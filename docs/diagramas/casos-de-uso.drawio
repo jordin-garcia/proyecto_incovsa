@@ -1,0 +1,171 @@
+<mxfile host="app.diagrams.net" modified="2026-09-14T21:50:00.000Z" agent="Carlos Hugo Escobar Gómez" version="22.1.0" type="device">
+  <diagram id="cu-incovsa" name="Casos de uso INCOVSA">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="sys" value="Sistema INCOVSA&#xa;(Sitio + CMS + Logística)" style="shape=swimlane;startSize=30;rounded=1;strokeWidth=2;fillColor=#f5f5f5;" vertex="1" parent="1">
+          <mxGeometry x="280" y="40" width="920" height="980" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="pkgSw" value="Sitio y CMS" style="swimlane;startSize=24;fillColor=#e3f2fd;rounded=1;" vertex="1" parent="sys">
+          <mxGeometry x="40" y="50" width="400" height="520" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu01" value="CU-01 Navegar sitio" style="ellipse;whiteSpace=wrap;aspect=fixed;" vertex="1" parent="pkgSw">
+          <mxGeometry x="30" y="40" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu02" value="CU-02 Consultar catálogo" style="ellipse;whiteSpace=wrap;" vertex="1" parent="pkgSw">
+          <mxGeometry x="210" y="40" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu03" value="CU-03 Enviar contacto" style="ellipse;whiteSpace=wrap;" vertex="1" parent="pkgSw">
+          <mxGeometry x="30" y="120" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu04" value="CU-04 Login / logout" style="ellipse;whiteSpace=wrap;" vertex="1" parent="pkgSw">
+          <mxGeometry x="210" y="120" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu05" value="CU-05 Recuperar contraseña" style="ellipse;whiteSpace=wrap;" vertex="1" parent="pkgSw">
+          <mxGeometry x="30" y="200" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu06" value="CU-06 Admin contenido" style="ellipse;whiteSpace=wrap;" vertex="1" parent="pkgSw">
+          <mxGeometry x="210" y="200" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu07" value="CU-07 Industrias y catálogo" style="ellipse;whiteSpace=wrap;" vertex="1" parent="pkgSw">
+          <mxGeometry x="30" y="280" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu08" value="CU-08 Noticias" style="ellipse;whiteSpace=wrap;" vertex="1" parent="pkgSw">
+          <mxGeometry x="210" y="280" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu09" value="CU-09 Gestionar solicitudes" style="ellipse;whiteSpace=wrap;" vertex="1" parent="pkgSw">
+          <mxGeometry x="30" y="360" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu10" value="CU-10 Docs internas" style="ellipse;whiteSpace=wrap;" vertex="1" parent="pkgSw">
+          <mxGeometry x="210" y="360" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu11" value="CU-11 Usuarios y roles" style="ellipse;whiteSpace=wrap;" vertex="1" parent="pkgSw">
+          <mxGeometry x="120" y="440" width="160" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="pkgSl" value="Sistema logístico" style="swimlane;startSize=24;fillColor=#e8f5e9;rounded=1;" vertex="1" parent="sys">
+          <mxGeometry x="480" y="50" width="400" height="600" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu12" value="CU-12 Productos y presentaciones" style="ellipse;whiteSpace=wrap;" vertex="1" parent="pkgSl">
+          <mxGeometry x="20" y="40" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu13" value="CU-13 Equivalencias" style="ellipse;whiteSpace=wrap;" vertex="1" parent="pkgSl">
+          <mxGeometry x="210" y="40" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu14" value="CU-14 Inventario" style="ellipse;whiteSpace=wrap;" vertex="1" parent="pkgSl">
+          <mxGeometry x="20" y="120" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu15" value="CU-15 Pedidos facturados" style="ellipse;whiteSpace=wrap;" vertex="1" parent="pkgSl">
+          <mxGeometry x="210" y="120" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu16" value="CU-16 Generar picking" style="ellipse;whiteSpace=wrap;" vertex="1" parent="pkgSl">
+          <mxGeometry x="20" y="200" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu17" value="CU-17 Preparar pedido" style="ellipse;whiteSpace=wrap;" vertex="1" parent="pkgSl">
+          <mxGeometry x="210" y="200" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu18" value="CU-18 Tablero" style="ellipse;whiteSpace=wrap;" vertex="1" parent="pkgSl">
+          <mxGeometry x="20" y="280" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu19" value="CU-19 Cargar vehículo" style="ellipse;whiteSpace=wrap;" vertex="1" parent="pkgSl">
+          <mxGeometry x="210" y="280" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu20" value="CU-20 Despacho y ruta" style="ellipse;whiteSpace=wrap;" vertex="1" parent="pkgSl">
+          <mxGeometry x="20" y="360" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu21" value="CU-21 Reportes" style="ellipse;whiteSpace=wrap;" vertex="1" parent="pkgSl">
+          <mxGeometry x="210" y="360" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="cu22" value="CU-22 Bitácora" style="ellipse;whiteSpace=wrap;" vertex="1" parent="pkgSl">
+          <mxGeometry x="110" y="440" width="170" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="aV" value="Visitante" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="80" width="40" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="aAC" value="Admin contenido" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="220" width="40" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="aUD" value="Usuario docs" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="360" width="40" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="aAS" value="Admin sistema" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="500" width="40" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="aF" value="Facturador" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="100" width="40" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="aB" value="Bodega" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="260" width="40" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="aD" value="Despacho" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="420" width="40" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="aG" value="Gerencia" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="560" width="40" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e1" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1" source="aV" target="cu01">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" style="endArrow=none;html=1;" edge="1" parent="1" source="aV" target="cu02">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" style="endArrow=none;html=1;" edge="1" parent="1" source="aV" target="cu03">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" style="endArrow=none;html=1;" edge="1" parent="1" source="aAC" target="cu06">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" style="endArrow=none;html=1;" edge="1" parent="1" source="aAC" target="cu07">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" style="endArrow=none;html=1;" edge="1" parent="1" source="aAC" target="cu08">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" style="endArrow=none;html=1;" edge="1" parent="1" source="aAC" target="cu09">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" style="endArrow=none;html=1;" edge="1" parent="1" source="aUD" target="cu10">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9" style="endArrow=none;html=1;" edge="1" parent="1" source="aAS" target="cu11">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e10" style="endArrow=none;html=1;" edge="1" parent="1" source="aAS" target="cu05">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e11" style="endArrow=none;html=1;" edge="1" parent="1" source="aF" target="cu15">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e12" style="endArrow=none;html=1;" edge="1" parent="1" source="aB" target="cu16">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e13" style="endArrow=none;html=1;" edge="1" parent="1" source="aB" target="cu17">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e14" style="endArrow=none;html=1;" edge="1" parent="1" source="aB" target="cu18">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e15" style="endArrow=none;html=1;" edge="1" parent="1" source="aB" target="cu14">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e16" style="endArrow=none;html=1;" edge="1" parent="1" source="aD" target="cu19">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e17" style="endArrow=none;html=1;" edge="1" parent="1" source="aD" target="cu20">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e18" style="endArrow=none;html=1;" edge="1" parent="1" source="aG" target="cu21">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e19" style="endArrow=none;html=1;" edge="1" parent="1" source="aG" target="cu22">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
