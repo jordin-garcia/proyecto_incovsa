@@ -1,0 +1,380 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+  <style>
+    :root{--verde900:#0B3A1B;--verde700:#14612D;--verde500:#2F8B4C;--dorado:#C9A227;--oro:#E8CE72;--hueso:#F6F4EF;--papel:#FFFFFF;--tinta:#1A1A17;--gris:#6E6E64;--linea:#DFDACE}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--hueso);color:var(--tinta);font:400 17px/1.62 "Source Serif 4",Georgia,serif;-webkit-font-smoothing:antialiased}
+    h1,h2,h3,h4{margin:0;font-family:Archivo,"Helvetica Neue",sans-serif;letter-spacing:-.025em;line-height:1.04;font-weight:800}
+    p{margin:0}
+    a{color:var(--verde700);text-decoration:none}
+    a:hover{color:var(--dorado)}
+    .wrap{max-width:1200px;margin:0 auto;padding:0 60px}
+    .mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+    .eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase}
+    .nav{background:var(--verde900)}
+    .nav-in{display:flex;align-items:center;justify-content:space-between;height:88px;gap:48px}
+    .marca{display:flex;align-items:center;gap:13px}
+    .marca-n{font-family:Archivo,sans-serif;font-weight:800;font-size:23px;color:#fff;line-height:1}
+    .marca-s{font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--oro);margin-top:5px}
+    .menu{display:flex;align-items:center;gap:34px;font-family:Archivo,sans-serif;font-size:14px;font-weight:600}
+    .menu a{color:#D6D2C7}
+    .menu a:hover{color:var(--oro)}
+    .menu a.act{color:#fff;box-shadow:inset 0 -2px 0 var(--oro);padding-bottom:5px}
+    .acceso{border:1px solid rgba(232,206,114,.45);color:var(--oro) !important;padding:11px 19px;border-radius:2px;display:flex;align-items:center;gap:9px}
+    .acceso:hover{background:rgba(232,206,114,.12)}
+    .btn{display:inline-flex;align-items:center;gap:11px;font-family:Archivo,sans-serif;font-weight:700;font-size:15px;padding:16px 28px;border-radius:2px;border:0;cursor:pointer}
+    .btn-p{background:var(--verde700);color:#fff}
+    .btn-p:hover{background:var(--verde900);color:#fff}
+    .btn-l{background:transparent;color:var(--verde700);border:1.5px solid var(--verde700)}
+    .btn-l:hover{background:var(--verde700);color:#fff}
+    .miga{display:flex;align-items:center;gap:10px;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--gris);letter-spacing:.06em}
+    .pr{display:flex;align-items:center;gap:18px;width:100%;text-align:left;background:var(--papel);border:1px solid var(--linea);border-left:3px solid var(--linea);padding:17px 20px;cursor:pointer;border-radius:2px;transition:.15s;font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--tinta)}
+    .pr:hover{border-color:var(--verde500);border-left-color:var(--verde500)}
+    .pr .t{font-family:Archivo,sans-serif;font-weight:700;font-size:16px;min-width:88px}
+    .pr .k{margin-left:auto;font-weight:500;font-size:16px}
+    .pr.on{border-color:var(--verde700);border-left-color:var(--verde700);background:rgba(47,139,76,.07)}
+    .tab{font-family:Archivo,sans-serif;font-size:15px;font-weight:700;background:transparent;border:0;border-bottom:2px solid transparent;padding:14px 4px;cursor:pointer;color:var(--gris)}
+    .tab:hover{color:var(--tinta)}
+    .tab.on{color:var(--tinta);border-bottom-color:var(--verde700)}
+    .foto{background:#E7E3D8;border:1.5px dashed #BDB7A8;border-radius:2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#8A8474;text-align:center;padding:24px}
+    .foto-t{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase}
+    .pend{border:1.5px dashed var(--dorado);background:repeating-linear-gradient(135deg,rgba(201,162,39,.07) 0 9px,transparent 9px 18px);padding:26px 28px;border-radius:2px;display:flex;flex-direction:column;gap:10px}
+    .pend-t{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#8A6D12;display:flex;align-items:center;gap:8px}
+    .doc{display:flex;align-items:center;gap:16px;background:var(--papel);border:1px solid var(--linea);padding:20px 24px;border-radius:2px}
+    .card{background:var(--papel);border:1px solid var(--linea);border-radius:2px;padding:24px;display:flex;flex-direction:column;gap:11px;transition:.18s}
+    .card:hover{border-color:var(--verde500);transform:translateY(-3px)}
+    .pie{background:var(--verde900);color:#B6B2A7;padding:72px 0 40px;font-size:15px}
+    .pie h4{color:#fff;font-size:13px;letter-spacing:.16em;text-transform:uppercase;font-family:"IBM Plex Mono",monospace;font-weight:500;margin-bottom:20px}
+    .pie a{color:#B6B2A7}
+    .pie a:hover{color:var(--oro)}
+  </style>
+</helmet>
+
+<div>
+  <header class="nav">
+    <div class="wrap nav-in">
+      <a href="#" class="marca">
+        <svg width="38" height="38" viewBox="0 0 38 38" fill="none" aria-hidden="true">
+          <rect x="1.2" y="1.2" width="35.6" height="35.6" rx="2" stroke="#E8CE72" stroke-width="1.4"></rect>
+          <path d="M10 27V11h5.4v16z" fill="#E8CE72"></path>
+          <path d="M18.6 27V16H24v11z" fill="#FFFFFF" fill-opacity=".9"></path>
+          <path d="M27 27v-6h1.6v6z" fill="#2F8B4C"></path>
+        </svg>
+        <span style="display:flex;flex-direction:column">
+          <span class="marca-n">INCOVSA</span>
+          <span class="marca-s">Químicos</span>
+        </span>
+      </a>
+      <nav class="menu">
+        <a href="#">Inicio</a>
+        <a href="#">Quiénes somos</a>
+        <a href="#">Industrias</a>
+        <a href="#" class="act">Productos</a>
+        <a href="#">Contacto</a>
+        <a href="#" class="acceso">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <rect x="3" y="7" width="10" height="7" rx="1" stroke="currentColor" stroke-width="1.5"></rect>
+            <path d="M5.5 7V4.8a2.5 2.5 0 015 0V7" stroke="currentColor" stroke-width="1.5"></path>
+          </svg>
+          Acceso personal
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============ FICHA ============ -->
+  <section style="background:var(--papel);border-bottom:1px solid var(--linea);padding:34px 0 72px">
+    <div class="wrap">
+      <div class="miga">
+        <a href="#">PRODUCTOS</a>
+        <span>/</span>
+        <a href="#">LAVANDERÍA</a>
+        <span>/</span>
+        <span style="color:var(--tinta)">ÁCIDO ACÉTICO GLACIAL</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;margin-top:38px;align-items:start">
+        <div class="foto" style="height:430px">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 3h6M10 3v6.5L5.5 18a2 2 0 001.8 3h9.4a2 2 0 001.8-3L14 9.5V3" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path><path d="M7.5 15h9" stroke="currentColor" stroke-width="1.4"></path></svg>
+          <span class="foto-t">Fotografía del producto<br>pendiente de INCOVSA</span>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:26px">
+          <div>
+            <p class="mono" style="font-size:11px;letter-spacing:.18em;color:var(--verde700)">PRODUCTO DEL CATÁLOGO PÚBLICO &#183; DATOS DE EJEMPLO</p>
+            <h1 style="font-size:50px;margin-top:12px;text-wrap:pretty">Ácido Acético Glacial</h1>
+          </div>
+
+          <div>
+            <p class="mono" style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gris);margin-bottom:14px">Presentaciones disponibles</p>
+            <div style="display:flex;flex-direction:column;gap:9px">
+              <sc-for list="{{presentaciones}}" as="pr" hint-placeholder-count="3">
+                <button class="{{pr.clase}}" onClick="{{pr.elegir}}">
+                  <span class="t">{{pr.tipo}}</span>
+                  <span style="color:var(--gris)">{{pr.nota}}</span>
+                  <span class="k">{{pr.kg}}</span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:44px;padding-top:22px;border-top:1px solid var(--linea)">
+            <div>
+              <p class="mono" style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gris)">Origen</p>
+              <p style="font-family:Archivo,sans-serif;font-weight:700;font-size:18px;margin-top:7px">China &#183; Estados Unidos</p>
+            </div>
+            <div>
+              <p class="mono" style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gris)">Industrias</p>
+              <p style="font-family:Archivo,sans-serif;font-weight:700;font-size:18px;margin-top:7px">Textil, hulera, limpieza, alimentación animal, lavandería</p>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:14px">
+            <a href="#" class="btn btn-p">Solicitar información</a>
+            <a href="#" class="btn btn-l">Ver productos relacionados</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DETALLE ============ -->
+  <section style="padding:72px 0">
+    <div class="wrap" style="display:grid;grid-template-columns:1.25fr .75fr;gap:64px;align-items:start">
+      <div>
+        <div style="display:flex;gap:30px;border-bottom:1px solid var(--linea)">
+          <sc-for list="{{pestanas}}" as="p" hint-placeholder-count="3">
+            <button class="{{p.clase}}" onClick="{{p.elegir}}">{{p.nombre}}</button>
+          </sc-for>
+        </div>
+
+        <div style="padding-top:34px">
+          <sc-if value="{{esUso}}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;gap:20px">
+              <h2 style="font-size:28px">Aplicación y uso del producto</h2>
+              <p style="font-size:18px;line-height:1.7;color:#3A3A34;text-wrap:pretty">El ácido puro se denomina ácido acético glacial por el aspecto de los cristales que se forman por solidificación, que son parecidos al hielo. Es un excelente disolvente. Se utiliza también como detenedor en fotografía, como ácido de uso general en la fabricación de sustancias químicas orgánicas, en el tratamiento de textiles, y como fuente del grupo acetilo para numerosos derivados orgánicos.</p>
+              <p class="mono" style="font-size:12px;color:var(--gris);padding-top:12px;border-top:1px dotted var(--linea)">Texto tomado de la página de Google Sites de INCOVSA. Revisión de redacción pendiente.</p>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{esManejo}}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:18px">
+              <h2 style="font-size:28px">Manejo y almacenamiento</h2>
+              <div class="pend">
+                <p class="pend-t">
+                  <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2l6 11H2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path><path d="M8 6.5v3" stroke="currentColor" stroke-width="1.5"></path></svg>
+                  Cuatro campos pendientes de INCOVSA &#183; requerimiento RF-SW-05
+                </p>
+                <p style="font-size:16px;color:#6B5A21">El Ing. William pidió mostrar estos datos por producto. No existen en la página de Google Sites de la empresa ni en la documentación recibida:</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px">
+                  <div style="background:rgba(255,255,255,.55);padding:16px 18px;border-radius:2px">
+                    <p class="mono" style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#8A6D12">Cómo se maneja</p>
+                    <p style="font-size:15px;color:#7A6828;margin-top:6px">Pendiente</p>
+                  </div>
+                  <div style="background:rgba(255,255,255,.55);padding:16px 18px;border-radius:2px">
+                    <p class="mono" style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#8A6D12">Almacenamiento</p>
+                    <p style="font-size:15px;color:#7A6828;margin-top:6px">Pendiente</p>
+                  </div>
+                  <div style="background:rgba(255,255,255,.55);padding:16px 18px;border-radius:2px">
+                    <p class="mono" style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#8A6D12">Área de humedad</p>
+                    <p style="font-size:15px;color:#7A6828;margin-top:6px">Pendiente</p>
+                  </div>
+                  <div style="background:rgba(255,255,255,.55);padding:16px 18px;border-radius:2px">
+                    <p class="mono" style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#8A6D12">Restricciones de uso</p>
+                    <p style="font-size:15px;color:#7A6828;margin-top:6px">Pendiente</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{esDocs}}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:18px">
+              <h2 style="font-size:28px">Documentación técnica</h2>
+              <p style="font-size:17px;color:var(--gris)">Disponible únicamente para personal de INCOVSA con sesión iniciada y según el rol asignado.</p>
+              <div style="display:flex;flex-direction:column;gap:11px;margin-top:6px">
+                <div class="doc">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 3h8l4 4v14H6z" stroke="var(--gris)" stroke-width="1.5" stroke-linejoin="round"></path><path d="M14 3v4h4" stroke="var(--gris)" stroke-width="1.5"></path></svg>
+                  <div style="flex:1">
+                    <p style="font-family:Archivo,sans-serif;font-weight:700;font-size:16px">Ficha técnica</p>
+                    <p class="mono" style="font-size:12px;color:var(--gris)">PDF &#183; acceso restringido</p>
+                  </div>
+                  <span class="mono" style="font-size:11px;color:var(--gris);display:flex;align-items:center;gap:7px;letter-spacing:.1em">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1" stroke="currentColor" stroke-width="1.5"></rect><path d="M5.5 7V4.8a2.5 2.5 0 015 0V7" stroke="currentColor" stroke-width="1.5"></path></svg>
+                    REQUIERE INGRESO
+                  </span>
+                </div>
+                <div class="doc">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" stroke="var(--gris)" stroke-width="1.5" stroke-linejoin="round"></path></svg>
+                  <div style="flex:1">
+                    <p style="font-family:Archivo,sans-serif;font-weight:700;font-size:16px">Hoja de seguridad</p>
+                    <p class="mono" style="font-size:12px;color:var(--gris)">PDF &#183; acceso restringido</p>
+                  </div>
+                  <span class="mono" style="font-size:11px;color:var(--gris);display:flex;align-items:center;gap:7px;letter-spacing:.1em">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1" stroke="currentColor" stroke-width="1.5"></rect><path d="M5.5 7V4.8a2.5 2.5 0 015 0V7" stroke="currentColor" stroke-width="1.5"></path></svg>
+                    REQUIERE INGRESO
+                  </span>
+                </div>
+                <div class="doc">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="10" r="6" stroke="var(--gris)" stroke-width="1.5"></circle><path d="M9 15l-1 6 4-2 4 2-1-6" stroke="var(--gris)" stroke-width="1.5" stroke-linejoin="round"></path></svg>
+                  <div style="flex:1">
+                    <p style="font-family:Archivo,sans-serif;font-weight:700;font-size:16px">Certificado de análisis</p>
+                    <p class="mono" style="font-size:12px;color:var(--gris)">PDF &#183; indica el código o lote &#183; acceso restringido</p>
+                  </div>
+                  <span class="mono" style="font-size:11px;color:var(--gris);display:flex;align-items:center;gap:7px;letter-spacing:.1em">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1" stroke="currentColor" stroke-width="1.5"></rect><path d="M5.5 7V4.8a2.5 2.5 0 015 0V7" stroke="currentColor" stroke-width="1.5"></path></svg>
+                    REQUIERE INGRESO
+                  </span>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+
+      <aside style="background:var(--papel);border:1px solid var(--linea);border-radius:2px;padding:32px;display:flex;flex-direction:column;gap:22px">
+        <h3 style="font-size:21px">Datos de la presentación seleccionada</h3>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;justify-content:space-between;gap:16px;padding-bottom:12px;border-bottom:1px dotted var(--linea)">
+            <span class="mono" style="font-size:12px;color:var(--gris);letter-spacing:.1em">ENVASE</span>
+            <span class="mono" style="font-size:14px;font-weight:500">{{sel.tipo}}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;gap:16px;padding-bottom:12px;border-bottom:1px dotted var(--linea)">
+            <span class="mono" style="font-size:12px;color:var(--gris);letter-spacing:.1em">CONTENIDO</span>
+            <span class="mono" style="font-size:14px;font-weight:500">{{sel.kg}}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;gap:16px;padding-bottom:12px;border-bottom:1px dotted var(--linea)">
+            <span class="mono" style="font-size:12px;color:var(--gris);letter-spacing:.1em">UNIDAD DE VENTA</span>
+            <span class="mono" style="font-size:14px;font-weight:500">Kilogramo</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;gap:16px">
+            <span class="mono" style="font-size:12px;color:var(--gris);letter-spacing:.1em">LOTE</span>
+            <span class="mono" style="font-size:14px;color:var(--gris)">No se publica</span>
+          </div>
+        </div>
+        <p style="font-size:15px;color:var(--gris);padding-top:16px;border-top:1px solid var(--linea);text-wrap:pretty">El precio y el número de lote no se muestran en el sitio público. Para cotizaciones, comuníquese con la sede que le corresponde.</p>
+        <a href="#" class="btn btn-p" style="justify-content:center">Contactar a un asesor</a>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ RELACIONADOS ============ -->
+  <section style="background:var(--papel);border-top:1px solid var(--linea);padding:72px 0">
+    <div class="wrap">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;padding-bottom:24px;border-bottom:1px solid var(--linea);margin-bottom:34px">
+        <h2 style="font-size:34px">Otros productos para lavandería</h2>
+        <a href="#" class="mono" style="font-size:13px">Ver el catálogo completo &#8594;</a>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px">
+        <a href="#" class="card">
+          <h3 style="font-size:18px;line-height:1.2">Hidrosulfito de Sodio</h3>
+          <p class="mono" style="font-size:12px">Tonel &#183; 50 kg</p>
+          <p class="mono" style="font-size:11px;color:var(--gris);letter-spacing:.08em;margin-top:auto;padding-top:12px;border-top:1px solid var(--linea)">CHINA, INDIA</p>
+        </a>
+        <a href="#" class="card">
+          <h3 style="font-size:18px;line-height:1.2">Metabisulfito de Sodio</h3>
+          <p class="mono" style="font-size:12px">Saco &#183; 25 kg</p>
+          <p class="mono" style="font-size:11px;color:var(--gris);letter-spacing:.08em;margin-top:auto;padding-top:12px;border-top:1px solid var(--linea)">CHINA, TURQUÍA</p>
+        </a>
+        <a href="#" class="card">
+          <h3 style="font-size:18px;line-height:1.2">Soda Ash</h3>
+          <p class="mono" style="font-size:12px">Saco &#183; 25, 40 y 50 kg</p>
+          <p class="mono" style="font-size:11px;color:var(--gris);letter-spacing:.08em;margin-top:auto;padding-top:12px;border-top:1px solid var(--linea)">CHINA</p>
+        </a>
+        <a href="#" class="card">
+          <h3 style="font-size:18px;line-height:1.2">Soda Cáustica</h3>
+          <p class="mono" style="font-size:12px">Saco &#183; 25 kg</p>
+          <p class="mono" style="font-size:11px;color:var(--gris);letter-spacing:.08em;margin-top:auto;padding-top:12px;border-top:1px solid var(--linea)">CHINA, MÉXICO, POLONIA</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="pie">
+    <div class="wrap">
+      <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:48px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,.12)">
+        <div>
+          <p style="font-family:Archivo,sans-serif;font-weight:800;font-size:21px;color:#fff">INCOVSA</p>
+          <p class="mono" style="font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--oro);margin-top:5px">Químicos</p>
+          <p style="margin-top:20px;font-size:15px;max-width:290px">Industria del Cuero Covadonga, S. A. Compra y venta de productos químicos en Guatemala.</p>
+        </div>
+        <div>
+          <h4>Navegación</h4>
+          <div style="display:flex;flex-direction:column;gap:11px">
+            <a href="#">Inicio</a><a href="#">Quiénes somos</a><a href="#">Industrias</a><a href="#">Productos</a><a href="#">Contacto</a>
+          </div>
+        </div>
+        <div>
+          <h4>Sedes</h4>
+          <div style="display:flex;flex-direction:column;gap:11px">
+            <a href="#">Quetzaltenango</a><a href="#">Guatemala</a><a href="#">Escuintla</a>
+          </div>
+        </div>
+        <div>
+          <h4>Contacto</h4>
+          <div style="display:flex;flex-direction:column;gap:11px">
+            <a href="#" class="mono" style="font-size:13px">facturacion@incovsa.com</a>
+            <a href="#" class="mono" style="font-size:13px">recepciongt@incovsa.com</a>
+          </div>
+        </div>
+      </div>
+      <p style="padding-top:26px;font-size:13px;color:#7E7A71">Prototipo para validación &#183; Universidad Rafael Landívar &#183; Proyecto de Programación Web</p>
+    </div>
+  </footer>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"acento":{"editor":"color","default":"#C9A227","options":["#C9A227","#2F8B4C","#B45309","#8A8474"],"section":"Marca"}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { pres: 0, tab: 'uso' };
+  }
+  renderVals() {
+    const self = this;
+    const st = this.state;
+    const lista = [
+      { tipo: 'Garrafa', kg: '30 kg', nota: 'envase individual' },
+      { tipo: 'IBC', kg: '1,000 kg', nota: 'contenedor intermedio' },
+      { tipo: 'IBC', kg: '1,050 kg', nota: 'contenedor intermedio' }
+    ];
+    const tabs = [
+      { id: 'uso', nombre: 'Aplicación y uso' },
+      { id: 'manejo', nombre: 'Manejo y almacenamiento' },
+      { id: 'docs', nombre: 'Documentación técnica' }
+    ];
+    return {
+      acento: this.props.acento ?? '#C9A227',
+      presentaciones: lista.map(function (p, i) {
+        return {
+          tipo: p.tipo, kg: p.kg, nota: p.nota,
+          clase: st.pres === i ? 'pr on' : 'pr',
+          elegir: function () { self.setState({ pres: i }); }
+        };
+      }),
+      sel: lista[st.pres] || lista[0],
+      pestanas: tabs.map(function (t) {
+        return {
+          nombre: t.nombre,
+          clase: st.tab === t.id ? 'tab on' : 'tab',
+          elegir: function () { self.setState({ tab: t.id }); }
+        };
+      }),
+      esUso: st.tab === 'uso',
+      esManejo: st.tab === 'manejo',
+      esDocs: st.tab === 'docs'
+    };
+  }
+}
+</script>
+</body>
+</html>

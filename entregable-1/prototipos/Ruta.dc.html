@@ -1,0 +1,207 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+  <style>
+    :root{--verde900:#0B3A1B;--verde700:#14612D;--verde500:#2F8B4C;--dorado:#C9A227;--oro:#E8CE72;--hueso:#F6F4EF;--papel:#FFFFFF;--tinta:#1A1A17;--gris:#6E6E64;--linea:#DFDACE}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--hueso);color:var(--tinta);font:400 17px/1.62 "Source Serif 4",Georgia,serif;-webkit-font-smoothing:antialiased}
+    h1,h2,h3{margin:0;font-family:Archivo,"Helvetica Neue",sans-serif;letter-spacing:-.025em;line-height:1.06;font-weight:800}
+    p{margin:0}
+    a{color:var(--verde700);text-decoration:none}
+    a:hover{color:var(--dorado)}
+    .wrap{max-width:1200px;margin:0 auto;padding:0 60px}
+    .mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+    .barra{background:var(--verde900);height:72px;display:flex;align-items:center}
+    .barra-in{display:flex;align-items:center;justify-content:space-between;width:100%;gap:40px}
+    .barra a{color:#D6D2C7;font-family:Archivo,sans-serif;font-size:14px;font-weight:600}
+    .barra a:hover{color:var(--oro)}
+    .barra a.act{color:#fff;box-shadow:inset 0 -2px 0 var(--oro);padding-bottom:5px}
+    .avatar{width:36px;height:36px;border-radius:50%;background:var(--verde500);color:#fff;display:flex;align-items:center;justify-content:center;font-family:Archivo,sans-serif;font-weight:700;font-size:13px}
+    .tarjeta{background:var(--papel);border:1px solid var(--linea);border-radius:2px;padding:28px 30px}
+    .rotulo{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gris);display:block;margin-bottom:7px}
+    .campo{width:100%;font-family:Archivo,sans-serif;font-size:15px;padding:12px 14px;border:1px solid var(--linea);background:var(--papel);border-radius:2px;color:var(--tinta)}
+    .campo:focus{outline:2px solid var(--verde500);outline-offset:-1px}
+    .campo.fijo{background:#F2F0EA;color:var(--gris)}
+    .g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+    table{width:100%;border-collapse:collapse;background:var(--papel);border:1px solid var(--linea)}
+    th{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gris);text-align:left;padding:15px 18px;border-bottom:1px solid var(--linea);font-weight:500}
+    td{padding:17px 18px;border-bottom:1px solid var(--linea);vertical-align:middle;font-size:17px}
+    tr:last-child td{border-bottom:0}
+    .num{text-align:right;font-family:"IBM Plex Mono",monospace;font-size:16px}
+    .orden{font-family:Archivo,sans-serif;font-weight:800;font-size:22px;color:var(--verde700)}
+    .sector{font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--gris)}
+    tfoot td{background:rgba(47,139,76,.07);font-family:Archivo,sans-serif;font-weight:700;border-top:1px solid var(--verde500)}
+    .mini{font-family:Archivo,sans-serif;font-size:12px;font-weight:600;padding:6px 10px;border:1px solid var(--linea);background:var(--papel);border-radius:2px;cursor:pointer;color:var(--gris)}
+    .mini:hover{border-color:var(--verde500);color:var(--verde700)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-family:Archivo,sans-serif;font-weight:700;font-size:15px;padding:15px 28px;border-radius:2px;border:0;cursor:pointer}
+    .btn-p{background:var(--verde700);color:#fff}
+    .btn-p:hover{background:var(--verde900)}
+    .btn-l{background:transparent;color:var(--gris);border:1.5px solid var(--linea)}
+    .aviso{display:flex;align-items:flex-start;gap:12px;padding:15px 18px;border-radius:2px;font-size:15px;border-left:3px solid;background:rgba(47,139,76,.09);border-color:var(--verde500);color:#1C5030}
+    .pill{display:inline-flex;align-items:center;gap:8px;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;padding:7px 12px;border-radius:2px;background:rgba(47,139,76,.14);color:var(--verde700)}
+    .llave{display:inline-flex;align-items:center;gap:7px;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;padding:6px 11px;border-radius:2px;background:rgba(201,162,39,.16);color:#7A6014}
+    .pend{border:1.5px dashed var(--dorado);background:repeating-linear-gradient(135deg,rgba(201,162,39,.07) 0 9px,transparent 9px 18px);padding:24px 26px;border-radius:2px;display:flex;flex-direction:column;gap:9px}
+    .pend-t{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#8A6D12}
+    tbody tr{cursor:grab}
+    tbody tr:active{cursor:grabbing}
+    tbody tr.arrastrando{opacity:.34}
+    tbody tr.encima td{box-shadow:inset 0 3px 0 var(--verde500)}
+    .grip{display:inline-flex;align-items:center;color:var(--gris);opacity:.45;margin-right:10px;vertical-align:middle}
+    tbody tr:hover .grip{opacity:.95;color:var(--verde700)}
+  </style>
+</helmet>
+
+<div>
+  <!-- ============ BARRA INTERNA ============ -->
+  <div class="barra">
+    <div class="wrap barra-in">
+      <div style="display:flex;align-items:center;gap:44px">
+        <a href="#" style="display:flex;align-items:center;gap:11px">
+          <svg width="30" height="30" viewBox="0 0 38 38" fill="none" aria-hidden="true">
+            <rect x="1.2" y="1.2" width="35.6" height="35.6" rx="2" stroke="#E8CE72" stroke-width="1.6"></rect>
+            <path d="M10 27V11h5.4v16z" fill="#E8CE72"></path>
+            <path d="M18.6 27V16H24v11z" fill="#FFFFFF" fill-opacity=".9"></path>
+          </svg>
+          <span style="font-family:Archivo,sans-serif;font-weight:800;font-size:17px;color:#fff">INCOVSA</span>
+          <span class="mono" style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--oro);border-left:1px solid rgba(232,206,114,.4);padding-left:11px">Control logístico de bodega</span>
+        </a>
+        <div style="display:flex;align-items:center;gap:28px">
+          <a href="#" class="act">Ruta</a>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="text-align:right">
+          <p style="font-family:Archivo,sans-serif;font-size:14px;font-weight:600;color:#fff;line-height:1.3">Usuario de ejemplo</p>
+          <p class="mono" style="font-size:10px;color:var(--oro);letter-spacing:.1em">PILOTO &#183; QUETZALTENANGO</p>
+        </div>
+        <div class="avatar">UE</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ENCABEZADO ============ -->
+  <section style="background:var(--papel);border-bottom:1px solid var(--linea);padding:38px 0">
+    <div class="wrap" style="display:flex;align-items:flex-end;justify-content:space-between;gap:48px">
+      <div>
+        <p class="mono" style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color: {{acento}}">Módulo de ruta</p>
+        <h1 style="font-size:40px;margin-top:14px">Ruta asignada</h1>
+        <p style="font-size:17px;color:var(--gris);margin-top:12px;max-width:700px">Cada piloto ve solo las rutas que tiene asignadas. Puede acomodar los clientes durante la ruta; el orden que tengan al pulsar Pedido entregado se guarda como el recorrido.</p>
+      </div>
+      <span class="pill">ESTADO &#183; EN RUTA</span>
+    </div>
+  </section>
+
+  <section style="padding:34px 0 80px">
+    <div class="wrap" style="display:flex;flex-direction:column;gap:26px">
+
+      <!-- ============ DATOS DE LA RUTA ============ -->
+      <div class="tarjeta">
+        <h2 style="font-size:21px">Datos de la ruta</h2>
+        <p style="font-size:15px;color:var(--gris);margin-top:6px;margin-bottom:20px">El número es correlativo por sede y, junto con la fecha, se asigna cuando facturación envía el pedido a bodega.</p>
+        <div class="g4">
+          <div><span class="rotulo">Número de ruta</span><input class="campo fijo" type="text" value="1" readonly></div>
+          <div><span class="rotulo">Fecha</span><input class="campo fijo" type="text" value="21/09/2026" readonly></div>
+          <div><span class="rotulo">Camión</span><input class="campo fijo" type="text" value="Camión 1" readonly></div>
+          <div><span class="rotulo">Piloto</span><input class="campo fijo" type="text" value="Piloto de ejemplo 1" readonly></div>
+        </div>
+      </div>
+
+      <!-- ============ CLIENTES DE LA RUTA ============ -->
+      <div class="tarjeta">
+        <h2 style="font-size:21px">Clientes de la ruta</h2>
+        <p style="font-size:15px;color:var(--gris);margin-top:6px;margin-bottom:20px">Arrastre cada cliente para acomodarlo en el orden en que hará las entregas.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th style="width:130px">Orden</th>
+              <th>Cliente</th>
+              <th>Sector</th>
+              <th style="width:130px;text-align:right">Total (kg)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{paradas}}" as="p" hint-placeholder-count="4">
+              <tr class="{{p.clase}}" draggable="true" onDragStart="{{p.iniciar}}" onDragOver="{{p.encima}}" onDragLeave="{{p.sale}}" onDrop="{{p.soltar}}" onDragEnd="{{p.fin}}">
+                <td class="orden"><span class="grip" aria-hidden="true"><svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor"><circle cx="2.5" cy="3" r="1.4"></circle><circle cx="7.5" cy="3" r="1.4"></circle><circle cx="2.5" cy="8" r="1.4"></circle><circle cx="7.5" cy="8" r="1.4"></circle><circle cx="2.5" cy="13" r="1.4"></circle><circle cx="7.5" cy="13" r="1.4"></circle></svg></span>{{p.orden}}</td>
+                <td>{{p.cliente}}</td>
+                <td class="sector">{{p.sector}}</td>
+                <td class="num">{{p.total}}</td>
+              </tr>
+            </sc-for>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" style="text-align:right">Total de la ruta</td>
+              <td class="num" style="font-size:17px">3,460</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:24px">
+          <p style="font-size:15px;color:var(--gris)">Al confirmar, el pedido pasa a estado Entregado y la ruta queda en el registro histórico con su recorrido. Las devoluciones se registran después en el módulo de Inventario.</p>
+          <button class="btn btn-p">Pedido entregado</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"acento":{"editor":"color","default":"#C9A227","options":["#C9A227","#2F8B4C","#E8CE72","#8A8474"],"section":"Marca"},"marcarPendientes":{"editor":"boolean","default":true,"section":"Revisión"}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      arrastrada: null,
+      sobre: null,
+      paradas: [
+        { cliente: 'Cliente ejemplo 01', sector: 'sector 1 san andres xecul', total: '1,500' },
+        { cliente: 'Cliente ejemplo 02', sector: 'sector 2 san andres xucul', total: '600' },
+        { cliente: 'Cliente ejemplo 03', sector: 'sector 1 salcaja', total: '560' },
+        { cliente: 'Cliente ejemplo 04', sector: 'san felipe xecuyup', total: '800' }
+      ]
+    };
+  }
+  reordenar(desde, hasta) {
+    if (desde === null || hasta === null || desde === hasta) return;
+    var xs = this.state.paradas.slice();
+    var m = xs.splice(desde, 1)[0];
+    xs.splice(hasta, 0, m);
+    this.setState({ paradas: xs, arrastrada: null, sobre: null });
+  }
+  renderVals() {
+    var self = this;
+    var st = this.state;
+    return {
+      acento: this.props.acento ?? '#C9A227',
+      marcar: this.props.marcarPendientes ?? true,
+      paradas: st.paradas.map(function (p, i) {
+        return {
+          orden: String(i + 1),
+          cliente: p.cliente,
+          sector: p.sector,
+          total: p.total,
+          clase: st.arrastrada === i ? 'arrastrando' : (st.sobre === i ? 'encima' : ''),
+          iniciar: function (e) { if (e.dataTransfer) { e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', String(i)); } catch (err) {} } self.setState({ arrastrada: i }); },
+          encima: function (e) { e.preventDefault(); if (e.dataTransfer) e.dataTransfer.dropEffect = 'move'; if (st.sobre !== i) self.setState({ sobre: i }); },
+          sale: function () { if (st.sobre === i) self.setState({ sobre: null }); },
+          soltar: function (e) { e.preventDefault(); self.reordenar(st.arrastrada, i); },
+          fin: function () { self.setState({ arrastrada: null, sobre: null }); }
+        };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

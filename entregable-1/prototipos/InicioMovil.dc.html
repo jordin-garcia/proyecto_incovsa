@@ -1,0 +1,232 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+  <style>
+    :root{--verde900:#0B3A1B;--verde700:#14612D;--verde500:#2F8B4C;--dorado:#C9A227;--oro:#E8CE72;--hueso:#F6F4EF;--papel:#FFFFFF;--tinta:#1A1A17;--gris:#6E6E64;--linea:#DFDACE}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--hueso);color:var(--tinta);font:400 16px/1.6 "Source Serif 4",Georgia,serif;-webkit-font-smoothing:antialiased}
+    h1,h2,h3{margin:0;font-family:Archivo,"Helvetica Neue",sans-serif;letter-spacing:-.025em;line-height:1.08;font-weight:800}
+    p{margin:0}
+    a{color:var(--verde700);text-decoration:none}
+    a:hover{color:var(--dorado)}
+    .wrap{padding:0 20px}
+    .mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+    .eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase}
+    .btn{display:flex;align-items:center;justify-content:center;gap:10px;font-family:Archivo,sans-serif;font-weight:700;font-size:15px;min-height:52px;padding:0 24px;border-radius:2px;border:0;cursor:pointer;width:100%}
+    .btn-p{background:var(--verde700);color:#fff}
+    .ham{width:46px;height:46px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid rgba(232,206,114,.4);border-radius:2px;cursor:pointer;color:var(--oro)}
+    .mlink{display:flex;align-items:center;justify-content:space-between;min-height:52px;color:#D6D2C7;font-family:Archivo,sans-serif;font-size:17px;font-weight:600;border-bottom:1px solid rgba(255,255,255,.1)}
+    .card{background:var(--papel);border:1px solid var(--linea);border-radius:2px;padding:22px;display:flex;flex-direction:column;gap:11px}
+    .foto{background:#E7E3D8;border:1.5px dashed #BDB7A8;border-radius:2px;display:flex;align-items:center;justify-content:center;color:#8A8474;padding:18px}
+    .foto-t{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase}
+    .pend{border:1.5px dashed var(--dorado);background:repeating-linear-gradient(135deg,rgba(201,162,39,.07) 0 9px,transparent 9px 18px);padding:20px 22px;border-radius:2px;display:flex;flex-direction:column;gap:9px}
+    .pend-t{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#8A6D12}
+  </style>
+</helmet>
+
+<div style="width:390px;margin:0 auto;background:var(--hueso)">
+
+  <!-- ============ ENCABEZADO ============ -->
+  <header style="background:var(--verde900);position:relative">
+    <div class="wrap" style="height:72px;display:flex;align-items:center;justify-content:space-between">
+      <a href="#" style="display:flex;align-items:center;gap:10px">
+        <svg width="32" height="32" viewBox="0 0 38 38" fill="none" aria-hidden="true">
+          <rect x="1.2" y="1.2" width="35.6" height="35.6" rx="2" stroke="#E8CE72" stroke-width="1.6"></rect>
+          <path d="M10 27V11h5.4v16z" fill="#E8CE72"></path>
+          <path d="M18.6 27V16H24v11z" fill="#FFFFFF" fill-opacity=".9"></path>
+        </svg>
+        <span style="display:flex;flex-direction:column">
+          <span style="font-family:Archivo,sans-serif;font-weight:800;font-size:19px;color:#fff;line-height:1">INCOVSA</span>
+          <span class="mono" style="font-size:8px;letter-spacing:.28em;text-transform:uppercase;color:var(--oro);margin-top:3px">Químicos</span>
+        </span>
+      </a>
+      <button class="ham" onClick="{{alternar}}" aria-label="Abrir el menú">
+        <sc-if value="{{cerrado}}" hint-placeholder-val="{{ true }}">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 5.5h14M3 10h14M3 14.5h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"></path></svg>
+        </sc-if>
+        <sc-if value="{{abierto}}" hint-placeholder-val="{{ false }}">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"></path></svg>
+        </sc-if>
+      </button>
+    </div>
+
+    <sc-if value="{{abierto}}" hint-placeholder-val="{{ false }}">
+      <nav class="wrap" style="padding-bottom:22px;border-top:1px solid rgba(255,255,255,.1)">
+        <a href="#" class="mlink">Inicio<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5L12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"></path></svg></a>
+        <a href="#" class="mlink">Quiénes somos<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5L12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"></path></svg></a>
+        <a href="#" class="mlink">Industrias<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5L12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"></path></svg></a>
+        <a href="#" class="mlink">Productos<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5L12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"></path></svg></a>
+        <a href="#" class="mlink" style="border-bottom:0">Contacto<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M8.5 4.5L12 8l-3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"></path></svg></a>
+        <a href="#" class="btn" style="background:transparent;border:1px solid rgba(232,206,114,.45);color:var(--oro);margin-top:18px">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1" stroke="currentColor" stroke-width="1.5"></rect><path d="M5.5 7V4.8a2.5 2.5 0 015 0V7" stroke="currentColor" stroke-width="1.5"></path></svg>
+          Acceso personal
+        </a>
+      </nav>
+    </sc-if>
+  </header>
+
+  <!-- ============ PORTADA ============ -->
+  <section style="background:var(--verde900);color:#EDEAE1;padding:40px 0 44px">
+    <div class="wrap">
+      <p class="eyebrow" style="color: {{acento}}">Industria del Cuero Covadonga, S. A.</p>
+      <h1 style="font-size:40px;margin-top:18px;color:#fff;text-wrap:pretty">Química que sostiene a la industria guatemalteca</h1>
+      <p style="font-size:17px;color:#C6C2B6;margin-top:18px;text-wrap:pretty">Compra, venta y distribución de productos químicos para nueve industrias del país.</p>
+      <div style="display:flex;flex-direction:column;gap:11px;margin-top:28px">
+        <a href="#" class="btn" style="background: {{acento}};color:#1A1A17">Ver catálogo de productos</a>
+        <a href="#" class="btn" style="background:transparent;border:1.5px solid rgba(237,234,225,.4);color:#EDEAE1">Hablar con un asesor</a>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(237,234,225,.14);margin-top:34px;border:1px solid rgba(237,234,225,.14)">
+        <div style="background:var(--verde900);padding:18px 16px">
+          <p class="mono" style="font-size:30px;color:#fff;font-weight:500">30+</p>
+          <p style="font-size:13px;color:#A9A598;margin-top:2px">años en el mercado</p>
+        </div>
+        <div style="background:var(--verde900);padding:18px 16px">
+          <p class="mono" style="font-size:30px;color:#fff;font-weight:500">09</p>
+          <p style="font-size:13px;color:#A9A598;margin-top:2px">industrias</p>
+        </div>
+        <div style="background:var(--verde900);padding:18px 16px">
+          <p class="mono" style="font-size:30px;color:#fff;font-weight:500">03</p>
+          <p style="font-size:13px;color:#A9A598;margin-top:2px">bodegas</p>
+        </div>
+        <div style="background:var(--verde900);padding:18px 16px">
+          <p class="mono" style="font-size:30px;color:#fff;font-weight:500">22</p>
+          <p style="font-size:13px;color:#A9A598;margin-top:2px">departamentos</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ INDUSTRIAS ============ -->
+  <section style="padding:44px 0">
+    <div class="wrap">
+      <p class="eyebrow" style="color: {{acento}}">Industrias atendidas</p>
+      <h2 style="font-size:28px;margin-top:12px">Cada industria tiene sus productos</h2>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:24px">
+        <a href="#" class="card" style="border-top:3px solid var(--verde700);gap:8px">
+          <p class="mono" style="font-size:10px;color:var(--gris);letter-spacing:.14em">01 / CUERO</p>
+          <h3 style="font-size:21px">Industria de cuero</h3>
+          <p style="font-size:15px;color:var(--gris)">Procesamiento de piel animal mediante curtido.</p>
+          <p class="mono" style="font-size:11px;color:var(--verde700);padding-top:10px;border-top:1px solid var(--linea)">9 productos</p>
+        </a>
+        <a href="#" class="card" style="border-top:3px solid var(--verde700);gap:8px">
+          <p class="mono" style="font-size:10px;color:var(--gris);letter-spacing:.14em">02 / TEXTIL</p>
+          <h3 style="font-size:21px">Industria textil</h3>
+          <p style="font-size:15px;color:var(--gris)">Hilo, fibras naturales y sintéticas, telas y materiales.</p>
+          <p class="mono" style="font-size:11px;color:var(--verde700);padding-top:10px;border-top:1px solid var(--linea)">7 productos</p>
+        </a>
+        <a href="#" class="card" style="border-top:3px solid var(--verde500);gap:8px">
+          <p class="mono" style="font-size:10px;color:var(--gris);letter-spacing:.14em">03 / CERERÍA</p>
+          <h3 style="font-size:21px">Industria cerería</h3>
+          <p style="font-size:15px;color:var(--gris)">Objetos cuya materia prima principal es la parafina.</p>
+          <p class="mono" style="font-size:11px;color:var(--verde700);padding-top:10px;border-top:1px solid var(--linea)">5 productos</p>
+        </a>
+        <a href="#" class="btn" style="background:transparent;border:1.5px solid var(--verde700);color:var(--verde700);margin-top:6px">Ver las nueve industrias</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRODUCTOS ============ -->
+  <section style="background:var(--papel);border-top:1px solid var(--linea);border-bottom:1px solid var(--linea);padding:44px 0">
+    <div class="wrap">
+      <p class="eyebrow" style="color: {{acento}}">Catálogo informativo</p>
+      <h2 style="font-size:28px;margin-top:12px">Presentación, origen y uso</h2>
+      <div style="display:flex;flex-direction:column;gap:14px;margin-top:24px">
+        <article class="card" style="padding:0;overflow:hidden">
+          <div class="foto" style="height:130px;border:0;border-bottom:1px dashed #BDB7A8"><span class="foto-t">Fotografía</span></div>
+          <div style="padding:20px 22px 22px;display:flex;flex-direction:column;gap:10px">
+            <h3 style="font-size:18px">Ácido Acético Glacial</h3>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <p class="mono" style="font-size:12px">Garrafa &#183; 30 kg</p>
+              <p class="mono" style="font-size:12px">IBC &#183; 1,000 kg</p>
+              <p class="mono" style="font-size:12px">IBC &#183; 1,050 kg</p>
+            </div>
+            <p class="mono" style="font-size:10px;color:var(--gris);letter-spacing:.1em;padding-top:10px;border-top:1px solid var(--linea)">ORIGEN &#183; CHINA, USA</p>
+          </div>
+        </article>
+        <article class="card" style="padding:0;overflow:hidden">
+          <div class="foto" style="height:130px;border:0;border-bottom:1px dashed #BDB7A8"><span class="foto-t">Fotografía</span></div>
+          <div style="padding:20px 22px 22px;display:flex;flex-direction:column;gap:10px">
+            <h3 style="font-size:18px">Ácido Sulfúrico</h3>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <p class="mono" style="font-size:12px">Garrafa &#183; 50 kg</p>
+              <p class="mono" style="font-size:12px">IBC &#183; 1,600 kg</p>
+              <p class="mono" style="font-size:12px">Pipa &#183; 20,000 kg</p>
+            </div>
+            <p class="mono" style="font-size:10px;color:var(--gris);letter-spacing:.1em;padding-top:10px;border-top:1px solid var(--linea)">ORIGEN &#183; GUATEMALA, SALVADOR</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SEDES ============ -->
+  <section style="padding:44px 0">
+    <div class="wrap">
+      <p class="eyebrow" style="color: {{acento}}">Presencia</p>
+      <h2 style="font-size:28px;margin-top:12px">Tres sedes</h2>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:24px">
+        <div class="card" style="gap:9px">
+          <p class="mono" style="font-size:10px;letter-spacing:.14em;color:var(--verde700)">OFICINA CENTRAL</p>
+          <h3 style="font-size:22px">Quetzaltenango</h3>
+          <p style="font-size:15px;color:var(--gris)">7a Avenida 1-29 Zona 1, Cantón Llanos de Urbina, Cantel</p>
+          <p class="mono" style="font-size:13px;padding-top:12px;border-top:1px solid var(--linea)">7926-7951</p>
+        </div>
+        <div class="card" style="gap:9px">
+          <p class="mono" style="font-size:10px;letter-spacing:.14em;color:var(--verde700)">OFICINA Y BODEGA</p>
+          <h3 style="font-size:22px">Guatemala</h3>
+          <p style="font-size:15px;color:var(--gris)">8a Calle &quot;A&quot; 27-70 zona 4, Mixco, Finca El Naranjo</p>
+          <p class="mono" style="font-size:13px;padding-top:12px;border-top:1px solid var(--linea)">2436-0936 &#183; 2436-0937</p>
+        </div>
+        <div class="pend">
+          <p class="pend-t">Pendiente de INCOVSA</p>
+          <h3 style="font-size:22px;color:#54451A">Escuintla</h3>
+          <p style="font-size:15px;color:#6B5A21">Faltan dirección, teléfono y correo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PIE ============ -->
+  <footer style="background:var(--verde900);color:#B6B2A7;padding:40px 0 30px;font-size:15px">
+    <div class="wrap">
+      <p style="font-family:Archivo,sans-serif;font-weight:800;font-size:20px;color:#fff">INCOVSA</p>
+      <p class="mono" style="font-size:8px;letter-spacing:.28em;text-transform:uppercase;color:var(--oro);margin-top:4px">Químicos</p>
+      <p style="margin-top:16px;font-size:14px">Industria del Cuero Covadonga, S. A. Compra y venta de productos químicos en Guatemala.</p>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:26px;padding-top:22px;border-top:1px solid rgba(255,255,255,.12)">
+        <a href="#" class="mono" style="font-size:13px;color:#B6B2A7">facturacion@incovsa.com</a>
+        <a href="#" class="mono" style="font-size:13px;color:#B6B2A7">recepciongt@incovsa.com</a>
+      </div>
+      <p style="margin-top:24px;font-size:12px;color:#7E7A71">Prototipo para validación &#183; Universidad Rafael Landívar</p>
+    </div>
+  </footer>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"acento":{"editor":"color","default":"#C9A227","options":["#C9A227","#2F8B4C","#E8CE72","#8A8474"],"section":"Marca"}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { menu: false };
+  }
+  renderVals() {
+    const self = this;
+    const st = this.state;
+    return {
+      acento: this.props.acento ?? '#C9A227',
+      abierto: st.menu,
+      cerrado: !st.menu,
+      alternar: function () { self.setState({ menu: !st.menu }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

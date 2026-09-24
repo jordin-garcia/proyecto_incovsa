@@ -1,0 +1,318 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+  <style>
+    :root{--verde900:#0B3A1B;--verde700:#14612D;--verde500:#2F8B4C;--dorado:#C9A227;--oro:#E8CE72;--hueso:#F6F4EF;--papel:#FFFFFF;--tinta:#1A1A17;--gris:#6E6E64;--linea:#DFDACE}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--hueso);color:var(--tinta);font:400 17px/1.62 "Source Serif 4",Georgia,serif;-webkit-font-smoothing:antialiased}
+    h1,h2,h3,h4{margin:0;font-family:Archivo,"Helvetica Neue",sans-serif;letter-spacing:-.025em;line-height:1.04;font-weight:800}
+    p{margin:0}
+    a{color:var(--verde700);text-decoration:none}
+    a:hover{color:var(--dorado)}
+    .wrap{max-width:1200px;margin:0 auto;padding:0 60px}
+    .mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+    .eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase}
+    .nav{background:var(--verde900)}
+    .nav-in{display:flex;align-items:center;justify-content:space-between;height:88px;gap:48px}
+    .marca{display:flex;align-items:center;gap:13px}
+    .marca-n{font-family:Archivo,sans-serif;font-weight:800;font-size:23px;color:#fff;line-height:1}
+    .marca-s{font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--oro);margin-top:5px}
+    .menu{display:flex;align-items:center;gap:34px;font-family:Archivo,sans-serif;font-size:14px;font-weight:600}
+    .menu a{color:#D6D2C7}
+    .menu a:hover{color:var(--oro)}
+    .menu a.act{color:#fff;box-shadow:inset 0 -2px 0 var(--oro);padding-bottom:5px}
+    .acceso{border:1px solid rgba(232,206,114,.45);color:var(--oro) !important;padding:11px 19px;border-radius:2px;display:flex;align-items:center;gap:9px}
+    .acceso:hover{background:rgba(232,206,114,.12)}
+    .lado{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:transparent;border:0;padding:12px 16px;cursor:pointer;font-family:Archivo,sans-serif;font-size:15px;font-weight:600;color:var(--tinta);border-radius:2px;transition:background .14s}
+    .lado:hover{background:rgba(20,97,45,.06)}
+    .lado .c{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:400;color:var(--gris)}
+    .lado.on{background:var(--verde700);color:#fff}
+    .lado.on .c{color:var(--oro)}
+    .env{font-family:Archivo,sans-serif;font-size:13px;font-weight:600;padding:9px 15px;border:1px solid var(--linea);background:var(--papel);border-radius:2px;cursor:pointer;color:var(--tinta);transition:.14s}
+    .env:hover{border-color:var(--verde500)}
+    .env.on{background:var(--verde700);border-color:var(--verde700);color:#fff}
+    .busca{width:100%;font-family:Archivo,sans-serif;font-size:15px;padding:14px 16px 14px 44px;border:1px solid var(--linea);background:var(--papel);border-radius:2px;color:var(--tinta)}
+    .busca:focus{outline:2px solid var(--verde500);outline-offset:-1px}
+    .card{background:var(--papel);border:1px solid var(--linea);border-radius:2px;padding:26px;display:flex;flex-direction:column;gap:13px;transition:border-color .18s,transform .18s}
+    .card:hover{border-color:var(--verde500);transform:translateY(-3px)}
+    .tag{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--verde700);background:rgba(47,139,76,.1);padding:4px 8px;border-radius:2px}
+    .pres{display:flex;align-items:baseline;justify-content:space-between;gap:12px;font-family:"IBM Plex Mono",monospace;font-size:13px;padding:5px 0;border-bottom:1px dotted var(--linea)}
+    .pend{border:1.5px dashed var(--dorado);background:repeating-linear-gradient(135deg,rgba(201,162,39,.07) 0 9px,transparent 9px 18px);padding:28px 30px;border-radius:2px;display:flex;flex-direction:column;gap:11px}
+    .pend-t{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#8A6D12;display:flex;align-items:center;gap:8px}
+    .pie{background:var(--verde900);color:#B6B2A7;padding:72px 0 40px;font-size:15px}
+    .pie h4{color:#fff;font-size:13px;letter-spacing:.16em;text-transform:uppercase;font-family:"IBM Plex Mono",monospace;font-weight:500;margin-bottom:20px}
+    .pie a{color:#B6B2A7}
+    .pie a:hover{color:var(--oro)}
+  </style>
+</helmet>
+
+<div>
+  <header class="nav">
+    <div class="wrap nav-in">
+      <a href="#" class="marca">
+        <svg width="38" height="38" viewBox="0 0 38 38" fill="none" aria-hidden="true">
+          <rect x="1.2" y="1.2" width="35.6" height="35.6" rx="2" stroke="#E8CE72" stroke-width="1.4"></rect>
+          <path d="M10 27V11h5.4v16z" fill="#E8CE72"></path>
+          <path d="M18.6 27V16H24v11z" fill="#FFFFFF" fill-opacity=".9"></path>
+          <path d="M27 27v-6h1.6v6z" fill="#2F8B4C"></path>
+        </svg>
+        <span style="display:flex;flex-direction:column">
+          <span class="marca-n">INCOVSA</span>
+          <span class="marca-s">Químicos</span>
+        </span>
+      </a>
+      <nav class="menu">
+        <a href="#">Inicio</a>
+        <a href="#">Quiénes somos</a>
+        <a href="#">Industrias</a>
+        <a href="#" class="act">Productos</a>
+        <a href="#">Contacto</a>
+        <a href="#" class="acceso">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <rect x="3" y="7" width="10" height="7" rx="1" stroke="currentColor" stroke-width="1.5"></rect>
+            <path d="M5.5 7V4.8a2.5 2.5 0 015 0V7" stroke="currentColor" stroke-width="1.5"></path>
+          </svg>
+          Acceso personal
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <section style="background:var(--verde900);color:#EDEAE1;padding:68px 0">
+    <div class="wrap">
+      <p class="eyebrow" style="color: {{acento}}">Catálogo informativo</p>
+      <h1 style="font-size:54px;margin-top:18px;color:#fff;max-width:820px">Productos, presentación y origen</h1>
+      <p style="font-size:18px;color:#C6C2B6;margin-top:18px;max-width:680px">Filtre por industria o por tipo de envase. El catálogo es informativo: no se publican precios ni número de lote.</p>
+    </div>
+  </section>
+
+  <section style="padding:56px 0 88px">
+    <div class="wrap" style="display:grid;grid-template-columns:270px minmax(0,1fr);gap:44px;align-items:start">
+
+      <aside style="display:flex;flex-direction:column;gap:32px;position:sticky;top:24px">
+        <div>
+          <p class="mono" style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gris);margin-bottom:12px;padding:0 16px">Por industria</p>
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <sc-for list="{{industrias}}" as="ind" hint-placeholder-count="10">
+              <button class="{{ind.clase}}" onClick="{{ind.elegir}}">
+                <span>{{ind.nombre}}</span>
+                <span class="c">{{ind.cuenta}}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+        <div>
+          <p class="mono" style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gris);margin-bottom:12px;padding:0 16px">Tipo de envase</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;padding:0 16px">
+            <sc-for list="{{envases}}" as="env" hint-placeholder-count="6">
+              <button class="{{env.clase}}" onClick="{{env.elegir}}">{{env.nombre}}</button>
+            </sc-for>
+          </div>
+        </div>
+      </aside>
+
+      <div style="display:flex;flex-direction:column;gap:26px">
+        <div style="display:flex;align-items:center;gap:20px">
+          <div style="position:relative;flex:1">
+            <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--gris);display:flex">
+              <svg width="17" height="17" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.6"></circle><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"></path></svg>
+            </span>
+            <input class="busca" type="text" placeholder="Buscar producto, presentación u origen" value="{{q}}" onChange="{{escribir}}">
+          </div>
+          <p class="mono" style="font-size:13px;color:var(--gris);white-space:nowrap">{{total}} de 18 productos</p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px">
+          <sc-for list="{{productos}}" as="prod" hint-placeholder-count="9">
+            <a href="#" class="card">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+                <h3 style="font-size:19px;line-height:1.18">{{prod.nombre}}</h3>
+                <span class="mono" style="font-size:10px;color:var(--gris);padding-top:3px">{{prod.codigo}}</span>
+              </div>
+              <div style="display:flex;flex-direction:column">
+                <sc-for list="{{prod.presentaciones}}" as="pr" hint-placeholder-count="2">
+                  <span class="pres"><span>{{pr.tipo}}</span><span style="color:var(--verde700);font-weight:500">{{pr.kg}}</span></span>
+                </sc-for>
+              </div>
+              <p class="mono" style="font-size:11px;color:var(--gris);letter-spacing:.08em">ORIGEN &#183; {{prod.origen}}</p>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:12px">
+                <sc-for list="{{prod.tags}}" as="t" hint-placeholder-count="2">
+                  <span class="tag">{{t}}</span>
+                </sc-for>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{vacio}}" hint-placeholder-val="{{ false }}">
+          <div style="background:var(--papel);border:1px solid var(--linea);padding:56px;text-align:center;border-radius:2px">
+            <p style="font-size:19px;font-family:Archivo,sans-serif;font-weight:700">Ningún producto coincide con el filtro</p>
+            <p style="font-size:16px;color:var(--gris);margin-top:8px">Pruebe con otro término de búsqueda o quite el filtro de envase.</p>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{marcar}}" hint-placeholder-val="{{ true }}">
+          <div class="pend" style="margin-top:14px">
+            <p class="pend-t">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2l6 11H2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path><path d="M8 6.5v3" stroke="currentColor" stroke-width="1.5"></path></svg>
+              Quince productos citados sin ficha
+            </p>
+            <p style="font-size:16px;color:#6B5A21;text-wrap:pretty">Estos productos se mencionan en las páginas de industria de la página de Google Sites de la empresa pero no tienen ficha con presentación y origen. INCOVSA debe proporcionarlos o confirmar que no se publican:</p>
+            <p style="font-size:15px;color:#54451A;line-height:1.9">Parafina (full y semirrefinada, 56/58 y 58/60) &#183; Hipoclorito de Calcio &#183; Sulfuro de Sodio &#183; Bicarbonato de Amonio &#183; Negro Sulfuroso &#183; Tricloro &#183; Colorante Cuero &#183; Colorantes Reactivos &#183; Colorantes Directos &#183; Productos SILVATEAM &#183; Productos SILVAFEED</p>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </section>
+
+  <footer class="pie">
+    <div class="wrap">
+      <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:48px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,.12)">
+        <div>
+          <p style="font-family:Archivo,sans-serif;font-weight:800;font-size:21px;color:#fff">INCOVSA</p>
+          <p class="mono" style="font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--oro);margin-top:5px">Químicos</p>
+          <p style="margin-top:20px;font-size:15px;max-width:290px">Industria del Cuero Covadonga, S. A. Compra y venta de productos químicos en Guatemala.</p>
+        </div>
+        <div>
+          <h4>Navegación</h4>
+          <div style="display:flex;flex-direction:column;gap:11px">
+            <a href="#">Inicio</a><a href="#">Quiénes somos</a><a href="#">Industrias</a><a href="#">Productos</a><a href="#">Contacto</a>
+          </div>
+        </div>
+        <div>
+          <h4>Sedes</h4>
+          <div style="display:flex;flex-direction:column;gap:11px">
+            <a href="#">Quetzaltenango</a><a href="#">Guatemala</a><a href="#">Escuintla</a>
+          </div>
+        </div>
+        <div>
+          <h4>Contacto</h4>
+          <div style="display:flex;flex-direction:column;gap:11px">
+            <a href="#" class="mono" style="font-size:13px">facturacion@incovsa.com</a>
+            <a href="#" class="mono" style="font-size:13px">recepciongt@incovsa.com</a>
+          </div>
+        </div>
+      </div>
+      <p style="padding-top:26px;font-size:13px;color:#7E7A71">Prototipo para validación &#183; Universidad Rafael Landívar &#183; Proyecto de Programación Web</p>
+    </div>
+  </footer>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"acento":{"editor":"color","default":"#C9A227","options":["#C9A227","#2F8B4C","#B45309","#8A8474"],"section":"Marca"},"marcarPendientes":{"editor":"boolean","default":true,"section":"Revisión"}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { industria: 'todas', envase: 'todos', q: '' };
+  }
+  catalogo() {
+    return [
+      { c: 'PROD-001', n: 'Ácido Acético Glacial', i: ['textil', 'hulera', 'limpieza', 'alimentacion', 'lavanderia'], p: [['Garrafa', 30], ['IBC', 1000], ['IBC', 1050]], o: ['China', 'USA'] },
+      { c: 'PROD-002', n: 'Ácido Acético Textil', i: ['textil', 'hulera', 'limpieza', 'alimentacion'], p: [['Garrafa', 30], ['IBC', 1050]], o: ['China', 'USA'] },
+      { c: 'PROD-003', n: 'Ácido Acético Industrial', i: ['textil', 'hulera', 'limpieza', 'alimentacion'], p: [['Garrafa', 35], ['IBC', 1050]], o: ['China', 'USA'] },
+      { c: 'PROD-004', n: 'Ácido Fórmico', i: ['cuero', 'hulera'], p: [['Garrafa', 35], ['IBC', 1200]], o: ['China', 'Alemania'] },
+      { c: 'PROD-005', n: 'Ácido Oxálico', i: ['medicamentos'], p: [['Saco', 25]], o: ['China'] },
+      { c: 'PROD-006', n: 'Ácido Sulfúrico', i: ['cuero', 'hulera', 'agua'], p: [['Garrafa', 50], ['IBC', 1600], ['Pipa', 20000]], o: ['Guatemala', 'Salvador'] },
+      { c: 'PROD-007', n: 'Bicarbonato de Sodio', i: ['medicamentos', 'alimentacion'], p: [['Saco', 25]], o: ['China'] },
+      { c: 'PROD-008', n: 'Extracto de Mimosa', i: ['cuero'], p: [['Saco', 25]], o: ['Brasil'] },
+      { c: 'PROD-009', n: 'Extracto de Quebracho', i: ['cuero'], p: [['Saco', 25]], o: ['Argentina'] },
+      { c: 'PROD-010', n: 'Formiato de Sodio', i: [], p: [['Saco', 25]], o: ['China'] },
+      { c: 'PROD-011', n: 'Hidrosulfito de Sodio', i: ['lavanderia'], p: [['Tonel', 50]], o: ['China', 'India'] },
+      { c: 'PROD-012', n: 'Metabisulfito de Sodio', i: ['lavanderia'], p: [['Saco', 25]], o: ['China', 'Turquía'] },
+      { c: 'PROD-013', n: 'Soda Ash', i: ['cuero', 'textil', 'limpieza', 'alimentacion', 'agua', 'lavanderia'], p: [['Saco', 25], ['Saco', 40], ['Saco', 50]], o: ['China'] },
+      { c: 'PROD-014', n: 'Soda Cáustica', i: ['textil', 'hulera', 'medicamentos', 'limpieza', 'alimentacion', 'agua', 'lavanderia'], p: [['Saco', 25]], o: ['China', 'México', 'Polonia'] },
+      { c: 'PROD-015', n: 'Sulfato de Aluminio', i: ['agua'], p: [['Saco', 25]], o: ['México', 'Turquía'] },
+      { c: 'PROD-016', n: 'Sulfato de Cromo', i: ['cuero'], p: [['Saco', 25]], o: ['China'] },
+      { c: 'PROD-017', n: 'Sulfato de Magnesio', i: ['medicamentos'], p: [['Saco', 25]], o: ['Guatemala', 'China'] },
+      { c: 'PROD-018', n: 'Sulfato de Sodio', i: ['textil'], p: [['Saco', 50]], o: ['China', 'México', 'USA'] }
+    ];
+  }
+  nombresIndustria() {
+    return {
+      cuero: 'Cuero', textil: 'Textil', cereria: 'Cerería', hulera: 'Hulera',
+      medicamentos: 'Medicamentos', limpieza: 'Limpieza', alimentacion: 'Alimentación animal',
+      agua: 'Tratamiento de agua', lavanderia: 'Lavandería'
+    };
+  }
+  miles(n) {
+    return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+  sinTildes(s) {
+    return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  }
+  renderVals() {
+    const self = this;
+    const st = this.state;
+    const todos = this.catalogo();
+    const nombres = this.nombresIndustria();
+    const claves = ['cuero', 'textil', 'cereria', 'hulera', 'medicamentos', 'limpieza', 'alimentacion', 'agua', 'lavanderia'];
+    const q = this.sinTildes(st.q.trim());
+
+    const coincide = function (x) {
+      if (st.industria !== 'todas' && x.i.indexOf(st.industria) === -1) return false;
+      if (st.envase !== 'todos') {
+        const tiene = x.p.some(function (pr) { return pr[0] === st.envase; });
+        if (!tiene) return false;
+      }
+      if (q) {
+        const texto = self.sinTildes(x.n + ' ' + x.o.join(' ') + ' ' + x.p.map(function (pr) { return pr[0] + ' ' + pr[1]; }).join(' '));
+        if (texto.indexOf(q) === -1) return false;
+      }
+      return true;
+    };
+
+    const visibles = todos.filter(coincide);
+
+    const industrias = [{ id: 'todas', nombre: 'Todas las industrias', cuenta: todos.length }].concat(
+      claves.map(function (k) {
+        return { id: k, nombre: nombres[k], cuenta: todos.filter(function (x) { return x.i.indexOf(k) !== -1; }).length };
+      })
+    ).map(function (it) {
+      return {
+        nombre: it.nombre,
+        cuenta: it.cuenta,
+        clase: st.industria === it.id ? 'lado on' : 'lado',
+        elegir: function () { self.setState({ industria: it.id }); }
+      };
+    });
+
+    const envases = ['todos', 'Saco', 'Garrafa', 'IBC', 'Tonel', 'Pipa'].map(function (e) {
+      return {
+        nombre: e === 'todos' ? 'Todos' : e,
+        clase: st.envase === e ? 'env on' : 'env',
+        elegir: function () { self.setState({ envase: e }); }
+      };
+    });
+
+    return {
+      acento: this.props.acento ?? '#C9A227',
+      marcar: this.props.marcarPendientes ?? true,
+      q: st.q,
+      total: visibles.length,
+      vacio: visibles.length === 0,
+      escribir: function (e) { self.setState({ q: e.target.value }); },
+      industrias: industrias,
+      envases: envases,
+      productos: visibles.map(function (x) {
+        return {
+          codigo: x.c,
+          nombre: x.n,
+          origen: x.o.join(', ').toUpperCase(),
+          presentaciones: x.p.map(function (pr) { return { tipo: pr[0], kg: self.miles(pr[1]) + ' kg' }; }),
+          tags: x.i.length ? x.i.map(function (k) { return nombres[k]; }) : ['Sin industria asignada']
+        };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

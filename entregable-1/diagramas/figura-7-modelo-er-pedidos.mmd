@@ -1,0 +1,21 @@
+erDiagram
+    SEDE ||--o{ PEDIDO : recibe
+    USUARIO ||--o{ PEDIDO : registra
+    PEDIDO }o--o| CAMION : "se carga en"
+    ESTADO_PEDIDO ||--o{ PEDIDO : "define el estado de"
+    ESTADO_PEDIDO ||--o{ HISTORIAL_ESTADO : clasifica
+    USUARIO ||--o{ HISTORIAL_ESTADO : "cambia el estado"
+    PEDIDO ||--|{ HISTORIAL_ESTADO : registra
+    PEDIDO ||--|{ DETALLE_PEDIDO : contiene
+    CLIENTE ||--o{ DETALLE_PEDIDO : solicita
+    PRODUCTO ||--o{ DETALLE_PEDIDO : "se solicita en"
+    PEDIDO ||--|{ LINEA_PREPARACION : genera
+    PRODUCTO ||--o{ LINEA_PREPARACION : "se prepara en"
+    PEDIDO ||--o| RUTA : origina
+    USUARIO ||--o{ RUTA : conduce
+    RUTA ||--|{ ENTREGA_RUTA : contiene
+    CLIENTE ||--o{ ENTREGA_RUTA : recibe
+    DEVOLUCION }o--|| PEDIDO : "corrige"
+    USUARIO ||--o{ DEVOLUCION : registra
+    DEVOLUCION ||--|{ MOVIMIENTO_INVENTARIO : genera
+    DETALLE_PEDIDO ||--o{ MOVIMIENTO_INVENTARIO : "se vende o devuelve en"

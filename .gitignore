@@ -1,0 +1,24 @@
+# Variables de entorno: solo se sube el ejemplo
+.env*
+!.env.example
+
+# Dependencias y archivos generados
+node_modules/
+.next/
+__pycache__/
+
+# Archivos subidos por los usuarios: agregar aquí su carpeta cuando se defina en el proyecto base
+
+# Documentación del curso y datos de la empresa: se guardan en la carpeta local y en Google Drive
+docs/
+docs_incovsa/
+
+# Documentos entregables en Word y PDF
+entregable-*/**/*.docx
+entregable-*/**/*.pdf
+
+# Evidencias con fotografías de personas y de la empresa (Anexo B)
+entregable-*/figuras/evidencias/
+
+# Archivos temporales de Office
+~$*

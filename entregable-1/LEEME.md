@@ -1,0 +1,163 @@
+# Entregable No. 1: contenido de esta carpeta
+
+**Fecha de entrega:** lunes 21 de septiembre de 2026
+**Valor:** 10 puntos
+
+La especificación vigente del proyecto está en [`../specs/`](../specs/README.md). Si algo de esta carpeta la contradice, vale lo que dice `specs/`.
+
+---
+
+## Versiones del Documento 1
+
+| Archivo | Qué es |
+|---|---|
+| `Documento 1 - Memoria general y especificacion del sistema v0.1.docx` y `.pdf` | La versión **entregada** el 21/09/2026 (79 páginas). Se conserva sin cambios como registro de lo que se entregó |
+| `Documento 1 - Memoria general y especificacion del sistema v0.2.docx` y `.pdf` | La versión **vigente** (24/09/2026, 86 páginas). Incorpora las decisiones del 23 y 24/09/2026 y está alineada con `specs/`. Es la que se sigue editando para el Entregable 2 |
+
+### Qué cambió de la v0.1 a la v0.2
+
+- **Módulos:** se agregó el módulo de Inventario (compras, ajustes, traslados entre sedes y devoluciones). El sistema de picking pasa a tener seis módulos.
+- **Cantidades:** todas son en kilogramos y se permiten ventas fraccionadas, que se muestran como "N unidades + R kg".
+- **Devoluciones:** se registran en Inventario, ligadas al pedido. La edición de ruta y el estado "Editado" se eliminaron.
+- **Roles y accesos:**
+  - Vista general solo visualiza los documentos.
+  - Solo Gerencia administra los usuarios del sitio.
+  - Soporte IT opera todos los módulos del picking.
+  - La recuperación de contraseña depende del sistema.
+- **Requerimientos:**
+  - Se actualizaron los requerimientos funcionales y no funcionales, las reglas de negocio y la matriz de trazabilidad.
+  - Los códigos eliminados se conservan, marcados como eliminados.
+  - Se agregaron los casos de uso CU-16 a CU-20.
+- **Figuras:**
+  - Se actualizaron las figuras 1 a 8.
+  - Se regeneraron los prototipos y se agregó la figura 34, del módulo de Inventario. Reportes y Configuración pasan a ser las figuras 35 y 36.
+- **Correcciones:**
+  - La portada decía "Industria de Cuero"; ahora dice "Industria del Cuero".
+  - Los pasos de cada caso de uso ahora se numeran desde 1. En la v0.1 la numeración continuaba de un caso de uso al siguiente.
+
+### Antes de imprimir o exportar
+
+Los índices general y de figuras ya están actualizados. Si alguien edita el texto:
+
+- el **índice general** se actualiza en la pestaña **Referencias**, botón **Actualizar tabla**, opción **Actualizar toda la tabla**;
+- el **índice de figuras** y el **índice de tablas** son tablas escritas a mano, así que hay que ajustarlas también a mano si cambia una figura o una tabla.
+
+---
+
+## Material de apoyo
+
+| Carpeta o archivo | Qué es |
+|---|---|
+| `figuras/` | Las ocho figuras de los capítulos, en PNG a alta resolución |
+| `figuras/prototipos/` | Las capturas de los prototipos. El número del nombre de archivo sigue el orden del lienzo; en el Documento 1 son las figuras 20 a 36 |
+| `figuras/evidencias/` | Las once imágenes de las reuniones y de la visita (figuras 9 a 19) |
+| `diagramas/` | El código fuente de cada figura. Las figuras 1 a 5 se dibujan con guiones de Python; las figuras 6 a 8 son archivos Mermaid (`.mmd`) |
+| `prototipos/` | Las pantallas del prototipo (`.dc.html`), el lienzo (`canvas.json`), el prototipo navegable y sus herramientas |
+
+### Para volver a generar las figuras 1 a 5
+
+Con Python y la biblioteca Pillow instalada, desde la carpeta `diagramas/`:
+
+```
+python figura-1-casos-de-uso-sitio.py ../figuras/figura-1-casos-de-uso-sitio.png
+```
+
+Lo mismo para las figuras 2 a 5, cambiando el nombre del archivo. El módulo `uml.py` contiene las funciones de dibujo que comparten los cinco guiones.
+
+### Para volver a generar las figuras 6 a 8
+
+Con el paquete `@mermaid-js/mermaid-cli` y el tema `neutral`, desde la carpeta `diagramas/`:
+
+```
+mmdc -i figura-6-modelo-er-catalogos.mmd -o ../figuras/figura-6-modelo-er-catalogos.png -b white -s 2 -t neutral
+```
+
+También se pueden editar en <https://mermaid.live>.
+
+### Para volver a capturar los prototipos
+
+Con Python, Pillow y Google Chrome instalados, desde `prototipos/herramientas/`:
+
+```
+python capturar_prototipos.py
+```
+
+Vuelve a generar los diecisiete PNG de `figuras/prototipos/` en el orden del lienzo `canvas.json`. Dos salvedades:
+
+- El Documento 1 no usa la captura de la pantalla de inicio en teléfono.
+- La figura 28, «Prototipo de la pantalla Inicio de Sesión», es la pantalla de Ingreso con la opción «Administración del sitio» elegida. El guion no la genera; su copia está en `figuras/prototipos/inicio-de-sesion.png`.
+
+Los archivos `.dc.html` necesitan un `support.js` que no vino con los prototipos. El archivo `herramientas/support.js` es un sustituto escrito para este proyecto. Hace lo siguiente:
+
+- resuelve las plantillas;
+- dibuja el estado inicial de cada pantalla, incluida la opción elegida de cada lista desplegable;
+- atiende los clics.
+
+Sirve tanto para las capturas como para el prototipo navegable, pero no reproduce todo lo que hacía el original.
+
+---
+
+## Prototipo navegable para la validación con INCOVSA
+
+**`prototipos/prototipo-completo-incovsa.html`**
+
+Es un solo archivo. Se abre con doble clic en cualquier navegador y no necesita instalar nada. Conviene tener conexión, porque las tipografías se descargan de Google Fonts.
+
+Lo que se puede recorrer:
+
+- **Sitio público.** El menú lleva a Inicio, Quiénes somos, Industrias, Productos, Noticias y Contacto. En el catálogo, al pulsar la ficha de un producto se abre su detalle.
+- **Acceso interno.** «Acceso personal» abre el ingreso de personal. Al elegir «Administración del sitio» o «Sistema de picking» aparece el inicio de sesión de cada uno. Al pulsar **Ingresar**:
+  - el sitio abre el Panel del sitio;
+  - el picking abre el módulo de **Inventario**, que es la vista de Soporte IT, con los seis módulos en su menú.
+
+  La opción de **Odoo no hace nada**, porque todavía no se tiene el enlace.
+- **Menús por rol.** Cada pantalla muestra el menú del rol que la usa:
+  - Facturación, Bodega y Ruta muestran solo su propio módulo, como los verán el facturador, el operario de bodega y el piloto;
+  - Inventario, Reportes y Configuración, que usan Gerencia y Soporte IT, muestran los seis módulos.
+
+  Para volver desde una pantalla operativa se usa el botón **Atrás** del navegador o **Cerrar sesión**.
+- **Cerrar sesión.** Al pulsar el nombre del usuario, arriba a la derecha, aparece **Cerrar sesión**, que devuelve al ingreso.
+- **Interacción.** Se pueden marcar las líneas preparadas en Bodega, filtrar el catálogo, escribir en los formularios y usar el buscador. Los datos son de ejemplo.
+
+Hay cuatro cosas que el prototipo agrega y que la empresa todavía debe aprobar (P-16 en `specs/19-pendientes.md`):
+
+- la entrada al sistema al pulsar Ingresar;
+- el cierre de sesión en el menú del usuario;
+- el enlace de Noticias en el menú del sitio;
+- el módulo de Configuración.
+
+La pantalla de inicio en teléfono no está en este archivo; se muestra aparte.
+
+Para volver a generarlo, desde `prototipos/herramientas/`:
+
+```
+python armar_prototipo.py
+```
+
+Lee `canvas.json` y los archivos `.dc.html`, y reescribe el HTML completo.
+
+---
+
+## Anexos
+
+Los tres anexos que piden los lineamientos para este entregable están dentro del Documento 1.
+
+| Anexo | Contenido | Dónde está |
+|---|---|---|
+| A | Actas de reuniones | En el Documento 1. El texto fuente de cada acta está en `docs/Reuniones/<reunión>/acta-reunion-N.md`, junto a las notas originales. Las actas no se modifican: son el registro de cada reunión |
+| B | Evidencias del levantamiento de requerimientos | En el Documento 1, figuras 9 a 19. Las imágenes vienen de `docs/Reuniones/` y su copia está en `figuras/evidencias/` |
+| C | Prototipos | En el Documento 1, figuras 20 a 36. El lienzo y su copia local están en `prototipos/` |
+
+Las reglas y los casos de prueba de conversión (Anexo E de los lineamientos) están en `specs/12-reglas-de-negocio.md`.
+
+---
+
+## Elementos que corresponden al Entregable No. 2
+
+Los lineamientos ubican en el segundo entregable lo siguiente, que el Documento 1 deja señalado como pendiente:
+
+- Diagramas de secuencia de los procesos críticos.
+- Diagrama de componentes, diagrama de despliegue y diagrama de clases.
+- Estructura del repositorio y detalle de dependencias.
+- Diccionario de datos completo, reglas de integridad y procedimiento de migraciones.
+- Especificación del módulo de Reportes, que sigue pendiente de definición por parte de la empresa.

@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Módulo de Inventario</title>
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+  <style>
+    :root{--verde900:#0B3A1B;--verde700:#14612D;--verde500:#2F8B4C;--dorado:#C9A227;--oro:#E8CE72;--hueso:#F6F4EF;--papel:#FFFFFF;--tinta:#1A1A17;--gris:#6E6E64;--linea:#DFDACE}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--hueso);color:var(--tinta);font:400 17px/1.62 "Source Serif 4",Georgia,serif;-webkit-font-smoothing:antialiased}
+    h1,h2,h3{margin:0;font-family:Archivo,"Helvetica Neue",sans-serif;letter-spacing:-.025em;line-height:1.06;font-weight:800}
+    p{margin:0}
+    a{color:var(--verde700);text-decoration:none}
+    a:hover{color:var(--dorado)}
+    .wrap{max-width:1320px;margin:0 auto;padding:0 60px}
+    .mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+    .barra{background:var(--verde900);height:72px;display:flex;align-items:center}
+    .barra-in{display:flex;align-items:center;justify-content:space-between;width:100%;gap:40px}
+    .barra a{color:#D6D2C7;font-family:Archivo,sans-serif;font-size:14px;font-weight:600}
+    .barra a:hover{color:var(--oro)}
+    .barra a.act{color:#fff;box-shadow:inset 0 -2px 0 var(--oro);padding-bottom:5px}
+    .avatar{width:36px;height:36px;border-radius:50%;background:var(--verde500);color:#fff;display:flex;align-items:center;justify-content:center;font-family:Archivo,sans-serif;font-weight:700;font-size:13px}
+    .tarjeta{background:var(--papel);border:1px solid var(--linea);border-radius:2px;padding:28px 30px}
+    .rotulo{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gris);display:block;margin-bottom:7px}
+    .campo{width:100%;font-family:Archivo,sans-serif;font-size:15px;padding:12px 14px;border:1px solid var(--linea);background:var(--papel);border-radius:2px;color:var(--tinta)}
+    .campo:focus{outline:2px solid var(--verde500);outline-offset:-1px}
+    .fijo{background:#F3F1EA;color:var(--gris)}
+    .g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+    .pila{display:flex;flex-direction:column;gap:14px}
+    table{width:100%;border-collapse:collapse;background:var(--papel);border:1px solid var(--linea)}
+    th{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gris);text-align:left;padding:15px 18px;border-bottom:1px solid var(--linea);font-weight:500}
+    td{padding:14px 18px;border-bottom:1px solid var(--linea);vertical-align:middle;font-size:16px}
+    tr:last-child td{border-bottom:0}
+    .cod{font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--gris)}
+    .prod{font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--tinta)}
+    .num{text-align:right;font-family:"IBM Plex Mono",monospace;font-size:15px}
+    .mas{color:var(--verde700)}
+    .menos{color:#A33A22}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-family:Archivo,sans-serif;font-weight:700;font-size:15px;padding:14px 26px;border-radius:2px;border:0;cursor:pointer}
+    .btn-p{background:var(--verde700);color:#fff}
+    .btn-p:hover{background:var(--verde900)}
+    .mini{font-family:Archivo,sans-serif;font-size:12px;font-weight:600;padding:6px 10px;border:1px solid var(--linea);background:var(--papel);border-radius:2px;cursor:pointer;color:var(--gris)}
+    .mini:hover{border-color:var(--verde500);color:var(--verde700)}
+    .etiqueta{display:inline-flex;align-items:center;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:5px 10px;border-radius:2px;background:#EDEAE2;color:var(--gris);white-space:nowrap}
+    .etiqueta.verde{background:rgba(47,139,76,.14);color:var(--verde700)}
+    .etiqueta.oro{background:rgba(201,162,39,.18);color:#7A6014}
+    .etiqueta.rojo{background:#FBEAE4;color:#7A2C19}
+    .llave{display:inline-flex;align-items:center;gap:7px;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;padding:6px 11px;border-radius:2px;background:rgba(201,162,39,.16);color:#7A6014}
+    .nota{font-size:14px;color:var(--gris);line-height:1.55}
+    .pend{border:1.5px dashed var(--dorado);background:repeating-linear-gradient(135deg,rgba(201,162,39,.07) 0 9px,transparent 9px 18px);padding:24px 26px;border-radius:2px;display:flex;flex-direction:column;gap:9px}
+    .pend-t{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#8A6D12}
+  </style>
+</helmet>
+
+<div>
+  <!-- ============ BARRA INTERNA ============ -->
+  <div class="barra">
+    <div class="wrap barra-in">
+      <div style="display:flex;align-items:center;gap:44px">
+        <a href="#" style="display:flex;align-items:center;gap:11px">
+          <svg width="30" height="30" viewBox="0 0 38 38" fill="none" aria-hidden="true">
+            <rect x="1.2" y="1.2" width="35.6" height="35.6" rx="2" stroke="#E8CE72" stroke-width="1.6"></rect>
+            <path d="M10 27V11h5.4v16z" fill="#E8CE72"></path>
+            <path d="M18.6 27V16H24v11z" fill="#FFFFFF" fill-opacity=".9"></path>
+          </svg>
+          <span style="font-family:Archivo,sans-serif;font-weight:800;font-size:17px;color:#fff">INCOVSA</span>
+          <span class="mono" style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--oro);border-left:1px solid rgba(232,206,114,.4);padding-left:11px">Control logístico de bodega</span>
+        </a>
+        <div style="display:flex;align-items:center;gap:28px">
+          <a href="Facturacion.dc.html">Facturación</a>
+          <a href="Bodega.dc.html">Bodega</a>
+          <a href="Ruta.dc.html">Ruta</a>
+          <a href="#" class="act">Inventario</a>
+          <a href="Reportes.dc.html">Reportes</a>
+          <a href="Configuracion.dc.html">Configuración</a>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="text-align:right">
+          <p style="font-family:Archivo,sans-serif;font-size:14px;font-weight:600;color:#fff;line-height:1.3">Usuario de ejemplo</p>
+          <p class="mono" style="font-size:10px;color:var(--oro);letter-spacing:.1em">SOPORTE IT &#183; TODAS LAS SEDES</p>
+        </div>
+        <div class="avatar">UE</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ENCABEZADO ============ -->
+  <section style="background:var(--papel);border-bottom:1px solid var(--linea);padding:38px 0">
+    <div class="wrap" style="display:flex;align-items:flex-end;justify-content:space-between;gap:48px">
+      <div>
+        <p class="mono" style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color: {{acento}}">Módulo de inventario</p>
+        <h1 style="font-size:40px;margin-top:14px">Existencias y movimientos</h1>
+        <p style="font-size:17px;color:var(--gris);margin-top:12px;max-width:780px">Existencia actual de cada producto por sede, en kilogramos. Aquí se registran las compras, los ajustes, los traslados entre sedes y las devoluciones. Las ventas se descuentan solas cuando facturación envía un pedido a bodega.</p>
+      </div>
+      <span class="llave">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1" stroke="currentColor" stroke-width="1.5"></rect><path d="M5.5 7V4.8a2.5 2.5 0 015 0V7" stroke="currentColor" stroke-width="1.5"></path></svg>
+        GERENCIA Y SOPORTE IT
+      </span>
+    </div>
+  </section>
+
+  <section style="padding:34px 0 80px">
+    <div class="wrap" style="display:flex;flex-direction:column;gap:26px">
+
+      <!-- ============ EXISTENCIAS ============ -->
+      <div class="tarjeta">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:20px">
+          <div>
+            <h2 style="font-size:21px">Existencias</h2>
+            <p style="font-size:15px;color:var(--gris);margin-top:6px">Cada sede lleva su propio inventario y las existencias no se suman entre sedes. No se controlan lotes ni ubicaciones.</p>
+          </div>
+          <div class="g2" style="min-width:520px">
+            <div><span class="rotulo">Sede</span>
+              <select class="campo"><option>Quetzaltenango</option><option>Guatemala</option><option>Escuintla</option></select>
+            </div>
+            <div><span class="rotulo">Buscar producto</span>
+              <input class="campo" type="text" placeholder="Escriba el nombre del producto">
+            </div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:90px">SKU</th>
+              <th>Producto</th>
+              <th style="width:190px;text-align:right">Existencia (kg)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{existencias}}" as="e" hint-placeholder-count="5">
+              <tr>
+                <td class="cod">{{e.sku}}</td>
+                <td class="prod">{{e.producto}}</td>
+                <td class="num">{{e.kg}}</td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ============ COMPRA, AJUSTE Y TRASLADO ============ -->
+      <div class="g3">
+        <div class="tarjeta pila">
+          <div>
+            <p class="etiqueta verde">Entrada</p>
+            <h2 style="font-size:21px;margin-top:12px">Registrar compra</h2>
+          </div>
+          <div><span class="rotulo">Producto</span><input class="campo" type="text" value="SULFATO DE SODIO-CHI-SAC/0050KG-6241"></div>
+          <div><span class="rotulo">Sede que recibe</span><select class="campo"><option>Quetzaltenango</option><option>Guatemala</option><option>Escuintla</option></select></div>
+          <div><span class="rotulo">Cantidad (kg)</span><input class="campo" type="text" value="1,000"></div>
+          <div><button class="btn btn-p">Registrar compra</button></div>
+          <p class="nota">Solo se registra la cantidad. Si el producto es nuevo, primero se crea en Configuración con su Peso2.</p>
+        </div>
+
+        <div class="tarjeta pila">
+          <div>
+            <p class="etiqueta oro">Entrada o salida</p>
+            <h2 style="font-size:21px;margin-top:12px">Registrar ajuste</h2>
+          </div>
+          <div><span class="rotulo">Producto</span><input class="campo" type="text" placeholder="Escriba el nombre del producto"></div>
+          <div class="g2">
+            <div><span class="rotulo">Sede</span><select class="campo"><option>Quetzaltenango</option><option>Guatemala</option><option>Escuintla</option></select></div>
+            <div><span class="rotulo">Sentido</span><select class="campo"><option>Sumar</option><option>Restar</option></select></div>
+          </div>
+          <div><span class="rotulo">Cantidad (kg)</span><input class="campo" type="text" placeholder="0"></div>
+          <div><span class="rotulo">Motivo &#183; obligatorio</span><textarea class="campo" rows="2" placeholder="Sin motivo no se guarda el ajuste"></textarea></div>
+          <div><button class="btn btn-p">Registrar ajuste</button></div>
+          <p class="nota">Un ajuste que resta no puede dejar la existencia por debajo de cero.</p>
+        </div>
+
+        <div class="tarjeta pila">
+          <div>
+            <p class="etiqueta">Salida y entrada</p>
+            <h2 style="font-size:21px;margin-top:12px">Registrar traslado</h2>
+          </div>
+          <div><span class="rotulo">Producto</span><input class="campo" type="text" value="ACIDO FORMICO-CHI-GAR/0035KG-9238"></div>
+          <div class="g2">
+            <div><span class="rotulo">De la sede</span><select class="campo"><option>Quetzaltenango</option><option>Guatemala</option><option>Escuintla</option></select></div>
+            <div><span class="rotulo">A la sede</span><select class="campo" value="gt"><option value="xe">Quetzaltenango</option><option value="gt">Guatemala</option><option value="es">Escuintla</option></select></div>
+          </div>
+          <div><span class="rotulo">Cantidad (kg)</span><input class="campo" type="text" value="175"></div>
+          <div><button class="btn btn-p">Registrar traslado</button></div>
+          <p class="nota">Se descuenta en la sede de origen y se suma en la de destino al mismo tiempo. No se puede trasladar más de lo que hay en el origen.</p>
+        </div>
+      </div>
+
+      <!-- ============ DEVOLUCIÓN ============ -->
+      <div class="tarjeta">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:20px">
+          <div>
+            <p class="etiqueta verde">Entrada</p>
+            <h2 style="font-size:21px;margin-top:12px">Registrar devolución</h2>
+            <p style="font-size:15px;color:var(--gris);margin-top:6px;max-width:760px">Se busca el pedido por su correlativo. Solo se aceptan pedidos Despachado o Entregado, de cualquier tipo. Lo devuelto en cada línea no puede superar lo vendido menos lo ya devuelto.</p>
+          </div>
+          <div style="min-width:300px">
+            <span class="rotulo">Pedido</span>
+            <input class="campo" type="text" value="Quetzaltenango &#183; pedido 1">
+            <p class="mono" style="font-size:12px;color:var(--gris);margin-top:8px">ENVÍO EN CAMIÓN &#183; ESTADO ENTREGADO</p>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Producto</th>
+              <th style="width:130px;text-align:right">Vendido (kg)</th>
+              <th style="width:150px;text-align:right">Ya devuelto (kg)</th>
+              <th style="width:170px;text-align:right">Devuelto ahora (kg)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{lineasPedido}}" as="l" hint-placeholder-count="4">
+              <tr>
+                <td style="white-space:nowrap">{{l.cliente}}</td>
+                <td class="prod">{{l.producto}}</td>
+                <td class="num">{{l.vendido}}</td>
+                <td class="num">{{l.devuelto}}</td>
+                <td><input class="campo" type="text" value="{{l.ahora}}" placeholder="0" style="text-align:right"></td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+        <div style="margin-top:20px">
+          <span class="rotulo">Motivo &#183; obligatorio</span>
+          <textarea class="campo" rows="2">El cliente no recibió uno de los toneles.</textarea>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:20px">
+          <p style="font-size:15px;color:var(--gris);max-width:820px">Al guardar, lo devuelto vuelve a la existencia del mismo producto en la sede del pedido. El pedido conserva su estado y queda con la marca <strong style="color:var(--tinta)">Con devolución</strong>, con el usuario y la fecha a la vista. La ruta no se modifica.</p>
+          <button class="btn btn-p">Registrar devolución</button>
+        </div>
+      </div>
+
+      <!-- ============ MOVIMIENTOS ============ -->
+      <div class="tarjeta">
+        <h2 style="font-size:21px">Movimientos recientes</h2>
+        <p style="font-size:15px;color:var(--gris);margin-top:6px;margin-bottom:20px">Cada movimiento guarda tipo, producto, sede, cantidad, fecha, usuario y, cuando aplica, motivo o pedido. Al editar uno, la existencia se recalcula y la bitácora guarda los valores anteriores y los nuevos.</p>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:120px">Fecha</th>
+              <th style="width:170px">Tipo</th>
+              <th>Producto</th>
+              <th style="width:150px">Sede</th>
+              <th style="width:120px;text-align:right">Kg</th>
+              <th style="width:220px">Referencia</th>
+              <th style="width:80px"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{movimientos}}" as="m" hint-placeholder-count="5">
+              <tr>
+                <td class="cod">{{m.fecha}}</td>
+                <td><span class="etiqueta {{m.clase}}">{{m.tipo}}</span></td>
+                <td class="prod" style="font-size:13px">{{m.producto}}</td>
+                <td style="font-size:15px;color:var(--gris)">{{m.sede}}</td>
+                <td class="num {{m.signo}}">{{m.kg}}</td>
+                <td style="font-size:14px;color:var(--gris)">{{m.ref}}</td>
+                <td><button class="mini">Editar</button></td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+
+      <sc-if value="{{marcar}}" hint-placeholder-val="{{ true }}">
+        <div class="pend">
+          <p class="pend-t">Pendiente de INCOVSA</p>
+          <p style="font-size:16px;color:#54451A">La edición de movimientos está confirmada. Falta definir qué movimientos se pueden editar, porque las ventas, los traslados y las devoluciones nacen de otras operaciones; qué campos se cambian, si la edición exige motivo y si también se pueden eliminar movimientos.</p>
+        </div>
+      </sc-if>
+
+    </div>
+  </section>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"acento":{"editor":"color","default":"#C9A227","options":["#C9A227","#2F8B4C","#E8CE72","#8A8474"],"section":"Marca"},"marcarPendientes":{"editor":"boolean","default":true,"section":"Revisión"},"$preview":{"width":1440,"height":3000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      acento: this.props.acento ?? '#C9A227',
+      marcar: this.props.marcarPendientes ?? true,
+      existencias: [
+        { sku: '6960', producto: 'SODA CAUSTICA-MEX-SAC/0025KG-6960', kg: '700' },
+        { sku: '6241', producto: 'SULFATO DE SODIO-CHI-SAC/0050KG-6241', kg: '2,450' },
+        { sku: '9238', producto: 'ACIDO FORMICO-CHI-GAR/0035KG-9238', kg: '1,050' },
+        { sku: '0163', producto: 'NEGRO SULFUROSO HIGH QUALITY-CHI-SAC/0025KG-0163', kg: '440' },
+        { sku: '6830', producto: 'HIDROSULFITO DE SODIO-CHI-TON/0050KG-6830', kg: '1,550' }
+      ],
+      lineasPedido: [
+        { cliente: 'Cliente ejemplo 01', producto: 'SODA CAUSTICA-MEX-SAC/0025KG-6960', vendido: '500', devuelto: '0', ahora: '' },
+        { cliente: 'Cliente ejemplo 03', producto: 'NEGRO SULFUROSO HIGH QUALITY-CHI-SAC/0025KG-0163', vendido: '60', devuelto: '0', ahora: '' },
+        { cliente: 'Cliente ejemplo 03', producto: 'HIDROSULFITO DE SODIO-CHI-TON/0050KG-6830', vendido: '500', devuelto: '0', ahora: '50' },
+        { cliente: 'Cliente ejemplo 04', producto: 'SULFATO DE SODIO-CHI-SAC/0050KG-6241', vendido: '800', devuelto: '0', ahora: '' }
+      ],
+      movimientos: [
+        { fecha: '21/09 10:42', tipo: 'Venta', clase: 'rojo', producto: 'SODA CAUSTICA-MEX-SAC/0025KG-6960', sede: 'Quetzaltenango', kg: '−750', signo: 'menos', ref: 'Pedido 1' },
+        { fecha: '21/09 14:05', tipo: 'Compra', clase: 'verde', producto: 'SULFATO DE SODIO-CHI-SAC/0050KG-6241', sede: 'Quetzaltenango', kg: '+1,000', signo: 'mas', ref: '—' },
+        { fecha: '21/09 15:08', tipo: 'Devolución', clase: 'verde', producto: 'HIDROSULFITO DE SODIO-CHI-TON/0050KG-6830', sede: 'Quetzaltenango', kg: '+50', signo: 'mas', ref: 'Pedido 1 · el cliente no recibió uno de los toneles' },
+        { fecha: '21/09 16:20', tipo: 'Traslado enviado', clase: 'rojo', producto: 'ACIDO FORMICO-CHI-GAR/0035KG-9238', sede: 'Quetzaltenango', kg: '−175', signo: 'menos', ref: 'A Guatemala' },
+        { fecha: '21/09 16:20', tipo: 'Traslado recibido', clase: 'verde', producto: 'ACIDO FORMICO-CHI-GAR/0035KG-9238', sede: 'Guatemala', kg: '+175', signo: 'mas', ref: 'De Quetzaltenango' },
+        { fecha: '21/09 17:02', tipo: 'Ajuste', clase: 'oro', producto: 'NEGRO SULFUROSO HIGH QUALITY-CHI-SAC/0025KG-0163', sede: 'Quetzaltenango', kg: '−10', signo: 'menos', ref: 'Saco dañado en bodega' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

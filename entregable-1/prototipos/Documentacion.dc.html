@@ -1,0 +1,227 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&amp;family=IBM+Plex+Mono:wght@400;500&amp;family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&amp;display=swap">
+  <style>
+    :root{--verde900:#0B3A1B;--verde700:#14612D;--verde500:#2F8B4C;--dorado:#C9A227;--oro:#E8CE72;--hueso:#F6F4EF;--papel:#FFFFFF;--tinta:#1A1A17;--gris:#6E6E64;--linea:#DFDACE}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--hueso);color:var(--tinta);font:400 17px/1.62 "Source Serif 4",Georgia,serif;-webkit-font-smoothing:antialiased}
+    h1,h2,h3{margin:0;font-family:Archivo,"Helvetica Neue",sans-serif;letter-spacing:-.025em;line-height:1.06;font-weight:800}
+    p{margin:0}
+    a{color:var(--verde700);text-decoration:none}
+    a:hover{color:var(--dorado)}
+    .wrap{max-width:1200px;margin:0 auto;padding:0 60px}
+    .mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+    .barra{background:var(--verde900);height:72px;display:flex;align-items:center}
+    .barra-in{display:flex;align-items:center;justify-content:space-between;width:100%;gap:40px}
+    .barra a{color:#D6D2C7;font-family:Archivo,sans-serif;font-size:14px;font-weight:600}
+    .barra a:hover{color:var(--oro)}
+    .barra a.act{color:#fff;box-shadow:inset 0 -2px 0 var(--oro);padding-bottom:5px}
+    .avatar{width:36px;height:36px;border-radius:50%;background:var(--verde500);color:#fff;display:flex;align-items:center;justify-content:center;font-family:Archivo,sans-serif;font-weight:700;font-size:14px}
+    .chip{font-family:Archivo,sans-serif;font-size:13px;font-weight:600;padding:9px 16px;border:1px solid var(--linea);background:var(--papel);border-radius:2px;cursor:pointer;color:var(--tinta);transition:.14s}
+    .chip:hover{border-color:var(--verde500)}
+    .chip.on{background:var(--verde700);border-color:var(--verde700);color:#fff}
+    .busca{width:100%;font-family:Archivo,sans-serif;font-size:15px;padding:13px 16px 13px 44px;border:1px solid var(--linea);background:var(--papel);border-radius:2px;color:var(--tinta)}
+    .busca:focus{outline:2px solid var(--verde500);outline-offset:-1px}
+    table{width:100%;border-collapse:collapse;background:var(--papel);border:1px solid var(--linea)}
+    th{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gris);text-align:left;padding:16px 20px;border-bottom:1px solid var(--linea);font-weight:500}
+    td{padding:18px 20px;border-bottom:1px solid var(--linea);vertical-align:middle}
+    tr:last-child td{border-bottom:0}
+    tr:hover td{background:rgba(47,139,76,.04)}
+    .estado{display:inline-flex;align-items:center;gap:8px;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;padding:6px 10px;border-radius:2px}
+    .e-pend{background:rgba(201,162,39,.16);color:#7A6014}
+    .e-restr{background:#EDEAE2;color:var(--gris)}
+    .e-ok{background:rgba(47,139,76,.14);color:#14612D}
+    .pend{border:1.5px dashed var(--dorado);background:repeating-linear-gradient(135deg,rgba(201,162,39,.07) 0 9px,transparent 9px 18px);padding:26px 28px;border-radius:2px;display:flex;flex-direction:column;gap:10px}
+    .pend-t{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#8A6D12;display:flex;align-items:center;gap:8px}
+  </style>
+</helmet>
+
+<div>
+  <!-- ============ BARRA INTERNA ============ -->
+  <div class="barra">
+    <div class="wrap barra-in">
+      <div style="display:flex;align-items:center;gap:44px">
+        <a href="#" style="display:flex;align-items:center;gap:11px">
+          <svg width="30" height="30" viewBox="0 0 38 38" fill="none" aria-hidden="true">
+            <rect x="1.2" y="1.2" width="35.6" height="35.6" rx="2" stroke="#E8CE72" stroke-width="1.6"></rect>
+            <path d="M10 27V11h5.4v16z" fill="#E8CE72"></path>
+            <path d="M18.6 27V16H24v11z" fill="#FFFFFF" fill-opacity=".9"></path>
+          </svg>
+          <span style="font-family:Archivo,sans-serif;font-weight:800;font-size:17px;color:#fff">INCOVSA</span>
+          <span class="mono" style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--oro);border-left:1px solid rgba(232,206,114,.4);padding-left:11px">Administración del sitio</span>
+        </a>
+        <div style="display:flex;align-items:center;gap:28px">
+          <a href="PanelAdmin.dc.html">Panel del sitio</a>
+          <a href="#" class="act">Documentación</a>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="text-align:right">
+          <p style="font-family:Archivo,sans-serif;font-size:14px;font-weight:600;color:#fff;line-height:1.3">Usuario de ejemplo</p>
+          <p class="mono" style="font-size:10px;color:var(--oro);letter-spacing:.1em">ADMINISTRATIVO</p>
+        </div>
+        <div class="avatar">UE</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ENCABEZADO ============ -->
+  <section style="background:var(--papel);border-bottom:1px solid var(--linea);padding:44px 0">
+    <div class="wrap" style="display:flex;align-items:flex-end;justify-content:space-between;gap:48px">
+      <div>
+        <p class="mono" style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color: {{acento}}">Documentación interna de productos</p>
+        <h1 style="font-size:40px;margin-top:14px">Fichas técnicas, hojas de seguridad y certificados</h1>
+        <p style="font-size:17px;color:var(--gris);margin-top:14px;max-width:660px"><strong>Gerencia</strong> y <strong>Administrativo</strong> suben, reemplazan y eliminan los documentos, y también los ven y los descargan. El rol <strong>Operativo</strong>, que son el jefe de bodega y los jefes de área, los ve y los descarga. El rol <strong>Vista general</strong>, que son ventas y facturación, solo los ve en el navegador. Lo que cada persona puede hacer depende de su rol.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;white-space:nowrap">
+        <p class="mono" style="font-size:34px;font-weight:500;color:var(--verde700)">{{cargados}}</p>
+        <p class="mono" style="font-size:11px;color:var(--gris);letter-spacing:.1em">DOCUMENTOS CARGADOS</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LISTADO ============ -->
+  <section style="padding:40px 0 72px">
+    <div class="wrap" style="display:flex;flex-direction:column;gap:24px">
+
+      <div style="display:flex;align-items:center;gap:20px">
+        <div style="position:relative;flex:1;max-width:420px">
+          <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--gris);display:flex">
+            <svg width="17" height="17" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.6"></circle><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"></path></svg>
+          </span>
+          <input class="busca" type="text" placeholder="Buscar por producto" value="{{q}}" onChange="{{escribir}}">
+        </div>
+        <div style="display:flex;gap:9px;margin-left:auto">
+          <sc-for list="{{tipos}}" as="t" hint-placeholder-count="4">
+            <button class="{{t.clase}}" onClick="{{t.elegir}}">{{t.nombre}}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width:26%">Producto</th>
+            <th style="width:22%">Tipo de documento</th>
+            <th style="width:16%">Código o lote</th>
+            <th style="width:16%">Estado</th>
+            <th style="width:20%;text-align:right">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <sc-for list="{{filas}}" as="f" hint-placeholder-count="8">
+            <tr>
+              <td>
+                <p style="font-family:Archivo,sans-serif;font-weight:700;font-size:16px">{{f.producto}}</p>
+              </td>
+              <td style="font-size:16px">{{f.tipo}}</td>
+              <td class="mono" style="font-size:13px;color:var(--gris)">{{f.lote}}</td>
+              <td><span class="{{f.claseEstado}}">{{f.estado}}</span></td>
+              <td style="text-align:right">
+                <span class="mono" style="font-size:12px;color:var(--gris)">{{f.accion}}</span>
+              </td>
+            </tr>
+          </sc-for>
+        </tbody>
+      </table>
+
+      <sc-if value="{{vacio}}" hint-placeholder-val="{{ false }}">
+        <div style="background:var(--papel);border:1px solid var(--linea);padding:48px;text-align:center;border-radius:2px">
+          <p style="font-size:18px;font-family:Archivo,sans-serif;font-weight:700">Sin resultados</p>
+          <p style="font-size:16px;color:var(--gris);margin-top:8px">Pruebe con otro producto o cambie el tipo de documento.</p>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{marcar}}" hint-placeholder-val="{{ true }}">
+        <div class="pend">
+          <p class="pend-t">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2l6 11H2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path><path d="M8 6.5v3" stroke="currentColor" stroke-width="1.5"></path></svg>
+            Pendiente de INCOVSA
+          </p>
+          <p style="font-size:16px;color:#6B5A21;text-wrap:pretty">INCOVSA entregó como ejemplo la ficha técnica, la hoja de seguridad y un certificado de análisis de la soda cáustica de México. Todos los documentos son PDF. La ficha y la hoja se asocian a uno o varios productos del catálogo público; el certificado, además, lleva escrito el código o lote al que corresponde. Faltan los datos de los productos que se publican en el sitio.</p>
+        </div>
+      </sc-if>
+    </div>
+  </section>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"acento":{"editor":"color","default":"#C9A227","options":["#C9A227","#2F8B4C","#B45309","#8A8474"],"section":"Marca"},"marcarPendientes":{"editor":"boolean","default":true,"section":"Revisión"}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { tipo: 'todos', q: '' };
+  }
+  productos() {
+    return [
+      ['PROD-001', 'Ácido Acético Glacial'],
+      ['PROD-004', 'Ácido Fórmico'],
+      ['PROD-006', 'Ácido Sulfúrico'],
+      ['PROD-009', 'Extracto de Quebracho'],
+      ['PROD-013', 'Soda Ash'],
+      ['PROD-014', 'Soda Cáustica'],
+      ['PROD-016', 'Sulfato de Cromo'],
+      ['PROD-018', 'Sulfato de Sodio']
+    ];
+  }
+  sinTildes(s) {
+    return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  }
+  renderVals() {
+    const self = this;
+    const st = this.state;
+    const tipos = [
+      { id: 'todos', nombre: 'Todos' },
+      { id: 'ficha', nombre: 'Ficha técnica' },
+      { id: 'seguridad', nombre: 'Hoja de seguridad' },
+      { id: 'certificado', nombre: 'Certificado de análisis' }
+    ];
+    const etiquetas = { ficha: 'Ficha técnica', seguridad: 'Hoja de seguridad', certificado: 'Certificado de análisis' };
+    const q = this.sinTildes(st.q.trim());
+
+    const filas = [];
+    this.productos().forEach(function (p) {
+      ['ficha', 'seguridad', 'certificado'].forEach(function (t) {
+        if (st.tipo !== 'todos' && st.tipo !== t) return;
+        if (q && self.sinTildes(p[1]).indexOf(q) === -1) return;
+        const cargado = p[1] === 'Soda Cáustica';
+        filas.push({
+          producto: p[1],
+          tipo: etiquetas[t],
+          lote: t === 'certificado' ? (cargado ? 'SKU 4139' : 'Se indica al subir') : '—',
+          estado: cargado ? 'Cargado' : 'Pendiente de carga',
+          claseEstado: cargado ? 'estado e-ok' : 'estado e-pend',
+          accion: cargado ? 'Ver · Descargar · Reemplazar' : 'Subir PDF'
+        });
+      });
+    });
+
+    return {
+      acento: this.props.acento ?? '#C9A227',
+      marcar: this.props.marcarPendientes ?? true,
+      q: st.q,
+      vacio: filas.length === 0,
+      cargados: '3',
+      escribir: function (e) { self.setState({ q: e.target.value }); },
+      tipos: tipos.map(function (t) {
+        return {
+          nombre: t.nombre,
+          clase: st.tipo === t.id ? 'chip on' : 'chip',
+          elegir: function () { self.setState({ tipo: t.id }); }
+        };
+      }),
+      filas: filas
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+erDiagram
+    SEDE |o--o{ USUARIO : asigna
+    ROL |o--o{ USUARIO : "rol del sitio"
+    ROL |o--o{ USUARIO : "rol del picking"
+    USUARIO ||--o{ BITACORA : genera
+    SEDE ||--o{ CAMION : posee
+    SECTOR ||--o{ CLIENTE : agrupa
+    PRODUCTO ||--o{ EXISTENCIA : "tiene existencia en"
+    SEDE ||--o{ EXISTENCIA : almacena
+    PRODUCTO ||--o{ MOVIMIENTO_INVENTARIO : "se mueve en"
+    SEDE ||--o{ MOVIMIENTO_INVENTARIO : afecta
+    USUARIO ||--o{ MOVIMIENTO_INVENTARIO : registra
+    TRASLADO ||--|{ MOVIMIENTO_INVENTARIO : genera
+    SEDE ||--o{ TRASLADO : "sale de"
+    SEDE ||--o{ TRASLADO : "llega a"
+    PRODUCTO ||--o{ TRASLADO : traslada
+    USUARIO ||--o{ TRASLADO : registra
