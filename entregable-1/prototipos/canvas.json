@@ -179,6 +179,16 @@
       "w": 1440,
       "h": 2600,
       "is_interactive": true
+    },
+    {
+      "file": "pickit-visual/index.html",
+      "title": "Pickit Visual · diagrama de carga",
+      "page": "page-3",
+      "x": 0,
+      "y": 5800,
+      "w": 1180,
+      "h": 1800,
+      "is_interactive": true
     }
   ],
   "annotations": [
@@ -237,6 +247,14 @@
       "y": -300,
       "w": 520,
       "text": "Reportes es el único módulo aprobado pero sin especificar.\nLo que se muestra es lo que se desprende de requerimientos ya confirmados: el reporte diario que pidió la empresa, el histórico de rutas y la bitácora.\nFalta que INCOVSA defina qué otros reportes necesita, con qué columnas y filtros."
+    },
+    {
+      "id": "nota-pickit-visual",
+      "page": "page-3",
+      "x": 0,
+      "y": 5520,
+      "w": 660,
+      "text": "Pickit Visual: prototipo del diagrama de carga (iPad admin + TV).\nFlota 2 camiones pequeños (3.400 kg) + 1 grande (6.000 kg).\nSiluetas SVG según fotos de referencia. Abrir pickit-visual/index.html.\nEs propuesta visual; Bodega no exige confirmación de carga (P-45)."
     }
   ],
   "launch": {

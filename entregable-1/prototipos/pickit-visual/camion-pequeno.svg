@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 110" fill="none" role="img" aria-labelledby="title-peq desc-peq">
+  <title id="title-peq">Camión pequeño  plataforma abierta</title>
+  <desc id="desc-peq">Silueta de camión COE de plataforma baja, dos ejes. Flota INCOVSA: 3.400 kg.</desc>
+  <!-- Sombra -->
+  <ellipse cx="110" cy="100" rx="88" ry="6" fill="#0B3A1B" opacity=".08"/>
+  <!-- Chasis -->
+  <rect x="48" y="72" width="148" height="8" rx="1" fill="#1A1A17"/>
+  <!-- Cabina COE -->
+  <path d="M18 34h42v44H18V34z" fill="#F6F4EF" stroke="#0B3A1B" stroke-width="2"/>
+  <path d="M22 38h34v22H22V38z" fill="#2F8B4C" opacity=".35"/>
+  <rect x="24" y="40" width="30" height="18" rx="1" fill="#B8D4C0" stroke="#0B3A1B" stroke-width="1.2"/>
+  <!-- Parachoques / parrilla -->
+  <rect x="16" y="70" width="46" height="8" rx="1" fill="#1A1A17"/>
+  <rect x="20" y="62" width="10" height="6" rx="1" fill="#C9A227"/>
+  <!-- Espejo -->
+  <rect x="8" y="44" width="8" height="14" rx="1" fill="#1A1A17"/>
+  <rect x="9" y="46" width="5" height="8" fill="#B8D4C0"/>
+  <!-- Cabecera detrás de cabina -->
+  <rect x="58" y="40" width="6" height="38" fill="#0B3A1B"/>
+  <!-- Plataforma abierta (cama baja) -->
+  <path d="M64 56h128v24H64V56z" fill="#E8E4DA" stroke="#0B3A1B" stroke-width="2"/>
+  <path d="M64 56h128v6H64V56z" fill="#14612D"/>
+  <!-- Laterales bajos -->
+  <rect x="68" y="62" width="118" height="4" fill="#C9A227" opacity=".55"/>
+  <!-- Reflectores -->
+  <rect x="78" y="74" width="10" height="3" fill="#C9A227"/>
+  <rect x="94" y="74" width="10" height="3" fill="#F6F4EF" stroke="#0B3A1B" stroke-width=".6"/>
+  <rect x="110" y="74" width="10" height="3" fill="#C9A227"/>
+  <rect x="126" y="74" width="10" height="3" fill="#F6F4EF" stroke="#0B3A1B" stroke-width=".6"/>
+  <rect x="142" y="74" width="10" height="3" fill="#C9A227"/>
+  <rect x="158" y="74" width="10" height="3" fill="#F6F4EF" stroke="#0B3A1B" stroke-width=".6"/>
+  <!-- Ruedas -->
+  <circle cx="42" cy="84" r="12" fill="#1A1A17"/>
+  <circle cx="42" cy="84" r="6" fill="#6E6E64"/>
+  <circle cx="168" cy="84" r="12" fill="#1A1A17"/>
+  <circle cx="168" cy="84" r="6" fill="#6E6E64"/>
+  <!-- Marca -->
+  <text x="108" y="52" text-anchor="middle" font-family="Archivo, Helvetica, sans-serif" font-size="9" font-weight="800" fill="#0B3A1B" letter-spacing="1">INCOVSA</text>
+</svg>

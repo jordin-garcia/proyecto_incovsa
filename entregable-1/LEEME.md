@@ -53,6 +53,7 @@ Los índices general y de figuras ya están actualizados. Si alguien edita el te
 | `figuras/evidencias/` | Las once imágenes de las reuniones y de la visita (figuras 9 a 19) |
 | `diagramas/` | El código fuente de cada figura. Las figuras 1 a 5 se dibujan con guiones de Python; las figuras 6 a 8 son archivos Mermaid (`.mmd`) |
 | `prototipos/` | Las pantallas del prototipo (`.dc.html`), el lienzo (`canvas.json`), el prototipo navegable y sus herramientas |
+| `prototipos/pickit-visual/` | Design system y demo interactiva del diagrama de carga (modos iPad admin y TV). Abrir `index.html` |
 
 ### Para volver a generar las figuras 1 a 5
 

@@ -1,0 +1,259 @@
+/**
+ * Pickit Visual — design tokens INCOVSA
+ * Extiende la paleta de los prototipos .dc.html con escalas iPad (admin)
+ * y TV/proyección (operarios).
+ */
+
+:root {
+  /* ——— Marca ——— */
+  --verde-900: #0B3A1B;
+  --verde-800: #0F4A24;
+  --verde-700: #14612D;
+  --verde-500: #2F8B4C;
+  --verde-300: #6BB884;
+  --verde-100: rgba(47, 139, 76, 0.14);
+
+  --dorado: #C9A227;
+  --oro: #E8CE72;
+  --dorado-suave: rgba(201, 162, 39, 0.16);
+
+  --hueso: #F6F4EF;
+  --papel: #FFFFFF;
+  --tinta: #1A1A17;
+  --gris-700: #3D3D36;
+  --gris-500: #6E6E64;
+  --gris-300: #A9A598;
+  --linea: #DFDACE;
+  --sombra: rgba(11, 58, 27, 0.12);
+
+  --alerta: #B45309;
+  --alerta-fondo: rgba(180, 83, 9, 0.12);
+  --ok: #14612D;
+  --ok-fondo: rgba(47, 139, 76, 0.14);
+
+  /* ——— Tipografía ——— */
+  --font-display: "Archivo", "Helvetica Neue", sans-serif;
+  --font-body: "Source Serif 4", Georgia, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  /* ——— Escala iPad (admin / tableta) ——— */
+  --ipad-eyebrow: 11px;
+  --ipad-caption: 13px;
+  --ipad-body: 16px;
+  --ipad-body-lg: 18px;
+  --ipad-title-sm: 22px;
+  --ipad-title: 32px;
+  --ipad-hero: 40px;
+  --ipad-num: 36px;
+  --ipad-num-lg: 48px;
+
+  --ipad-space-1: 8px;
+  --ipad-space-2: 12px;
+  --ipad-space-3: 16px;
+  --ipad-space-4: 24px;
+  --ipad-space-5: 32px;
+  --ipad-space-6: 48px;
+  --ipad-radius: 2px;
+  --ipad-touch: 48px;
+  --ipad-wrap: 1024px;
+
+  /* ——— Escala TV (proyección / distancia) ——— */
+  --tv-eyebrow: 16px;
+  --tv-caption: 20px;
+  --tv-body: 28px;
+  --tv-body-lg: 34px;
+  --tv-title-sm: 40px;
+  --tv-title: 56px;
+  --tv-hero: 72px;
+  --tv-num: 64px;
+  --tv-num-lg: 96px;
+
+  --tv-space-1: 12px;
+  --tv-space-2: 20px;
+  --tv-space-3: 28px;
+  --tv-space-4: 40px;
+  --tv-space-5: 56px;
+  --tv-space-6: 80px;
+  --tv-radius: 4px;
+  --tv-touch: 64px;
+  --tv-wrap: 1680px;
+
+  /* ——— Defaults (modo admin) ——— */
+  --fs-eyebrow: var(--ipad-eyebrow);
+  --fs-caption: var(--ipad-caption);
+  --fs-body: var(--ipad-body);
+  --fs-body-lg: var(--ipad-body-lg);
+  --fs-title-sm: var(--ipad-title-sm);
+  --fs-title: var(--ipad-title);
+  --fs-hero: var(--ipad-hero);
+  --fs-num: var(--ipad-num);
+  --fs-num-lg: var(--ipad-num-lg);
+
+  --space-1: var(--ipad-space-1);
+  --space-2: var(--ipad-space-2);
+  --space-3: var(--ipad-space-3);
+  --space-4: var(--ipad-space-4);
+  --space-5: var(--ipad-space-5);
+  --space-6: var(--ipad-space-6);
+  --radius: var(--ipad-radius);
+  --touch: var(--ipad-touch);
+  --wrap: var(--ipad-wrap);
+
+  --bg: var(--hueso);
+  --surface: var(--papel);
+  --ink: var(--tinta);
+  --muted: var(--gris-500);
+  --accent: var(--verde-700);
+  --accent-deep: var(--verde-900);
+  --highlight: var(--oro);
+}
+
+/* Modo TV: alto contraste, tipografía grande, fondo oscuro de marca */
+[data-modo="tv"] {
+  --fs-eyebrow: var(--tv-eyebrow);
+  --fs-caption: var(--tv-caption);
+  --fs-body: var(--tv-body);
+  --fs-body-lg: var(--tv-body-lg);
+  --fs-title-sm: var(--tv-title-sm);
+  --fs-title: var(--tv-title);
+  --fs-hero: var(--tv-hero);
+  --fs-num: var(--tv-num);
+  --fs-num-lg: var(--tv-num-lg);
+
+  --space-1: var(--tv-space-1);
+  --space-2: var(--tv-space-2);
+  --space-3: var(--tv-space-3);
+  --space-4: var(--tv-space-4);
+  --space-5: var(--tv-space-5);
+  --space-6: var(--tv-space-6);
+  --radius: var(--tv-radius);
+  --touch: var(--tv-touch);
+  --wrap: var(--tv-wrap);
+
+  --bg: var(--verde-900);
+  --surface: #0F4A24;
+  --ink: #F6F4EF;
+  --muted: #C6C2B6;
+  --accent: var(--oro);
+  --accent-deep: var(--dorado);
+  --highlight: var(--oro);
+  --linea: rgba(232, 206, 114, 0.28);
+  --sombra: rgba(0, 0, 0, 0.35);
+}
+
+/* Utilidades de componente */
+.pk-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+}
+
+[data-modo="tv"] .pk-eyebrow { color: var(--oro); }
+
+.pk-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: var(--touch);
+  padding: 0 calc(var(--space-4) * 0.9);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-caption);
+  letter-spacing: 0.01em;
+  border: 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, transform 0.18s, border-color 0.18s;
+}
+
+.pk-btn-p {
+  background: var(--verde-700);
+  color: #fff;
+}
+.pk-btn-p:hover { background: var(--verde-900); }
+
+[data-modo="tv"] .pk-btn-p {
+  background: var(--oro);
+  color: var(--verde-900);
+}
+[data-modo="tv"] .pk-btn-p:hover { background: #fff; }
+
+.pk-btn-l {
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--linea);
+}
+.pk-btn-l:hover,
+.pk-btn-l[aria-pressed="true"] {
+  border-color: var(--verde-500);
+  color: var(--verde-700);
+  background: var(--verde-100);
+}
+
+[data-modo="tv"] .pk-btn-l {
+  color: var(--ink);
+  border-color: var(--linea);
+}
+[data-modo="tv"] .pk-btn-l:hover,
+[data-modo="tv"] .pk-btn-l[aria-pressed="true"] {
+  background: rgba(232, 206, 114, 0.14);
+  color: var(--oro);
+  border-color: var(--oro);
+}
+
+.pk-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 7px 12px;
+  border-radius: var(--radius);
+  background: var(--verde-100);
+  color: var(--verde-700);
+}
+
+[data-modo="tv"] .pk-pill {
+  background: rgba(232, 206, 114, 0.18);
+  color: var(--oro);
+}
+
+.pk-card {
+  background: var(--surface);
+  border: 1px solid var(--linea);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+}
+
+.pk-slot {
+  border: 2px dashed var(--linea);
+  border-radius: var(--radius);
+  background: rgba(11, 58, 27, 0.03);
+  transition: border-color 0.2s, background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.pk-slot.lleno {
+  border-style: solid;
+  border-color: var(--verde-500);
+  background: var(--verde-100);
+}
+
+.pk-slot.activo {
+  border-color: var(--dorado);
+  box-shadow: 0 0 0 3px var(--dorado-suave);
+  transform: translateY(-2px);
+}
+
+[data-modo="tv"] .pk-slot {
+  background: rgba(255, 255, 255, 0.04);
+}
+[data-modo="tv"] .pk-slot.lleno {
+  background: rgba(232, 206, 114, 0.14);
+  border-color: var(--oro);
+}

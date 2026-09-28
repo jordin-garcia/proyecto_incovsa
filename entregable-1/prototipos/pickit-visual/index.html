@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Pickit Visual · INCOVSA</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+  <link rel="stylesheet" href="./tokens.css">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font: 400 var(--fs-body)/1.5 var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.35s ease, color 0.35s ease;
+    }
+    h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 800; letter-spacing: -0.025em; line-height: 1.05; }
+    p { margin: 0; }
+    button { font: inherit; }
+    .mono { font-family: var(--font-mono); }
+
+    .shell { min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* Barra */
+    .barra {
+      background: var(--verde-900);
+      color: #fff;
+      padding: 0 var(--space-4);
+      height: calc(var(--touch) + 16px);
+      display: flex;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: 0 8px 24px var(--sombra);
+    }
+    .barra-in {
+      width: min(100%, var(--wrap));
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+    }
+    .marca { display: flex; align-items: center; gap: 12px; text-decoration: none; color: #fff; }
+    .marca-n { font-family: var(--font-display); font-weight: 800; font-size: calc(var(--fs-caption) + 4px); }
+    .marca-s {
+      font-family: var(--font-mono);
+      font-size: calc(var(--fs-eyebrow) - 1px);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--oro);
+      border-left: 1px solid rgba(232, 206, 114, 0.4);
+      padding-left: 12px;
+    }
+    .modos { display: flex; gap: 8px; }
+    .modos .pk-btn { min-height: 40px; padding: 0 14px; font-size: 12px; }
+    [data-modo="tv"] .modos .pk-btn { min-height: 52px; padding: 0 20px; font-size: 16px; }
+
+    .wrap {
+      width: min(100%, var(--wrap));
+      margin: 0 auto;
+      padding: var(--space-4);
+    }
+
+    .cabecera {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding-bottom: var(--space-3);
+      border-bottom: 1px solid var(--linea);
+      margin-bottom: var(--space-4);
+      animation: subir 0.5s ease both;
+    }
+    .cabecera h1 { font-size: var(--fs-hero); margin-top: var(--space-2); }
+    .cabecera p { color: var(--muted); font-size: var(--fs-body); max-width: 42ch; margin-top: var(--space-2); }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(240px, 0.9fr) minmax(0, 1.6fr);
+      gap: var(--space-4);
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .marca-s { display: none; }
+    }
+
+    /* Flota */
+    .flota-lista { display: flex; flex-direction: column; gap: var(--space-2); }
+    .camion-card {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: var(--space-3);
+      align-items: center;
+      text-align: left;
+      width: 100%;
+      padding: var(--space-3);
+      background: var(--surface);
+      border: 1.5px solid var(--linea);
+      border-radius: var(--radius);
+      color: var(--ink);
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .camion-card:hover { border-color: var(--verde-500); transform: translateY(-2px); }
+    .camion-card[aria-pressed="true"] {
+      border-color: var(--verde-700);
+      box-shadow: inset 3px 0 0 var(--dorado);
+      background: var(--verde-100);
+    }
+    [data-modo="tv"] .camion-card[aria-pressed="true"] {
+      background: rgba(232, 206, 114, 0.12);
+      border-color: var(--oro);
+      box-shadow: inset 4px 0 0 var(--oro);
+    }
+    .camion-card img, .camion-card .icono {
+      width: 96px;
+      height: auto;
+      display: block;
+    }
+    [data-modo="tv"] .camion-card .icono { width: 140px; }
+    .camion-card h3 { font-size: var(--fs-title-sm); }
+    .camion-meta { font-family: var(--font-mono); font-size: var(--fs-eyebrow); letter-spacing: 0.08em; color: var(--muted); margin-top: 6px; }
+    .camion-estado {
+      margin-top: 10px;
+      font-family: var(--font-mono);
+      font-size: var(--fs-eyebrow);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--verde-700);
+    }
+    [data-modo="tv"] .camion-estado { color: var(--oro); }
+
+    /* Diagrama */
+    .panel-diagrama { display: flex; flex-direction: column; gap: var(--space-3); }
+    .diagrama-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+    }
+    .diagrama-top h2 { font-size: var(--fs-title); }
+    .capacidad {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      font-family: var(--font-mono);
+    }
+    .capacidad .num { font-size: var(--fs-num); font-weight: 500; color: var(--accent); }
+    .capacidad .den { font-size: var(--fs-caption); color: var(--muted); }
+
+    .barra-carga {
+      height: 10px;
+      background: rgba(11, 58, 27, 0.1);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    [data-modo="tv"] .barra-carga { height: 16px; background: rgba(255,255,255,0.12); }
+    .barra-carga > span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--verde-700), var(--verde-500));
+      transition: width 0.45s cubic-bezier(.2,.8,.2,1);
+    }
+    [data-modo="tv"] .barra-carga > span {
+      background: linear-gradient(90deg, var(--dorado), var(--oro));
+    }
+    .barra-carga.alerta > span {
+      background: linear-gradient(90deg, #B45309, #F59E0B);
+    }
+
+    .vista-camion {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--linea);
+      border-radius: var(--radius);
+      padding: var(--space-4);
+      overflow: hidden;
+    }
+    .vista-camion::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 0%, rgba(47,139,76,.12), transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(201,162,39,.1), transparent 45%);
+      pointer-events: none;
+    }
+    [data-modo="tv"] .vista-camion::before {
+      background:
+        radial-gradient(ellipse at 15% 0%, rgba(232,206,114,.12), transparent 50%),
+        radial-gradient(ellipse at 90% 100%, rgba(47,139,76,.2), transparent 45%);
+    }
+
+    .silueta {
+      display: flex;
+      justify-content: center;
+      margin-bottom: var(--space-3);
+      animation: entrar 0.55s ease both;
+    }
+    .silueta img { width: min(100%, 420px); height: auto; filter: drop-shadow(0 12px 18px var(--sombra)); }
+    [data-modo="tv"] .silueta img { width: min(100%, 640px); }
+
+    .plano-label {
+      font-family: var(--font-mono);
+      font-size: var(--fs-eyebrow);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: var(--space-2);
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-2);
+    }
+
+    /* Plano de carga — vista superior */
+    .plano {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: var(--space-2);
+      align-items: stretch;
+    }
+    [data-modo="tv"] .plano { grid-template-columns: 110px 1fr; gap: var(--space-3); }
+    .cabina-hint {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-family: var(--font-mono);
+      font-size: var(--fs-eyebrow);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1.5px solid var(--linea);
+      border-radius: var(--radius);
+      background: rgba(11,58,27,.04);
+      padding: var(--space-2);
+    }
+    [data-modo="tv"] .cabina-hint { background: rgba(255,255,255,.05); }
+
+    .bodega-grid {
+      display: grid;
+      gap: var(--space-2);
+      min-height: 220px;
+    }
+    .bodega-grid.pequeno {
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, minmax(88px, 1fr));
+    }
+    .bodega-grid.grande {
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(3, minmax(80px, 1fr));
+    }
+    [data-modo="tv"] .bodega-grid.pequeno { grid-template-rows: repeat(2, minmax(120px, 1fr)); }
+    [data-modo="tv"] .bodega-grid.grande { grid-template-rows: repeat(3, minmax(110px, 1fr)); }
+
+    .pk-slot {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: var(--space-2);
+      min-height: var(--touch);
+      cursor: pointer;
+      color: var(--ink);
+      text-align: left;
+      animation: slotIn 0.4s ease both;
+    }
+    .pk-slot .pos {
+      font-family: var(--font-mono);
+      font-size: var(--fs-eyebrow);
+      letter-spacing: 0.14em;
+      color: var(--muted);
+    }
+    .pk-slot .prod {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: var(--fs-caption);
+      line-height: 1.2;
+      margin-top: 6px;
+    }
+    .pk-slot .kg {
+      font-family: var(--font-mono);
+      font-size: var(--fs-body-lg);
+      font-weight: 500;
+      color: var(--accent);
+      margin-top: auto;
+      padding-top: 8px;
+    }
+    .pk-slot.vacio .prod { color: var(--muted); font-weight: 500; }
+    .pk-slot.listo {
+      border-color: var(--verde-700);
+      background: rgba(47,139,76,.22);
+    }
+    [data-modo="tv"] .pk-slot.listo {
+      border-color: var(--oro);
+      background: rgba(232,206,114,.22);
+    }
+    .pk-slot.listo .kg::after {
+      content: " · LISTO";
+      font-size: var(--fs-eyebrow);
+      letter-spacing: 0.12em;
+    }
+
+    /* Lista lateral de pasos */
+    .pasos {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+    }
+    .paso {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: var(--space-2);
+      align-items: center;
+      padding: var(--space-2) var(--space-3);
+      background: var(--surface);
+      border: 1px solid var(--linea);
+      border-radius: var(--radius);
+      transition: opacity 0.2s, border-color 0.2s;
+    }
+    .paso.hecho { opacity: 0.55; }
+    .paso .ord {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: var(--fs-title-sm);
+      color: var(--accent);
+      min-width: 1.4ch;
+    }
+    .paso .txt { font-size: var(--fs-caption); }
+    .paso .txt strong { font-family: var(--font-display); display: block; font-size: var(--fs-body); margin-bottom: 2px; }
+    .paso .txt span { color: var(--muted); font-family: var(--font-mono); font-size: var(--fs-eyebrow); letter-spacing: 0.06em; }
+
+    .leyenda {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      font-family: var(--font-mono);
+      font-size: var(--fs-eyebrow);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: var(--space-2);
+    }
+    .leyenda i {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border-radius: 2px;
+      margin-right: 8px;
+      vertical-align: -2px;
+      border: 1.5px solid var(--linea);
+    }
+    .leyenda .l-lleno { background: var(--verde-100); border-color: var(--verde-500); }
+    .leyenda .l-listo { background: rgba(47,139,76,.28); border-color: var(--verde-700); }
+    .leyenda .l-vacio { background: transparent; }
+    [data-modo="tv"] .leyenda .l-lleno { background: rgba(232,206,114,.14); border-color: var(--oro); }
+    [data-modo="tv"] .leyenda .l-listo { background: rgba(232,206,114,.28); border-color: var(--oro); }
+
+    .nota-mock {
+      margin-top: var(--space-4);
+      padding: var(--space-3);
+      border: 1.5px dashed var(--dorado);
+      border-radius: var(--radius);
+      background: repeating-linear-gradient(135deg, rgba(201,162,39,.07) 0 9px, transparent 9px 18px);
+      color: #54451A;
+      font-size: var(--fs-caption);
+    }
+    [data-modo="tv"] .nota-mock {
+      color: var(--oro);
+      background: repeating-linear-gradient(135deg, rgba(232,206,114,.08) 0 9px, transparent 9px 18px);
+      border-color: var(--oro);
+    }
+
+    .acciones {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-top: var(--space-3);
+    }
+
+    @keyframes subir {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes entrar {
+      from { opacity: 0; transform: scale(0.96) translateY(8px); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes slotIn {
+      from { opacity: 0; transform: scale(0.94); }
+      to { opacity: 1; transform: none; }
+    }
+
+    /* Marco iPad sutil en modo admin en desktop */
+    [data-modo="admin"] .marco-dispositivo {
+      max-width: 1180px;
+      margin: var(--space-3) auto var(--space-5);
+      border: 10px solid #1A1A17;
+      border-radius: 28px;
+      box-shadow: 0 30px 60px rgba(11,58,27,.18);
+      overflow: hidden;
+      background: var(--bg);
+    }
+    [data-modo="admin"] .marco-dispositivo .barra { border-radius: 0; }
+    [data-modo="tv"] .marco-dispositivo {
+      max-width: none;
+      margin: 0;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body data-modo="admin">
+  <div class="shell">
+    <div class="marco-dispositivo">
+      <header class="barra">
+        <div class="barra-in">
+          <a class="marca" href="#">
+            <svg width="30" height="30" viewBox="0 0 38 38" fill="none" aria-hidden="true">
+              <rect x="1.2" y="1.2" width="35.6" height="35.6" rx="2" stroke="#E8CE72" stroke-width="1.6"></rect>
+              <path d="M10 27V11h5.4v16z" fill="#E8CE72"></path>
+              <path d="M18.6 27V16H24v11z" fill="#FFFFFF" fill-opacity=".9"></path>
+            </svg>
+            <span class="marca-n">INCOVSA</span>
+            <span class="marca-s">Pickit Visual</span>
+          </a>
+          <div class="modos" role="group" aria-label="Modo de visualización">
+            <button type="button" class="pk-btn pk-btn-l" id="btn-admin" aria-pressed="true">Admin · iPad</button>
+            <button type="button" class="pk-btn pk-btn-l" id="btn-tv" aria-pressed="false">Tablero · TV</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="wrap">
+        <div class="cabecera">
+          <div>
+            <p class="pk-eyebrow" id="modo-label">Modo administración · tableta</p>
+            <h1>Diagrama de carga</h1>
+            <p id="modo-desc">Organice qué va en cada camión, en qué posición y en qué orden. Flota de Quetzaltenango: 2 pequeños + 1 grande.</p>
+          </div>
+          <span class="pk-pill" id="sede-pill">Quetzaltenango · 3 camiones</span>
+        </div>
+
+        <div class="layout">
+          <aside class="pk-card" aria-label="Flota">
+            <p class="pk-eyebrow" style="margin-bottom: var(--space-3)">Flota del día</p>
+            <div class="flota-lista" id="flota"></div>
+          </aside>
+
+          <section class="panel-diagrama" aria-live="polite">
+            <div class="diagrama-top">
+              <div>
+                <h2 id="camion-titulo">Camión 1</h2>
+                <p class="mono" id="camion-sub" style="color: var(--muted); font-size: var(--fs-caption); margin-top: 6px; letter-spacing: 0.06em"></p>
+              </div>
+              <div class="capacidad" aria-label="Capacidad">
+                <span class="num" id="carga-kg">0</span>
+                <span class="den" id="carga-den">/ 3.400 kg</span>
+              </div>
+            </div>
+
+            <div class="barra-carga" id="barra-carga"><span id="barra-fill"></span></div>
+
+            <div class="vista-camion">
+              <div class="silueta">
+                <img id="camion-silueta" src="./camion-pequeno.svg" alt="Silueta del camión seleccionado">
+              </div>
+
+              <div class="plano-label">
+                <span>Plano de bodega · vista superior</span>
+                <span id="orden-hint">Toque una celda para marcarla lista</span>
+              </div>
+
+              <div class="plano">
+                <div class="cabina-hint">Cabina</div>
+                <div class="bodega-grid pequeno" id="bodega-grid"></div>
+              </div>
+
+              <div class="leyenda">
+                <span><i class="l-lleno"></i>Asignado</span>
+                <span><i class="l-listo"></i>Listo en piso</span>
+                <span><i class="l-vacio"></i>Libre</span>
+              </div>
+            </div>
+
+            <div>
+              <p class="pk-eyebrow" style="margin-bottom: var(--space-2)">Orden de carga · de atrás hacia la cabina</p>
+              <div class="pasos" id="pasos"></div>
+              <div class="acciones">
+                <button type="button" class="pk-btn pk-btn-p" id="btn-simular">Simular carga completa</button>
+                <button type="button" class="pk-btn pk-btn-l" id="btn-reset">Reiniciar marcas</button>
+              </div>
+            </div>
+
+            <div class="nota-mock">
+              <strong class="mono" style="letter-spacing:0.14em;text-transform:uppercase;font-size:10px;display:block;margin-bottom:8px">Prototipo visual</strong>
+              Datos y posiciones de ejemplo. El sistema real de Bodega no exige confirmación de carga en el camión (P-45); este diagrama es la propuesta Pickit Visual para orientar al personal en TV y tableta.
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const FLOTILLA = [
+      {
+        id: "c1",
+        nombre: "Camión 1",
+        tipo: "pequeno",
+        capacidad: 3400,
+        piloto: "Piloto de ejemplo 1",
+        ruta: "Ruta 1 · 21/09/2026",
+        icono: "./camion-pequeno.svg",
+        estado: "En preparación",
+        slots: [
+          { id: "A1", producto: "Sulfato de Aluminio", sku: "SULF-ALUM-25", kg: 500, orden: 1 },
+          { id: "A2", producto: "Carbonato de Sodio", sku: "CARB-SOD-25", kg: 450, orden: 2 },
+          { id: "A3", producto: "Ácido Acético", sku: "ACET-GLAC-30", kg: 300, orden: 3 },
+          { id: "B1", producto: "Hipoclorito de Calcio", sku: "HIPO-CA-45", kg: 600, orden: 4 },
+          { id: "B2", producto: "Parafina 58/60", sku: "PARA-5860", kg: 750, orden: 5 },
+          { id: "B3", producto: null, sku: null, kg: 0, orden: 6 }
+        ]
+      },
+      {
+        id: "c2",
+        nombre: "Camión 2",
+        tipo: "pequeno",
+        capacidad: 3400,
+        piloto: "Piloto de ejemplo 2",
+        ruta: "Ruta 2 · 21/09/2026",
+        icono: "./camion-pequeno.svg",
+        estado: "En cola",
+        slots: [
+          { id: "A1", producto: "Negro Sulfuroso", sku: "NEGR-SULF", kg: 400, orden: 1 },
+          { id: "A2", producto: "Tricloro", sku: "TRIC-90", kg: 350, orden: 2 },
+          { id: "A3", producto: "Bicarbonato de Amonio", sku: "BICA-AMO", kg: 280, orden: 3 },
+          { id: "B1", producto: "Colorante Cuero", sku: "COL-CUERO", kg: 520, orden: 4 },
+          { id: "B2", producto: null, sku: null, kg: 0, orden: 5 },
+          { id: "B3", producto: null, sku: null, kg: 0, orden: 6 }
+        ]
+      },
+      {
+        id: "c3",
+        nombre: "Camión 3",
+        tipo: "grande",
+        capacidad: 6000,
+        piloto: "Piloto de ejemplo 3",
+        ruta: "Ruta 3 · 21/09/2026",
+        icono: "./camion-grande.svg",
+        estado: "En preparación",
+        slots: [
+          { id: "A1", producto: "Sulfuro de Sodio", sku: "SULF-NA", kg: 800, orden: 1 },
+          { id: "A2", producto: "Parafina full", sku: "PARA-FULL", kg: 900, orden: 2 },
+          { id: "A3", producto: "SILVATEAM Tanino", sku: "SILVA-TAN", kg: 650, orden: 3 },
+          { id: "A4", producto: "Colorantes Reactivos", sku: "COL-REAC", kg: 420, orden: 4 },
+          { id: "B1", producto: "Ácido Fórmico", sku: "FORM-85", kg: 700, orden: 5 },
+          { id: "B2", producto: "Sulfato de Aluminio", sku: "SULF-ALUM-25", kg: 550, orden: 6 },
+          { id: "B3", producto: "Carbonato de Sodio", sku: "CARB-SOD-25", kg: 480, orden: 7 },
+          { id: "B4", producto: null, sku: null, kg: 0, orden: 8 },
+          { id: "C1", producto: "Hipoclorito de Calcio", sku: "HIPO-CA-45", kg: 600, orden: 9 },
+          { id: "C2", producto: "Parafina 56/58", sku: "PARA-5658", kg: 500, orden: 10 },
+          { id: "C3", producto: null, sku: null, kg: 0, orden: 11 },
+          { id: "C4", producto: null, sku: null, kg: 0, orden: 12 }
+        ]
+      }
+    ];
+
+    const state = {
+      modo: "admin",
+      camionId: "c1",
+      listos: new Set()
+    };
+
+    const el = (id) => document.getElementById(id);
+    const fmt = (n) => n.toLocaleString("es-GT");
+
+    function camionActual() {
+      return FLOTILLA.find((c) => c.id === state.camionId);
+    }
+
+    function totalKg(c) {
+      return c.slots.reduce((s, x) => s + (x.kg || 0), 0);
+    }
+
+    function setModo(modo) {
+      state.modo = modo;
+      document.body.dataset.modo = modo;
+      el("btn-admin").setAttribute("aria-pressed", String(modo === "admin"));
+      el("btn-tv").setAttribute("aria-pressed", String(modo === "tv"));
+      el("modo-label").textContent = modo === "admin"
+        ? "Modo administración · tableta"
+        : "Modo tablero · proyección TV";
+      el("modo-desc").textContent = modo === "admin"
+        ? "Organice qué va en cada camión, en qué posición y en qué orden. Flota de Quetzaltenango: 2 pequeños + 1 grande."
+        : "Lectura a distancia: tipografía grande, alto contraste y jerarquía clara para el personal de bodega.";
+      el("orden-hint").textContent = modo === "tv"
+        ? "Marque la celda cuando el producto esté en piso"
+        : "Toque una celda para marcarla lista";
+    }
+
+    function renderFlota() {
+      const root = el("flota");
+      root.innerHTML = "";
+      FLOTILLA.forEach((c, i) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "camion-card";
+        btn.setAttribute("aria-pressed", String(c.id === state.camionId));
+        btn.style.animationDelay = `${i * 0.06}s`;
+        btn.innerHTML = `
+          <img class="icono" src="${c.icono}" alt="">
+          <div>
+            <h3>${c.nombre}</h3>
+            <p class="camion-meta">${c.tipo === "grande" ? "GRANDE · 6.000 kg" : "PEQUEÑO · 3.400 kg"} · ${c.piloto}</p>
+            <p class="camion-estado">${c.estado} · ${fmt(totalKg(c))} kg</p>
+          </div>`;
+        btn.addEventListener("click", () => {
+          state.camionId = c.id;
+          state.listos = new Set();
+          render();
+        });
+        root.appendChild(btn);
+      });
+    }
+
+    function renderDiagrama() {
+      const c = camionActual();
+      const kg = totalKg(c);
+      const pct = Math.min(100, Math.round((kg / c.capacidad) * 100));
+
+      el("camion-titulo").textContent = c.nombre;
+      el("camion-sub").textContent = `${c.ruta} · ${c.piloto} · ${c.tipo === "grande" ? "Furgón cerrado" : "Plataforma abierta"}`;
+      el("carga-kg").textContent = fmt(kg);
+      el("carga-den").textContent = `/ ${fmt(c.capacidad)} kg`;
+      el("camion-silueta").src = c.icono;
+      el("camion-silueta").alt = c.tipo === "grande"
+        ? "Camión grande de furgón cerrado"
+        : "Camión pequeño de plataforma abierta";
+
+      const barra = el("barra-carga");
+      const fill = el("barra-fill");
+      fill.style.width = pct + "%";
+      barra.classList.toggle("alerta", kg >= c.capacidad);
+
+      const grid = el("bodega-grid");
+      grid.className = "bodega-grid " + c.tipo;
+      grid.innerHTML = "";
+
+      c.slots.forEach((slot, i) => {
+        const key = c.id + ":" + slot.id;
+        const lleno = !!slot.producto;
+        const listo = state.listos.has(key);
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "pk-slot" + (lleno ? " lleno" : " vacio") + (listo ? " listo" : "");
+        b.style.animationDelay = `${0.04 * i}s`;
+        b.disabled = !lleno;
+        b.setAttribute("aria-pressed", String(listo));
+        b.innerHTML = `
+          <span class="pos">${slot.id}</span>
+          <span class="prod">${lleno ? slot.producto : "Libre"}</span>
+          <span class="kg">${lleno ? fmt(slot.kg) + " kg" : "—"}</span>`;
+        if (lleno) {
+          b.addEventListener("click", () => {
+            if (state.listos.has(key)) state.listos.delete(key);
+            else state.listos.add(key);
+            renderDiagrama();
+            renderPasos();
+          });
+        }
+        grid.appendChild(b);
+      });
+
+      renderPasos();
+    }
+
+    function renderPasos() {
+      const c = camionActual();
+      const root = el("pasos");
+      root.innerHTML = "";
+      const ocupados = c.slots
+        .filter((s) => s.producto)
+        .slice()
+        .sort((a, b) => a.orden - b.orden);
+
+      ocupados.forEach((s) => {
+        const key = c.id + ":" + s.id;
+        const hecho = state.listos.has(key);
+        const div = document.createElement("div");
+        div.className = "paso" + (hecho ? " hecho" : "");
+        div.innerHTML = `
+          <span class="ord">${s.orden}</span>
+          <div class="txt">
+            <strong>${s.producto}</strong>
+            <span>${s.id} · ${s.sku} · ${fmt(s.kg)} kg</span>
+          </div>
+          <span class="pk-pill">${hecho ? "Listo" : "Cargar"}</span>`;
+        root.appendChild(div);
+      });
+    }
+
+    function render() {
+      renderFlota();
+      renderDiagrama();
+    }
+
+    el("btn-admin").addEventListener("click", () => { setModo("admin"); });
+    el("btn-tv").addEventListener("click", () => { setModo("tv"); });
+    el("btn-reset").addEventListener("click", () => {
+      state.listos = new Set();
+      renderDiagrama();
+    });
+    el("btn-simular").addEventListener("click", () => {
+      const c = camionActual();
+      c.slots.filter((s) => s.producto).forEach((s) => state.listos.add(c.id + ":" + s.id));
+      renderDiagrama();
+    });
+
+    setModo("admin");
+    render();
+  </script>
+</body>
+</html>
