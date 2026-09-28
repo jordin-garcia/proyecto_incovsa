@@ -725,7 +725,13 @@
       renderDiagrama();
     });
 
-    setModo("admin");
+    const params = new URLSearchParams(location.search);
+    const modoInicial = params.get("modo") === "tv" ? "tv" : "admin";
+    const camionParam = params.get("camion");
+    if (camionParam && FLOTILLA.some((c) => c.id === camionParam)) {
+      state.camionId = camionParam;
+    }
+    setModo(modoInicial);
     render();
   </script>
 </body>
