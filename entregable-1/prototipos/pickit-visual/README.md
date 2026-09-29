@@ -35,3 +35,7 @@ Flota Quetzaltenango. Camión 1 y 2 (pequeños, 3.400 kg). Camión 3 (grande, 6.
 
 - **Mock.** Posiciones de carga, orden sugerido, marcas listo, siluetas SVG.
 - **Alineado a specs.** Capacidades 3.400 / 6.000 kg, 3 camiones, sin confirmación formal de carga (P-45).
+
+## Mockups PDF
+
+`mockups.pdf` (A3, 7 páginas). Formato alineado a la muestra KoiCloud. También en el store del proyecto en `docs/mockups.pdf`. Fuente HTML: `mockups-source.html`.

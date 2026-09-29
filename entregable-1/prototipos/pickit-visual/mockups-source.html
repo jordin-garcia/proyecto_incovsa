@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Pickit Visual · Mockups</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+  @page { size: A3 portrait; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #E6EAE6; color: #1E1E1E; }
+  body { font-family: "DM Sans", sans-serif; font-size: 14px; line-height: 1.45; }
+  .page {
+    width: 297mm;
+    height: 420mm;
+    padding: 18mm 18mm 16mm;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+    background:
+      linear-gradient(#E6EAE6, #E6EAE6);
+  }
+  .page::before {
+    content: "";
+    position: absolute; left: 0; right: 0; top: 0; height: 5px;
+    background: #006800;
+  }
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: #006800;
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-weight: 700;
+    font-size: 44px;
+    line-height: 1.05;
+    margin: 0 0 14px;
+    letter-spacing: -.02em;
+  }
+  h1.display {
+    font-size: 52px;
+    max-width: 18ch;
+  }
+  h2 {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-weight: 700;
+    font-size: 32px;
+    margin: 0 0 10px;
+    letter-spacing: -.02em;
+  }
+  .lead { color: #5A5A5A; max-width: 68ch; margin: 0 0 22px; font-size: 15px; }
+  .meta { margin: 0 0 28px; font-size: 13px; }
+  .meta div { margin: 4px 0; }
+  .meta strong { font-weight: 700; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .box {
+    background: #F7F9F7;
+    border: 1px solid #C4CCC4;
+    padding: 16px 18px;
+  }
+  .box h3 {
+    font-family: "DM Sans", sans-serif;
+    font-size: 15px;
+    margin: 0 0 8px;
+  }
+  .box p, .box li { color: #2A2A2A; font-size: 13px; }
+  .box ul { margin: 8px 0 0; padding-left: 18px; }
+  .box li { margin: 4px 0; }
+
+  .swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 18px 0; }
+  .swatch { background: #F7F9F7; border: 1px solid #C4CCC4; padding: 10px; }
+  .swatch .chip { height: 42px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,.08); }
+  .swatch .name { font-family: "IBM Plex Mono", monospace; font-size: 11px; }
+  .swatch .hex { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: #5A5A5A; }
+
+  .type-row {
+    display: grid; grid-template-columns: 140px 1fr;
+    gap: 12px; align-items: end;
+    border-bottom: 1px solid #C4CCC4;
+    padding: 10px 0;
+  }
+  .type-row .spec { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: #5A5A5A; }
+  .type-row .sample-xl { font-family: "Barlow Condensed", sans-serif; font-weight: 800; font-size: 48px; text-transform: uppercase; line-height: 1; }
+  .type-row .sample-l { font-family: "Barlow Condensed", sans-serif; font-weight: 800; font-size: 34px; text-transform: uppercase; line-height: 1; }
+  .type-row .sample-m { font-family: "DM Sans", sans-serif; font-weight: 500; font-size: 16px; }
+  .type-row .sample-mono { font-family: "IBM Plex Mono", monospace; font-size: 13px; }
+
+  .shot-frame {
+    background: #F7F9F7;
+    border: 1px solid #C4CCC4;
+    padding: 10px;
+    margin: 14px 0 12px;
+  }
+  .shot-frame .chrome {
+    background: #1E1E1E;
+    color: #9AD29A;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: 7px 10px;
+    margin-bottom: 8px;
+  }
+  .shot-frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 250mm;
+    object-fit: contain;
+    object-position: top;
+    background: #121412;
+  }
+  .campos {
+    margin-top: 10px;
+    border-top: 1px solid #C4CCC4;
+    padding-top: 10px;
+  }
+  .campos h4 {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #006800;
+    margin: 0 0 8px;
+  }
+  .campos table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .campos td { padding: 4px 6px; border-bottom: 1px solid #D5DBD5; vertical-align: top; }
+  .campos td:first-child { font-family: "IBM Plex Mono", monospace; width: 42%; color: #2A2A2A; }
+  .footer-note {
+    position: absolute; left: 18mm; right: 18mm; bottom: 12mm;
+    font-family: "IBM Plex Mono", monospace; font-size: 10px; color: #5A5A5A;
+    display: flex; justify-content: space-between;
+  }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+  .pair img { width: 100%; border: 1px solid #C4CCC4; background: #fff; }
+  .dir-cap { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; margin: 6px 0 0; color: #006800; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section class="page">
+  <p class="eyebrow">Entrega 1 · Maquetas de pantalla · Pickit Visual</p>
+  <h1 class="display">Pantallas principales de Pickit Visual</h1>
+  <p class="lead">Misma flota, mismo diagrama de carga y mismos modos iPad/TV. Lo que cambia es la piel. Hormigón frío, verde exacto del logo INCOVSA, tipografía condensada de almacén y un tablero oscuro legible a distancia.</p>
+  <div class="meta">
+    <div><strong>Proyecto</strong> INCOVSA · Pickit Visual · Bodega</div>
+    <div><strong>Equipo</strong> Proyecto académico · Universidad Rafael Landívar</div>
+    <div><strong>Piel</strong> entregable-1/prototipos/pickit-visual/tokens.css</div>
+    <div><strong>Alcance</strong> Diagrama de carga · flota 2 pequeños + 1 grande · modos Admin iPad y Tablero TV</div>
+  </div>
+  <div class="grid2">
+    <div class="box">
+      <h3>Piso. Qué es obligatorio</h3>
+      <p>La estructura no se negocia.</p>
+      <ul>
+        <li>Flota fija. Dos camiones pequeños (3.400 kg) y uno grande (6.000 kg).</li>
+        <li>Diagrama de carga como interacción principal. Celdas, kg y orden de atrás hacia la cabina.</li>
+        <li>Dos superficies. Admin en tableta. Tablero en TV para operarios.</li>
+        <li>Sin confirmación formal de carga en camión (P-45). El diagrama orienta.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>Techo. Hasta dónde puede llegar</h3>
+      <p>Esta hoja es el techo visual.</p>
+      <ul>
+        <li>Verde logo <code>#006800</code> y gris <code>#2A2A2A</code>. Nada de dorado inventado.</li>
+        <li>Barlow Condensed + DM Sans + IBM Plex Mono. Nada de Inter. Nada de morado.</li>
+        <li>Atmósfera de planta. Retícula de hormigón. No dashboard genérico.</li>
+        <li>TV oscuro con tipo grande. Lectura a metros de distancia.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-note"><span>INCOVSA · Pickit Visual</span><span>01 / portada</span></div>
+</section>
+
+<!-- SYSTEM -->
+<section class="page">
+  <p class="eyebrow">Techo visual · Sistema</p>
+  <h1>El sistema, antes de las pantallas</h1>
+  <p class="lead">Todo lo que sigue se arma solo con estas piezas. Si una pantalla necesita algo que no está aquí, primero se agrega al sistema.</p>
+
+  <p class="eyebrow">Sustrato, tinta y marca</p>
+  <div class="swatches">
+    <div class="swatch"><div class="chip" style="background:#E6EAE6"></div><div class="name">--hormigon</div><div class="hex">#E6EAE6 · fondo admin</div></div>
+    <div class="swatch"><div class="chip" style="background:#F7F9F7"></div><div class="name">--papel</div><div class="hex">#F7F9F7 · superficie</div></div>
+    <div class="swatch"><div class="chip" style="background:#1E1E1E"></div><div class="name">--tinta</div><div class="hex">#1E1E1E · texto</div></div>
+    <div class="swatch"><div class="chip" style="background:#5A5A5A"></div><div class="name">--muted</div><div class="hex">#5A5A5A · secundario</div></div>
+    <div class="swatch"><div class="chip" style="background:#006800"></div><div class="name">--verde-700</div><div class="hex">#006800 · logo</div></div>
+    <div class="swatch"><div class="chip" style="background:#003D00"></div><div class="name">--verde-900</div><div class="hex">#003D00 · barra</div></div>
+    <div class="swatch"><div class="chip" style="background:#121412"></div><div class="name">--bg-tv</div><div class="hex">#121412 · tablero</div></div>
+    <div class="swatch"><div class="chip" style="background:#2DB82D"></div><div class="name">--accent-tv</div><div class="hex">#2DB82D · TV</div></div>
+  </div>
+
+  <p class="eyebrow" style="margin-top:22px">Escala tipográfica</p>
+  <div class="type-row"><div class="spec">hero · 48/48<br>Barlow Condensed</div><div class="sample-xl">Diagrama de carga</div></div>
+  <div class="type-row"><div class="spec">title · 34/34<br>Barlow Condensed</div><div class="sample-l">Camión 1</div></div>
+  <div class="type-row"><div class="spec">body · 16/23<br>DM Sans</div><div class="sample-m">Asigne producto, posición y orden por camión.</div></div>
+  <div class="type-row"><div class="spec">mono · 11/16<br>IBM Plex Mono</div><div class="sample-mono">QUETZALTENANGO · 3 CAMIONES · SULF-ALUM-25</div></div>
+
+  <div class="grid2" style="margin-top:28px">
+    <div class="box">
+      <h3>Admin · iPad</h3>
+      <ul>
+        <li>Fondo hormigón con retícula sutil.</li>
+        <li>Toque mínimo 48 px.</li>
+        <li>Marco de tableta en escritorio.</li>
+        <li>Una acción primaria por región.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>Tablero · TV</h3>
+      <ul>
+        <li>Fondo #121412. Acento #2DB82D.</li>
+        <li>Tipo desde 28 px de cuerpo.</li>
+        <li>Sin marco. Lienzo a pantalla completa.</li>
+        <li>Estado siempre con texto + glifo.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-note"><span>tokens.css · logo #006800 / #2A2A2A</span><span>02 / sistema</span></div>
+</section>
+
+<!-- DIRECTIONS -->
+<section class="page">
+  <p class="eyebrow">Exploración · Tres direcciones</p>
+  <h1>Exhaust the design space</h1>
+  <p class="lead">Antes de fijar la piel se dibujaron tres direcciones throwaway. Se eligió Planta para admin. El contraste de Turno se guardó como escala TV del mismo sistema.</p>
+  <div class="pair">
+    <div>
+      <img src="file:///cursor/stores/bc-2bc200c9-90a0-4196-8d59-f41f12ddb0cd/media/pickit-mockups/directions/dir-a-planta.png" alt="Dirección A Planta">
+      <p class="dir-cap">A · Planta · elegida</p>
+    </div>
+    <div>
+      <img src="file:///cursor/stores/bc-2bc200c9-90a0-4196-8d59-f41f12ddb0cd/media/pickit-mockups/directions/dir-b-laboratorio.png" alt="Dirección B Laboratorio">
+      <p class="dir-cap">B · Laboratorio · descartada (fría de más)</p>
+    </div>
+  </div>
+  <div style="margin-top:12px; max-width:70%">
+    <img src="file:///cursor/stores/bc-2bc200c9-90a0-4196-8d59-f41f12ddb0cd/media/pickit-mockups/directions/dir-c-turno.png" alt="Dirección C Turno">
+    <p class="dir-cap">C · Turno TV · absorbida como modo tablero</p>
+  </div>
+  <div class="footer-note"><span>_scratch/directions.html</span><span>03 / direcciones</span></div>
+</section>
+
+<!-- SCREEN IPAD -->
+<section class="page">
+  <p class="eyebrow">Pantalla 1 · Admin · iPad · PV-01</p>
+  <h2>Diagrama de carga · tableta</h2>
+  <p class="lead">El admin organiza flota y celdas desde la tableta. La silueta del camión y el plano superior son el héroe. La lista de orden vive debajo, no compite.</p>
+  <div class="shot-frame">
+    <div class="chrome">pickit-visual/?modo=admin&amp;camion=c1 · iPad landscape</div>
+    <img src="file:///cursor/stores/bc-2bc200c9-90a0-4196-8d59-f41f12ddb0cd/media/pickit-demo/ipad-admin-diagrama.png" alt="iPad admin">
+  </div>
+  <div class="campos">
+    <h4>Campos visibles · flota y diagrama</h4>
+    <table>
+      <tr><td>camion.id</td><td>c1 · c2 · c3</td></tr>
+      <tr><td>camion.tipo</td><td>pequeno (3.400 kg) · grande (6.000 kg)</td></tr>
+      <tr><td>camion.estado</td><td>En preparación · En cola</td></tr>
+      <tr><td>slot.id / slot.kg / slot.producto</td><td>A1…Bn · kg · nombre químico o Libre</td></tr>
+      <tr><td>orden</td><td>De atrás hacia la cabina. Marca listo en piso.</td></tr>
+    </table>
+  </div>
+  <div class="footer-note"><span>Modo administración · tableta</span><span>04 / iPad</span></div>
+</section>
+
+<!-- SCREEN TV -->
+<section class="page">
+  <p class="eyebrow">Pantalla 2 · Tablero · TV · PV-02</p>
+  <h2>Diagrama de carga · proyección</h2>
+  <p class="lead">El personal de bodega lee el mismo diagrama a distancia. Tipo grande, fondo oscuro, acento verde vivo. Sin marco de dispositivo.</p>
+  <div class="shot-frame">
+    <div class="chrome">pickit-visual/?modo=tv&amp;camion=c1 · 1680×945</div>
+    <img src="file:///cursor/stores/bc-2bc200c9-90a0-4196-8d59-f41f12ddb0cd/media/pickit-demo/tv-tablero-diagrama.png" alt="TV tablero">
+  </div>
+  <div class="campos">
+    <h4>Reglas de superficie TV</h4>
+    <table>
+      <tr><td>fs-body</td><td>≥ 28 px</td></tr>
+      <tr><td>fs-hero</td><td>72 px · Barlow Condensed</td></tr>
+      <tr><td>contraste</td><td>Tinta clara sobre #121412. Acento #2DB82D.</td></tr>
+      <tr><td>estado</td><td>Texto + glifo. Nunca solo color.</td></tr>
+    </table>
+  </div>
+  <div class="footer-note"><span>Modo tablero · proyección TV</span><span>05 / TV</span></div>
+</section>
+
+<!-- SCREEN LARGE TRUCK -->
+<section class="page">
+  <p class="eyebrow">Pantalla 3 · Admin · Camión grande · PV-03</p>
+  <h2>Camión 3 · furgón 6.000 kg</h2>
+  <p class="lead">La flota no es decoración. El grande cambia la rejilla a 4×3 y la silueta a furgón cerrado. Misma piel. Distinto modelo de dominio.</p>
+  <div class="shot-frame">
+    <div class="chrome">pickit-visual/?modo=admin&amp;camion=c3</div>
+    <img src="file:///cursor/stores/bc-2bc200c9-90a0-4196-8d59-f41f12ddb0cd/media/pickit-mockups/shot-ipad-camion-grande.png" alt="Camión grande">
+  </div>
+  <div class="campos">
+    <h4>Modelo de flota</h4>
+    <table>
+      <tr><td>c1 / c2</td><td>Pequeño · plataforma abierta · rejilla 3×2 · 3.400 kg</td></tr>
+      <tr><td>c3</td><td>Grande · furgón cerrado · rejilla 4×3 · 6.000 kg</td></tr>
+      <tr><td>sede</td><td>Quetzaltenango · 3 camiones</td></tr>
+    </table>
+  </div>
+  <div class="footer-note"><span>Flota 2 pequeños + 1 grande</span><span>06 / camión grande</span></div>
+</section>
+
+<!-- CLOSE -->
+<section class="page">
+  <p class="eyebrow">Cierre · Qué queda fuera</p>
+  <h1>Fuera de estas maquetas</h1>
+  <p class="lead">Esta entrega sella la piel del diagrama de carga. No inventa pantallas nuevas del módulo Bodega.</p>
+  <div class="box">
+    <h3>Queda para la app real</h3>
+    <ul>
+      <li>IDs reales de camiones (P-01) y tamaños TV/tableta confirmados (P-27).</li>
+      <li>Integración al módulo Bodega cuando exista la app Next.js.</li>
+      <li>Confirmación formal de carga. Fuera de alcance (P-45).</li>
+      <li>Datos vivos de inventario y ruta. Aquí solo hay ejemplos.</li>
+    </ul>
+  </div>
+  <div class="box" style="margin-top:14px">
+    <h3>Archivos de esta entrega</h3>
+    <ul>
+      <li><code>entregable-1/prototipos/pickit-visual/</code> prototipo interactivo</li>
+      <li><code>docs/mockups.pdf</code> este documento</li>
+      <li><code>media/pickit-demo/</code> capturas iPad y TV</li>
+      <li><code>media/pickit-mockups/</code> fuentes de página y direcciones</li>
+    </ul>
+  </div>
+  <div class="footer-note"><span>Prototipo visual · no es software de producción</span><span>07 / cierre</span></div>
+</section>
+
+</body>
+</html>
