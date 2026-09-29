@@ -2,32 +2,32 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 130" fill="none" role="img" aria-labelledby="title-gde desc-gde">
   <title id="title-gde">Camion grande - furgon cerrado</title>
   <desc id="desc-gde">Silueta de camion rigido con caja cerrada y deflector de techo, dos ejes. Flota INCOVSA: 6000 kg.</desc>
-  <ellipse cx="130" cy="118" rx="108" ry="7" fill="#0B3A1B" opacity=".08"/>
-  <rect x="52" y="86" width="178" height="10" rx="1" fill="#1A1A17"/>
-  <rect x="118" y="90" width="36" height="10" rx="2" fill="#2A2A26"/>
-  <rect x="160" y="94" width="50" height="4" rx="1" fill="#DFDACE"/>
-  <path d="M22 42c0-4 3-8 8-8h46v54H22V42z" fill="#F6F4EF" stroke="#0B3A1B" stroke-width="2"/>
-  <path d="M30 34h44l8-14h-36c-8 0-14 6-16 14z" fill="#E8E4DA" stroke="#0B3A1B" stroke-width="1.6"/>
-  <path d="M30 44h38v26H30V44z" fill="#B8D4C0" stroke="#0B3A1B" stroke-width="1.2"/>
-  <rect x="20" y="78" width="56" height="10" rx="1" fill="#1A1A17"/>
-  <rect x="26" y="80" width="12" height="6" rx="1" fill="#C9A227"/>
-  <rect x="58" y="80" width="12" height="6" rx="1" fill="#C9A227"/>
-  <rect x="10" y="48" width="10" height="18" rx="1" fill="#1A1A17"/>
-  <rect x="12" y="50" width="6" height="10" fill="#B8D4C0"/>
-  <rect x="74" y="48" width="8" height="16" rx="1" fill="#1A1A17"/>
-  <path d="M76 20h158v66H76V20z" fill="#F6F4EF" stroke="#0B3A1B" stroke-width="2.2"/>
-  <path d="M76 20h158v8H76V20z" fill="#14612D"/>
-  <line x1="128" y1="28" x2="128" y2="86" stroke="#DFDACE" stroke-width="1.4"/>
-  <line x1="180" y1="28" x2="180" y2="86" stroke="#DFDACE" stroke-width="1.4"/>
-  <rect x="86" y="36" width="30" height="40" rx="1" fill="#E8E4DA" stroke="#0B3A1B" stroke-width="1"/>
-  <rect x="138" y="36" width="30" height="40" rx="1" fill="#E8E4DA" stroke="#0B3A1B" stroke-width="1"/>
-  <rect x="190" y="36" width="30" height="40" rx="1" fill="#E8E4DA" stroke="#0B3A1B" stroke-width="1"/>
-  <rect x="228" y="28" width="4" height="56" fill="#0B3A1B" opacity=".35"/>
-  <circle cx="46" cy="100" r="14" fill="#1A1A17"/>
-  <circle cx="46" cy="100" r="7" fill="#6E6E64"/>
-  <circle cx="196" cy="100" r="14" fill="#1A1A17"/>
-  <circle cx="210" cy="100" r="14" fill="#1A1A17"/>
-  <circle cx="196" cy="100" r="6" fill="#6E6E64"/>
-  <circle cx="210" cy="100" r="6" fill="#6E6E64"/>
-  <text x="155" y="62" text-anchor="middle" font-family="Archivo, Helvetica, sans-serif" font-size="14" font-weight="800" fill="#0B3A1B" letter-spacing="2">INCOVSA</text>
+  <ellipse cx="130" cy="118" rx="108" ry="7" fill="#003D00" opacity=".1"/>
+  <rect x="52" y="86" width="178" height="10" rx="1" fill="#1E1E1E"/>
+  <rect x="118" y="90" width="36" height="10" rx="2" fill="#2A2A2A"/>
+  <rect x="160" y="94" width="50" height="4" rx="1" fill="#C4CCC4"/>
+  <path d="M22 42c0-4 3-8 8-8h46v54H22V42z" fill="#F7F9F7" stroke="#006800" stroke-width="2"/>
+  <path d="M30 34h44l8-14h-36c-8 0-14 6-16 14z" fill="#E6EAE6" stroke="#006800" stroke-width="1.6"/>
+  <path d="M30 44h38v26H30V44z" fill="#C8E0C8" stroke="#006800" stroke-width="1.2"/>
+  <rect x="20" y="78" width="56" height="10" rx="1" fill="#1E1E1E"/>
+  <rect x="26" y="80" width="12" height="6" rx="1" fill="#006800"/>
+  <rect x="58" y="80" width="12" height="6" rx="1" fill="#006800"/>
+  <rect x="10" y="48" width="10" height="18" rx="1" fill="#1E1E1E"/>
+  <rect x="12" y="50" width="6" height="10" fill="#C8E0C8"/>
+  <rect x="74" y="48" width="8" height="16" rx="1" fill="#1E1E1E"/>
+  <path d="M76 20h158v66H76V20z" fill="#F7F9F7" stroke="#006800" stroke-width="2.2"/>
+  <path d="M76 20h158v8H76V20z" fill="#006800"/>
+  <line x1="128" y1="28" x2="128" y2="86" stroke="#C4CCC4" stroke-width="1.4"/>
+  <line x1="180" y1="28" x2="180" y2="86" stroke="#C4CCC4" stroke-width="1.4"/>
+  <rect x="86" y="36" width="30" height="40" rx="1" fill="#E6EAE6" stroke="#006800" stroke-width="1"/>
+  <rect x="138" y="36" width="30" height="40" rx="1" fill="#E6EAE6" stroke="#006800" stroke-width="1"/>
+  <rect x="190" y="36" width="30" height="40" rx="1" fill="#E6EAE6" stroke="#006800" stroke-width="1"/>
+  <rect x="228" y="28" width="4" height="56" fill="#004D00" opacity=".4"/>
+  <circle cx="46" cy="100" r="14" fill="#1E1E1E"/>
+  <circle cx="46" cy="100" r="7" fill="#5A5A5A"/>
+  <circle cx="196" cy="100" r="14" fill="#1E1E1E"/>
+  <circle cx="210" cy="100" r="14" fill="#1E1E1E"/>
+  <circle cx="196" cy="100" r="6" fill="#5A5A5A"/>
+  <circle cx="210" cy="100" r="6" fill="#5A5A5A"/>
+  <text x="155" y="62" text-anchor="middle" font-family="Barlow Condensed, Helvetica, sans-serif" font-size="15" font-weight="800" fill="#006800" letter-spacing="2">INCOVSA</text>
 </svg>

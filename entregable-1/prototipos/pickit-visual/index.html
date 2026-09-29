@@ -5,38 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Pickit Visual · INCOVSA</title>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=IBM+Plex+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="./tokens.css">
   <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; min-height: 100%; }
     body {
-      background: var(--bg);
+      background:
+        linear-gradient(180deg, rgba(0,104,0,.045), transparent 38%),
+        repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(0,0,0,.03) 24px),
+        repeating-linear-gradient(90deg, transparent, transparent 23px, rgba(0,0,0,.03) 24px),
+        var(--bg);
       color: var(--ink);
-      font: 400 var(--fs-body)/1.5 var(--font-body);
+      font: 400 var(--fs-body)/1.45 var(--font-body);
       -webkit-font-smoothing: antialiased;
       transition: background 0.35s ease, color 0.35s ease;
     }
-    h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 800; letter-spacing: -0.025em; line-height: 1.05; }
+    [data-modo="tv"] body,
+    body[data-modo="tv"] {
+      background:
+        radial-gradient(ellipse at 72% 0%, rgba(0,104,0,.38), transparent 55%),
+        var(--bg);
+    }
+    h1, h2, h3 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
     p { margin: 0; }
     button { font: inherit; }
     .mono { font-family: var(--font-mono); }
 
     .shell { min-height: 100vh; display: flex; flex-direction: column; }
 
-    /* Barra */
     .barra {
       background: var(--verde-900);
       color: #fff;
       padding: 0 var(--space-4);
-      height: calc(var(--touch) + 16px);
+      height: calc(var(--touch) + 18px);
       display: flex;
       align-items: center;
       position: sticky;
       top: 0;
       z-index: 20;
-      box-shadow: 0 8px 24px var(--sombra);
+      box-shadow: 0 10px 28px var(--sombra);
     }
+    [data-modo="tv"] .barra { background: var(--verde-700); }
+
     .barra-in {
       width: min(100%, var(--wrap));
       margin: 0 auto;
@@ -45,20 +63,40 @@
       justify-content: space-between;
       gap: var(--space-3);
     }
-    .marca { display: flex; align-items: center; gap: 12px; text-decoration: none; color: #fff; }
-    .marca-n { font-family: var(--font-display); font-weight: 800; font-size: calc(var(--fs-caption) + 4px); }
+    .marca {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+    .marca-logo {
+      height: 34px;
+      width: auto;
+      background: #fff;
+      padding: 4px 8px;
+      border-radius: 2px;
+      display: block;
+    }
+    [data-modo="tv"] .marca-logo { height: 48px; padding: 6px 10px; }
+    .marca-n {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: calc(var(--fs-caption) + 8px);
+      letter-spacing: 0.06em;
+    }
     .marca-s {
       font-family: var(--font-mono);
-      font-size: calc(var(--fs-eyebrow) - 1px);
+      font-size: var(--fs-eyebrow);
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--oro);
-      border-left: 1px solid rgba(232, 206, 114, 0.4);
+      color: #9AD29A;
+      border-left: 1px solid rgba(154, 210, 154, 0.4);
       padding-left: 12px;
     }
     .modos { display: flex; gap: 8px; }
-    .modos .pk-btn { min-height: 40px; padding: 0 14px; font-size: 12px; }
-    [data-modo="tv"] .modos .pk-btn { min-height: 52px; padding: 0 20px; font-size: 16px; }
+    .modos .pk-btn { min-height: 40px; padding: 0 14px; font-size: 13px; }
+    [data-modo="tv"] .modos .pk-btn { min-height: 52px; padding: 0 20px; font-size: 18px; }
 
     .wrap {
       width: min(100%, var(--wrap));
@@ -72,25 +110,46 @@
       justify-content: space-between;
       gap: var(--space-4);
       padding-bottom: var(--space-3);
-      border-bottom: 1px solid var(--linea);
+      border-bottom: 2px solid var(--linea);
       margin-bottom: var(--space-4);
       animation: subir 0.5s ease both;
     }
     .cabecera h1 { font-size: var(--fs-hero); margin-top: var(--space-2); }
-    .cabecera p { color: var(--muted); font-size: var(--fs-body); max-width: 42ch; margin-top: var(--space-2); }
+    .cabecera p {
+      color: var(--muted);
+      font-size: var(--fs-body);
+      max-width: 42ch;
+      margin-top: var(--space-2);
+    }
+    .sede-mark {
+      font-family: var(--font-mono);
+      font-size: var(--fs-eyebrow);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1.5px solid var(--linea);
+      padding: 10px 14px;
+      white-space: nowrap;
+    }
 
     .layout {
       display: grid;
-      grid-template-columns: minmax(240px, 0.9fr) minmax(0, 1.6fr);
+      grid-template-columns: minmax(240px, 0.85fr) minmax(0, 1.7fr);
       gap: var(--space-4);
       align-items: start;
     }
     @media (max-width: 900px) {
       .layout { grid-template-columns: 1fr; }
       .marca-s { display: none; }
+      .marca-n { display: none; }
     }
 
-    /* Flota */
+    .panel-flota {
+      background: var(--surface);
+      border: 1.5px solid var(--linea);
+      padding: var(--space-3);
+    }
+
     .flota-lista { display: flex; flex-direction: column; gap: var(--space-2); }
     .camion-card {
       display: grid;
@@ -106,26 +165,33 @@
       color: var(--ink);
       cursor: pointer;
       transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s, background 0.2s;
+      animation: subir 0.45s ease both;
     }
     .camion-card:hover { border-color: var(--verde-500); transform: translateY(-2px); }
     .camion-card[aria-pressed="true"] {
       border-color: var(--verde-700);
-      box-shadow: inset 3px 0 0 var(--dorado);
+      box-shadow: inset 4px 0 0 var(--verde-700);
       background: var(--verde-100);
     }
     [data-modo="tv"] .camion-card[aria-pressed="true"] {
-      background: rgba(232, 206, 114, 0.12);
-      border-color: var(--oro);
-      box-shadow: inset 4px 0 0 var(--oro);
+      background: rgba(45, 184, 45, 0.12);
+      border-color: var(--accent);
+      box-shadow: inset 4px 0 0 var(--accent);
     }
-    .camion-card img, .camion-card .icono {
+    .camion-card .icono {
       width: 96px;
       height: auto;
       display: block;
     }
     [data-modo="tv"] .camion-card .icono { width: 140px; }
     .camion-card h3 { font-size: var(--fs-title-sm); }
-    .camion-meta { font-family: var(--font-mono); font-size: var(--fs-eyebrow); letter-spacing: 0.08em; color: var(--muted); margin-top: 6px; }
+    .camion-meta {
+      font-family: var(--font-mono);
+      font-size: var(--fs-eyebrow);
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-top: 6px;
+    }
     .camion-estado {
       margin-top: 10px;
       font-family: var(--font-mono);
@@ -134,13 +200,12 @@
       text-transform: uppercase;
       color: var(--verde-700);
     }
-    [data-modo="tv"] .camion-estado { color: var(--oro); }
+    [data-modo="tv"] .camion-estado { color: var(--accent); }
 
-    /* Diagrama */
     .panel-diagrama { display: flex; flex-direction: column; gap: var(--space-3); }
     .diagrama-top {
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       justify-content: space-between;
       gap: var(--space-3);
       flex-wrap: wrap;
@@ -152,63 +217,74 @@
       gap: 10px;
       font-family: var(--font-mono);
     }
-    .capacidad .num { font-size: var(--fs-num); font-weight: 500; color: var(--accent); }
+    .capacidad .num {
+      font-family: var(--font-display);
+      font-size: var(--fs-num);
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+    }
     .capacidad .den { font-size: var(--fs-caption); color: var(--muted); }
 
     .barra-carga {
-      height: 10px;
-      background: rgba(11, 58, 27, 0.1);
-      border-radius: 999px;
+      height: 12px;
+      background: rgba(0, 104, 0, 0.12);
+      border-radius: 0;
       overflow: hidden;
     }
-    [data-modo="tv"] .barra-carga { height: 16px; background: rgba(255,255,255,0.12); }
+    [data-modo="tv"] .barra-carga { height: 16px; background: rgba(255,255,255,0.1); }
     .barra-carga > span {
       display: block;
       height: 100%;
       width: 0;
-      background: linear-gradient(90deg, var(--verde-700), var(--verde-500));
+      background: var(--verde-700);
       transition: width 0.45s cubic-bezier(.2,.8,.2,1);
     }
-    [data-modo="tv"] .barra-carga > span {
-      background: linear-gradient(90deg, var(--dorado), var(--oro));
-    }
-    .barra-carga.alerta > span {
-      background: linear-gradient(90deg, #B45309, #F59E0B);
-    }
+    [data-modo="tv"] .barra-carga > span { background: var(--accent); }
+    .barra-carga.alerta > span { background: var(--alerta); }
 
     .vista-camion {
       position: relative;
       background: var(--surface);
-      border: 1px solid var(--linea);
+      border: 1.5px solid var(--linea);
       border-radius: var(--radius);
       padding: var(--space-4);
       overflow: hidden;
+      animation: entrar 0.55s ease both;
     }
     .vista-camion::before {
       content: "";
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(ellipse at 20% 0%, rgba(47,139,76,.12), transparent 50%),
-        radial-gradient(ellipse at 80% 100%, rgba(201,162,39,.1), transparent 45%);
+        radial-gradient(ellipse at 18% 0%, rgba(0,104,0,.1), transparent 48%),
+        radial-gradient(ellipse at 85% 100%, rgba(0,61,0,.06), transparent 42%);
       pointer-events: none;
     }
     [data-modo="tv"] .vista-camion::before {
       background:
-        radial-gradient(ellipse at 15% 0%, rgba(232,206,114,.12), transparent 50%),
-        radial-gradient(ellipse at 90% 100%, rgba(47,139,76,.2), transparent 45%);
+        radial-gradient(ellipse at 15% 0%, rgba(45,184,45,.12), transparent 50%),
+        radial-gradient(ellipse at 90% 100%, rgba(0,104,0,.25), transparent 45%);
     }
 
     .silueta {
+      position: relative;
       display: flex;
       justify-content: center;
       margin-bottom: var(--space-3);
+      z-index: 1;
+    }
+    .silueta img {
+      width: min(100%, 460px);
+      height: auto;
+      filter: drop-shadow(0 14px 20px var(--sombra));
       animation: entrar 0.55s ease both;
     }
-    .silueta img { width: min(100%, 420px); height: auto; filter: drop-shadow(0 12px 18px var(--sombra)); }
-    [data-modo="tv"] .silueta img { width: min(100%, 640px); }
+    [data-modo="tv"] .silueta img { width: min(100%, 680px); }
 
     .plano-label {
+      position: relative;
+      z-index: 1;
       font-family: var(--font-mono);
       font-size: var(--fs-eyebrow);
       letter-spacing: 0.16em;
@@ -220,8 +296,9 @@
       gap: var(--space-2);
     }
 
-    /* Plano de carga — vista superior */
     .plano {
+      position: relative;
+      z-index: 1;
       display: grid;
       grid-template-columns: 72px 1fr;
       gap: var(--space-2);
@@ -241,7 +318,7 @@
       color: var(--muted);
       border: 1.5px solid var(--linea);
       border-radius: var(--radius);
-      background: rgba(11,58,27,.04);
+      background: rgba(0, 61, 0, 0.04);
       padding: var(--space-2);
     }
     [data-modo="tv"] .cabina-hint { background: rgba(255,255,255,.05); }
@@ -249,18 +326,18 @@
     .bodega-grid {
       display: grid;
       gap: var(--space-2);
-      min-height: 220px;
+      min-height: 240px;
     }
     .bodega-grid.pequeno {
       grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(2, minmax(88px, 1fr));
+      grid-template-rows: repeat(2, minmax(96px, 1fr));
     }
     .bodega-grid.grande {
       grid-template-columns: repeat(4, 1fr);
-      grid-template-rows: repeat(3, minmax(80px, 1fr));
+      grid-template-rows: repeat(3, minmax(84px, 1fr));
     }
-    [data-modo="tv"] .bodega-grid.pequeno { grid-template-rows: repeat(2, minmax(120px, 1fr)); }
-    [data-modo="tv"] .bodega-grid.grande { grid-template-rows: repeat(3, minmax(110px, 1fr)); }
+    [data-modo="tv"] .bodega-grid.pequeno { grid-template-rows: repeat(2, minmax(130px, 1fr)); }
+    [data-modo="tv"] .bodega-grid.grande { grid-template-rows: repeat(3, minmax(118px, 1fr)); }
 
     .pk-slot {
       display: flex;
@@ -282,9 +359,11 @@
     .pk-slot .prod {
       font-family: var(--font-display);
       font-weight: 700;
-      font-size: var(--fs-caption);
-      line-height: 1.2;
+      font-size: calc(var(--fs-caption) + 2px);
+      line-height: 1.15;
       margin-top: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
     }
     .pk-slot .kg {
       font-family: var(--font-mono);
@@ -294,14 +373,14 @@
       margin-top: auto;
       padding-top: 8px;
     }
-    .pk-slot.vacio .prod { color: var(--muted); font-weight: 500; }
+    .pk-slot.vacio .prod { color: var(--muted); font-weight: 600; }
     .pk-slot.listo {
-      border-color: var(--verde-700);
-      background: rgba(47,139,76,.22);
+      border-color: var(--verde-800);
+      background: rgba(0, 104, 0, 0.22);
     }
     [data-modo="tv"] .pk-slot.listo {
-      border-color: var(--oro);
-      background: rgba(232,206,114,.22);
+      border-color: var(--accent);
+      background: rgba(45, 184, 45, 0.22);
     }
     .pk-slot.listo .kg::after {
       content: " · LISTO";
@@ -309,7 +388,6 @@
       letter-spacing: 0.12em;
     }
 
-    /* Lista lateral de pasos */
     .pasos {
       display: grid;
       grid-template-columns: 1fr;
@@ -322,11 +400,11 @@
       align-items: center;
       padding: var(--space-2) var(--space-3);
       background: var(--surface);
-      border: 1px solid var(--linea);
+      border: 1.5px solid var(--linea);
       border-radius: var(--radius);
       transition: opacity 0.2s, border-color 0.2s;
     }
-    .paso.hecho { opacity: 0.55; }
+    .paso.hecho { opacity: 0.5; }
     .paso .ord {
       font-family: var(--font-display);
       font-weight: 800;
@@ -335,10 +413,24 @@
       min-width: 1.4ch;
     }
     .paso .txt { font-size: var(--fs-caption); }
-    .paso .txt strong { font-family: var(--font-display); display: block; font-size: var(--fs-body); margin-bottom: 2px; }
-    .paso .txt span { color: var(--muted); font-family: var(--font-mono); font-size: var(--fs-eyebrow); letter-spacing: 0.06em; }
+    .paso .txt strong {
+      font-family: var(--font-display);
+      display: block;
+      font-size: var(--fs-body);
+      margin-bottom: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .paso .txt span {
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: var(--fs-eyebrow);
+      letter-spacing: 0.06em;
+    }
 
     .leyenda {
+      position: relative;
+      z-index: 1;
       display: flex;
       flex-wrap: wrap;
       gap: var(--space-3);
@@ -357,25 +449,25 @@
       vertical-align: -2px;
       border: 1.5px solid var(--linea);
     }
-    .leyenda .l-lleno { background: var(--verde-100); border-color: var(--verde-500); }
-    .leyenda .l-listo { background: rgba(47,139,76,.28); border-color: var(--verde-700); }
+    .leyenda .l-lleno { background: var(--verde-100); border-color: var(--verde-700); }
+    .leyenda .l-listo { background: rgba(0,104,0,.28); border-color: var(--verde-800); }
     .leyenda .l-vacio { background: transparent; }
-    [data-modo="tv"] .leyenda .l-lleno { background: rgba(232,206,114,.14); border-color: var(--oro); }
-    [data-modo="tv"] .leyenda .l-listo { background: rgba(232,206,114,.28); border-color: var(--oro); }
+    [data-modo="tv"] .leyenda .l-lleno { background: rgba(45,184,45,.14); border-color: var(--accent); }
+    [data-modo="tv"] .leyenda .l-listo { background: rgba(45,184,45,.28); border-color: var(--accent); }
 
     .nota-mock {
       margin-top: var(--space-4);
       padding: var(--space-3);
-      border: 1.5px dashed var(--dorado);
+      border: 1.5px dashed var(--verde-700);
       border-radius: var(--radius);
-      background: repeating-linear-gradient(135deg, rgba(201,162,39,.07) 0 9px, transparent 9px 18px);
-      color: #54451A;
+      background: repeating-linear-gradient(135deg, rgba(0,104,0,.06) 0 9px, transparent 9px 18px);
+      color: var(--verde-800);
       font-size: var(--fs-caption);
     }
     [data-modo="tv"] .nota-mock {
-      color: var(--oro);
-      background: repeating-linear-gradient(135deg, rgba(232,206,114,.08) 0 9px, transparent 9px 18px);
-      border-color: var(--oro);
+      color: var(--accent);
+      background: repeating-linear-gradient(135deg, rgba(45,184,45,.08) 0 9px, transparent 9px 18px);
+      border-color: var(--accent);
     }
 
     .acciones {
@@ -398,13 +490,12 @@
       to { opacity: 1; transform: none; }
     }
 
-    /* Marco iPad sutil en modo admin en desktop */
     [data-modo="admin"] .marco-dispositivo {
       max-width: 1180px;
       margin: var(--space-3) auto var(--space-5);
-      border: 10px solid #1A1A17;
+      border: 10px solid #1E1E1E;
       border-radius: 28px;
-      box-shadow: 0 30px 60px rgba(11,58,27,.18);
+      box-shadow: 0 30px 60px rgba(0, 61, 0, 0.18);
       overflow: hidden;
       background: var(--bg);
     }
@@ -424,11 +515,7 @@
       <header class="barra">
         <div class="barra-in">
           <a class="marca" href="#">
-            <svg width="30" height="30" viewBox="0 0 38 38" fill="none" aria-hidden="true">
-              <rect x="1.2" y="1.2" width="35.6" height="35.6" rx="2" stroke="#E8CE72" stroke-width="1.6"></rect>
-              <path d="M10 27V11h5.4v16z" fill="#E8CE72"></path>
-              <path d="M18.6 27V16H24v11z" fill="#FFFFFF" fill-opacity=".9"></path>
-            </svg>
+            <img class="marca-logo" src="./incovsa-logo.png" alt="INCOVSA Químicos">
             <span class="marca-n">INCOVSA</span>
             <span class="marca-s">Pickit Visual</span>
           </a>
@@ -444,13 +531,13 @@
           <div>
             <p class="pk-eyebrow" id="modo-label">Modo administración · tableta</p>
             <h1>Diagrama de carga</h1>
-            <p id="modo-desc">Organice qué va en cada camión, en qué posición y en qué orden. Flota de Quetzaltenango: 2 pequeños + 1 grande.</p>
+            <p id="modo-desc">Asigne producto, posición y orden por camión. Flota Quetzaltenango. Dos pequeños y un grande.</p>
           </div>
-          <span class="pk-pill" id="sede-pill">Quetzaltenango · 3 camiones</span>
+          <span class="sede-mark" id="sede-pill">Quetzaltenango · 3 camiones</span>
         </div>
 
         <div class="layout">
-          <aside class="pk-card" aria-label="Flota">
+          <aside class="panel-flota" aria-label="Flota">
             <p class="pk-eyebrow" style="margin-bottom: var(--space-3)">Flota del día</p>
             <div class="flota-lista" id="flota"></div>
           </aside>
@@ -502,7 +589,7 @@
 
             <div class="nota-mock">
               <strong class="mono" style="letter-spacing:0.14em;text-transform:uppercase;font-size:10px;display:block;margin-bottom:8px">Prototipo visual</strong>
-              Datos y posiciones de ejemplo. El sistema real de Bodega no exige confirmación de carga en el camión (P-45); este diagrama es la propuesta Pickit Visual para orientar al personal en TV y tableta.
+              Datos y posiciones de ejemplo. Bodega real no exige confirmación de carga en camión (P-45). Este diagrama orienta al personal en TV y tableta.
             </div>
           </section>
         </div>
@@ -600,8 +687,8 @@
         ? "Modo administración · tableta"
         : "Modo tablero · proyección TV";
       el("modo-desc").textContent = modo === "admin"
-        ? "Organice qué va en cada camión, en qué posición y en qué orden. Flota de Quetzaltenango: 2 pequeños + 1 grande."
-        : "Lectura a distancia: tipografía grande, alto contraste y jerarquía clara para el personal de bodega.";
+        ? "Asigne producto, posición y orden por camión. Flota Quetzaltenango. Dos pequeños y un grande."
+        : "Lectura a distancia. Tipo grande, alto contraste y jerarquía clara para bodega.";
       el("orden-hint").textContent = modo === "tv"
         ? "Marque la celda cuando el producto esté en piso"
         : "Toque una celda para marcarla lista";
@@ -703,7 +790,7 @@
             <strong>${s.producto}</strong>
             <span>${s.id} · ${s.sku} · ${fmt(s.kg)} kg</span>
           </div>
-          <span class="pk-pill">${hecho ? "Listo" : "Cargar"}</span>`;
+          <span class="pk-mark">${hecho ? "■ Listo" : "○ Cargar"}</span>`;
         root.appendChild(div);
       });
     }

@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pickit Visual · directions (throwaway)</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;600&family=Oswald:wght@500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui; background: #111; color: #eee; }
+    .switcher {
+      position: sticky; top: 0; z-index: 40;
+      display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+      padding: 12px 16px; background: #0a0a0a; border-bottom: 1px solid #333;
+    }
+    .switcher button {
+      border: 1px solid #555; background: #1a1a1a; color: #ddd;
+      padding: 10px 14px; cursor: pointer; font: 600 13px/1 "DM Sans", sans-serif;
+    }
+    .switcher button[aria-pressed="true"] { background: #006800; border-color: #006800; color: #fff; }
+    .switcher .note { margin-left: auto; font: 400 12px/1.3 "IBM Plex Mono", monospace; color: #888; max-width: 42ch; }
+    .stage { min-height: 100vh; }
+    .frame {
+      max-width: 1100px; margin: 24px auto; overflow: hidden;
+      border: 12px solid #1a1a1a; border-radius: 22px;
+    }
+    [data-dir="c"] .frame { max-width: none; margin: 0; border: 0; border-radius: 0; }
+
+    /* Shared mini UI */
+    .barra { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; }
+    .marca { display: flex; align-items: center; gap: 12px; }
+    .marca img { height: 28px; width: auto; }
+    .wrap { padding: 24px 28px 36px; }
+    .layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
+    .fleet button {
+      width: 100%; text-align: left; display: grid; grid-template-columns: 72px 1fr; gap: 12px;
+      align-items: center; padding: 12px; margin-bottom: 8px; cursor: pointer;
+    }
+    .fleet img { width: 72px; height: auto; }
+    .hero-d { display: flex; justify-content: space-between; align-items: end; gap: 16px; margin-bottom: 14px; }
+    .cap .n { font-size: 42px; font-weight: 700; }
+    .bar { height: 10px; margin-bottom: 16px; overflow: hidden; }
+    .bar > i { display: block; height: 100%; width: 72%; }
+    .truck { text-align: center; margin-bottom: 12px; }
+    .truck img { width: min(100%, 380px); }
+    .grid3 {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; min-height: 160px;
+    }
+    .slot { padding: 10px; min-height: 88px; display: flex; flex-direction: column; justify-content: space-between; }
+    .slot .pos { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; }
+    .slot .kg { font-size: 18px; font-weight: 600; margin-top: auto; }
+
+    /* ========== A · PLANTA ========== */
+    [data-dir="a"] {
+      --bg: #E6EAE6;
+      --surf: #F7F9F7;
+      --ink: #1E1E1E;
+      --mute: #5A5A5A;
+      --brand: #006800;
+      --brand-deep: #004D00;
+      --line: #C4CCC4;
+      --font-d: "Barlow Condensed", sans-serif;
+      --font-b: "DM Sans", sans-serif;
+      --font-m: "IBM Plex Mono", monospace;
+      background:
+        linear-gradient(180deg, rgba(0,104,0,.04), transparent 40%),
+        repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(0,0,0,.035) 24px),
+        repeating-linear-gradient(90deg, transparent, transparent 23px, rgba(0,0,0,.035) 24px),
+        var(--bg);
+      color: var(--ink);
+      font-family: var(--font-b);
+    }
+    [data-dir="a"] .barra { background: var(--brand-deep); color: #fff; }
+    [data-dir="a"] .marca-n { font: 800 22px/1 var(--font-d); letter-spacing: .04em; }
+    [data-dir="a"] .marca-s { font: 500 11px/1 var(--font-m); letter-spacing: .18em; text-transform: uppercase; color: #9AD29A; border-left: 1px solid rgba(154,210,154,.35); padding-left: 12px; }
+    [data-dir="a"] h1 { font: 800 44px/1 var(--font-d); letter-spacing: -.01em; margin: 6px 0 8px; text-transform: uppercase; }
+    [data-dir="a"] .eyebrow { font: 500 11px/1 var(--font-m); letter-spacing: .2em; text-transform: uppercase; color: var(--brand); }
+    [data-dir="a"] .fleet button { background: var(--surf); border: 1.5px solid var(--line); color: var(--ink); }
+    [data-dir="a"] .fleet button.on { border-color: var(--brand); box-shadow: inset 4px 0 0 var(--brand); background: #E8F4E8; }
+    [data-dir="a"] .panel { background: var(--surf); border: 1.5px solid var(--line); padding: 18px; }
+    [data-dir="a"] .bar { background: rgba(0,104,0,.12); }
+    [data-dir="a"] .bar > i { background: var(--brand); }
+    [data-dir="a"] .cap .n { font-family: var(--font-d); color: var(--brand); }
+    [data-dir="a"] .slot { border: 2px solid var(--brand); background: #E8F4E8; }
+    [data-dir="a"] .slot.empty { border-style: dashed; border-color: var(--line); background: transparent; color: var(--mute); }
+    [data-dir="a"] .aside { background: var(--surf); border: 1.5px solid var(--line); padding: 16px; }
+
+    /* ========== B · LABORATORIO ========== */
+    [data-dir="b"] {
+      --bg: #FFFFFF;
+      --surf: #FFFFFF;
+      --ink: #2A2A2A;
+      --mute: #666;
+      --brand: #006800;
+      --line: #D0D8D0;
+      --font-d: "Space Grotesk", sans-serif;
+      --font-b: "IBM Plex Sans", sans-serif;
+      --font-m: "IBM Plex Mono", monospace;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(0,104,0,.07), transparent 42%),
+        linear-gradient(#e8f0e8 1px, transparent 1px),
+        linear-gradient(90deg, #e8f0e8 1px, transparent 1px),
+        var(--bg);
+      background-size: auto, 28px 28px, 28px 28px, auto;
+      color: var(--ink);
+      font-family: var(--font-b);
+    }
+    [data-dir="b"] .barra { background: #fff; color: var(--ink); border-bottom: 3px solid var(--brand); }
+    [data-dir="b"] .marca-n { font: 700 20px/1 var(--font-d); color: var(--brand); letter-spacing: -.02em; }
+    [data-dir="b"] .marca-s { font: 500 10px/1 var(--font-m); letter-spacing: .2em; text-transform: uppercase; color: var(--mute); border-left: 1px solid var(--line); padding-left: 12px; }
+    [data-dir="b"] h1 { font: 700 36px/1.05 var(--font-d); margin: 6px 0 8px; letter-spacing: -.03em; }
+    [data-dir="b"] .eyebrow { font: 500 11px/1 var(--font-m); letter-spacing: .22em; text-transform: uppercase; color: var(--brand); }
+    [data-dir="b"] .fleet button { background: #fff; border: 1px solid var(--line); color: var(--ink); }
+    [data-dir="b"] .fleet button.on { border-color: var(--brand); outline: 2px solid rgba(0,104,0,.25); }
+    [data-dir="b"] .panel { background: rgba(255,255,255,.92); border: 1px solid var(--line); padding: 18px; }
+    [data-dir="b"] .bar { background: #EEF3EE; border: 1px solid var(--line); }
+    [data-dir="b"] .bar > i { background: linear-gradient(90deg, #004D00, #006800); }
+    [data-dir="b"] .cap .n { font-family: var(--font-m); color: var(--brand); }
+    [data-dir="b"] .slot { border: 1px solid var(--brand); background: rgba(0,104,0,.06); }
+    [data-dir="b"] .slot.empty { border-style: dashed; border-color: var(--line); background: #fff; color: var(--mute); }
+    [data-dir="b"] .aside { background: rgba(255,255,255,.92); border: 1px solid var(--line); padding: 16px; }
+
+    /* ========== C · TURNO ========== */
+    [data-dir="c"] {
+      --bg: #121412;
+      --surf: #1A1F1A;
+      --ink: #F2F5F2;
+      --mute: #A3AFA3;
+      --brand: #2DB82D;
+      --brand-deep: #006800;
+      --line: rgba(45,184,45,.28);
+      --font-d: "Oswald", sans-serif;
+      --font-b: "Source Sans 3", sans-serif;
+      --font-m: "IBM Plex Mono", monospace;
+      background:
+        radial-gradient(ellipse at 70% 0%, rgba(0,104,0,.35), transparent 55%),
+        var(--bg);
+      color: var(--ink);
+      font-family: var(--font-b);
+    }
+    [data-dir="c"] .barra { background: #006800; color: #fff; }
+    [data-dir="c"] .marca-n { font: 700 26px/1 var(--font-d); letter-spacing: .06em; text-transform: uppercase; }
+    [data-dir="c"] .marca-s { font: 500 12px/1 var(--font-m); letter-spacing: .2em; text-transform: uppercase; color: #C8F0C8; border-left: 1px solid rgba(200,240,200,.35); padding-left: 12px; }
+    [data-dir="c"] h1 { font: 700 56px/1 var(--font-d); letter-spacing: .02em; text-transform: uppercase; margin: 8px 0; }
+    [data-dir="c"] .eyebrow { font: 500 14px/1 var(--font-m); letter-spacing: .22em; text-transform: uppercase; color: var(--brand); }
+    [data-dir="c"] .fleet button { background: var(--surf); border: 2px solid var(--line); color: var(--ink); }
+    [data-dir="c"] .fleet button.on { border-color: var(--brand); background: rgba(0,104,0,.35); }
+    [data-dir="c"] .panel { background: var(--surf); border: 2px solid var(--line); padding: 22px; }
+    [data-dir="c"] .bar { background: rgba(255,255,255,.08); height: 14px; }
+    [data-dir="c"] .bar > i { background: var(--brand); }
+    [data-dir="c"] .cap .n { font-family: var(--font-d); font-size: 64px; color: var(--brand); }
+    [data-dir="c"] .slot { border: 2px solid var(--brand); background: rgba(45,184,45,.12); font-size: 18px; min-height: 110px; }
+    [data-dir="c"] .slot .kg { font-size: 28px; }
+    [data-dir="c"] .slot.empty { border-style: dashed; border-color: var(--line); background: transparent; color: var(--mute); }
+    [data-dir="c"] .aside { background: var(--surf); border: 2px solid var(--line); padding: 18px; }
+    [data-dir="c"] .layout { grid-template-columns: 320px 1fr; gap: 28px; }
+    [data-dir="c"] .wrap { padding: 32px 40px 48px; }
+    [data-dir="c"] .truck img { width: min(100%, 560px); filter: brightness(1.15); }
+  </style>
+</head>
+<body data-dir="a">
+  <div class="switcher">
+    <strong style="font:700 13px DM Sans,sans-serif;margin-right:8px">DIRECTIONS</strong>
+    <button type="button" data-set="a" aria-pressed="true">A · Planta</button>
+    <button type="button" data-set="b" aria-pressed="false">B · Laboratorio</button>
+    <button type="button" data-set="c" aria-pressed="false">C · Turno TV</button>
+    <span class="note">Throwaway. Keys 1/2/3. Decide visual language before shipping into index.html.</span>
+  </div>
+  <div class="stage">
+    <div class="frame">
+      <header class="barra">
+        <div class="marca">
+          <img src="../incovsa-logo.png" alt="INCOVSA" style="filter:none; background:#fff; padding:4px 8px;">
+          <span class="marca-n">INCOVSA</span>
+          <span class="marca-s">Pickit Visual</span>
+        </div>
+        <span class="eyebrow" id="mode-tag">Admin · iPad</span>
+      </header>
+      <main class="wrap">
+        <p class="eyebrow">Diagrama de carga · Quetzaltenango</p>
+        <div class="hero-d">
+          <div>
+            <h1>Camión 1</h1>
+            <p style="margin:0;max-width:40ch;opacity:.85" id="blurb">Vista planta. Hormigón frío, verde de logo, tipografía condensada de almacén.</p>
+          </div>
+          <div class="cap"><span class="n">2.600</span> <span style="opacity:.7">/ 3.400 kg</span></div>
+        </div>
+        <div class="bar"><i></i></div>
+        <div class="layout">
+          <aside class="aside">
+            <p class="eyebrow" style="margin:0 0 12px">Flota del día</p>
+            <div class="fleet">
+              <button type="button" class="on">
+                <img src="../camion-pequeno.svg" alt="">
+                <div>
+                  <strong>Camión 1</strong>
+                  <div style="font:500 11px/1.4 var(--font-m);opacity:.7;margin-top:4px">PEQUEÑO · 3.400 kg</div>
+                </div>
+              </button>
+              <button type="button">
+                <img src="../camion-pequeno.svg" alt="">
+                <div>
+                  <strong>Camión 2</strong>
+                  <div style="font:500 11px/1.4 var(--font-m);opacity:.7;margin-top:4px">PEQUEÑO · 3.400 kg</div>
+                </div>
+              </button>
+              <button type="button">
+                <img src="../camion-grande.svg" alt="">
+                <div>
+                  <strong>Camión 3</strong>
+                  <div style="font:500 11px/1.4 var(--font-m);opacity:.7;margin-top:4px">GRANDE · 6.000 kg</div>
+                </div>
+              </button>
+            </div>
+          </aside>
+          <section class="panel">
+            <div class="truck"><img src="../camion-pequeno.svg" alt="Camión pequeño"></div>
+            <p class="eyebrow" style="margin:0 0 8px">Plano de bodega · vista superior</p>
+            <div class="grid3">
+              <div class="slot"><span class="pos">A1</span><strong>Sulfato de Aluminio</strong><span class="kg">500 kg</span></div>
+              <div class="slot"><span class="pos">A2</span><strong>Carbonato de Sodio</strong><span class="kg">450 kg</span></div>
+              <div class="slot"><span class="pos">A3</span><strong>Ácido Acético</strong><span class="kg">300 kg</span></div>
+              <div class="slot"><span class="pos">B1</span><strong>Hipoclorito</strong><span class="kg">600 kg</span></div>
+              <div class="slot"><span class="pos">B2</span><strong>Parafina 58/60</strong><span class="kg">750 kg</span></div>
+              <div class="slot empty"><span class="pos">B3</span><strong>Libre</strong><span class="kg">—</span></div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script>
+    const blurbs = {
+      a: "Vista planta. Hormigón frío, verde de logo, tipografía condensada de almacén.",
+      b: "Vista laboratorio. Retícula de cuaderno, blanco de marca, Space Grotesk.",
+      c: "Vista turno. Oscuro de bodega nocturna, tipo enorme para TV a distancia."
+    };
+    const tags = { a: "Admin · iPad", b: "Admin · iPad", c: "Tablero · TV" };
+    function setDir(d) {
+      document.body.dataset.dir = d;
+      document.querySelectorAll(".switcher button[data-set]").forEach((b) => {
+        b.setAttribute("aria-pressed", String(b.dataset.set === d));
+      });
+      document.getElementById("blurb").textContent = blurbs[d];
+      document.getElementById("mode-tag").textContent = tags[d];
+    }
+    document.querySelectorAll(".switcher button[data-set]").forEach((b) => {
+      b.addEventListener("click", () => setDir(b.dataset.set));
+    });
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "1") setDir("a");
+      if (e.key === "2") setDir("b");
+      if (e.key === "3") setDir("c");
+    });
+  </script>
+</body>
+</html>
