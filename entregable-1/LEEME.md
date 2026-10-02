@@ -55,6 +55,19 @@ Los índices general y de figuras ya están actualizados. Si alguien edita el te
 | `prototipos/` | Las pantallas del prototipo (`.dc.html`), el lienzo (`canvas.json`), el prototipo navegable y sus herramientas |
 | `prototipos/pickit-visual/` | Design system y demo interactiva del diagrama de carga (modos iPad admin y TV). Abrir `index.html` |
 
+### Pickit Visual (diagrama de carga)
+
+Propuesta visual sobre el tablero de Bodega. No sustituye las capturas del Anexo C del Documento 1.
+
+| Hecho | Evidencia |
+|---|---|
+| En `develop` hay una demo navegable (`index.html`, tokens, siluetas SVG) | PR [#32](https://github.com/jordin-garcia/proyecto_incovsa/pull/32) (mergeado) |
+| El equipo aprobó los borradores de la iteración de marca (dirección Planta, verde logo `#006800`) | Comentarios de revisión del proyecto |
+| El PDF de mockups (7 páginas A3) y el rediseño Planta están en un PR abierto, aún en borrador | PR [#33](https://github.com/jordin-garcia/proyecto_incovsa/pull/33) → `develop` |
+| Capacidades y flota alineadas a specs | 3.400 kg / 6.000 kg, flota 2+1; sin confirmación formal de carga (P-45) |
+
+Cuando se mergee el PR #33, `prototipos/pickit-visual/` incluirá `mockups.pdf`, `mockups-source.html` y el logo. Hasta entonces la copia de entrega del PDF está en el store del proyecto (`docs/mockups.pdf`).
+
 ### Para volver a generar las figuras 1 a 5
 
 Con Python y la biblioteca Pillow instalada, desde la carpeta `diagramas/`:
