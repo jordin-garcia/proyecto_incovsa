@@ -37,7 +37,7 @@ La columna **SKU** del prototipo **se quita** (11/10).
 
 **Ejemplo con resto:** 60 kg con Peso de Conversión 25 se muestran como "2 unidades + 10 kg". 10 kg con Peso de Conversión 25 se muestran como "0 unidades + 10 kg".
 
-> Cómo se muestra una cantidad exacta, "2 unidades" o "2 unidades + 0 kg", está pendiente (P-26).
+**Cantidad exacta:** 50 kg con Peso de Conversión 25 se muestran como "2 unidades", sin "+ 0 kg" (12/10, resuelve P-26).
 
 ## Marcado de preparación (RF-SL-23, RN-20)
 
@@ -71,4 +71,4 @@ El módulo tiene un botón para abrir el tablero en pantalla completa, que es el
 
 ## Legibilidad (RF-SL-25, RNF-02)
 
-Se tiene que leer bien proyectado en una TV y ser fácil de usar en una tableta: cantidades grandes, producto y unidades claramente separados, estados visibles y pocos pasos. Todavía no se sabe el tamaño de la TV o la tableta ni cómo es la red de la bodega (P-27).
+Se tiene que leer bien proyectado en una TV y ser fácil de usar en una tableta: cantidades grandes, producto y unidades claramente separados, estados visibles y pocos pasos. El sistema es completamente responsivo y se adapta a cualquier tamaño de pantalla, así que no depende del tamaño de la TV o la tableta (12/10, resuelve P-27).

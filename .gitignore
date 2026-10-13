@@ -24,5 +24,8 @@ entregable-*/figuras/evidencias/
 # Se sube solo su código fuente (entregable-1/prototipos/simulacion/)
 entregable-1/prototipos/prototipo-simulacion-incovsa.html
 
+# Configuración personal de Claude Code
+.claude/settings.local.json
+
 # Archivos temporales de Office
 ~$*

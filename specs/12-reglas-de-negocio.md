@@ -65,7 +65,7 @@ resto_kg = cantidad_kg − (unidades × Peso de Conversión)
 
 | Cantidad (kg) | Peso de Conversión (kg) | Resultado |
 |---|---|---|
-| 50 | 25 | 2 unidades (cómo se muestra el resto 0, P-26) |
+| 50 | 25 | 2 unidades (sin "+ 0 kg", 12/10) |
 | 60 | 25 | 2 unidades + 10 kg |
 | 10 | 25 | 0 unidades + 10 kg |
 | 55 | 55 | 1 unidad (ejemplo de la contraparte) |

@@ -11,8 +11,8 @@ Todos los datos de prueba vienen de archivos entregados por INCOVSA. Esos archiv
 | `PROYECTO PICKING/Data Odo Para Picking.xlsx` | Export de 80 salidas de Odoo (agosto 2026). Desde el 29/09 es el **formato del archivo que se carga en Facturación** y sirve como dato de prueba de la importación (ver abajo). La copia local tiene fecha del 08/10/2026 |
 | `PAGINA WEB/CATALOGO/` (28 imágenes) | Productos públicos de prueba para el sitio |
 | `PAGINA WEB/DOCUMENTOS TECNICOS/` (3 PDF) | Ejemplos de ficha técnica, hoja de seguridad y certificado de análisis |
-| `PAGINA WEB/DOCUMENTOS TECNICOS/CONTROL DE DOCUMENTOS TECNICOS POR INGRESO 2026.xlsx` | Registro de notas de ingreso con sus documentos (hojas INCOVSA e Inquiserca). **Para qué sirve está pendiente** (P-33) |
-| `PAGINA WEB/DOCUMENTOS TECNICOS/` (2 videos de WhatsApp, 21/09) | **Para qué sirven está pendiente** (P-34) |
+| `PAGINA WEB/DOCUMENTOS TECNICOS/CONTROL DE DOCUMENTOS TECNICOS POR INGRESO 2026.xlsx` | Registro de notas de ingreso con sus documentos (hojas INCOVSA e Inquiserca). Solo sirvió en una reunión para mostrar cómo se manejan los documentos técnicos. **No se carga nada** de él en la documentación interna y se quitará de la carpeta (12/10, resuelve P-33) |
+| `PAGINA WEB/DOCUMENTOS TECNICOS/` (2 videos de WhatsApp, 21/09) | **No tienen ningún uso** en el proyecto; se ignoran y se quitarán de la carpeta (12/10, resuelve P-34) |
 | `PAGINA WEB/INFORMACION EMPRESA/` | Misión, visión y dos logotipos |
 
 > Los archivos que empiezan con `~$` son archivos temporales que crea Excel mientras un archivo está abierto. No son datos.
@@ -51,7 +51,7 @@ Todos los datos de prueba vienen de archivos entregados por INCOVSA. Esos archiv
 
 ### Estructura del archivo de ejemplo
 
-Una sola hoja, `Sheet1`, con 16 columnas:
+Una sola hoja, `Sheet1`, con 16 columnas. El archivo de Odoo **siempre** se exporta con esta misma estructura (12/10):
 
 | Columna | ¿Se usa? |
 |---|---|

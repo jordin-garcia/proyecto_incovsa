@@ -78,7 +78,7 @@ Los títulos y textos que mencionaban cuántas sedes o bodegas tiene la empresa 
 
 > Ser referentes y acercar soluciones en la distribución de productos químicos satisfaciendo las necesidades de los mercados atendidos, creando valor integral a nuestros grupos de interés a través del crecimiento y mejora continua, con una administración responsable y transparente enfocada en la solidez y el largo plazo.
 
-La imagen original dice "tranparente". Falta que la empresa confirme el texto correcto (P-20). Como ahora se muestran las imágenes, la transcripción sirve de texto alternativo (RNF-08).
+La imagen original dice "tranparente". La empresa compartirá la imagen corregida (12/10); mientras llega, la transcripción dice "transparente" (P-20). Como ahora se muestran las imágenes, la transcripción sirve de texto alternativo (RNF-08).
 
 ### Industrias (RF-SW-03)
 

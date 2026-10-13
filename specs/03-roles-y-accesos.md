@@ -117,12 +117,4 @@ El sistema registra en la **bitácora** las acciones de cada usuario, incluidos 
 
 ## Cantidad de usuarios
 
-Según una nota del prototipo de Configuración que se atribuye a INCOVSA; la fuente original no está archivada (P-41). Las cantidades se refieren a los roles anteriores al 29/09.
-
-| Rol anterior | Cantidad |
-|---|---|
-| Gerencia | 4 |
-| Soporte IT | 1 |
-| Operativo Facturador | 4 (2 en Quetzaltenango, 1 en Guatemala, 1 en Escuintla) |
-| Operativo Bodega | 4 (mismo reparto) |
-| Operativo Piloto | [PENDIENTE] P-02 |
+No hay un número fijo: se pueden crear todos los usuarios que se necesiten (12/10, resuelve P-41). Los nombres de los pilotos siguen pendientes (P-02).
