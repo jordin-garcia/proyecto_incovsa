@@ -28,8 +28,10 @@ Además se entregan el repositorio (con un README de 16 secciones obligatorias) 
 | Entregable | Exige |
 |---|---|
 | 1 (21/09) | Definición, análisis y diseño inicial. Alcance, flujos, reglas de conversión y prototipos **validados con INCOVSA** |
-| 2 (14/10) | **Avance funcional real**, con lógica y persistencia: sitio con CMS, autenticación y roles, contenido, industrias y catálogo; picking con productos, equivalencias (Peso2), inventario, pedidos y generación del picking, y avance en preparación, estados y tablero. Además: arquitectura actualizada, diagramas de componentes, clases y secuencia, ER actualizado, diccionario de datos, estructura del repositorio, migraciones, dependencias, seguridad, README preliminar, casos de prueba iniciales y matriz de trazabilidad. **Demostración obligatoria:** pedido facturado → conversión → picking → preparación |
+| 2 (14/10) | **Avance funcional real**, con lógica y persistencia: sitio con CMS, autenticación y roles, contenido, industrias y catálogo; picking con productos, equivalencias (Peso de Conversión), inventario, pedidos y generación del picking, y avance en preparación, estados y tablero. Además: arquitectura actualizada, diagramas de componentes, clases y secuencia, ER actualizado, diccionario de datos, estructura del repositorio, migraciones, dependencias, seguridad, README preliminar, casos de prueba iniciales y matriz de trazabilidad. **Demostración obligatoria:** pedido facturado → conversión → picking → preparación |
 | 3 (04/11) | Sistema completo y desplegado, los 6 documentos finales, pruebas con evidencia, capacitación y transferencia de accesos. **Demostración obligatoria del flujo completo:** pedido facturado → conversión → picking → preparación → actualización de inventario → carga → despacho → estado → reporte |
+
+> **P-58 (con el docente).** Desde el 29/09 el sistema no lleva inventario por decisión de INCOVSA. El Entregable 2 pide "inventario" y la demostración del Entregable 3 incluye "actualización de inventario". La exclusión se le explicará al docente en el Entregable 2. El coordinador espera que la apruebe, porque son requerimientos de la empresa, y **no impide seguir adelante** con el proyecto (11/10).
 
 ## Cómo cubre el sistema lo que piden los lineamientos
 
@@ -37,19 +39,19 @@ Además se entregan el repositorio (con un README de 16 secciones obligatorias) 
 |---|---|
 | Conversión de kilogramos a unidades | RN-01, con resto en kg para ventas fraccionadas |
 | Productos | Configuración (CRUD de productos) |
-| Presentaciones y equivalencias | Cada código de producto tiene **una sola presentación**, y su equivalencia es el **Peso2** en kg, que se configura al crear o editar el producto. No hay entidades separadas de presentación o equivalencia (P-45) |
-| Inventario, entradas y salidas, existencias | Módulo de Inventario: compras, ajustes, traslados, devoluciones y ventas (RN-22) |
+| Presentaciones y equivalencias | Cada producto tiene **un nombre y un Peso de Conversión** en kg, que se configura al crear o editar el producto. No hay entidades separadas de presentación o equivalencia. Aprobado con el prototipo (P-45, resuelto el 11/10) |
+| Inventario, entradas y salidas, existencias | **No se cubre.** INCOVSA lo sacó del alcance el 29/09: el inventario lo lleva Odoo. Falta la aprobación del docente (P-58) |
 | Pedidos pendientes de despacho | Pedidos En Preparación en Bodega |
-| Generación del picking | Facturación más la agrupación y conversión de Bodega |
+| Generación del picking | Carga del archivo de Odoo en Facturación, más la agrupación y conversión de Bodega |
 | Preparación y cambios de estado | Marcado por fila y botón "Pedido Despachado" (RN-11) |
 | Tablero para personal de bodega | El módulo de Bodega es el tablero |
-| Carga de vehículos | Asignación de camión y piloto más la alerta de capacidad. No hay confirmación de carga (P-45) |
+| Carga de vehículos | El facturador arrastra los pedidos a cada camión, con control de peso, alerta de sobrepeso y piloto asignado. No hay confirmación de carga (aprobado, P-45) |
 | Despacho | "Pedido Despachado" (Despachado o En Ruta) |
 | Rutas realizadas | Módulo de Ruta y su registro histórico |
-| Reportes | Módulo de Reportes, pendiente de especificar (P-05) |
-| Usuarios y roles | [03-roles-y-accesos.md](03-roles-y-accesos.md) |
-| Historial de operaciones | Bitácora y movimientos de inventario |
-| Lotes | No se controlan; lo hace Odoo (P-45) |
+| Reportes | Módulo de Reportes del prototipo aprobado, con filtros por periodo ([10-picking-reportes.md](10-picking-reportes.md)) |
+| Usuarios y roles | Permisos por usuario; roles predeterminados Gerencia y Soporte ([03-roles-y-accesos.md](03-roles-y-accesos.md)) |
+| Historial de operaciones | Bitácora consultable en la pestaña "Bitácora" de Reportes, con inicios de sesión (RN-39), y registro histórico de rutas en Reportes |
+| Lotes | No se controlan; lo hace Odoo (aprobado, P-45) |
 
 ## Anexos
 
@@ -66,4 +68,4 @@ Además se entregan el repositorio (con un README de 16 secciones obligatorias) 
 | I | Evidencia de entrega |
 | J | Inventario de servicios y accesos. Las credenciales se entregan por un medio seguro y separado |
 
-> **P-45.** El docente todavía no ha aprobado que presentaciones y equivalencias se cubran con el Peso2 de cada producto, que no haya confirmación de carga ni control de lotes, ni cómo se documentan en los Documentos 4 y 6 las secciones que dependen de esto.
+> **P-45 (resuelto el 11/10).** La aprobación del prototipo por el Ing. Manuel Rojas cubre que presentaciones y equivalencias se resuelvan con el Peso de Conversión de cada producto, y que no haya confirmación de carga ni control de lotes.
