@@ -263,6 +263,17 @@ Al aplicar la clave normalizada de productos (decisión 13) aparecieron 2 pares 
 |---|---|
 | P-88 | Se conservan `INCO BLACK VSF 600% (IND-CAJ/0025KG)` y `SODA ASH (SOL-SAC/0025KG)`. `INCOBLACK VSF 600%-IND-CAJ/0025KG-4034`, `SODa ASH-SOL-SAC/0025KG-5813` y `SODA ASH-SOL-SAC/SAC/0025KG-2479` se corrigen y se unen a ellos. Catálogo inicial: **336 productos** ([13](13-datos-maestros.md)) |
 
+## Versiones del stack (12/10/2026)
+
+Al preparar la documentación técnica del Entregable 2 se revisaron las versiones vigentes. El coordinador aprobó:
+
+| Tema | Antes | Ahora |
+|---|---|---|
+| Node.js | 22 LTS | **24 LTS**: es la LTS activa y la que está instalada en los equipos del equipo; Node 22 deja de tener soporte en abril de 2027 |
+| PostgreSQL | 16 | **18**, la instalada en los equipos del equipo |
+| Next.js | 15 (como mínimo 15.2.3) | **16** (16.4.0 al 12/10). En Next.js 16 el middleware se llama `proxy.ts` |
+| Autenticación | Auth.js; contraseñas con bcrypt | **Better Auth 1.7**, con inicio de sesión por nombre de usuario; contraseñas con scrypt. Auth.js está en modo mantenimiento desde septiembre de 2025 y sus mantenedores recomiendan Better Auth para proyectos nuevos |
+
 ## Documentos no alineados con la reunión 4
 
 Al 12/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los cambios del 29/09 ni las respuestas del 11/10:

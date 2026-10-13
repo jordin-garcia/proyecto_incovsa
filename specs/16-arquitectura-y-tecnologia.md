@@ -10,7 +10,7 @@
   - base de datos relacional.
 - La lógica de conversión y la lectura del archivo de Odoo viven en la capa de negocio. Se comportan igual sin importar desde qué pantalla se llamen.
 - Control de acceso: autenticación con sesión y **autorización en dos niveles** (12/10):
-  - el intermediario (middleware) de Next.js revisa la sesión al entrar a cada área. Es **solo una primera barrera**;
+  - el intermediario de Next.js (`proxy.ts`, antes llamado middleware) revisa la sesión al entrar a cada área. Es **solo una primera barrera**;
   - **cada operación del servidor** (acciones del servidor, rutas de la API y descarga de PDF) vuelve a verificar la sesión, **los permisos del usuario** (29/09) y su sede (11/10) antes de leer o cambiar datos. Ver "Seguridad".
 
 ## Stack
@@ -19,12 +19,12 @@ La contraparte lo revisó y no tuvo objeción.
 
 | Capa | Tecnología |
 |---|---|
-| Entorno de ejecución | Node.js 22 LTS |
-| Framework | Next.js 15 (App Router) con TypeScript. Con los parches de seguridad al día: como mínimo **15.2.3**, que corrige CVE-2025-29927 (12/10) |
-| Base de datos | PostgreSQL 16 |
-| ORM y migraciones | Prisma |
-| Autenticación | Auth.js con credenciales y sesiones; contraseñas con bcrypt |
-| Permisos | Modelo propio de permisos por usuario en Prisma (29/09). Se verifican **en el servidor en cada operación**; el middleware de Next.js es solo una primera barrera (12/10) |
+| Entorno de ejecución | **Node.js 24 LTS** (12/10; antes 22) |
+| Framework | **Next.js 16** (App Router) con TypeScript, en su versión más reciente con los parches de seguridad al día (16.4.0 al 12/10; antes Next.js 15) |
+| Base de datos | **PostgreSQL 18** (12/10; antes 16) |
+| ORM y migraciones | Prisma 7 |
+| Autenticación | **Better Auth 1.7** (12/10; antes Auth.js), con inicio de sesión por **nombre de usuario** y contraseña, y sesiones guardadas en la base de datos. Contraseñas con **scrypt**, el algoritmo de Better Auth (antes bcrypt) |
+| Permisos | Modelo propio de permisos por usuario en Prisma (29/09). Se verifican **en el servidor en cada operación**; el `proxy.ts` de Next.js (antes llamado middleware) es solo una primera barrera (12/10) |
 | Interfaz | Tailwind CSS y shadcn/ui, configurados con los tokens del design system del prototipo aprobado ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)) |
 | Lectura de .xlsx | **SheetJS Community Edition 0.20.3**, instalada desde el sitio oficial (`npm i --save https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz`), **no** desde el registro de npm, cuya versión 0.18.5 está abandonada y es vulnerable. Medidas en "Decisiones técnicas" (12/10) |
 | Validación | Zod, en cliente y servidor |
@@ -58,14 +58,14 @@ Medidas que el equipo adoptó el 12/10/2026 para que la aplicación sea segura y
 ### Autorización en el servidor
 
 - **Toda operación del servidor verifica la sesión, el permiso y la sede** antes de leer o cambiar datos: acciones del servidor, rutas de la API, carga del archivo de Odoo, descarga de PDF y exportación de reportes.
-- El **middleware** de Next.js se usa solo como primera barrera (redirigir a quien no tiene sesión). **No** es el único control: en 2025 se publicó una vulnerabilidad (CVE-2025-29927) que permitía saltárselo.
+- El **`proxy.ts`** de Next.js 16 (el antiguo middleware) se usa solo como primera barrera (redirigir a quien no tiene sesión). **No** es el único control: en 2025 se publicó una vulnerabilidad (CVE-2025-29927) que permitía saltarse el middleware.
 - La verificación vive en **una sola función de la capa de negocio** (por ejemplo, `exigirPermiso(usuario, permiso, sede)`), que usan todas las operaciones. Así no se duplica ni se olvida.
 - El servidor **nunca confía** en lo que manda el navegador sobre el usuario: la sede, los permisos y el rol salen de la sesión y de la base de datos, no de la petición.
 - Ocultar un botón en la pantalla **no** es un control de acceso; solo mejora la experiencia.
 
 ### Autenticación y sesiones
 
-- Auth.js con credenciales y sesiones; contraseñas con bcrypt (RNF-03). No se programa un sistema de autenticación propio.
+- Better Auth con nombre de usuario y contraseña, y sesiones en la base de datos; contraseñas con scrypt (RNF-03). No se programa un sistema de autenticación propio. Se eligió en lugar de Auth.js porque Auth.js está en modo mantenimiento desde septiembre de 2025 (solo parches de seguridad) y sus mantenedores recomiendan Better Auth para proyectos nuevos.
 - Cookies de sesión `HttpOnly`, `Secure` y `SameSite=Lax`. La sesión se renueva al iniciar sesión.
 - **Límite de intentos de inicio de sesión** (RNF-15): 5 intentos fallidos seguidos de un mismo usuario lo bloquean 15 minutos, y 20 intentos fallidos desde una misma dirección IP en 15 minutos la bloquean 15 minutos. Un inicio de sesión correcto reinicia el conteo del usuario. Los intentos se cuentan en la base de datos, a partir de la bitácora (RN-39), para que no se pierdan si se reinicia el servidor.
 - El mensaje de error del inicio de sesión no dice si el usuario existe o si la contraseña es la incorrecta.
@@ -90,7 +90,7 @@ Medidas que el equipo adoptó el 12/10/2026 para que la aplicación sea segura y
 ### Secretos y dependencias
 
 - Claves, contraseña de la base de datos, credenciales SMTP y de R2 solo en variables de entorno, fuera del repositorio (RNF-10).
-- **Dependencias al día** (RNF-16): Dependabot de GitHub activado, `npm audit` en cada pull request y el archivo de bloqueo (`package-lock.json`) en el repositorio. Los parches de seguridad de Next.js, Auth.js y Prisma se aplican en cuanto salen.
+- **Dependencias al día** (RNF-16): Dependabot de GitHub activado, `npm audit` en cada pull request y el archivo de bloqueo (`package-lock.json`) en el repositorio. Los parches de seguridad de Next.js, Better Auth y Prisma se aplican en cuanto salen.
 
 ### Respaldos
 
@@ -167,7 +167,7 @@ src/modulos/<modulo>/   conversion, odoo, pedidos, bodega, ruta, contenido, usua
                         permisos, bitacora, reportes: servicio.ts, esquemas.ts (Zod),
                         acciones.ts y sus pruebas *.test.ts
 src/componentes/ui/     componentes de shadcn/ui con los tokens del design system
-src/lib/                cliente de Prisma, Auth.js, sesión
+src/lib/                cliente de Prisma, Better Auth, sesión
 prisma/                 schema.prisma, migraciones y seed.ts
 scripts/                importar-datos-maestros.ts
 ```

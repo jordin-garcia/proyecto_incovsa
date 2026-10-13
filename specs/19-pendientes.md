@@ -16,7 +16,7 @@ Las dudas P-51 a P-87 sobre los cambios de la reunión 4 se resolvieron el 11/10
 | P-07 | Tiempo de expiración de las sesiones | P2 |
 | P-08 | Usuario administrador inicial | P2 |
 | P-09 | Cuenta SMTP (para el formulario de contacto) | P2 |
-| P-10 | Resultado de la prueba del hosting (Node 22, PostgreSQL 16, SSH), o contratación de un VPS, y fecha de acceso | P2 |
+| P-10 | Resultado de la prueba del hosting (Node 24, PostgreSQL 18, SSH), o contratación de un VPS, y fecha de acceso | P2 |
 | P-17 | Datos de los productos públicos: nombre, descripción, presentación, países de origen e industrias de cada uno | P2 |
 | P-18 | Logotipo vectorial, códigos de color exactos y tipografía | P2 |
 | P-19 | Historia y valores de la empresa, y si llevarán imágenes | P2 |
