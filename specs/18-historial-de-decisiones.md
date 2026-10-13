@@ -25,6 +25,7 @@
 | 09/10/2026 | Confirmación del coordinador (Jordin García): el design system y la mayoría de las funcionalidades del prototipo de simulación están aprobados por el Ing. William Ambrossio y el Ing. Manuel Rojas, salvo los cambios de la reunión 4, que son obligatorios | Esta carpeta |
 | 11/10/2026 | Respuestas del coordinador a las dudas P-45 y P-51 a P-76 sobre cómo aplicar los cambios de la reunión 4, con el código de los mapas de Google Maps de Quetzaltenango y Guatemala | Esta carpeta |
 | 12/10/2026 | El coordinador aprueba usar los nombres reales de los clientes en el prototipo de simulación y las medidas de seguridad de [16-arquitectura-y-tecnologia.md](16-arquitectura-y-tecnologia.md) | Esta carpeta |
+| 12/10/2026 | Respuestas del coordinador en el documento de preguntas para la reunión del 13/10 con el Ing. William: P-11, P-20, P-26, P-27, P-33, P-34 y P-41, formato del archivo de Odoo y presentación del Entregable 2 | Esta carpeta |
 
 ## Decisiones reemplazadas
 
@@ -221,6 +222,28 @@ P-58 sigue abierto con el docente, pero no impide avanzar: la exclusión del inv
 | Pruebas obligatorias | Conversión y lectura del archivo de Odoo | También la verificación de permisos y sedes |
 | Repositorio (P-49, resuelto) | `specs/` v1.1 y el código fuente del prototipo de simulación sin commit; el HTML armado del prototipo no estaba en el `.gitignore` | Subidos a `develop` por pull request; el `.gitignore` excluye `entregable-1/prototipos/prototipo-simulacion-incovsa.html`. Las direcciones, teléfonos y correos de las sedes que trae el código del prototipo se suben, porque son datos de contacto institucionales |
 | Rediseño "Planta" de Pickit Visual (PR #33 y #34) | Propuesta de verde `#006800` y tipografía Barlow para el tablero de Bodega | Se cierran sin integrar. El design system vigente es el del prototipo de simulación aprobado ([20](20-prototipo-aprobado.md)) |
+| Prototipo navegable del Entregable 1 (`entregable-1/prototipos/prototipo-completo-incovsa.html`) | En el repositorio | Se quita: ya no se usa. El prototipo vigente es el de simulación |
+
+## Pendientes resueltos el 12/10/2026
+
+Respuestas del coordinador, escritas en el documento de preguntas para la reunión del 13/10 con el Ing. William.
+
+| Pendiente | Decisión |
+|---|---|
+| P-11, entorno de pruebas | El Entregable 2 se prueba solo en las computadoras del equipo. No hay entorno en internet ni servicio de terceros ([16](16-arquitectura-y-tecnologia.md)) |
+| P-20, texto de la visión | La empresa compartirá la imagen corregida. P-20 sigue abierto solo para recibirla ([05](05-sitio-web.md)) |
+| P-26, conversión exacta | Se muestra "2 unidades", sin "+ 0 kg" ([07](07-picking-bodega.md), [12](12-reglas-de-negocio.md)) |
+| P-27, TV, tableta y red de la bodega | No hace falta: el sistema es completamente responsivo y se adapta a cualquier pantalla ([07](07-picking-bodega.md)) |
+| P-33, `CONTROL DE DOCUMENTOS TECNICOS POR INGRESO 2026.xlsx` | Solo sirvió para mostrar cómo se manejan los documentos técnicos. No se carga nada en la documentación interna ([13](13-datos-maestros.md)) |
+| P-34, 2 videos de WhatsApp del 21/09 | No tienen uso; se ignoran ([13](13-datos-maestros.md)) |
+| P-41, cantidad de usuarios por rol | No aplica: se pueden crear todos los usuarios que se necesiten ([03](03-roles-y-accesos.md)) |
+
+Además, el mismo 12/10:
+
+| Tema | Decisión |
+|---|---|
+| Formato del archivo de Odoo | Siempre se exporta con la misma estructura del archivo de ejemplo ([13](13-datos-maestros.md)) |
+| Presentación del Entregable 2 | Se presenta solo al Ing. Manuel Rojas, no en clase ([00](00-proyecto.md)) |
 
 ## Documentos no alineados con la reunión 4
 

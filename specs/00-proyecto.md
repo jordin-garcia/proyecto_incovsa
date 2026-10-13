@@ -56,7 +56,7 @@ El sistema se implementa y se prueba **solo con Quetzaltenango** (ubicaciones de
 | Fecha | Entregable | Valor |
 |---|---|---|
 | Lunes 21/09/2026 | **Entregable 1.** Definición, análisis y diseño inicial. Se presenta en clase | 10 puntos |
-| Miércoles 14/10/2026 | **Entregable 2.** Avance funcional y documentación técnica. Se presenta en clase | 10 puntos |
+| Miércoles 14/10/2026 | **Entregable 2.** Avance funcional y documentación técnica. Se presenta solo al Ing. Manuel Rojas, no en clase (12/10) | 10 puntos |
 | Miércoles 04/11/2026 | **Entregable 3.** Entrega final con el sistema desplegado. Se presenta en clase | 30 puntos |
 
 Lo que exige cada entregable está en [17-lineamientos-del-curso.md](17-lineamientos-del-curso.md).

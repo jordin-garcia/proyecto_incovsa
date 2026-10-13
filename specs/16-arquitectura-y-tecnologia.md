@@ -106,7 +106,7 @@ Medidas que el equipo adoptó el 12/10/2026 para que la aplicación sea segura y
 - Hace falta un servidor capaz de ejecutar Node.js y PostgreSQL. Un hosting compartido tradicional (cPanel con PHP) no sirve.
 - La contraparte iba a probar la compatibilidad del hosting actual; el resultado está pendiente (P-10).
 - La empresa paga el hosting y el dominio.
-- Dónde vive el entorno de pruebas del Entregable 2 está pendiente (P-11).
+- El Entregable 2 se prueba **solo en las computadoras del equipo**. No hay entorno de pruebas en internet ni se contrata un servicio de terceros (12/10, resuelve P-11).
 
 ## Decisiones técnicas abiertas
 

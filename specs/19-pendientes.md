@@ -20,14 +20,10 @@ Las dudas P-51 a P-87 sobre los cambios de la reunión 4 se resolvieron el 11/10
 | P-17 | Datos de los productos públicos: nombre, descripción, presentación, países de origen e industrias de cada uno | P2 |
 | P-18 | Logotipo vectorial, códigos de color exactos y tipografía | P2 |
 | P-19 | Historia y valores de la empresa, y si llevarán imágenes | P2 |
-| P-20 | Confirmar el texto de la visión ("tranparente" en la imagen original) | P3 |
+| P-20 | Recibir la imagen corregida de la visión (la original dice "tranparente") | P3 |
 | P-21 | Descripciones definitivas e imágenes en alta resolución de las 9 industrias | P2 |
 | P-22 | Correo que recibe las solicitudes y horarios de Quetzaltenango y Guatemala | P2 |
 | P-23 | Contenido inicial de Noticias (los campos ya están definidos) | P2 |
-| P-26 | ¿Cómo se muestra una conversión exacta: "2 unidades" o "2 unidades + 0 kg"? | P2 |
-| P-27 | Tamaño y ubicación de la TV y la tableta, y red de la bodega | P3 |
-| P-33 | ¿Para qué sirve `CONTROL DE DOCUMENTOS TECNICOS POR INGRESO 2026.xlsx`? | P2 |
-| P-34 | ¿Para qué sirven los 2 videos de WhatsApp del 21/09? | P2 |
 | P-38 | Navegadores que usa la empresa | P3 |
 | P-69 | Logotipo de Inquiserca. El sitio ya deja preparado dónde se sube y cómo se muestra | P2 |
 | P-03 | Personas que recibirán la capacitación, quién recibe las credenciales y quién probará el panel sin ayuda del equipo | P3 |
@@ -45,11 +41,9 @@ Las dudas P-51 a P-87 sobre los cambios de la reunión 4 se resolvieron el 11/10
 | Id | Pendiente | Prioridad |
 |---|---|---|
 | P-04 | Archivar la evidencia (correos o WhatsApp) del cuestionario del 09–11/09, la reunión del 18/09, las aclaraciones del 19–20/09 y las respuestas del 23–24/09 | P1 |
-| P-11 | Definir el entorno de pruebas accesible por internet para el Entregable 2 | P2 |
 | P-35 | Armar el Excel maestro limpio: 339 productos con nombre en formato de Odoo y Peso de Conversión (con los 6 códigos corregidos y sin los 3 excluidos) y 314 clientes sin duplicados exactos ([13-datos-maestros.md](13-datos-maestros.md)) | P1 |
 | P-37 | [DECISIÓN TÉCNICA] Anonimización de las semillas del repositorio | P1 |
 | P-39 | [DECISIÓN TÉCNICA] Mecanismo de tiempo real para Bodega | P1 |
 | P-40 | Plan de trabajo v1.2: tareas, responsables y fechas alineadas a los 5 módulos y a los cambios de la reunión 4 | P1 |
-| P-41 | Encontrar la fuente de las cantidades de usuarios por rol que aparecen en el prototipo de Configuración (se refieren a los roles anteriores al 29/09) | P3 |
 | P-42 | [DECISIÓN TÉCNICA] Eliminación de productos, clientes, sectores, camiones y **usuarios** con historial | P1 |
 | P-77 | Actualizar el Documento 1 y los diagramas con los cambios de la reunión 4 y del 11/10, y archivar un acta en Markdown de la reunión 4 como las de las reuniones 1 a 3. El prototipo de simulación ya se actualizó el 12/10 | P2 |
