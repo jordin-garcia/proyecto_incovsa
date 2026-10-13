@@ -22,7 +22,7 @@
 - Tiene dos mercados: industrial (con maquinaria) y artesanal (trabajo manual).
 - Tiene presencia en todo el país con tres sedes y bodegas: **Quetzaltenango** (oficinas y bodega central), **Guatemala** y **Escuintla**.
 - INCOVSA e Inquiserca **comparten productos y existencias**. En el sitio se presentan bajo una misma identidad visual.
-- Usa el ERP **Odoo** para casi toda su operación. El picking se lleva en un Excel (`Picking II.xlsm`).
+- Usa el ERP **Odoo** para casi toda su operación, **incluido el inventario de todas las bodegas**. El picking se lleva en un Excel (`Picking II.xlsm`).
 - Presencia web actual: solo una página básica en Google Sites que comparte con sus clientes: <https://sites.google.com/view/incovsa>. No tiene un sitio corporativo propio.
 
 ### Volumen de operación
@@ -61,8 +61,11 @@ El sistema se implementa y se prueba **solo con Quetzaltenango** (ubicaciones de
 
 Lo que exige cada entregable está en [17-lineamientos-del-curso.md](17-lineamientos-del-curso.md).
 
-### Estado al 24/09/2026
+### Estado al 11/10/2026
 
-- El Entregable 1 (Documento 1 v0.1, 79 páginas) está elaborado. En el repositorio no hay evidencia de su presentación ni de la retroalimentación del docente (P-31).
-- **No existe código.** El proyecto base todavía no se ha creado.
-- Las reglas y el alcance cambiaron el 23 y 24/09. Esta carpeta refleja esos cambios, y el **Documento 1 v0.2** (86 páginas), los diagramas y los prototipos ya están alineados con ella (`entregable-1/`).
+- El Entregable 1 (Documento 1 v0.1, 79 páginas) está entregado. En el repositorio no hay evidencia de la retroalimentación del docente (P-31).
+- El **29/09/2026** (reunión 4) se presentó al Ing. William el **prototipo de simulación** (`entregable-1/prototipos/simulacion/`). Pidió cambios en el sitio, en los usuarios y permisos, y en el picking, entre ellos sacar el control de inventario y cargar los pedidos desde Odoo. Esta carpeta los incorpora (versión 1.1).
+- El **09/10/2026** el coordinador confirmó que el **design system** y la mayoría de las **funcionalidades** del prototipo de simulación están **aprobados por el Ing. William y por el Ing. Manuel Rojas**, salvo los cambios de la reunión 4. La aplicación real se desarrolla a partir de ese prototipo y de esos cambios ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)).
+- El **11/10/2026** el coordinador respondió las dudas sobre cómo aplicar esos cambios (P-45 y P-51 a P-76). Las dudas que quedaron (P-78 a P-87) se resolvieron el mismo 11/10.
+- **No existe código** de la aplicación real.
+- El Documento 1 v0.2, los diagramas y las capturas de `entregable-1/` reflejan el estado del 24/09 y **todavía no** incorporan los cambios de la reunión 4.

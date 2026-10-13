@@ -20,5 +20,9 @@ entregable-*/**/*.pdf
 # Evidencias con fotografías de personas y de la empresa (Anexo B)
 entregable-*/figuras/evidencias/
 
+# Prototipo de simulación armado: contiene datos reales de la empresa (RNF-10).
+# Se sube solo su código fuente (entregable-1/prototipos/simulacion/)
+entregable-1/prototipos/prototipo-simulacion-incovsa.html
+
 # Archivos temporales de Office
 ~$*

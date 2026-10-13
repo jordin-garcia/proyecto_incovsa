@@ -1,117 +1,34 @@
 # 09. Módulo de Inventario
 
-## Propósito
+**Estado: Eliminado** el 29/09/2026 (reunión 4, Ing. William Ambrossio).
 
-Llevar la **existencia actual en kg de cada producto en cada sede**, sumando entradas y restando salidas. No controla lotes ni ubicaciones; eso lo hace Odoo. El sistema **no** se conecta con Odoo.
+## Decisión
 
-## Acceso
+El sistema **ya no lleva control de inventario**: ni existencias, ni entradas, ni salidas de productos. Queda fuera del alcance porque el sistema está pensado para integrarse en el futuro con Odoo, y Odoo es el que lleva el inventario de todas las bodegas.
 
-Solo **Gerencia y Soporte IT**, en todas las sedes (RF-SL-39). Por eso, en cada operación se elige la sede.
+El sistema de picking queda con **cinco módulos**: Facturación, Bodega, Ruta, Reportes y Configuración ([01-alcance.md](01-alcance.md)).
 
-## Tipos de movimiento (RN-22)
+## Qué se elimina
 
-| Tipo | Sentido | Dónde se origina |
+| Elemento | Antes | Referencia |
 |---|---|---|
-| Compra | Entrada | Inventario, manual |
-| Ajuste positivo | Entrada | Inventario, manual, con motivo |
-| Traslado recibido | Entrada | Automático, al registrar un traslado |
-| Devolución | Entrada | Inventario, manual, ligada a un pedido |
-| Venta | Salida | Automático, al pulsar "Enviar Pedido a Bodega" en Facturación |
-| Ajuste negativo | Salida | Inventario, manual, con motivo |
-| Traslado enviado | Salida | Inventario, manual (el traslado) |
+| Consulta de existencias por producto y sede | RF-SL-40, CU-16 | Eliminado |
+| Compras | RF-SL-41, RN-27, CU-17 | Eliminado |
+| Ajustes | RF-SL-42, RN-26, CU-18 | Eliminado |
+| Traslados entre sedes | RF-SL-43, RN-25, CU-19 | Eliminado |
+| Devoluciones y marca "Con devolución" | RF-SL-44, RF-SL-45, RN-23, CU-06 | Eliminado. La devolución era una entrada de inventario |
+| Validación de existencias al registrar el pedido | RF-SL-15, RN-07 | Eliminado |
+| Salida por venta al enviar el pedido a bodega | RF-SL-16, RN-06 | Eliminado (RF-SL-16 se modifica) |
+| Existencia nunca negativa | RF-SL-46, RN-24 | Eliminado |
+| Registro y edición de movimientos | RF-SL-47, RF-SL-49, RN-34, CU-20 | Eliminado |
+| Carga inicial de existencias de Quetzaltenango | [13-datos-maestros.md](13-datos-maestros.md) | Eliminado |
+| Entidades EXISTENCIA, MOVIMIENTO_INVENTARIO, TRASLADO y DEVOLUCION | [14-modelo-de-datos.md](14-modelo-de-datos.md) | Eliminado |
 
-La carga inicial de existencias **no** es un movimiento de este módulo: se hace una sola vez desde el Excel maestro ([13-datos-maestros.md](13-datos-maestros.md)).
+Los códigos no se reutilizan. Los requerimientos y reglas eliminados conservan su código con estado *Eliminado* en [04-requerimientos-funcionales.md](04-requerimientos-funcionales.md) y [12-reglas-de-negocio.md](12-reglas-de-negocio.md).
 
-## Consulta de existencias (RF-SL-40)
+## Lo que no cambia
 
-- Existencia actual por producto (código completo) y sede, en kg.
-- Se busca por nombre de producto.
-- Las existencias **no** se consolidan entre sedes.
+- Los **productos** siguen existiendo en Configuración, con su nombre y su **Peso de Conversión**, porque la conversión a unidades los necesita ([11-picking-configuracion.md](11-picking-configuracion.md)).
+- El sistema sigue sin controlar lotes ni ubicaciones (RN-32).
 
-## Compra (RF-SL-41, RN-27)
-
-| Campo | Regla |
-|---|---|
-| Producto | Producto existente, buscado por nombre |
-| Sede | Sede que recibe |
-| Cantidad | En kg, mayor que cero |
-
-- **Solo se registran cantidades.** No se capturan lote, proveedor, orden de compra, póliza ni nota de ingreso.
-- Si el producto (por ejemplo, un lote nuevo con código nuevo) no existe, **primero Gerencia o Soporte IT lo crean en Configuración** con su Peso2, y después se registra la compra.
-- Efecto: suma la cantidad a la existencia del producto en esa sede.
-
-## Ajuste (RF-SL-42, RN-26)
-
-| Campo | Regla |
-|---|---|
-| Producto | Existente |
-| Sede | Sede afectada |
-| Sentido | Positivo (suma) o negativo (resta) |
-| Cantidad | En kg, mayor que cero |
-| Motivo | **Obligatorio** |
-
-Un ajuste negativo no puede dejar la existencia por debajo de cero (RN-24).
-
-## Traslado entre sedes (RF-SL-43, RN-25)
-
-| Campo | Regla |
-|---|---|
-| Producto | Existente |
-| Sede de origen | Distinta de la de destino |
-| Sede de destino | Distinta de la de origen |
-| Cantidad | En kg, mayor que cero |
-
-- En **una sola transacción** se registran la salida en la sede de origen y la entrada en la de destino.
-- No se puede trasladar más de la existencia de la sede de origen (RN-24).
-- El traslado no tiene estado "en tránsito": se aplica de inmediato.
-
-## Devolución (RF-SL-44, RF-SL-45, RN-23)
-
-Aplica a **los dos tipos de pedido**: cliente recoge en bodega y envío en camión.
-
-### Flujo
-
-1. Gerencia o Soporte IT buscan el pedido por su **correlativo**.
-2. Solo se aceptan pedidos en estado **Despachado** o **Entregado**.
-3. El sistema muestra las líneas del pedido: cliente, producto, cantidad vendida en kg y cantidad ya devuelta en kg.
-4. El usuario escribe los kg devueltos en una o varias líneas. En cada línea, lo devuelto no puede superar **lo vendido menos lo ya devuelto**.
-5. El usuario escribe el **motivo**, que es obligatorio.
-6. Al guardar:
-   - se registra una entrada por devolución por cada línea con cantidad;
-   - la cantidad vuelve a la existencia del **mismo código de producto** en la **sede del pedido**;
-   - el pedido recibe la marca **"Con devolución"**, que no cambia su estado;
-   - quedan visibles el usuario y la fecha y hora de la devolución.
-
-### Reglas
-
-- Un pedido puede tener **varias devoluciones**, siempre que no se devuelva más de lo vendido en ninguna línea.
-- La ruta no se modifica.
-
-## Registro de cada movimiento (RF-SL-47)
-
-Cada movimiento guarda:
-
-- tipo;
-- producto;
-- sede;
-- cantidad en kg;
-- fecha y hora;
-- usuario;
-- motivo, si es ajuste o devolución;
-- pedido y línea, si es venta o devolución;
-- traslado al que pertenece, si es traslado.
-
-## Edición de movimientos (RF-SL-49, RN-34)
-
-- Gerencia y Soporte IT pueden **editar** un movimiento ya registrado (confirmado el 24/09).
-- Al editarlo, la existencia se recalcula y no puede quedar por debajo de cero (RN-24).
-- La bitácora registra la edición: quién la hizo, cuándo, y los valores anteriores y nuevos.
-- [PENDIENTE] P-50:
-  - ¿Qué tipos se pueden editar? Hay tipos que nacen de otras operaciones: las ventas, del envío del pedido; los traslados, de dos movimientos ligados, y las devoluciones, de un pedido.
-  - ¿Qué campos se pueden cambiar?
-  - ¿La edición exige motivo?
-  - ¿También se pueden eliminar movimientos?
-
-## Transacciones (RNF-06)
-
-Cada operación que cambia existencias es **transaccional**: se aplica completa o no se aplica. Eso incluye el envío de un pedido con varias líneas, un traslado y una devolución con varias líneas.
+> **P-58.** Los lineamientos del curso piden inventario, entradas, salidas y existencias en el Entregable 2, y "actualización de inventario" en la demostración del Entregable 3. Falta que el docente apruebe esta exclusión ([17-lineamientos-del-curso.md](17-lineamientos-del-curso.md)).
