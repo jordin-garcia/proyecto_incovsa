@@ -41,7 +41,6 @@ Las dudas P-51 a P-87 sobre los cambios de la reunión 4 se resolvieron el 11/10
 | Id | Pendiente | Prioridad |
 |---|---|---|
 | P-04 | Archivar la evidencia (correos o WhatsApp) del cuestionario del 09–11/09, la reunión del 18/09, las aclaraciones del 19–20/09 y las respuestas del 23–24/09 | P1 |
-| P-35 | Armar el Excel maestro limpio: 339 productos con nombre en formato de Odoo y Peso de Conversión (con los 6 códigos corregidos y sin los 3 excluidos) y 314 clientes sin duplicados exactos ([13-datos-maestros.md](13-datos-maestros.md)) | P1 |
+| P-35 | Armar el Excel maestro limpio: 336 productos con nombre en formato de Odoo y Peso de Conversión (con los 9 códigos corregidos y sin los 3 excluidos) y 314 clientes sin duplicados exactos ([13-datos-maestros.md](13-datos-maestros.md)) | P1 |
 | P-40 | Plan de trabajo v1.2: tareas, responsables y fechas alineadas a los 5 módulos y a los cambios de la reunión 4 | P1 |
-| P-88 | Qué se hace con 3 productos del catálogo convertido: los pares `INCO BLACK VSF 600%` / `INCOBLACK VSF 600%` y `SODA ASH` / `SODa ASH` (ambos `IND-CAJ/0025KG` y `SOL-SAC/0025KG`), que la clave normalizada vuelve iguales, y `SODA ASH (SOL-SAC/SAC/0025KG)`, con el envase repetido ([13-datos-maestros.md](13-datos-maestros.md)). Hasta resolverlo, el catálogo de 339 productos no se puede cargar con la clave única | P1 |
 | P-77 | Actualizar el Documento 1 y los diagramas con los cambios de la reunión 4 y del 11/10, y archivar un acta en Markdown de la reunión 4 como las de las reuniones 1 a 3. El prototipo de simulación ya se actualizó el 12/10 | P2 |

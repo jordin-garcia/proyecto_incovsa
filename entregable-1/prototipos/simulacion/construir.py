@@ -12,7 +12,7 @@ subir al repositorio (RNF-10).
 Requiere Python 3 con Pillow y openpyxl.
 Uso, desde esta carpeta:  python construir.py
 """
-import base64, io, json, os, re, collections
+import base64, io, json, os, re, collections, unicodedata
 from PIL import Image
 import numpy as np
 import openpyxl
@@ -34,6 +34,10 @@ CORREGIDOS = {
     "SULFATO DE SODIO CHI-SAC/0050KG-4765": "SULFATO DE SODIO-CHI-SAC/0050KG-4765",
     "SULFATO DE SODIO CHI-SAC/0050KG-0823": "SULFATO DE SODIO-CHI-SAC/0050KG-0823",
     "SODA CAUSTICA-CHISAC/0025KG-1240": "SODA CAUSTICA-CHI-SAC/0025KG-1240",
+    # P-88 (12/10/2026): se unen a INCO BLACK VSF 600% (IND-CAJ/0025KG) y a SODA ASH (SOL-SAC/0025KG)
+    "INCOBLACK VSF 600%-IND-CAJ/0025KG-4034": "INCO BLACK VSF 600%-IND-CAJ/0025KG-4034",
+    "SODa ASH-SOL-SAC/0025KG-5813": "SODA ASH-SOL-SAC/0025KG-5813",
+    "SODA ASH-SOL-SAC/SAC/0025KG-2479": "SODA ASH-SOL-SAC/0025KG-2479",
 }
 PESO_FIJO = {"METANOL (GUA-TON/0055GL)": 164}
 
@@ -79,8 +83,14 @@ def datos():
         if len(ps) != 1:
             raise SystemExit(f"{nombre} tiene dos Pesos de Conversión distintos: {ps}")
         productos.append([nombre, next(iter(ps))])
-    if len(productos) != 339:
-        raise SystemExit(f"Se esperaban 339 productos y salieron {len(productos)}. Revise las reglas de specs/13.")
+    if len(productos) != 336:
+        raise SystemExit(f"Se esperaban 336 productos y salieron {len(productos)}. Revise las reglas de specs/13.")
+    # Clave normalizada única (specs/16, decisión 13): mayúsculas, sin acentos, sin puntos ni espacios
+    clave = lambda n: re.sub(r"[\s.]", "", "".join(c for c in unicodedata.normalize("NFD", n.upper())
+                                                   if unicodedata.category(c) != "Mn"))
+    repetidas = [k for k, v in collections.Counter(clave(p[0]) for p in productos).items() if v > 1]
+    if repetidas:
+        raise SystemExit(f"Productos con la misma clave normalizada: {repetidas}")
 
     clave_sector = lambda s: re.sub(r"[\s,.]", "", s).lower()
     sectores, clientes = [], []
