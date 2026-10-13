@@ -81,9 +81,7 @@ const Demo = (() => {
           <button class="btn btn-s btn-sm" data-abrir="#/picking/tablero?cuenta=ejemplo.05&tema=claro">${ico('sol', 'ico-s')} Tablero claro</button>
           <button class="btn btn-s btn-sm" data-abrir="#/picking/facturacion?cuenta=ejemplo.03">${ico('factura', 'ico-s')} Facturación</button></div></div>
       <div class="sec-d"><h4>Pendientes con INCOVSA</h4>
-        <label class="chk" style="font-size:14px"><input type="checkbox" data-pend ${UI.pendientes ? 'checked' : ''}> Mostrar las notas de pendientes (P-xx)</label>
-        <div style="margin-top:12px;font-size:13.5px;color:var(--g600)"><b>P-26</b> · ¿Cómo se muestra una conversión exacta?</div>
-        <div class="seg" style="margin-top:8px" data-exacto><button data-v="solo" class="${UI.exacto === 'solo' ? 'on' : ''}">2 unidades</button><button data-v="cero" class="${UI.exacto === 'cero' ? 'on' : ''}">2 unidades + 0 kg</button></div></div>
+        <label class="chk" style="font-size:14px"><input type="checkbox" data-pend ${UI.pendientes ? 'checked' : ''}> Mostrar las notas de pendientes (P-xx)</label></div>
       <div class="sec-d"><h4>Recorrido sugerido</h4><ol class="guia">
         <li>Sitio público: Inicio con los mapas, catálogo y formulario de contacto.</li>
         <li><b>Facturador</b>: cargar <span class="mono">Data Odo Para Picking.xlsx</span>, agregar los productos y clientes que faltan, arrastrar pedidos facturados a los camiones y a «Cliente recoge en bodega», y enviar.</li>
@@ -99,7 +97,6 @@ const Demo = (() => {
     $$('[data-cuenta]', cont).forEach((b) => b.addEventListener('click', () => entrar(b.dataset.cuenta, b.dataset.sis)));
     $$('[data-abrir]', cont).forEach((b) => b.addEventListener('click', () => window.open(location.href.split('#')[0] + b.dataset.abrir, '_blank')));
     $('[data-pend]', cont).addEventListener('change', (e) => { UI.pendientes = e.target.checked; guardarUI(); });
-    $('[data-exacto]', cont).addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (!b) return; UI.exacto = b.dataset.v; guardarUI(); repintar(); });
     $('[data-reiniciar]', cont).addEventListener('click', () => confirmar('Reiniciar la simulación', 'Se borran los pedidos, los pedidos facturados del tablero y los cambios hechos durante la demostración, y se vuelve a los datos iniciales. Afecta a todas las pestañas abiertas.', 'Reiniciar', () => {
       S = semilla(); guardar(); abierto = false; toast('Datos de la simulación reiniciados.'); repintar();
     }, 'btn-d'));

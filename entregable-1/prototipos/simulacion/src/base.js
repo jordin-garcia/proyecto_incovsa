@@ -43,12 +43,11 @@ function convertir(cantidadKg, peso2) {
 function textoUnidades(u) { return u === 1 ? '1 unidad' : fmt(u) + ' unidades'; }
 function textoConversion(cantidadKg, peso2) {
   const { u, r } = convertir(cantidadKg, peso2);
-  if (r > 0) return textoUnidades(u) + ' + ' + fmt(r) + ' kg';
-  return UI.exacto === 'cero' ? textoUnidades(u) + ' + 0 kg' : textoUnidades(u);   // P-26
+  return r > 0 ? textoUnidades(u) + ' + ' + fmt(r) + ' kg' : textoUnidades(u);   // conversión exacta: «2 unidades»
 }
 function htmlConversion(cantidadKg, peso2) {
   const { u, r } = convertir(cantidadKg, peso2);
-  const resto = r > 0 ? r : (UI.exacto === 'cero' ? 0 : null);
+  const resto = r > 0 ? r : null;
   return `<span class="unid">${esc(textoUnidades(u))}${resto !== null ? `<span class="resto">+ ${fmt(resto)} kg</span>` : ''}</span>`;
 }
 
@@ -241,7 +240,7 @@ const GUATEMALA = (window.DATOS && window.DATOS.guatemala) || [];
 const UI = (() => {
   let g = {};
   try { g = JSON.parse(localStorage.getItem('incovsa-sim-ui') || '{}'); } catch (e) {}
-  return Object.assign({ pendientes: true, exacto: 'solo' }, g);
+  return Object.assign({ pendientes: true }, g);
 })();
 function guardarUI() { try { localStorage.setItem('incovsa-sim-ui', JSON.stringify(UI)); } catch (e) {} document.body.classList.toggle('sin-pendientes', !UI.pendientes); }
 const pend = (cod, texto) => `<div class="pend"><b class="cod">${esc(cod)}</b><div>${texto}</div></div>`;
