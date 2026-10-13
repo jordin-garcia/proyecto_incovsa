@@ -40,7 +40,9 @@ Usuarios del picking con permiso sobre Facturación, en las sedes que tengan asi
 2. Cada pedido facturado viene separado por **referencia y cliente**.
 3. Una fila que **no tiene Referencia ni Contacto** pertenece a la **última referencia y contacto que aparecen arriba**; es decir, es otra línea del mismo pedido facturado.
 4. Solo se cargan las referencias en estado **"Hecho"** (columna `Estado`). Las demás, por ejemplo "Cancelado", se ignoran.
-5. Las filas de agrupación que agrega Odoo (texto en Referencia sin Contacto ni Producto, por ejemplo "agosto 2026 (80)") no son pedidos y se ignoran ([DECISIÓN TÉCNICA]).
+5. Las filas de agrupación que agrega Odoo (texto en Referencia sin Contacto ni Producto, por ejemplo "agosto 2026 (80)") no son pedidos y se ignoran (12/10).
+6. Si una línea de una referencia "Hecho" trae una cantidad vacía, no numérica o menor o igual a 0, ese pedido facturado no se carga y se avisa en el resumen de la carga, igual que cuando falta un producto (12/10). En el archivo de ejemplo, las 3 líneas con 0 kg son de referencias "Cancelado".
+7. El archivo se rechaza si pesa más de 2 MB (12/10). La librería y las medidas de seguridad están en [16](16-arquitectura-y-tecnologia.md).
 
 ### Columnas que se usan
 

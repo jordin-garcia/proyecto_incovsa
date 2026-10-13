@@ -93,7 +93,7 @@ Catálogo único de requerimientos funcionales. La columna **Estado** compara ca
 | RF-SL-54 | **(29/09)** No se usa la columna `Movimientos de stock/Producto/Peso`. La conversión usa el Peso de Conversión del catálogo | Nuevo |
 | RF-SL-55 | **(29/09)** El acceso a cada módulo del picking depende de los permisos asignados a cada usuario, por módulo y por acción ([03-roles-y-accesos.md](03-roles-y-accesos.md)) | Nuevo |
 | RF-SL-56 | **(29/09)** Gerencia y Soporte asignan a cada usuario un rol (texto libre) y le agregan, editan o revocan permisos puntuales con casillas | Nuevo |
-| RF-SL-57 | **(29/09)** Gerencia y Soporte pueden eliminar usuarios (historial: P-42) | Nuevo |
+| RF-SL-57 | **(29/09)** Gerencia y Soporte pueden eliminar usuarios. **(12/10)** La eliminación es lógica y conserva su historial | Nuevo |
 | RF-SL-58 | **(29/09)** El tablero en pantalla completa ofrece "Modo claro" (como el modo Tableta del prototipo) y "Modo oscuro" (escala de negros y grises), en lugar de "TV" y "Tableta" | Nuevo |
 | RF-SL-59 | **(29/09)** Reportes filtra por periodo: diario, semanal (lunes a domingo), mensual, anual o rango de fechas, en las pestañas Despacho y Rutas realizadas | Nuevo |
 | RF-SL-60 | **(29/09)** El menú lateral izquierdo del picking se reduce a íconos para ampliar el área de trabajo (11/10) | Nuevo |

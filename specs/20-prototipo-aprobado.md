@@ -27,7 +27,7 @@
 | Cuentas de ejemplo y contraseña `demo` en el inicio de sesión | Herramienta de presentación |
 | Notas amarillas de pendientes (P-xx) | Herramienta de validación |
 | Leyenda "Prototipo para validación" del pie y nota "Simulación" del tablero | Herramienta de validación |
-| Estado guardado en el navegador (`localStorage`) y sincronizado entre pestañas (`BroadcastChannel`) | Simula la base de datos y el tiempo real. La aplicación real usa PostgreSQL y el mecanismo de P-39 |
+| Estado guardado en el navegador (`localStorage`) y sincronizado entre pestañas (`BroadcastChannel`) | Simula la base de datos y el tiempo real. La aplicación real usa PostgreSQL y avisos por SSE ([16](16-arquitectura-y-tecnologia.md)) |
 | Nombres "Usuario de ejemplo NN" | Anonimización. La aplicación real usa los datos que cargue la empresa |
 | Módulo de Inventario, validación de existencias, devoluciones, columnas de existencia | Eliminados el 29/09 ([09-picking-inventario.md](09-picking-inventario.md)) |
 | Captura manual de pedidos en Facturación y un solo pedido con un camión por pantalla | Reemplazados por la carga del archivo de Odoo y el armado de envíos arrastrando pedidos (29/09 y 11/10, [06](06-picking-facturacion.md)) |
@@ -116,7 +116,7 @@ Cada cambio que pidió el Ing. William el 29/09/2026, con su estado después de 
 |---|---|---|---|
 | CAM-25 | Permisos por usuario, por módulo y por acción, con casillas; dos administraciones de usuarios y dos inicios de sesión | Definido | [03](03-roles-y-accesos.md) |
 | CAM-26 | Rol de texto libre; únicos roles predeterminados Gerencia y Soporte; sedes por usuario con casillas; pilotos = rol "Piloto" | Definido | [03](03-roles-y-accesos.md) |
-| CAM-27 | Eliminar usuarios | Definido (historial: P-42) | [03](03-roles-y-accesos.md) |
+| CAM-27 | Eliminar usuarios | Definido (eliminación lógica, 12/10) | [03](03-roles-y-accesos.md) |
 | CAM-28 | Bitácora con inicios de sesión, consultable en la pestaña "Bitácora" de Reportes | Definido | [12](12-reglas-de-negocio.md) |
 | CAM-36 | La contraseña la restablecen Gerencia o Soporte, a solicitud; sin recuperación por correo | Definido | [03](03-roles-y-accesos.md) |
 

@@ -122,7 +122,7 @@ Muestra la **imagen**, el **nombre**, la **descripción**, la **presentación**,
 
 - Al final del detalle va la sección **"Productos Recomendados"**. Es la del prototipo, que se llamaba "Otros productos de las mismas industrias" (respuesta del 11/10 a P-70).
 - **Siempre debe aparecer.** En el prototipo a veces no aparece, porque solo busca productos que compartan industria, y un producto sin industrias, o con industrias que ningún otro producto tiene, se queda sin recomendados.
-- Regla: se muestran hasta 4 productos. Primero los que comparten alguna industria con el producto que se está viendo; si no alcanzan, se completa con otros productos del catálogo. Nunca se recomienda el mismo producto que se está viendo ([DECISIÓN TÉCNICA] del criterio para completar).
+- Regla: se muestran hasta 4 productos. Primero los que comparten alguna industria con el producto que se está viendo; si no alcanzan, se completa con otros productos del catálogo. Nunca se recomienda el mismo producto que se está viendo. Cada grupo (los de la misma industria y los de relleno) va en orden alfabético por nombre (12/10).
 
 ### Noticias (RF-SW-18)
 

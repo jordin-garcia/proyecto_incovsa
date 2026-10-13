@@ -22,7 +22,7 @@ Filtros de consulta para ver los **pedidos despachados** en distintos lapsos de 
 
 - Al abrir el módulo, el periodo es el día de hoy, como en el prototipo.
 - Cómo se eligen en pantalla la semana, el mes y el año lo decide el equipo de diseño (acuerdo del 04/09: diseño e interacción libres).
-- El rango incluye la fecha de inicio y la fecha final ([DECISIÓN TÉCNICA]).
+- El rango incluye la fecha de inicio y la fecha final, calculadas en la hora de Guatemala (12/10).
 
 ## Pestaña "Despacho" (RF-SL-38)
 

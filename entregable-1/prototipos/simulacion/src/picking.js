@@ -549,7 +549,7 @@ const Picking = (() => {
 
       function eliminar(id) {
         const hecho = (txt, fn) => confirmar('Eliminar', txt, 'Eliminar', () => { fn(); guardar(); toast('Registro eliminado.'); repintar(); }, 'btn-d');
-        const bloqueado = (t) => modal({ titulo: 'No se puede eliminar', cuerpo: `<p style="color:var(--g600)">${t}</p><div style="margin-top:14px">${pend('P-42', 'Decisión técnica pendiente: qué pasa al eliminar un registro con historial (por ejemplo, eliminación lógica). El historial y la bitácora se deben conservar.')}</div>`, acciones: [{ txt: 'Entendido', cls: 'btn-p' }] });
+        const bloqueado = (t) => modal({ titulo: 'No se puede eliminar', cuerpo: `<p style="color:var(--g600)">${t}</p>`, acciones: [{ txt: 'Entendido', cls: 'btn-p' }] });
         if (cfgTab === 'productos') { const p = prod(+id); if (usado.prod(p.id)) return bloqueado(`<b class="mono">${esc(p.n)}</b> está en pedidos o en pedidos facturados.`); hecho(`¿Eliminar <b class="mono">${esc(p.n)}</b>?`, () => { S.productos = S.productos.filter((x) => x !== p); bit(u.id, 'Eliminación de producto', p.n); }); }
         else if (cfgTab === 'clientes') { const c = cliente(+id); if (usado.cli(c.id)) return bloqueado(`${esc(c.n)} aparece en pedidos o en pedidos facturados.`); hecho(`¿Eliminar a <b>${esc(c.n)}</b>?`, () => { S.clientes = S.clientes.filter((x) => x !== c); bit(u.id, 'Eliminación de cliente', c.n); }); }
         else if (cfgTab === 'sectores') { const s = S.sectores.find((x) => x.id === +id); const n = S.clientes.filter((c) => c.s === s.id).length; if (n) return bloqueado(`El sector tiene ${n} cliente(s).`); hecho(`¿Eliminar el sector <b>${esc(s.n)}</b>?`, () => { S.sectores = S.sectores.filter((x) => x !== s); bit(u.id, 'Eliminación de sector', s.n); }); }

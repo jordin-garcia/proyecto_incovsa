@@ -244,6 +244,20 @@ Además, el mismo 12/10:
 |---|---|
 | Formato del archivo de Odoo | Siempre se exporta con la misma estructura del archivo de ejemplo ([13](13-datos-maestros.md)) |
 | Presentación del Entregable 2 | Se presenta solo al Ing. Manuel Rojas, no en clase ([00](00-proyecto.md)) |
+| Notas del prototipo | Se quitan las notas de P-26, P-27 y P-41 y el selector de P-26 del panel Demostración; la nota de P-20 se actualiza |
+
+## Decisiones técnicas del 12/10/2026
+
+El coordinador aprobó las 17 decisiones técnicas propuestas, que resuelven **P-37**, **P-39** y **P-42** y todas las [DECISIÓN TÉCNICA] abiertas. El detalle está en [16-arquitectura-y-tecnologia.md](16-arquitectura-y-tecnologia.md), "Decisiones técnicas (12/10)".
+
+| Tema | Antes | Ahora |
+|---|---|---|
+| Orden de prioridad de Bodega y orden de Ruta antes de entregar | "No se guarda" (24/09) | Se guarda **solo el orden actual**, sin historial ni bitácora, para compartirlo entre pantallas ([14](14-modelo-de-datos.md)). La decisión del 24/09 se refería a no guardar el historial |
+| Librería de .xlsx | Sin definir; el prototipo usaba SheetJS 0.18.5 de npm, abandonada y vulnerable | SheetJS 0.20.3 desde el sitio oficial, con archivo de máximo 2 MB y revisión manual de avisos en cada entrega. Se eligió frente a ExcelJS 4.4.0, que tiene vulnerabilidades publicadas en agosto de 2026 sin versión corregida (entre ellas, una descompresión sin límite al leer archivos) |
+| Eliminar registros con historial (P-42) | Sin definir; el prototipo no deja eliminar | Eliminación lógica |
+| Pedidos facturados con cantidades vacías o en 0 | Sin definir | El pedido facturado no se carga y se avisa ([06](06-picking-facturacion.md)) |
+
+Al aplicar la clave normalizada de productos (decisión 13) aparecieron 2 pares de productos que quedan iguales y un nombre con el envase repetido. Se registran como P-88.
 
 ## Documentos no alineados con la reunión 4
 
