@@ -169,7 +169,7 @@ const Sitio = (() => {
       </div></section>
       <section class="banda-mv sec"><div class="foto" style="background-image:url(${A.fotoReunion})"></div><div class="velo"></div>
         <div class="wrap">${misionVision()}
-        <div style="margin-top:22px;position:relative">${pend('P-20', 'La imagen original de la visión dice «tranparente». En el texto alternativo se escribe «transparente» hasta que la empresa confirme el texto.')}</div></div>
+        <div style="margin-top:22px;position:relative">${pend('P-20', 'La imagen original de la visión dice «tranparente». La empresa compartirá la imagen corregida; mientras tanto, el texto alternativo dice «transparente».')}</div></div>
       </section>
       <section class="sec"><div class="wrap">
         <div class="cab-sec"><div><p class="eyebrow">Valores</p><h2>Lo que nos guía</h2></div></div>

@@ -75,7 +75,7 @@ const Tablero = (() => {
 
   function linea(l, i, p) {
     const pr = prod(l.prod) || { n: '—' }, base = pr.n.replace(/\s*\(.*\)\s*$/, ''), { u, r } = convertir(l.kg, l.p2);
-    const resto = r > 0 ? r : (UI.exacto === 'cero' ? 0 : null);
+    const resto = r > 0 ? r : null;
     const clave = p.id + ':' + l.prod;
     const cambio = clave in marcasPrevias && marcasPrevias[clave] !== l.listo;
     return `<div class="tb-linea ${l.listo ? 'lista' : ''} ${cambio ? 'recien' : ''}" data-id="${l.prod}" role="button" aria-pressed="${l.listo}" tabindex="0">
