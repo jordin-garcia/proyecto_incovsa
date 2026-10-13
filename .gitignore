@@ -24,6 +24,10 @@ entregable-*/figuras/evidencias/
 # Se sube solo su código fuente (entregable-1/prototipos/simulacion/)
 entregable-1/prototipos/prototipo-simulacion-incovsa.html
 
+# Datos locales de los documentos (nombres y carnés del equipo)
+entregable-*/**/*.local.json
+entregable-*/*.local.json
+
 # Configuración personal de Claude Code
 .claude/settings.local.json
 
