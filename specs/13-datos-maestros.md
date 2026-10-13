@@ -97,7 +97,7 @@ Decisión del 11/10 (P-80): el catálogo de `Picking II` se convierte a los nomb
 
 - Los códigos de distintos lotes del mismo producto quedan en **un solo producto**.
 - El Peso de Conversión es el mismo en todos los lotes, salvo en `METANOL (GUA-TON/0055GL)`, que tenía lotes con 164 y 55: se usa **164 kg** (decisión del 11/10).
-- **Resultado del análisis del equipo (11/10):** los 856 códigos dan **339 nombres** con la regla automática. Otros **9 códigos** no siguen el formato:
+- **Resultado del análisis del equipo (11/10):** los 856 códigos dan **339 nombres** con la regla automática (336 después de las correcciones del 12/10, abajo). Otros **9 códigos** no siguen el formato:
   - **6 se corrigen** agregando el guion que falta (decisión del 11/10). Los seis nombres corregidos ya existían en el catálogo con otros lotes y con el mismo Peso de Conversión, así que se unen a ellos:
 
     | Código de `Picking II` | Error | Nombre en el catálogo | Peso de Conversión |
@@ -110,9 +110,16 @@ Decisión del 11/10 (P-80): el catálogo de `Picking II` se convierte a los nomb
     | `SODA CAUSTICA-CHISAC/0025KG-1240` | Falta el guion entre origen y envase | `SODA CAUSTICA (CHI-SAC/0025KG)` | 25 |
 
   - **3 no se cargan** (decisión del 11/10): `METABISULFITO DE SODIO II`, `SAL (INVENTARIO II)` y `TRICLORO GRANULAR-TON/0050KG-9127`, porque no tienen origen o presentación y no se puede saber su nombre en Odoo. Si un archivo de Odoo trae alguno, se agrega desde Facturación con su Peso de Conversión (RN-43).
-- **Catálogo inicial: 339 productos.**
-- La comparación con el nombre del archivo de Odoo no distingue mayúsculas, espacios ni puntos. Se hace con una **clave normalizada** de cada producto (mayúsculas, sin acentos, sin puntos y sin espacios), que es única (12/10).
-- Con esa clave, **2 pares** de productos del catálogo convertido quedan iguales, porque solo se diferencian por una mayúscula o un espacio: `INCO BLACK VSF 600% (IND-CAJ/0025KG)` y `INCOBLACK VSF 600% (IND-CAJ/0025KG)`, y `SODA ASH (SOL-SAC/0025KG)` y `SODa ASH (SOL-SAC/0025KG)`. Los dos de cada par tienen Peso de Conversión 25. Además, `SODA ASH-SOL-SAC/SAC/0025KG-2479` da el nombre `SODA ASH (SOL-SAC/SAC/0025KG)`, con el envase repetido. Qué se hace con ellos está pendiente (P-88).
+- **Otros 3 códigos se corrigen** (decisión del 12/10, resuelve P-88). Sí seguían el formato, pero daban un nombre que es el mismo producto de otro ya existente, escrito distinto. Se unen a ese producto, que tiene el mismo Peso de Conversión:
+
+    | Código de `Picking II` | Error | Nombre en el catálogo | Peso de Conversión |
+    |---|---|---|---|
+    | `INCOBLACK VSF 600%-IND-CAJ/0025KG-4034` | Falta el espacio en "INCO BLACK" | `INCO BLACK VSF 600% (IND-CAJ/0025KG)` | 25 |
+    | `SODa ASH-SOL-SAC/0025KG-5813` | Minúscula en "SODa" | `SODA ASH (SOL-SAC/0025KG)` | 25 |
+    | `SODA ASH-SOL-SAC/SAC/0025KG-2479` | Envase repetido ("SAC/SAC") | `SODA ASH (SOL-SAC/0025KG)` | 25 |
+
+- **Catálogo inicial: 336 productos** (339 hasta el 12/10).
+- La comparación con el nombre del archivo de Odoo no distingue mayúsculas, espacios ni puntos. Se hace con una **clave normalizada** de cada producto (mayúsculas, sin acentos, sin puntos y sin espacios), que es única (12/10). Con las correcciones de arriba, los 336 productos tienen claves distintas.
 
 ### Correspondencia del archivo de ejemplo con el catálogo convertido
 

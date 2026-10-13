@@ -257,7 +257,11 @@ El coordinador aprobó las 17 decisiones técnicas propuestas, que resuelven **P
 | Eliminar registros con historial (P-42) | Sin definir; el prototipo no deja eliminar | Eliminación lógica |
 | Pedidos facturados con cantidades vacías o en 0 | Sin definir | El pedido facturado no se carga y se avisa ([06](06-picking-facturacion.md)) |
 
-Al aplicar la clave normalizada de productos (decisión 13) aparecieron 2 pares de productos que quedan iguales y un nombre con el envase repetido. Se registran como P-88.
+Al aplicar la clave normalizada de productos (decisión 13) aparecieron 2 pares de productos que quedan iguales y un nombre con el envase repetido (P-88). El mismo 12/10 el coordinador lo resolvió:
+
+| Pendiente | Decisión |
+|---|---|
+| P-88 | Se conservan `INCO BLACK VSF 600% (IND-CAJ/0025KG)` y `SODA ASH (SOL-SAC/0025KG)`. `INCOBLACK VSF 600%-IND-CAJ/0025KG-4034`, `SODa ASH-SOL-SAC/0025KG-5813` y `SODA ASH-SOL-SAC/SAC/0025KG-2479` se corrigen y se unen a ellos. Catálogo inicial: **336 productos** ([13](13-datos-maestros.md)) |
 
 ## Documentos no alineados con la reunión 4
 
