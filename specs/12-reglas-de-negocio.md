@@ -73,7 +73,7 @@ resto_kg = cantidad_kg − (unidades × Peso de Conversión)
 
 - La conversión se hace sobre la cantidad **agrupada por producto** en Bodega (RF-SL-21), con el Peso de Conversión guardado en el pedido (RN-33). Se suman las cantidades del mismo producto entre todos los clientes del pedido.
 - El Peso de Conversión es el del catálogo del sistema, **nunca** el peso que trae el archivo de Odoo (RN-37).
-- Los cálculos usan números decimales exactos, no punto flotante ([DECISIÓN TÉCNICA] sobre el tipo y la precisión).
+- Los cálculos usan números decimales exactos, no punto flotante: las cantidades se guardan como `Decimal(12,3)` y la conversión se calcula en gramos enteros (12/10).
 - **Casos de prueba obligatorios:** los 15 casos exactos que la empresa validó (respuesta del 23/09). Todos existen en el catálogo de `Picking II` con el mismo Peso de Conversión. La columna "Código" usa el formato de `Picking II`; en el catálogo cada caso queda con su nombre en formato de Odoo (por ejemplo, el caso 9 es `SODA ASH (TUR-SAC/0025KG)`), con el mismo Peso de Conversión. El caso 8 tiene en `Picking II` el error de escritura `SULFATO DE ALUMINIO TUR-SAC/0025KG-9232`; en el catálogo es `SULFATO DE ALUMINIO (TUR-SAC/0025KG)`. Hay que agregar casos fraccionados y casos con datos incorrectos (Documento 6, sección 9).
 
 | # | Código | Cantidad | Peso de Conversión | Unidades esperadas |

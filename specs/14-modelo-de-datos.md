@@ -9,44 +9,46 @@ Este es el modelo **conceptual**. Los nombres físicos, los tipos, los índices 
 | Entidad | Atributos principales | Relaciones |
 |---|---|---|
 | SEDE | nombre, prefijo de Odoo (`XE`, `GT`, `ESC`), tiene oficina (sí/no) | — |
-| USUARIO | nombre completo, nombre de usuario (único), correo (opcional), contraseña cifrada, activo, **rol (texto libre)**, sistema (sitio o picking) | Permisos (N:M), sedes (N:M, solo picking) |
+| USUARIO | nombre completo, nombre de usuario (único), correo (opcional), contraseña cifrada, activo, **rol (texto libre)**, sistema (sitio o picking), fecha de eliminación (12/10) | Permisos (N:M), sedes (N:M, solo picking) |
 | PERMISO | código, sistema (sitio o picking), módulo, acción, descripción | — |
 | USUARIO_PERMISO | — | Usuario y permiso (única por par) |
 | USUARIO_SEDE | — | Usuario del picking y sede (única por par) |
 
-- Cada sistema tiene **sus propios usuarios** y su propia administración (RN-18). Las cuentas con rol **Gerencia** o **Soporte** tienen acceso total a los dos sistemas y a todas las sedes (RN-38). Cómo se representa eso (rol especial, o todos los permisos y sedes asignados) es una [DECISIÓN TÉCNICA].
+- Cada sistema tiene **sus propios usuarios** y su propia administración (RN-18). Las cuentas con rol **Gerencia** o **Soporte** tienen acceso total a los dos sistemas y a todas las sedes (RN-38). Se resuelve por rol: la verificación de permisos les da todo sin depender de sus casillas (12/10, [16](16-arquitectura-y-tecnologia.md)).
 - El catálogo de permisos está en [03-roles-y-accesos.md](03-roles-y-accesos.md).
-- Los pilotos son los usuarios del picking con rol "Piloto" (RN-46). Cómo se compara el texto (por ejemplo, sin distinguir mayúsculas) es una [DECISIÓN TÉCNICA].
-- Al eliminar un usuario se conservan la bitácora y los registros donde aparece ([DECISIÓN TÉCNICA] P-42).
+- Los pilotos son los usuarios del picking con rol "Piloto" (RN-46). El rol se compara sin distinguir mayúsculas, acentos ni espacios al inicio o al final (12/10).
+- Al eliminar un usuario se guarda su fecha de eliminación (eliminación lógica): no puede iniciar sesión, su nombre de usuario queda reservado y se conservan la bitácora y los registros donde aparece (12/10, resuelve P-42).
 
 ## Sistema de picking
 
 | Entidad | Atributos principales | Relaciones |
 |---|---|---|
-| PRODUCTO | **nombre (único)** con el formato de Odoo y sin lote, peso de conversión en kg | — |
-| SECTOR | nombre | — |
-| CLIENTE | nombre | Sector |
-| CAMION | identificación, capacidad máxima en kg | Sede |
+| PRODUCTO | **nombre (único)** con el formato de Odoo y sin lote, **clave normalizada (única)** (12/10), peso de conversión en kg, fecha de eliminación (12/10) | — |
+| SECTOR | nombre, fecha de eliminación (12/10) | — |
+| CLIENTE | nombre, fecha de eliminación (12/10) | Sector |
+| CAMION | identificación, capacidad máxima en kg, fecha de eliminación (12/10) | Sede |
 | OPCION_ENVIO | tipo (camión o cliente recoge en bodega) | Sede, camión (si es de camión), piloto asignado (usuario con rol "Piloto", 0..1) |
 | PEDIDO_FACTURADO | **número de Odoo** (tercer segmento de la Referencia), nombre del cliente y sector del cliente (los de la base, o los del archivo si el cliente no se guardó), fecha de carga | Sede, cliente de la base (0..1), usuario que lo cargó, opción de envío (0..1; vacía = en el tablero), pedido (0..1; se llena al enviar) |
 | DETALLE_PEDIDO_FACTURADO | cantidad en kg, orden en el archivo | Pedido facturado, producto |
-| PEDIDO | **correlativo por sede**, tipo (recoge o camión), fecha de envío a bodega | Sede, estado actual (ESTADO_PEDIDO), usuario que lo envió, pedidos facturados (1:N) |
+| PEDIDO | **correlativo por sede**, tipo (recoge o camión), fecha de envío a bodega, posición actual en la cola de Bodega (12/10) | Sede, estado actual (ESTADO_PEDIDO), usuario que lo envió, pedidos facturados (1:N) |
 | DETALLE_PEDIDO | cantidad en kg, peso de conversión aplicado en kg | Pedido, pedido facturado (de ahí sale el cliente), producto |
-| LINEA_PREPARACION | cantidad total en kg, peso de conversión aplicado en kg, marcado | Pedido y producto (única por par) |
+| LINEA_PREPARACION | cantidad total en kg, peso de conversión aplicado en kg, marcado, posición actual en el pedido (12/10) | Pedido y producto (única por par) |
 | ESTADO_PEDIDO | nombre: En Preparación, Despachado, En Ruta o Entregado | — |
 | HISTORIAL_ESTADO | fecha y hora | Pedido, estado, usuario |
 | RUTA | número (correlativo por sede), fecha (la del envío a bodega) | Pedido (1:1), sede, camión, piloto. Se crea al enviar a bodega una opción de camión |
-| ENTREGA_RUTA | cliente, total en kg, orden en el recorrido | Ruta. Una fila por cliente, aunque tenga varios pedidos facturados en la ruta (RN-49) |
-| BITACORA | operación, entidad, identificador del registro, detalle, fecha y hora | Usuario |
+| ENTREGA_RUTA | cliente, total en kg, orden en el recorrido (antes de entregar, el orden actual; al entregar, el recorrido, RN-29) | Ruta. Una fila por cliente, aunque tenga varios pedidos facturados en la ruta (RN-49) |
+| BITACORA | sistema (sitio o picking), operación, entidad, identificador del registro, detalle (JSON), nombre de usuario escrito, dirección IP (en inicios de sesión), fecha y hora (12/10) | Usuario (0..1) |
 
 ### Notas
 
 - **Pedido facturado** = una referencia de Odoo de un solo cliente. **Pedido** = lo que se envía a Bodega desde una opción de envío; reúne uno o varios pedidos facturados y puede tener varios clientes (11/10).
 - El tablero de pedidos facturados son los PEDIDO_FACTURADO de la sede sin opción de envío y sin pedido. Se guardan en la base de datos, igual que la opción de envío asignada (RN-48). Cancelar una opción les quita la opción de envío y regresan al tablero.
-- Eliminar un pedido facturado del tablero lo borra o lo marca como eliminado ([DECISIÓN TÉCNICA]); queda en la bitácora.
-- No se valida que el número de Odoo no se repita, porque viene de Odoo. Si la base de datos lo declara único por sede es una [DECISIÓN TÉCNICA].
+- Eliminar un pedido facturado del tablero lo **borra** de la base de datos; sus datos quedan en la bitácora (12/10).
+- No se valida que el número de Odoo no se repita, porque viene de Odoo. La base de datos **no** lo declara único; solo tiene un índice para buscar (12/10).
 - Al corregir el sector en el tablero se actualiza CLIENTE.sector; si el cliente no está en la base, solo cambia el sector del pedido facturado (RN-45).
-- El orden de prioridad de Bodega y el orden de las filas de Ruta antes de la entrega **no** se guardan como historial (RN-28, RN-29). Cómo se comparten en tiempo real es una [DECISIÓN TÉCNICA].
+- El orden de prioridad de Bodega y el orden de las filas de Ruta antes de la entrega **no** se guardan como historial ni en la bitácora (RN-28, RN-29). Se guarda **solo el orden actual**, para que todas las pantallas lo compartan y no se pierda si se reinicia el servidor (12/10). Cómo se avisa a las pantallas está en [16](16-arquitectura-y-tecnologia.md).
+- Las cantidades en kg y el Peso de Conversión son `Decimal(12,3)`; las fechas se guardan en UTC (12/10).
+- Los productos, clientes, sectores, camiones y usuarios eliminados se conservan con su fecha de eliminación (eliminación lógica, P-42).
 - El marcado de LINEA_PREPARACION no guarda quién marcó (RN-20).
 - El pedido guarda el Peso de Conversión con el que se vendió. Si después se cambia en el producto, el pedido no cambia (RN-33).
 - BITACORA registra también los inicios de sesión de los dos sistemas (RN-39) y, desde el 12/10, los intentos fallidos (RNF-15). En un intento fallido el usuario puede no existir: el registro guarda el nombre de usuario escrito y la relación con USUARIO queda vacía.
@@ -74,7 +76,7 @@ Este es el modelo **conceptual**. Los nombres físicos, los tipos, los índices 
 | El atributo PEDIDO.editado se eliminó | El estado "Editado" y la marca "Con devolución" ya no existen (29/09) |
 | PEDIDO.id_estado_actual con ESTADO_PEDIDO: solo se guardan En Preparación, Despachado, En Ruta y Entregado | Pendiente y Cancelado no se guardan (24/09) |
 | Se eliminó INVENTARIO | El sistema no lleva inventario (29/09) |
-| LINEA_PREPARACION.orden y el campo de prioridad del pedido no se guardan | La prioridad no se guarda (24/09) |
+| LINEA_PREPARACION y PEDIDO guardan solo su posición actual, sin historial | La prioridad no se guarda en el historial (24/09). Desde el 12/10 se guarda el orden actual para compartirlo entre pantallas |
 | USUARIO se relaciona con permisos y sedes (N:M) en vez de con roles | Permisos y sedes por usuario (29/09 y 11/10) |
 | DETALLE_PEDIDO y LINEA_PREPARACION guardan el peso de conversión aplicado | Los pedidos conservan el Peso de Conversión con el que se vendieron (24/09) |
 | RUTA se crea al enviar el pedido a bodega | 24/09 |

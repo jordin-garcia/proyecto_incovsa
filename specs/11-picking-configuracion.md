@@ -20,7 +20,7 @@ Se pueden **ver, crear, editar y eliminar** productos. Los productos siguen sien
 - El sistema **ya no lleva existencias** (29/09/2026). La tabla de productos del prototipo pierde las columnas de existencia por sede y la columna "Unidad medida", y un producto ya no se bloquea para eliminar por tener existencia ([09-picking-inventario.md](09-picking-inventario.md)).
 - La columna **SKU** se quita de todas las pantallas (11/10).
 - La carga inicial convierte los códigos de `Picking II` a este formato; las reglas están en [13-datos-maestros.md](13-datos-maestros.md).
-- Qué pasa al eliminar un producto, cliente, sector o camión que ya tiene pedidos o rutas: [DECISIÓN TÉCNICA] P-42. Hay que conservar el historial y la bitácora.
+- Eliminar un producto, cliente, sector o camión es una **eliminación lógica** (12/10, resuelve P-42): desaparece de listas y selectores, y los pedidos, rutas, reportes y la bitácora donde aparece se conservan intactos.
 - Si se cambia el Peso de Conversión, **los pedidos ya enviados conservan el Peso de Conversión con el que se vendieron**. El valor nuevo aplica solo a los pedidos que se envíen desde ese momento (RN-33, confirmado el 24/09).
 - **No existe un catálogo aparte de "unidades de venta":** el producto solo tiene nombre y Peso de Conversión (respuesta del 11/10, resuelve P-44).
 

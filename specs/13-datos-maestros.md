@@ -75,7 +75,7 @@ Análisis del equipo del 09/10/2026, sin datos personales:
 
 | Concepto | Cantidad |
 |---|---|
-| Filas de agrupación de Odoo (texto en Referencia sin Contacto ni Producto, por ejemplo "agosto 2026 (80)") | 1. No es un pedido ([DECISIÓN TÉCNICA] ignorarla) |
+| Filas de agrupación de Odoo (texto en Referencia sin Contacto ni Producto, por ejemplo "agosto 2026 (80)") | 1. No es un pedido y se ignora (12/10) |
 | Referencias | 80, todas con prefijo `XE-IN` (Quetzaltenango), del número 03539 al 03627, sin repetidos |
 | Líneas de producto | 208 |
 | Contactos distintos | 52. Un mismo contacto aparece en hasta 4 referencias, y cada referencia es un pedido distinto |
@@ -111,7 +111,8 @@ Decisión del 11/10 (P-80): el catálogo de `Picking II` se convierte a los nomb
 
   - **3 no se cargan** (decisión del 11/10): `METABISULFITO DE SODIO II`, `SAL (INVENTARIO II)` y `TRICLORO GRANULAR-TON/0050KG-9127`, porque no tienen origen o presentación y no se puede saber su nombre en Odoo. Si un archivo de Odoo trae alguno, se agrega desde Facturación con su Peso de Conversión (RN-43).
 - **Catálogo inicial: 339 productos.**
-- La comparación con el nombre del archivo de Odoo no distingue mayúsculas, espacios ni puntos ([DECISIÓN TÉCNICA] sobre el detalle de la comparación).
+- La comparación con el nombre del archivo de Odoo no distingue mayúsculas, espacios ni puntos. Se hace con una **clave normalizada** de cada producto (mayúsculas, sin acentos, sin puntos y sin espacios), que es única (12/10).
+- Con esa clave, **2 pares** de productos del catálogo convertido quedan iguales, porque solo se diferencian por una mayúscula o un espacio: `INCO BLACK VSF 600% (IND-CAJ/0025KG)` y `INCOBLACK VSF 600% (IND-CAJ/0025KG)`, y `SODA ASH (SOL-SAC/0025KG)` y `SODa ASH (SOL-SAC/0025KG)`. Los dos de cada par tienen Peso de Conversión 25. Además, `SODA ASH-SOL-SAC/SAC/0025KG-2479` da el nombre `SODA ASH (SOL-SAC/SAC/0025KG)`, con el envase repetido. Qué se hace con ellos está pendiente (P-88).
 
 ### Correspondencia del archivo de ejemplo con el catálogo convertido
 
@@ -164,4 +165,4 @@ Se quitaron la columna "Existencia inicial Xela (kg)" (29/09) y las columnas "Un
 
 ## Datos personales
 
-Los nombres de clientes, pilotos y personal, las coordenadas y los documentos de identidad **no se suben al repositorio** ni se escriben en esta carpeta. Las semillas de base de datos que se suban al repositorio usan datos anonimizados; cómo se anonimizan es una [DECISIÓN TÉCNICA] (P-37).
+Los nombres de clientes, pilotos y personal, las coordenadas y los documentos de identidad **no se suben al repositorio** ni se escriben en esta carpeta. Las semillas de base de datos que se suban al repositorio usan solo datos ficticios o ya públicos en esta carpeta ("Cliente de ejemplo 001…", "Usuario de ejemplo NN", los 15 productos de los casos de conversión); los datos reales se cargan con un script que lee el Excel maestro desde fuera del repositorio (12/10, resuelve P-37; detalle en [16](16-arquitectura-y-tecnologia.md)).

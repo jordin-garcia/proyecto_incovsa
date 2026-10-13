@@ -20,7 +20,7 @@ Se mantienen **dos inicios de sesión separados** (respuesta del 11/10 a P-59).
 - El correo electrónico de la cuenta es **opcional**. Los pilotos y operarios no tienen correo.
 - Las contraseñas se guardan cifradas con un algoritmo unidireccional.
 - **No hay selector de sede** al iniciar sesión.
-- Se pueden **eliminar usuarios** (RF-SL-57). Qué pasa con el historial de un usuario eliminado es una [DECISIÓN TÉCNICA] (P-42): hay que conservar la bitácora y los registros donde aparece.
+- Se pueden **eliminar usuarios** (RF-SL-57). La eliminación es lógica (12/10, resuelve P-42): el usuario ya no puede iniciar sesión, su nombre de usuario queda reservado y se conservan la bitácora y los registros donde aparece.
 - Cada sistema tiene **sus propias cuentas** (RN-18). Las cuentas de **Gerencia y Soporte** sirven en los dos sistemas, porque esos roles tienen acceso total a ambos.
 
 ## Administración de usuarios (RF-SW-13, RF-SL-03)
