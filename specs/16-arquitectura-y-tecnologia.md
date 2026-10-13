@@ -163,9 +163,10 @@ src/app/(sitio)/        sitio público
 src/app/panel/          panel del sitio y documentación interna
 src/app/picking/        Facturación, Bodega, Ruta, Reportes y Configuración
 src/app/api/            rutas de la API (SSE, descargas, exportaciones)
-src/modulos/<modulo>/   conversion, odoo, pedidos, bodega, ruta, contenido, usuarios,
-                        permisos, bitacora, reportes: servicio.ts, esquemas.ts (Zod),
-                        acciones.ts y sus pruebas *.test.ts
+src/modulos/<modulo>/   de dominio: contenido, solicitudes, documentos, catalogos, odoo,
+                        pedidos, bodega, ruta, reportes, conversion; transversales:
+                        permisos, usuarios, bitacora, tiempo-real. Cada uno con
+                        servicio.ts, esquemas.ts (Zod), acciones.ts y sus pruebas *.test.ts
 src/componentes/ui/     componentes de shadcn/ui con los tokens del design system
 src/lib/                cliente de Prisma, Better Auth, sesión
 prisma/                 schema.prisma, migraciones y seed.ts

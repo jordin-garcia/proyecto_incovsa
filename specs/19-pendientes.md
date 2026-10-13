@@ -25,6 +25,7 @@ Las dudas P-51 a P-87 sobre los cambios de la reunión 4 se resolvieron el 11/10
 | P-22 | Correo que recibe las solicitudes y horarios de Quetzaltenango y Guatemala | P2 |
 | P-23 | Contenido inicial de Noticias (los campos ya están definidos) | P2 |
 | P-38 | Navegadores que usa la empresa | P3 |
+| P-89 | El caso de prueba de conversión 4 que validó la empresa (`METANOL-GUA-TON/0055GL-9047`, 55 kg, Peso de Conversión 55 → 1 unidad) usa el único lote con Peso2 = 55; los otros 8 lotes tienen 164. Desde el 11/10 el catálogo usa **164**, y con ese valor 55 kg dan "0 unidades + 55 kg". Confirmar con INCOVSA cuál es el Peso de Conversión correcto y el resultado esperado del caso 4 ([12-reglas-de-negocio.md](12-reglas-de-negocio.md)) | P2 |
 | P-69 | Logotipo de Inquiserca. El sitio ya deja preparado dónde se sube y cómo se muestra | P2 |
 | P-03 | Personas que recibirán la capacitación, quién recibe las credenciales y quién probará el panel sin ayuda del equipo | P3 |
 

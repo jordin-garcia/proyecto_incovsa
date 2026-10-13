@@ -1,0 +1,23 @@
+{
+  "titulo_documento": "DOCUMENTO 2: DOCUMENTACIÓN TÉCNICA DEL SISTEMA",
+  "archivo_salida": "Documento 2 - Documentacion tecnica del sistema v0.1.docx",
+  "lugar_fecha": "Quetzaltenango, 12 de octubre de 2026",
+  "portada": true,
+  "control_versiones": true,
+  "indices": true,
+  "numerar": true,
+  "versiones": [
+    ["0.1", "12/10/2026", "Héctor Jordin Adolfo García Coyoy", "Creación inicial para el Entregable No. 2: introducción técnica, arquitectura general y su diagrama, diagrama de componentes, tecnologías y versiones, dependencias, estructura del repositorio, autenticación, roles y permisos, manejo de archivos y de errores, servicios externos, respaldos, convenciones de desarrollo y casos de prueba iniciales"]
+  ],
+  "secciones": [
+    "01-introduccion-y-arquitectura.md",
+    "02-modelado-y-datos.md",
+    "03-tecnologias-y-repositorio.md",
+    "04-configuracion.md",
+    "05-seguridad.md",
+    "06-logica-de-negocio.md",
+    "07-operacion-y-mantenimiento.md",
+    "90-anexo-f-casos-de-prueba.md",
+    "99-referencias.md"
+  ]
+}

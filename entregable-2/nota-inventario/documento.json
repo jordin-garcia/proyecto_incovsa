@@ -1,0 +1,8 @@
+{
+  "archivo_salida": "Nota - Exclusion del control de inventario.docx",
+  "portada": false,
+  "control_versiones": false,
+  "indices": false,
+  "numerar": false,
+  "secciones": ["nota.md"]
+}
