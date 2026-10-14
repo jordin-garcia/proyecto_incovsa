@@ -1,4 +1,4 @@
-# 20. Prototipo aprobado y cambios de la reunión 4
+# 20. Prototipo aprobado y cambios de las reuniones 4 y 5
 
 ## El prototipo
 
@@ -7,14 +7,14 @@
 | Nombre | Prototipo de simulación de INCOVSA |
 | Código fuente | `entregable-1/prototipos/simulacion/src/` (`base.js`, `sitio.js`, `panel.js`, `picking.js`, `tablero.js`, `inicio.js`, `estilos.css`, `plantilla.html`) |
 | Cómo se arma | `python construir.py` desde `entregable-1/prototipos/simulacion/`. Genera `entregable-1/prototipos/prototipo-simulacion-incovsa.html`, que se abre con doble clic |
-| Datos | Toma productos, Peso de Conversión, clientes, sectores, imágenes y documentos de `docs_incovsa/`. Desde el 11/10/2026 los clientes llevan sus **nombres reales**, porque la validación de clientes del archivo de Odoo los necesita y el HTML armado no se sube al repositorio. Los usuarios siguen anonimizados. Los departamentos y municipios de Guatemala salen del INE (Censo 2018), en `simulacion/datos/guatemala.json` |
+| Datos | Toma imágenes, logotipos (incluido el de Inquiserca), documentos de ejemplo y, de `Picking II.xlsm`, nombres reales de productos con su Peso de Conversión y sus lotes, y de clientes con su sector, **solo para armar las rutas y los pedidos de ejemplo** con que arranca la simulación (desde el 13/10 el sistema no tiene esos catálogos). El HTML armado no se sube al repositorio. Los usuarios siguen anonimizados. Los departamentos y municipios de Guatemala salen del INE (Censo 2018), en `simulacion/datos/guatemala.json` |
 | Repositorio | Se sube el código fuente. El HTML armado **no se sube**, porque contiene datos reales de la empresa (RNF-10) |
-| Presentado | 29/09/2026, reunión 4, al Ing. William Ambrossio |
-| Aprobación | El 09/10/2026 el coordinador confirmó que el **design system** y la **mayoría de las funcionalidades** están aprobados por el Ing. William Ambrossio y por el Ing. Manuel Rojas, **salvo los cambios de la reunión 4** |
+| Presentado | 29/09/2026 (reunión 4) y 13/10/2026 (reunión 5), al Ing. William Ambrossio. El 14/10/2026 se presenta al Ing. Manuel Rojas como avance del Entregable 2 |
+| Aprobación | El 09/10/2026 el coordinador confirmó que el **design system** y la **mayoría de las funcionalidades** están aprobados por el Ing. William Ambrossio y por el Ing. Manuel Rojas, salvo los cambios de la reunión 4. El **13/10/2026** el Ing. William **aprobó** el prototipo con esos cambios y pidió los de la reunión 5 (CAM-40 a CAM-77), que se aplicaron el 14/10 |
 
 ## Cómo se usa para desarrollar
 
-1. La aplicación real se construye **a partir de este prototipo, de los cambios de la reunión 4 y de las respuestas del 11/10/2026**.
+1. La aplicación real se construye **a partir de este prototipo**, que desde el 14/10/2026 incluye los cambios de las reuniones 4 y 5.
 2. Si el prototipo y esta carpeta dicen cosas distintas, **vale esta carpeta** (regla 1 de [README.md](README.md)). Los cambios de la reunión 4 ya están escritos en los archivos de cada módulo.
 3. Lo que esta carpeta no detalla (distribución de la pantalla, textos de ayuda, orden de los elementos, interacción) se toma del prototipo.
 4. Mientras un cambio esté pendiente (P-xx), no se implementa como decidido. Donde el cambio está pendiente pero el prototipo ya resuelve algo, el archivo del módulo dice qué parte del prototipo se conserva.
@@ -23,19 +23,18 @@
 
 | Elemento del prototipo | Motivo |
 |---|---|
-| Botón "Demostración" (entrar como, abrir pantallas, reiniciar datos, alternar P-26) | Herramienta de presentación |
+| Botón "Demostración" (entrar como, abrir pantallas, reiniciar datos) | Herramienta de presentación |
 | Cuentas de ejemplo y contraseña `demo` en el inicio de sesión | Herramienta de presentación |
 | Notas amarillas de pendientes (P-xx) | Herramienta de validación |
 | Leyenda "Prototipo para validación" del pie y nota "Simulación" del tablero | Herramienta de validación |
 | Estado guardado en el navegador (`localStorage`) y sincronizado entre pestañas (`BroadcastChannel`) | Simula la base de datos y el tiempo real. La aplicación real usa PostgreSQL y avisos por SSE ([16](16-arquitectura-y-tecnologia.md)) |
+| Imágenes que se suben, guardadas en el navegador y reducidas a 900 px | La aplicación real las guarda en Cloudflare R2. Si el navegador se queda sin espacio, la simulación avisa |
+| Rutas y pedidos de ejemplo armados con productos y clientes de `Picking II` | Datos de arranque de la demostración. En la aplicación real todo llega en el archivo de Odoo |
+| Producto documentado de ejemplo (soda cáustica de México) con los 3 PDF de la empresa incluidos en el archivo | En la simulación no hay enlaces reales de Google Drive. La aplicación real solo guarda enlaces |
+| Contraseña `demo` de las cuentas de ejemplo (menos de 8 caracteres) | Herramienta de presentación. Las contraseñas que se crean en la simulación sí piden 8 caracteres |
 | Nombres "Usuario de ejemplo NN" | Anonimización. La aplicación real usa los datos que cargue la empresa |
-| Módulo de Inventario, validación de existencias, devoluciones, columnas de existencia | Eliminados el 29/09 ([09-picking-inventario.md](09-picking-inventario.md)) |
-| Captura manual de pedidos en Facturación y un solo pedido con un camión por pantalla | Reemplazados por la carga del archivo de Odoo y el armado de envíos arrastrando pedidos (29/09 y 11/10, [06](06-picking-facturacion.md)) |
-| Columna y campo "Unidad medida" de los productos | No se usa (11/10) |
-| Nombre "Peso2" | Se llama "Peso de Conversión" (11/10) |
-| Recuperación de contraseña por correo en el sitio | La contraseña la restablecen Gerencia o Soporte (11/10) |
-| Escuintla en el sitio público (presencia, contacto y formulario) | Solo se muestran Quetzaltenango y Guatemala (11/10) |
-| Roles fijos por sistema en los formularios de usuario | Rol de texto libre, sedes y permisos por casillas (29/09 y 11/10) |
+
+El módulo de Inventario, la captura manual de pedidos, la unidad de medida, el nombre "Peso2", la recuperación por correo, Escuintla en el sitio, los roles fijos y, desde el 14/10, la validación de productos y clientes, la corrección del sector y una opción por camión ya **no** están en el prototipo.
 
 ## Design system aprobado
 
@@ -72,7 +71,7 @@ Los colores se tomaron de los dos logotipos recibidos. Los códigos exactos de l
 
 ## Registro de cambios de la reunión 4
 
-Cada cambio que pidió el Ing. William el 29/09/2026, con su estado después de las respuestas del 11/10/2026. "Definido" significa que se puede implementar; "Pendiente" significa que falta resolver lo que indica el P-xx antes de implementarlo.
+Cada cambio que pidió el Ing. William el 29/09/2026, con su estado después de las respuestas del 11/10/2026. La reunión 5 (13/10) reemplazó parte de CAM-02, CAM-09, CAM-23, CAM-24, CAM-30 y CAM-37 (ver "Registro de cambios de la reunión 5"); lo que dice ese registro y los archivos de cada módulo es lo vigente. "Definido" significa que se puede implementar; "Pendiente" significa que falta resolver lo que indica el P-xx antes de implementarlo.
 
 ### Sitio público
 
@@ -132,3 +131,70 @@ Cada cambio que pidió el Ing. William el 29/09/2026, con su estado después de 
 | CAM-37 | Producto del picking con solo nombre y Peso de Conversión; "Peso2" pasa a llamarse "Peso de Conversión"; "Unidad de Medida" no se usa | Definido (nombre en formato de Odoo; sin SKU) | [11](11-picking-configuracion.md) |
 | CAM-38 | Bodega sin columna SKU; Ruta con una fila por cliente aunque tenga varios pedidos facturados | Definido | [07](07-picking-bodega.md), [08](08-picking-ruta.md) |
 | CAM-39 | Textos del sitio sin el número de sedes y bodegas, sin Escuintla, sin inventario y sin roles fijos | Definido | [05](05-sitio-web.md) |
+
+## Registro de cambios de la reunión 5
+
+Cada cambio que pidió el Ing. William el 13/10/2026, con las respuestas del coordinador del 14/10/2026. Todos están **definidos** e **implementados en el prototipo** el 14/10.
+
+### Sitio público
+
+| Id | Cambio | Dónde |
+|---|---|---|
+| CAM-40 | Inicio: misión con el texto a la izquierda y la imagen a la derecha; debajo, visión con la imagen a la izquierda y el texto a la derecha. Sin imagen hasta que se suba | [05](05-sitio-web.md) |
+| CAM-41 | Quiénes somos: misión y visión igual que en Inicio | [05](05-sitio-web.md) |
+| CAM-42 | Valores: 5 imágenes, una por valor, en una fila, sin texto, que se suben desde el panel | [05](05-sitio-web.md) |
+| CAM-43 | Galerías de hasta 5 imágenes que rotan cada 5 s en todas las áreas con imágenes (menos logotipos y valores); con una sola imagen, fija; sin hacer más lenta la carga | [05](05-sitio-web.md), RNF-17 |
+| CAM-44 | Industrias: barra lateral izquierda solo con íconos; el nombre aparece al pasar el cursor | [05](05-sitio-web.md) |
+| CAM-45 | Contacto: la solicitud solo se guarda en el sistema; no se envía por correo | [05](05-sitio-web.md) |
+
+### Acceso y autenticación
+
+| Id | Cambio | Dónde |
+|---|---|---|
+| CAM-46 | Acceso personal: usuario → validación en los dos sistemas → elección de Odoo, sitio o picking → contraseña. Si no existe, mensaje de que no tiene permisos | [03](03-roles-y-accesos.md) |
+| CAM-47 | El mismo nombre de usuario puede existir en los dos sistemas | [03](03-roles-y-accesos.md) |
+| CAM-48 | Al cerrar sesión se vuelve a la página de inicio | [03](03-roles-y-accesos.md) |
+
+### Administración del sitio
+
+| Id | Cambio | Dónde |
+|---|---|---|
+| CAM-49 | Contenido institucional: sin la sección "Imágenes del sitio"; campos para la portada y el logotipo de INCOVSA; el logotipo de Inquiserca viene cargado | [05](05-sitio-web.md) |
+| CAM-50 | Solicitudes: indicador de solicitudes nuevas sobre el ícono, también con el menú reducido | [05](05-sitio-web.md) |
+| CAM-51 | Usuarios: contraseña al crear el usuario; Gerencia y Soporte la restablecen escribiendo una nueva; sin correo | [03](03-roles-y-accesos.md) |
+| CAM-52 | Documentación interna: un producto documentado con nombre, país, lote obligatorio y enlaces de Google Drive de FT, HS y COA | [05](05-sitio-web.md) |
+| CAM-53 | Documentación interna: tabla sin columnas Documento y Tipo ni filtro por tipo; acciones solo editar y eliminar; clic en la fila para ver o descargar según los permisos | [05](05-sitio-web.md) |
+
+### Sistema de picking
+
+| Id | Cambio | Dónde |
+|---|---|---|
+| CAM-54 | Facturación: datos del archivo tal como vienen, sin validar ni guardar productos, clientes ni sectores; Peso de Conversión y lote del archivo. Configuración queda con Camiones y Usuarios | [06](06-picking-facturacion.md), [11](11-picking-configuracion.md) |
+| CAM-55 | Facturación: instrucciones cortas a la par del título | [06](06-picking-facturacion.md) |
+| CAM-56 | Facturación: seleccionar uno, varios o todos los pedidos facturados y arrastrarlos juntos | [06](06-picking-facturacion.md) |
+| CAM-57 | Facturación: solo dos opciones de envío; en la de camión, camión y piloto de listas desplegables | [06](06-picking-facturacion.md) |
+| CAM-58 | Facturación: cada pedido facturado de una opción muestra su total en kg | [06](06-picking-facturacion.md) |
+| CAM-59 | Facturación: fecha y hora programadas en cada opción, obligatorias, que pasan a Bodega | [06](06-picking-facturacion.md) |
+| CAM-60 | Facturación: ordenar los pedidos facturados dentro de la opción; el orden pasa a Bodega y a Ruta | [06](06-picking-facturacion.md) |
+| CAM-61 | Facturación: tarjetas sin asa ni "x"; eliminar uno o varios seleccionándolos | [06](06-picking-facturacion.md) |
+| CAM-62 | Lo de camión se llama **ruta**; lo que recoge el cliente, **pedido** | [02](02-glosario.md) |
+| CAM-63 | Rutas y pedidos se numeran cada día desde 1 | [12](12-reglas-de-negocio.md) |
+| CAM-64 | Cada registro guarda la fecha y hora exactas en que se guardó | [12](12-reglas-de-negocio.md) |
+| CAM-65 | Bodega: sin contador en la barra lateral | [07](07-picking-bodega.md) |
+| CAM-66 | Bodega: botón "Detalle de Ruta" o "Detalle de Pedido" con todos los datos del archivo | [07](07-picking-bodega.md) |
+| CAM-67 | Bodega: ordenar las filas de mayor a menor peso | [07](07-picking-bodega.md) |
+| CAM-68 | Bodega: lote resaltado; una fila por producto, lote y Peso de Conversión | [07](07-picking-bodega.md) |
+| CAM-69 | Bodega: fecha y hora programadas, sin la hora de envío desde Facturación | [07](07-picking-bodega.md) |
+| CAM-70 | Bodega: marcar todos los productos de una vez | [07](07-picking-bodega.md) |
+| CAM-71 | Tablero: numeración de arriba hacia abajo, columna izquierda y después la derecha | [07](07-picking-bodega.md) |
+| CAM-72 | Ruta: rutas de la más reciente a la más antigua | [08](08-picking-ruta.md) |
+| CAM-73 | Ruta: sin sección de registro histórico | [08](08-picking-ruta.md) |
+
+### Aprobados con el prototipo del 13/10
+
+| Id | Cambio | Dónde |
+|---|---|---|
+| CAM-74 | Contacto: país obligatorio; departamento y municipio obligatorios si el país es Guatemala | [05](05-sitio-web.md) |
+| CAM-75 | Facturación: la tarjeta del pedido facturado lista sus productos con su cantidad | [06](06-picking-facturacion.md) |
+| CAM-76 | Presentación dinámica en todas las páginas públicas | [05](05-sitio-web.md) |
+| CAM-77 | Reportes: filtro de periodo también en la Bitácora | [10](10-picking-reportes.md) |

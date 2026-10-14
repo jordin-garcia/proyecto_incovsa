@@ -2,8 +2,8 @@
 
 Esta carpeta es la **fuente de verdad** del proyecto. Todo lo que el equipo o un agente de IA necesita saber para diseñar, programar, probar o documentar el sistema debe estar aquí.
 
-**Versión:** 1.1
-**Fecha de corte:** 12 de octubre de 2026 (incorpora los cambios de la reunión 4, del 29/09/2026, las respuestas del coordinador del 11/10/2026 y las medidas de seguridad y respuestas del coordinador del 12/10/2026)
+**Versión:** 1.2
+**Fecha de corte:** 14 de octubre de 2026 (incorpora los cambios de la reunión 4, del 29/09/2026, las respuestas del coordinador del 11/10/2026 y del 12/10/2026, y los cambios de la reunión 5, del 13/10/2026, con las respuestas del coordinador del 14/10/2026)
 **Responsable de mantenerla:** Jordin García (coordinador)
 
 ---
@@ -32,7 +32,7 @@ Esta carpeta es la **fuente de verdad** del proyecto. Todo lo que el equipo o un
 | [08-picking-ruta.md](08-picking-ruta.md) | Módulo de Ruta |
 | [09-picking-inventario.md](09-picking-inventario.md) | Módulo de Inventario: **eliminado** el 29/09 y lo que se quitó |
 | [10-picking-reportes.md](10-picking-reportes.md) | Módulo de Reportes |
-| [11-picking-configuracion.md](11-picking-configuracion.md) | Módulo de Configuración: catálogos del picking |
+| [11-picking-configuracion.md](11-picking-configuracion.md) | Módulo de Configuración: camiones y usuarios del picking |
 | [12-reglas-de-negocio.md](12-reglas-de-negocio.md) | Reglas de negocio, conversión, estados del pedido y bitácora |
 | [13-datos-maestros.md](13-datos-maestros.md) | Origen de los datos, carga inicial y archivos de la empresa |
 | [14-modelo-de-datos.md](14-modelo-de-datos.md) | Modelo conceptual de datos |
@@ -41,16 +41,16 @@ Esta carpeta es la **fuente de verdad** del proyecto. Todo lo que el equipo o un
 | [17-lineamientos-del-curso.md](17-lineamientos-del-curso.md) | Exigencias del docente y cómo las cubre el sistema |
 | [18-historial-de-decisiones.md](18-historial-de-decisiones.md) | Fuentes, decisiones y decisiones reemplazadas |
 | [19-pendientes.md](19-pendientes.md) | Todo lo que falta definir o recibir |
-| [20-prototipo-aprobado.md](20-prototipo-aprobado.md) | Prototipo de simulación aprobado, design system y registro de cambios de la reunión 4 |
+| [20-prototipo-aprobado.md](20-prototipo-aprobado.md) | Prototipo de simulación aprobado, design system y registro de cambios de las reuniones 4 y 5 |
 
 ## Convenciones
 
-- **Códigos de requerimiento:** `RF-SW-xx` (sitio web), `RF-SL-xx` (sistema logístico o picking), `RNF-xx` (no funcionales), `RN-xx` (reglas de negocio), `CU-xx` (casos de uso), `P-xx` (pendientes), `CAM-xx` (cambios de la reunión 4, en [20-prototipo-aprobado.md](20-prototipo-aprobado.md)).
+- **Códigos de requerimiento:** `RF-SW-xx` (sitio web), `RF-SL-xx` (sistema logístico o picking), `RNF-xx` (no funcionales), `RN-xx` (reglas de negocio), `CU-xx` (casos de uso), `P-xx` (pendientes), `CAM-xx` (cambios de las reuniones 4 y 5, en [20-prototipo-aprobado.md](20-prototipo-aprobado.md)).
 - **Estado de un requerimiento o regla:** *Vigente* (sin cambios desde el Documento 1), *Modificado* (cambió su contenido), *Nuevo* (no existía en el Documento 1), *Eliminado* (ya no aplica) o *Pendiente* (falta definirlo).
 - **Los códigos no se reutilizan.** Un requerimiento eliminado conserva su código con estado *Eliminado*, para que la trazabilidad con el Documento 1 no se rompa.
 - **Unidades:** todas las cantidades del sistema de picking están en **kilogramos (kg)**. Las capacidades de camión también.
-- **Cambios de la reunión 4 y respuestas posteriores:** se marcan en el texto con **(29/09)** u **(11/10)**, o con una nota "Cambio del …".
-- **Peso de Conversión:** desde el 11/10 es el nombre del dato que antes se llamaba "Peso2". La columna del Excel de la empresa conserva su nombre literal, `Peso2`.
+- **Cambios de las reuniones 4 y 5 y respuestas posteriores:** se marcan en el texto con **(29/09)**, **(11/10)**, **(13/10)** o **(14/10)**, o con una nota "Cambio del …".
+- **Peso de Conversión:** desde el 11/10 es el nombre del dato que antes se llamaba "Peso2". Desde el 13/10 se toma de la columna `Movimientos de stock/Producto/Peso` del archivo de Odoo.
 - **Fechas:** formato dd/mm/aaaa.
 
 ## Cómo actualizar esta carpeta

@@ -2,18 +2,19 @@
 
 ## Propósito
 
-Es la entrada de los pedidos al sistema. El facturador **sube un archivo .xlsx exportado de Odoo** con las salidas ya facturadas. Cada referencia del archivo es un **pedido facturado** de un cliente y aparece en el **tablero de pedidos facturados**. El facturador arma cada **pedido** para Bodega agregando pedidos facturados, de uno o de varios clientes, a una **opción de envío** (un camión o "Cliente recoge en bodega"), y envía cada opción a Bodega cuando la considera correcta.
+Es la entrada de los pedidos al sistema. El facturador **sube un archivo .xlsx exportado de Odoo** con las salidas ya facturadas. Cada referencia del archivo es un **pedido facturado** de un cliente y aparece en el **tablero de pedidos facturados**. El facturador arma cada **ruta** (envío por camión) o cada **pedido** (cliente recoge en bodega) agregando pedidos facturados, de uno o de varios clientes, a una **opción de envío**, y la envía a Bodega cuando la considera correcta.
 
-> **Cambios del 29/09/2026 (reunión 4) y respuestas del 11/10/2026.** Los pedidos ya **no se capturan a mano**: se cargan desde el archivo de Odoo. El sistema ya no valida ni descuenta existencias ([09-picking-inventario.md](09-picking-inventario.md)). Un pedido sigue pudiendo tener **varios clientes**, como hasta ahora; lo que cambia es la forma de armarlo.
+> **Cambios del 13/10/2026 (reunión 5).** Los datos del archivo se usan **tal como vienen**: ya no se validan productos, clientes ni sectores, y no se guardan en ninguna base de productos o de clientes. El **Peso de Conversión** y el **lote** salen del archivo. Las opciones de envío son solo **dos**: "Envío por camión" (con el camión y el piloto elegidos de listas) y "Cliente recoge en bodega". Cada opción lleva **fecha y hora programadas**. Lo que sale de un camión se llama **ruta** y lo que recoge el cliente, **pedido**; los dos se numeran **cada día desde 1**. Se pueden seleccionar varios pedidos facturados para arrastrarlos o eliminarlos juntos.
 
 ## Términos de este módulo
 
 | Término | Significado |
 |---|---|
-| **Pedido facturado** | Una referencia de Odoo (por ejemplo, `XE-IN/SALIDA/03539`), de **un solo cliente**, con sus productos y cantidades. Se identifica con el **número de Odoo** |
-| **Tablero de pedidos facturados** | Lado izquierdo de la pantalla, con los pedidos facturados que todavía no se enviaron a bodega |
-| **Opción de envío** | Lado derecho: un camión de la sede o "Cliente recoge en bodega". Se le agregan pedidos facturados de uno o de varios clientes |
-| **Pedido** | Lo que se envía a Bodega desde una opción de envío: el conjunto de sus pedidos facturados. Puede tener **varios clientes**. Se identifica con un **correlativo por sede** y es lo que ven Bodega, Ruta y Reportes |
+| **Pedido facturado** | Una referencia de Odoo (por ejemplo, `XE-IN/SALIDA/03539`), de **un solo cliente**, con sus productos, lotes, Pesos de Conversión y cantidades. Se identifica con el **número de Odoo** |
+| **Tablero de pedidos facturados** | Lado izquierdo de la pantalla, con los pedidos facturados que todavía no están en ninguna opción de envío |
+| **Opción de envío** | Lado derecho: "Envío por camión" o "Cliente recoge en bodega". Se le agregan pedidos facturados de uno o de varios clientes |
+| **Ruta** | Lo que se envía a Bodega desde "Envío por camión". Se identifica con su **número del día** en la sede |
+| **Pedido** | Lo que se envía a Bodega desde "Cliente recoge en bodega". Se identifica con su **número del día** en la sede |
 
 ## Acceso
 
@@ -23,9 +24,10 @@ Usuarios del picking con permiso sobre Facturación, en las sedes que tengan asi
 
 1. El facturador **carga el archivo .xlsx**.
 2. Los pedidos facturados del archivo aparecen **resumidos** en el tablero, en el lado izquierdo.
-3. El facturador agrega, **pedido facturado por pedido facturado**, cada uno a la opción de envío que considere adecuada: un camión o "Cliente recoge en bodega".
-4. Cuando una opción de envío está correcta, el facturador la **envía a bodega**.
-5. Cada pedido enviado aparece en Bodega como lo hace hoy en el prototipo.
+3. El facturador selecciona uno, varios o todos los pedidos facturados y los arrastra a la opción de envío que corresponda: "Envío por camión" o "Cliente recoge en bodega".
+4. Ordena los pedidos facturados dentro de la opción, elige el camión y el piloto (si es envío por camión) y escribe la fecha y la hora programadas.
+5. Cuando la opción está correcta, la **envía a Bodega**: se crea la ruta o el pedido con su número del día.
+6. Cada ruta o pedido aparece en Bodega como en el prototipo.
 
 ## Archivo de Odoo (RF-SL-50, RN-35)
 
@@ -33,6 +35,7 @@ Usuarios del picking con permiso sobre Facturación, en las sedes que tengan asi
 - Un archivo puede traer **una o varias referencias**.
 - Cada archivo trae referencias de **una sola bodega**, porque el sistema está enfocado en el despacho por bodega.
 - Las pruebas se hacen **solo con la bodega de Quetzaltenango** (Xela).
+- El Ing. William se comprometió a entregar el archivo con **todos los datos** de las columnas que usa el sistema (13/10).
 
 ### Cómo se lee
 
@@ -40,22 +43,26 @@ Usuarios del picking con permiso sobre Facturación, en las sedes que tengan asi
 2. Cada pedido facturado viene separado por **referencia y cliente**.
 3. Una fila que **no tiene Referencia ni Contacto** pertenece a la **última referencia y contacto que aparecen arriba**; es decir, es otra línea del mismo pedido facturado.
 4. Solo se cargan las referencias en estado **"Hecho"** (columna `Estado`). Las demás, por ejemplo "Cancelado", se ignoran.
-5. Las filas de agrupación que agrega Odoo (texto en Referencia sin Contacto ni Producto, por ejemplo "agosto 2026 (80)") no son pedidos y se ignoran (12/10).
-6. Si una línea de una referencia "Hecho" trae una cantidad vacía, no numérica o menor o igual a 0, ese pedido facturado no se carga y se avisa en el resumen de la carga, igual que cuando falta un producto (12/10). En el archivo de ejemplo, las 3 líneas con 0 kg son de referencias "Cancelado".
-7. El archivo se rechaza si pesa más de 2 MB (12/10). La librería y las medidas de seguridad están en [16](16-arquitectura-y-tecnologia.md).
+5. Las filas de agrupación que agrega Odoo (texto en Referencia sin Contacto ni Producto, por ejemplo "agosto 2026 (80)") no son pedidos y se ignoran.
+6. Si una línea de una referencia "Hecho" trae una **cantidad** vacía, no numérica o menor o igual a 0, ese pedido facturado **no se carga** y se avisa en el resumen de la carga (12/10).
+7. Si una línea de una referencia "Hecho" trae un **Peso de Conversión** vacío, no numérico o menor o igual a 0, ese pedido facturado **no se carga** y se avisa en el resumen de la carga (decisión del coordinador del 14/10, RN-50). En el archivo de ejemplo, 82 de las 205 líneas de referencias "Hecho" traen el peso en 0, en 46 de los 79 pedidos facturados.
+8. El archivo se rechaza si pesa más de 2 MB (12/10). La librería y las medidas de seguridad están en [16](16-arquitectura-y-tecnologia.md).
+9. **No se valida nada más** (13/10): el producto, el lote, el cliente y el sector se toman tal como vienen. No hay ventanas para agregar productos o clientes que falten, porque el sistema ya no tiene esos catálogos.
 
 ### Columnas que se usan
 
 | Columna del archivo | Uso | Ejemplo |
 |---|---|---|
 | `Referencia` | Tres segmentos separados por `/`. El **primero** indica la bodega de la que salió. El **segundo** indica que es una salida. El **tercero** es el **número del pedido facturado** (RN-36) | `XE-IN/SALIDA/03539` → `03539`, bodega de Quetzaltenango |
-| `Contacto` | **Nombre del cliente**, si el cliente no está en la base | — |
-| `Contacto/Ciudad` | **Sector del cliente**, si el cliente no está en la base | — |
+| `Contacto` | **Nombre del cliente**, tal como viene | — |
+| `Contacto/Ciudad` | **Sector del cliente**, tal como viene | — |
 | `Estado` | Solo se cargan las referencias "Hecho" | `Hecho` |
-| `Movimientos de stock/Producto` | **Nombre del producto**, que se busca en el catálogo | `SODA ASH (CHI-SAC/0040KG)` |
-| `Movimientos de stock/Cantidad hecha` | Cantidad facturada, **en kilogramos** (RN-37) | `120` |
+| `Movimientos de stock/Producto` | **Nombre del producto**, tal como viene | `SODA ASH (CHI-SAC/0040KG)` |
+| `Movimientos de stock/Producto/Peso` | **Peso de Conversión** de la línea, en kg (13/10, RN-37) | `25` |
+| `Movimientos de stock/Números de serie` | **Lote** de la línea. Se guarda y se muestra en Bodega (13/10) | `5287` |
+| `Movimientos de stock/Cantidad hecha` | Cantidad facturada, **en kilogramos** (RN-04) | `120` |
 
-**No se usa** la columna `Movimientos de stock/Producto/Peso`, porque en algunos productos viene en cero. La conversión usa el **Peso de Conversión** de cada producto del catálogo (RN-02, RN-37).
+> El archivo de ejemplo trae un caso que el sistema toma tal como viene: `SODA ASH (CHI-SAC/0040KG)` tiene peso 25 en sus 12 líneas, aunque su nombre dice 40 kg. La conversión usa 25, porque es el dato de la columna (P-90).
 
 Prefijos de bodega en la Referencia:
 
@@ -67,93 +74,88 @@ Prefijos de bodega en la Referencia:
 
 No se valida si una referencia ya se cargó antes: no puede pasar, porque los datos vienen de Odoo.
 
-### Validación de productos (RN-43)
-
-Cada producto del archivo se busca en el catálogo para obtener su Peso de Conversión. El nombre del catálogo tiene el mismo formato que el de Odoo ([11-picking-configuracion.md](11-picking-configuracion.md)).
-
-- Si un producto **no está** en el catálogo, el sistema lo **notifica** y **pregunta si se desea agregar**.
-- Si se agrega, el sistema pide **únicamente el Peso de Conversión**. El nombre es el del archivo.
-- Si **no** se agrega, el pedido facturado que lo contiene **no se carga**, porque no hay Peso de Conversión para convertirlo a unidades (respuesta del 11/10 a P-81). Los demás pedidos facturados del archivo sí se cargan.
-
-### Validación de clientes (RN-44)
-
-Cada cliente del archivo (columna `Contacto`) se busca en la base de clientes.
-
-| Caso | Nombre y sector del pedido facturado |
-|---|---|
-| El cliente **existe** en la base | Se toman **de la base de datos** |
-| El nombre está **dos veces** en la base, con sectores distintos | El nombre de la base y el sector de `Contacto/Ciudad` del archivo (11/10) |
-| El cliente **no existe** y se decide **guardarlo** | El sistema pide su **nombre** y su **sector**. El sector se **elige de la lista de sectores existentes** o se **agrega uno nuevo** en ese momento. El cliente queda guardado en la base |
-| El cliente **no existe** y **no** se guarda | Se usan el nombre y el sector **tal como vienen** en `Contacto` y `Contacto/Ciudad` |
-
 ## Pantalla de Facturación (RF-SL-61)
+
+- El título y un texto de instrucciones **corto, a la par del título**, para dejar el mayor espacio posible al tablero y a las opciones de envío (13/10).
+- A la izquierda, el tablero de pedidos facturados; a la derecha, las dos opciones de envío.
 
 ### Lado izquierdo: tablero de pedidos facturados (RF-SL-67)
 
-- Muestra los pedidos facturados que **todavía no se enviaron a bodega** y no están en ninguna opción de envío.
-- **Se guarda en la base de datos**: si el facturador cierra la sesión, o entra otro facturador de la misma sede, el tablero sigue igual (respuesta del 11/10). Así funcionará también cuando el sistema se conecte a Odoo y los pedidos facturados lleguen solos.
-- Una tarjeta **resumida** por pedido facturado, con **solo** estos datos:
+- Muestra los pedidos facturados que **todavía no están en ninguna opción de envío**.
+- **Se guarda en la base de datos**: si el facturador cierra la sesión, o entra otro facturador de la misma sede, el tablero sigue igual.
+- Una tarjeta por pedido facturado, que usa **todo el ancho** (sin el asa de arrastre ni la "x" de eliminar, 13/10), con:
 
 | Dato | Origen |
 |---|---|
-| Número de pedido | Tercer segmento de la Referencia |
-| Nombre del cliente | Base de clientes, o `Contacto` si el cliente no se guardó |
-| Sector del cliente | Base de clientes, o `Contacto/Ciudad` si el cliente no se guardó |
+| Número de pedido facturado | Tercer segmento de la Referencia |
+| Nombre del cliente | `Contacto` |
+| Sector del cliente | `Contacto/Ciudad` |
 | Total en kg | Suma de la cantidad de todos los productos del pedido facturado |
+| Productos con su cantidad en kg | Lista de los productos del pedido facturado (aprobado con el prototipo el 13/10) |
 
-- **El único dato que se puede corregir es el sector del cliente** (RF-SL-62). La corrección **se guarda en la base de clientes**. Si el cliente no está guardado en la base, la corrección queda en ese pedido facturado.
-- Se puede **eliminar un pedido facturado** del tablero, o **eliminar todos** los pedidos facturados del tablero (RF-SL-68). La bitácora registra la eliminación.
+- Ningún dato de la tarjeta se puede corregir (13/10).
+- **Selección (13/10):**
+  - se puede seleccionar **uno o varios** pedidos facturados;
+  - una opción **"Seleccionar todos"** selecciona todos los del tablero;
+  - al arrastrar un pedido facturado seleccionado se llevan **todos los seleccionados** juntos a la opción de envío;
+  - al haber pedidos facturados seleccionados aparece la opción **"Eliminar"**, que los elimina del tablero después de confirmar. La bitácora registra la eliminación (RF-SL-68).
 
-### Lado derecho: opciones de envío
+### Lado derecho: opciones de envío (13/10)
+
+Solo hay **dos** opciones, sin importar cuántos camiones tenga la sede:
 
 | Opción | Contenido |
 |---|---|
-| **Un camión por cada camión de la sede** | Identificación y capacidad máxima, **piloto**, pedidos facturados que contiene, **peso acumulado** frente a la capacidad, alerta de sobrepeso y sus botones |
-| **Cliente recoge en bodega** | Pedidos facturados que contiene, total en kg y sus botones |
+| **Envío por camión** | **Camión** (lista desplegable con los camiones de la sede), **piloto** (lista desplegable), **fecha y hora programadas de envío**, pedidos facturados que contiene (cada uno con su total en kg), **peso acumulado** frente a la capacidad del camión elegido, alerta de sobrepeso y sus botones |
+| **Cliente recoge en bodega** | **Fecha y hora programadas de despacho**, pedidos facturados que contiene (cada uno con su total en kg), total en kg y sus botones |
 
 - A cada opción se le pueden agregar pedidos facturados de **varios clientes**.
-- El **piloto** se elige en cada opción de camión, entre los usuarios con rol **"Piloto"** que tienen acceso a la sede ([03-roles-y-accesos.md](03-roles-y-accesos.md)).
-- Lo que tiene cada opción **se guarda en la base de datos**: al volver a entrar, cada opción conserva los pedidos facturados que se le asignaron (respuesta del 11/10).
-- Un camión puede hacer **varias rutas en el mismo día**: después de enviar una opción de camión, la opción queda vacía y se puede volver a usar.
+- El **piloto** se elige entre los usuarios con rol **"Piloto"** que tienen acceso a la sede ([03-roles-y-accesos.md](03-roles-y-accesos.md)).
+- Cada pedido facturado de una opción muestra su **número, su cliente y su total en kg** (13/10).
+- **Orden (13/10):** el facturador puede reordenar los pedidos facturados dentro de cada opción arrastrándolos. El orden **se guarda** y es el orden con que se envían a Bodega: el del detalle de la ruta o del pedido, el de sus líneas de preparación (por primera aparición) y el orden inicial de los clientes de la ruta (RN-29).
+- La **fecha y la hora programadas** son **obligatorias** para enviar (decisión del coordinador del 14/10). Se guardan y se muestran en Bodega (RN-53).
+- Lo que tiene cada opción (pedidos facturados, orden, camión, piloto, fecha y hora) **se guarda en la base de datos**: al volver a entrar, cada opción conserva lo que se le asignó.
+- Después de enviar, la opción queda vacía y se puede volver a usar, con el mismo camión o con otro. Un camión puede hacer **varias rutas en el mismo día**.
 
 ### Arrastrar pedidos facturados (RF-SL-63)
 
-- Del **tablero** a una **opción de envío**.
-- De una **opción** a **otra opción**.
+- Del **tablero** a una **opción de envío**, uno o varios a la vez (13/10).
+- De una **opción** a la **otra opción**.
 - De una **opción** de regreso al **tablero**.
-- Funciona con mouse y con el dedo, como el reordenamiento del prototipo.
+- **Dentro de una opción**, para cambiar su orden (13/10).
+- Funciona con mouse y con el dedo. Como la tarjeta ya no tiene asa, en pantallas táctiles el arrastre empieza con una **pulsación larga** sobre la tarjeta; un toque corto la selecciona (decisión de diseño del 14/10).
 
 ### Peso y alerta de sobrepeso (RF-SL-14, RN-13)
 
-- Cada opción de camión **lleva el control del peso**: suma el total en kg de sus pedidos facturados y lo muestra frente a la capacidad máxima, con el medidor del prototipo.
+- La opción "Envío por camión" **lleva el control del peso**: suma el total en kg de sus pedidos facturados y lo muestra frente a la capacidad máxima del **camión elegido**, con el medidor del prototipo.
 - Si el total **excede el peso máximo** del camión, aparece la **alerta de sobrepeso**.
 - La alerta **solo informa, no bloquea**. INCOVSA acepta que sea aproximada.
 - Capacidades en Quetzaltenango: 3,400 kg (dos camiones) y 6,000 kg (uno).
 
 ### Botones de cada opción (RF-SL-16, RF-SL-17)
 
-**Cada opción de envío tiene sus propios botones** "Enviar Pedido a Bodega" y "Cancelar".
-
 | Botón | Efecto |
 |---|---|
-| **Enviar Pedido a Bodega** | En una sola transacción crea **un pedido** con todos los pedidos facturados de esa opción: le asigna el **correlativo de la sede**, guarda sus líneas (cliente, producto y cantidad) con el **Peso de Conversión vigente** de cada producto (RN-33), lo pone **En Preparación** y lo manda a Bodega. En una opción de camión, **en el mismo paso se crea la ruta**, con su número (correlativo por sede), la fecha del envío, el camión y el piloto (RF-SL-30). Requiere al menos un pedido facturado y, en los camiones, piloto asignado. Los pedidos facturados enviados salen de la pantalla |
-| **Cancelar** | Los pedidos facturados de esa opción **regresan al tablero** (respuesta del 11/10 a P-79). No se pierde nada y no se crea ningún pedido. La bitácora registra la cancelación |
+| **Enviar a Bodega** | En una sola transacción crea **una ruta** (envío por camión) o **un pedido** (cliente recoge) con todos los pedidos facturados de esa opción, en su orden: le asigna el **número del día** de la sede (RN-52), guarda la fecha y hora programadas, guarda la **fecha y hora exactas de creación** (RN-57), crea sus líneas de preparación (RN-51) y la pone **En Preparación**. En la ruta guarda también el camión y el piloto. Requiere al menos un pedido facturado y la fecha y hora programadas; en el envío por camión requiere además camión y piloto. Los pedidos facturados enviados salen de la pantalla |
+| **Cancelar** | Los pedidos facturados de esa opción **regresan al tablero**. No se pierde nada y no se crea nada. La bitácora registra la cancelación |
+
+Antes de enviar se muestra la ventana de confirmación del prototipo, con el número que va a recibir la ruta o el pedido.
 
 ## Restricciones
 
-- Un pedido ya enviado a bodega no se puede editar ni cancelar (RF-SL-18).
+- Una ruta o un pedido ya enviados a bodega no se pueden editar ni cancelar (RF-SL-18).
 - **No** se registra el número de factura.
-- Desde el 11/10 sí hay datos guardados antes del envío: el tablero y las opciones de envío. El **pedido** de Bodega se crea al enviar (RN-16).
+- Antes del envío se guardan el tablero y las opciones de envío. La ruta o el pedido se crean al enviar (RN-16).
 
 ## Estados
 
 | Situación | Estado |
 |---|---|
-| Pedido facturado en el tablero o en una opción de envío | Todavía no es un pedido. Es el estado "Pendiente" de RN-11 y se guarda como pedido facturado |
-| Pedido creado al pulsar "Enviar Pedido a Bodega" | **En Preparación**, el primer estado del pedido |
+| Pedido facturado en el tablero o en una opción de envío | Todavía no es una ruta ni un pedido. Es el estado "Pendiente" de RN-11 y se guarda como pedido facturado |
+| Ruta o pedido creado al pulsar "Enviar a Bodega" | **En Preparación**, el primer estado |
 
 Ver RN-11 en [12-reglas-de-negocio.md](12-reglas-de-negocio.md).
 
 ## Diferencias con el prototipo aprobado
 
-El prototipo tiene la captura manual (tabla vacía, botón "Agregar línea", búsqueda de cliente y producto), la validación de existencias y un solo pedido por pantalla con un camión y un piloto. Todo eso **se reemplaza** por la carga del archivo, el tablero de pedidos facturados y las opciones de envío. Del prototipo se conservan el estilo de las tarjetas, el medidor de capacidad con su alerta, el arrastre con mouse o dedo, la ventana de confirmación antes de enviar y, en Bodega, Ruta y Reportes, el pedido con varios clientes ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)).
+El prototipo de simulación implementa todo lo de este archivo desde el 14/10. Lo que se reemplazó del prototipo del 29/09 (captura manual, validación de existencias, un pedido por pantalla) y del prototipo del 13/10 (ventanas de productos y clientes que faltan, corrección del sector, una opción por camión, asa y "x" en las tarjetas) ya no se usa ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)).

@@ -1,37 +1,42 @@
 # 04. Requerimientos funcionales y casos de uso
 
-Catálogo único de requerimientos funcionales. La columna **Estado** compara cada requerimiento con el Documento 1 v0.1 (21/09/2026); ver las convenciones en [README.md](README.md). Cuando un requerimiento cambió en la reunión 4 (29/09/2026) o con las respuestas del 11/10/2026, el texto lo indica con **(29/09)** u **(11/10)**. El comportamiento detallado está en el archivo de cada módulo.
+Catálogo único de requerimientos funcionales. La columna **Estado** compara cada requerimiento con el Documento 1 v0.1 (21/09/2026); ver las convenciones en [README.md](README.md). Cuando un requerimiento cambió en la reunión 4 (29/09/2026), con las respuestas del 11/10/2026 o en la reunión 5 (13/10/2026), el texto lo indica con **(29/09)**, **(11/10)** o **(13/10)**. El comportamiento detallado está en el archivo de cada módulo.
 
 ## Sitio web (RF-SW)
 
 | Código | Requerimiento | Estado |
 |---|---|---|
-| RF-SW-01 | El sitio presenta una página de inicio **informativa**, con información institucional y noticias. **(29/09)** Sin la sección "Catálogo informativo" (no se quita nada más), con las imágenes de misión y visión centradas una debajo de la otra, y con presentación dinámica de las imágenes al desplazarse | Modificado |
-| RF-SW-02 | El sitio presenta el apartado "Quiénes somos" con historia, misión, visión y valores. **(29/09)** Banner con transición entre los logotipos de INCOVSA e Inquiserca; misión y visión como imágenes dinámicas a media pantalla, misión arriba y visión abajo, centradas; imagen opcional para historia y valores | Modificado |
-| RF-SW-03 | El sitio presenta las **9 industrias** atendidas, con navegación por industria. Las industrias **no** van en una barra superior horizontal. **(29/09)** Cada industria muestra solo su descripción, una imagen propia y sus productos en texto; sin imágenes de productos | Modificado |
-| RF-SW-04 | El sitio presenta un catálogo informativo de productos por industria, sin precios ni comercio electrónico. Se muestran nombre, países de origen y presentación, y nunca el lote. **Un producto puede pertenecer a varias industrias**. **(29/09)** La búsqueda del prototipo está aprobada | Modificado |
-| RF-SW-05 | El sitio presenta el detalle de cada producto. **(11/10)** Imagen, nombre, descripción, presentación, países de origen e industrias. Se eliminan manejo, almacenamiento, humedad, tipo y restricciones | Modificado |
-| RF-SW-06 | El sitio presenta un formulario de contacto para solicitudes, quejas o reclamos. El contenido se envía por correo, se guarda en la base de datos, y el correo de contacto queda visible | Vigente |
-| RF-SW-07 | El panel permite actualizar sin tocar código la información institucional, las imágenes, las industrias, el catálogo, las noticias y la información de contacto. **(29/09)** Quién lo hace depende de sus permisos | Modificado |
-| RF-SW-08 | El sitio y el panel son responsivos para escritorio, tableta y teléfono | Vigente (reconfirmado el 29/09) |
-| RF-SW-09 | El sitio presenta los tres accesos: Odoo (enlace), administración del sitio y sistema de picking | Vigente |
-| RF-SW-10 | El sitio tiene un área protegida de documentación interna (FT, HS, COA). **(29/09)** Lo que cada usuario puede hacer depende de sus permisos | Modificado |
-| RF-SW-11 | **(11/10)** Para recuperar su contraseña, el usuario la solicita a Gerencia o a Soporte, que la restablecen desde el panel. No hay recuperación por correo | Modificado |
+| RF-SW-01 | El sitio presenta una página de inicio **informativa**, con información institucional y noticias. **(29/09)** Sin la sección "Catálogo informativo". **(13/10)** Misión con su texto a la izquierda y su imagen a la derecha; debajo, visión con su imagen a la izquierda y su texto a la derecha | Modificado |
+| RF-SW-02 | El sitio presenta el apartado "Quiénes somos" con historia, misión, visión y valores. **(29/09)** Banner con transición entre los logotipos de INCOVSA e Inquiserca. **(13/10)** Misión y visión como en Inicio; valores como 5 imágenes, una por valor, sin texto (RF-SW-29) | Modificado |
+| RF-SW-03 | El sitio presenta las **9 industrias** atendidas, con navegación por industria. Cada industria muestra su descripción, sus imágenes y sus productos en texto. **(13/10)** La navegación es una barra lateral izquierda solo con íconos, que muestra el nombre de la industria al pasar el cursor | Modificado |
+| RF-SW-04 | El sitio presenta un catálogo informativo de productos por industria, sin precios ni comercio electrónico. Se muestran nombre, países de origen y presentación, y nunca el lote. Un producto puede pertenecer a varias industrias. La búsqueda del prototipo está aprobada | Modificado |
+| RF-SW-05 | El sitio presenta el detalle de cada producto: imágenes, nombre, descripción, presentación, países de origen e industrias | Modificado |
+| RF-SW-06 | El sitio presenta un formulario de contacto para solicitudes, quejas o reclamos. **(13/10)** El contenido **solo se guarda en el sistema**; no se envía a ningún correo | Modificado |
+| RF-SW-07 | El panel permite actualizar sin tocar código la información institucional, las imágenes, las industrias, el catálogo, las noticias y la información de contacto. Quién lo hace depende de sus permisos | Modificado |
+| RF-SW-08 | El sitio y el panel son responsivos para escritorio, tableta y teléfono | Vigente |
+| RF-SW-09 | El sitio presenta el acceso a Odoo (enlace), a la administración del sitio y al sistema de picking. **(13/10)** "Acceso personal" pide primero el usuario, valida que exista en alguno de los dos sistemas, deja elegir el sistema y pide la contraseña al final ([03](03-roles-y-accesos.md)) | Modificado |
+| RF-SW-10 | El sitio tiene un área protegida de documentación interna (FT, HS, COA). Lo que cada usuario puede hacer depende de sus permisos. **(13/10)** Los documentos son enlaces de Google Drive | Modificado |
+| RF-SW-11 | Para recuperar su contraseña, el usuario la solicita a Gerencia o a Soporte. **(13/10)** La restablecen escribiendo una nueva en el panel. No hay recuperación por correo | Modificado |
 | RF-SW-12 | El panel tiene una bandeja con las solicitudes recibidas por el formulario de contacto | Vigente |
-| RF-SW-13 | **(11/10)** Gerencia y Soporte administran los usuarios del sitio desde el panel: crear, editar, eliminar, rol (texto libre) y permisos por casillas. La administración es distinta de la del picking | Modificado |
-| RF-SW-14 | Al cargar un documento interno se indica su tipo (FT, HS o COA). **(29/09 y 11/10)** Se escribe el nombre de un solo producto, se elige el país de origen de una lista con todos los países y se escribe el lote (números y letras), obligatorio solo en el COA | Modificado |
-| RF-SW-15 | **(29/09)** Inicio, Quiénes somos, Noticias y Contacto llevan pie de página, con el logotipo de la cabecera. Industrias, Productos y el detalle de producto van sin pie de página | Nuevo |
-| RF-SW-16 | **(29/09)** Las imágenes de Inicio y las de misión y visión de Quiénes somos tienen una animación de aparición y desaparición al desplazarse | Nuevo |
-| RF-SW-17 | **(29/09)** El detalle de producto incluye, al final, la sección **"Productos Recomendados"**, que **siempre** aparece (11/10) | Nuevo |
-| RF-SW-18 | **(29/09)** Cada noticia tiene fotografía, título y texto, y se administra desde el panel | Nuevo |
-| RF-SW-19 | **(29/09)** El formulario de contacto captura el teléfono con código de área por país, valida la estructura del correo y del teléfono, y agrega País (lista de todos los países), Departamento y Municipio (listas de Guatemala, que solo aparecen si el país es Guatemala), todos opcionales. **(11/10)** La sede sigue siendo obligatoria y solo ofrece Quetzaltenango y Guatemala | Nuevo |
-| RF-SW-20 | **(29/09)** La bandeja divide las solicitudes por motivo (solicitud, queja, reclamo); cada solicitud tiene un responsable (usuario del sitio), un comentario y botones de estado Asignado, En proceso y Solucionado, sin estado inicial y sin restricción de orden (11/10) | Nuevo |
-| RF-SW-21 | **(29/09)** Los documentos internos se buscan por lote, nombre del producto y país de origen | Nuevo |
-| RF-SW-22 | **(29/09 y 11/10)** En Inicio, Quetzaltenango y Guatemala muestran sus datos de dirección y su mapa de Google Maps insertado. Escuintla no se muestra en el sitio | Nuevo |
-| RF-SW-23 | **(29/09 y 11/10)** El panel permite cargar las imágenes de misión y visión, una imagen opcional para historia y valores, el logotipo de Inquiserca, una imagen por industria y una por producto público (subida o arrastrada), y eliminar productos públicos. El producto público tiene nombre, descripción, presentación y países de origen, todos de texto | Nuevo |
-| RF-SW-24 | **(29/09)** El logotipo "Transformamos INCOVSA" no se usa en el sitio público; se usa el logotipo de la cabecera | Nuevo |
-| RF-SW-25 | **(29/09)** El acceso al panel y a la documentación interna depende de los permisos asignados a cada usuario ([03-roles-y-accesos.md](03-roles-y-accesos.md)) | Nuevo |
-| RF-SW-26 | **(29/09)** El menú lateral izquierdo del panel del sitio se reduce a íconos para ampliar el área de trabajo (11/10) | Nuevo |
+| RF-SW-13 | Gerencia y Soporte administran los usuarios del sitio desde el panel: crear, editar, eliminar, rol (texto libre) y permisos por casillas. **(13/10)** Al crear un usuario escriben su contraseña. El nombre de usuario puede ser el mismo que el de una cuenta del picking | Modificado |
+| RF-SW-14 | **(13/10)** La documentación interna se registra por producto documentado: nombre, país de origen (lista de países), lote (obligatorio, números y letras) y los enlaces de su ficha técnica, su hoja de seguridad y su certificado de análisis | Modificado |
+| RF-SW-15 | Inicio, Quiénes somos, Noticias y Contacto llevan pie de página, con el logotipo de la cabecera. Industrias, Productos y el detalle de producto van sin pie de página | Nuevo |
+| RF-SW-16 | Las imágenes y tarjetas tienen una animación de aparición y desaparición al desplazarse. **(13/10)** En todas las páginas públicas (prototipo aprobado) | Nuevo |
+| RF-SW-17 | El detalle de producto incluye, al final, la sección **"Productos Recomendados"**, que siempre aparece | Nuevo |
+| RF-SW-18 | Cada noticia tiene imágenes, título y texto, y se administra desde el panel | Nuevo |
+| RF-SW-19 | El formulario de contacto captura el teléfono con código de área por país y valida la estructura del correo y del teléfono. Tiene País (lista de todos los países) y, si el país es Guatemala, Departamento y Municipio (listas de Guatemala). La sede es obligatoria y solo ofrece Quetzaltenango y Guatemala. **(13/10)** País es obligatorio, y Departamento y Municipio lo son cuando el país es Guatemala | Nuevo |
+| RF-SW-20 | La bandeja divide las solicitudes por motivo; cada solicitud tiene responsable, comentario y botones de estado Asignado, En proceso y Solucionado, sin estado inicial y sin restricción de orden | Nuevo |
+| RF-SW-21 | Los productos documentados se buscan por lote, nombre del producto y país de origen. **(13/10)** Al hacer clic en la fila se abre una ventana con los documentos y solo las opciones que permiten los permisos; la tabla no tiene columnas Documento ni Tipo ni filtro por tipo, y sus acciones son solo editar y eliminar | Nuevo |
+| RF-SW-22 | En Inicio, Quetzaltenango y Guatemala muestran sus datos y su mapa de Google Maps. Escuintla no se muestra en el sitio | Nuevo |
+| RF-SW-23 | El panel permite cargar las imágenes del sitio. **(13/10)** En "Contenido institucional": la portada (hasta 5), el logotipo de INCOVSA, las imágenes de misión, visión e historia (hasta 5 cada una), las de los 5 valores y el logotipo de Inquiserca; sin la sección "Imágenes del sitio". También las imágenes de cada industria, producto público y noticia (hasta 5) | Modificado |
+| RF-SW-24 | El logotipo "Transformamos INCOVSA" no se usa en el sitio público | Nuevo |
+| RF-SW-25 | El acceso al panel y a la documentación interna depende de los permisos asignados a cada usuario | Nuevo |
+| RF-SW-26 | El menú lateral izquierdo del panel del sitio se reduce a íconos para ampliar el área de trabajo | Nuevo |
+| RF-SW-27 | **(11/10)** Los textos del sitio no mencionan el número de sedes y bodegas, ni Escuintla, ni el inventario, ni los roles fijos ([05](05-sitio-web.md)) | Nuevo |
+| RF-SW-28 | **(13/10)** Cada área de imágenes del sitio público admite hasta 5 imágenes que rotan cada 5 segundos; con una sola imagen, queda fija. La rotación no debe hacer más lenta la carga (RNF-17) | Nuevo |
+| RF-SW-29 | **(13/10)** La sección de valores muestra solo 5 imágenes, una por valor, en una sola fila y sin texto, que se suben desde el panel | Nuevo |
+| RF-SW-30 | **(13/10)** Al cerrar sesión en cualquiera de los dos sistemas, el usuario vuelve a la página de inicio del sitio | Nuevo |
+| RF-SW-31 | **(13/10)** El ícono de Solicitudes del menú lateral del panel muestra un indicador cuando hay solicitudes nuevas, también con el menú reducido | Nuevo |
 
 ## Sistema de picking (RF-SL)
 
@@ -39,95 +44,107 @@ Catálogo único de requerimientos funcionales. La columna **Estado** compara ca
 |---|---|---|
 | RF-SL-01 | El sistema autentica con nombre de usuario y contraseña | Vigente |
 | RF-SL-02 | No hay selector de sede al iniciar sesión | Vigente |
-| RF-SL-03 | **(11/10)** Gerencia y Soporte administran los usuarios del picking desde Configuración: rol (texto libre), sedes y permisos por casillas | Modificado |
-| RF-SL-04 | Se ven, crean, editan y eliminan productos, clientes, sectores y camiones, desde Configuración. **(11/10)** Un producto solo tiene nombre y Peso de Conversión | Modificado |
-| RF-SL-05 | **(11/10)** El facturador decide si cada pedido facturado va en un camión o lo recoge el cliente en bodega, arrastrándolo a la opción de envío | Modificado |
-| RF-SL-06 | **(11/10)** Cada opción de camión de Facturación tiene su piloto, elegido entre los usuarios con rol "Piloto" de la sede | Modificado |
-| RF-SL-07 | **(11/10)** Facturación muestra cada pedido facturado del tablero en una tarjeta resumida: número de pedido, nombre del cliente, sector del cliente y total en kg | Modificado |
-| RF-SL-08 | La tabla empieza vacía y cada clic en el botón "+" agrega una fila | **Eliminado** (29/09), reemplazado por RF-SL-50 |
-| RF-SL-09 | Búsqueda de clientes en tiempo real al capturar | **Eliminado** (29/09), reemplazado por RF-SL-50 |
-| RF-SL-10 | Búsqueda de productos en tiempo real al capturar | **Eliminado** (29/09), reemplazado por RF-SL-50 |
-| RF-SL-11 | **(11/10)** Desde Facturación se pueden agregar los productos y clientes del archivo que no existen en la base (RF-SL-64, RF-SL-65) | Modificado |
-| RF-SL-12 | **(11/10)** En el tablero, el único dato que se puede corregir es el sector del cliente, y la corrección se guarda en la base de clientes | Modificado |
-| RF-SL-13 | **(11/10)** Cada tarjeta muestra el total en kg del pedido facturado, y cada opción de envío el total de sus pedidos facturados | Modificado |
-| RF-SL-14 | **(11/10)** Cada opción de camión lleva el control del peso y muestra una alerta de sobrepeso, que **no bloquea**, si el total excede la capacidad | Modificado |
-| RF-SL-15 | Validación de existencias al agregar cada fila | **Eliminado** (29/09, sin inventario) |
-| RF-SL-16 | **(11/10)** Cada opción de envío tiene su botón "Enviar Pedido a Bodega", que crea un pedido (correlativo por sede) con sus pedidos facturados, de uno o varios clientes, guarda el Peso de Conversión vigente y lo manda a Bodega. En una opción de camión, en el mismo paso crea la ruta, con su número y la fecha | Modificado |
-| RF-SL-17 | **(11/10)** Cada opción de envío tiene su botón "Cancelar", que regresa sus pedidos facturados al tablero. La bitácora registra la cancelación | Modificado |
-| RF-SL-18 | No hay borradores. Un pedido enviado a bodega no se puede editar ni cancelar | Vigente |
-| RF-SL-19 | Bodega muestra los pedidos por preparar en el orden en que llegan de Facturación | Vigente |
-| RF-SL-20 | En Bodega se pueden reordenar los pedidos y las filas de cada pedido. El orden se comparte **en tiempo real** entre todas las pantallas de la sede y **no queda en el historial** | Modificado |
-| RF-SL-21 | Cada pedido en Bodega tiene una tabla con Producto, Cantidad y Unidades. La cantidad es la suma en kg del mismo producto entre todos los clientes del pedido. **(11/10)** Sin la columna SKU | Modificado |
-| RF-SL-22 | Las unidades se calculan con RN-01 y se muestran como "N unidades + R kg" | Modificado |
-| RF-SL-23 | Cada fila tiene una casilla para marcar y desmarcar lo que ya se sacó. El cambio se ve **al instante en todas las pantallas** | Modificado |
-| RF-SL-24 | El botón "Pedido Despachado" solo se habilita cuando todas las filas están marcadas | Vigente |
+| RF-SL-03 | Gerencia y Soporte administran los usuarios del picking desde Configuración: contraseña (13/10), rol (texto libre), sedes y permisos por casillas | Modificado |
+| RF-SL-04 | **(13/10)** Desde Configuración se ven, crean, editan y eliminan los **camiones**. Ya no hay productos, clientes ni sectores | Modificado |
+| RF-SL-05 | **(13/10)** El facturador decide si cada pedido facturado va en un camión o lo recoge el cliente, arrastrándolo a una de las dos opciones de envío | Modificado |
+| RF-SL-06 | **(13/10)** La opción "Envío por camión" tiene listas desplegables para elegir el camión y el piloto de la sede | Modificado |
+| RF-SL-07 | **(13/10)** Facturación muestra cada pedido facturado del tablero en una tarjeta de todo el ancho: número, cliente, sector, total en kg y productos con su cantidad, sin asa de arrastre ni "x" | Modificado |
+| RF-SL-08 | La tabla empieza vacía y cada clic en el botón "+" agrega una fila | **Eliminado** (29/09) |
+| RF-SL-09 | Búsqueda de clientes en tiempo real al capturar | **Eliminado** (29/09) |
+| RF-SL-10 | Búsqueda de productos en tiempo real al capturar | **Eliminado** (29/09) |
+| RF-SL-11 | Agregar desde Facturación los productos y clientes del archivo que no existen en la base | **Eliminado** (13/10): ya no hay catálogos |
+| RF-SL-12 | Corregir el sector del cliente en el tablero | **Eliminado** (13/10) |
+| RF-SL-13 | Cada tarjeta muestra el total en kg del pedido facturado. **(13/10)** Cada pedido facturado dentro de una opción de envío también muestra su total en kg, y cada opción el total de sus pedidos facturados | Modificado |
+| RF-SL-14 | La opción "Envío por camión" lleva el control del peso frente a la capacidad del camión elegido y muestra una alerta de sobrepeso que **no bloquea** | Modificado |
+| RF-SL-15 | Validación de existencias al agregar cada fila | **Eliminado** (29/09) |
+| RF-SL-16 | **(13/10)** Cada opción de envío tiene su botón "Enviar a Bodega", que crea una **ruta** (camión) o un **pedido** (cliente recoge) con sus pedidos facturados, en su orden, con su número del día, su fecha y hora programadas y su fecha de creación, y lo manda a Bodega En Preparación | Modificado |
+| RF-SL-17 | Cada opción de envío tiene su botón "Cancelar", que regresa sus pedidos facturados al tablero. La bitácora registra la cancelación | Modificado |
+| RF-SL-18 | No hay borradores. Una ruta o un pedido enviado a bodega no se puede editar ni cancelar | Vigente |
+| RF-SL-19 | Bodega muestra las rutas y los pedidos por preparar en el orden en que llegan de Facturación | Vigente |
+| RF-SL-20 | En Bodega se pueden reordenar las rutas, los pedidos y sus filas. El orden se comparte **en tiempo real** y **no queda en el historial**. **(13/10)** Cada ruta o pedido tiene una opción para ordenar sus filas de mayor a menor peso | Modificado |
+| RF-SL-21 | Cada ruta o pedido en Bodega tiene una tabla con Producto, Lote, Cantidad y Unidades. **(13/10)** Una fila por producto, lote y Peso de Conversión, con la suma de los clientes; el lote se resalta | Modificado |
+| RF-SL-22 | Las unidades se calculan con RN-01, con el Peso de Conversión de la línea, y se muestran como "N unidades + R kg" | Modificado |
+| RF-SL-23 | Cada fila tiene una casilla para marcar y desmarcar lo que ya se sacó; el cambio se ve **al instante en todas las pantallas**. **(13/10)** Hay una opción para marcar o desmarcar todas las filas | Modificado |
+| RF-SL-24 | El botón "Ruta Despachada" o "Pedido Despachado" solo se habilita cuando todas las filas están marcadas | Modificado |
 | RF-SL-25 | Bodega se lee bien proyectado en una TV y se puede usar en una tableta | Vigente |
-| RF-SL-26 | **(11/10)** Los usuarios con rol "Piloto" solo ven las rutas que tienen asignadas | Modificado |
-| RF-SL-27 | La tabla de Ruta tiene las columnas Cliente, Sector y Total (kg). **(11/10)** Una sola fila por cliente, aunque tenga varios pedidos facturados en la ruta | Modificado |
-| RF-SL-28 | El piloto puede reordenar las filas durante la ruta. El orden que tienen al pulsar "Pedido Entregado" se guarda como recorrido | Modificado |
-| RF-SL-29 | El botón "Pedido Entregado" registra la entrega completa a todos los clientes de la ruta | Vigente |
-| RF-SL-30 | Cada ruta registra su número (correlativo por sede), su fecha (la del envío a bodega), camión, piloto y su pedido. El número y la fecha se asignan al pulsar "Enviar Pedido a Bodega" en la opción de camión | Modificado |
+| RF-SL-26 | Los usuarios con rol "Piloto" solo ven las rutas que tienen asignadas | Modificado |
+| RF-SL-27 | La tabla de Ruta tiene las columnas Cliente, Sector y Total (kg), con una sola fila por cliente | Modificado |
+| RF-SL-28 | El piloto puede reordenar las filas durante la ruta. El orden que tienen al pulsar "Ruta Entregada" se guarda como recorrido | Modificado |
+| RF-SL-29 | El botón "Ruta Entregada" registra la entrega completa a todos los clientes de la ruta | Modificado |
+| RF-SL-30 | **(13/10)** Cada ruta registra su número (correlativo diario por sede), su fecha (la del envío a bodega), su fecha y hora programadas, su camión y su piloto | Modificado |
 | RF-SL-31 | Editar la cantidad del registro de ruta | **Eliminado** |
 | RF-SL-32 | Motivo obligatorio al editar la ruta | **Eliminado** |
 | RF-SL-33 | Reingreso al inventario al editar la ruta | **Eliminado** |
 | RF-SL-34 | Estado "Editado" al editar la ruta | **Eliminado** |
-| RF-SL-35 | El sistema maneja los estados del pedido y sus transiciones según RN-11 | Vigente (RN-11 modificada) |
-| RF-SL-36 | La bitácora registra las operaciones de los usuarios. **(11/10)** Incluye los inicios de sesión y se consulta en la pestaña "Bitácora" de Reportes (RN-39) | Modificado |
-| RF-SL-37 | El sistema guarda el registro histórico de todas las rutas, desde Facturación hasta el cierre en Ruta, y lo muestra en Reportes | Vigente |
-| RF-SL-38 | Módulo de Reportes. **(29/09)** Su contenido es el del prototipo aprobado: despacho por producto con indicadores y exportación a Excel y PDF, rutas realizadas y bitácora ([10-picking-reportes.md](10-picking-reportes.md)) | Modificado |
-| RF-SL-39 | Acceso al módulo de Inventario | **Eliminado** (29/09, sin inventario) |
-| RF-SL-40 | Consulta de existencias por sede | **Eliminado** (29/09, sin inventario) |
-| RF-SL-41 | Registro de compras | **Eliminado** (29/09, sin inventario) |
-| RF-SL-42 | Registro de ajustes | **Eliminado** (29/09, sin inventario) |
-| RF-SL-43 | Registro de traslados entre sedes | **Eliminado** (29/09, sin inventario) |
-| RF-SL-44 | Registro de devoluciones | **Eliminado** (29/09, sin inventario) |
-| RF-SL-45 | Marca "Con devolución" | **Eliminado** (29/09, sin inventario) |
-| RF-SL-46 | Existencia nunca negativa | **Eliminado** (29/09, sin inventario) |
-| RF-SL-47 | Registro de cada movimiento de inventario | **Eliminado** (29/09, sin inventario) |
-| RF-SL-48 | **(11/10)** Gerencia y Soporte restablecen la contraseña de los usuarios del picking que se lo soliciten, desde Configuración | Modificado |
-| RF-SL-49 | Edición de movimientos de inventario | **Eliminado** (29/09, sin inventario) |
-| RF-SL-50 | **(29/09)** Facturación registra los pedidos **cargando un archivo .xlsx** exportado de Odoo, con la estructura de `Data Odo Para Picking.xlsx`. Un archivo trae una o varias referencias, de una sola bodega | Nuevo |
-| RF-SL-51 | **(29/09)** El archivo se lee de arriba hacia abajo. Una fila sin Referencia ni Contacto pertenece a la última referencia y contacto de arriba. **(11/10)** Solo se cargan las referencias en estado "Hecho" | Nuevo |
-| RF-SL-52 | **(29/09)** El número de cada pedido facturado es el tercer segmento de la Referencia (`XE-IN/SALIDA/03539` → `03539`). El primer segmento indica la bodega (`XE`, `GT` o `ESC`). **(11/10)** El pedido que se envía a Bodega se identifica con un correlativo por sede | Nuevo |
-| RF-SL-53 | **(29/09 y 11/10)** Cada referencia es un pedido facturado de un solo cliente. El producto sale de `Movimientos de stock/Producto` y la cantidad en kg de `Movimientos de stock/Cantidad hecha`. El cliente se busca en la base por `Contacto`; si no existe y no se guarda, se usan `Contacto` y `Contacto/Ciudad` | Nuevo |
-| RF-SL-54 | **(29/09)** No se usa la columna `Movimientos de stock/Producto/Peso`. La conversión usa el Peso de Conversión del catálogo | Nuevo |
-| RF-SL-55 | **(29/09)** El acceso a cada módulo del picking depende de los permisos asignados a cada usuario, por módulo y por acción ([03-roles-y-accesos.md](03-roles-y-accesos.md)) | Nuevo |
-| RF-SL-56 | **(29/09)** Gerencia y Soporte asignan a cada usuario un rol (texto libre) y le agregan, editan o revocan permisos puntuales con casillas | Nuevo |
-| RF-SL-57 | **(29/09)** Gerencia y Soporte pueden eliminar usuarios. **(12/10)** La eliminación es lógica y conserva su historial | Nuevo |
-| RF-SL-58 | **(29/09)** El tablero en pantalla completa ofrece "Modo claro" (como el modo Tableta del prototipo) y "Modo oscuro" (escala de negros y grises), en lugar de "TV" y "Tableta" | Nuevo |
-| RF-SL-59 | **(29/09)** Reportes filtra por periodo: diario, semanal (lunes a domingo), mensual, anual o rango de fechas, en las pestañas Despacho y Rutas realizadas | Nuevo |
-| RF-SL-60 | **(29/09)** El menú lateral izquierdo del picking se reduce a íconos para ampliar el área de trabajo (11/10) | Nuevo |
-| RF-SL-61 | **(11/10)** La pantalla de Facturación muestra a la izquierda el tablero de pedidos facturados y a la derecha las opciones de envío: un camión por cada camión de la sede y "Cliente recoge en bodega". A cada opción se le agregan pedidos facturados de varios clientes | Nuevo |
-| RF-SL-62 | **(11/10)** En la tarjeta de un pedido facturado se puede corregir el sector del cliente | Nuevo |
-| RF-SL-63 | **(11/10)** Los pedidos facturados se arrastran del tablero a una opción de envío, entre opciones y de una opción de regreso al tablero | Nuevo |
-| RF-SL-64 | **(11/10)** Si un producto del archivo no existe en el catálogo, el sistema lo notifica y pregunta si se agrega; si se agrega, solo pide el Peso de Conversión; si no, el pedido facturado que lo contiene no se carga | Nuevo |
-| RF-SL-65 | **(11/10)** Si el cliente existe, se usan su nombre y su sector de la base. Si no existe, el sistema pregunta si se guarda y pide nombre y sector (de la lista o uno nuevo); si no se guarda, usa los datos del archivo | Nuevo |
-| RF-SL-66 | **(11/10)** A cada usuario del picking se le marcan las sedes a las que tiene acceso; solo ve los datos de esas sedes | Nuevo |
-| RF-SL-67 | **(11/10)** El tablero de pedidos facturados y lo asignado a cada opción de envío se guardan en la base de datos | Nuevo |
-| RF-SL-68 | **(11/10)** Se puede eliminar un pedido facturado del tablero, o todos a la vez | Nuevo |
+| RF-SL-35 | El sistema maneja los estados de la ruta y del pedido y sus transiciones según RN-11 | Vigente (RN-11 modificada) |
+| RF-SL-36 | La bitácora registra las operaciones de los usuarios, incluidos los inicios de sesión, y se consulta en la pestaña "Bitácora" de Reportes | Modificado |
+| RF-SL-37 | El sistema guarda el registro histórico de las rutas y lo muestra en Reportes. **(13/10)** Es el único lugar donde se consulta | Modificado |
+| RF-SL-38 | Módulo de Reportes: despacho por producto con indicadores y exportación a Excel y PDF, rutas realizadas y bitácora | Modificado |
+| RF-SL-39 | Acceso al módulo de Inventario | **Eliminado** (29/09) |
+| RF-SL-40 | Consulta de existencias por sede | **Eliminado** (29/09) |
+| RF-SL-41 | Registro de compras | **Eliminado** (29/09) |
+| RF-SL-42 | Registro de ajustes | **Eliminado** (29/09) |
+| RF-SL-43 | Registro de traslados entre sedes | **Eliminado** (29/09) |
+| RF-SL-44 | Registro de devoluciones | **Eliminado** (29/09) |
+| RF-SL-45 | Marca "Con devolución" | **Eliminado** (29/09) |
+| RF-SL-46 | Existencia nunca negativa | **Eliminado** (29/09) |
+| RF-SL-47 | Registro de cada movimiento de inventario | **Eliminado** (29/09) |
+| RF-SL-48 | Gerencia y Soporte restablecen la contraseña de los usuarios del picking que lo soliciten, desde Configuración. **(13/10)** Escribiendo una nueva | Modificado |
+| RF-SL-49 | Edición de movimientos de inventario | **Eliminado** (29/09) |
+| RF-SL-50 | Facturación registra los pedidos **cargando un archivo .xlsx** exportado de Odoo, con la estructura de `Data Odo Para Picking.xlsx`. Un archivo trae una o varias referencias, de una sola bodega | Nuevo |
+| RF-SL-51 | El archivo se lee de arriba hacia abajo. Una fila sin Referencia ni Contacto pertenece a la última referencia y contacto de arriba. Solo se cargan las referencias en estado "Hecho" | Nuevo |
+| RF-SL-52 | El número de cada pedido facturado es el tercer segmento de la Referencia. El primer segmento indica la bodega (`XE`, `GT` o `ESC`). **(13/10)** La ruta o el pedido que se envía a Bodega se identifica con su número del día | Nuevo |
+| RF-SL-53 | Cada referencia es un pedido facturado de un solo cliente. **(13/10)** Se toman tal como vienen el cliente (`Contacto`), el sector (`Contacto/Ciudad`), el producto (`Movimientos de stock/Producto`), el Peso de Conversión (`Movimientos de stock/Producto/Peso`), el lote (`Movimientos de stock/Números de serie`) y la cantidad en kg (`Movimientos de stock/Cantidad hecha`), sin validarlos contra ningún catálogo | Nuevo |
+| RF-SL-54 | **(13/10)** La conversión usa el Peso de Conversión de la columna `Movimientos de stock/Producto/Peso` de cada línea. Reemplaza a "no se usa la columna de peso" (29/09) | Modificado |
+| RF-SL-55 | El acceso a cada módulo del picking depende de los permisos asignados a cada usuario, por módulo y por acción | Nuevo |
+| RF-SL-56 | Gerencia y Soporte asignan a cada usuario un rol (texto libre) y le agregan, editan o revocan permisos puntuales con casillas | Nuevo |
+| RF-SL-57 | Gerencia y Soporte pueden eliminar usuarios. La eliminación es lógica y conserva su historial | Nuevo |
+| RF-SL-58 | El tablero en pantalla completa ofrece "Modo claro" y "Modo oscuro" | Nuevo |
+| RF-SL-59 | Reportes filtra por periodo: diario, semanal (lunes a domingo), mensual, anual o rango de fechas, en las pestañas Despacho, Rutas realizadas y **(13/10)** Bitácora | Nuevo |
+| RF-SL-60 | El menú lateral izquierdo del picking se reduce a íconos | Nuevo |
+| RF-SL-61 | La pantalla de Facturación muestra a la izquierda el tablero de pedidos facturados y a la derecha las opciones de envío. **(13/10)** Solo dos opciones ("Envío por camión" y "Cliente recoge en bodega"), y el texto de instrucciones es corto y va a la par del título | Nuevo |
+| RF-SL-62 | En la tarjeta de un pedido facturado se puede corregir el sector del cliente | **Eliminado** (13/10) |
+| RF-SL-63 | Los pedidos facturados se arrastran del tablero a una opción de envío, entre opciones y de una opción al tablero. **(13/10)** También dentro de una opción, para ordenarlos | Nuevo |
+| RF-SL-64 | Si un producto del archivo no existe en el catálogo, el sistema pregunta si se agrega | **Eliminado** (13/10) |
+| RF-SL-65 | Si el cliente del archivo no existe, el sistema pregunta si se guarda | **Eliminado** (13/10) |
+| RF-SL-66 | A cada usuario del picking se le marcan las sedes a las que tiene acceso; solo ve los datos de esas sedes | Nuevo |
+| RF-SL-67 | El tablero de pedidos facturados y lo asignado a cada opción de envío se guardan en la base de datos | Nuevo |
+| RF-SL-68 | Se pueden eliminar del tablero uno, **(13/10)** varios o todos los pedidos facturados, seleccionándolos | Nuevo |
+| RF-SL-69 | **(13/10)** En el tablero se pueden seleccionar uno, varios o todos los pedidos facturados ("Seleccionar todos") y arrastrarlos juntos a una opción de envío | Nuevo |
+| RF-SL-70 | **(13/10)** Cada opción de envío tiene la fecha y la hora programadas de envío o despacho, obligatorias (14/10), que se guardan y se muestran en Bodega | Nuevo |
+| RF-SL-71 | **(13/10)** El facturador ordena los pedidos facturados dentro de cada opción de envío; el orden se guarda y con ese orden pasan a Bodega y a Ruta | Nuevo |
+| RF-SL-72 | **(13/10)** Lo que sale de "Envío por camión" se llama **ruta** y lo que sale de "Cliente recoge en bodega" se llama **pedido**. Rutas y pedidos se numeran por separado, cada día desde 1, en cada sede | Nuevo |
+| RF-SL-73 | **(14/10)** Si una línea trae el Peso de Conversión vacío, no numérico o menor o igual a 0, su pedido facturado no se carga y se avisa en el resumen de la carga | Nuevo |
+| RF-SL-74 | **(13/10)** Cada ruta y cada pedido de Bodega tiene un botón "Detalle de Ruta" o "Detalle de Pedido" que muestra en una ventana todos los datos del archivo de sus pedidos facturados | Nuevo |
+| RF-SL-75 | **(13/10)** Bodega muestra la fecha y la hora programadas de cada ruta o pedido, y no la hora en que se envió de Facturación | Nuevo |
+| RF-SL-76 | **(13/10)** El módulo de Bodega no muestra en la barra lateral el contador de rutas y pedidos | Nuevo |
+| RF-SL-77 | **(13/10)** Cuando el tablero reparte las filas en dos columnas, las numera de arriba hacia abajo, primero la columna izquierda y después la derecha | Nuevo |
+| RF-SL-78 | **(13/10)** El módulo de Ruta muestra siempre las rutas de la más reciente a la más antigua | Nuevo |
+| RF-SL-79 | **(13/10)** El módulo de Ruta no tiene sección de registro histórico; las rutas entregadas se consultan en Reportes | Nuevo |
+| RF-SL-80 | **(13/10)** El sistema guarda automáticamente la fecha y la hora exactas en que se guarda cada registro (RN-57) | Nuevo |
 
 ## Casos de uso
 
 | Código | Nombre | Actor principal | Estado respecto del Documento 1 |
 |---|---|---|---|
-| CU-01 | Registrar pedido facturado | Usuario con permiso de Facturación | Modificado: **(29/09 y 11/10)** se carga el archivo .xlsx de Odoo al tablero de pedidos facturados; el facturador arrastra cada pedido facturado a un camión o a "Cliente recoge en bodega" y envía cada opción por separado; cada envío crea un pedido que puede tener varios clientes |
-| CU-02 | Cancelar pedido | Usuario con permiso de Facturación | Modificado: **(11/10)** se cancela por opción de envío y sus pedidos facturados regresan al tablero; se registra en la bitácora |
-| CU-03 | Preparar pedido | Usuario con permiso de Bodega | Modificado: marcado y orden compartidos en tiempo real; unidades con resto |
-| CU-04 | Cerrar preparación del pedido | Usuario con permiso de Bodega | Vigente |
-| CU-05 | Ejecutar ruta de entrega | Usuario con rol "Piloto" | Modificado: el recorrido se guarda al entregar; número de ruta por sede; **(11/10)** una fila por cliente |
-| CU-06 | Registrar devolución | — | **Eliminado** (29/09, sin inventario) |
-| CU-07 | Administrar contenido del sitio | Usuario con permisos del sitio | Modificado: **(29/09 y 11/10)** imágenes por dato, por industria y por producto; logotipo de Inquiserca; noticias con fotografía; mapas de las sedes |
-| CU-08 | Consultar información pública | Visitante | Modificado: **(29/09 y 11/10)** cambios de Inicio, Quiénes somos, Industrias, catálogo, Productos Recomendados, pie de página y sedes mostradas |
-| CU-09 | Enviar solicitud de contacto | Visitante | Modificado: **(29/09 y 11/10)** teléfono internacional, validaciones, listas territoriales opcionales y solo dos sedes |
-| CU-10 | Consultar documentación interna | Usuario con permisos de documentación | Modificado: **(29/09)** permisos por usuario; búsqueda por lote, nombre y país de origen |
-| CU-11 | Iniciar sesión y recuperar contraseña | Todos los usuarios | Modificado: usuario, no correo; **(11/10)** la contraseña la restablecen Gerencia o Soporte a solicitud |
-| CU-12 | Administrar usuarios | Gerencia o Soporte | Modificado: **(29/09 y 11/10)** dos administraciones; rol de texto libre, permisos y sedes por casillas, eliminación de usuarios |
-| CU-13 | Configurar catálogos | Usuario con permiso de Configuración | Modificado: productos (nombre y Peso de Conversión), clientes, sectores y camiones con CRUD completo |
-| CU-14 | Consultar reportes y bitácora | Usuario con permiso de Reportes | Modificado: **(29/09 y 11/10)** contenido del prototipo aprobado, filtros por periodo y bitácora con inicios de sesión |
-| CU-15 | Administrar documentos internos | Usuario con permiso de documentación | Modificado: **(29/09 y 11/10)** nombre del producto, país de origen y lote |
-| CU-16 | Consultar existencias | — | **Eliminado** (29/09, sin inventario) |
-| CU-17 | Registrar compra | — | **Eliminado** (29/09, sin inventario) |
-| CU-18 | Registrar ajuste | — | **Eliminado** (29/09, sin inventario) |
-| CU-19 | Registrar traslado entre sedes | — | **Eliminado** (29/09, sin inventario) |
-| CU-20 | Editar movimiento de inventario | — | **Eliminado** (29/09, sin inventario) |
-| CU-21 | Gestionar solicitud de contacto | Usuario con permiso de gestionar solicitudes | Nuevo (29/09): designar responsable, comentar y marcar el estado |
+| CU-01 | Registrar pedido facturado y enviarlo a bodega | Usuario con permiso de Facturación | Modificado: **(29/09, 11/10 y 13/10)** se carga el archivo .xlsx de Odoo al tablero, tal como viene; el facturador selecciona y arrastra los pedidos facturados a "Envío por camión" o "Cliente recoge en bodega", los ordena, escribe la fecha y hora programadas y envía la opción; cada envío crea una ruta o un pedido con su número del día |
+| CU-02 | Cancelar opción de envío | Usuario con permiso de Facturación | Modificado: sus pedidos facturados regresan al tablero; se registra en la bitácora |
+| CU-03 | Preparar ruta o pedido | Usuario con permiso de Bodega | Modificado: marcado (también todo de una vez), orden y orden por peso compartidos en tiempo real; filas por producto y lote; detalle de ruta o de pedido |
+| CU-04 | Cerrar preparación | Usuario con permiso de Bodega | Vigente ("Ruta Despachada" o "Pedido Despachado") |
+| CU-05 | Ejecutar ruta de entrega | Usuario con rol "Piloto" | Modificado: el recorrido se guarda al entregar; una fila por cliente; rutas de la más reciente a la más antigua |
+| CU-06 | Registrar devolución | — | **Eliminado** (29/09) |
+| CU-07 | Administrar contenido del sitio | Usuario con permisos del sitio | Modificado: **(13/10)** galerías de hasta 5 imágenes, portada y logotipo de INCOVSA, 5 imágenes de valores, logotipo de Inquiserca |
+| CU-08 | Consultar información pública | Visitante | Modificado: **(13/10)** misión y visión con texto e imagen, valores con imágenes, galerías que rotan, menú de industrias con íconos |
+| CU-09 | Enviar solicitud de contacto | Visitante | Modificado: **(13/10)** país obligatorio; la solicitud solo se guarda en el sistema |
+| CU-10 | Consultar documentación interna | Usuario con permisos de documentación | Modificado: **(13/10)** clic en el producto documentado y ventana con ver y descargar según permisos |
+| CU-11 | Iniciar sesión y recuperar contraseña | Todos los usuarios | Modificado: **(13/10)** usuario, sistema y contraseña; cierre de sesión al inicio del sitio; la contraseña la restablecen Gerencia o Soporte |
+| CU-12 | Administrar usuarios | Gerencia o Soporte | Modificado: **(13/10)** contraseña al crear; el mismo nombre de usuario en los dos sistemas |
+| CU-13 | Configurar camiones | Usuario con permiso de administrar camiones | Modificado: **(13/10)** solo camiones; ya no hay productos, clientes ni sectores |
+| CU-14 | Consultar reportes y bitácora | Usuario con permiso de Reportes | Modificado: filtros por periodo, también en la bitácora |
+| CU-15 | Administrar productos documentados | Usuario con permiso de administrar documentos | Modificado: **(13/10)** nombre, país, lote obligatorio y enlaces de Google Drive |
+| CU-16 | Consultar existencias | — | **Eliminado** (29/09) |
+| CU-17 | Registrar compra | — | **Eliminado** (29/09) |
+| CU-18 | Registrar ajuste | — | **Eliminado** (29/09) |
+| CU-19 | Registrar traslado entre sedes | — | **Eliminado** (29/09) |
+| CU-20 | Editar movimiento de inventario | — | **Eliminado** (29/09) |
+| CU-21 | Gestionar solicitud de contacto | Usuario con permiso de gestionar solicitudes | Nuevo (29/09): designar responsable, comentar y marcar el estado. **(13/10)** Aviso de solicitudes nuevas en el menú |

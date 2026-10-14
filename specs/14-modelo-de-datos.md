@@ -1,114 +1,117 @@
 # 14. Modelo conceptual de datos
 
-Este es el modelo **conceptual**. Los nombres físicos, los tipos, los índices y las restricciones se definen en el esquema de Prisma. El modelo ER y el diccionario de datos del Documento 1 y del Documento 2 deben corresponder con este modelo y, después, con la base de datos real.
+Este es el modelo **conceptual**. Los nombres físicos, los tipos, los índices y las restricciones se definen en el esquema de Prisma. El modelo ER y el diccionario de datos del Documento 2 corresponden con este modelo y, después, con la base de datos real.
 
-> **Cambios del 29/09/2026 (reunión 4) y del 11/10/2026.** Se quitan las entidades de inventario; los accesos pasan a permisos y sedes por usuario; aparecen el pedido facturado (una referencia de Odoo, de un cliente), el tablero y las opciones de envío, y el pedido de Bodega reúne varios pedidos facturados; el producto del picking solo tiene nombre y Peso de Conversión; cambian varias entidades del sitio. Lo que depende de un pendiente está marcado con su P-xx.
+> **Cambios del 13/10/2026 (reunión 5).** El picking ya no tiene catálogos de productos, clientes ni sectores: cada línea del pedido facturado guarda el producto, el lote y el Peso de Conversión que trae el archivo de Odoo, y cada pedido facturado guarda el cliente y el sector tal como vienen. Lo que se envía a Bodega (ENVIO) es una **ruta** o un **pedido**, con número diario y fecha y hora programadas, y la ruta ya no es una entidad aparte. Hay solo dos opciones de envío por sede. En el sitio, la documentación interna pasa a productos documentados con enlaces de Google Drive, las imágenes se guardan en galerías de hasta 5 y los valores son 5 imágenes. Todas las entidades guardan su fecha de creación.
+
+## Convenciones del modelo (13/10 y 12/10)
+
+- Cada entidad tiene un identificador (clave primaria) y una **fecha de creación** que el sistema pone sola al guardar el registro (RN-57). Las entidades que se modifican guardan también su fecha de última modificación.
+- Las fechas se guardan en UTC; los días, semanas y numeraciones diarias se calculan en la hora de Guatemala.
+- Las cantidades en kg y el Peso de Conversión son `Decimal(12,3)`.
+- La eliminación de camiones y usuarios es lógica (fecha de eliminación).
 
 ## Acceso
 
 | Entidad | Atributos principales | Relaciones |
 |---|---|---|
 | SEDE | nombre, prefijo de Odoo (`XE`, `GT`, `ESC`), tiene oficina (sí/no) | — |
-| USUARIO | nombre completo, nombre de usuario (único), correo (opcional), contraseña cifrada, activo, **rol (texto libre)**, sistema (sitio o picking), fecha de eliminación (12/10) | Permisos (N:M), sedes (N:M, solo picking) |
+| USUARIO | nombre completo, nombre de usuario, correo (opcional), contraseña cifrada, activo, **rol (texto libre)**, sistema (sitio o picking), fecha de eliminación | Permisos (N:M), sedes (N:M, solo picking) |
 | PERMISO | código, sistema (sitio o picking), módulo, acción, descripción | — |
 | USUARIO_PERMISO | — | Usuario y permiso (única por par) |
 | USUARIO_SEDE | — | Usuario del picking y sede (única por par) |
 
-- Cada sistema tiene **sus propios usuarios** y su propia administración (RN-18). Las cuentas con rol **Gerencia** o **Soporte** tienen acceso total a los dos sistemas y a todas las sedes (RN-38). Se resuelve por rol: la verificación de permisos les da todo sin depender de sus casillas (12/10, [16](16-arquitectura-y-tecnologia.md)).
-- El catálogo de permisos está en [03-roles-y-accesos.md](03-roles-y-accesos.md).
-- Los pilotos son los usuarios del picking con rol "Piloto" (RN-46). El rol se compara sin distinguir mayúsculas, acentos ni espacios al inicio o al final (12/10).
-- Al eliminar un usuario se guarda su fecha de eliminación (eliminación lógica): no puede iniciar sesión, su nombre de usuario queda reservado y se conservan la bitácora y los registros donde aparece (12/10, resuelve P-42).
+- Cada sistema tiene **sus propios usuarios** y su propia administración (RN-18). El nombre de usuario es **único por sistema** (13/10, RN-54): el par (nombre de usuario, sistema) no se repite. Una cuenta del sitio y una del picking pueden tener el mismo nombre de usuario.
+- Las cuentas con rol **Gerencia** o **Soporte** tienen acceso total a los dos sistemas y a todas las sedes, y sirven en los dos inicios de sesión (RN-38). Su nombre de usuario no se puede repetir en el otro sistema (RN-54).
+- Los pilotos son los usuarios del picking con rol "Piloto" (RN-46). El rol se compara sin distinguir mayúsculas, acentos ni espacios al inicio o al final.
+- Al eliminar un usuario se guarda su fecha de eliminación: no puede iniciar sesión, su nombre de usuario queda reservado en su sistema y se conservan la bitácora y los registros donde aparece.
 
 ## Sistema de picking
 
 | Entidad | Atributos principales | Relaciones |
 |---|---|---|
-| PRODUCTO | **nombre (único)** con el formato de Odoo y sin lote, **clave normalizada (única)** (12/10), peso de conversión en kg, fecha de eliminación (12/10) | — |
-| SECTOR | nombre, fecha de eliminación (12/10) | — |
-| CLIENTE | nombre, fecha de eliminación (12/10) | Sector |
-| CAMION | identificación, capacidad máxima en kg, fecha de eliminación (12/10) | Sede |
-| OPCION_ENVIO | tipo (camión o cliente recoge en bodega) | Sede, camión (si es de camión), piloto asignado (usuario con rol "Piloto", 0..1) |
-| PEDIDO_FACTURADO | **número de Odoo** (tercer segmento de la Referencia), nombre del cliente y sector del cliente (los de la base, o los del archivo si el cliente no se guardó), fecha de carga | Sede, cliente de la base (0..1), usuario que lo cargó, opción de envío (0..1; vacía = en el tablero), pedido (0..1; se llena al enviar) |
-| DETALLE_PEDIDO_FACTURADO | cantidad en kg, orden en el archivo | Pedido facturado, producto |
-| PEDIDO | **correlativo por sede**, tipo (recoge o camión), fecha de envío a bodega, posición actual en la cola de Bodega (12/10) | Sede, estado actual (ESTADO_PEDIDO), usuario que lo envió, pedidos facturados (1:N) |
-| DETALLE_PEDIDO | cantidad en kg, peso de conversión aplicado en kg | Pedido, pedido facturado (de ahí sale el cliente), producto |
-| LINEA_PREPARACION | cantidad total en kg, peso de conversión aplicado en kg, marcado, posición actual en el pedido (12/10) | Pedido y producto (única por par) |
-| ESTADO_PEDIDO | nombre: En Preparación, Despachado, En Ruta o Entregado | — |
-| HISTORIAL_ESTADO | fecha y hora | Pedido, estado, usuario |
-| RUTA | número (correlativo por sede), fecha (la del envío a bodega) | Pedido (1:1), sede, camión, piloto. Se crea al enviar a bodega una opción de camión |
-| ENTREGA_RUTA | cliente, total en kg, orden en el recorrido (antes de entregar, el orden actual; al entregar, el recorrido, RN-29) | Ruta. Una fila por cliente, aunque tenga varios pedidos facturados en la ruta (RN-49) |
-| BITACORA | sistema (sitio o picking), operación, entidad, identificador del registro, detalle (JSON), nombre de usuario escrito, dirección IP (en inicios de sesión), fecha y hora (12/10) | Usuario (0..1) |
+| CAMION | identificación, capacidad máxima en kg, fecha de eliminación | Sede |
+| OPCION_ENVIO | tipo (camión o cliente recoge en bodega), fecha y hora programadas (vacías hasta que se escriben) | Sede, camión elegido (0..1, solo en la de camión), piloto elegido (usuario con rol "Piloto", 0..1). Hay **dos por sede**, una de cada tipo (13/10) |
+| PEDIDO_FACTURADO | **número de Odoo** (tercer segmento de la Referencia), referencia completa, **nombre del cliente** (`Contacto`), **sector** (`Contacto/Ciudad`), fecha de carga, posición (orden en el tablero o en la opción de envío) | Sede, usuario que lo cargó, opción de envío (0..1; vacía = en el tablero), envío (0..1; se llena al enviar) |
+| DETALLE_PEDIDO_FACTURADO | **producto** (texto del archivo), **lote** (texto, puede venir vacío), **Peso de Conversión** en kg, cantidad en kg, orden en el archivo | Pedido facturado |
+| ENVIO | tipo (**ruta** o **pedido**), **número del día**, fecha de envío a bodega, **fecha y hora programadas**, posición actual en la cola de Bodega | Sede, estado actual (ESTADO_ENVIO), usuario que lo envió, camión y piloto (solo ruta), pedidos facturados (1:N) |
+| LINEA_PREPARACION | producto, lote, Peso de Conversión en kg, cantidad total en kg, marcado, posición actual | Envío. Única por (envío, producto, lote, Peso de Conversión) (RN-51) |
+| ESTADO_ENVIO | nombre: En Preparación, Despachado, En Ruta o Entregado | — |
+| HISTORIAL_ESTADO | fecha y hora | Envío, estado, usuario |
+| ENTREGA_RUTA | nombre del cliente, sector, total en kg, orden (antes de entregar, el orden actual; al entregar, el recorrido, RN-29) | Envío de tipo ruta. Una fila por cliente (mismo nombre y sector, RN-49) |
+| BITACORA | sistema (sitio o picking), operación, entidad, identificador del registro, detalle (JSON), nombre de usuario escrito, dirección IP (en inicios de sesión y consultas de usuario), fecha y hora | Usuario (0..1) |
 
 ### Notas
 
-- **Pedido facturado** = una referencia de Odoo de un solo cliente. **Pedido** = lo que se envía a Bodega desde una opción de envío; reúne uno o varios pedidos facturados y puede tener varios clientes (11/10).
-- El tablero de pedidos facturados son los PEDIDO_FACTURADO de la sede sin opción de envío y sin pedido. Se guardan en la base de datos, igual que la opción de envío asignada (RN-48). Cancelar una opción les quita la opción de envío y regresan al tablero.
-- Eliminar un pedido facturado del tablero lo **borra** de la base de datos; sus datos quedan en la bitácora (12/10).
-- No se valida que el número de Odoo no se repita, porque viene de Odoo. La base de datos **no** lo declara único; solo tiene un índice para buscar (12/10).
-- Al corregir el sector en el tablero se actualiza CLIENTE.sector; si el cliente no está en la base, solo cambia el sector del pedido facturado (RN-45).
-- El orden de prioridad de Bodega y el orden de las filas de Ruta antes de la entrega **no** se guardan como historial ni en la bitácora (RN-28, RN-29). Se guarda **solo el orden actual**, para que todas las pantallas lo compartan y no se pierda si se reinicia el servidor (12/10). Cómo se avisa a las pantallas está en [16](16-arquitectura-y-tecnologia.md).
-- Las cantidades en kg y el Peso de Conversión son `Decimal(12,3)`; las fechas se guardan en UTC (12/10).
-- Los productos, clientes, sectores, camiones y usuarios eliminados se conservan con su fecha de eliminación (eliminación lógica, P-42).
+- **Pedido facturado** = una referencia de Odoo de un solo cliente. **Envío** = lo que se manda a Bodega desde una opción de envío; si sale del camión es una **ruta** y si lo recoge el cliente es un **pedido** (13/10). Reúne uno o varios pedidos facturados y puede tener varios clientes.
+- El número del envío es único por (sede, tipo, fecha de envío en la hora de Guatemala) y empieza en 1 cada día (RN-52).
+- La fecha de la ruta y la entrega quedan en ENVIO (fecha de envío) y en su historial de estados (fecha de "Entregado"); el recorrido, en ENTREGA_RUTA.
+- El tablero de pedidos facturados son los PEDIDO_FACTURADO de la sede sin opción de envío y sin envío. Se guardan en la base de datos, igual que la opción asignada y su posición (RN-48). Cancelar una opción les quita la opción de envío y regresan al tablero.
+- Eliminar un pedido facturado del tablero lo **borra** de la base de datos; sus datos quedan en la bitácora.
+- No se valida que el número de Odoo no se repita, porque viene de Odoo. La base de datos **no** lo declara único; solo tiene un índice para buscar.
+- El orden de prioridad de Bodega y el orden de las filas de Ruta antes de la entrega **no** se guardan como historial ni en la bitácora (RN-28, RN-29). Se guarda **solo el orden actual**.
 - El marcado de LINEA_PREPARACION no guarda quién marcó (RN-20).
-- El pedido guarda el Peso de Conversión con el que se vendió. Si después se cambia en el producto, el pedido no cambia (RN-33).
-- BITACORA registra también los inicios de sesión de los dos sistemas (RN-39) y, desde el 12/10, los intentos fallidos (RNF-15). En un intento fallido el usuario puede no existir: el registro guarda el nombre de usuario escrito y la relación con USUARIO queda vacía.
+- Las líneas guardan el Peso de Conversión con el que llegaron en el archivo (RN-33).
+- BITACORA registra también los inicios de sesión, los intentos fallidos y las consultas de usuarios inexistentes del acceso personal (RN-39). En esos casos el usuario puede no existir: el registro guarda el nombre de usuario escrito y la relación con USUARIO queda vacía.
 
 ### Entidades y atributos eliminados
 
 | Entidad o atributo | Motivo | Desde |
 |---|---|---|
-| EXISTENCIA | El sistema no lleva inventario (RN-40) | 29/09 |
-| MOVIMIENTO_INVENTARIO y sus tipos (`COMPRA`, `AJUSTE_ENTRADA`, `AJUSTE_SALIDA`, `TRASLADO_ENTRADA`, `TRASLADO_SALIDA`, `VENTA`, `DEVOLUCION`) | Igual | 29/09 |
-| TRASLADO | Igual | 29/09 |
-| DEVOLUCION | Igual | 29/09 |
-| PEDIDO.con_devolucion | Ya no hay devoluciones | 29/09 |
-| ROL con sistema (sitio o picking) y los dos roles opcionales de USUARIO | El acceso es por permisos y el rol es texto libre (RN-38) | 29/09 |
-| USUARIO.sede (una sola) | Se reemplaza por USUARIO_SEDE (varias sedes) | 11/10 |
-| PEDIDO.camion y PEDIDO.piloto | Están en la RUTA (y en la OPCION_ENVIO antes de enviar) | 11/10 |
-| DETALLE_PEDIDO.cliente | El cliente sale del pedido facturado de cada línea | 11/10 |
-| PRODUCTO.codigo_completo, PRODUCTO.sku y PRODUCTO.unidad_medida | El producto solo tiene nombre y Peso de Conversión; el SKU no se muestra y "Unidad de Medida" no se usa | 11/10 |
+| PRODUCTO (picking) | El producto y su Peso de Conversión vienen en cada línea del archivo de Odoo (RN-37) | 13/10 |
+| CLIENTE y SECTOR | El cliente y el sector vienen en el archivo y no se guardan en ninguna base | 13/10 |
+| PEDIDO | Se reemplaza por ENVIO (ruta o pedido) | 13/10 |
+| RUTA (como entidad aparte, 1:1 con el pedido) | La ruta es un ENVIO de tipo ruta | 13/10 |
+| DETALLE_PEDIDO | Las líneas son las de DETALLE_PEDIDO_FACTURADO, que ya guardan el Peso de Conversión | 13/10 |
+| Correlativo continuo por sede | Numeración diaria (RN-52) | 13/10 |
+| Una OPCION_ENVIO por camión | Dos opciones por sede; el camión se elige en la opción | 13/10 |
+| EXISTENCIA, MOVIMIENTO_INVENTARIO, TRASLADO, DEVOLUCION y PEDIDO.con_devolucion | El sistema no lleva inventario (RN-40) | 29/09 |
+| ROL con sistema y los dos roles opcionales de USUARIO | El acceso es por permisos y el rol es texto libre (RN-38) | 29/09 |
+| USUARIO.sede (una sola) | Se reemplaza por USUARIO_SEDE | 11/10 |
+| Nombre de usuario único en los dos sistemas | Único por sistema (RN-54) | 13/10 |
 
 ### Cambios respecto del ER del Documento 1 v0.1
 
 | Cambio | Motivo |
 |---|---|
 | Se eliminó EDICION_ENTREGA | La ruta ya no se edita (24/09) |
-| El atributo PEDIDO.editado se eliminó | El estado "Editado" y la marca "Con devolución" ya no existen (29/09) |
-| PEDIDO.id_estado_actual con ESTADO_PEDIDO: solo se guardan En Preparación, Despachado, En Ruta y Entregado | Pendiente y Cancelado no se guardan (24/09) |
-| Se eliminó INVENTARIO | El sistema no lleva inventario (29/09) |
-| LINEA_PREPARACION y PEDIDO guardan solo su posición actual, sin historial | La prioridad no se guarda en el historial (24/09). Desde el 12/10 se guarda el orden actual para compartirlo entre pantallas |
+| Se eliminaron INVENTARIO y las entidades de movimientos | El sistema no lleva inventario (29/09) |
 | USUARIO se relaciona con permisos y sedes (N:M) en vez de con roles | Permisos y sedes por usuario (29/09 y 11/10) |
-| DETALLE_PEDIDO y LINEA_PREPARACION guardan el peso de conversión aplicado | Los pedidos conservan el Peso de Conversión con el que se vendieron (24/09) |
-| RUTA se crea al enviar el pedido a bodega | 24/09 |
-| Se agregan PEDIDO_FACTURADO, DETALLE_PEDIDO_FACTURADO y OPCION_ENVIO | Carga del archivo de Odoo y armado de pedidos en Facturación (29/09 y 11/10) |
+| Se agregan PEDIDO_FACTURADO, DETALLE_PEDIDO_FACTURADO y OPCION_ENVIO | Carga del archivo de Odoo y armado de envíos en Facturación (29/09, 11/10 y 13/10) |
+| PEDIDO y RUTA se unen en ENVIO, con tipo, número diario y fecha y hora programadas | 13/10 |
+| Se eliminan PRODUCTO, CLIENTE y SECTOR del picking | 13/10 |
 
 ## Sitio web
 
 | Entidad | Atributos principales | Relaciones |
 |---|---|---|
-| CONTENIDO_INSTITUCIONAL | sección (historia, misión, visión, valores, logotipo de Inquiserca), título, cuerpo, imagen (URL de R2; opcional en historia y valores) | — |
-| INDUSTRIA | nombre, descripción, imagen (URL de R2), orden | — |
-| PRODUCTO_SITIO | nombre, descripción, presentación, países de origen (texto), imagen (URL de R2) | Industrias (N:M) |
-| NOTICIA | título, texto, fotografía (URL de R2), fecha de publicación, publicada | Usuario que la creó |
-| DOCUMENTO_INTERNO | tipo (FT, HS o COA), nombre del archivo, archivo PDF (ruta en el servidor), nombre del producto (texto), lote (texto con números y letras; obligatorio en COA), fecha de carga | País de origen, usuario que lo cargó |
-| SOLICITUD_CONTACTO | motivo (solicitud, queja o reclamo), nombre, empresa, correo, código de país del teléfono, teléfono, mensaje, fecha, estado (vacío, Asignado, En proceso o Solucionado), comentario del responsable (uno solo) | Sede destino (Quetzaltenango o Guatemala), país, departamento o estado, municipio (los tres opcionales; departamento y municipio solo si el país es Guatemala), responsable (usuario del sitio, 0..1) |
+| CONTENIDO_INSTITUCIONAL | sección (misión, visión, historia), texto | Galería de imágenes |
+| CONFIGURACION_SITIO | logotipo de INCOVSA (URL de R2), logotipo de Inquiserca (URL de R2) | Galería de la portada |
+| VALOR | posición (1 a 5), imagen (URL de R2, vacía hasta que se sube) | — (13/10) |
+| INDUSTRIA | nombre, descripción, orden | Galería de imágenes |
+| PRODUCTO_SITIO | nombre, descripción, presentación, países de origen (texto) | Industrias (N:M), galería de imágenes |
+| NOTICIA | título, texto, fecha de publicación, publicada | Usuario que la creó, galería de imágenes |
+| IMAGEN | área (portada, misión, visión, historia, industria, producto, noticia), identificador del dueño, posición (1 a 5), URL de R2 | Pertenece a un contenido, una industria, un producto, una noticia o a la portada. Máximo 5 por dueño (RN-56) |
+| PRODUCTO_DOCUMENTADO | nombre del producto, lote (obligatorio, números y letras), enlace de la ficha técnica, enlace de la hoja de seguridad, enlace del certificado de análisis (los tres de Google Drive, opcionales) | País de origen, usuario que lo creó (13/10) |
+| SOLICITUD_CONTACTO | motivo (solicitud, queja o reclamo), nombre, empresa, correo, código de país del teléfono, teléfono, mensaje, fecha, leída, estado (vacío, Asignado, En proceso o Solucionado), comentario del responsable (uno solo) | Sede destino (Quetzaltenango o Guatemala), país (obligatorio), departamento y municipio (obligatorios si el país es Guatemala), responsable (usuario del sitio, 0..1) |
 | INFORMACION_CONTACTO | dirección, teléfono, correo, WhatsApp, horario, dirección del mapa insertado de Google Maps | Sede (solo las que tienen oficina) |
 | PAIS | nombre | — |
 | DEPARTAMENTO | nombre | — (los 22 departamentos de Guatemala) |
 | MUNICIPIO | nombre | Departamento |
 
-- La relación N:M entre productos e industrias se implementa con **PRODUCTO_INDUSTRIA**.
-- PAIS es la lista de todos los países, que usan el formulario de contacto y la documentación interna. DEPARTAMENTO y MUNICIPIO son solo de Guatemala (11/10).
+- La relación N:M entre productos públicos e industrias se implementa con **PRODUCTO_INDUSTRIA**.
+- PAIS es la lista de todos los países, que usan el formulario de contacto y la documentación interna.
+- Las imágenes se guardan en Cloudflare R2; en la base de datos solo se guarda su dirección (URL).
+- La solicitud de contacto solo se guarda en el sistema; no se envía por correo (13/10).
 
 ### Cambios respecto del ER del Documento 1 v0.1
 
 | Cambio | Motivo |
 |---|---|
 | PRODUCTO_SITIO ↔ INDUSTRIA pasa de 1:N a N:M | Un producto puede pertenecer a varias industrias (23/09) |
-| PRODUCTO_SITIO queda con nombre, descripción, presentación, países de origen e imagen; se eliminan manejo, almacenamiento, humedad, tipo y restricciones | 11/10 |
-| DOCUMENTO_INTERNO ya no se relaciona con el PRODUCTO del picking ni con PRODUCTO_SITIO: guarda nombre del producto, país de origen y lote | 29/09 y 11/10. Reemplaza la relación N:M con PRODUCTO_SITIO del 24/09 y su entidad DOCUMENTO_PRODUCTO |
-| Se eliminó DOCUMENTO_INTERNO.id_rol_minimo | El acceso es por permisos, no por documento |
-| DOCUMENTO_INTERNO.codigo_lote (solo COA) pasa a lote (números y letras, obligatorio en COA) | 29/09 y 11/10 |
-| SOLICITUD_CONTACTO agrega teléfono internacional, campos territoriales, estado, responsable y comentario | 29/09 y 11/10 |
-| NOTICIA lleva fotografía, título y texto | 29/09 |
+| PRODUCTO_SITIO queda con nombre, descripción, presentación y países de origen; las imágenes pasan a IMAGEN | 11/10 y 13/10 |
+| DOCUMENTO_INTERNO se reemplaza por PRODUCTO_DOCUMENTADO, con enlaces en lugar de archivos | 13/10 |
+| Se agregan IMAGEN, VALOR y CONFIGURACION_SITIO | Galerías de hasta 5 imágenes, 5 valores con imagen, portada y logotipos (13/10) |
+| SOLICITUD_CONTACTO agrega teléfono internacional, campos territoriales, estado, responsable y comentario | 29/09, 11/10 y 13/10 |
+| NOTICIA lleva título, texto y galería de imágenes | 29/09 y 13/10 |
 | INFORMACION_CONTACTO agrega el mapa de Google Maps y solo cubre las sedes con oficina | 29/09 y 11/10 |

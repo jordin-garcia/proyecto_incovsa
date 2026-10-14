@@ -27,6 +27,9 @@ const fHora = (iso) => { const d = new Date(iso); return pad(d.getHours()) + ':'
 const fFH = (iso) => fFecha(iso) + ' · ' + fHora(iso);
 const hoyISO = () => new Date().toISOString();
 const mismoDia = (a, b) => fFecha(a) === fFecha(b);
+/* Día local (hora de Guatemala en la aplicación real) en formato aaaa-mm-dd */
+const isoLocal = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const diaDe = (iso) => isoLocal(new Date(iso));
 function leerNumero(txt) {
   const t = String(txt ?? '').replace(/,/g, '').replace(/\s/g, '').trim();
   if (t === '') return NaN;
@@ -132,8 +135,8 @@ const PREFIJOS_ODOO = { XE: 'XE', GT: 'GT', ESC: 'ES' };   // primer segmento de
 
 /* Catálogo de permisos (specs/03-roles-y-accesos.md). Gerencia y Soporte los tienen todos. */
 const PERMISOS = [
-  { c: 'sit.contenido', s: 'sitio', m: 'Contenido institucional', n: 'Editar historia, misión, visión, valores e imágenes' },
-  { c: 'sit.industrias', s: 'sitio', m: 'Industrias', n: 'Editar descripción e imagen de cada industria' },
+  { c: 'sit.contenido', s: 'sitio', m: 'Contenido institucional', n: 'Editar portada, logotipos, historia, misión, visión, valores e imágenes' },
+  { c: 'sit.industrias', s: 'sitio', m: 'Industrias', n: 'Editar descripción e imágenes de cada industria' },
   { c: 'sit.catalogo', s: 'sitio', m: 'Catálogo', n: 'Crear, editar y eliminar productos públicos' },
   { c: 'sit.noticias', s: 'sitio', m: 'Noticias', n: 'Crear, editar, publicar y ocultar noticias' },
   { c: 'sit.contacto', s: 'sitio', m: 'Información de contacto', n: 'Editar los datos de las sedes' },
@@ -141,14 +144,12 @@ const PERMISOS = [
   { c: 'sit.sol.gestionar', s: 'sitio', m: 'Solicitudes', n: 'Gestionar solicitudes: responsable, comentario y estado' },
   { c: 'sit.doc.ver', s: 'sitio', m: 'Documentación interna', n: 'Ver documentos en el navegador' },
   { c: 'sit.doc.descargar', s: 'sitio', m: 'Documentación interna', n: 'Descargar documentos' },
-  { c: 'sit.doc.gestionar', s: 'sitio', m: 'Documentación interna', n: 'Subir, reemplazar y eliminar documentos' },
-  { c: 'pk.facturacion', s: 'picking', m: 'Facturación', n: 'Cargar el archivo de Odoo y enviar pedidos a bodega' },
-  { c: 'pk.bodega', s: 'picking', m: 'Bodega', n: 'Preparar, priorizar y despachar pedidos (incluye el tablero)' },
+  { c: 'sit.doc.gestionar', s: 'sitio', m: 'Documentación interna', n: 'Crear, editar y eliminar productos documentados' },
+  { c: 'pk.facturacion', s: 'picking', m: 'Facturación', n: 'Cargar el archivo de Odoo y enviar rutas y pedidos a bodega' },
+  { c: 'pk.bodega', s: 'picking', m: 'Bodega', n: 'Preparar, priorizar y despachar rutas y pedidos (incluye el tablero)' },
   { c: 'pk.ruta.propias', s: 'picking', m: 'Ruta', n: 'Ejecutar las rutas asignadas' },
   { c: 'pk.ruta.todas', s: 'picking', m: 'Ruta', n: 'Ver todas las rutas' },
   { c: 'pk.reportes', s: 'picking', m: 'Reportes', n: 'Consultar y exportar reportes, incluida la bitácora' },
-  { c: 'pk.cfg.productos', s: 'picking', m: 'Configuración', n: 'Administrar productos y su Peso de Conversión' },
-  { c: 'pk.cfg.clientes', s: 'picking', m: 'Configuración', n: 'Administrar clientes y sectores' },
   { c: 'pk.cfg.camiones', s: 'picking', m: 'Configuración', n: 'Administrar camiones' },
 ];
 const PERMISO = Object.fromEntries(PERMISOS.map((p) => [p.c, p]));
@@ -212,7 +213,15 @@ const PRODUCTOS_PUB_BASE = [
   ['Sulfuro de Sodio', ['cuero', 'textil']],
   ['Tricloro Granular y Polvo', ['agua']],
 ];
-const imgProd = (p) => p.foto || (A.catalogo || [])[p.img] || '';
+/* Imágenes de un producto público: las que se subieron o, si no hay, la del catálogo de prueba */
+const imgsProd = (p) => ((p.fotos || []).length ? p.fotos : (A.catalogo || [])[p.img] ? [A.catalogo[p.img]] : []);
+const imgProd = (p) => imgsProd(p)[0] || '';
+/* Galerías del sitio (RN-56): portada, misión, visión e historia. La portada usa la fotografía de la empresa mientras no se suba otra */
+const galSitio = (k) => { const g = (S.sitio.gal || {})[k] || []; return k === 'portada' && !g.length ? [A.fotoEquipo].filter(Boolean) : g; };
+/* Logotipos (specs/05): el de INCOVSA se puede cambiar desde el panel; el de Inquiserca viene cargado */
+const logoSitio = () => S.sitio.logo || A.logo;
+const logoSitioOscuro = () => (S.sitio.logo ? '' : A.logoBlanco);     // sobre fondo oscuro: el blanco, o el subido sobre una placa clara
+const logoInquiserca = () => (S.sitio.inquiserca === 'empresa' ? A.inquiserca || '' : S.sitio.inquiserca || '');
 
 /* Mapas de Google Maps de las dos sedes con oficina (specs/05) */
 const MAPAS = {
@@ -254,7 +263,7 @@ const pendIn = (cod, texto = 'Por confirmar') => `<span class="pend-in" title="P
    antes de enviar a bodega: el tablero de pedidos facturados y las opciones
    de envío (RN-48).
    ========================================================================== */
-const VER = 4;
+const VER = 5;
 const CLAVE = 'incovsa-simulacion';
 let S = null;
 let canal = null;
@@ -293,9 +302,6 @@ window.addEventListener('storage', (e) => { if (e.key === CLAVE && e.newValue) r
 if (canal) canal.onmessage = (e) => recibir(e.data);
 
 /* ------------------------------------------------------------------ consultas */
-const prod = (id) => S.productos.find((p) => p.id === id);
-const cliente = (id) => S.clientes.find((c) => c.id === id);
-const sector = (id) => (S.sectores.find((s) => s.id === id) || {}).n || '—';
 const camion = (id) => S.camiones.find((c) => c.id === id);
 const usuario = (id) => S.usuarios.find((u) => u.id === id);
 const pedido = (id) => S.pedidos.find((p) => p.id === id);
@@ -305,25 +311,26 @@ const camionesDe = (sede) => S.camiones.filter((c) => c.sede === sede);
 /* El nombre se conserva aunque el usuario se elimine, para el historial (P-42) */
 const nombreUsuario = (id) => (usuario(id) || {}).nombre || (S.nombresEliminados || {})[id] || '—';
 const totalPedido = (p) => r3(p.lineas.reduce((a, l) => a + l.kg, 0));
+/* Lo que se envía a Bodega: ruta si sale del camión, pedido si lo recoge el cliente,
+   con su número del día (specs/02, RN-52) */
+const esRuta = (p) => p.tipo === 'camion';
+const etiqueta = (p) => (esRuta(p) ? 'Ruta ' : 'Pedido ') + p.num;
+const fProg = (p) => (p.prog ? fFecha(p.prog) + ' · ' + p.prog.slice(11, 16) : '—');
 
-/* Comparaciones de la carga del archivo de Odoo (specs/06 y 13) */
-const claveProducto = (s) => String(s || '').replace(/[\s.]/g, '').toUpperCase();
-const claveCliente = (s) => String(s || '').replace(/\s+/g, ' ').trim().toLowerCase();
-const productoPorNombre = (n) => { const k = claveProducto(n); return S.productos.find((p) => claveProducto(p.n) === k); };
-
-/* Pedidos facturados: el nombre y el sector salen de la base de clientes si el
-   cliente está guardado; si no, de lo que trajo el archivo (RN-44) */
-const nombreFact = (f) => (f.cli != null && cliente(f.cli) ? cliente(f.cli).n : f.nombre);
-const sectorFact = (f) => (f.cli != null && cliente(f.cli) ? sector(cliente(f.cli).s) : f.sector);
+/* Pedidos facturados: todo sale del archivo de Odoo, tal como viene (specs/06) */
+const nombreFact = (f) => f.nombre || 'Sin nombre';
+const sectorFact = (f) => f.sector || 'Sin sector';
 const totalFact = (f) => r3(f.lineas.reduce((a, l) => a + l.kg, 0));
-/* opcion: null = tablero, id de camión o 'recoge' */
+/* opcion: null = tablero, 'camion' o 'recoge' */
 const facturadosDe = (sede, opcion) => S.facturados.filter((f) => f.sede === sede && !f.pedido && f.opcion === opcion).sort((a, b) => a.pos - b.pos);
-const pilotoOpcion = (sede, cid) => ((S.opciones[sede] || {})[cid] || {}).piloto || null;
-const claveRuta = (f) => (f.cli != null && cliente(f.cli) ? 'c' + f.cli : 'n:' + nombreFact(f) + '|' + sectorFact(f));
+const opcionDe = (sede, opcion) => ((S.opciones[sede] || {})[opcion]) || {};
+/* Mismo cliente en la ruta: mismo nombre y mismo sector (RN-49) */
+const claveRuta = (f) => 'n:' + norm(nombreFact(f)) + '|' + norm(sectorFact(f));
+const siguienteNumero = (sede, tipo, fecha = hoyISO()) => ((S.corr.dia || {})[sede + '|' + tipo + '|' + diaDe(fecha)] || 0) + 1;
 
 /* ------------------------------------------------------------------ bitácora */
-function bit(uid, op, detalle, fecha) {
-  S.bitacora.unshift({ id: 'b' + (++S.corr.bit), fecha: fecha || hoyISO(), usuario: uid, nombre: nombreUsuario(uid), op, detalle });
+function bit(uid, op, detalle, fecha, escrito) {
+  S.bitacora.unshift({ id: 'b' + (++S.corr.bit), fecha: fecha || hoyISO(), usuario: uid, nombre: uid ? nombreUsuario(uid) : (escrito ? escrito + ' (no existe)' : '—'), op, detalle });
 }
 
 /* ==========================================================================
@@ -333,79 +340,42 @@ function bit(uid, op, detalle, fecha) {
    ========================================================================== */
 const Err = (m) => { const e = new Error(m); e.negocio = true; return e; };
 
-/* Productos y clientes que se agregan desde Facturación (RN-43, RN-44) */
-function opAgregarProducto(nombre, p2, uid) {
-  nombre = String(nombre || '').trim();
-  if (!nombre) throw Err('El nombre del producto es obligatorio.');
-  if (!(p2 > 0)) throw Err(`El Peso de Conversión de ${nombre} debe ser un número mayor que cero.`);
-  if (productoPorNombre(nombre)) throw Err(`${nombre} ya está en el catálogo.`);
-  const p = { id: S.productos.reduce((m, x) => Math.max(m, x.id), -1) + 1, n: nombre, p2: r3(p2) };
-  S.productos.push(p);
-  bit(uid, 'Producto agregado desde Facturación', `${nombre} · Peso de Conversión ${fmt(p.p2)} kg`);
-  return p;
-}
-function opCrearSector(nombre, uid, op = 'Creación de sector') {
-  nombre = String(nombre || '').trim();
-  if (!nombre) throw Err('Escriba el nombre del sector.');
-  const ya = S.sectores.find((s) => s.n === nombre);
-  if (ya) return ya;
-  const s = { id: S.sectores.reduce((m, x) => Math.max(m, x.id), -1) + 1, n: nombre };
-  S.sectores.push(s);
-  bit(uid, op, nombre);
-  return s;
-}
-function opAgregarCliente(nombre, idSector, uid) {
-  nombre = String(nombre || '').trim();
-  if (!nombre) throw Err('El nombre del cliente es obligatorio.');
-  const c = { id: S.clientes.reduce((m, x) => Math.max(m, x.id), -1) + 1, n: nombre, s: idSector };
-  S.clientes.push(c);
-  bit(uid, 'Cliente agregado desde Facturación', `${nombre} · ${sector(idSector)}`);
-  return c;
-}
-
-/* RF-SL-50 · Carga del archivo de Odoo al tablero de pedidos facturados.
-   items: [{ num, cli, nombre, sector, lineas: [{ prod, kg }] }] ya validados. */
+/* RF-SL-50 · Carga del archivo de Odoo al tablero de pedidos facturados, con los datos tal como
+   vienen (specs/06). items: [{ num, ref, nombre, sector, lineas: [{ prod, lote, p2, kg }] }] ya revisados. */
 function opCargarArchivo(sede, items, uid, detalle) {
   const fecha = hoyISO();
   items.forEach((x) => {
-    S.facturados.push({ id: 'f' + (++S.corr.fid), sede, num: x.num, cli: x.cli, nombre: x.nombre, sector: x.sector,
-      lineas: x.lineas.map((l) => ({ prod: l.prod, kg: r3(l.kg) })), opcion: null, pos: ++S.corr.asig, pedido: null, fecha, usuario: uid });
+    S.facturados.push({ id: 'f' + (++S.corr.fid), sede, num: x.num, ref: x.ref, nombre: x.nombre, sector: x.sector,
+      lineas: x.lineas.map((l) => ({ prod: l.prod, lote: l.lote, p2: r3(l.p2), kg: r3(l.kg) })), opcion: null, pos: ++S.corr.asig, pedido: null, fecha, creado: fecha, usuario: uid });
   });
   bit(uid, 'Carga de archivo de Odoo', `${SEDES[sede]} · ${detalle}`);
 }
-/* RF-SL-63 · Mover un pedido facturado al tablero (null) o a una opción de envío */
-function opAsignar(idFact, opcion) {
-  const f = facturado(idFact);
-  if (!f || f.pedido) throw Err('Ese pedido facturado ya no está disponible.');
-  if (f.opcion === opcion) return;
-  f.opcion = opcion; f.pos = ++S.corr.asig;
+/* RF-SL-63, RF-SL-69, RF-SL-71 · Llevar uno o varios pedidos facturados al tablero (null) o a una opción de
+   envío, antes del pedido facturado antesDe (o al final). También sirve para ordenarlos dentro de la opción. */
+function opMover(ids, opcion, antesDe) {
+  const fs = ids.map(facturado).filter((f) => f && !f.pedido);
+  if (!fs.length) throw Err('Esos pedidos facturados ya no están disponibles.');
+  const destino = facturadosDe(fs[0].sede, opcion).filter((f) => !fs.includes(f));
+  let i = antesDe ? destino.findIndex((f) => f.id === antesDe) : -1;
+  if (i < 0) i = destino.length;
+  destino.splice(i, 0, ...fs);
+  fs.forEach((f) => { f.opcion = opcion; });
+  destino.forEach((f) => { f.pos = ++S.corr.asig; });
 }
-function opEliminarFacturado(id, uid) {
-  const f = facturado(id); if (!f || f.pedido) return;
-  S.facturados = S.facturados.filter((x) => x !== f);
-  bit(uid, 'Eliminación de pedido facturado', `${SEDES[f.sede]} · ${f.num} · ${nombreFact(f)} · ${kg(totalFact(f))}`);
-}
-function opVaciarTablero(sede, uid) {
-  const fs = facturadosDe(sede, null); if (!fs.length) return 0;
+/* RF-SL-68 · Eliminar del tablero uno o varios pedidos facturados */
+function opEliminarFacturados(ids, uid) {
+  const fs = ids.map(facturado).filter((f) => f && !f.pedido && f.opcion === null);
+  if (!fs.length) return 0;
   S.facturados = S.facturados.filter((x) => !fs.includes(x));
-  bit(uid, 'Eliminación de pedidos facturados', `${SEDES[sede]} · se vació el tablero · ${fs.length} pedido(s) facturado(s): ${fs.map((f) => f.num).join(', ')}`);
+  bit(uid, 'Eliminación de pedidos facturados', `${SEDES[fs[0].sede]} · ${fs.length} pedido(s) facturado(s): ${fs.map((f) => `${f.num} (${nombreFact(f)}, ${kg(totalFact(f))})`).join(', ')}`);
   return fs.length;
 }
-/* RN-45 · El único dato que se corrige es el sector; si el cliente está en la base, se guarda ahí */
-function opCorregirSector(idFact, idSector, uid) {
-  const f = facturado(idFact), s = S.sectores.find((x) => x.id === idSector);
-  if (!f || !s) throw Err('No se pudo corregir el sector.');
-  const antes = sectorFact(f);
-  if (antes === s.n) return;
-  if (f.cli != null && cliente(f.cli)) cliente(f.cli).s = s.id;
-  f.sector = s.n;
-  bit(uid, 'Corrección de sector', `${f.num} · ${nombreFact(f)} · de «${antes}» a «${s.n}»${f.cli != null ? ' · guardado en la base de clientes' : ' · solo en este pedido facturado'}`);
+/* Camión, piloto, fecha y hora programadas de una opción de envío (se guardan, RN-48) */
+function opCampoOpcion(sede, opcion, campo, valor) {
+  if (!S.opciones[sede]) S.opciones[sede] = { camion: {}, recoge: {} };
+  S.opciones[sede][opcion] = Object.assign({}, S.opciones[sede][opcion], { [campo]: valor || null });
 }
-function opElegirPiloto(sede, cid, piloto) {
-  if (!S.opciones[sede]) S.opciones[sede] = {};
-  S.opciones[sede][cid] = Object.assign(S.opciones[sede][cid] || {}, { piloto: piloto || null });
-}
-const nombreOpcion = (opcion) => (opcion === 'recoge' ? 'Cliente recoge en bodega' : (camion(opcion) || {}).n || 'Camión');
+const nombreOpcion = (opcion) => (opcion === 'recoge' ? 'Cliente recoge en bodega' : 'Envío por camión');
 function opCancelarOpcion(sede, opcion, uid) {
   const fs = facturadosDe(sede, opcion); if (!fs.length) return 0;
   fs.forEach((f) => { f.opcion = null; f.pos = ++S.corr.asig; });
@@ -413,31 +383,37 @@ function opCancelarOpcion(sede, opcion, uid) {
   return fs.length;
 }
 
-/* RF-SL-16 · Enviar Pedido a Bodega desde una opción de envío: crea un pedido
-   con todos sus pedidos facturados (puede tener varios clientes, RN-12) */
+/* RF-SL-16 · Enviar a Bodega desde una opción de envío: crea una ruta (camión) o un pedido (recoge)
+   con todos sus pedidos facturados, en su orden (puede tener varios clientes, RN-12) */
 function opEnviarOpcion(sede, opcion, uid, fecha) {
   fecha = fecha || hoyISO();
   const fs = facturadosDe(sede, opcion);
   if (!fs.length) throw Err('Agregue al menos un pedido facturado a esta opción.');
   const tipo = opcion === 'recoge' ? 'recoge' : 'camion';
-  const cam = tipo === 'camion' ? camion(opcion) : null;
-  const piloto = tipo === 'camion' ? pilotoOpcion(sede, opcion) : null;
-  if (tipo === 'camion' && !cam) throw Err('El camión ya no existe.');
-  if (tipo === 'camion' && !(piloto && usuario(piloto))) throw Err(`Elija el piloto de ${cam.n}.`);
-  for (const f of fs) for (const l of f.lineas) if (!prod(l.prod)) throw Err(`Un producto del pedido facturado ${f.num} ya no está en el catálogo.`);
-  const corr = ++S.corr.ped[sede];
+  const o = opcionDe(sede, opcion);
+  const cam = tipo === 'camion' ? camion(o.camion) : null;
+  const piloto = tipo === 'camion' ? o.piloto : null;
+  if (tipo === 'camion' && !cam) throw Err('Elija el camión.');
+  if (tipo === 'camion' && !(piloto && usuario(piloto))) throw Err('Elija el piloto.');
+  if (!o.fecha || !o.hora) throw Err(`Escriba la fecha y la hora programadas de ${tipo === 'camion' ? 'envío' : 'despacho'} (RN-53).`);
+  // número del día por sede y tipo (RN-52)
+  const kd = sede + '|' + tipo + '|' + diaDe(fecha);
+  S.corr.dia[kd] = (S.corr.dia[kd] || 0) + 1;
+  const num = S.corr.dia[kd];
   const p = {
-    id: 'p' + (++S.corr.pid), sede, corr, tipo, camion: cam ? cam.id : null, piloto, estado: 'PREP', fecha, facturador: uid,
+    id: 'p' + (++S.corr.pid), sede, num, tipo, camion: cam ? cam.id : null, piloto, estado: 'PREP', fecha,
+    prog: o.fecha + 'T' + o.hora, creado: new Date().toISOString(), facturador: uid,
     facturados: fs.map((f) => f.id), lineas: [], prep: [], hist: [{ estado: 'PREP', fecha, usuario: uid }],
   };
   fs.forEach((f) => {
-    const ck = claveRuta(f), nombre = nombreFact(f), sec = sectorFact(f);
-    f.lineas.forEach((l) => p.lineas.push({ i: p.lineas.length, fact: f.id, num: f.num, ck, cli: f.cli, nombre, sector: sec, prod: l.prod, kg: r3(l.kg), p2: prod(l.prod).p2 }));
+    const ck = claveRuta(f);
+    f.lineas.forEach((l) => p.lineas.push({ i: p.lineas.length, fact: f.id, num: f.num, ck, nombre: nombreFact(f), sector: sectorFact(f), prod: l.prod, lote: l.lote, kg: r3(l.kg), p2: l.p2 }));
   });
-  // líneas de preparación: una por producto, sumando todos los clientes (RF-SL-21), con el Peso de Conversión vigente (RN-33)
+  // líneas de preparación: una por producto, lote y Peso de Conversión, sumando los clientes (RN-51)
   p.lineas.forEach((l) => {
-    let x = p.prep.find((y) => y.prod === l.prod);
-    if (!x) { x = { prod: l.prod, kg: 0, p2: l.p2, listo: false }; p.prep.push(x); }
+    const k = l.prod + '|' + l.lote + '|' + l.p2;
+    let x = p.prep.find((y) => y.k === k);
+    if (!x) { x = { id: 'l' + (p.prep.length + 1), k, prod: l.prod, lote: l.lote, p2: l.p2, kg: 0, listo: false }; p.prep.push(x); }
     x.kg = r3(x.kg + l.kg);
   });
   fs.forEach((f) => { f.pedido = p.id; });
@@ -445,24 +421,29 @@ function opEnviarOpcion(sede, opcion, uid, fecha) {
   let r = null;
   if (tipo === 'camion') {
     const orden = [];
-    p.lineas.forEach((l) => { if (!orden.includes(l.ck)) orden.push(l.ck); });
-    r = { id: 'r' + (++S.corr.rid), sede, num: ++S.corr.ruta[sede], fecha, pedido: p.id, camion: cam.id, piloto, orden, recorrido: null, entrega: null };
+    p.lineas.forEach((l) => { if (!orden.includes(l.ck)) orden.push(l.ck); });     // el orden que dejó el facturador (RN-29)
+    r = { id: 'r' + (++S.corr.rid), sede, num, fecha, pedido: p.id, camion: cam.id, piloto, orden, recorrido: null, entrega: null };
     S.rutas.push(r);
   }
   S.orden[sede].push(p.id);
-  bit(uid, 'Envío de pedido a bodega', `${SEDES[sede]} · pedido ${corr} · ${tipo === 'camion' ? `${cam.n}, ruta ${r.num}, ${nombreUsuario(piloto)}` : 'cliente recoge en bodega'} · pedidos facturados ${fs.map((f) => f.num).join(', ')} · ${kg(totalPedido(p))}`, fecha);
+  S.opciones[sede][opcion] = {};          // la opción queda vacía y se puede volver a usar
+  bit(uid, tipo === 'camion' ? 'Envío de ruta a bodega' : 'Envío de pedido a bodega', `${SEDES[sede]} · ${etiqueta(p)} del ${fFecha(fecha)} · programada ${fProg(p)} · ${tipo === 'camion' ? `${cam.n}, ${nombreUsuario(piloto)}` : 'cliente recoge en bodega'} · pedidos facturados ${fs.map((f) => f.num).join(', ')} · ${kg(totalPedido(p))}`, fecha);
   return p;
 }
-function opMarcar(pid, prodId) {
-  const p = pedido(pid); const x = p && p.prep.find((y) => y.prod === prodId);
+function opMarcar(pid, lid) {
+  const p = pedido(pid); const x = p && p.prep.find((y) => y.id === lid);
   if (!x || p.estado !== 'PREP') return;
   x.listo = !x.listo;                 // no se registra quién marcó (RN-20)
 }
+/* RF-SL-23 · Marcar o desmarcar todas las filas de una vez */
+function opMarcarTodo(pid, valor) { const p = pedido(pid); if (p && p.estado === 'PREP') p.prep.forEach((x) => { x.listo = !!valor; }); }
 function opOrdenPedidos(sede, ids) { S.orden[sede] = ids.filter((id) => (pedido(id) || {}).estado === 'PREP'); }
-function opOrdenLineas(pid, prodIds) {
+function opOrdenLineas(pid, ids) {
   const p = pedido(pid);
-  p.prep = prodIds.map((id) => p.prep.find((x) => String(x.prod) === String(id))).filter(Boolean);
+  p.prep = ids.map((id) => p.prep.find((x) => x.id === id)).filter(Boolean);
 }
+/* RF-SL-20 · Ordenar las filas de mayor a menor peso (es un orden más: no queda en el historial, RN-28) */
+function opOrdenPeso(pid) { const p = pedido(pid); if (p) p.prep = p.prep.slice().sort((a, b) => b.kg - a.kg); }
 function opDespachar(pid, uid, fecha) {
   fecha = fecha || hoyISO();
   const p = pedido(pid);
@@ -471,7 +452,7 @@ function opDespachar(pid, uid, fecha) {
   p.estado = p.tipo === 'camion' ? 'RUTA' : 'DESP';
   p.hist.push({ estado: p.estado, fecha, usuario: uid });
   S.orden[p.sede] = S.orden[p.sede].filter((id) => id !== pid);
-  bit(uid, 'Cambio de estado', `${SEDES[p.sede]} · pedido ${p.corr} pasa a ${ESTADOS[p.estado].n}`, fecha);
+  bit(uid, 'Cambio de estado', `${SEDES[p.sede]} · ${etiqueta(p)} del ${fFecha(p.fecha)} pasa a ${ESTADOS[p.estado].n}`, fecha);
   return p;
 }
 /* Ruta: una fila por cliente, sumando sus pedidos facturados (RN-49) */
@@ -487,19 +468,16 @@ function opEntregar(rid, uid, fecha) {
   if (p.estado !== 'RUTA') throw Err('La ruta no está en curso.');
   r.recorrido = r.orden.slice(); r.entrega = fecha;          // RN-29
   p.estado = 'ENTR'; p.hist.push({ estado: 'ENTR', fecha, usuario: uid });
-  bit(uid, 'Cierre de ruta', `${SEDES[p.sede]} · ruta ${r.num} · pedido ${p.corr} entregado`, fecha);
+  bit(uid, 'Cierre de ruta', `${SEDES[p.sede]} · ${etiqueta(p)} del ${fFecha(p.fecha)} entregada`, fecha);
 }
 
 /* ------------------------------------------------------------------ datos iniciales */
 function semilla() {
-  const D = window.DATOS || { productos: [], sectores: [], clientes: [] };
+  const D = window.DATOS || { productos: [], clientes: [] };
   S = { v: VER, rev: 0, ts: 0 };
-  S.productos = D.productos.map((p, i) => ({ id: i, n: p[0], p2: Number(p[1]) || 0 }));
-  S.sectores = D.sectores.map((n, i) => ({ id: i, n }));
-  S.clientes = D.clientes.map((c, i) => ({ id: i, n: c[0], s: c[1] }));
   S.camiones = [{ id: 'c1', n: 'Camión 1', cap: 3400, sede: 'XE' }, { id: 'c2', n: 'Camión 2', cap: 3400, sede: 'XE' }, { id: 'c3', n: 'Camión 3', cap: 6000, sede: 'XE' }];
   const sit = PERMISOS.filter((p) => p.s === 'sitio').map((p) => p.c);
-  const u = (n, sistema, rol, permisos, sedes, extra = {}) => Object.assign({ id: 'u' + pad(n), nombre: 'Usuario de ejemplo ' + pad(n), usuario: 'ejemplo.' + pad(n), sistema, rol, permisos, sedes, activo: true, correo: '', clave: 'demo' }, extra);
+  const u = (n, sistema, rol, permisos, sedes, extra = {}) => Object.assign({ id: 'u' + pad(n), nombre: 'Usuario de ejemplo ' + pad(n), usuario: 'ejemplo.' + pad(n), sistema, rol, permisos, sedes, activo: true, correo: '', clave: 'demo', creado: '2026-10-01T08:00:00' }, extra);
   S.usuarios = [
     u(1, 'ambos', 'Gerencia', [], []),
     u(2, 'ambos', 'Soporte', [], []),
@@ -511,58 +489,62 @@ function semilla() {
     u(8, 'sitio', 'Administrativo', sit, [], { correo: 'ejemplo08@correo.com' }),
     u(9, 'sitio', 'Operativo', ['sit.doc.ver', 'sit.doc.descargar'], []),
     u(10, 'sitio', 'Vista general', ['sit.doc.ver'], []),
+    // El mismo nombre de usuario en los dos sistemas (RN-54): una cuenta del sitio y otra del picking
+    u(11, 'sitio', 'Facturador', ['sit.doc.ver'], [], { usuario: 'ejemplo.03', nombre: 'Usuario de ejemplo 03' }),
   ];
   S.nombresEliminados = {};
   S.facturados = []; S.pedidos = []; S.rutas = []; S.bitacora = [];
-  S.opciones = { XE: {}, GT: {}, ES: {} };
+  const vacias = () => ({ camion: {}, recoge: {} });
+  S.opciones = { XE: vacias(), GT: vacias(), ES: vacias() };
   S.orden = { XE: [], GT: [], ES: [] };
-  S.corr = { ped: { XE: 0, GT: 0, ES: 0 }, ruta: { XE: 0, GT: 0, ES: 0 }, pid: 0, rid: 0, fid: 0, asig: 0, bit: 0, sol: 0, doc: 0, not: 0 };
+  S.corr = { dia: {}, pid: 0, rid: 0, fid: 0, asig: 0, bit: 0, sol: 0, doc: 0, not: 0 };
   S.sitio = {
-    // Transcripciones de MISION.jpg y VISION.jpg: texto alternativo de las imágenes (RNF-08)
+    // Transcripciones de MISION.jpg y VISION.jpg: el texto de misión y visión (specs/05)
     mision: 'Ser el aliado estratégico para nuestros clientes y proveedores en la distribución de productos químicos, atendiendo la región CA-4, marcando la diferencia en servicio, con una completa gama de productos para brindar soluciones a las necesidades del mercado, apoyando a cumplir los objetivos de nuestros grupos de interés.',
     vision: 'Ser referentes y acercar soluciones en la distribución de productos químicos satisfaciendo las necesidades de los mercados atendidos, creando valor integral a nuestros grupos de interés a través del crecimiento y mejora continua, con una administración responsable y transparente enfocada en la solidez y el largo plazo.',
-    historia: '', valores: '',
-    img: { mision: '', vision: '', historia: '', valores: [], inquiserca: '' },   // vacías = las de la empresa (misión y visión) o ninguna; valores admite varias
+    historia: '',
+    gal: { portada: [], mision: [], vision: [], historia: [] },      // galerías de hasta 5 imágenes (RN-56)
+    valores: ['', '', '', '', ''],                                   // 5 imágenes, una por valor, sin texto (RF-SW-29)
+    logo: '',                                                        // vacío = el logotipo de la cabecera recibido
+    inquiserca: 'empresa',                                           // 'empresa' = el recibido el 13/10; '' = quitado
     industrias: Object.fromEntries(INDUSTRIAS.map((x) => [x.id, x.d])),
     indImg: {},
-    productos: PRODUCTOS_PUB_BASE.map((x, i) => ({ id: 'pp' + pad(i + 1), n: x[0], desc: '', pres: '', origen: '', ind: x[1], img: i, foto: '' })),
+    productos: PRODUCTOS_PUB_BASE.map((x, i) => ({ id: 'pp' + pad(i + 1), n: x[0], desc: '', pres: '', origen: '', ind: x[1], img: i, fotos: [] })),
     contacto: {
       XE: { dir: '7a Avenida 1-29 Zona 1, Cantón Llanos de Urbina, Cantel, Quetzaltenango', tel: '7926-7951', correo: 'facturacion@incovsa.com', wa: '4073-0766', horario: '', mapa: MAPAS.XE },
       GT: { dir: '8a Calle "A" 27-70 zona 4, Mixco, Finca El Naranjo, Guatemala', tel: '2436-0936 · 2436-0937', correo: 'recepciongt@incovsa.com', wa: '4073-2260', horario: '', mapa: MAPAS.GT },
     },
     noticias: [], solicitudes: [],
-    documentos: [
-      { id: 'doc1', tipo: 'FT', nombre: 'FT SODA CAUSTICA MX.pdf', producto: 'Soda Cáustica', pais: 'MX', lote: '', fecha: '2026-09-21T15:50:00', usuario: 'u08', pdf: 'ft' },
-      { id: 'doc2', tipo: 'HS', nombre: 'HOJA DE SEGURIDAD SODA CAUSTICA MX.pdf', producto: 'Soda Cáustica', pais: 'MX', lote: '', fecha: '2026-09-21T15:50:00', usuario: 'u08', pdf: 'hs' },
-      { id: 'doc3', tipo: 'COA', nombre: 'CAUSTICA MX CAB250526 SKU 4139.pdf', producto: 'Soda Cáustica', pais: 'MX', lote: '4139', fecha: '2026-09-21T15:51:00', usuario: 'u08', pdf: 'coa' },
-    ],
+    // Producto documentado de ejemplo: la soda cáustica de México de los 3 PDF de la empresa (specs/05).
+    // En la simulación los PDF van dentro del archivo; la aplicación real solo guarda enlaces de Google Drive.
+    docs: [{ id: 'doc1', producto: 'Soda Cáustica', pais: 'MX', lote: '4139', ft: 'ejemplo:ft', hs: 'ejemplo:hs', coa: 'ejemplo:coa', fecha: '2026-09-21T15:50:00', usuario: 'u08' }],
   };
-  S.corr.doc = 3;
+  S.corr.doc = 1;
 
-  /* Pedidos de ejemplo de hoy en Quetzaltenango, para que Bodega, Ruta y
-     Reportes no arranquen vacíos. Cada cliente es un pedido facturado con un
-     número de Odoo de ejemplo (9000N, no existe en el archivo real); los
-     productos son del catálogo, con su Peso de Conversión real. */
+  /* Rutas y pedidos de ejemplo de hoy en Quetzaltenango, para que Bodega, Ruta y Reportes no
+     arranquen vacíos. Productos, Pesos de Conversión, lotes y clientes reales de Picking II; cada
+     cliente es un pedido facturado con un número de Odoo de ejemplo (9000N, no existe en el archivo real). */
   const hoy = new Date(); const a = (h, m) => { const d = new Date(hoy); d.setHours(h, m, 0, 0); return d.toISOString(); };
-  const P = (nombre) => { const x = S.productos.find((p) => p.n === nombre); return x ? x.id : null; };
-  const L = (cli, nombre, k) => ({ cli, prod: P(nombre), kg: k });
+  const dia = isoLocal(hoy);
+  const P = (nombre) => D.productos.find((p) => p[0] === nombre);
+  const L = (cli, nombre, k) => ({ cli, p: P(nombre), kg: k });
   const lote = [
-    { t: a(7, 5), op: 'c1', piloto: 'u06', filas: [
+    { t: a(7, 5), op: 'camion', camion: 'c1', piloto: 'u06', hora: '08:00', filas: [
       L(1, 'SODA CAUSTICA (CHI-SAC/0025KG)', 1000), L(1, 'SULFURO DE SODIO (TUR-SAC/0025KG)', 500),
       L(4, 'EXTRACTO DE MIMOSA (BRA-SAC/0025KG)', 750), L(14, 'HIDROSULFITO DE SODIO (IND-TON/0050KG)', 300),
       L(14, 'DESENGOMANTE (GUA-GAR/0030KG)', 90), L(27, 'NEGRO SULFUROSO EXTRA HIGH QUALITY (CHI-SAC/0025KG)', 260)] },
-    { t: a(7, 40), op: 'recoge', filas: [L(33, 'SODA ASH (CHI-SAC/0025KG)', 150), L(33, 'SULFATO DE MAGNESIO (CHI-SAC/0025KG)', 100)] },
-    { t: a(8, 15), op: 'c2', piloto: 'u07', filas: [
+    { t: a(7, 40), op: 'recoge', hora: '09:00', filas: [L(33, 'SODA ASH (CHI-SAC/0025KG)', 150), L(33, 'SULFATO DE MAGNESIO (CHI-SAC/0025KG)', 100)] },
+    { t: a(8, 15), op: 'camion', camion: 'c2', piloto: 'u07', hora: '10:00', filas: [
       L(40, 'SODA CAUSTICA (POL-SAC/0025KG)', 1250), L(52, 'SULFURO DE SODIO (TUR-SAC/0025KG)', 750),
       L(61, 'EXTRACTO DE MIMOSA ME (SUD-SAC/0020KG)', 400), L(61, 'CLARIFICANTE (CHI-GAR/0020KG)', 120)] },
-    { t: a(9, 2), op: 'c3', piloto: 'u06', filas: [
+    { t: a(9, 2), op: 'camion', camion: 'c3', piloto: 'u06', hora: '13:30', filas: [
       L(75, 'SULFURO DE SODIO (TUR-SAC/0025KG)', 1500), L(75, 'EXTRACTO DE MIMOSA (BRA-SAC/0025KG)', 1000),
       L(88, 'SODA CAUSTICA (POL-SAC/0025KG)', 800), L(88, 'SULFHIDRATO DE SODIO (CHI-SAC/0025KG)', 500),
       L(97, 'SODA CAUSTICA (CHI-SAC/0025KG)', 600), L(97, 'HIDROSULFITO DE SODIO (IND-TON/0050KG)', 250),
       L(105, 'EXTRACTO DE MIMOSA ME (SUD-SAC/0020KG)', 360), L(105, 'KEUSOL AB-2 (ITA-TON/0200KG)', 400),
       L(105, 'ACIDO FORMICO (CHI-GAR/0035KG)', 105)] },
-    { t: a(9, 30), op: 'recoge', filas: [L(120, 'DESENGOMANTE (GUA-GAR/0030KG)', 60), L(120, 'ACIDO OXALICO (CHI-SAC/0025KG)', 55)] },
-    { t: a(9, 48), op: 'c1', piloto: 'u07', filas: [
+    { t: a(9, 30), op: 'recoge', hora: '14:00', filas: [L(120, 'DESENGOMANTE (GUA-GAR/0030KG)', 60), L(120, 'ACIDO OXALICO (CHI-SAC/0025KG)', 55)] },
+    { t: a(9, 48), op: 'camion', camion: 'c1', piloto: 'u07', hora: '15:00', filas: [
       L(133, 'SODA CAUSTICA (CHI-SAC/0025KG)', 1100), L(133, 'NEGRO SULFUROSO EXTRA HIGH QUALITY (CHI-SAC/0025KG)', 60),
       L(150, 'SODA CAUSTICA (CHI-SAC/0025KG)', 400), L(150, 'SODA ASH (CHI-SAC/0025KG)', 200),
       L(166, 'SULFHIDRATO DE SODIO (CHI-SAC/0025KG)', 1225)] },
@@ -570,17 +552,18 @@ function semilla() {
   let num = 90000;
   const listos = [];
   lote.forEach((x) => {
-    if (x.filas.some((f) => f.prod == null || !cliente(f.cli))) { console.warn('semilla: falta un producto o un cliente de ejemplo'); return; }
+    if (x.filas.some((f) => !f.p || !D.clientes[f.cli])) { console.warn('semilla: falta un producto o un cliente de ejemplo'); return; }
     const clis = []; x.filas.forEach((f) => { if (!clis.includes(f.cli)) clis.push(f.cli); });
-    clis.forEach((cid) => {
-      const c = cliente(cid);
-      S.facturados.push({ id: 'f' + (++S.corr.fid), sede: 'XE', num: String(++num), cli: cid, nombre: c.n, sector: sector(c.s),
-        lineas: x.filas.filter((f) => f.cli === cid).map((f) => ({ prod: f.prod, kg: f.kg })), opcion: x.op, pos: ++S.corr.asig, pedido: null, fecha: x.t, usuario: 'u03' });
+    clis.forEach((ci) => {
+      const [nombre, sec] = D.clientes[ci];
+      S.facturados.push({ id: 'f' + (++S.corr.fid), sede: 'XE', num: String(++num), ref: 'XE-IN/SALIDA/' + num, nombre, sector: sec,
+        lineas: x.filas.filter((f) => f.cli === ci).map((f) => ({ prod: f.p[0], p2: Number(f.p[1]) || 0, lote: (f.p[2] || [])[0] || '', kg: f.kg })),
+        opcion: x.op, pos: ++S.corr.asig, pedido: null, fecha: x.t, creado: x.t, usuario: 'u03' });
     });
-    if (x.piloto) opElegirPiloto('XE', x.op, x.piloto);
+    S.opciones.XE[x.op] = { camion: x.camion || null, piloto: x.piloto || null, fecha: dia, hora: x.hora };
     try { listos.push(opEnviarOpcion('XE', x.op, 'u03', x.t)); } catch (e) { console.warn('semilla', e.message); }
   });
-  S.opciones = { XE: {}, GT: {}, ES: {} };
+  S.opciones = { XE: vacias(), GT: vacias(), ES: vacias() };
   const [p1, p2, p3, p4] = listos;
   const marcarTodo = (p) => p && p.prep.forEach((l) => { l.listo = true; });
   if (p1) { marcarTodo(p1); opDespachar(p1.id, 'u05', a(8, 20)); opEntregar(rutaDe(p1.id).id, 'u06', a(11, 10)); }
@@ -605,7 +588,7 @@ function accesoModulo(u, mod) {
   if (mod === 'bodega') return tiene(u, 'pk.bodega');
   if (mod === 'ruta') return tiene(u, 'pk.ruta.propias') || tiene(u, 'pk.ruta.todas');
   if (mod === 'reportes') return tiene(u, 'pk.reportes');
-  if (mod === 'configuracion') return esTotal(u) || ['pk.cfg.productos', 'pk.cfg.clientes', 'pk.cfg.camiones'].some((c) => tiene(u, c));
+  if (mod === 'configuracion') return esTotal(u) || tiene(u, 'pk.cfg.camiones');
   return false;
 }
 const pilotosDe = (sede) => S.usuarios.filter((u) => u.activo && esPiloto(u) && enSistema(u, 'picking') && sedesDe(u).includes(sede));
@@ -620,6 +603,9 @@ function iniciarSesion(sis, uid) {
   if (u) { bit(uid, 'Inicio de sesión', `${sis === 'picking' ? 'Sistema de picking' : 'Sitio web'} · ${u.usuario}`); guardar(); }
 }
 function cerrarSesion(sis) { try { sessionStorage.removeItem('incovsa-ses-' + sis); } catch (e) {} }
+/* Acceso personal (specs/03): cuenta activa con ese nombre de usuario en cada sistema. El nombre es
+   único dentro de cada sistema y se puede repetir en el otro (RN-54) */
+const cuentaEn = (nombreUsuario, sis) => S.usuarios.find((x) => x.activo && x.usuario.toLowerCase() === String(nombreUsuario || '').trim().toLowerCase() && enSistema(x, sis)) || null;
 const iniciales = (n) => String(n).split(/\s+/).filter((x) => /[A-Za-zÁÉÍÓÚÑ]/.test(x[0] || '')).slice(0, 2).map((x) => x[0]).join('').toUpperCase() || 'U';
 /* Quien tiene más de una sede elige con el selector de la barra superior */
 function sedeTrabajo(u) {
@@ -696,29 +682,35 @@ function ordenable(cont, { item, asa, onFin }) {
   });
 }
 
-/* Llevar un elemento de una zona a otra arrastrando, con la misma mecánica de
-   pointer events que ordenable: con mouse desde cualquier parte de la tarjeta
-   y con el dedo desde el asa (así la pantalla se sigue desplazando con el dedo).
-   onSoltar(id, zona) recibe el data-id del elemento y el data-zona de destino. */
-function arrastrable(root, { item, asa, zona, onSoltar }) {
+/* Llevar uno o varios elementos de una zona a otra, o cambiar su orden dentro de la zona, arrastrando.
+   Las tarjetas no tienen asa (specs/06): con el mouse el arrastre empieza al mover; con el dedo, con una
+   pulsación larga, para que un toque corto seleccione y deslizar siga desplazando la pantalla.
+   seleccionados(it) devuelve los data-id que se mueven juntos; onSoltar(ids, zona, antesDe) recibe el
+   destino y el data-id del elemento antes del que quedan (o null, al final); onToque(it), un clic o toque corto. */
+let arrastreActivo = false;
+document.addEventListener('touchmove', (e) => { if (arrastreActivo) e.preventDefault(); }, { passive: false });
+function arrastrable(root, { item, zona, seleccionados, onSoltar, onToque }) {
+  root.addEventListener('contextmenu', (e) => { if (e.target.closest(item)) e.preventDefault(); });
   root.addEventListener('pointerdown', (e) => {
     const it = e.target.closest(item); if (!it || !root.contains(it)) return;
-    if (e.target.closest('select, button, input, a, textarea')) return;
-    const desdeAsa = !!e.target.closest(asa);
-    if (e.pointerType !== 'mouse' && !desdeAsa) return;
+    if (e.target.closest('select, button, input, a, textarea, label')) return;
     if (e.button !== undefined && e.button !== 0) return;
-    const origen = it.closest(zona);
+    const tactil = e.pointerType !== 'mouse';
     const x0 = e.clientX, y0 = e.clientY;
-    let fantasma = null, sobre = null, ultimo = { x: x0, y: y0 }, giro = null;
-    if (desdeAsa) e.preventDefault();
+    let fantasma = null, sobre = null, antes = null, ultimo = { x: x0, y: y0 }, giro = null, ids = null, cancelado = false, espera = null;
+    const marcados = () => ids.map((id) => $(`${item.split(',').map((x) => x.trim() + `[data-id="${id}"]`).join(',')}`, root)).filter(Boolean);
     const empezar = () => {
+      ids = seleccionados ? seleccionados(it) : [it.dataset.id];
       const r = it.getBoundingClientRect();
       fantasma = it.cloneNode(true);
       fantasma.classList.add('fantasma');
+      if (ids.length > 1) fantasma.insertAdjacentHTML('beforeend', `<span class="fantasma-n">${ids.length}</span>`);
       Object.assign(fantasma.style, { width: r.width + 'px', left: r.left + 'px', top: r.top + 'px' });
       fantasma.dataset.dx = x0 - r.left; fantasma.dataset.dy = y0 - r.top;
       document.body.appendChild(fantasma);
-      it.classList.add('arrastrando'); document.body.classList.add('sin-seleccion', 'moviendo');
+      marcados().forEach((x) => x.classList.add('arrastrando'));
+      document.body.classList.add('sin-seleccion', 'moviendo'); arrastreActivo = true;
+      if (tactil && navigator.vibrate) navigator.vibrate(12);
       const desplazar = () => {                      // desplaza la página cerca de los bordes (teléfono)
         const m = 70;
         if (ultimo.y < m) window.scrollBy(0, -14); else if (ultimo.y > window.innerHeight - m) window.scrollBy(0, 14);
@@ -726,24 +718,39 @@ function arrastrable(root, { item, asa, zona, onSoltar }) {
       };
       giro = requestAnimationFrame(desplazar);
     };
+    if (tactil) espera = setTimeout(() => { if (!cancelado) empezar(); }, 380);
+    const limpiarMarca = () => $$('.insertar-antes', root).forEach((x) => x.classList.remove('insertar-antes'));
     const mover = (ev) => {
       ultimo = { x: ev.clientX, y: ev.clientY };
-      if (!fantasma) { if (Math.hypot(ev.clientX - x0, ev.clientY - y0) < 6) return; empezar(); }
+      if (!fantasma) {
+        const d = Math.hypot(ev.clientX - x0, ev.clientY - y0);
+        if (tactil) { if (d > 8) { cancelado = true; clearTimeout(espera); } return; }   // el dedo se movió antes: es desplazamiento
+        if (d < 6) return;
+        empezar();
+      }
       ev.preventDefault();
       fantasma.style.left = (ev.clientX - fantasma.dataset.dx) + 'px';
       fantasma.style.top = (ev.clientY - fantasma.dataset.dy) + 'px';
       const bajo = document.elementFromPoint(ev.clientX, ev.clientY);
       const z = bajo && bajo.closest(zona);
       const nueva = z && root.contains(z) ? z : null;
-      if (nueva !== sobre) { if (sobre) sobre.classList.remove('zona-sobre'); sobre = nueva; if (sobre && sobre !== origen) sobre.classList.add('zona-sobre'); }
+      if (nueva !== sobre) { if (sobre) sobre.classList.remove('zona-sobre'); sobre = nueva; if (sobre) sobre.classList.add('zona-sobre'); }
+      limpiarMarca(); antes = null;
+      if (sobre) {
+        const hs = $$(item, sobre).filter((x) => !ids.includes(x.dataset.id));
+        const sig = hs.find((x) => { const r = x.getBoundingClientRect(); return ev.clientY < r.top + r.height / 2; });
+        if (sig) { antes = sig.dataset.id; sig.classList.add('insertar-antes'); }
+      }
     };
     const fin = () => {
       window.removeEventListener('pointermove', mover); window.removeEventListener('pointerup', fin); window.removeEventListener('pointercancel', fin);
+      clearTimeout(espera);
       if (giro) cancelAnimationFrame(giro);
-      if (!fantasma) return;
-      fantasma.remove(); it.classList.remove('arrastrando'); document.body.classList.remove('sin-seleccion', 'moviendo');
-      if (sobre) sobre.classList.remove('zona-sobre');
-      if (sobre && sobre !== origen) onSoltar(it.dataset.id, sobre.dataset.zona);
+      if (!fantasma) { if (!cancelado && onToque) onToque(it); return; }
+      arrastreActivo = false;
+      fantasma.remove(); marcados().forEach((x) => x.classList.remove('arrastrando')); document.body.classList.remove('sin-seleccion', 'moviendo');
+      limpiarMarca();
+      if (sobre) { sobre.classList.remove('zona-sobre'); onSoltar(ids, sobre.dataset.zona, antes); }
     };
     window.addEventListener('pointermove', mover, { passive: false }); window.addEventListener('pointerup', fin); window.addEventListener('pointercancel', fin);
   });
@@ -774,8 +781,59 @@ function leerImagen(archivo, max = 900) {
     lector.readAsDataURL(archivo);
   });
 }
-/* Imágenes de los valores: una o varias (los estados guardados antes las tenían como una sola) */
-const imgsValores = () => { const v = S.sitio.img.valores; return Array.isArray(v) ? v : v ? [v] : []; };
+/* ==========================================================================
+   GALERÍAS (RN-56, RNF-17): hasta 5 imágenes que rotan cada 5 s. Con una sola
+   imagen, queda fija. Al abrir la página solo se carga la primera imagen de cada
+   galería; las demás se cargan después (data-src).
+   ========================================================================== */
+function galeria(imgs, alt = '', cls = '') {
+  const l = (imgs || []).filter(Boolean).slice(0, 5);
+  if (!l.length) return '';
+  if (l.length === 1) return `<div class="gal ${cls}"><img src="${l[0]}" alt="${esc(alt)}"></div>`;
+  return `<div class="gal rota ${cls}" data-gal>${l.map((src, i) => (i ? `<img data-src="${src}" alt="" aria-hidden="true">` : `<img class="on" src="${src}" alt="${esc(alt)}">`)).join('')}</div>`;
+}
+const Galerias = (() => {
+  const quieto = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function cargar(root = document) { $$('.gal.rota img[data-src]', root).forEach((im) => { im.src = im.dataset.src; im.removeAttribute('data-src'); }); }
+  setInterval(() => {
+    if (document.hidden || quieto()) return;
+    $$('.gal.rota').forEach((g) => {
+      const ims = $$('img', g), i = Math.max(0, ims.findIndex((x) => x.classList.contains('on'))), sig = ims[(i + 1) % ims.length];
+      if (sig.dataset.src) { sig.src = sig.dataset.src; sig.removeAttribute('data-src'); }
+      ims[i].classList.remove('on'); sig.classList.add('on');
+    });
+  }, 5000);
+  return { cargar };
+})();
+/* Campo del panel para una galería: agregar (elegir o arrastrar), quitar y mover imágenes, hasta max */
+const galeriaInterior = (imgs, max) => `<div class="gc-lista">${imgs.map((src, i) => `<figure class="gc-img"><img src="${src}" alt="Imagen ${i + 1}"><span class="gc-n">${i + 1}</span>
+    <span class="gc-acc"><button type="button" class="btn btn-s btn-ico" data-gc-izq="${i}" ${i ? '' : 'disabled'} title="Mover antes" aria-label="Mover la imagen ${i + 1} antes">${ico('atras', 'ico-s')}</button><button type="button" class="btn btn-s btn-ico" data-gc-quitar="${i}" title="Quitar" aria-label="Quitar la imagen ${i + 1}">${ico('borrar', 'ico-s')}</button></span></figure>`).join('')}</div>
+  ${imgs.length < max ? `<label class="subida gc-subir">${ico('subir')}<span>Arrastre aquí ${max - imgs.length === 1 ? 'una imagen' : `hasta ${max - imgs.length} imágenes`} o haga clic para elegirlas</span><input type="file" accept="image/*" multiple hidden></label>` : `<p class="gc-lleno">Tiene ${max} imágenes, el máximo. Quite una para agregar otra.</p>`}
+  <small class="muted">${imgs.length > 1 ? `Rotan cada 5 segundos, en este orden.` : imgs.length ? 'Con una sola imagen, se muestra fija.' : 'Sin imágenes.'}</small>`;
+const campoGaleria = (nombre, imgs, max = 5) => `<div class="galeria-campo" data-galeria="${nombre}" data-max="${max}">${galeriaInterior(imgs || [], max)}</div>`;
+/* actuales: { nombre: [imágenes] }; alCambiar(nombre, imágenes) en cada cambio */
+function montarGalerias(root, actuales, alCambiar) {
+  $$('[data-galeria]', root).forEach((el) => {
+    const nombre = el.dataset.galeria, max = Number(el.dataset.max) || 5;
+    let arr = (actuales[nombre] || []).slice();
+    const pintar = () => { el.innerHTML = galeriaInterior(arr, max); alCambiar(nombre, arr.slice()); };
+    const agregar = (archivos) => {
+      const fs = [...archivos].filter((f) => /^image\//.test(f.type)), cabe = max - arr.length;
+      if (!fs.length) return toast('El archivo debe ser una imagen.', 'error');
+      if (fs.length > cabe) toast(`Solo caben ${cabe} imagen(es) más: el máximo es ${max}.`, 'aviso');
+      Promise.all(fs.slice(0, cabe).map((f) => leerImagen(f))).then((urls) => { arr = arr.concat(urls).slice(0, max); pintar(); })
+        .catch((e) => toast(e.message || 'No se pudo leer la imagen.', 'error'));
+    };
+    el.addEventListener('change', (e) => { if (e.target.type === 'file') { agregar(e.target.files); e.target.value = ''; } });
+    el.addEventListener('click', (e) => {
+      const q = e.target.closest('[data-gc-quitar]'); if (q) { arr.splice(Number(q.dataset.gcQuitar), 1); pintar(); return; }
+      const iz = e.target.closest('[data-gc-izq]'); if (iz) { const i = Number(iz.dataset.gcIzq); [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]]; pintar(); }
+    });
+    el.addEventListener('dragover', (e) => { e.preventDefault(); el.classList.add('zona-sobre'); });
+    el.addEventListener('dragleave', () => el.classList.remove('zona-sobre'));
+    el.addEventListener('drop', (e) => { e.preventDefault(); el.classList.remove('zona-sobre'); agregar(e.dataTransfer.files); });
+  });
+}
 /* Campo para subir o arrastrar una imagen desde la computadora */
 const campoImagen = (nombre, actual, texto = 'Arrastre una imagen aquí o haga clic para elegirla') => `<label class="subida subida-img ${actual ? 'con' : ''}" data-img="${nombre}">
     <span class="vista" ${actual ? `style="background-image:url(${actual})"` : ''}></span>

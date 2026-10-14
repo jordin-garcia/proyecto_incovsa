@@ -1,15 +1,17 @@
 /* ==========================================================================
-   SITIO PÚBLICO (specs/05-sitio-web.md)
+   SITIO PÚBLICO (specs/05-sitio-web.md) y ACCESO PERSONAL (specs/03)
    ========================================================================== */
 const Sitio = (() => {
   const NAV = [['/', 'Inicio'], ['/nosotros', 'Quiénes somos'], ['/industrias', 'Industrias'], ['/productos', 'Productos'], ['/noticias', 'Noticias'], ['/contacto', 'Contacto']];
   const activo = (ruta, actual) => (ruta === '/' ? actual === '/' : actual.startsWith(ruta));
+  /* Logotipo sobre fondo oscuro: el blanco recibido o, si se subió otro, el subido sobre una placa clara */
+  const logoOscuro = (alto = 54) => (logoSitioOscuro() ? `<img src="${logoSitioOscuro()}" alt="INCOVSA Químicos" style="height:${alto}px;width:auto">` : `<span class="logo-placa"><img src="${logoSitio()}" alt="INCOVSA Químicos" style="height:${alto - 14}px;width:auto"></span>`);
 
   function cabecera(actual) {
     const links = NAV.map(([r, n]) => `<a href="#${r}" class="${activo(r, actual) ? 'on' : ''}">${n}</a>`).join('');
     return `<header class="sh">
       <div class="wrap sh-in">
-        <a href="#/" class="sh-logo" aria-label="INCOVSA Químicos, inicio"><img src="${A.logo}" alt="INCOVSA Químicos"></a>
+        <a href="#/" class="sh-logo" aria-label="INCOVSA Químicos, inicio"><img src="${logoSitio()}" alt="INCOVSA Químicos"></a>
         <nav class="sh-nav" aria-label="Menú principal">${links}</nav>
         <a href="#/acceso" class="btn btn-p btn-sm" style="min-height:40px">${ico('candado', 'ico-s')} Acceso personal</a>
         <button class="btn btn-g btn-ico sh-menu" data-menu aria-label="Abrir menú">${ico('menu')}</button>
@@ -23,7 +25,7 @@ const Sitio = (() => {
     return `<footer class="pie-sitio"><div class="wrap">
       <div class="pie-rej">
         <div>
-          <img src="${A.logoBlanco}" alt="INCOVSA Químicos" style="height:54px;width:auto">
+          ${logoOscuro(54)}
           <p style="margin-top:20px;max-width:320px">Industria del Cuero Covadonga S. A. Compra y venta de productos químicos en Guatemala. INCOVSA e Inquiserca, una sola identidad.</p>
         </div>
         <div><h4>Navegación</h4>${NAV.map(([r, n]) => `<a href="#${r}">${n}</a>`).join('')}</div>
@@ -39,9 +41,9 @@ const Sitio = (() => {
     </div></footer>`;
   }
   const pagina = (actual, cuerpo, conPie = true) => cabecera(actual) + `<main>${cuerpo}</main>` + (conPie ? pie() : '');
-  /* Presentación dinámica: las imágenes aparecen al entrar en pantalla y desaparecen al salir (RF-SW-16).
-     Igual que la misión y la visión, todas las imágenes y tarjetas del contenido de la página */
-  const REVELAR = 'main img, main .tarjeta, main .ind-t, main .prod-t, main .det-foto, main .banner-logos';
+  /* Presentación dinámica (RF-SW-16): las imágenes y tarjetas del contenido aparecen al entrar en pantalla y
+     desaparecen al salir, en todas las páginas. Las galerías se animan completas, no imagen por imagen */
+  const REVELAR = 'main img:not(.gal img), main .gal:not(.gal-fondo), main .tarjeta, main .ind-t, main .prod-t, main .det-foto, main .banner-logos, main .valor-t';
   let observador = null;
   function revelar(root) {
     $$(REVELAR, root).forEach((x) => { if (!x.parentElement.closest(REVELAR)) x.classList.add('revelar'); });
@@ -59,13 +61,14 @@ const Sitio = (() => {
     if (observador) { observador.disconnect(); observador = null; }
     revelar(root);
   }
-  const cabPag = (eyebrow, titulo, texto, foto = A.fotoEquipo, miga = '') => `<section class="pag-cab">
-      <div class="foto" style="background-image:url(${foto})"></div><div class="velo"></div>
+  /* Encabezado de página: su fondo es la galería de portada (specs/05) */
+  const cabPag = (eyebrow, titulo, texto, miga = '') => `<section class="pag-cab">
+      <div class="foto">${galeria(galSitio('portada'), '', 'gal-fondo')}</div><div class="velo"></div>
       <div class="wrap">${miga}<p class="eyebrow" style="margin-top:${miga ? 18 : 0}px">${eyebrow}</p><h1>${titulo}</h1>${texto ? `<p>${texto}</p>` : ''}</div>
     </section>`;
 
   const tarjetaProducto = (p) => `<a class="prod-t" href="#/productos/${p.id}">
-      <div class="foto">${imgProd(p) ? `<img src="${imgProd(p)}" alt="${esc(p.n)}">` : `<span class="sin-foto">${ico('imagen')}</span>`}</div>
+      <div class="foto">${imgsProd(p).length ? galeria(imgsProd(p), p.n) : `<span class="sin-foto">${ico('imagen')}</span>`}</div>
       <div class="info"><h3>${esc(p.n)}</h3>
         ${p.origen || p.pres ? `<p class="prod-datos">${[p.origen, p.pres].filter(Boolean).map(esc).join(' · ')}</p>` : ''}
         <div class="etiquetas">${p.ind.length ? p.ind.slice(0, 2).map((i) => `<span class="chip chip-v">${INDN[i]}</span>`).join('') + (p.ind.length > 2 ? `<span class="chip">+${p.ind.length - 2}</span>` : '') : '<span class="chip chip-a">Industria por confirmar</span>'}</div>
@@ -74,12 +77,12 @@ const Sitio = (() => {
       <span class="n">${pad(i + 1)}</span><span class="ind-ic">${ico(x.id)}</span>
       <h3>${x.n}</h3><p>${esc(S.sitio.industrias[x.id])}</p>
       <span class="pie">${x.p.length} productos ${ico('flecha', 'ico-s')}</span></a>`;
-  const imgMision = () => S.sitio.img.mision || A.mision;
-  const imgVision = () => S.sitio.img.vision || A.vision;
-  /* Misión y visión: las imágenes de la empresa, centradas, una debajo de la otra */
-  const misionVision = () => `<div class="mv-imgs">
-      <img class="revelar" src="${imgMision()}" alt="Misión: ${esc(S.sitio.mision)}">
-      <img class="revelar" src="${imgVision()}" alt="Visión: ${esc(S.sitio.vision)}">
+  /* Misión y visión (specs/05, 13/10): misión con el texto a la izquierda y la imagen a la derecha;
+     debajo, visión con la imagen a la izquierda y el texto a la derecha. Sin imagen hasta que se suba */
+  const imgMV = (k, alt) => { const g = galSitio(k); return g.length ? galeria(g, alt, 'mv-gal') : '<div class="mv-sin" aria-hidden="true"></div>'; };
+  const misionVision = () => `<div class="mv">
+      <div class="mv-fila"><div class="mv-txt"><p class="eyebrow">Misión</p><h3>Nuestra misión</h3><p>${esc(S.sitio.mision)}</p></div>${imgMV('mision', 'Misión de INCOVSA')}</div>
+      <div class="mv-fila inversa">${imgMV('vision', 'Visión de INCOVSA')}<div class="mv-txt"><p class="eyebrow">Visión</p><h3>Nuestra visión</h3><p>${esc(S.sitio.vision)}</p></div></div>
     </div>`;
 
   /* ------------------------------------------------------------ inicio */
@@ -87,7 +90,7 @@ const Sitio = (() => {
     const c = S.sitio.contacto;
     return { titulo: 'Inicio', mount: montarBase, html: pagina('/', `
       <section class="hero">
-        <div class="hero-foto revelar revelar-f" style="background-image:url(${A.fotoEquipo})"></div><div class="hero-velo"></div><div class="hero-puntos"></div>
+        <div class="hero-foto revelar revelar-f">${galeria(galSitio('portada'), '', 'gal-fondo')}</div><div class="hero-velo"></div><div class="hero-puntos"></div>
         <div class="wrap hero-in">
           <div>
             <p class="eyebrow">Industria del Cuero Covadonga S. A.</p>
@@ -117,11 +120,9 @@ const Sitio = (() => {
         </div>
       </section>
 
-      <section class="banda-mv sec">
-        <div class="foto" style="background-image:url(${A.fotoReunion})"></div><div class="velo"></div>
+      <section class="sec sec-b">
         <div class="wrap">
-          <div class="cab-sec" style="position:relative"><div><p class="eyebrow" style="color:var(--lima-b)">Propósito</p><h2 style="color:#fff">Misión y visión</h2></div>
-            <img src="${A.logoBlanco}" alt="INCOVSA Químicos" style="height:48px;width:auto;opacity:.95"></div>
+          <div class="cab-sec"><div><p class="eyebrow">Propósito</p><h2>Misión y visión</h2></div></div>
           ${misionVision()}
         </div>
       </section>
@@ -158,32 +159,34 @@ const Sitio = (() => {
   /* ------------------------------------------------------------ quiénes somos */
   function nosotros() {
     const st = S.sitio;
-    const logos = [A.logoBlanco].concat(st.img.inquiserca ? [st.img.inquiserca] : []);
+    // Banner: transición entre los logotipos de INCOVSA e Inquiserca (RF-SW-02)
+    const logos = [[logoSitio(), 'INCOVSA Químicos']].concat(logoInquiserca() ? [[logoInquiserca(), 'Inquiserca']] : []);
+    const hist = st.gal.historia || [];
     return { titulo: 'Quiénes somos', mount: montarBase, html: pagina('/nosotros', `<section class="pag-cab pag-cab-logos">
-        <div class="foto" style="background-image:url(${A.fotoReunion})"></div><div class="velo"></div>
+        <div class="foto">${galeria(galSitio('portada'), '', 'gal-fondo')}</div><div class="velo"></div>
         <div class="wrap banner-nos">
           <div><p class="eyebrow">Quiénes somos</p><h1>Más de treinta años abasteciendo de químicos a la industria del país</h1>
             <p>INCOVSA, Industria del Cuero Covadonga S. A., se dedica a la compra y venta de productos químicos en Guatemala. Atiende nueve industrias y lleva sus productos a clientes de todo el país.</p></div>
-          <div class="banner-logos ${logos.length > 1 ? 'alterna' : ''}">${logos.map((src, i) => `<img src="${src}" alt="${i ? 'Inquiserca' : 'INCOVSA Químicos'}">`).join('')}</div>
+          <div class="banner-logos ${logos.length > 1 ? 'alterna' : ''}">${logos.map(([src, alt]) => `<img src="${src}" alt="${alt}">`).join('')}</div>
         </div>
       </section>
-      <section class="sec"><div class="wrap dos-col">
+      <section class="sec"><div class="wrap dos-col ${hist.length ? '' : 'una-col'}">
         <div>
           <p class="eyebrow">Nuestra historia</p>
           <h2 style="font-size:38px;margin-top:14px">De tenería a distribuidor de productos químicos</h2>
           ${st.historia ? `<p style="margin-top:18px;font-size:17px;color:var(--g600);line-height:1.7">${esc(st.historia)}</p>` : `<div style="margin-top:22px">${pend('P-19', 'La historia la redacta INCOVSA. Lo único registrado en las actas es que la operación inició como tenería, se consolidó como distribuidora de productos químicos y de ahí nace Inquiserca.')}</div>`}
         </div>
-        ${st.img.historia ? `<img src="${st.img.historia}" alt="Historia de INCOVSA" style="border-radius:24px;box-shadow:var(--s2);width:100%">` : `<div class="revelar" style="border-radius:24px;overflow:hidden;box-shadow:var(--s2);aspect-ratio:16/10;background:url(${A.fotoEquipo}) 55% 30%/cover"></div>`}
+        ${hist.length ? galeria(hist, 'Historia de INCOVSA', 'hist-gal') : ''}
       </div></section>
-      <section class="banda-mv sec"><div class="foto" style="background-image:url(${A.fotoReunion})"></div><div class="velo"></div>
-        <div class="wrap">${misionVision()}
-        <div style="margin-top:22px;position:relative">${pend('P-20', 'La imagen original de la visión dice «tranparente». La empresa compartirá la imagen corregida; mientras tanto, el texto alternativo dice «transparente».')}</div></div>
-      </section>
+      <section class="sec sec-b"><div class="wrap">
+        <div class="cab-sec"><div><p class="eyebrow">Propósito</p><h2>Misión y visión</h2></div></div>
+        ${misionVision()}
+      </div></section>
       <section class="sec"><div class="wrap">
         <div class="cab-sec"><div><p class="eyebrow">Valores</p><h2>Lo que nos guía</h2></div></div>
-        ${st.valores ? `<p style="font-size:17px">${esc(st.valores)}</p>` : `<div class="rejilla r4">${[1, 2, 3, 4].map((n) => `<div class="tarjeta tarjeta-p" style="border-style:dashed;min-height:150px"><span class="mono" style="color:var(--g300);font-size:28px;font-weight:700">${pad(n)}</span><p class="muted" style="margin-top:12px">Valor pendiente de INCOVSA</p></div>`).join('')}</div>
-        <div style="margin-top:16px">${pend('P-19', 'La cantidad de valores y su redacción los define la empresa. El diseño se ajusta a los que envíe.')}</div>`}
-        ${imgsValores().map((src, i, l) => `<img src="${src}" alt="Valores de INCOVSA${l.length > 1 ? ' · imagen ' + (i + 1) : ''}" style="margin-top:24px;border-radius:24px;box-shadow:var(--s2);width:100%;max-width:900px">`).join('')}
+        <div class="valores-fila">${st.valores.map((src, i) => (src ? `<figure class="valor-t"><img src="${src}" alt="Valor ${i + 1} de INCOVSA"></figure>`
+          : `<div class="valor-t vacio-v"><span class="mono">${pad(i + 1)}</span><p class="muted">Imagen del valor pendiente de INCOVSA</p></div>`)).join('')}</div>
+        ${st.valores.some((x) => !x) ? `<div style="margin-top:16px">${pend('P-19', 'Faltan las imágenes de los valores. Son 5, una por valor, y se suben desde el panel.')}</div>` : ''}
       </div></section>
       <section class="sec sec-b"><div class="wrap">
         <div class="cab-sec"><div><p class="eyebrow">A quién servimos</p><h2>Dos mercados, la misma calidad de producto</h2></div></div>
@@ -195,28 +198,29 @@ const Sitio = (() => {
         </div>
       </div></section>
       <section class="sec"><div class="wrap" style="display:flex;gap:40px;align-items:center;flex-wrap:wrap">
-        <img src="${A.logo}" alt="INCOVSA Químicos" style="height:90px;width:auto">
+        <img src="${logoSitio()}" alt="INCOVSA Químicos" style="height:90px;width:auto">
         <div style="flex:1;min-width:280px"><p class="eyebrow">INCOVSA e Inquiserca</p><h2 style="font-size:32px;margin-top:12px">Dos empresas del mismo grupo, una sola identidad</h2>
-          <p class="muted" style="margin-top:12px;font-size:17px">Comparten productos y existencias según la logística de distribución, y se presentan en este sitio bajo una misma identidad visual.</p></div>
+          <p class="muted" style="margin-top:12px;font-size:17px">Comparten productos según la logística de distribución, y se presentan en este sitio bajo una misma identidad visual.</p></div>
       </div></section>`) };
   }
 
   /* ------------------------------------------------------------ industrias */
   function industrias(id) {
     const sel = INDUSTRIAS.find((x) => x.id === id) || INDUSTRIAS[0];
-    const img = S.sitio.indImg[sel.id];
+    const imgs = S.sitio.indImg[sel.id] || [];
     const mount = (root) => {
       montarBase(root);
-      $('.ind-lista', root).addEventListener('click', (e) => { const b = e.target.closest('[data-ind]'); if (b && b.dataset.ind !== sel.id) { conservarDesplazamiento = true; location.hash = '#/industrias/' + b.dataset.ind; } });
+      $('.ind-barra', root).addEventListener('click', (e) => { const b = e.target.closest('[data-ind]'); if (b && b.dataset.ind !== sel.id) { conservarDesplazamiento = true; location.hash = '#/industrias/' + b.dataset.ind; } });
     };
-    return { titulo: 'Industrias', mount, html: pagina('/industrias', cabPag('Industrias atendidas', 'Nueve industrias, cada una con su propio conjunto de productos', 'Seleccione una industria para ver su descripción y los productos que INCOVSA distribuye para ese sector.') + `
-      <section class="sec" style="padding-top:56px"><div class="wrap ind-lay">
-        <nav class="ind-lista" aria-label="Industrias">${INDUSTRIAS.map((x, i) => `<button data-ind="${x.id}" class="${x.id === sel.id ? 'on' : ''}">${ico(x.id)}${x.n}<span class="n">${pad(i + 1)}</span></button>`).join('')}</nav>
+    // Menú: barra lateral izquierda solo con íconos; el nombre aparece al pasar el cursor (specs/05, 13/10)
+    return { titulo: 'Industrias', mount, html: pagina('/industrias', cabPag('Industrias atendidas', 'Nueve industrias, cada una con su propio conjunto de productos', 'Seleccione una industria en la barra de la izquierda para ver su descripción y los productos que INCOVSA distribuye para ese sector.') + `
+      <section class="sec" style="padding-top:44px"><div class="wrap ind-lay2">
+        <nav class="ind-barra" aria-label="Industrias">${INDUSTRIAS.map((x) => `<button data-ind="${x.id}" class="${x.id === sel.id ? 'on' : ''}" aria-label="${x.n}" ${x.id === sel.id ? 'aria-current="true"' : ''}>${ico(x.id)}<span class="ind-nombre" role="tooltip">${x.n}</span></button>`).join('')}</nav>
         <article class="tarjeta ind-det">
-          <div class="top"><span class="ind-ic">${ico(sel.id)}</span><div><p class="eyebrow">Industria ${pad(INDUSTRIAS.indexOf(sel) + 1)}</p><h2 style="margin-top:8px">${sel.n}</h2></div>
+          <div class="top"><span class="ind-ic">${ico(sel.id)}</span><div><p class="eyebrow">Industria ${pad(INDUSTRIAS.indexOf(sel) + 1)} de 9</p><h2 style="margin-top:8px">${sel.n}</h2></div>
             <a href="#/productos?industria=${sel.id}" class="btn btn-s" style="margin-left:auto">Ver en el catálogo ${ico('flecha', 'ico-s')}</a></div>
           <p class="desc">${esc(S.sitio.industrias[sel.id])}</p>
-          <div class="ind-img">${img ? `<img src="${img}" alt="Industria ${esc(sel.n)}">` : `<span class="ind-img-vacia">${ico(sel.id)}<small>Imagen de la industria</small></span>`}</div>
+          <div class="ind-img">${imgs.length ? galeria(imgs, `Industria ${sel.n}`) : `<span class="ind-img-vacia">${ico(sel.id)}<small>Imagen de la industria</small></span>`}</div>
           <h4 style="margin-top:28px;font-size:16px">Productos para esta industria · ${sel.p.length}</h4>
           <div class="lista-prod">${sel.p.map((n) => `<span>${esc(n)}</span>`).join('')}</div>
           <div style="margin-top:24px">${pend('P-21', 'Las descripciones vienen literales de la página de Google Sites y necesitan revisión de redacción. Faltan las imágenes propias de cada industria en alta resolución.')}</div>
@@ -246,7 +250,7 @@ const Sitio = (() => {
       </div></section>`, false),
     mount(root) {
       montarBase(root);
-      const upd = () => { $('[data-rejilla]', root).innerHTML = rejilla(); $('[data-filtros]', root).innerHTML = filtros(); $('[data-total]', root).textContent = lista().length + ' de ' + S.sitio.productos.length + ' productos'; revelar(root); };
+      const upd = () => { $('[data-rejilla]', root).innerHTML = rejilla(); $('[data-filtros]', root).innerHTML = filtros(); $('[data-total]', root).textContent = lista().length + ' de ' + S.sitio.productos.length + ' productos'; revelar(root); setTimeout(() => Galerias.cargar(root), 400); };
       $('[data-filtros]', root).addEventListener('click', (e) => { const b = e.target.closest('[data-f]'); if (b) { fInd = b.dataset.f; upd(); } });
       $('[data-q]', root).addEventListener('input', (e) => { fTxt = e.target.value; upd(); });
       upd();
@@ -257,15 +261,17 @@ const Sitio = (() => {
   function producto(id) {
     const p = S.sitio.productos.find((x) => x.id === id);
     if (!p) return noEncontrada();
-    // Productos Recomendados: siempre aparecen. Primero los que comparten industria; si faltan, otros del catálogo (RF-SW-17)
+    // Productos Recomendados: siempre aparecen. Primero los que comparten industria y después otros del
+    // catálogo, cada grupo en orden alfabético (RF-SW-17, 12/10)
+    const alfa = (a, b) => a.n.localeCompare(b.n, 'es');
     const otros = S.sitio.productos.filter((x) => x.id !== p.id);
-    const rel = otros.filter((x) => x.ind.some((i) => p.ind.includes(i))).concat(otros.filter((x) => !x.ind.some((i) => p.ind.includes(i)))).slice(0, 4);
+    const rel = otros.filter((x) => x.ind.some((i) => p.ind.includes(i))).sort(alfa).concat(otros.filter((x) => !x.ind.some((i) => p.ind.includes(i))).sort(alfa)).slice(0, 4);
     const dato = (t, v, ancho) => `<div ${ancho ? 'style="grid-column:1/-1"' : ''}><dt>${t}</dt><dd>${v ? esc(v) : pendIn('P-17')}</dd></div>`;
     return { titulo: p.n, mount: montarBase, html: pagina('/productos', `
       <section class="sec" style="padding-top:40px"><div class="wrap">
         <div class="miga" style="color:var(--g500);margin-bottom:26px"><a href="#/productos" style="color:var(--g600)">Productos</a> / ${p.ind[0] ? `<a href="#/productos?industria=${p.ind[0]}" style="color:var(--g600)">${INDN[p.ind[0]]}</a> /` : ''} <span style="color:var(--g900)">${esc(p.n)}</span></div>
         <div class="det-lay">
-          <div class="det-foto">${imgProd(p) ? `<img src="${imgProd(p)}" alt="${esc(p.n)}" style="width:100%">` : `<span class="sin-foto" style="aspect-ratio:1">${ico('imagen')}</span>`}</div>
+          <div class="det-foto">${imgsProd(p).length ? galeria(imgsProd(p), p.n) : `<span class="sin-foto" style="aspect-ratio:1">${ico('imagen')}</span>`}</div>
           <div>
             <p class="eyebrow">Catálogo público</p>
             <h1 style="font-size:clamp(32px,4vw,48px);margin-top:12px;font-weight:800">${esc(p.n)}</h1>
@@ -286,9 +292,9 @@ const Sitio = (() => {
     return { titulo: 'Noticias', mount: montarBase, html: pagina('/noticias', cabPag('Noticias', 'Novedades de la empresa', 'Nuevos productos, ampliación de bodegas, certificaciones y avisos a clientes.') + `
       <section class="sec"><div class="wrap">
         ${ns.length ? `<div class="rejilla r3">${ns.map((n) => `<article class="tarjeta" style="overflow:hidden">
-            <div style="aspect-ratio:16/9;background:${n.foto ? `url(${n.foto}) center/cover` : 'linear-gradient(135deg,var(--v600),var(--v900))'};position:relative">${n.foto ? '' : `<div style="position:absolute;right:18px;bottom:10px;width:34px;opacity:.9">${burbujas()}</div>`}</div>
+            <div class="not-foto">${(n.fotos || []).length ? galeria(n.fotos, n.titulo) : `<div class="not-sin"><div style="position:absolute;right:18px;bottom:10px;width:34px;opacity:.9">${burbujas()}</div></div>`}</div>
             <div class="tarjeta-p"><span class="chip">${fFecha(n.fecha)}</span><h3 style="font-size:21px;margin-top:12px">${esc(n.titulo)}</h3><p class="muted" style="margin-top:10px">${esc(extracto(n.texto || ''))}</p></div></article>`).join('')}</div>`
-        : `<div class="tarjeta vacio" style="padding:70px 20px">${ico('noticia')}<h4>Todavía no hay noticias publicadas</h4><p>Las noticias se publican desde el panel del sitio, con fotografía, título y texto.</p></div>`}
+        : `<div class="tarjeta vacio" style="padding:70px 20px">${ico('noticia')}<h4>Todavía no hay noticias publicadas</h4><p>Las noticias se publican desde el panel del sitio, con imágenes, título y texto.</p></div>`}
         <div style="margin-top:20px">${pend('P-23', 'Falta el contenido inicial de las noticias.')}</div>
       </div></section>`) };
   }
@@ -309,7 +315,7 @@ const Sitio = (() => {
       let tipo = 'solicitud';
       const lib = window.libphonenumber, ps = paises();
       const form = () => {
-        caja.innerHTML = `<h2 style="font-size:26px">Envíenos su mensaje</h2><p class="muted" style="margin-top:6px">Los campos con asterisco son obligatorios. La solicitud se guarda en el sistema y se envía por correo a la sede seleccionada.</p>
+        caja.innerHTML = `<h2 style="font-size:26px">Envíenos su mensaje</h2><p class="muted" style="margin-top:6px">Los campos con asterisco son obligatorios. La solicitud queda registrada en el sistema y la atiende la sede seleccionada.</p>
           <div style="margin-top:22px" class="rejilla">
             <div class="campo"><span>Tipo de mensaje *</span><div class="seg" data-tipo>${['solicitud', 'queja', 'reclamo'].map((t) => `<button type="button" data-t="${t}" class="${t === tipo ? 'on' : ''}">${t[0].toUpperCase() + t.slice(1)}</button>`).join('')}</div></div>
             <div class="rejilla r2"><label class="campo"><span>Nombre completo *</span><input class="inp" name="nombre" placeholder="Su nombre"></label>
@@ -324,7 +330,7 @@ const Sitio = (() => {
             <div data-err></div>
             <button class="btn btn-p btn-lg" data-enviar style="justify-self:start">Enviar mensaje ${ico('flecha')}</button>
             ${ps.length ? '' : '<p class="muted" style="font-size:13.5px">No se pudo cargar la lista de países y códigos telefónicos (se necesita conexión a internet).</p>'}
-            ${pend('P-22', 'Faltan el correo que recibe las solicitudes y los horarios de las sedes.')}
+            ${pend('P-22', 'Faltan los horarios de las sedes.')}
           </div>`;
         const el = (n) => $(`[name=${n}]`, caja);
         /* Correo y teléfono se validan al salir del campo, antes de seguir con los demás */
@@ -377,11 +383,11 @@ const Sitio = (() => {
           const gt = v('pais') === 'GT', d = gt ? GUATEMALA[v('depto')] : null;
           const folio = 'SOL-' + new Date().getFullYear() + '-' + pad(++S.corr.sol, 4);
           const s = { id: folio, tipo, nombre: v('nombre'), empresa: v('empresa'), correo: v('correo'), telCod: v('tel') && lib ? '+' + lib.getCountryCallingCode(v('telcod')) : '', tel: v('tel'),
-            pais: v('pais'), depto: d ? d[0] : '', muni: d ? v('muni') : '', sede: v('sede'), mensaje: v('mensaje'), fecha: hoyISO(), leida: false, estado: '', resp: null, comentario: '' };
+            pais: v('pais'), depto: d ? d[0] : '', muni: d ? v('muni') : '', sede: v('sede'), mensaje: v('mensaje'), fecha: hoyISO(), creado: hoyISO(), leida: false, estado: '', resp: null, comentario: '' };
           S.sitio.solicitudes.unshift(s);
           guardar();
           caja.innerHTML = `<div class="exito"><div class="ok">${ico('check')}</div><h2 style="font-size:26px">Solicitud recibida</h2>
-            <p class="muted" style="margin-top:10px;font-size:16.5px">Gracias, ${esc(s.nombre)}. Su ${tipo} quedó registrada con el número <b class="mono" style="color:var(--g900)">${folio}</b> y fue enviada a la sede de ${SEDES[s.sede]}.</p>
+            <p class="muted" style="margin-top:10px;font-size:16.5px">Gracias, ${esc(s.nombre)}. Su ${tipo} quedó registrada con el número <b class="mono" style="color:var(--g900)">${folio}</b> para la sede de ${SEDES[s.sede]}.</p>
             <p class="muted" style="margin-top:8px;font-size:14px">En la simulación, la solicitud aparece en la bandeja del panel del sitio.</p>
             <button class="btn btn-s" style="margin-top:22px" data-otra>Enviar otro mensaje</button></div>`;
           $('[data-otra]', caja).addEventListener('click', form);
@@ -391,38 +397,75 @@ const Sitio = (() => {
     } };
   }
 
-  /* ------------------------------------------------------------ acceso */
-  const CUENTAS = {
-    sitio: [['ejemplo.01', 'Gerencia'], ['ejemplo.02', 'Soporte'], ['ejemplo.08', 'Administrativo'], ['ejemplo.09', 'Operativo'], ['ejemplo.10', 'Vista general']],
-    picking: [['ejemplo.01', 'Gerencia'], ['ejemplo.02', 'Soporte'], ['ejemplo.03', 'Facturador · Xela'], ['ejemplo.05', 'Bodega · Xela'], ['ejemplo.06', 'Piloto · Xela'], ['ejemplo.07', 'Piloto · Xela']],
-  };
+  /* ------------------------------------------------------------ acceso personal (specs/03, 13/10)
+     1) usuario; 2) se valida que exista en alguno de los dos sistemas; 3) se elige Odoo, el sitio o el
+     picking (solo los sistemas donde tiene cuenta); 4) contraseña de la cuenta de ese sistema. */
+  let accesoUsuario = '';
+  const CUENTAS = [['ejemplo.01', 'Gerencia'], ['ejemplo.02', 'Soporte'], ['ejemplo.03', 'Facturador · sitio y picking'], ['ejemplo.05', 'Bodega'], ['ejemplo.06', 'Piloto'], ['ejemplo.08', 'Administrativo'], ['ejemplo.09', 'Operativo'], ['ejemplo.10', 'Vista general']];
   function destinoInicial(sis, u) {
     if (sis === 'sitio') { const s = Panel.primera(u); return s ? '#/panel' + (s.id ? '/' + s.id : '') : '#/panel/documentos'; }
     const m = MODULOS_P.find((x) => accesoModulo(u, x.id));
     return '#/picking/' + (m ? m.id : 'facturacion');
   }
-  function acceso() {
-    return { titulo: 'Acceso personal', html: `<div class="acc-lay">
-      <aside class="acc-marca"><div class="foto" style="background-image:url(${A.fotoEquipo})"></div><div class="velo"></div>
+  const marcaAcceso = (titulo, texto, foto = A.fotoEquipo) => `<aside class="acc-marca"><div class="foto" style="background-image:url(${foto})"></div><div class="velo"></div>
         <a href="#/"><img src="${A.logoBlanco}" alt="INCOVSA Químicos" style="height:52px;width:auto"></a>
-        <h1>Tres accesos, tres inicios de sesión</h1>
-        <p>Cada sistema tiene su propio inicio de sesión. Lo que ve y hace cada persona depende de sus permisos.</p>
-        <div class="nota"><b style="color:#fff">Gerencia y Soporte usan la misma cuenta en los dos sistemas.</b> Las demás personas tienen una cuenta para cada sistema.</div>
-      </aside>
+        <h1>${titulo}</h1><p>${texto}</p>
+        <div class="nota"><b style="color:#fff">Gerencia y Soporte usan la misma cuenta en los dos sistemas.</b> Las demás personas tienen una cuenta para cada sistema, y pueden usar el mismo nombre de usuario en los dos.</div>
+      </aside>`;
+  function acceso() {
+    const u = accesoUsuario;
+    const cs = u ? { sitio: cuentaEn(u, 'sitio'), picking: cuentaEn(u, 'picking') } : null;
+    if (u && !cs.sitio && !cs.picking) accesoUsuario = '';
+    if (!accesoUsuario) {
+      return { titulo: 'Acceso personal', html: `<div class="acc-lay">${marcaAcceso('Acceso personal', 'Escriba su nombre de usuario. Después elija a qué sistema desea ingresar y escriba su contraseña.')}
+        <section class="acc-form"><div style="max-width:440px;width:100%">
+          <a href="#/" class="enlace" style="display:inline-flex;gap:6px;align-items:center;margin-bottom:26px">${ico('atras', 'ico-s')} Volver al sitio</a>
+          <p class="eyebrow">Acceso para personal · paso 1 de 3</p><h2 style="font-size:32px;margin:10px 0 8px">¿Quién es usted?</h2>
+          <p class="muted">Use el usuario que le asignaron Gerencia o Soporte.</p>
+          <form data-usuario style="margin-top:24px" class="rejilla" autocomplete="off">
+            <label class="campo"><span>Usuario</span><input class="inp" name="u" placeholder="nombre.apellido" autocapitalize="off" autofocus></label>
+            <div data-err></div>
+            <button class="btn btn-p btn-lg" type="submit">Continuar ${ico('flecha')}</button>
+          </form>
+          <div class="cuentas-demo"><span class="etq">Cuentas de la demostración · contraseña <span class="mono">demo</span></span>
+            <div class="lista">${CUENTAS.map(([x, r]) => `<button type="button" data-cuenta="${x}"><b>${x}</b>${r}</button>`).join('')}</div></div>
+        </div></section></div>`,
+      mount(root) {
+        const f = $('[data-usuario]', root);
+        $$('[data-cuenta]', root).forEach((b) => b.addEventListener('click', () => { f.u.value = b.dataset.cuenta; f.requestSubmit ? f.requestSubmit() : f.dispatchEvent(new Event('submit')); }));
+        f.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const n = f.u.value.trim();
+          if (!n) { $('[data-err]', root).innerHTML = `<div class="aviso aviso-r">${ico('alerta')}<div>Escriba su nombre de usuario.</div></div>`; return; }
+          if (!cuentaEn(n, 'sitio') && !cuentaEn(n, 'picking')) {
+            bit(null, 'Intento de acceso fallido', `Acceso personal · el usuario no existe en ningún sistema`, null, n); guardar();
+            $('[data-err]', root).innerHTML = `<div class="aviso aviso-r">${ico('alerta')}<div>No tiene permisos para acceder a los sistemas de INCOVSA. Si cree que es un error, comuníquese con Gerencia o con Soporte.</div></div>`;
+            return;
+          }
+          accesoUsuario = n; repintar();
+        });
+      } };
+    }
+    return { titulo: 'Acceso personal', html: `<div class="acc-lay">${marcaAcceso('Acceso personal', 'Lo que ve y hace cada persona depende de sus permisos.')}
       <section class="acc-form">
-        <a href="#/" class="enlace" style="display:inline-flex;gap:6px;align-items:center;margin-bottom:26px">${ico('atras', 'ico-s')} Volver al sitio</a>
-        <p class="eyebrow">Acceso para personal</p><h2 style="font-size:32px;margin:10px 0 26px">¿A dónde desea ingresar?</h2>
+        <button type="button" class="enlace" data-otro style="display:inline-flex;gap:6px;align-items:center;margin-bottom:26px">${ico('atras', 'ico-s')} Usar otro usuario</button>
+        <p class="eyebrow">Acceso para personal · paso 2 de 3</p><h2 style="font-size:32px;margin:10px 0 8px">¿A dónde desea ingresar?</h2>
+        <p class="muted" style="margin-bottom:22px">Usuario <b class="mono" style="color:var(--g900)">${esc(accesoUsuario)}</b></p>
         <div style="display:flex;flex-direction:column;gap:12px">
           <button class="acc-op" data-odoo><span class="ic">${ico('externo', 'ico-l')}</span><div><h3>Odoo</h3><p>El ERP con el que la empresa ya trabaja. Solo es un enlace; no hay intercambio de datos.</p></div>${ico('flecha')}</button>
-          <a class="acc-op" href="#/acceso/sitio"><span class="ic">${ico('globo', 'ico-l')}</span><div><h3>Administración del sitio</h3><p>Contenido publicado y documentación interna de productos.</p></div>${ico('flecha')}</a>
-          <a class="acc-op" href="#/acceso/picking"><span class="ic">${ico('bodega', 'ico-l')}</span><div><h3>Sistema de picking</h3><p>Facturación, bodega, ruta, reportes y configuración.</p></div>${ico('flecha')}</a>
+          ${[['sitio', 'globo', 'Administración del sitio', 'Contenido publicado y documentación interna de productos.'], ['picking', 'bodega', 'Sistema de picking', 'Facturación, bodega, ruta, reportes y configuración.']].map(([k, i, t, d]) => cs[k]
+            ? `<a class="acc-op" href="#/acceso/${k}"><span class="ic">${ico(i, 'ico-l')}</span><div><h3>${t}</h3><p>${d}</p></div>${ico('flecha')}</a>`
+            : `<div class="acc-op deshabilitada" aria-disabled="true"><span class="ic">${ico(i, 'ico-l')}</span><div><h3>${t}</h3><p>Su usuario no tiene cuenta en este sistema.</p></div>${ico('candado')}</div>`).join('')}
         </div>
       </section></div>`,
     mount(root) {
+      $('[data-otro]', root).addEventListener('click', () => { accesoUsuario = ''; repintar(); });
       $('[data-odoo]', root).addEventListener('click', () => modal({ titulo: 'Iniciar sesión en Odoo', cuerpo: `<p class="muted" style="font-size:15.5px">Este botón abre el inicio de sesión de Odoo en otra pestaña, fuera del sitio. No hay intercambio de datos con Odoo.</p><div style="margin-top:16px">${pend('P-06', 'Falta la dirección exacta del inicio de sesión de Odoo para conectar este botón.')}</div>`, acciones: [{ txt: 'Entendido', cls: 'btn-p' }] }));
     } };
   }
   function login(sis, q) {
+    const cuenta = accesoUsuario && cuentaEn(accesoUsuario, sis);
+    if (!cuenta) { location.hash = '#/acceso'; return null; }
     const titulo = sis === 'picking' ? 'Sistema de picking' : 'Administración del sitio';
     return { titulo, html: `<div class="acc-lay">
       <aside class="acc-marca"><div class="foto" style="background-image:url(${sis === 'picking' ? A.fotoEquipo : A.fotoReunion})"></div><div class="velo"></div>
@@ -435,39 +478,37 @@ const Sitio = (() => {
           <div style="padding:4px 0">Los demás usuarios entran según los permisos que les asignan Gerencia o Soporte.</div></div>
       </aside>
       <section class="acc-form"><div style="max-width:440px;width:100%">
-        <a href="#/acceso" class="enlace" style="display:inline-flex;gap:6px;align-items:center;margin-bottom:26px">${ico('atras', 'ico-s')} Elegir otro acceso</a>
-        <p class="eyebrow">Inicio de sesión</p><h2 style="font-size:32px;margin:10px 0 8px">${titulo}</h2>
-        <p class="muted">Use el usuario que le asignaron Gerencia o Soporte.${sis === 'picking' ? ' No hay selector de sede: sale de su cuenta.' : ''}</p>
+        <a href="#/acceso" class="enlace" style="display:inline-flex;gap:6px;align-items:center;margin-bottom:26px">${ico('atras', 'ico-s')} Elegir otro sistema</a>
+        <p class="eyebrow">Acceso para personal · paso 3 de 3</p><h2 style="font-size:32px;margin:10px 0 8px">${titulo}</h2>
+        <p class="muted">Usuario <b class="mono" style="color:var(--g900)">${esc(accesoUsuario)}</b>.${sis === 'picking' ? ' No hay selector de sede: sale de su cuenta.' : ''}</p>
         <form data-login style="margin-top:24px" class="rejilla" autocomplete="off">
-          <label class="campo"><span>Usuario</span><input class="inp" name="u" placeholder="nombre.apellido" autocapitalize="off"></label>
-          <label class="campo"><span>Contraseña</span><div style="position:relative"><input class="inp" name="c" type="password" placeholder="Su contraseña" style="padding-right:48px"><button type="button" class="btn btn-g btn-ico" data-ojo style="position:absolute;right:4px;top:4px" aria-label="Mostrar contraseña">${ico('ojo', 'ico-s')}</button></div></label>
+          <label class="campo"><span>Contraseña</span><div style="position:relative"><input class="inp" name="c" type="password" placeholder="Su contraseña" style="padding-right:48px" autofocus><button type="button" class="btn btn-g btn-ico" data-ojo style="position:absolute;right:4px;top:4px" aria-label="Mostrar contraseña">${ico('ojo', 'ico-s')}</button></div></label>
           <div data-err></div>
           <button class="btn btn-p btn-lg" type="submit">Ingresar ${ico('flecha')}</button>
           <button type="button" class="enlace" data-olvido style="justify-self:start">¿Olvidó su contraseña?</button>
         </form>
-        <div class="cuentas-demo"><span class="etq">Cuentas de la demostración · contraseña <span class="mono">demo</span></span>
-          <div class="lista">${CUENTAS[sis].map(([u, r]) => `<button type="button" data-cuenta="${u}"><b>${u}</b>${r}</button>`).join('')}</div></div>
+        <p class="muted" style="margin-top:18px;font-size:13.5px">En la demostración, la contraseña de las cuentas de ejemplo es <span class="mono">demo</span>.</p>
       </div></section></div>`,
     mount(root) {
       const f = $('[data-login]', root);
-      $$('[data-cuenta]', root).forEach((b) => b.addEventListener('click', () => { f.u.value = b.dataset.cuenta; f.c.value = 'demo'; f.c.focus(); }));
       $('[data-ojo]', root).addEventListener('click', () => { f.c.type = f.c.type === 'password' ? 'text' : 'password'; });
       $('[data-olvido]', root).addEventListener('click', () => modal({ titulo: '¿Olvidó su contraseña?', cuerpo: '<p class="muted" style="font-size:15.5px">Pídale a Gerencia o a Soporte que la restablezcan.</p>', acciones: [{ txt: 'Entendido', cls: 'btn-p' }] }));
       f.addEventListener('submit', (e) => {
         e.preventDefault();
-        const u = S.usuarios.find((x) => x.usuario.toLowerCase() === f.u.value.trim().toLowerCase());
-        const delSistema = u && enSistema(u, sis);
-        if (!u || !delSistema || !u.activo || u.clave !== f.c.value) {
-          $('[data-err]', root).innerHTML = `<div class="aviso aviso-r">${ico('alerta')}<div>Usuario o contraseña incorrectos${u && !delSistema ? '. Esta cuenta no es de este sistema (RN-18)' : ''}.</div></div>`;
+        const u = cuentaEn(accesoUsuario, sis);
+        if (!u || u.clave !== f.c.value) {
+          if (u) { bit(u.id, 'Intento fallido de inicio de sesión', `${sis === 'picking' ? 'Sistema de picking' : 'Sitio web'} · contraseña incorrecta`); guardar(); }
+          $('[data-err]', root).innerHTML = `<div class="aviso aviso-r">${ico('alerta')}<div>Usuario o contraseña incorrectos.</div></div>`;
           return;
         }
         iniciarSesion(sis, u.id);
-        location.hash = q.get('volver') || destinoInicial(sis, u);
+        accesoUsuario = '';
+        location.hash = (q && q.get('volver')) || destinoInicial(sis, u);
       });
     } };
   }
   function noEncontrada() {
     return { titulo: 'No encontrada', mount: montarBase, html: pagina('', `<section class="sec"><div class="wrap tarjeta vacio" style="padding:80px 20px">${ico('buscar')}<h4>Esta página no existe</h4><p><a href="#/">Volver al inicio</a></p></div></section>`) };
   }
-  return { inicio, nosotros, industrias, catalogo, producto, noticias, contacto, acceso, login, noEncontrada, destinoInicial, CUENTAS };
+  return { inicio, nosotros, industrias, catalogo, producto, noticias, contacto, acceso, login, noEncontrada, destinoInicial };
 })();
