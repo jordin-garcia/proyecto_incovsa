@@ -39,17 +39,25 @@ const Sitio = (() => {
     </div></footer>`;
   }
   const pagina = (actual, cuerpo, conPie = true) => cabecera(actual) + `<main>${cuerpo}</main>` + (conPie ? pie() : '');
-  /* Presentación dinámica: las imágenes aparecen al entrar en pantalla y desaparecen al salir (RF-SW-16) */
+  /* Presentación dinámica: las imágenes aparecen al entrar en pantalla y desaparecen al salir (RF-SW-16).
+     Igual que la misión y la visión, todas las imágenes y tarjetas del contenido de la página */
+  const REVELAR = 'main img, main .tarjeta, main .ind-t, main .prod-t, main .det-foto, main .banner-logos';
   let observador = null;
-  function montarBase(root) {
-    const b = $('[data-menu]', root);
-    if (b) b.addEventListener('click', () => $('.sh-movil', root).classList.toggle('abierto'));
-    if (observador) observador.disconnect();
+  function revelar(root) {
+    $$(REVELAR, root).forEach((x) => { if (!x.parentElement.closest(REVELAR)) x.classList.add('revelar'); });
     const els = $$('.revelar', root);
     if (!els.length) return;
     if (!('IntersectionObserver' in window)) { els.forEach((x) => x.classList.add('visible')); return; }
-    observador = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('visible', e.isIntersecting)), { threshold: 0.15 });
+    // Aparece cuando se ve el 15 % del elemento; los muy altos (como el formulario de contacto), cuando ocupan el 15 % de la pantalla
+    const ver = (e) => e.isIntersecting && (e.intersectionRatio >= 0.15 || e.intersectionRect.height >= 0.15 * (e.rootBounds ? e.rootBounds.height : innerHeight));
+    observador = observador || new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('visible', ver(e))), { threshold: Array.from({ length: 21 }, (x, i) => i / 20) });
     els.forEach((x) => observador.observe(x));
+  }
+  function montarBase(root) {
+    const b = $('[data-menu]', root);
+    if (b) b.addEventListener('click', () => $('.sh-movil', root).classList.toggle('abierto'));
+    if (observador) { observador.disconnect(); observador = null; }
+    revelar(root);
   }
   const cabPag = (eyebrow, titulo, texto, foto = A.fotoEquipo, miga = '') => `<section class="pag-cab">
       <div class="foto" style="background-image:url(${foto})"></div><div class="velo"></div>
@@ -165,7 +173,7 @@ const Sitio = (() => {
           <h2 style="font-size:38px;margin-top:14px">De tenería a distribuidor de productos químicos</h2>
           ${st.historia ? `<p style="margin-top:18px;font-size:17px;color:var(--g600);line-height:1.7">${esc(st.historia)}</p>` : `<div style="margin-top:22px">${pend('P-19', 'La historia la redacta INCOVSA. Lo único registrado en las actas es que la operación inició como tenería, se consolidó como distribuidora de productos químicos y de ahí nace Inquiserca.')}</div>`}
         </div>
-        ${st.img.historia ? `<img src="${st.img.historia}" alt="Historia de INCOVSA" style="border-radius:24px;box-shadow:var(--s2);width:100%">` : `<div style="border-radius:24px;overflow:hidden;box-shadow:var(--s2);aspect-ratio:16/10;background:url(${A.fotoEquipo}) 55% 30%/cover"></div>`}
+        ${st.img.historia ? `<img src="${st.img.historia}" alt="Historia de INCOVSA" style="border-radius:24px;box-shadow:var(--s2);width:100%">` : `<div class="revelar" style="border-radius:24px;overflow:hidden;box-shadow:var(--s2);aspect-ratio:16/10;background:url(${A.fotoEquipo}) 55% 30%/cover"></div>`}
       </div></section>
       <section class="banda-mv sec"><div class="foto" style="background-image:url(${A.fotoReunion})"></div><div class="velo"></div>
         <div class="wrap">${misionVision()}
@@ -175,7 +183,7 @@ const Sitio = (() => {
         <div class="cab-sec"><div><p class="eyebrow">Valores</p><h2>Lo que nos guía</h2></div></div>
         ${st.valores ? `<p style="font-size:17px">${esc(st.valores)}</p>` : `<div class="rejilla r4">${[1, 2, 3, 4].map((n) => `<div class="tarjeta tarjeta-p" style="border-style:dashed;min-height:150px"><span class="mono" style="color:var(--g300);font-size:28px;font-weight:700">${pad(n)}</span><p class="muted" style="margin-top:12px">Valor pendiente de INCOVSA</p></div>`).join('')}</div>
         <div style="margin-top:16px">${pend('P-19', 'La cantidad de valores y su redacción los define la empresa. El diseño se ajusta a los que envíe.')}</div>`}
-        ${st.img.valores ? `<img src="${st.img.valores}" alt="Valores de INCOVSA" style="margin-top:24px;border-radius:24px;box-shadow:var(--s2);width:100%;max-width:900px">` : ''}
+        ${imgsValores().map((src, i, l) => `<img src="${src}" alt="Valores de INCOVSA${l.length > 1 ? ' · imagen ' + (i + 1) : ''}" style="margin-top:24px;border-radius:24px;box-shadow:var(--s2);width:100%;max-width:900px">`).join('')}
       </div></section>
       <section class="sec sec-b"><div class="wrap">
         <div class="cab-sec"><div><p class="eyebrow">A quién servimos</p><h2>Dos mercados, la misma calidad de producto</h2></div></div>
@@ -197,9 +205,13 @@ const Sitio = (() => {
   function industrias(id) {
     const sel = INDUSTRIAS.find((x) => x.id === id) || INDUSTRIAS[0];
     const img = S.sitio.indImg[sel.id];
-    return { titulo: 'Industrias', mount: montarBase, html: pagina('/industrias', cabPag('Industrias atendidas', 'Nueve industrias, cada una con su propio conjunto de productos', 'Seleccione una industria para ver su descripción y los productos que INCOVSA distribuye para ese sector.') + `
+    const mount = (root) => {
+      montarBase(root);
+      $('.ind-lista', root).addEventListener('click', (e) => { const b = e.target.closest('[data-ind]'); if (b && b.dataset.ind !== sel.id) { conservarDesplazamiento = true; location.hash = '#/industrias/' + b.dataset.ind; } });
+    };
+    return { titulo: 'Industrias', mount, html: pagina('/industrias', cabPag('Industrias atendidas', 'Nueve industrias, cada una con su propio conjunto de productos', 'Seleccione una industria para ver su descripción y los productos que INCOVSA distribuye para ese sector.') + `
       <section class="sec" style="padding-top:56px"><div class="wrap ind-lay">
-        <nav class="ind-lista" aria-label="Industrias">${INDUSTRIAS.map((x, i) => `<button onclick="location.hash='#/industrias/${x.id}'" class="${x.id === sel.id ? 'on' : ''}">${ico(x.id)}${x.n}<span class="n">${pad(i + 1)}</span></button>`).join('')}</nav>
+        <nav class="ind-lista" aria-label="Industrias">${INDUSTRIAS.map((x, i) => `<button data-ind="${x.id}" class="${x.id === sel.id ? 'on' : ''}">${ico(x.id)}${x.n}<span class="n">${pad(i + 1)}</span></button>`).join('')}</nav>
         <article class="tarjeta ind-det">
           <div class="top"><span class="ind-ic">${ico(sel.id)}</span><div><p class="eyebrow">Industria ${pad(INDUSTRIAS.indexOf(sel) + 1)}</p><h2 style="margin-top:8px">${sel.n}</h2></div>
             <a href="#/productos?industria=${sel.id}" class="btn btn-s" style="margin-left:auto">Ver en el catálogo ${ico('flecha', 'ico-s')}</a></div>
@@ -234,7 +246,7 @@ const Sitio = (() => {
       </div></section>`, false),
     mount(root) {
       montarBase(root);
-      const upd = () => { $('[data-rejilla]', root).innerHTML = rejilla(); $('[data-filtros]', root).innerHTML = filtros(); $('[data-total]', root).textContent = lista().length + ' de ' + S.sitio.productos.length + ' productos'; };
+      const upd = () => { $('[data-rejilla]', root).innerHTML = rejilla(); $('[data-filtros]', root).innerHTML = filtros(); $('[data-total]', root).textContent = lista().length + ' de ' + S.sitio.productos.length + ' productos'; revelar(root); };
       $('[data-filtros]', root).addEventListener('click', (e) => { const b = e.target.closest('[data-f]'); if (b) { fInd = b.dataset.f; upd(); } });
       $('[data-q]', root).addEventListener('input', (e) => { fTxt = e.target.value; upd(); });
       upd();
@@ -302,11 +314,11 @@ const Sitio = (() => {
             <div class="campo"><span>Tipo de mensaje *</span><div class="seg" data-tipo>${['solicitud', 'queja', 'reclamo'].map((t) => `<button type="button" data-t="${t}" class="${t === tipo ? 'on' : ''}">${t[0].toUpperCase() + t.slice(1)}</button>`).join('')}</div></div>
             <div class="rejilla r2"><label class="campo"><span>Nombre completo *</span><input class="inp" name="nombre" placeholder="Su nombre"></label>
               <label class="campo"><span>Empresa</span><input class="inp" name="empresa" placeholder="Nombre de su empresa"></label></div>
-            <div class="rejilla r2"><label class="campo"><span>Correo electrónico *</span><input class="inp" name="correo" type="email" placeholder="correo@empresa.com"></label>
-              <div class="campo"><span>Teléfono</span><div class="tel-caja">${ps.length ? `<select class="sel" name="telcod" aria-label="Código de país">${ps.map((p) => `<option value="${p.c}" ${p.c === 'GT' ? 'selected' : ''}>${esc(p.n)} (${p.tel})</option>`).join('')}</select>` : ''}<input class="inp" name="tel" inputmode="tel" placeholder="Número de teléfono"></div></div></div>
-            <div class="rejilla r3"><label class="campo"><span>País</span><select class="sel" name="pais"><option value="">Elija el país</option>${ps.map((p) => `<option value="${p.c}">${esc(p.n)}</option>`).join('')}</select></label>
-              <label class="campo" data-gt hidden><span>Departamento</span><select class="sel" name="depto"><option value="">Elija el departamento</option>${GUATEMALA.map((d, i) => `<option value="${i}">${esc(d[0])}</option>`).join('')}</select></label>
-              <label class="campo" data-gt hidden><span>Municipio</span><select class="sel" name="muni"><option value="">Elija primero el departamento</option></select></label></div>
+            <div class="rejilla r2"><label class="campo"><span>Correo electrónico *</span><input class="inp" name="correo" type="email" placeholder="correo@empresa.com"><small class="msg-error" data-msg="correo" hidden></small></label>
+              <div class="campo"><span>Teléfono</span><div class="tel-caja">${ps.length ? `<div class="tel-cod"><select class="sel" name="telcod" aria-label="Código de país">${ps.map((p) => `<option value="${p.c}" ${p.c === 'GT' ? 'selected' : ''}>${esc(p.n)} (${p.tel})</option>`).join('')}</select><span class="tel-cod-txt" data-telcod aria-hidden="true">${(ps.find((p) => p.c === 'GT') || ps[0]).tel}</span></div>` : ''}<input class="inp" name="tel" inputmode="tel" placeholder="5123 4567" aria-label="Número de teléfono"></div><small class="msg-error" data-msg="tel" hidden></small></div></div>
+            <div class="rejilla"><label class="campo"><span>País *</span><span class="sel-ajuste"><select class="sel" name="pais"><option value="">Elija el país</option>${ps.map((p) => `<option value="${p.c}">${esc(p.n)}</option>`).join('')}</select><span class="sel-txt" aria-hidden="true"></span></span></label>
+              <label class="campo" data-gt hidden><span>Departamento *</span><span class="sel-ajuste"><select class="sel" name="depto"><option value="">Elija el departamento</option>${GUATEMALA.map((d, i) => `<option value="${i}">${esc(d[0])}</option>`).join('')}</select><span class="sel-txt" aria-hidden="true"></span></span></label>
+              <label class="campo" data-gt hidden><span>Municipio *</span><span class="sel-ajuste"><select class="sel" name="muni"><option value="">Elija primero el departamento</option></select><span class="sel-txt" aria-hidden="true"></span></span></label></div>
             <label class="campo"><span>Sede a la que dirige su mensaje *</span><select class="sel" name="sede"><option value="">Elija la sede</option>${SEDES_SITIO.map((k) => `<option value="${k}">${SEDES[k]}</option>`).join('')}</select></label>
             <label class="campo"><span>Mensaje *</span><textarea class="txa" name="mensaje" placeholder="Describa su solicitud, queja o reclamo"></textarea></label>
             <div data-err></div>
@@ -315,24 +327,50 @@ const Sitio = (() => {
             ${pend('P-22', 'Faltan el correo que recibe las solicitudes y los horarios de las sedes.')}
           </div>`;
         const el = (n) => $(`[name=${n}]`, caja);
+        /* Correo y teléfono se validan al salir del campo, antes de seguir con los demás */
+        const errCorreo = (x) => (/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(x) ? '' : 'Indique un correo con una estructura válida (nombre@dominio.com).');
+        const errTel = (x, cod) => (x && lib && lib.isValidPhoneNumber && !lib.isValidPhoneNumber(x, cod) ? `El teléfono no es válido para ${nombrePais(cod)}.` : '');
+        const validar = (n) => {
+          const x = el(n).value.trim(), t = n === 'correo' ? errCorreo(x) : errTel(x, el('telcod') ? el('telcod').value : '');
+          el(n).classList.toggle('error', !!t);
+          const m = $(`[data-msg=${n}]`, caja); m.textContent = t; m.hidden = !t;
+          return t;
+        };
+        el('correo').addEventListener('blur', () => validar('correo'));
+        el('tel').addEventListener('blur', () => validar('tel'));
+        if (el('telcod')) el('telcod').addEventListener('change', () => {
+          $('[data-telcod]', caja).textContent = '+' + lib.getCountryCallingCode(el('telcod').value);
+          if (el('tel').value.trim()) validar('tel');
+        });
         $('[data-tipo]', caja).addEventListener('click', (e) => { const b = e.target.closest('[data-t]'); if (!b) return; tipo = b.dataset.t; $$('[data-t]', caja).forEach((x) => x.classList.toggle('on', x === b)); });
+        /* País, departamento y municipio: la opción elegida se muestra completa; si no cabe, pasa a otra línea */
+        const verOpciones = () => $$('.sel-ajuste', caja).forEach((x) => { const s = $('select', x), o = s.options[s.selectedIndex]; $('.sel-txt', x).textContent = o ? o.text : ''; });
         el('pais').addEventListener('change', () => {
           const gt = el('pais').value === 'GT';
           $$('[data-gt]', caja).forEach((x) => { x.hidden = !gt; });
           if (!gt) { el('depto').value = ''; el('muni').innerHTML = '<option value="">Elija primero el departamento</option>'; }
+          verOpciones();
         });
         el('depto').addEventListener('change', () => {
           const d = GUATEMALA[el('depto').value];
           el('muni').innerHTML = d ? `<option value="">Elija el municipio</option>${d[1].map((m) => `<option>${esc(m)}</option>`).join('')}` : '<option value="">Elija primero el departamento</option>';
+          verOpciones();
         });
+        el('muni').addEventListener('change', verOpciones);
+        verOpciones();
         $('[data-enviar]', caja).addEventListener('click', () => {
           const v = (n) => (el(n) ? el(n).value.trim() : '');
           const errores = [];
           $$('.inp,.txa,.sel', caja).forEach((x) => x.classList.remove('error'));
           const mal = (n, t) => { errores.push(t); el(n).classList.add('error'); };
           if (v('nombre').length < 2) mal('nombre', 'Indique su nombre.');
-          if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(v('correo'))) mal('correo', 'Indique un correo con una estructura válida (nombre@dominio.com).');
-          if (v('tel') && lib && lib.isValidPhoneNumber && !lib.isValidPhoneNumber(v('tel'), v('telcod'))) mal('tel', `El teléfono no es válido para ${nombrePais(v('telcod'))}.`);
+          if (validar('correo')) mal('correo', errCorreo(v('correo')));
+          if (validar('tel')) mal('tel', errTel(v('tel'), v('telcod')));
+          if (!v('pais')) mal('pais', 'Elija el país.');
+          else if (v('pais') === 'GT') {
+            if (!v('depto')) mal('depto', 'Elija el departamento.');
+            if (!v('muni')) mal('muni', 'Elija el municipio.');
+          }
           if (!v('sede')) mal('sede', 'Elija la sede.');
           if (v('mensaje').length < 5) mal('mensaje', 'Escriba su mensaje.');
           if (errores.length) { $('[data-err]', caja).innerHTML = `<div class="aviso aviso-r">${ico('alerta')}<div>${errores.join(' ')}</div></div>`; return; }

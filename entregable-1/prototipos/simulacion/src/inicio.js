@@ -17,6 +17,7 @@ const RUTAS = [
   [/^\/picking$/, () => { const u = sesion('picking'); location.hash = u ? Sitio.destinoInicial('picking', u) : '#/acceso/picking'; return null; }],
 ];
 let pagina = null, rutaActual = null;
+let conservarDesplazamiento = false;   // la siguiente ruta se muestra sin mover la página (Industrias)
 
 function render(mantener) {
   const h = location.hash.replace(/^#/, '') || '/';
@@ -29,7 +30,8 @@ function render(mantener) {
     q.delete('cuenta');
     history.replaceState(null, '', '#' + path + (q.toString() ? '?' + q : ''));
   }
-  const y = window.scrollY, cambio = path !== rutaActual;
+  const y = window.scrollY, cambio = path !== rutaActual, conservar = conservarDesplazamiento;
+  conservarDesplazamiento = false;
   let p;
   for (const [re, fn] of RUTAS) { const m = path.match(re); if (m) { p = fn(m, q); if (p === undefined) p = Sitio.noEncontrada(); break; } }
   if (p === null) return;                      // la ruta redirigió
@@ -41,7 +43,7 @@ function render(mantener) {
   app.innerHTML = pagina.html;
   pagina.mount && pagina.mount(app);
   document.title = (pagina.titulo ? pagina.titulo + ' · ' : '') + 'INCOVSA';
-  if (mantener && !cambio) window.scrollTo(0, y); else if (cambio) window.scrollTo(0, 0);
+  if (conservar || (mantener && !cambio)) window.scrollTo(0, y); else if (cambio) window.scrollTo(0, 0);
   Demo.pintar();
 }
 const repintar = () => render(true);

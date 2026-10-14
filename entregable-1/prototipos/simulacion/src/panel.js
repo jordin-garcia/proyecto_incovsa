@@ -192,12 +192,18 @@ const Panel = (() => {
       ['valores', 'Valores', 'Pendiente P-19 · imagen opcional', 'Texto'],
     ];
     const imgDe = (k) => st.img[k] || (k === 'mision' ? A.mision : k === 'vision' ? A.vision : '');
+    const conImg = (k) => (k === 'valores' ? imgsValores().length : st.img[k]);
+    /* Valores: una o varias imágenes; se agregan y se quitan aquí y se publican con «Guardar y publicar» */
+    let valImgs = imgsValores().slice();
+    const galeriaValores = () => valImgs.map((src, i) => `<figure class="val-img"><img src="${src}" alt="Imagen de valores ${i + 1}"><button type="button" class="btn btn-s btn-ico" data-val-quitar="${i}" title="Quitar imagen" aria-label="Quitar imagen ${i + 1}">${ico('borrar', 'ico-s')}</button></figure>`).join('');
     return vista('contenido', u, cab('Contenido institucional', 'Quiénes somos', 'Lo que se guarda aquí se publica en el inicio y en «Quiénes somos».'),
       `<div class="rejilla r2">${bloques.map(([k, n, e, et]) => `<div class="tarjeta">
-        <div class="bloque-cab"><div><h3>${n}</h3><p>${e}</p></div><span class="chip ${st[k] || st.img[k] ? 'chip-v' : 'chip-a'}">${st[k] || st.img[k] ? 'Publicado' : 'Sin contenido'}</span></div>
+        <div class="bloque-cab"><div><h3>${n}</h3><p>${e}</p></div><span class="chip ${st[k] || conImg(k) ? 'chip-v' : 'chip-a'}">${st[k] || conImg(k) ? 'Publicado' : 'Sin contenido'}</span></div>
         <div class="bloque-cuerpo rejilla">
-          <div class="campo"><span>Imagen${k === 'historia' || k === 'valores' ? ' (opcional)' : ''}</span>${campoImagen(k, imgDe(k))}
-            <div style="display:flex;gap:8px;flex-wrap:wrap">${st.img[k] ? `<button class="btn btn-g btn-sm" data-quitar="${k}">${k === 'mision' || k === 'vision' ? 'Volver a la imagen de la empresa' : 'Quitar imagen'}</button>` : ''}</div></div>
+          ${k === 'valores' ? `<div class="campo"><span>Imágenes (opcional, una o varias)</span><div class="val-imgs" data-val-imgs>${galeriaValores()}</div>
+            <label class="subida" data-val-subir>${ico('subir')}<div style="margin-top:6px;font-size:14px">Arrastre una o varias imágenes aquí o haga clic para elegirlas</div><input type="file" accept="image/*" multiple hidden></label></div>`
+          : `<div class="campo"><span>Imagen${k === 'historia' ? ' (opcional)' : ''}</span>${campoImagen(k, imgDe(k))}
+            <div style="display:flex;gap:8px;flex-wrap:wrap">${st.img[k] ? `<button class="btn btn-g btn-sm" data-quitar="${k}">${k === 'mision' || k === 'vision' ? 'Volver a la imagen de la empresa' : 'Quitar imagen'}</button>` : ''}</div></div>`}
           <label class="campo"><span>${et}</span><textarea class="txa" data-k="${k}" rows="${k === 'mision' || k === 'vision' ? 4 : 6}" placeholder="Texto pendiente de INCOVSA">${esc(st[k])}</textarea></label>
           <div style="display:flex;gap:10px"><button class="btn btn-p btn-sm" data-guardar="${k}">Guardar y publicar</button><a class="btn btn-s btn-sm" href="#/nosotros">Ver en el sitio</a></div></div></div>`).join('')}</div>
       <div class="tarjeta bloque" style="margin-top:22px"><div class="bloque-cab"><div><h3>Logotipo de Inquiserca</h3><p>Se alterna con el de INCOVSA en el banner de «Quiénes somos». Mientras no se suba, el banner muestra solo el de INCOVSA.</p></div><span class="chip ${st.img.inquiserca ? 'chip-v' : 'chip-a'}">${st.img.inquiserca ? 'Publicado' : 'Sin logotipo'}</span></div>
@@ -217,10 +223,29 @@ const Panel = (() => {
             bit(u.id, 'Cambio de contenido del sitio', 'Logotipo de Inquiserca'); guardar(); toast('Logotipo de Inquiserca publicado.'); repintar();
           } else { nuevas[k] = url; toast('Imagen lista. Pulse «Guardar y publicar».', 'aviso'); }
         });
+        const galeria = $('[data-val-imgs]', root), zona = $('[data-val-subir]', root);
+        const pintarValores = () => { galeria.innerHTML = galeriaValores(); };
+        const agregarValores = (archivos) => {
+          const fs = [...archivos]; if (!fs.length) return;
+          Promise.all(fs.map((f) => leerImagen(f))).then((urls) => {
+            valImgs = valImgs.concat(urls); pintarValores();
+            toast(urls.length > 1 ? 'Imágenes listas. Pulse «Guardar y publicar».' : 'Imagen lista. Pulse «Guardar y publicar».', 'aviso');
+          }).catch((e) => toast(e.message || 'No se pudo leer la imagen.', 'error'));
+        };
+        $('input', zona).addEventListener('change', (e) => { agregarValores(e.target.files); e.target.value = ''; });
+        zona.addEventListener('dragover', (e) => { e.preventDefault(); zona.classList.add('zona-sobre'); });
+        zona.addEventListener('dragleave', () => zona.classList.remove('zona-sobre'));
+        zona.addEventListener('drop', (e) => { e.preventDefault(); zona.classList.remove('zona-sobre'); agregarValores(e.dataTransfer.files); });
+        galeria.addEventListener('click', (e) => {
+          const b = e.target.closest('[data-val-quitar]'); if (!b) return;
+          valImgs.splice(Number(b.dataset.valQuitar), 1); pintarValores();
+          toast('Imagen quitada de la lista. Pulse «Guardar y publicar».', 'aviso');
+        });
         $$('[data-guardar]', root).forEach((b) => b.addEventListener('click', () => {
           const k = b.dataset.guardar, antes = { t: st[k], i: st.img[k] };
           st[k] = $(`[data-k=${k}]`, root).value.trim();
-          if (nuevas[k]) st.img[k] = nuevas[k];
+          if (k === 'valores') st.img.valores = valImgs.slice();
+          else if (nuevas[k]) st.img[k] = nuevas[k];
           if (!guardar()) { st[k] = antes.t; st.img[k] = antes.i; return; }
           bit(u.id, 'Cambio de contenido del sitio', bloques.find((x) => x[0] === k)[1]); guardar();
           toast(`${bloques.find((x) => x[0] === k)[1]} publicada en el sitio.`); repintar();
@@ -262,7 +287,7 @@ const Panel = (() => {
           <td><b>${esc(p.n)}</b>${p.desc ? `<div class="muted" style="font-size:13px;max-width:320px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.desc)}</div>` : ''}</td>
           <td>${p.pres ? esc(p.pres) : pendIn('P-17')}</td><td>${p.origen ? esc(p.origen) : pendIn('P-17')}</td>
           <td><div class="etiquetas">${p.ind.length ? p.ind.map((i) => `<span class="chip chip-v">${INDN[i]}</span>`).join('') : '<span class="chip chip-a">Por confirmar</span>'}</div></td>
-          <td class="der" style="white-space:nowrap"><button class="btn btn-s btn-sm" data-ed="${p.id}">${ico('editar', 'ico-s')} Editar</button> <button class="btn btn-g btn-sm" data-del="${p.id}" title="Eliminar">${ico('borrar', 'ico-s')}</button></td></tr>`).join('')}
+          <td class="der" style="white-space:nowrap"><button class="btn btn-s btn-sm" data-ed="${p.id}" title="Editar" aria-label="Editar">${ico('editar', 'ico-s')}</button> <button class="btn btn-g btn-sm" data-del="${p.id}" title="Eliminar">${ico('borrar', 'ico-s')}</button></td></tr>`).join('')}
       </tbody></table></div></div>
       <div style="margin-top:18px">${pend('P-17', 'Faltan los datos de los productos públicos: descripción, presentación, países de origen e industrias de cada uno.')}</div>`,
       (root) => {
@@ -309,7 +334,7 @@ const Panel = (() => {
       <div class="tarjeta" style="margin-top:18px">${ns.length ? `<div class="tabla-caja"><table class="tabla"><thead><tr><th style="width:84px"></th><th>Título</th><th>Fecha</th><th>Estado</th><th></th></tr></thead><tbody>${ns.map((n) => `<tr>
           <td>${n.foto ? `<img src="${n.foto}" alt="" style="width:68px;height:46px;border-radius:8px;object-fit:cover;border:1px solid var(--g150)">` : `<span class="sin-img">${ico('imagen', 'ico-s')}</span>`}</td>
           <td><b>${esc(n.titulo)}</b><div class="muted" style="font-size:13.5px;max-width:420px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(n.texto)}</div></td><td class="mono">${fFecha(n.fecha)}</td><td><span class="chip ${n.pub ? 'chip-v' : ''}">${n.pub ? 'Publicada' : 'Oculta'}</span></td>
-          <td class="der" style="white-space:nowrap"><button class="btn btn-s btn-sm" data-ed="${n.id}">${ico('editar', 'ico-s')} Editar</button> <button class="btn btn-s btn-sm" data-alt="${n.id}">${n.pub ? 'Ocultar' : 'Publicar'}</button></td></tr>`).join('')}</tbody></table></div>`
+          <td class="der" style="white-space:nowrap"><button class="btn btn-s btn-sm" data-ed="${n.id}" title="Editar" aria-label="Editar">${ico('editar', 'ico-s')}</button> <button class="btn btn-s btn-sm" data-alt="${n.id}">${n.pub ? 'Ocultar' : 'Publicar'}</button></td></tr>`).join('')}</tbody></table></div>`
         : `<div class="vacio">${ico('imagen')}<h4>No hay noticias</h4><p>Cree la primera y véala publicada en el sitio.</p></div>`}</div>`,
       (root) => {
         const editar = (n) => {
@@ -485,7 +510,7 @@ const Panel = (() => {
         ${ls.map((x) => `<tr><td><div style="display:flex;gap:10px;align-items:center"><span class="avatar" style="width:34px;height:34px;font-size:12.5px">${iniciales(x.nombre)}</span><b>${esc(x.nombre)}</b></div></td><td class="mono">${esc(x.usuario)}</td>
           <td>${esc(x.rol)}${x.sistema === 'ambos' || esTotal(x) ? ' <span class="chip">+ picking</span>' : ''}</td><td>${resumenPermisos(x, 'sitio')}</td><td class="muted">${esc(x.correo || 'Sin correo')}</td>
           <td><span class="chip ${x.activo ? 'chip-v' : ''}">${x.activo ? 'Activo' : 'Inactivo'}</span></td>
-          <td class="der" style="white-space:nowrap"><button class="btn btn-s btn-sm" data-ed="${x.id}">${ico('editar', 'ico-s')} Editar</button> <button class="btn btn-s btn-sm" data-clave="${x.id}">${ico('llave', 'ico-s')} Contraseña</button> <button class="btn btn-g btn-sm" data-del="${x.id}" title="Eliminar">${ico('borrar', 'ico-s')}</button></td></tr>`).join('')}
+          <td class="der" style="white-space:nowrap"><button class="btn btn-s btn-sm" data-ed="${x.id}" title="Editar" aria-label="Editar">${ico('editar', 'ico-s')}</button> <button class="btn btn-s btn-sm" data-clave="${x.id}">${ico('llave', 'ico-s')} Contraseña</button> <button class="btn btn-g btn-sm" data-del="${x.id}" title="Eliminar">${ico('borrar', 'ico-s')}</button></td></tr>`).join('')}
       </tbody></table></div></div>`,
       (root) => {
         $('[data-nuevo]', root).addEventListener('click', () => formUsuario('sitio', null, u, repintar));

@@ -522,7 +522,7 @@ function semilla() {
     mision: 'Ser el aliado estratégico para nuestros clientes y proveedores en la distribución de productos químicos, atendiendo la región CA-4, marcando la diferencia en servicio, con una completa gama de productos para brindar soluciones a las necesidades del mercado, apoyando a cumplir los objetivos de nuestros grupos de interés.',
     vision: 'Ser referentes y acercar soluciones en la distribución de productos químicos satisfaciendo las necesidades de los mercados atendidos, creando valor integral a nuestros grupos de interés a través del crecimiento y mejora continua, con una administración responsable y transparente enfocada en la solidez y el largo plazo.',
     historia: '', valores: '',
-    img: { mision: '', vision: '', historia: '', valores: '', inquiserca: '' },   // vacías = las de la empresa (misión y visión) o ninguna
+    img: { mision: '', vision: '', historia: '', valores: [], inquiserca: '' },   // vacías = las de la empresa (misión y visión) o ninguna; valores admite varias
     industrias: Object.fromEntries(INDUSTRIAS.map((x) => [x.id, x.d])),
     indImg: {},
     productos: PRODUCTOS_PUB_BASE.map((x, i) => ({ id: 'pp' + pad(i + 1), n: x[0], desc: '', pres: '', origen: '', ind: x[1], img: i, foto: '' })),
@@ -774,6 +774,8 @@ function leerImagen(archivo, max = 900) {
     lector.readAsDataURL(archivo);
   });
 }
+/* Imágenes de los valores: una o varias (los estados guardados antes las tenían como una sola) */
+const imgsValores = () => { const v = S.sitio.img.valores; return Array.isArray(v) ? v : v ? [v] : []; };
 /* Campo para subir o arrastrar una imagen desde la computadora */
 const campoImagen = (nombre, actual, texto = 'Arrastre una imagen aquí o haga clic para elegirla') => `<label class="subida subida-img ${actual ? 'con' : ''}" data-img="${nombre}">
     <span class="vista" ${actual ? `style="background-image:url(${actual})"` : ''}></span>
