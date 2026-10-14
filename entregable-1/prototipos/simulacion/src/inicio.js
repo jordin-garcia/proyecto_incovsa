@@ -14,7 +14,7 @@ const RUTAS = [
   [/^\/panel(?:\/([a-z]+))?$/, (m) => Panel.ruta(m[1] || '')],
   [/^\/picking\/tablero$/, (m, q) => Tablero.ruta(q)],
   [/^\/picking\/([a-z]+)$/, (m) => Picking.ruta(m[1])],
-  [/^\/picking$/, () => { const u = sesion('picking'); location.hash = u ? Sitio.destinoInicial('picking', u) : '#/acceso/picking'; return null; }],
+  [/^\/picking$/, () => { const u = sesion('picking'); location.hash = u ? Sitio.destinoInicial('picking', u) : '#/acceso'; return null; }],
 ];
 let pagina = null, rutaActual = null;
 let conservarDesplazamiento = false;   // la siguiente ruta se muestra sin mover la página (Industrias)
@@ -25,8 +25,8 @@ function render(mantener) {
   const q = new URLSearchParams(qs || '');
   // Atajo de la demostración: ?cuenta=ejemplo.05 abre la pantalla con esa cuenta
   if (q.get('cuenta')) {
-    const u = S.usuarios.find((x) => x.usuario === q.get('cuenta'));
-    if (u) iniciarSesion(path.startsWith('/panel') ? 'sitio' : 'picking', u.id);
+    const sis = path.startsWith('/panel') ? 'sitio' : 'picking', u = cuentaEn(q.get('cuenta'), sis);
+    if (u) iniciarSesion(sis, u.id);
     q.delete('cuenta');
     history.replaceState(null, '', '#' + path + (q.toString() ? '?' + q : ''));
   }
@@ -42,6 +42,8 @@ function render(mantener) {
   const app = $('#app');
   app.innerHTML = pagina.html;
   pagina.mount && pagina.mount(app);
+  // Galerías (RNF-17): la primera imagen ya está; las demás se cargan cuando la página terminó de mostrarse
+  setTimeout(() => Galerias.cargar(app), 900);
   document.title = (pagina.titulo ? pagina.titulo + ' · ' : '') + 'INCOVSA';
   if (conservar || (mantener && !cambio)) window.scrollTo(0, y); else if (cambio) window.scrollTo(0, 0);
   Demo.pintar();
@@ -63,10 +65,10 @@ const Demo = (() => {
     ['ejemplo.06', 'Piloto', 'picking', 'ejemplo.06 · Quetzaltenango'], ['ejemplo.07', 'Piloto', 'picking', 'ejemplo.07 · Quetzaltenango'],
     ['ejemplo.02', 'Soporte', 'picking', 'Picking y sitio · todas las sedes'], ['ejemplo.01', 'Gerencia', 'picking', 'Picking y sitio · todas las sedes'],
     ['ejemplo.08', 'Administrativo', 'sitio', 'Panel del sitio'], ['ejemplo.09', 'Operativo', 'sitio', 'Documentación: ver y descargar'],
-    ['ejemplo.10', 'Vista general', 'sitio', 'Documentación: solo ver'],
+    ['ejemplo.10', 'Vista general', 'sitio', 'Documentación: solo ver'], ['ejemplo.03', 'Facturador en el sitio', 'sitio', 'Mismo usuario en los dos sistemas'],
   ];
   function entrar(usr, sis) {
-    const u = S.usuarios.find((x) => x.usuario === usr); if (!u) return;
+    const u = cuentaEn(usr, sis); if (!u) return;
     iniciarSesion(sis, u.id); abierto = false;
     location.hash = Sitio.destinoInicial(sis, u);
     toast(`Sesión de ${esc(u.nombre)} · ${esc(u.rol)}.`);
@@ -85,13 +87,14 @@ const Demo = (() => {
       <div class="sec-d"><h4>Pendientes con INCOVSA</h4>
         <label class="chk" style="font-size:14px"><input type="checkbox" data-pend ${UI.pendientes ? 'checked' : ''}> Mostrar las notas de pendientes (P-xx)</label></div>
       <div class="sec-d"><h4>Recorrido sugerido</h4><ol class="guia">
-        <li>Sitio público: Inicio con los mapas, catálogo y formulario de contacto.</li>
-        <li><b>Facturador</b>: cargar <span class="mono">Data Odo Para Picking.xlsx</span>, agregar los productos y clientes que faltan, arrastrar pedidos facturados a los camiones y a «Cliente recoge en bodega», y enviar.</li>
-        <li><b>Bodega</b> en el tablero: marcar líneas, cambiar la prioridad y despachar.</li>
+        <li>Sitio público: Inicio con misión y visión, Quiénes somos con los valores, Industrias con la barra de íconos, catálogo y formulario de contacto.</li>
+        <li><b>Acceso personal</b>: usuario, sistema y contraseña (pruebe <span class="mono">ejemplo.03</span>, que tiene cuenta en los dos).</li>
+        <li><b>Facturador</b>: cargar <span class="mono">Data Odo Para Picking.xlsx</span>, seleccionar pedidos facturados, arrastrarlos a «Envío por camión» o a «Cliente recoge en bodega», ordenarlos, elegir camión, piloto, fecha y hora, y enviar.</li>
+        <li><b>Bodega</b> en el tablero: detalle, orden por peso, marcar todo, lotes y despacho.</li>
         <li><b>Piloto</b>: reordenar clientes y entregar la ruta.</li>
-        <li><b>Gerencia o Soporte</b>: reportes por periodo, bitácora, configuración y usuarios con permisos.</li>
-        <li><b>Administrativo</b>: solicitudes y documentos internos.</li></ol></div>
-      <div class="sec-d" style="border:0;display:flex;justify-content:space-between;align-items:center;gap:10px"><span style="font-size:12.5px;color:var(--g500)">${S.pedidos.length} pedidos · ${S.facturados.filter((f) => !f.pedido && f.opcion === null).length} pedidos facturados en el tablero · ${S.bitacora.length} registros de bitácora</span>
+        <li><b>Gerencia o Soporte</b>: reportes por periodo, bitácora, camiones y usuarios con contraseña y permisos.</li>
+        <li><b>Administrativo</b>: contenido con galerías, solicitudes y documentación interna con enlaces.</li></ol></div>
+      <div class="sec-d" style="border:0;display:flex;justify-content:space-between;align-items:center;gap:10px"><span style="font-size:12.5px;color:var(--g500)">${S.pedidos.filter(esRuta).length} rutas · ${S.pedidos.filter((p) => !esRuta(p)).length} pedidos · ${S.facturados.filter((f) => !f.pedido && f.opcion === null).length} pedidos facturados en el tablero · ${S.bitacora.length} registros de bitácora</span>
         <button class="btn btn-d btn-sm" data-reiniciar>${ico('ciclo', 'ico-s')} Reiniciar datos</button></div>
     </div>` : '');
     $('[data-demo]', cont).addEventListener('click', () => { abierto = !abierto; pintar(); });
@@ -99,7 +102,7 @@ const Demo = (() => {
     $$('[data-cuenta]', cont).forEach((b) => b.addEventListener('click', () => entrar(b.dataset.cuenta, b.dataset.sis)));
     $$('[data-abrir]', cont).forEach((b) => b.addEventListener('click', () => window.open(location.href.split('#')[0] + b.dataset.abrir, '_blank')));
     $('[data-pend]', cont).addEventListener('change', (e) => { UI.pendientes = e.target.checked; guardarUI(); });
-    $('[data-reiniciar]', cont).addEventListener('click', () => confirmar('Reiniciar la simulación', 'Se borran los pedidos, los pedidos facturados del tablero y los cambios hechos durante la demostración, y se vuelve a los datos iniciales. Afecta a todas las pestañas abiertas.', 'Reiniciar', () => {
+    $('[data-reiniciar]', cont).addEventListener('click', () => confirmar('Reiniciar la simulación', 'Se borran las rutas, los pedidos, los pedidos facturados del tablero y los cambios hechos durante la demostración, y se vuelve a los datos iniciales. Afecta a todas las pestañas abiertas.', 'Reiniciar', () => {
       S = semilla(); guardar(); abierto = false; toast('Datos de la simulación reiniciados.'); repintar();
     }, 'btn-d'));
   }

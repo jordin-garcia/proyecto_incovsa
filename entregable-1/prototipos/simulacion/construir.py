@@ -9,7 +9,7 @@ El archivo resultante contiene datos reales de la empresa (productos y Peso de
 Conversión, nombres de clientes, imágenes y documentos técnicos). No se debe
 subir al repositorio (RNF-10).
 
-Requiere Python 3 con Pillow y openpyxl.
+Requiere Python 3 con Pillow, numpy y openpyxl.
 Uso, desde esta carpeta:  python construir.py
 """
 import base64, io, json, os, re, collections, unicodedata
@@ -58,11 +58,13 @@ def nombre_odoo(codigo):
 
 
 def datos():
-    """Productos del picking (nombre en formato de Odoo y Peso de Conversión), clientes y sectores
-    de Picking II, y departamentos y municipios de Guatemala (INE)."""
+    """Departamentos y municipios de Guatemala (INE) y, de Picking II, productos (nombre en formato de
+    Odoo, Peso de Conversión y lotes) y clientes con su sector. Desde el 13/10/2026 el sistema no tiene
+    catálogos de productos ni de clientes (specs/13): la simulación los usa solo para armar las rutas y
+    los pedidos de ejemplo con que arranca. Lo que se carga en Facturación viene en el archivo de Odoo."""
     picking = openpyxl.load_workbook(os.path.join(EMPRESA, "PROYECTO PICKING", "Picking II.xlsm"),
                                      read_only=True, data_only=True)
-    pesos, vistos = collections.OrderedDict(), set()
+    pesos, lotes, vistos = collections.OrderedDict(), {}, set()
     for i, r in enumerate(picking["Base Datos Productos"].iter_rows(values_only=True)):
         if i == 0 or not r[0]:
             continue
@@ -76,13 +78,14 @@ def datos():
         if not nombre:
             raise SystemExit(f"Código sin formato reconocible: {codigo}")
         pesos.setdefault(nombre, set()).add(r[2])
+        lotes.setdefault(nombre, []).append(codigo.split("-")[-1].strip())   # el sufijo del código es el lote de Odoo
     productos = []
     for nombre, ps in pesos.items():
         if nombre in PESO_FIJO:
             ps = {PESO_FIJO[nombre]}
         if len(ps) != 1:
             raise SystemExit(f"{nombre} tiene dos Pesos de Conversión distintos: {ps}")
-        productos.append([nombre, next(iter(ps))])
+        productos.append([nombre, next(iter(ps)), lotes[nombre][:3]])
     if len(productos) != 336:
         raise SystemExit(f"Se esperaban 336 productos y salieron {len(productos)}. Revise las reglas de specs/13.")
     # Clave normalizada única (specs/16, decisión 13): mayúsculas, sin acentos, sin puntos ni espacios
@@ -105,6 +108,7 @@ def datos():
         if any(c[0] == nombre and clave_sector(sectores[c[1]]) == clave_sector(sector) for c in clientes):
             continue
         clientes.append([nombre, sectores.index(sector)])
+    clientes = [[n, sectores[i]] for n, i in clientes]
     if len(clientes) != 314:
         raise SystemExit(f"Se esperaban 314 clientes y salieron {len(clientes)}. Revise las reglas de specs/13.")
 
@@ -116,7 +120,7 @@ def datos():
 
     print(f"  productos {len(productos)} · clientes {len(clientes)} · sectores {len(sectores)}"
           f" · departamentos {len(deps)} · municipios {nm}")
-    return {"productos": productos, "sectores": sectores, "clientes": clientes, "guatemala": deps}
+    return {"productos": productos, "clientes": clientes, "guatemala": deps}
 
 
 # ------------------------------------------------------------------ imágenes
@@ -148,12 +152,8 @@ def recursos():
     # Solo la parte de la fotografía, sin el texto de la imagen
     a["fotoEquipo"] = webp(Image.open(os.path.join(info, "VISION.jpg")).convert("RGB").crop((0, 0, 1920, 445)), 72)
     a["fotoReunion"] = webp(Image.open(os.path.join(info, "MISION.jpg")).convert("RGB").crop((0, 0, 1440, 430)), 72)
-    # Misión y visión completas, con su texto (specs/05)
-    for clave, f in [("mision", "MISION.jpg"), ("vision", "VISION.jpg")]:
-        im = Image.open(os.path.join(info, f)).convert("RGB")
-        if im.width > 1400:
-            im = im.resize((1400, round(im.height * 1400 / im.width)), Image.LANCZOS)
-        a[clave] = webp(im, 82)
+    # Logotipo de Inquiserca, recibido el 13/10/2026 (specs/05): a color, con el fondo blanco transparente
+    a["inquiserca"], _ = logo(os.path.join(info, "Inquiserca.jpeg"), (0, 0, 1280, 350))
 
     catalogo = os.path.join(EMPRESA, "PAGINA WEB", "CATALOGO")
     a["catalogo"] = []
@@ -166,7 +166,7 @@ def recursos():
     for clave, f in [("ft", "FT SODA CAUSTICA MX.pdf"), ("hs", "HOJA DE SEGURIDAD SODA CAUSTICA MX.pdf"),
                      ("coa", "CAUSTICA MX CAB250526 SKU 4139.pdf")]:
         a["pdf"][clave] = base64.b64encode(open(os.path.join(docs, f), "rb").read()).decode()
-    print(f"  {len(a['catalogo'])} imágenes de catálogo · 2 logotipos · 2 fotografías · misión y visión · 3 PDF")
+    print(f"  {len(a['catalogo'])} imágenes de catálogo · logotipos de INCOVSA e Inquiserca · 2 fotografías · 3 PDF")
     return a
 
 
