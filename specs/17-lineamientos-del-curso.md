@@ -38,20 +38,20 @@ Además se entregan el repositorio (con un README de 16 secciones obligatorias) 
 | Lo que piden los lineamientos | Cómo se cubre |
 |---|---|
 | Conversión de kilogramos a unidades | RN-01, con resto en kg para ventas fraccionadas |
-| Productos | Configuración (CRUD de productos) |
-| Presentaciones y equivalencias | Cada producto tiene **un nombre y un Peso de Conversión** en kg, que se configura al crear o editar el producto. No hay entidades separadas de presentación o equivalencia. Aprobado con el prototipo (P-45, resuelto el 11/10) |
+| Productos | **(13/10)** El producto llega en cada línea del archivo de Odoo, con su Peso de Conversión y su lote, y se usa tal como viene. El picking ya no tiene catálogo de productos |
+| Presentaciones y equivalencias | La presentación está en el nombre del producto de Odoo y la equivalencia es el **Peso de Conversión** en kg que trae cada línea del archivo (13/10). No hay entidades separadas de presentación o equivalencia |
 | Inventario, entradas y salidas, existencias | **No se cubre.** INCOVSA lo sacó del alcance el 29/09: el inventario lo lleva Odoo. Falta la aprobación del docente (P-58) |
-| Pedidos pendientes de despacho | Pedidos En Preparación en Bodega |
-| Generación del picking | Carga del archivo de Odoo en Facturación, más la agrupación y conversión de Bodega |
+| Pedidos pendientes de despacho | Rutas y pedidos En Preparación en Bodega |
+| Generación del picking | Carga del archivo de Odoo en Facturación, armado de rutas y pedidos, y agrupación por producto y lote con su conversión en Bodega |
 | Preparación y cambios de estado | Marcado por fila y botón "Pedido Despachado" (RN-11) |
 | Tablero para personal de bodega | El módulo de Bodega es el tablero |
-| Carga de vehículos | El facturador arrastra los pedidos a cada camión, con control de peso, alerta de sobrepeso y piloto asignado. No hay confirmación de carga (aprobado, P-45) |
+| Carga de vehículos | El facturador arrastra los pedidos facturados a "Envío por camión", elige camión y piloto, con control de peso y alerta de sobrepeso. No hay confirmación de carga (aprobado, P-45) |
 | Despacho | "Pedido Despachado" (Despachado o En Ruta) |
 | Rutas realizadas | Módulo de Ruta y su registro histórico |
 | Reportes | Módulo de Reportes del prototipo aprobado, con filtros por periodo ([10-picking-reportes.md](10-picking-reportes.md)) |
 | Usuarios y roles | Permisos por usuario; roles predeterminados Gerencia y Soporte ([03-roles-y-accesos.md](03-roles-y-accesos.md)) |
 | Historial de operaciones | Bitácora consultable en la pestaña "Bitácora" de Reportes, con inicios de sesión (RN-39), y registro histórico de rutas en Reportes |
-| Lotes | No se controlan; lo hace Odoo (aprobado, P-45) |
+| Lotes | No se controlan; lo hace Odoo. Desde el 13/10 Bodega muestra el lote de cada línea |
 
 ## Anexos
 

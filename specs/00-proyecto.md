@@ -61,11 +61,13 @@ El sistema se implementa y se prueba **solo con Quetzaltenango** (ubicaciones de
 
 Lo que exige cada entregable está en [17-lineamientos-del-curso.md](17-lineamientos-del-curso.md).
 
-### Estado al 11/10/2026
+### Estado al 14/10/2026
 
 - El Entregable 1 (Documento 1 v0.1, 79 páginas) está entregado. En el repositorio no hay evidencia de la retroalimentación del docente (P-31).
 - El **29/09/2026** (reunión 4) se presentó al Ing. William el **prototipo de simulación** (`entregable-1/prototipos/simulacion/`). Pidió cambios en el sitio, en los usuarios y permisos, y en el picking, entre ellos sacar el control de inventario y cargar los pedidos desde Odoo. Esta carpeta los incorpora (versión 1.1).
 - El **09/10/2026** el coordinador confirmó que el **design system** y la mayoría de las **funcionalidades** del prototipo de simulación están **aprobados por el Ing. William y por el Ing. Manuel Rojas**, salvo los cambios de la reunión 4. La aplicación real se desarrolla a partir de ese prototipo y de esos cambios ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)).
 - El **11/10/2026** el coordinador respondió las dudas sobre cómo aplicar esos cambios (P-45 y P-51 a P-76). Las dudas que quedaron (P-78 a P-87) se resolvieron el mismo 11/10.
+- El **13/10/2026** (reunión 5) se presentó al Ing. William el prototipo de simulación con los cambios de la reunión 4. Lo **aprobó** y pidió nuevos cambios en el sitio, el acceso, la administración del sitio y el picking, entre ellos usar los datos del archivo de Odoo tal como vienen, con su Peso de Conversión y su lote. El 14/10 el coordinador resolvió las dudas y los cambios se incorporaron a esta carpeta (versión 1.2) y al prototipo.
+- El Ing. Manuel Rojas autorizó presentar el prototipo como avance del Entregable 2.
 - **No existe código** de la aplicación real.
-- El Documento 1 v0.2, los diagramas y las capturas de `entregable-1/` reflejan el estado del 24/09 y **todavía no** incorporan los cambios de la reunión 4.
+- El Documento 1 v0.2, los diagramas y las capturas de `entregable-1/` reflejan el estado del 24/09 y **todavía no** incorporan los cambios de las reuniones 4 y 5.

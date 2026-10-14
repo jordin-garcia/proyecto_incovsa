@@ -1,6 +1,6 @@
 # 05. Sitio web corporativo e institucional
 
-> **Cambios del 29/09/2026 (reunión 4) y respuestas del 11/10/2026.** El Ing. William revisó el prototipo de simulación y pidió los cambios que se describen en este archivo; el 11/10 el coordinador resolvió las dudas sobre cómo aplicarlos. Todo lo demás del prototipo (diseño visual, estructura y comportamiento) está aprobado ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)).
+> **Cambios del 29/09/2026 (reunión 4), respuestas del 11/10/2026 y cambios del 13/10/2026 (reunión 5).** El Ing. William revisó el prototipo de simulación en las reuniones 4 y 5 y pidió los cambios que se describen en este archivo; el 11/10 y el 14/10 el coordinador resolvió las dudas sobre cómo aplicarlos. Todo lo demás del prototipo (diseño visual, estructura y comportamiento) está aprobado ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)).
 
 ## Identidad
 
@@ -9,14 +9,14 @@
 | Dominio | incovsa.com (reservado y disponible, según la contraparte) |
 | Nombre a mostrar | Industria del Cuero Covadonga S. A. |
 | Empresas | INCOVSA e Inquiserca en una sola presentación y una sola identidad visual |
-| Logotipo del sitio | **"INCOVSA Químicos"**, el que aparece en la cabecera. Es el que se usa en todo el sitio público, incluido el pie de página |
+| Logotipo del sitio | **"INCOVSA Químicos"**, el que aparece en la cabecera. Es el que se usa en todo el sitio público, incluido el pie de página. **(13/10)** Se puede cambiar desde el panel, en "Contenido institucional" |
 | Logotipo "Transformamos INCOVSA" | **Solo para uso interno** de la empresa. **No** se usa en el sitio público (29/09) |
-| Logotipo de Inquiserca | Pendiente de recibir (P-69). El sitio deja preparado dónde se sube y cómo se muestra (ver Quiénes somos) |
+| Logotipo de Inquiserca | **Recibido el 13/10** (`docs_incovsa/PAGINA WEB/INFORMACION EMPRESA/Inquiserca.jpeg`). Viene cargado en el sitio y se puede cambiar desde el panel |
 | Colores | Verde y gris, tomados de los logotipos. Faltan los códigos exactos (P-18). El design system del prototipo está aprobado |
 | Tipografía | La del prototipo aprobado ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)). La tipografía oficial de la empresa sigue pendiente (P-18) |
 | Diseño visual e interacción | El del prototipo aprobado, con los cambios de este archivo |
 
-Archivos recibidos (`docs_incovsa/PAGINA WEB/INFORMACION EMPRESA/`): dos logotipos en JPG ("INCOVSA Químicos" y "Transformamos INCOVSA") y las imágenes `MISION.jpg` y `VISION.jpg`.
+Archivos recibidos (`docs_incovsa/PAGINA WEB/INFORMACION EMPRESA/`): los logotipos "INCOVSA Químicos", "Transformamos INCOVSA" e Inquiserca, y las imágenes `MISION.jpg` y `VISION.jpg`.
 
 ## Estructura y navegación
 
@@ -28,47 +28,54 @@ Archivos recibidos (`docs_incovsa/PAGINA WEB/INFORMACION EMPRESA/`): dos logotip
 
 | Páginas | Pie de página |
 |---|---|
-| Inicio, Quiénes somos, Noticias y Contacto | **Sí.** El pie actual del prototipo, pero con el logotipo de la cabecera en lugar del de "Transformamos INCOVSA" |
+| Inicio, Quiénes somos, Noticias y Contacto | **Sí**, con el logotipo de la cabecera |
 | Industrias, Productos y el **detalle de cada producto** | **Sin pie de página** |
 
-### Presentación dinámica de imágenes (RF-SW-16)
+### Presentación dinámica (RF-SW-16)
 
-Las imágenes de Inicio y las de misión y visión de Quiénes somos tienen una **presentación dinámica**: una **animación de aparición y desaparición al desplazarse** (scroll). La imagen aparece cuando entra en la pantalla y desaparece cuando sale de ella.
+Las imágenes y las tarjetas del contenido de las páginas públicas tienen una **animación de aparición y desaparición al desplazarse**: aparecen cuando entran en la pantalla y desaparecen cuando salen. Hasta el 13/10 se aplicaba solo a Inicio y a misión y visión; el prototipo aprobado el 13/10 la extendió a todas las páginas. Se respeta la preferencia del navegador de reducir el movimiento.
+
+### Galerías de imágenes que rotan (RF-SW-28, RN-56)
+
+> **Cambio del 13/10/2026 (reunión 5).** Todas las áreas que llevan imágenes en el sitio público admiten **hasta 5 imágenes**, que se suben desde el panel y **rotan cada 5 segundos**. Si un área tiene **una sola imagen**, se muestra **fija, sin movimiento** (decisión del coordinador del 14/10).
+
+| Área | Galería |
+|---|---|
+| Portada de Inicio | Hasta 5 imágenes. Las mismas imágenes son el fondo de los encabezados de las demás páginas públicas (Quiénes somos, Industrias, Productos, Noticias y Contacto) |
+| Misión (Inicio y Quiénes somos) | Hasta 5 imágenes |
+| Visión (Inicio y Quiénes somos) | Hasta 5 imágenes |
+| Historia (Quiénes somos) | Hasta 5 imágenes, opcionales |
+| Cada industria | Hasta 5 imágenes |
+| Cada producto público | Hasta 5 imágenes (en la tarjeta del catálogo y en el detalle) |
+| Cada noticia | Hasta 5 imágenes; al menos una |
+
+- **No rotan:** los logotipos, que son una sola imagen cada uno, y los **valores**, que son 5 imágenes fijas, una por valor (RF-SW-29).
+- En el banner de Quiénes somos se alternan los logotipos de INCOVSA e Inquiserca (RF-SW-02).
+- **Rendimiento (RNF-17):** la galería no puede hacer más lenta la carga de la página. Al abrir la página solo se descarga la primera imagen de cada galería; las demás se descargan después, mientras se ve la primera. Se comprueba con pruebas de rendimiento (Documento 6) que la carga inicial de una página con galerías de 5 imágenes no tarda más que con galerías de una.
 
 ## Sedes que se muestran en el sitio
 
-Solo se muestran las sedes de **Quetzaltenango** y **Guatemala**, porque son las que tienen **oficinas** a las que pueden llegar los clientes. **Escuintla no se muestra** en el sitio: es solo una bodega, sin oficina (respuesta del 11/10). Esto aplica a Inicio, Contacto, el pie de página y el formulario de contacto.
+Solo se muestran las sedes de **Quetzaltenango** y **Guatemala**, porque son las que tienen **oficinas** a las que pueden llegar los clientes. **Escuintla no se muestra** en el sitio: es solo una bodega (11/10). Esto aplica a Inicio, Contacto, el pie de página y el formulario de contacto.
 
 | Sede | Mapa de Google Maps (dirección `src` del mapa insertado) |
 |---|---|
 | Quetzaltenango | `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3856.469689459672!2d-91.4743845!3d14.854992000000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x858ea30032a1ae3f%3A0xccc394a56fe6af75!2sIncovsa!5e0!3m2!1ses-419!2sgt!4v1791772265076!5m2!1ses-419!2sgt` |
 | Guatemala | `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3859.898369446534!2d-90.56218562536918!3d14.661708575578558!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85899fe9da39aa29%3A0x5f1c10c1ff4a038a!2sIncovsa!5e0!3m2!1ses-419!2sus!4v1791772376935!5m2!1ses-419!2sus` |
 
-El código que entregó el coordinador inserta cada mapa con un `iframe` con `allowfullscreen`, `loading="lazy"` y `referrerpolicy="strict-origin-when-cross-origin"`. El tamaño del mapa se adapta al diseño responsivo.
+Cada mapa se inserta con un `iframe` con `allowfullscreen`, `loading="lazy"` y `referrerpolicy="strict-origin-when-cross-origin"`. El tamaño del mapa se adapta al diseño responsivo.
 
 ## Secciones públicas
 
-### Inicio (RF-SW-01)
+### Misión y visión (Inicio y Quiénes somos) (RF-SW-01, RF-SW-02)
 
-- **Debe ser informativa.**
-- **Se elimina la sección "Catálogo informativo"** del prototipo (la rejilla de productos destacados con el botón "Ver los N productos"). **No se quita nada más** (respuesta del 11/10).
-- **Misión y visión:** se muestran **las imágenes proporcionadas** por la empresa (`MISION.jpg` y `VISION.jpg`), **cada una centrada, una debajo de la otra**. Reemplazan a las dos tarjetas de texto del prototipo.
-- **Todas las imágenes** de esta sección tienen presentación dinámica al desplazarse (RF-SW-16).
-- **Presencia** (RF-SW-22): una tarjeta para Quetzaltenango y otra para Guatemala, cada una con sus **datos de dirección** (los del prototipo) y su **mapa de Google Maps** insertado. El mapa insertado trae el enlace de Google "Ampliar el mapa", que abre la ubicación en Google Maps: con eso se cumple el hipervínculo pedido el 29/09.
-- Las demás secciones del prototipo se conservan: portada con cifras, industrias atendidas, presencia y llamado a enviar una solicitud.
+> **Cambio del 13/10/2026 (reunión 5).** Reemplaza a "misión y visión como las imágenes de la empresa, centradas, una debajo de la otra" del 29/09.
 
-Los títulos y textos que mencionaban cuántas sedes o bodegas tiene la empresa se reemplazan (ver "Textos que se reemplazan").
-
-### Quiénes somos (RF-SW-02)
-
-- **Banner principal** (RF-SW-23) con una **transición dinámica entre el logotipo de INCOVSA y el de Inquiserca**:
-  - para INCOVSA se usa el logotipo de la cabecera;
-  - el logotipo de Inquiserca se sube desde el panel, en "Contenido institucional" (P-69);
-  - los dos logotipos se alternan en el mismo lugar del banner, con una transición;
-  - mientras no se suba el logotipo de Inquiserca, el banner muestra solo el de INCOVSA.
-- **Misión y visión:** las imágenes, con presentación dinámica al desplazarse, **a media pantalla**: **primero la misión y debajo la visión**, no lado a lado, **centradas** en la pantalla y con el tamaño en que se vean mejor (respuestas del 11/10).
-- **Historia y valores:** su texto está pendiente de INCOVSA (P-19). Todavía no se sabe si llevarán imágenes, así que el panel deja **la opción de agregarles una imagen**, que no es obligatoria. Si no hay imagen, se muestra solo el texto.
-- El bloque "INCOVSA e Inquiserca" del prototipo usa el logotipo "Transformamos INCOVSA": se cambia por el logotipo de la cabecera.
+- Primero la **misión**: el **texto de la misión a la izquierda** y su **imagen a la derecha**.
+- Debajo, la **visión**: su **imagen a la izquierda** y el **texto de la visión a la derecha**.
+- Igual en Inicio y en Quiénes somos.
+- El texto es el de misión y visión del panel (abajo las transcripciones de `MISION.jpg` y `VISION.jpg`).
+- Las imágenes son galerías de hasta 5 que se suben desde el panel. **Mientras no se suba ninguna, el lugar de la imagen queda vacío** (decisión del coordinador del 14/10): `MISION.jpg` y `VISION.jpg` no se usan, porque ya traen el texto escrito y el logotipo "Transformamos INCOVSA".
+- En teléfono, el texto y la imagen van uno debajo del otro.
 
 **Misión**, transcrita de `MISION.jpg`:
 
@@ -78,7 +85,24 @@ Los títulos y textos que mencionaban cuántas sedes o bodegas tiene la empresa 
 
 > Ser referentes y acercar soluciones en la distribución de productos químicos satisfaciendo las necesidades de los mercados atendidos, creando valor integral a nuestros grupos de interés a través del crecimiento y mejora continua, con una administración responsable y transparente enfocada en la solidez y el largo plazo.
 
-La imagen original dice "tranparente". La empresa compartirá la imagen corregida (12/10); mientras llega, la transcripción dice "transparente" (P-20). Como ahora se muestran las imágenes, la transcripción sirve de texto alternativo (RNF-08).
+La imagen original de la visión dice "tranparente"; el texto del sitio dice "transparente". Como la imagen ya no se muestra (13/10), P-20 se cierra.
+
+### Inicio (RF-SW-01)
+
+- **Debe ser informativa.**
+- Sin la sección "Catálogo informativo" del prototipo (29/09). **No se quita nada más** (11/10).
+- **Portada** con la galería de portada (RF-SW-28) y las cifras.
+- **Misión y visión** como se describe arriba (13/10).
+- **Presencia** (RF-SW-22): una tarjeta para Quetzaltenango y otra para Guatemala, cada una con sus **datos de dirección** y su **mapa de Google Maps** insertado.
+- Las demás secciones del prototipo se conservan: industrias atendidas, presencia y llamado a enviar una solicitud.
+
+### Quiénes somos (RF-SW-02)
+
+- **Banner principal** con una **transición dinámica entre el logotipo de INCOVSA y el de Inquiserca**, que se alternan en el mismo lugar. Si se quita el logotipo de Inquiserca desde el panel, el banner muestra solo el de INCOVSA.
+- **Historia:** texto pendiente de INCOVSA (P-19) y galería opcional de hasta 5 imágenes.
+- **Misión y visión** como se describe arriba (13/10).
+- **Valores (RF-SW-29, 13/10):** **solo 5 imágenes, una por cada valor**, en **una sola fila**, como las tarjetas de valores del prototipo. **Sin texto.** Se suben desde el panel. Mientras falte la imagen de un valor, su lugar muestra la tarjeta de pendiente del prototipo. En teléfono, la fila se acomoda al ancho de la pantalla.
+- El bloque "INCOVSA e Inquiserca" usa el logotipo de la cabecera.
 
 ### Industrias (RF-SW-03)
 
@@ -94,41 +118,37 @@ Son 9 industrias, en este orden:
 8. Tratamiento de agua
 9. Lavandería
 
-- Se navega por industria con la lista lateral del prototipo. **No** se usa una barra superior horizontal.
-- **No se muestran imágenes de productos** (se quita el mosaico de fotos del prototipo). Cada industria muestra **solo su descripción, una imagen propia y sus productos como texto**, como la lista actual del prototipo.
-- En el panel se puede **subir la imagen de cada industria**.
+- **Menú (13/10):** una **barra lateral alineada a la izquierda** que muestra **solo el ícono** de cada industria, parecida a la barra lateral reducida del panel y del picking. Al pasar el cursor (o el foco del teclado) sobre un ícono, se muestra el **nombre de la industria**. Así se amplía el espacio para la imagen y el contenido de la industria elegida. **No** se usa una barra superior horizontal.
+- Cada industria muestra **solo su descripción, su galería de imágenes y sus productos como texto**. No se muestran imágenes de productos.
 - **Sin pie de página.**
-- La descripción y los productos de cada industria vienen del sitio de Google de la empresa (<https://sites.google.com/view/incovsa>) y necesitan revisión de redacción y ortografía. Las descripciones definitivas y las imágenes están pendientes (P-21).
+- La descripción y los productos de cada industria vienen del sitio de Google de la empresa y necesitan revisión. Las descripciones definitivas y las imágenes están pendientes (P-21).
 
 ### Catálogo de productos (RF-SW-04)
 
 - Es solo informativo: sin precios y sin comercio electrónico.
 - Se filtra por industria. Un producto puede pertenecer a **varias** industrias.
-- En las tarjetas se muestran nombre, países de origen y presentación. **Nunca** el lote.
+- En las tarjetas se muestran la galería de imágenes, el nombre, los países de origen y la presentación. **Nunca** el lote.
 - **La búsqueda de productos está aprobada** tal como está en el prototipo.
 - **Sin pie de página.**
-- **Productos de prueba:** las 28 imágenes de `docs_incovsa/PAGINA WEB/CATALOGO/`. Cada imagen es un producto público, y su nombre correcto es el que aparece **dentro de la imagen**; los nombres de los archivos tienen errores de escritura ("SODA ACUSTICA", "CASUTICA", "HIGROGENO", "HIPOCLARITO", "BLANQUEDADOR").
-- Los productos públicos son una entidad **distinta** de los productos del picking y no tienen relación con ellos.
+- **Productos de prueba:** las 28 imágenes de `docs_incovsa/PAGINA WEB/CATALOGO/`. Cada imagen es un producto público, y su nombre correcto es el que aparece **dentro de la imagen**.
+- Los productos públicos no tienen relación con el picking.
 
 ### Detalle de producto (RF-SW-05)
 
-Muestra la **imagen**, el **nombre**, la **descripción**, la **presentación**, los **países de origen** y las industrias del producto (respuesta del 11/10 a P-71).
+Muestra la **galería de imágenes**, el **nombre**, la **descripción**, la **presentación**, los **países de origen** y las industrias del producto.
 
-- Se eliminan los campos manejo, condiciones de almacenamiento, humedad, tipo de producto y restricciones de uso.
 - **Sin pie de página.**
-- **No** muestra los documentos técnicos del producto (respuesta del 11/10). Se quita el bloque "Documentación técnica" del prototipo.
+- **No** muestra documentos técnicos.
 
 #### Productos Recomendados (RF-SW-17)
 
-- Al final del detalle va la sección **"Productos Recomendados"**. Es la del prototipo, que se llamaba "Otros productos de las mismas industrias" (respuesta del 11/10 a P-70).
-- **Siempre debe aparecer.** En el prototipo a veces no aparece, porque solo busca productos que compartan industria, y un producto sin industrias, o con industrias que ningún otro producto tiene, se queda sin recomendados.
-- Regla: se muestran hasta 4 productos. Primero los que comparten alguna industria con el producto que se está viendo; si no alcanzan, se completa con otros productos del catálogo. Nunca se recomienda el mismo producto que se está viendo. Cada grupo (los de la misma industria y los de relleno) va en orden alfabético por nombre (12/10).
+- Al final del detalle va la sección **"Productos Recomendados"**, que **siempre** aparece.
+- Regla: se muestran hasta 4 productos. Primero los que comparten alguna industria con el producto que se está viendo; si no alcanzan, se completa con otros productos del catálogo. Nunca se recomienda el mismo producto que se está viendo. Cada grupo va en orden alfabético por nombre (12/10).
 
 ### Noticias (RF-SW-18)
 
-- Cada noticia tiene **fotografía, título y texto**.
-- Se crean y editan desde el panel.
-- Del prototipo se conservan la fecha de publicación y la opción de publicar u ocultar.
+- Cada noticia tiene **galería de imágenes (al menos una), título y texto**.
+- Se crean y editan desde el panel. Se conservan la fecha de publicación y la opción de publicar u ocultar.
 - El contenido inicial está pendiente (P-23).
 
 ### Contacto (RF-SW-06, RF-SW-19)
@@ -140,59 +160,54 @@ La página muestra el formulario y los datos de Quetzaltenango y Guatemala. Escu
 | Tipo de mensaje | Solicitud, queja o reclamo. Obligatorio |
 | Nombre completo | Obligatorio |
 | Empresa | Opcional |
-| Correo electrónico | Obligatorio. Se valida que tenga una **estructura válida** |
-| Teléfono | Opcional. Se captura con un **código de área por país**, para aceptar números de otros países. Si se escribe, se valida que tenga una **estructura válida** |
-| País | **Lista** con todos los países. Opcional |
-| Departamento | **Lista** de los departamentos de Guatemala. Opcional. **Solo aparece si el país es Guatemala** |
-| Municipio | **Lista** de los municipios del departamento elegido. Opcional. **Solo aparece si el país es Guatemala** |
+| Correo electrónico | Obligatorio. Se valida que tenga una **estructura válida** al salir del campo y al enviar |
+| Teléfono | Opcional. Se captura con un **código de área por país**. Si se escribe, se valida que tenga una **estructura válida** para ese país |
+| País | **Lista** con todos los países. **Obligatorio** (prototipo aprobado el 13/10) |
+| Departamento | **Lista** de los departamentos de Guatemala. **Solo aparece si el país es Guatemala**, y entonces es **obligatorio** (13/10) |
+| Municipio | **Lista** de los municipios del departamento elegido. **Solo aparece si el país es Guatemala**, y entonces es **obligatorio** (13/10) |
 | Sede a la que dirige su mensaje | **Obligatorio.** Solo **Quetzaltenango** y **Guatemala** |
 | Mensaje | Obligatorio |
 
-- Los campos territoriales **no reemplazan** al campo de sede (respuesta del 11/10 a P-72).
-- La solicitud se guarda en la base de datos y se envía por correo. Faltan el correo que recibe las solicitudes y los horarios de las dos sedes (P-22).
-
-Si el usuario elige otro país, los campos de departamento y municipio **no aparecen** (respuesta del 11/10).
+- **(13/10)** La solicitud **solo se guarda en el sistema** y se consulta en la bandeja del panel. **No se envía a ningún correo.** Por eso el sistema no necesita una cuenta de correo (P-09 se cierra) y de P-22 queda solo el horario de las sedes.
 
 ### Textos que se reemplazan (RF-SW-27)
 
-Textos del prototipo que mencionan cuántas sedes o bodegas tiene la empresa, a Escuintla, el inventario o los roles anteriores. Se reemplazan por estos (respuesta del 11/10 a P-84: textos sin el número de sedes y bodegas, más creativos). Todos se basan en datos confirmados: más de 30 años, 9 industrias, presencia en todo el país y dos mercados, industrial y artesanal ([00-proyecto.md](00-proyecto.md)).
+Textos del prototipo del 29/09 que mencionaban cuántas sedes o bodegas tiene la empresa, a Escuintla, el inventario o los roles anteriores. Se reemplazaron por estos (11/10):
 
-| Dónde | Texto del prototipo | Texto nuevo |
-|---|---|---|
-| Inicio, párrafo de la portada | "Compra, venta y distribución de productos químicos para nueve industrias del país. Más de treinta años abasteciendo al sector industrial y artesanal desde Quetzaltenango, Guatemala y Escuintla." | "Compra, venta y distribución de productos químicos para nueve industrias del país. Más de treinta años abasteciendo al sector industrial y artesanal, con presencia en todo el territorio." |
-| Inicio, título de Presencia | "Tres sedes de distribución" | "Visítenos" |
-| Inicio, texto de Presencia | "Cada sede tiene su propia bodega e inventario." | "Ubique nuestras oficinas en el mapa: será un gusto atenderle en persona." |
-| Quiénes somos, encabezado | "… Atiende nueve industrias, tiene presencia en todo el país y opera tres bodegas de distribución." | "… Atiende nueve industrias y lleva sus productos a clientes de todo el país." |
-| Contacto, título | "Estamos en tres sedes del país" | "Cuéntenos cómo podemos ayudarle" (el texto de abajo se mantiene) |
-| Acceso personal, botón del picking | "Facturación, bodega, ruta, inventario, reportes y configuración." | "Facturación, bodega, ruta, reportes y configuración." |
-| Acceso personal, texto lateral | "Lo que ve y hace cada persona depende de su rol, y la sede sale de su propia cuenta." / "Gerencia usa la misma cuenta en los dos sistemas. Las demás personas tienen una cuenta para cada sistema, con un solo rol en cada uno." | "Lo que ve y hace cada persona depende de sus permisos." / "Gerencia y Soporte usan la misma cuenta en los dos sistemas. Las demás personas tienen una cuenta para cada sistema." |
-| Inicio de sesión del picking, texto lateral | "Control logístico de bodega: del pedido facturado a la entrega, con existencias por sede." | "Control logístico de bodega: del pedido facturado a la entrega." |
-| Inicio de sesión (los dos sistemas), lista "Roles de este sistema" | Roles fijos (Facturador, Bodega, Piloto; Administrativo, Operativo, Vista general) | "Gerencia: acceso total a los dos sistemas. Soporte: el mismo acceso, para mantenimiento. Los demás usuarios entran según los permisos que les asignan Gerencia o Soporte." |
-| Inicio de sesión, ayuda | "Use el usuario que le asignó Soporte IT" / "… Gerencia" | "Use el usuario que le asignaron Gerencia o Soporte." |
-| Inicio de sesión, "¿Olvidó su contraseña?" | Por correo, o Gerencia / Soporte IT según el sistema | "Pídale a Gerencia o a Soporte que la restablezcan." |
+| Dónde | Texto nuevo |
+|---|---|
+| Inicio, párrafo de la portada | "Compra, venta y distribución de productos químicos para nueve industrias del país. Más de treinta años abasteciendo al sector industrial y artesanal, con presencia en todo el territorio." |
+| Inicio, título de Presencia | "Visítenos" |
+| Inicio, texto de Presencia | "Ubique nuestras oficinas en el mapa: será un gusto atenderle en persona." |
+| Quiénes somos, encabezado | "… Atiende nueve industrias y lleva sus productos a clientes de todo el país." |
+| Contacto, título | "Cuéntenos cómo podemos ayudarle" |
+| Acceso personal, opción del picking | "Facturación, bodega, ruta, reportes y configuración." |
+| Inicio de sesión del picking, texto lateral | "Control logístico de bodega: del pedido facturado a la entrega." |
+| Inicio de sesión, lista "Roles de este sistema" | "Gerencia: acceso total a los dos sistemas. Soporte: el mismo acceso, para mantenimiento. Los demás usuarios entran según los permisos que les asignan Gerencia o Soporte." |
+| Inicio de sesión, "¿Olvidó su contraseña?" | "Pídale a Gerencia o a Soporte que la restablezcan." |
 
-"Productos disponibles en nuestras bodegas" desaparece con la sección "Catálogo informativo".
-
-La cifra de la portada "**3** sedes con bodega de distribución" **se mantiene** como está en el prototipo (decisión del 11/10).
+La cifra de la portada "**3** sedes con bodega de distribución" **se mantiene** (11/10). Los textos de la formulación de contacto que decían que la solicitud se envía por correo se quitan (13/10).
 
 ### Acceso personal (RF-SW-09)
 
-Los tres botones descritos en [03-roles-y-accesos.md](03-roles-y-accesos.md).
+El flujo de acceso con el botón "Acceso personal" está en [03-roles-y-accesos.md](03-roles-y-accesos.md) (13/10).
 
 ## Panel administrativo (RF-SW-07, RF-SW-12, RF-SW-13)
 
-Entran los usuarios del sitio según sus permisos ([03-roles-y-accesos.md](03-roles-y-accesos.md)). El **menú lateral izquierdo se puede reducir a íconos** para ampliar el área de trabajo, igual que en el picking (RF-SW-26). Desde el panel se administra:
+Entran los usuarios del sitio según sus permisos ([03-roles-y-accesos.md](03-roles-y-accesos.md)). El **menú lateral izquierdo se puede reducir a íconos** (RF-SW-26). Desde el panel se administra:
 
-| Sección | Qué se hace | Cambios del 29/09 y del 11/10 |
-|---|---|---|
-| Contenido institucional | Historia, misión, visión y valores | Imágenes de misión y visión; imagen **opcional** para historia y valores; **logotipo de Inquiserca** para el banner de Quiénes somos |
-| Industrias | Descripción de cada industria | Se puede **subir una imagen por industria** |
-| Catálogo | Productos públicos y sus industrias | Campos del producto (abajo). Se pueden **eliminar productos** |
-| Noticias | Noticias del sitio | Cada noticia lleva **fotografía, título y texto** |
-| Información de contacto | Datos de Quetzaltenango y Guatemala | Dirección, teléfono, correo, WhatsApp, horario y **mapa de Google Maps** de cada una |
-| Solicitudes | Bandeja del formulario de contacto | Gestión de solicitudes (abajo) |
-| Documentación interna | Documentos PDF | Producto, país de origen y lote (abajo) |
-| Usuarios | Usuarios del sitio | Los administran Gerencia y Soporte, con rol y permisos ([03-roles-y-accesos.md](03-roles-y-accesos.md)) |
+| Sección | Qué se hace |
+|---|---|
+| Contenido institucional | **Portada** (galería de hasta 5), **logotipo de INCOVSA**, **misión** y **visión** (texto y galería de hasta 5), **historia** (texto y galería opcional de hasta 5), **valores** (5 imágenes, una por valor, sin texto) y **logotipo de Inquiserca**. La sección "Imágenes del sitio" del prototipo se elimina (13/10) |
+| Industrias | Descripción y galería de hasta 5 imágenes de cada industria |
+| Catálogo | Productos públicos y sus industrias, con galería de hasta 5 imágenes. Se pueden eliminar |
+| Noticias | Título, texto y galería de hasta 5 imágenes de cada noticia |
+| Información de contacto | Dirección, teléfono, correo, WhatsApp, horario y mapa de Google Maps de Quetzaltenango y Guatemala |
+| Solicitudes | Bandeja del formulario de contacto (abajo) |
+| Documentación interna | Productos documentados (abajo) |
+| Usuarios | Usuarios del sitio. Los administran Gerencia y Soporte, con contraseña, rol y permisos ([03-roles-y-accesos.md](03-roles-y-accesos.md)) |
+
+Las imágenes se suben desde la computadora, eligiéndolas o arrastrándolas. En cada galería se pueden agregar, quitar y reordenar imágenes, hasta 5.
 
 ### Producto público en el panel (RF-SW-23)
 
@@ -202,63 +217,67 @@ Entran los usuarios del sitio según sus permisos ([03-roles-y-accesos.md](03-ro
 | Descripción | Texto |
 | Presentación | Texto |
 | Países de origen | Texto |
-| Imagen | Archivo de imagen que se **sube** o se **arrastra** desde la computadora |
-| Industrias | Una o varias, como en el prototipo |
-
-Todos los datos se agregan y se cambian desde el panel (respuesta del 11/10 a P-71).
+| Imágenes | Galería de hasta 5 imágenes |
+| Industrias | Una o varias |
 
 ### Gestión de solicitudes (RF-SW-12, RF-SW-20)
 
-- Las solicitudes se **dividen por motivo**: **solicitud, queja y reclamo**, para encontrarlas con facilidad.
-- **Responsable:** campo visible para designarlo. Se elige entre los **usuarios del sitio**. Su rol y sus permisos los asigna Gerencia según lo crea conveniente.
-- **Comentario:** campo visible donde el responsable escribe **un solo comentario** sobre la solicitud que atiende.
-- **Estados:** botones **Asignado**, **En proceso** y **Solucionado** (RN-42):
-  - una solicitud recién llegada **no tiene estado**: los tres botones aparecen desmarcados;
-  - se puede marcar **cualquier estado**, sin orden ni restricción;
-  - los botones solo sirven para ver el avance de la solicitud.
+- Las solicitudes se **dividen por motivo**: **solicitud, queja y reclamo**.
+- **Responsable:** se elige entre los **usuarios del sitio**.
+- **Comentario:** un solo comentario del responsable.
+- **Estados:** botones **Asignado**, **En proceso** y **Solucionado** (RN-42), sin estado inicial y sin restricción de orden.
 - **No** se avisa por correo al responsable.
+- **Aviso de solicitudes nuevas (13/10):** el ícono de Solicitudes del menú lateral muestra un **indicador de notificaciones** cuando hay solicitudes nuevas (sin leer), también cuando el menú está reducido a íconos.
 - Ver la bandeja y gestionarla dependen de los permisos del usuario.
 
-## Documentación interna (RF-SW-10, RF-SW-14)
+## Documentación interna (RF-SW-10, RF-SW-14, RF-SW-21)
 
-### Tipos de documento
+> **Cambio del 13/10/2026 (reunión 5).** Ya no se sube un documento por cada archivo. Se crea **un producto documentado** con su nombre, su país de origen, su lote y los **enlaces** de sus tres documentos. **El sistema ya no guarda archivos PDF.** Los enlaces son de **Google Drive** (decisión del coordinador del 14/10).
 
-Ficha técnica (FT / TDS), hoja de seguridad (HS / MSDS) y certificado de análisis (COA). Los tres tipos están en el prototipo aprobado.
-
-### Subir documento
+### Crear o editar un producto documentado (RF-SW-14)
 
 | Campo | Regla |
 |---|---|
-| Tipo de documento | FT, HS o COA |
-| Nombre del producto | Se **escribe**. Un **solo** producto por documento. Ejemplo: "Soda Cáustica" |
-| País de origen | Se elige de una **lista con todos los países**, la misma del formulario de contacto |
-| Lote | Admite **números y letras** (RN-41). **Obligatorio solo en el certificado de análisis (COA)**; opcional en FT y HS |
-| Archivo | PDF |
+| Nombre del producto | Se **escribe**. Ejemplo: "Soda Cáustica" |
+| País de origen | Se elige de una **lista con todos los países**, la misma del formulario de contacto. Obligatorio |
+| Lote | Admite **números y letras**. **Obligatorio** (13/10, RN-41) |
+| Enlace de la ficha técnica (FT / TDS) | Enlace de Google Drive. Opcional |
+| Enlace de la hoja de seguridad (HS / MSDS) | Enlace de Google Drive. Opcional |
+| Enlace del certificado de análisis (COA) | Enlace de Google Drive. Opcional |
 
-Ejemplo de la contraparte: hay varias sodas cáusticas con distintos países de origen y distintos lotes. Para todas se escribe el mismo nombre, "Soda Cáustica", y lo que las distingue es el país de origen y el lote.
+- Se valida que cada enlace escrito sea una dirección de Google Drive (`https://drive.google.com/…` o `https://docs.google.com/…`).
+- Lo que distingue a dos productos documentados con el mismo nombre es su país de origen y su lote. El par (nombre, país, lote) no se repite.
+- Crear, editar y eliminar requieren el permiso "Subir, reemplazar y eliminar documentos".
 
-Esto **reemplaza** la asociación anterior a uno o varios productos públicos, y el campo "código o lote" que solo llevaba el COA.
+### Tabla de la documentación (RF-SW-21)
 
-### Búsqueda (RF-SW-21)
+| Columna | Contenido |
+|---|---|
+| Producto | Nombre |
+| País de origen | — |
+| Lote | — |
+| Creado | Fecha y usuario (la columna "Cargado" del prototipo) |
+| Acciones | Solo **editar** (ícono del lápiz) y **eliminar** (ícono del basurero), y solo para quien tiene el permiso de administrar documentos |
 
-Se puede buscar un documento por **lote**, por **nombre del producto** y por **país de origen**. El filtro por tipo de documento del prototipo se conserva.
+- Ya **no** hay columnas "Documento" y "Tipo", ni el filtro por tipo de documento (13/10).
+- Se puede **buscar** por lote, nombre del producto y país de origen.
+- **Al hacer clic en la fila** se abre una ventana con los documentos del producto y **solo las opciones que permiten los permisos** del usuario (13/10):
 
-Los documentos internos **no** se muestran en el detalle de los productos públicos (respuesta del 11/10).
+| Permiso | Opción en la ventana |
+|---|---|
+| Ver documentos en el navegador | **Ver**: abre la vista previa de Google Drive dentro de la ventana |
+| Descargar documentos | **Descargar**: usa el enlace de descarga de Google Drive. Si el usuario solo puede ver, **no aparece ninguna opción de descargar** |
 
 ### Reglas
 
-- Todos los documentos son **PDF**. La empresa no fija un tamaño máximo.
-- Lo que cada usuario puede hacer depende de **sus permisos** ([03-roles-y-accesos.md](03-roles-y-accesos.md)).
 - Un usuario sin sesión no entra a esta área.
-- Los PDF se guardan en el **sistema de archivos del servidor, fuera de la carpeta pública**, y se entregan por una ruta protegida que verifica los permisos. **No** se guardan en Cloudflare R2.
-- Ejemplos entregados por la empresa, en `docs_incovsa/PAGINA WEB/DOCUMENTOS TECNICOS/`:
-  - una ficha técnica de soda cáustica de México (4 páginas);
-  - una hoja de seguridad del mismo producto (17 páginas);
-  - un certificado de análisis del lote de proveedor CAB250526, identificado como "SKU 4139" (1 página).
+- Lo que cada usuario puede hacer depende de **sus permisos** ([03-roles-y-accesos.md](03-roles-y-accesos.md)).
+- **Protección de los documentos:** el sistema muestra los enlaces solo a quien tiene permiso, pero quien abre el archivo en Google Drive es Google. Que un usuario con solo permiso de ver no pueda descargar desde Drive, y que nadie fuera de la empresa pueda abrir el enlace, depende de **cómo comparta INCOVSA cada archivo en Google Drive** (por ejemplo, compartirlo solo con cuentas de la empresa y deshabilitar la descarga para lectores). Esto se explica en el Documento 3.
+- Ejemplos entregados por la empresa, en `docs_incovsa/PAGINA WEB/DOCUMENTOS TECNICOS/`: una ficha técnica, una hoja de seguridad y un certificado de análisis de soda cáustica de México.
 
 ## Imágenes del sitio
 
-Todas las imágenes del sitio se guardan en **Cloudflare R2, plan gratuito**: las del contenido institucional (incluidas misión y visión), las de las industrias, las de los productos, las de las noticias y los logotipos, incluido el de Inquiserca cuando llegue.
+Todas las imágenes del sitio se guardan en **Cloudflare R2, plan gratuito**: las de la portada, misión, visión, historia, valores, industrias, productos y noticias, y los logotipos.
 
 ## Confidencialidad
 

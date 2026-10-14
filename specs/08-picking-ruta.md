@@ -4,6 +4,8 @@
 
 Muestra al piloto los clientes a los que debe ir en su ruta y registra que se entregó.
 
+> **Cambios del 13/10/2026 (reunión 5).** Las rutas se muestran siempre **de la más reciente a la más antigua**. El módulo ya **no** tiene la sección "Registro histórico": el registro de rutas realizadas se consulta en Reportes. Desde el 13/10, lo que sale de Facturación en un camión **es** la ruta, con su número del día.
+
 ## Acceso
 
 - Los usuarios con rol **"Piloto"** ven **solo sus rutas asignadas** (RF-SL-26). El rol "Piloto" es el que identifica a los pilotos ([03-roles-y-accesos.md](03-roles-y-accesos.md)).
@@ -12,44 +14,52 @@ Muestra al piloto los clientes a los que debe ir en su ruta y registra que se en
 
 ## Cuándo se crea y cuándo aparece una ruta
 
-- La ruta **se crea** cuando el facturador pulsa "Enviar Pedido a Bodega" en una **opción de camión** de Facturación. En ese momento se crea el pedido con los pedidos facturados de esa opción, y la ruta recibe su número y su fecha. Cada ruta corresponde a **un pedido**, que puede tener varios clientes.
-- **Aparece en el módulo de Ruta** del piloto cuando Bodega pulsa "Pedido Despachado" y el pedido pasa a **En Ruta**.
+- La ruta **se crea** cuando el facturador pulsa "Enviar a Bodega" en la opción **"Envío por camión"** de Facturación, con los pedidos facturados de esa opción. En ese momento recibe su número del día, su fecha, su fecha y hora programadas, su camión y su piloto.
+- **Aparece en el módulo de Ruta** del piloto cuando Bodega pulsa "Ruta Despachada" y la ruta pasa a **En Ruta**.
+- **Deja de aparecer** cuando el piloto pulsa "Ruta Entregada" (13/10). A partir de ahí se consulta en la pestaña "Rutas realizadas" de Reportes.
+
+## Lista de rutas (13/10)
+
+- Solo aparecen las rutas **En Ruta**.
+- Se ordenan **de la más reciente a la más antigua**, de arriba hacia abajo: por fecha y, en la misma fecha, por número de mayor a menor.
 
 ## Registro de la ruta (RF-SL-30, RN-30)
 
 | Dato | Regla |
 |---|---|
-| Número de ruta | Correlativo **por sede**, asignado al enviar a bodega. Una ruta no tiene nombre, solo número |
-| Fecha | La fecha en que el pedido se envió de Facturación a Bodega |
-| Pedido | El pedido (correlativo por sede) que se armó en la opción de camión |
-| Camión | El que se asignó en Facturación |
-| Piloto | El que se asignó en Facturación |
+| Número de ruta | Correlativo **diario por sede**: empieza en 1 cada día (RN-52). Una ruta no tiene nombre, solo número y fecha |
+| Fecha | La fecha en que la ruta se envió de Facturación a Bodega |
+| Fecha y hora programadas | Las que escribió el facturador (RN-53) |
+| Camión | El que se eligió en Facturación |
+| Piloto | El que se eligió en Facturación |
+| Fecha de creación | Fecha y hora exactas en que se guardó (RN-57) |
 
-**No** se registran horas de salida ni de regreso.
+**No** se registran horas reales de salida ni de regreso.
 
 ## Tabla de la ruta (RF-SL-27)
 
 | Columna | Contenido |
 |---|---|
-| Cliente | Nombre del cliente |
-| Sector | Sector del cliente: el de la base de clientes, o el del archivo de Odoo si el cliente no se guardó ([06-picking-facturacion.md](06-picking-facturacion.md)) |
-| Total | Suma en kg de todos los productos de ese cliente en el pedido |
+| Cliente | Nombre del cliente, tal como viene en `Contacto` |
+| Sector | Sector del cliente, tal como viene en `Contacto/Ciudad` |
+| Total | Suma en kg de todos los productos de ese cliente en la ruta |
 
-Hay **una fila por cliente**. Si un cliente tiene dos o más pedidos facturados en la misma ruta, van en **una sola fila**, con la suma de sus kg (respuesta del 11/10).
+Hay **una fila por cliente**. Si un cliente tiene dos o más pedidos facturados en la misma ruta, van en **una sola fila**, con la suma de sus kg. Como ya no hay base de clientes, dos pedidos facturados son del mismo cliente cuando tienen el mismo nombre y el mismo sector (RN-49).
 
 No se muestran la dirección ni el teléfono.
 
 ## Recorrido (RF-SL-28, RN-29)
 
+- Al llegar, las filas están en el orden en que el facturador dejó los pedidos facturados en la opción de envío (13/10).
 - El piloto puede reordenar las filas en cualquier momento de la ruta.
-- **El orden que tienen las filas al pulsar "Pedido Entregado" es el que se guarda como recorrido.**
+- **El orden que tienen las filas al pulsar "Ruta Entregada" es el que se guarda como recorrido.**
 
 ## Cierre (RF-SL-29)
 
-- Al final de la tabla está el botón **"Pedido Entregado"**.
-- Al pulsarlo, el pedido pasa a **Entregado**, lo que significa que se entregó completo a todos los clientes de la ruta. La ruta queda en el registro histórico (RF-SL-37).
+- Al final de la tabla está el botón **"Ruta Entregada"** (antes "Pedido Entregado"; se cambió el nombre por la terminología del 13/10).
+- Al pulsarlo, la ruta pasa a **Entregado**, lo que significa que se entregó completa a todos sus clientes. Queda en el registro histórico de Reportes (RF-SL-37).
 - El piloto **no** puede cambiar clientes, productos ni cantidades.
 
 ## Devoluciones
 
-La ruta **no se edita** y el sistema **ya no registra devoluciones**: eran entradas de inventario, y el control de inventario salió del alcance el 29/09/2026 ([09-picking-inventario.md](09-picking-inventario.md)). El piloto no reporta nada en el sistema.
+La ruta **no se edita** y el sistema **no registra devoluciones**: eran entradas de inventario, y el control de inventario salió del alcance el 29/09/2026 ([09-picking-inventario.md](09-picking-inventario.md)).

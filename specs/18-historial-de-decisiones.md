@@ -26,6 +26,9 @@
 | 11/10/2026 | Respuestas del coordinador a las dudas P-45 y P-51 a P-76 sobre cómo aplicar los cambios de la reunión 4, con el código de los mapas de Google Maps de Quetzaltenango y Guatemala | Esta carpeta |
 | 12/10/2026 | El coordinador aprueba usar los nombres reales de los clientes en el prototipo de simulación y las medidas de seguridad de [16-arquitectura-y-tecnologia.md](16-arquitectura-y-tecnologia.md) | Esta carpeta |
 | 12/10/2026 | Respuestas del coordinador en el documento de preguntas para la reunión del 13/10 con el Ing. William: P-11, P-20, P-26, P-27, P-33, P-34 y P-41, formato del archivo de Odoo y presentación del Entregable 2 | Esta carpeta |
+| 13/10/2026 | Reunión 5, virtual (Ing. William Ambrossio y el equipo completo), de 18:00 a 21:30. Se presentó el prototipo de simulación con los cambios de la reunión 4; el Ing. William lo aprobó y pidió nuevos cambios. Notas de Daniela Marín (dicen "14 de octubre" por error) | `docs/Reuniones/Reunion5_131026/` |
+| 13/10/2026 | Entrega del logotipo de Inquiserca | `docs_incovsa/PAGINA WEB/INFORMACION EMPRESA/Inquiserca.jpeg` |
+| 14/10/2026 | Respuestas del coordinador a las dudas sobre cómo aplicar los cambios de la reunión 5 | Esta carpeta |
 
 ## Decisiones reemplazadas
 
@@ -274,11 +277,101 @@ Al preparar la documentación técnica del Entregable 2 se revisaron las version
 | Next.js | 15 (como mínimo 15.2.3) | **16** (16.4.0 al 12/10). En Next.js 16 el middleware se llama `proxy.ts` |
 | Autenticación | Auth.js; contraseñas con bcrypt | **Better Auth 1.7**, con inicio de sesión por nombre de usuario; contraseñas con scrypt. Auth.js está en modo mantenimiento desde septiembre de 2025 y sus mantenedores recomiendan Better Auth para proyectos nuevos |
 
-## Documentos no alineados con la reunión 4
+## Reunión 5 (13/10/2026)
 
-Al 12/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los cambios del 29/09 ni las respuestas del 11/10:
+El Ing. William aprobó el prototipo de simulación que se le presentó (el armado el 13/10, que ya incluía los cambios del commit "Prototipo mejorado") y pidió los cambios que siguen. El detalle de cada uno está en el archivo del módulo y en el registro CAM-40 a CAM-77 de [20-prototipo-aprobado.md](20-prototipo-aprobado.md).
+
+### Decisiones reemplazadas el 13/10/2026
+
+| Tema | Antes | Ahora (13/10) |
+|---|---|---|
+| Datos del archivo de Odoo | Producto validado contra el catálogo; cliente y sector desde la base de clientes; ventanas para agregar productos y clientes que faltan (11/10) | Se usan **tal como vienen**, sin validar nada y sin guardarlos en catálogos |
+| Peso de Conversión | Del catálogo del picking; la columna `Movimientos de stock/Producto/Peso` no se usaba porque a veces venía en 0 (29/09) | De la columna `Movimientos de stock/Producto/Peso` de cada línea. El Ing. William se comprometió a entregar el archivo con todos los datos |
+| Lote en el picking | No se usaba; el catálogo no tenía lote | De la columna `Movimientos de stock/Números de serie`; se guarda y se muestra resaltado en Bodega |
+| Catálogos del picking | Productos (336), clientes (314) y sectores en Configuración, cargados de `Picking II` | Ya no existen. Configuración queda con Camiones y Usuarios (14/10) |
+| Corrección del sector en la tarjeta | Se guardaba en la base de clientes (11/10) | Se elimina |
+| Opciones de envío | Una por cada camión de la sede, más "Cliente recoge en bodega" | Dos: "Envío por camión" (camión y piloto de listas desplegables) y "Cliente recoge en bodega" |
+| Nombre de lo que se envía a Bodega | "Pedido", con correlativo por sede; el de camión tenía además una ruta | Lo de camión es una **ruta** y lo que recoge el cliente es un **pedido** |
+| Numeración | Correlativo continuo por sede, para pedidos y rutas | Correlativo **diario** por sede, aparte para rutas y para pedidos |
+| Fecha y hora | Bodega mostraba la hora de envío desde Facturación | Cada opción tiene fecha y hora programadas, obligatorias (14/10); Bodega muestra esas y no la hora de envío |
+| Tarjetas del tablero | Con asa de arrastre y "x" para eliminar | Sin asa ni "x"; se seleccionan uno, varios o todos para arrastrarlos o eliminarlos |
+| Orden dentro de la opción | No se ordenaba | El facturador los ordena; el orden pasa a Bodega y a Ruta |
+| Bodega | Una fila por producto; contador en la barra lateral | Una fila por producto, lote y Peso de Conversión (14/10); lote resaltado; detalle de ruta o pedido; ordenar por peso; marcar todo; sin contador |
+| Tablero en dos columnas | Numeración por filas | Numeración de arriba hacia abajo, primero la columna izquierda |
+| Módulo de Ruta | Pestañas "En ruta" y "Registro histórico" | Solo rutas en curso, de la más reciente a la más antigua; el histórico está en Reportes. El botón "Pedido Entregado" pasa a llamarse "Ruta Entregada" |
+| Misión y visión | Las imágenes de la empresa, centradas, una debajo de la otra (29/09) | Misión: texto a la izquierda e imagen a la derecha; visión: imagen a la izquierda y texto a la derecha. Sin imagen hasta que se suba (14/10) |
+| Valores | Texto, con imagen opcional | 5 imágenes, una por valor, en una fila, sin texto |
+| Imágenes del sitio | Una imagen por área | Galerías de hasta 5 imágenes que rotan cada 5 s; con una sola imagen, fija (14/10) |
+| Menú de Industrias | Lista lateral con nombre de cada industria | Barra lateral solo con íconos; el nombre aparece al pasar el cursor |
+| Solicitudes de contacto | Se guardaban y se enviaban por correo a la sede | Solo se guardan en el sistema. El sistema ya no envía correos |
+| Acceso personal | Tres botones y un inicio de sesión por sistema | Usuario → validación → elección del sistema → contraseña. Revela si el usuario existe (aceptado el 14/10, con límite de intentos) |
+| Nombre de usuario | Único en los dos sistemas | Único dentro de cada sistema; se puede repetir en el otro |
+| Cierre de sesión | Volvía al inicio de sesión del sistema | Vuelve a la página de inicio del sitio |
+| Contraseñas | Gerencia o Soporte asignaban una temporal | Gerencia o Soporte la escriben al crear el usuario y al restablecerla |
+| Contenido institucional en el panel | Sección "Imágenes del sitio" (solo de consulta) | Campos para subir la portada y el logotipo de INCOVSA |
+| Solicitudes en el panel | Contador oculto con el menú reducido | Indicador de solicitudes nuevas también con el menú reducido |
+| Documentación interna | Un documento PDF por registro, con tipo, producto, país y lote (lote obligatorio solo en el COA) | Un producto documentado con nombre, país, lote obligatorio y los enlaces de Google Drive de FT, HS y COA; la tabla sin columnas Documento y Tipo; acciones solo editar y eliminar; clic en la fila para ver o descargar según los permisos |
+| Fecha de creación de los registros | No se había pedido | Cada registro guarda la fecha y la hora exactas en que se guardó |
+
+### Aprobado con el prototipo del 13/10
+
+Cambios del commit "Prototipo mejorado" que el Ing. William vio y aprobó con el prototipo, y que el coordinador pidió registrar el 14/10:
+
+| Tema | Antes | Ahora |
+|---|---|---|
+| País en el formulario de contacto | Opcional, igual que departamento y municipio (11/10) | Obligatorio; departamento y municipio son obligatorios cuando el país es Guatemala |
+| Validación del correo y del teléfono | Al enviar el formulario | Además, al salir de cada campo |
+| Tarjeta del pedido facturado | Número, cliente, sector y total en kg | Además, la lista de productos con su cantidad en kg |
+| Presentación dinámica | Imágenes de Inicio y misión y visión de Quiénes somos | Imágenes y tarjetas de todas las páginas públicas |
+| Filtro de periodo de Reportes | Despacho y Rutas realizadas | También la Bitácora |
+
+### Respuestas del coordinador del 14/10/2026
+
+| Duda | Decisión |
+|---|---|
+| ¿Qué pasa si el Peso de Conversión del archivo viene en 0 o vacío? | Ese pedido facturado no se carga y se avisa en el resumen de la carga (RN-50) |
+| ¿Qué pasa con Productos, Clientes y Sectores de Configuración y con la corrección del sector? | Se eliminan, con sus permisos. Configuración queda con Camiones y Usuarios |
+| ¿Dónde están los documentos técnicos y cómo se distingue ver de descargar? | En Google Drive. "Ver" abre la vista previa de Drive y "Descargar" el enlace de descarga. Que quien solo puede ver no descargue depende de cómo comparta INCOVSA el archivo en Drive (P-92) |
+| El paso del usuario revela si existe, contra RNF-15 | Se acepta como lo pidió la contraparte. En la pantalla de sistemas solo se habilitan los sistemas donde el usuario tiene cuenta (Odoo siempre). El paso cuenta en el límite de intentos y en la bitácora |
+| ¿Qué imagen de misión y visión se muestra mientras no suban otra? | Ninguna: el lugar queda vacío. `MISION.jpg` y `VISION.jpg` no se usan |
+| ¿A qué áreas aplican las galerías de hasta 5 imágenes? | A todas las áreas con imágenes del sitio público, salvo los logotipos y los valores. Con una sola imagen, la imagen queda fija |
+| ¿Qué ordena "de mayor a menor peso" en Bodega? | Las filas de cada ruta o pedido |
+| ¿Cómo se muestra el mismo producto con lotes distintos? | Una fila por producto, lote y Peso de Conversión |
+| ¿La fecha y la hora programadas son obligatorias? | Sí |
+| ¿Cómo funciona el orden de los pedidos facturados en la opción? | Se reordenan dentro de la opción; el orden pasa al detalle y a las líneas de Bodega y al orden inicial de los clientes de la ruta |
+| ¿Se registran los cambios del commit del 13/10? | Sí, todos (tabla anterior) |
+| ¿Dónde va la matriz de trazabilidad del Entregable 2? | Dentro del contenido del Documento 2 |
+
+### Decisiones del equipo del 14/10/2026
+
+Decisiones de diseño y técnicas para aplicar los cambios ([DECISIÓN TÉCNICA], regla 4 de [README.md](README.md)). Las técnicas están en [16-arquitectura-y-tecnologia.md](16-arquitectura-y-tecnologia.md), "Decisiones técnicas del 14/10".
+
+| Tema | Decisión |
+|---|---|
+| Arrastre táctil sin asa | En pantallas táctiles el arrastre empieza con una pulsación larga sobre la tarjeta; un toque corto la selecciona |
+| Encabezados de las páginas públicas | Usan las imágenes de la galería de portada (opción aprobada por el coordinador el 14/10) |
+| Botones con la nueva terminología | "Enviar a Bodega", "Ruta Despachada" / "Pedido Despachado" y "Ruta Entregada" |
+| Enlaces de la documentación | Los tres son opcionales; el lote es el único obligatorio, como dice el acta. Se valida que sean de Google Drive. El par nombre, país y lote no se repite |
+| Nombres de usuario de Gerencia y Soporte | No se repiten en el otro sistema, porque esas cuentas ya sirven en los dos |
+| Contraseñas | Mínimo 8 caracteres y se escriben dos veces |
+
+### Pendientes resueltos el 13/10 y el 14/10/2026
+
+| Pendiente | Decisión |
+|---|---|
+| P-09 | Ya no aplica: el sistema no envía correos |
+| P-20 | Se cierra: la imagen de la visión ya no se muestra; el texto del sitio dice "transparente" |
+| P-35 | Ya no aplica: no hay carga inicial de productos ni clientes |
+| P-69 | Se recibió el logotipo de Inquiserca (13/10) |
+| P-89 | Ya no aplica: el Peso de Conversión viene en el archivo de Odoo; el caso de prueba 4 (55 kg con peso 55 → 1 unidad) se conserva tal como lo validó la empresa |
+
+Pendientes nuevos: P-90, P-91 y P-92 ([19-pendientes.md](19-pendientes.md)).
+
+## Documentos no alineados con las reuniones 4 y 5
+
+Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los cambios del 29/09, del 11/10 ni del 13/10:
 
 - el Documento 1 v0.2 y sus figuras (casos de uso, actividades, estados, arquitectura y modelos ER);
-- los prototipos `.dc.html` y sus capturas.
+- las capturas de los prototipos `.dc.html` (los archivos `.dc.html` y `canvas.json` se borraron del repositorio el 14/10, en el commit "Prototipo mejorado").
 
-El prototipo de simulación se actualizó el 12/10/2026 con los cambios de la reunión 4 y las respuestas del 11/10 ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)).
+El prototipo de simulación se actualizó el 14/10/2026 con los cambios de la reunión 5 ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)), y el Documento 2 pasó a la versión 0.2.
