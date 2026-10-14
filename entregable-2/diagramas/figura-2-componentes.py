@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Figura 2 del Documento 2. Diagrama de componentes (12/10/2026, specs/16).
+"""Figura 2 del Documento 2. Diagrama de componentes (14/10/2026, specs/16).
 
 Componentes de software y sus dependencias principales (línea discontinua con punta
 abierta = «depende de», notación UML). La tabla de componentes del Documento 2 lista
@@ -63,15 +63,15 @@ for i, (k, n, d) in enumerate([("sitio", "Sitio", "público"), ("panel", "Panel 
 contenedor(40, 360, W - 40, 960, "Módulos de dominio: lógica de negocio (src/modulos)", abajo=True)
 M = {}
 for i, (k, d) in enumerate([("contenido", "institucional,\nindustrias, catálogo\ny noticias"),
-                            ("solicitudes", "de contacto"), ("documentos", "FT, HS y COA"),
-                            ("catalogos", "productos, clientes,\nsectores, camiones"),
+                            ("solicitudes", "de contacto"), ("documentos", "FT, HS y COA\n(enlaces)"),
+                            ("camiones", "camiones de\ncada sede"),
                             ("odoo", "lectura del\narchivo .xlsx"), ("ruta", "rutas y\nentregas"),
                             ("bodega", "preparación\ny despacho"), ("reportes", "despacho, rutas\ny bitácora")]):
     x1, x2 = col(i)
     M[k] = comp(x1, 440, x2, 620, k, d, size=26)
 x1, _ = col(4)
 _, x2 = col(6)
-M["pedidos"] = comp(x1 + 30, 740, x2 - 30, 880, "pedidos", "tablero de pedidos facturados, opciones de envío\ny envío a bodega", size=27)
+M["pedidos"] = comp(x1 + 30, 740, x2 - 30, 880, "envios", "tablero de pedidos facturados, opciones de envío\ny envío de rutas y pedidos a bodega", size=27)
 x1, x2 = col(7)
 M["conversion"] = comp(x1, 740, x2, 880, "conversion", "RN-01, en\ngramos enteros", size=27)
 
@@ -87,8 +87,8 @@ for i, (k, d) in enumerate([("autenticacion", "Better Auth"), ("permisos", "exig
 # ---------------- Librerías y servicios externos ----------------
 contenedor(1560, 1060, W - 40, 1620, "Librerías y servicios externos")
 LIB = comp(1600, 1130, 2340, 1240, "SheetJS 0.20.3", "lee el archivo .xlsx de Odoo", size=27)
-ALM = comp(1600, 1270, 2340, 1400, "Almacenamiento", "Cloudflare R2 y PDF del servidor", size=27)
-COR = comp(1600, 1430, 2340, 1580, "Correo", "SMTP de la empresa", size=27)
+ALM = comp(1600, 1270, 2340, 1400, "Almacenamiento", "Cloudflare R2: imágenes y respaldos", size=27)
+COR = comp(1600, 1430, 2340, 1580, "Google Drive", "enlaces de los documentos técnicos", size=27)
 
 # ---------------- Datos ----------------
 DAT = comp(80, 1440, 900, 1580, "Acceso a datos", "Prisma 7 y migraciones")
@@ -100,27 +100,26 @@ dep((UI["sitio"]["cx"] + 80, 250), (UI["sitio"]["cx"] + 80, 330), (M["solicitude
 dep((UI["panel"]["cx"] - 80, 250), (UI["panel"]["cx"] - 80, 310), (M["contenido"]["cx"] + 80, 310), (M["contenido"]["cx"] + 80, 440))
 dep(UI["panel"]["b"], M["solicitudes"]["t"])
 dep(UI["doc"]["b"], M["documentos"]["t"])
-dep(UI["conf"]["b"], M["catalogos"]["t"])
+dep(UI["conf"]["b"], M["camiones"]["t"])
 dep(UI["fact"]["b"], M["odoo"]["t"])
 dep(UI["bod"]["b"], M["bodega"]["t"])
 dep(UI["ruta"]["b"], M["ruta"]["t"])
 dep(UI["rep"]["b"], M["reportes"]["t"])
 
 # ---------------- dependencias entre módulos de dominio ----------------
-dep(M["odoo"]["l"], M["catalogos"]["r"])                                                   # odoo -> catalogos
 dep((M["odoo"]["cx"], 620), (M["odoo"]["cx"], 740))                                         # odoo -> pedidos
 dep((M["ruta"]["cx"], 620), (M["ruta"]["cx"], 740))                                         # ruta -> pedidos
 dep((M["bodega"]["cx"] - 40, 620), (M["bodega"]["cx"] - 40, 740))                           # bodega -> pedidos
 dep((M["bodega"]["x2"] - 40, 620), (M["bodega"]["x2"] - 40, 690), (M["conversion"]["x1"] + 50, 690),
     (M["conversion"]["x1"] + 50, 740))                                                      # bodega -> conversion
 dep((M["reportes"]["cx"] + 40, 620), (M["reportes"]["cx"] + 40, 740))                       # reportes -> conversion
-dep((M["pedidos"]["x1"], 840), (M["catalogos"]["cx"], 840), (M["catalogos"]["cx"], 620))    # pedidos -> catalogos
+dep((M["pedidos"]["x1"], 840), (M["camiones"]["cx"], 840), (M["camiones"]["cx"], 620))      # envios -> camiones
 
 # ---------------- dependencias hacia abajo ----------------
 dep((750, 960), (750, 1060))
 cv.text(770, 1010, "todos los módulos de dominio", size=NS, anchor="lm")
 dep((1960, 960), (1960, 1060))
-cv.text(1940, 1010, "odoo, contenido, documentos y solicitudes", size=NS, anchor="rm")
+cv.text(1940, 1010, "odoo, contenido y documentos", size=NS, anchor="rm")
 dep((490, 1330), (490, 1440))
 cv.text(510, 1385, "módulos de dominio y transversales", size=NS, anchor="lm")
 dep(DAT["r"], (1030, 1510))

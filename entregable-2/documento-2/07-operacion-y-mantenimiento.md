@@ -1,8 +1,9 @@
 # Respaldos
 
-- Los respaldos son **automáticos y diarios**, en la noche: una copia de la base de datos con `pg_dump` y una copia de la carpeta de documentos internos (RNF-09).
+- Los respaldos son **automáticos y diarios**, en la noche: una copia de la base de datos con `pg_dump` (RNF-09).
 - Se conservan **7 respaldos diarios y 4 semanales**.
 - Se guardan **fuera del servidor**, en un bucket privado de Cloudflare R2, distinto del de las imágenes. Las imágenes ya están en R2.
+- Desde el 13/10/2026 el servidor no guarda archivos PDF: los documentos técnicos están en el Google Drive de la empresa, que se encarga de respaldarlos. La base de datos guarda sus enlaces, que quedan incluidos en el respaldo.
 
 El procedimiento de respaldo y la prueba de restauración se documentan en el Entregable No. 3, en el manual técnico de instalación, despliegue y mantenimiento (Documento 5).
 

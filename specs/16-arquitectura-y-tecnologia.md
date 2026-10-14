@@ -171,6 +171,7 @@ Las tomó el equipo el 14/10/2026 para aplicar los cambios de la reunión 5 (coo
 | 23 | Paso del usuario del acceso personal | Una acción del servidor responde solo en qué sistemas tiene cuenta activa el nombre escrito. Cuenta en el límite de intentos por dirección IP y registra en la bitácora las consultas de nombres que no existen |
 | 24 | Contraseñas | Las escriben Gerencia o Soporte al crear y al restablecer, dos veces para confirmarla. Mínimo 8 caracteres, el valor por omisión de Better Auth |
 | 25 | Cierre de sesión (RF-SW-30) | Después de cerrar la sesión, la aplicación redirige a la página de inicio del sitio |
+| 26 | Cuentas en Better Auth con el mismo nombre de usuario en los dos sistemas (RN-54) | Better Auth exige que su nombre de usuario y su correo sean únicos en toda la tabla de usuarios, y el correo es obligatorio. Cada cuenta guarda: el nombre de usuario que escribe la persona (`display_username`), único junto con el sistema; una **clave de acceso interna** única formada por el sistema y el nombre de usuario (`username`, por ejemplo `picking.maria.argueta`), que es la que recibe Better Auth al iniciar sesión; y un correo interno único derivado de esa clave, que nunca se muestra ni se usa para enviar correos. El correo real, opcional, se guarda en un campo aparte |
 
 ## Estructura de carpetas
 

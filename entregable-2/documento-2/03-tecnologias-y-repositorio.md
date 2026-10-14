@@ -1,6 +1,6 @@
 # Tecnologías y versiones
 
-La {{tab:tecnologias}} lista las tecnologías de la solución. Las versiones son las vigentes al 12/10/2026; la versión exacta de cada paquete instalado queda fijada en el archivo `package-lock.json` del repositorio.
+La {{tab:tecnologias}} lista las tecnologías de la solución. Las versiones son las vigentes al 14/10/2026; la versión exacta de cada paquete instalado queda fijada en el archivo `package-lock.json` del repositorio.
 
 Tabla: Tecnologías utilizadas {#tab:tecnologias}
 
@@ -12,13 +12,13 @@ Tabla: Tecnologías utilizadas {#tab:tecnologias}
 | React | 19.3 | Componentes de la interfaz | Lo usa Next.js. Permite las interacciones del prototipo: arrastrar, marcar y reordenar |
 | PostgreSQL | 18 | Base de datos relacional | Relacional, transaccional y gratuita. Es la instalada en los equipos del equipo |
 | Prisma | 7.10 | Acceso a datos, esquema y migraciones | Consultas tipadas y parametrizadas, y migraciones versionadas que otro desarrollador puede aplicar desde cero |
-| Better Auth | 1.7 | Inicio de sesión con nombre de usuario y contraseña, y sesiones en la base de datos | Librería gratuita (MIT) que se integra con Prisma y Next.js. Auth.js, la alternativa prevista, está en modo mantenimiento desde septiembre de 2025 y sus mantenedores recomiendan Better Auth para proyectos nuevos |
+| Better Auth | 1.7 | Inicio de sesión con nombre de usuario (plugin username) y contraseña, y sesiones en la base de datos | Librería gratuita (MIT) que se integra con Prisma y Next.js. Auth.js, la alternativa prevista, está en modo mantenimiento desde septiembre de 2025 y sus mantenedores recomiendan Better Auth para proyectos nuevos |
 | Zod | 4.6 | Validación de formularios, parámetros y del archivo de Odoo, en cliente y servidor | Un solo esquema por dato valida en los dos lados (RNF-05) |
 | Tailwind CSS | 4.3 | Estilos | Permite aplicar los tokens del design system aprobado (colores, tipografía, espaciados) en todas las pantallas |
 | shadcn/ui | — | Componentes de interfaz (diálogos, tablas, formularios) | Los componentes se copian al proyecto, así que no es una dependencia que haya que actualizar; se ajustan al design system |
 | SheetJS Community Edition | 0.20.3 | Lectura del archivo .xlsx de Odoo y exportación de reportes a Excel | Es la librería del prototipo y no tiene vulnerabilidades abiertas. Se eligió frente a ExcelJS 4.4.0, que tiene vulnerabilidades publicadas en agosto de 2026 sin corregir. Se instala desde el sitio oficial de SheetJS, no desde npm |
-| Nodemailer | 10.1 | Envío por correo de las solicitudes del formulario de contacto | Librería estándar de Node.js para SMTP |
 | Cloudflare R2 | Servicio | Imágenes del sitio y respaldos | Plan gratuito suficiente para el volumen del sitio; compatible con la API de S3 |
+| Google Drive | Servicio de la empresa | Documentos técnicos de la documentación interna, enlazados desde el sistema | INCOVSA ya lo usa; el sistema solo guarda los enlaces y no necesita almacenar PDF (decisión del 14/10/2026) |
 | Vitest | 5.0 | Pruebas automatizadas | Obligatorias para la conversión, la lectura del archivo de Odoo y la verificación de permisos y sedes |
 | ESLint | 9.39 | Revisión estática del código | Detecta errores comunes y mantiene un estilo uniforme. La guía de Next.js 16 indica ESLint 9 para `eslint-config-next@16` |
 | Git y GitHub | — | Control de versiones, revisiones y alertas de dependencias (Dependabot) | Repositorio privado del equipo |
@@ -40,7 +40,6 @@ Tabla: Dependencias principales {#tab:dependencias}
 | `better-auth` | 1.7.7 | Producción | Inicio de sesión, sesiones y límite de intentos |
 | `zod` | 4.6.7 | Producción | Validación de datos de entrada |
 | `xlsx` (SheetJS) | 0.20.3 | Producción | Lectura del archivo de Odoo y exportación a Excel. Se instala con `npm i --save https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz` |
-| `nodemailer` | 10.1.0 | Producción | Envío de correos por SMTP |
 | `@aws-sdk/client-s3` | 3.x | Producción | Subida y lectura de imágenes y respaldos en Cloudflare R2 |
 | `libphonenumber-js` | 1.13.15 | Producción | Códigos telefónicos por país y validación del teléfono del formulario de contacto (RF-SW-19), como en el prototipo |
 | `tailwindcss` y `@tailwindcss/postcss` | 4.3.3 | Producción | Estilos |
@@ -49,10 +48,10 @@ Tabla: Dependencias principales {#tab:dependencias}
 | `typescript` | 6.0.3 | Desarrollo | Compilador de TypeScript |
 | `vitest` | 5.0.4 | Desarrollo | Pruebas automatizadas |
 | `eslint` y `eslint-config-next` | 9.39.5 y 16.4.0 | Desarrollo | Revisión estática del código |
-| `tsx` | 4.23.15 | Desarrollo | Ejecución de los scripts de TypeScript: semilla e importación de datos maestros |
-| `@types/node`, `@types/react`, `@types/react-dom`, `@types/pg` y `@types/nodemailer` | Los de cada paquete | Desarrollo | Definiciones de tipos para TypeScript |
+| `tsx` | 4.23.15 | Desarrollo | Ejecución de la semilla de la base de datos (`prisma/seed.ts`) |
+| `@types/node`, `@types/react`, `@types/react-dom` y `@types/pg` | Los de cada paquete | Desarrollo | Definiciones de tipos para TypeScript |
 
-Los íconos son los del prototipo aprobado, dibujados en SVG dentro del código, por lo que no se usa una librería de íconos.
+Los íconos son los del prototipo aprobado, dibujados en SVG dentro del código, por lo que no se usa una librería de íconos. El sistema no envía correos (las solicitudes de contacto solo se guardan, desde el 13/10/2026), por lo que ya no usa Nodemailer.
 
 ## Política de dependencias
 
@@ -63,7 +62,7 @@ Los íconos son los del prototipo aprobado, dibujados en SVG dentro del código,
 
 # Estructura del repositorio
 
-El repositorio está organizado por módulos de dominio. La siguiente estructura es la del proyecto; las carpetas `src/`, `prisma/` y `scripts/` se crean junto con el código del Entregable No. 2.
+El repositorio está organizado por módulos de dominio. La siguiente estructura es la del proyecto; las carpetas `src/` y `prisma/` se crean junto con el código de la aplicación. Desde el 13/10/2026 no hace falta la carpeta `scripts/` con la importación de datos maestros, porque el picking ya no tiene catálogos que cargar.
 
 ```
 proyecto_incovsa/
@@ -84,8 +83,6 @@ proyecto_incovsa/
 │   ├── schema.prisma           esquema de la base de datos
 │   ├── migrations/             migraciones
 │   └── seed.ts                 semilla con datos de ejemplo
-├── scripts/
-│   └── importar-datos-maestros.ts
 ├── .env.example                variables de entorno de ejemplo, sin valores reales
 ├── package.json y package-lock.json
 └── README.md
@@ -102,9 +99,8 @@ Tabla: Responsabilidad de cada carpeta {#tab:carpetas}
 | `src/componentes/ui/` | Componentes de interfaz reutilizables |
 | `src/lib/` | Conexión a la base de datos, configuración de Better Auth y lectura de la sesión |
 | `prisma/` | Esquema, migraciones y semilla de la base de datos |
-| `scripts/` | Carga inicial de los datos reales desde el Excel maestro, que se lee desde fuera del repositorio |
 
-Los módulos de `src/modulos/` son los de la {{tab:componentes}}: de dominio (`contenido`, `solicitudes`, `documentos`, `catalogos`, `odoo`, `pedidos`, `bodega`, `ruta`, `reportes` y `conversion`) y transversales (`permisos`, `usuarios`, `bitacora` y `tiempo-real`).
+Los módulos de `src/modulos/` son los de la {{tab:componentes}}: de dominio (`contenido`, `solicitudes`, `documentos`, `camiones`, `odoo`, `envios`, `bodega`, `ruta`, `reportes` y `conversion`) y transversales (`permisos`, `usuarios`, `bitacora` y `tiempo-real`).
 
 ## Lo que no se sube al repositorio
 

@@ -354,6 +354,7 @@ Decisiones de diseño y técnicas para aplicar los cambios ([DECISIÓN TÉCNICA]
 | Enlaces de la documentación | Los tres son opcionales; el lote es el único obligatorio, como dice el acta. Se valida que sean de Google Drive. El par nombre, país y lote no se repite |
 | Nombres de usuario de Gerencia y Soporte | No se repiten en el otro sistema, porque esas cuentas ya sirven en los dos |
 | Contraseñas | Mínimo 8 caracteres y se escriben dos veces |
+| Cuentas en Better Auth | Clave de acceso interna y correo interno por sistema, para que el mismo nombre de usuario exista en los dos sistemas (decisión técnica 26) |
 
 ### Pendientes resueltos el 13/10 y el 14/10/2026
 
