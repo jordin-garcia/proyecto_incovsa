@@ -90,7 +90,7 @@ Este es el modelo **conceptual**. Los nombres físicos, los tipos, los índices 
 | VALOR | posición (1 a 5), imagen (URL de R2, vacía hasta que se sube) | — (13/10) |
 | INDUSTRIA | nombre, descripción, orden | Galería de imágenes |
 | PRODUCTO_SITIO | nombre, descripción, presentación, países de origen (texto) | Industrias (N:M), galería de imágenes |
-| NOTICIA | título, texto, fecha de publicación, publicada | Usuario que la creó, galería de imágenes |
+| NOTICIA | título, texto, fecha de publicación | Usuario que la creó, galería de imágenes. Sin atributo "publicada": toda noticia guardada se publica, y se elimina en lugar de ocultarse (15/10) |
 | IMAGEN | área (portada, misión, visión, historia, industria, producto, noticia), identificador del dueño, posición (1 a 5), URL de R2 | Pertenece a un contenido, una industria, un producto, una noticia o a la portada. Máximo 5 por dueño (RN-56) |
 | PRODUCTO_DOCUMENTADO | nombre del producto, lote (obligatorio, números y letras), enlace de la ficha técnica, enlace de la hoja de seguridad, enlace del certificado de análisis (los tres de Google Drive, opcionales) | País de origen, usuario que lo creó (13/10) |
 | SOLICITUD_CONTACTO | motivo (solicitud, queja o reclamo), nombre, empresa, correo, código de país del teléfono, teléfono, mensaje, fecha, leída, estado (vacío, Asignado, En proceso o Solucionado), comentario del responsable (uno solo) | Sede destino (Quetzaltenango o Guatemala), país (obligatorio), departamento y municipio (obligatorios si el país es Guatemala), responsable (usuario del sitio, 0..1) |
@@ -114,4 +114,5 @@ Este es el modelo **conceptual**. Los nombres físicos, los tipos, los índices 
 | Se agregan IMAGEN, VALOR y CONFIGURACION_SITIO | Galerías de hasta 5 imágenes, 5 valores con imagen, portada y logotipos (13/10) |
 | SOLICITUD_CONTACTO agrega teléfono internacional, campos territoriales, estado, responsable y comentario | 29/09, 11/10 y 13/10 |
 | NOTICIA lleva título, texto y galería de imágenes | 29/09 y 13/10 |
+| NOTICIA sin el atributo "publicada"; las noticias se eliminan | 15/10 |
 | INFORMACION_CONTACTO agrega el mapa de Google Maps y solo cubre las sedes con oficina | 29/09 y 11/10 |

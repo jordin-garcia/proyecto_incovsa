@@ -24,6 +24,7 @@ El sitio web tiene el botón **"Acceso personal"**. El flujo es:
 
 - Se mantienen **dos inicios de sesión separados**: la contraseña se valida contra la cuenta del sistema elegido.
 - **Cerrar sesión** lleva a la **página de inicio del sitio** (13/10).
+- **Pantallas de acceso (15/10):** en los tres pasos, el panel izquierdo muestra el logotipo y **solo el título y su descripción breve, centrados vertical y horizontalmente**. Ya no muestra notas sobre los roles ("Roles de este sistema", "Gerencia y Soporte usan la misma cuenta…").
 
 ### Seguridad del paso del usuario (14/10)
 
@@ -40,7 +41,7 @@ El paso 2 revela si un nombre de usuario existe. Lo pidió la contraparte el 13/
 - Las contraseñas se guardan cifradas con un algoritmo unidireccional.
 - **No hay selector de sede** al iniciar sesión.
 - Cada sistema tiene **sus propias cuentas** (RN-18). Las cuentas de **Gerencia y Soporte** sirven en los dos sistemas, porque esos roles tienen acceso total a ambos.
-- **Mismo nombre de usuario en los dos sistemas (13/10, RN-54):** el nombre de usuario es único **dentro de cada sistema**. Si ya existe "maria.argueta" en la administración del sitio, se puede crear "maria.argueta" en el picking, para que la persona entre a los dos con el mismo usuario. Son dos cuentas: si se quiere la misma contraseña, Gerencia o Soporte la escriben igual en las dos. El nombre de usuario de una cuenta de Gerencia o Soporte no se repite en el otro sistema, porque esa cuenta ya sirve en los dos.
+- **Mismo nombre de usuario en los dos sistemas (13/10, RN-54):** el nombre de usuario es único **dentro de cada sistema**. Si ya existe "maria.argueta" en la administración del sitio, se puede crear "maria.argueta" en el picking, para que la persona entre a los dos con el mismo usuario. Son dos cuentas: si se quiere la misma contraseña, Gerencia o Soporte la escriben igual en las dos. El nombre de usuario de una cuenta de Gerencia o Soporte no se repite en el otro sistema, porque esa cuenta ya sirve en los dos. La regla se aplica al guardar; las ventanas de nuevo usuario y de editar usuario, en los dos sistemas, **no muestran una nota con ella** debajo del campo "Usuario" (15/10).
 - Se pueden **eliminar usuarios** (RF-SL-57). La eliminación es lógica: el usuario ya no puede iniciar sesión, su nombre de usuario queda reservado en su sistema y se conservan la bitácora y los registros donde aparece.
 
 ## Administración de usuarios (RF-SW-13, RF-SL-03)
@@ -84,7 +85,7 @@ Aprobado el 11/10/2026 y ajustado el 14/10/2026. Los permisos del sitio se asign
 | Sitio | Contenido institucional | Editar portada, logotipos, historia, misión, visión, valores e imágenes |
 | Sitio | Industrias | Editar descripción e imágenes de cada industria |
 | Sitio | Catálogo | Crear, editar y eliminar productos públicos |
-| Sitio | Noticias | Crear, editar, publicar y ocultar noticias |
+| Sitio | Noticias | Crear, editar y eliminar noticias (antes "Crear, editar, publicar y ocultar noticias", 15/10) |
 | Sitio | Información de contacto | Editar los datos de las sedes |
 | Sitio | Solicitudes | Ver la bandeja de solicitudes |
 | Sitio | Solicitudes | Gestionar solicitudes: responsable, comentario y estado |

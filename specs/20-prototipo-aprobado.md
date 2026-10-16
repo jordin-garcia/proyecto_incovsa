@@ -1,4 +1,4 @@
-# 20. Prototipo aprobado y cambios de las reuniones 4 y 5
+# 20. Prototipo aprobado y cambios de las reuniones 4 y 5 y del 15/10
 
 ## El prototipo
 
@@ -10,11 +10,11 @@
 | Datos | Toma imágenes, logotipos (incluido el de Inquiserca), documentos de ejemplo y, de `Picking II.xlsm`, nombres reales de productos con su Peso de Conversión y sus lotes, y de clientes con su sector, **solo para armar las rutas y los pedidos de ejemplo** con que arranca la simulación (desde el 13/10 el sistema no tiene esos catálogos). El HTML armado no se sube al repositorio. Los usuarios siguen anonimizados. Los departamentos y municipios de Guatemala salen del INE (Censo 2018), en `simulacion/datos/guatemala.json` |
 | Repositorio | Se sube el código fuente. El HTML armado **no se sube**, porque contiene datos reales de la empresa (RNF-10) |
 | Presentado | 29/09/2026 (reunión 4) y 13/10/2026 (reunión 5), al Ing. William Ambrossio. El 14/10/2026 se presenta al Ing. Manuel Rojas como avance del Entregable 2 |
-| Aprobación | El 09/10/2026 el coordinador confirmó que el **design system** y la **mayoría de las funcionalidades** están aprobados por el Ing. William Ambrossio y por el Ing. Manuel Rojas, salvo los cambios de la reunión 4. El **13/10/2026** el Ing. William **aprobó** el prototipo con esos cambios y pidió los de la reunión 5 (CAM-40 a CAM-77), que se aplicaron el 14/10 |
+| Aprobación | El 09/10/2026 el coordinador confirmó que el **design system** y la **mayoría de las funcionalidades** están aprobados por el Ing. William Ambrossio y por el Ing. Manuel Rojas, salvo los cambios de la reunión 4. El **13/10/2026** el Ing. William **aprobó** el prototipo con esos cambios y pidió los de la reunión 5 (CAM-40 a CAM-77), que se aplicaron el 14/10. El **15/10/2026** el coordinador revisó el prototipo y pidió los ajustes CAM-78 a CAM-95, que se aplicaron ese día |
 
 ## Cómo se usa para desarrollar
 
-1. La aplicación real se construye **a partir de este prototipo**, que desde el 14/10/2026 incluye los cambios de las reuniones 4 y 5.
+1. La aplicación real se construye **a partir de este prototipo**, que desde el 14/10/2026 incluye los cambios de las reuniones 4 y 5, y desde el 15/10/2026 los ajustes del coordinador.
 2. Si el prototipo y esta carpeta dicen cosas distintas, **vale esta carpeta** (regla 1 de [README.md](README.md)). Los cambios de la reunión 4 ya están escritos en los archivos de cada módulo.
 3. Lo que esta carpeta no detalla (distribución de la pantalla, textos de ayuda, orden de los elementos, interacción) se toma del prototipo.
 4. Mientras un cambio esté pendiente (P-xx), no se implementa como decidido. Donde el cambio está pendiente pero el prototipo ya resuelve algo, el archivo del módulo dice qué parte del prototipo se conserva.
@@ -65,8 +65,11 @@ Los colores se tomaron de los dos logotipos recibidos. Los códigos exactos de l
 
 - Radios: 8, 12, 18 y 26 px. Sombras suaves en tono verde oscuro.
 - Íconos de trazo, dibujados en SVG dentro del código.
+- **Encabezado de los módulos (15/10):** en todos los módulos de la administración del sitio y del picking, el título va con su instrucción, lo más breve posible, a la par (como en Facturación, CAM-55).
+- **Secciones verdes del sitio (15/10):** misión y visión (Inicio y Quiénes somos) y "A quién servimos" usan el verde del pie (`--v950`), con títulos en blanco y el acento `--lima-b`.
+- **Campos de fecha y hora (15/10):** se escriben como texto (fecha dd/mm/aaaa, hora HH:MM de 24 horas) y tienen un botón de calendario o de reloj que abre el selector del navegador debajo del campo. Un valor inválido se marca en rojo. Están en `base.js` (`campoFecha`) y en `picking.js`.
 - Componentes: tarjetas, chips de estado (En Preparación, Despachado, En Ruta, Entregado), avisos verde, ámbar, rojo y azul, mensajes emergentes, ventanas modales de confirmación, tablas con filas que se arrastran, botones segmentados, búsqueda con lista desplegable, medidores y barra lateral de navegación.
-- Tablero de Bodega: diseño "Pickit Visual" (pedido en curso con anillo de avance, líneas con unidades grandes, silueta del camión con la ocupación por peso y cola de pedidos). Las siluetas de los camiones también están en `entregable-1/prototipos/pickit-visual/`.
+- Tablero de Bodega: diseño "Pickit Visual" (pedido en curso con anillo de avance, líneas con unidades grandes, silueta del camión con la ocupación por peso y cola de pedidos). Las siluetas de los camiones también están en `entregable-1/prototipos/pickit-visual/`. Desde el 15/10 el tablero usa **solo la silueta del camión grande** para todos los camiones.
 - El tablero tenía dos temas: "TV" (verdes oscuros) y "Tableta" (claro). Desde el 29/09 son **modo claro** (el de "Tableta") y **modo oscuro** (negros y grises) ([07-picking-bodega.md](07-picking-bodega.md)).
 
 ## Registro de cambios de la reunión 4
@@ -198,3 +201,45 @@ Cada cambio que pidió el Ing. William el 13/10/2026, con las respuestas del coo
 | CAM-75 | Facturación: la tarjeta del pedido facturado lista sus productos con su cantidad | [06](06-picking-facturacion.md) |
 | CAM-76 | Presentación dinámica en todas las páginas públicas | [05](05-sitio-web.md) |
 | CAM-77 | Reportes: filtro de periodo también en la Bitácora | [10](10-picking-reportes.md) |
+
+## Ajustes del coordinador del 15/10/2026
+
+El 15/10/2026 el coordinador revisó el prototipo con los cambios de la reunión 5 y pidió estos ajustes. Todos están **definidos** e **implementados en el prototipo** ese día (PR #43 a #46). Las decisiones de diseño que se tomaron para aplicarlos están en [18-historial-de-decisiones.md](18-historial-de-decisiones.md).
+
+### Sitio público
+
+| Id | Cambio | Dónde |
+|---|---|---|
+| CAM-78 | Inicio: la sección de misión y visión con el verde del pie de página | [05](05-sitio-web.md) |
+| CAM-79 | Quiénes somos: las secciones blancas ("Misión y visión" y "A quién servimos") con el verde del pie de página | [05](05-sitio-web.md) |
+| CAM-80 | Quiénes somos: el bloque "INCOVSA e Inquiserca" alterna los dos logotipos, como el banner | [05](05-sitio-web.md) |
+| CAM-81 | Noticias: cada noticia ocupa todo el ancho y muestra completos su título y su texto | [05](05-sitio-web.md) |
+| CAM-82 | Contacto: al enviar, la página se desplaza hasta el aviso "Solicitud recibida" | [05](05-sitio-web.md) |
+| CAM-83 | Pantallas de acceso: el panel izquierdo solo con el título y su descripción, centrados; sin notas de roles | [03](03-roles-y-accesos.md), [05](05-sitio-web.md) |
+
+### Administración del sitio
+
+| Id | Cambio | Dónde |
+|---|---|---|
+| CAM-84 | Noticias: botón "Eliminar" con el ícono del basurero, como en el Catálogo, en lugar de "Ocultar"; ya no se ocultan (sin columna de estado ni casilla "Publicar de inmediato") | [05](05-sitio-web.md), [03](03-roles-y-accesos.md), [14](14-modelo-de-datos.md) |
+| CAM-85 | Solicitudes: motivo con inicial mayúscula; mensaje completo dentro de su cuadro; "Guardar comentario" pasa a "Editar comentario" cuando ya hay uno guardado | [05](05-sitio-web.md) |
+| CAM-86 | Usuarios del sitio y del picking: sin la nota "Único en … Puede ser el mismo de una cuenta …" en las ventanas de nuevo usuario y editar usuario | [03](03-roles-y-accesos.md), [11](11-picking-configuracion.md) |
+
+### Los dos sistemas
+
+| Id | Cambio | Dónde |
+|---|---|---|
+| CAM-87 | Todos los módulos: la instrucción, lo más breve posible, a la par del título, como en Facturación | [05](05-sitio-web.md), [06](06-picking-facturacion.md) |
+
+### Sistema de picking
+
+| Id | Cambio | Dónde |
+|---|---|---|
+| CAM-88 | Facturación: la tarjeta seleccionada muestra solo su número y su peso total, y seleccionar no mueve el desplazamiento del tablero | [06](06-picking-facturacion.md) |
+| CAM-89 | Facturación: fecha y hora programadas en verde (antes ámbar) y con cursor de mano | [06](06-picking-facturacion.md) |
+| CAM-90 | Facturación: la hora programada se escribe con el teclado (HH:MM) o se elige con el reloj | [06](06-picking-facturacion.md) |
+| CAM-91 | Facturación y Reportes: las fechas se escriben con el teclado (dd/mm/aaaa) o se eligen con el calendario | [06](06-picking-facturacion.md), [10](10-picking-reportes.md) |
+| CAM-92 | Calendario y reloj se abren debajo del campo, no a la derecha | [06](06-picking-facturacion.md), [10](10-picking-reportes.md) |
+| CAM-93 | Bodega: lote en verde; en el modo oscuro del tablero, en gris | [07](07-picking-bodega.md) |
+| CAM-94 | Tablero: la silueta del camión grande para todos los camiones; cuadro del pedido en un verde distinto al de la ruta (antes gris) | [07](07-picking-bodega.md) |
+| CAM-95 | Bodega: el "Detalle de Ruta" y el "Detalle de Pedido" muestran completos todos los pedidos facturados. Ruta: sin el texto al pie junto a "Ruta entregada" | [07](07-picking-bodega.md), [08](08-picking-ruta.md) |

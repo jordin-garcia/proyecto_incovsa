@@ -76,7 +76,7 @@ No se valida si una referencia ya se cargó antes: no puede pasar, porque los da
 
 ## Pantalla de Facturación (RF-SL-61)
 
-- El título y un texto de instrucciones **corto, a la par del título**, para dejar el mayor espacio posible al tablero y a las opciones de envío (13/10).
+- El título y un texto de instrucciones **corto, a la par del título**, para dejar el mayor espacio posible al tablero y a las opciones de envío (13/10). Desde el 15/10 todos los módulos de los dos sistemas usan este mismo encabezado ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)).
 - A la izquierda, el tablero de pedidos facturados; a la derecha, las dos opciones de envío.
 
 ### Lado izquierdo: tablero de pedidos facturados (RF-SL-67)
@@ -98,7 +98,9 @@ No se valida si una referencia ya se cargó antes: no puede pasar, porque los da
   - se puede seleccionar **uno o varios** pedidos facturados;
   - una opción **"Seleccionar todos"** selecciona todos los del tablero;
   - al arrastrar un pedido facturado seleccionado se llevan **todos los seleccionados** juntos a la opción de envío;
-  - al haber pedidos facturados seleccionados aparece la opción **"Eliminar"**, que los elimina del tablero después de confirmar. La bitácora registra la eliminación (RF-SL-68).
+  - al haber pedidos facturados seleccionados aparece la opción **"Eliminar"**, que los elimina del tablero después de confirmar. La bitácora registra la eliminación (RF-SL-68);
+  - **(15/10)** una tarjeta seleccionada se **compacta**: muestra **solo el número del pedido facturado y su peso total**, con la marca de seleccionada;
+  - **(15/10)** seleccionar o quitar la selección **no mueve el desplazamiento** del tablero: la lista se queda donde estaba.
 
 ### Lado derecho: opciones de envío (13/10)
 
@@ -114,6 +116,17 @@ Solo hay **dos** opciones, sin importar cuántos camiones tenga la sede:
 - Cada pedido facturado de una opción muestra su **número, su cliente y su total en kg** (13/10).
 - **Orden (13/10):** el facturador puede reordenar los pedidos facturados dentro de cada opción arrastrándolos. El orden **se guarda** y es el orden con que se envían a Bodega: el del detalle de la ruta o del pedido, el de sus líneas de preparación (por primera aparición) y el orden inicial de los clientes de la ruta (RN-29).
 - La **fecha y la hora programadas** son **obligatorias** para enviar (decisión del coordinador del 14/10). Se guardan y se muestran en Bodega (RN-53).
+- **Campos de fecha y hora (15/10):**
+
+| Campo | Cómo se llena |
+|---|---|
+| Fecha programada | Se **escribe con el teclado** en formato **dd/mm/aaaa** (las barras se agregan solas: "20102026" → "20/10/2026"; al salir del campo "5/1/2027" → "05/01/2027"), o se elige con el **botón del calendario** |
+| Hora programada | Se **escribe con el teclado** en formato de **24 horas, HH:MM** ("1330" → "13:30"; "9:05" → "09:05"), o se elige con el **botón del reloj** |
+
+- El calendario y el reloj se abren **debajo del campo**, alineados a la izquierda (el navegador los abre hacia arriba si no caben abajo).
+- Una fecha que no existe (por ejemplo, 31/02/2026) o una hora inválida (por ejemplo, 25:90) **no se guarda**, y el campo se marca en rojo con un mensaje del formato esperado.
+- Mientras están vacíos, los dos campos se muestran con un **fondo verde claro** (`--v50`, borde `--v300`), que combina con el sistema (antes ámbar). El cursor sobre ellos es una **mano**.
+- Lo escrito se guarda mientras se escribe, sin volver a pintar la pantalla.
 - Lo que tiene cada opción (pedidos facturados, orden, camión, piloto, fecha y hora) **se guarda en la base de datos**: al volver a entrar, cada opción conserva lo que se le asignó.
 - Después de enviar, la opción queda vacía y se puede volver a usar, con el mismo camión o con otro. Un camión puede hacer **varias rutas en el mismo día**.
 
@@ -158,4 +171,4 @@ Ver RN-11 en [12-reglas-de-negocio.md](12-reglas-de-negocio.md).
 
 ## Diferencias con el prototipo aprobado
 
-El prototipo de simulación implementa todo lo de este archivo desde el 14/10. Lo que se reemplazó del prototipo del 29/09 (captura manual, validación de existencias, un pedido por pantalla) y del prototipo del 13/10 (ventanas de productos y clientes que faltan, corrección del sector, una opción por camión, asa y "x" en las tarjetas) ya no se usa ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)).
+El prototipo de simulación implementa todo lo de este archivo desde el 14/10, y los ajustes del 15/10 desde ese día. Lo que se reemplazó del prototipo del 29/09 (captura manual, validación de existencias, un pedido por pantalla) y del prototipo del 13/10 (ventanas de productos y clientes que faltan, corrección del sector, una opción por camión, asa y "x" en las tarjetas) ya no se usa ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)).

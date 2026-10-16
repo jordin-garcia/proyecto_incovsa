@@ -21,6 +21,7 @@ Filtros de consulta para ver lo despachado en distintos lapsos de tiempo. Aplica
 - Al abrir el módulo, el periodo es el día de hoy, como en el prototipo.
 - Cómo se eligen en pantalla la semana, el mes y el año lo decide el equipo de diseño (acuerdo del 04/09: diseño e interacción libres).
 - El rango incluye la fecha de inicio y la fecha final, calculadas en la hora de Guatemala (12/10).
+- **Fechas del filtro (15/10):** las fechas de Diario, Semanal y Rango se **escriben con el teclado** en formato **dd/mm/aaaa** o se eligen con el **botón del calendario**, que se abre debajo del campo, igual que en Facturación ([06](06-picking-facturacion.md)). El periodo se actualiza al pulsar Enter, al salir del campo o al elegir en el calendario. Una fecha que no existe no cambia el periodo y el campo se marca en rojo.
 
 ## Pestaña "Despacho" (RF-SL-38)
 

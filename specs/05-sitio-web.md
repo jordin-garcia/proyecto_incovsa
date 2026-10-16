@@ -1,6 +1,8 @@
 # 05. Sitio web corporativo e institucional
 
 > **Cambios del 29/09/2026 (reunión 4), respuestas del 11/10/2026 y cambios del 13/10/2026 (reunión 5).** El Ing. William revisó el prototipo de simulación en las reuniones 4 y 5 y pidió los cambios que se describen en este archivo; el 11/10 y el 14/10 el coordinador resolvió las dudas sobre cómo aplicarlos. Todo lo demás del prototipo (diseño visual, estructura y comportamiento) está aprobado ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)).
+>
+> **Ajustes del coordinador del 15/10/2026** (CAM-78 a CAM-87): fondo verde en misión y visión y en las secciones blancas de Quiénes somos, logotipos alternados en "INCOVSA e Inquiserca", noticias a todo el ancho y completas, desplazamiento al aviso de Contacto, pantallas de acceso sin notas de roles, noticias que se eliminan en lugar de ocultarse y ajustes en la bandeja de solicitudes.
 
 ## Identidad
 
@@ -76,6 +78,7 @@ Cada mapa se inserta con un `iframe` con `allowfullscreen`, `loading="lazy"` y `
 - El texto es el de misión y visión del panel (abajo las transcripciones de `MISION.jpg` y `VISION.jpg`).
 - Las imágenes son galerías de hasta 5 que se suben desde el panel. **Mientras no se suba ninguna, el lugar de la imagen queda vacío** (decisión del coordinador del 14/10): `MISION.jpg` y `VISION.jpg` no se usan, porque ya traen el texto escrito y el logotipo "Transformamos INCOVSA".
 - En teléfono, el texto y la imagen van uno debajo del otro.
+- **Fondo (15/10):** la sección de misión y visión va con el **verde del pie de página** (`--v950`), con los títulos en blanco, igual en Inicio y en Quiénes somos.
 
 **Misión**, transcrita de `MISION.jpg`:
 
@@ -102,7 +105,9 @@ La imagen original de la visión dice "tranparente"; el texto del sitio dice "tr
 - **Historia:** texto pendiente de INCOVSA (P-19) y galería opcional de hasta 5 imágenes.
 - **Misión y visión** como se describe arriba (13/10).
 - **Valores (RF-SW-29, 13/10):** **solo 5 imágenes, una por cada valor**, en **una sola fila**, como las tarjetas de valores del prototipo. **Sin texto.** Se suben desde el panel. Mientras falte la imagen de un valor, su lugar muestra la tarjeta de pendiente del prototipo. En teléfono, la fila se acomoda al ancho de la pantalla.
-- El bloque "INCOVSA e Inquiserca" usa el logotipo de la cabecera.
+- **A quién servimos:** mercado industrial y mercado artesanal, como en el prototipo.
+- **INCOVSA e Inquiserca (15/10):** el bloque muestra los **logotipos de INCOVSA e Inquiserca alternándose**, de la misma manera que el banner principal. Si no hay logotipo de Inquiserca, muestra solo el de INCOVSA.
+- **Fondos (15/10):** las secciones que eran blancas, **"Misión y visión"** y **"A quién servimos"**, van con el **verde del pie de página** (`--v950`). Historia, Valores e "INCOVSA e Inquiserca" conservan el fondo claro, de modo que se alternan claro y verde.
 
 ### Industrias (RF-SW-03)
 
@@ -148,7 +153,9 @@ Muestra la **galería de imágenes**, el **nombre**, la **descripción**, la **p
 ### Noticias (RF-SW-18)
 
 - Cada noticia tiene **galería de imágenes (al menos una), título y texto**.
-- Se crean y editan desde el panel. Se conservan la fecha de publicación y la opción de publicar u ocultar.
+- Se crean, editan y **eliminan** desde el panel. Se conserva la fecha de publicación.
+- **(15/10)** Ya **no** hay opción de publicar u ocultar: toda noticia se publica al guardarla, y la que no debe mostrarse se elimina.
+- **Presentación (15/10):** cada noticia ocupa **todo el ancho** de la página, con su galería a la izquierda y la fecha, el título y el **texto completo** a la derecha (en teléfono, uno debajo del otro). El texto respeta sus saltos de línea y las palabras muy largas se parten para que nada quede oculto. Se ordenan de la más reciente a la más antigua.
 - El contenido inicial está pendiente (P-23).
 
 ### Contacto (RF-SW-06, RF-SW-19)
@@ -169,6 +176,7 @@ La página muestra el formulario y los datos de Quetzaltenango y Guatemala. Escu
 | Mensaje | Obligatorio |
 
 - **(13/10)** La solicitud **solo se guarda en el sistema** y se consulta en la bandeja del panel. **No se envía a ningún correo.** Por eso el sistema no necesita una cuenta de correo (P-09 se cierra) y de P-22 queda solo el horario de las sedes.
+- **(15/10)** Al enviar el mensaje, la página **se desplaza hasta el aviso "Solicitud recibida"**, para que se vea sin buscarlo.
 
 ### Textos que se reemplazan (RF-SW-27)
 
@@ -183,7 +191,7 @@ Textos del prototipo del 29/09 que mencionaban cuántas sedes o bodegas tiene la
 | Contacto, título | "Cuéntenos cómo podemos ayudarle" |
 | Acceso personal, opción del picking | "Facturación, bodega, ruta, reportes y configuración." |
 | Inicio de sesión del picking, texto lateral | "Control logístico de bodega: del pedido facturado a la entrega." |
-| Inicio de sesión, lista "Roles de este sistema" | "Gerencia: acceso total a los dos sistemas. Soporte: el mismo acceso, para mantenimiento. Los demás usuarios entran según los permisos que les asignan Gerencia o Soporte." |
+| Inicio de sesión, lista "Roles de este sistema" | **Se quitó el 15/10**, igual que la nota "Gerencia y Soporte usan la misma cuenta…" del acceso personal: el panel izquierdo de las pantallas de acceso solo lleva el título y su descripción ([03](03-roles-y-accesos.md)) |
 | Inicio de sesión, "¿Olvidó su contraseña?" | "Pídale a Gerencia o a Soporte que la restablezcan." |
 
 La cifra de la portada "**3** sedes con bodega de distribución" **se mantiene** (11/10). Los textos de la formulación de contacto que decían que la solicitud se envía por correo se quitan (13/10).
@@ -201,13 +209,15 @@ Entran los usuarios del sitio según sus permisos ([03-roles-y-accesos.md](03-ro
 | Contenido institucional | **Portada** (galería de hasta 5), **logotipo de INCOVSA**, **misión** y **visión** (texto y galería de hasta 5), **historia** (texto y galería opcional de hasta 5), **valores** (5 imágenes, una por valor, sin texto) y **logotipo de Inquiserca**. La sección "Imágenes del sitio" del prototipo se elimina (13/10) |
 | Industrias | Descripción y galería de hasta 5 imágenes de cada industria |
 | Catálogo | Productos públicos y sus industrias, con galería de hasta 5 imágenes. Se pueden eliminar |
-| Noticias | Título, texto y galería de hasta 5 imágenes de cada noticia |
+| Noticias | Título, texto y galería de hasta 5 imágenes de cada noticia. La lista muestra imagen, título, fecha y los botones **editar** (lápiz) y **eliminar** (basurero, con confirmación), como en el Catálogo. Sin columna de estado ni botón "Ocultar" (15/10) |
 | Información de contacto | Dirección, teléfono, correo, WhatsApp, horario y mapa de Google Maps de Quetzaltenango y Guatemala |
 | Solicitudes | Bandeja del formulario de contacto (abajo) |
 | Documentación interna | Productos documentados (abajo) |
 | Usuarios | Usuarios del sitio. Los administran Gerencia y Soporte, con contraseña, rol y permisos ([03-roles-y-accesos.md](03-roles-y-accesos.md)) |
 
 Las imágenes se suben desde la computadora, eligiéndolas o arrastrándolas. En cada galería se pueden agregar, quitar y reordenar imágenes, hasta 5.
+
+Cada sección muestra su **instrucción, lo más breve posible, a la par del título**, como en Facturación, para aprovechar el espacio de la pantalla (15/10).
 
 ### Producto público en el panel (RF-SW-23)
 
@@ -222,9 +232,10 @@ Las imágenes se suben desde la computadora, eligiéndolas o arrastrándolas. En
 
 ### Gestión de solicitudes (RF-SW-12, RF-SW-20)
 
-- Las solicitudes se **dividen por motivo**: **solicitud, queja y reclamo**.
+- Las solicitudes se **dividen por motivo**: **solicitud, queja y reclamo**. En la bandeja el motivo se muestra con **inicial mayúscula** ("Solicitud", "Queja", "Reclamo"), en verde, ámbar y rojo (15/10).
+- El **mensaje** se muestra **completo dentro de su cuadro**, con sus saltos de línea; las palabras muy largas se parten (15/10).
 - **Responsable:** se elige entre los **usuarios del sitio**.
-- **Comentario:** un solo comentario del responsable.
+- **Comentario:** un solo comentario del responsable. **(15/10)** Mientras no hay comentario, el botón dice **"Guardar comentario"**. Una vez guardado, el cuadro queda de solo lectura y el botón pasa a **"Editar comentario"**; al pulsarlo, el cuadro se habilita y el botón vuelve a "Guardar comentario".
 - **Estados:** botones **Asignado**, **En proceso** y **Solucionado** (RN-42), sin estado inicial y sin restricción de orden.
 - **No** se avisa por correo al responsable.
 - **Aviso de solicitudes nuevas (13/10):** el ícono de Solicitudes del menú lateral muestra un **indicador de notificaciones** cuando hay solicitudes nuevas (sin leer), también cuando el menú está reducido a íconos.
