@@ -419,4 +419,4 @@ Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los camb
 - el Documento 1 v0.2 y sus figuras (casos de uso, actividades, estados, arquitectura y modelos ER);
 - las capturas de los prototipos `.dc.html` (los archivos `.dc.html` y `canvas.json` se borraron del repositorio el 14/10, en el commit "Prototipo mejorado").
 
-El prototipo de simulación se actualizó el 14/10/2026 con los cambios de la reunión 5 y el 15/10/2026 con los ajustes del coordinador ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)), y el Documento 2 pasó a la versión 0.2. El Documento 2 v0.2 se armó el 14/10, así que **no** incorpora los ajustes del 15/10.
+El prototipo de simulación se actualizó el 14/10/2026 con los cambios de la reunión 5 y el 15/10/2026 con los ajustes del coordinador ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)), y el Documento 2 pasó a la versión 0.2 (la entregada el 14/10) y el 15/10 a la versión 0.3, alineada con la especificación 1.3.

@@ -8,7 +8,7 @@ La especificación vigente del proyecto está en [`../specs/`](../specs/README.m
 
 | Fuente | Documento que genera |
 |---|---|
-| `documento-2/` | `Documento 2 - Documentacion tecnica del sistema v0.2.docx` (la v0.1 del 12/10 se conserva) |
+| `documento-2/` | `Documento 2 - Documentacion tecnica del sistema v0.3.docx` (se conservan la v0.1 del 12/10 y la v0.2 del 14/10, la entregada) |
 | `nota-inventario/` | `Nota - Exclusion del control de inventario.docx`, para el Ing. Manuel Rojas (P-58) |
 
 Los `.docx` y `.pdf` no se suben al repositorio; se guardan en la carpeta local y en el Google Drive del equipo. Lo que se versiona es el Markdown de cada documento.
@@ -20,7 +20,7 @@ Requiere Python 3 con `python-docx` y Pillow, y Microsoft Word para actualizar l
 ```
 python herramientas/generar_diccionario.py
 python herramientas/armar_documento.py documento-2
-powershell -ExecutionPolicy Bypass -File herramientas/actualizar_indices.ps1 "Documento 2 - Documentacion tecnica del sistema v0.2.docx" "Documento 2 - Documentacion tecnica del sistema v0.2.pdf"
+powershell -ExecutionPolicy Bypass -File herramientas/actualizar_indices.ps1 "Documento 2 - Documentacion tecnica del sistema v0.3.docx" "Documento 2 - Documentacion tecnica del sistema v0.3.pdf"
 ```
 
 1. `generar_diccionario.py` escribe `documento-2/02b-diccionario-de-datos.md` a partir de `diagramas/modelo.py`, la misma fuente de los diagramas entidad-relación.

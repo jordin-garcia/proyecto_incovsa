@@ -71,7 +71,7 @@ Tabla: Catálogo de permisos {#tab:permisos}
 | Sitio | Contenido institucional | `sit.contenido` | Editar portada, logotipos, historia, misión, visión, valores e imágenes |
 | Sitio | Industrias | `sit.industrias` | Editar descripción e imágenes de cada industria |
 | Sitio | Catálogo | `sit.catalogo` | Crear, editar y eliminar productos públicos |
-| Sitio | Noticias | `sit.noticias` | Crear, editar, publicar y ocultar noticias |
+| Sitio | Noticias | `sit.noticias` | Crear, editar y eliminar noticias |
 | Sitio | Información de contacto | `sit.contacto` | Editar los datos de las sedes |
 | Sitio | Solicitudes | `sit.sol.ver` | Ver la bandeja de solicitudes |
 | Sitio | Solicitudes | `sit.sol.gestionar` | Gestionar solicitudes: responsable, comentario y estado |

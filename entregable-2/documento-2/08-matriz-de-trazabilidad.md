@@ -2,11 +2,11 @@
 
 # Matriz de trazabilidad
 
-La matriz relaciona cada requerimiento funcional vigente (`specs/04-requerimientos-funcionales.md`, versión del 14/10/2026) con el módulo que lo implementa, su caso de uso y sus casos de prueba del Anexo F. Los requerimientos eliminados no se incluyen; conservan su código en la especificación.
+La matriz relaciona cada requerimiento funcional vigente (`specs/04-requerimientos-funcionales.md`, versión del 15/10/2026) con el módulo que lo implementa, su caso de uso y sus casos de prueba del Anexo F. Los requerimientos eliminados no se incluyen; conservan su código en la especificación.
 
 La columna **Estado** indica el avance al Entregable No. 2:
 
-- **Prototipo:** el comportamiento está implementado y funcionando en el prototipo de simulación aprobado el 13/10/2026, que es el avance que se presenta en este entregable. En la aplicación definitiva está diseñado en este documento y en desarrollo.
+- **Prototipo:** el comportamiento está implementado y funcionando en el prototipo de simulación aprobado el 13/10/2026 y ajustado el 15/10/2026, que es el avance que se presenta en este entregable. En la aplicación definitiva está diseñado en este documento y en desarrollo.
 - **Diseñado:** está diseñado en este documento, pero el prototipo no lo ejecuta; se implementa en la aplicación definitiva.
 
 Los casos de prueba se ejecutan sobre la aplicación definitiva y su resultado queda en el Documento 6. «Documento 6» indica que el caso de prueba se define allí.
@@ -34,9 +34,9 @@ Tabla: Matriz de trazabilidad del sitio web {#tab:traza-sitio}
 | RF-SW-15 | Pie de página solo en cuatro páginas | Sitio público | CU-08 | Documento 6 | Prototipo |
 | RF-SW-16 | Presentación dinámica al desplazarse | Sitio público | CU-08 | Documento 6 | Prototipo |
 | RF-SW-17 | Productos Recomendados siempre visibles | Sitio público · contenido | CU-08 | CP-55 | Prototipo |
-| RF-SW-18 | Noticias con imágenes, título y texto | Panel · contenido | CU-07 | Documento 6 | Prototipo |
+| RF-SW-18 | Noticias con imágenes, título y texto; se eliminan en lugar de ocultarse | Panel · contenido | CU-07 | CP-62 | Prototipo |
 | RF-SW-19 | Teléfono internacional, validaciones y país obligatorio | Sitio público · solicitudes | CU-09 | CP-58 | Prototipo |
-| RF-SW-20 | Solicitudes por motivo, responsable, comentario y estados | Panel · solicitudes | CU-21 | Documento 6 | Prototipo |
+| RF-SW-20 | Solicitudes por motivo, responsable, comentario y estados | Panel · solicitudes | CU-21 | CP-63 | Prototipo |
 | RF-SW-21 | Búsqueda de documentos y ventana según permisos | Documentación interna · documentos | CU-10 | CP-57 | Prototipo |
 | RF-SW-22 | Sedes con mapa de Google Maps; sin Escuintla | Sitio público · contenido | CU-08 | Documento 6 | Prototipo |
 | RF-SW-23 | Carga de imágenes desde el panel | Panel · contenido | CU-07 | CP-52, CP-53 | Prototipo |
@@ -93,15 +93,15 @@ Tabla: Matriz de trazabilidad del sistema de picking {#tab:traza-picking}
 | RF-SL-56 | Rol de texto libre y permisos por casillas | usuarios | CU-12 | CP-44 | Prototipo |
 | RF-SL-57 | Eliminación lógica de usuarios | usuarios | CU-12 | CP-49 | Prototipo |
 | RF-SL-58 | Modo claro y modo oscuro del tablero | Bodega y tablero | CU-03 | Documento 6 | Prototipo |
-| RF-SL-59 | Filtros por periodo en Reportes | reportes | CU-14 | Documento 6 | Prototipo |
+| RF-SL-59 | Filtros por periodo en Reportes | reportes | CU-14 | CP-64 | Prototipo |
 | RF-SL-60 | Menú lateral reducible a íconos | Interfaz | CU-03 | Documento 6 | Prototipo |
-| RF-SL-61 | Pantalla de Facturación con dos opciones | Facturación | CU-01 | Documento 6 | Prototipo |
+| RF-SL-61 | Pantalla de Facturación con dos opciones | Facturación | CU-01 | CP-61 | Prototipo |
 | RF-SL-63 | Arrastrar entre tablero y opciones, y dentro de una opción | Facturación · envios | CU-01 | CP-30, CP-31 | Prototipo |
 | RF-SL-66 | Sedes por usuario | permisos | CU-12 | CP-43 | Prototipo |
 | RF-SL-67 | Tablero y opciones guardados | envios | CU-01 | CP-31 | Prototipo |
 | RF-SL-68 | Eliminar uno, varios o todos | envios | CU-01 | CP-30 | Prototipo |
 | RF-SL-69 | Seleccionar y arrastrar varios | Facturación · envios | CU-01 | CP-30 | Prototipo |
-| RF-SL-70 | Fecha y hora programadas obligatorias | envios | CU-01 | CP-32 | Prototipo |
+| RF-SL-70 | Fecha y hora programadas obligatorias, escritas con el teclado o elegidas | envios | CU-01 | CP-32, CP-60 | Prototipo |
 | RF-SL-71 | Orden de los pedidos facturados en la opción | envios | CU-01 | CP-31 | Prototipo |
 | RF-SL-72 | Rutas y pedidos con numeración diaria aparte | envios | CU-01 | CP-33, CP-34 | Prototipo |
 | RF-SL-73 | Peso de Conversión en 0: no se carga | odoo | CU-01 | CP-21, CP-23 | Prototipo |

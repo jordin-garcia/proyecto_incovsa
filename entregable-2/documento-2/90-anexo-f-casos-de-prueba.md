@@ -1,6 +1,6 @@
 # Anexo F. Casos de prueba iniciales {-}
 
-Estos son los casos de prueba iniciales del Entregable No. 2, en el formato del Documento 6 (Plan y evidencias de pruebas), alineados con la especificación del 14/10/2026. Cubren la conversión de kilogramos a unidades, la lectura del archivo de Odoo, el flujo pedido facturado → conversión → picking → preparación → despacho, la seguridad y el sitio web. Las columnas «Resultado obtenido» y «Estado» se llenan al ejecutar cada prueba sobre la aplicación; la evidencia se adjunta en el Documento 6.
+Estos son los casos de prueba iniciales del Entregable No. 2, en el formato del Documento 6 (Plan y evidencias de pruebas), alineados con la especificación del 15/10/2026. Cubren la conversión de kilogramos a unidades, la lectura del archivo de Odoo, el flujo pedido facturado → conversión → picking → preparación → despacho, la seguridad y el sitio web. Las columnas «Resultado obtenido» y «Estado» se llenan al ejecutar cada prueba sobre la aplicación; la evidencia se adjunta en el Documento 6.
 
 Los casos CP-01 a CP-15 son los 15 casos de conversión que INCOVSA validó el 23/09/2026. Desde el 13/10/2026 el Peso de Conversión llega en el archivo de Odoo; el cálculo y el resultado esperado no cambian. Se automatizan con Vitest sobre el módulo `conversion`.
 
@@ -58,7 +58,7 @@ Tabla: Casos de prueba del flujo pedido facturado → conversión → picking �
 | CP-33 | RF-SL-16, RF-SL-72, RN-52 | Dos envíos por camión el mismo día y uno al día siguiente | Enviar las tres opciones | Se crean la Ruta 1 y la Ruta 2 del primer día y la Ruta 1 del día siguiente, cada una con su fecha y su fecha y hora programadas | — | Pendiente |
 | CP-34 | RF-SL-72, RN-52 | Opción «Cliente recoge en bodega» el mismo día de CP-33 | Enviarla | Se crea el Pedido 1, con numeración aparte de las rutas | — | Pendiente |
 | CP-35 | RNF-06 | Envío a Bodega en el que falla la creación de las líneas (falla simulada en la prueba automatizada) | Ejecutar la prueba | No se guarda nada: ni el envío, ni sus líneas, ni su estado, ni su número | — | Pendiente |
-| CP-36 | RF-SL-75, RF-SL-74 | Ruta enviada con fecha y hora programadas | Abrirla en Bodega y pulsar «Detalle de Ruta» | Se ve la fecha y hora programadas, no la hora de envío; el detalle muestra cada pedido facturado con sus datos del archivo, en el orden del facturador | — | Pendiente |
+| CP-36 | RF-SL-75, RF-SL-74 | Ruta enviada con fecha y hora programadas | Abrirla en Bodega y pulsar «Detalle de Ruta» | Se ve la fecha y hora programadas, no la hora de envío; el detalle muestra completos cada pedido facturado y todas sus líneas, con sus datos del archivo, en el orden del facturador | — | Pendiente |
 | CP-37 | RF-SL-23, RNF-13 | Ruta en Bodega abierta en dos pantallas | Marcar una línea en una pantalla | La marca aparece en la otra pantalla sin recargar | — | Pendiente |
 | CP-38 | RF-SL-23, RF-SL-24, RN-11 | Ruta con todas sus líneas sin marcar | Pulsar «Marcar todo» y después «Ruta despachada» | El botón se habilita con todas marcadas; la ruta pasa a En Ruta y deja de aparecer en Bodega. Un pedido pasaría a Despachado | — | Pendiente |
 | CP-39 | RF-SL-20 | Ruta con líneas de distintos pesos | Pulsar «Ordenar por peso» | Las filas quedan de mayor a menor cantidad en kg en todas las pantallas; no queda en la bitácora | — | Pendiente |
@@ -92,3 +92,13 @@ Tabla: Casos de prueba del sitio web y del panel {#tab:cp-sitio}
 | CP-57 | RF-SW-21, RN-19 | Usuario con solo el permiso de ver documentos | Hacer clic en un producto documentado | La ventana muestra «Ver» y la vista previa de Google Drive, y ninguna opción de descargar | — | Pendiente |
 | CP-58 | RF-SW-19, RF-SW-06 | Formulario de contacto sin país, y con país Guatemala sin departamento | Enviarlo | Se pide el país, y con Guatemala el departamento y el municipio. Completo, la solicitud se guarda, no se envía por correo y aparece en la bandeja | — | Pendiente |
 | CP-59 | RF-SW-31 | Solicitud nueva y menú del panel reducido a íconos | Abrir el panel | El ícono de Solicitudes muestra el indicador de solicitudes nuevas | — | Pendiente |
+
+Tabla: Casos de prueba de los ajustes del 15/10/2026 {#tab:cp-ajustes}
+
+| Id | Requerimiento | Entrada | Procedimiento | Resultado esperado | Resultado obtenido | Estado |
+|---|---|---|---|---|---|---|
+| CP-60 | RF-SL-70, RN-53 | Opción «Envío por camión» vacía | Escribir «20102026» en la fecha y «1330» en la hora; después «31/02/2026» y «25:90» | Las primeras quedan como «20/10/2026» y «13:30» y se guardan; las segundas no se guardan y el campo se marca en rojo | — | Pendiente |
+| CP-61 | RF-SL-61 | Tablero de pedidos facturados desplazado hacia abajo | Seleccionar una tarjeta | El tablero no se mueve; la tarjeta seleccionada muestra solo su número y su peso total | — | Pendiente |
+| CP-62 | RF-SW-18 | Noticia publicada | Pulsar el botón del basurero en el panel y confirmar | La noticia deja de mostrarse en el sitio y la eliminación queda en la bitácora. No existe la opción de ocultar | — | Pendiente |
+| CP-63 | RF-SW-20 | Solicitud sin comentario | Escribir un comentario y pulsar «Guardar comentario»; después pulsar «Editar comentario» | Se guarda y el botón pasa a «Editar comentario» con el cuadro de solo lectura; al pulsarlo, el cuadro se habilita y el botón vuelve a «Guardar comentario» | — | Pendiente |
+| CP-64 | RF-SL-59 | Reportes con el periodo Rango | Escribir «01102026» en la fecha de inicio y pulsar Enter | La fecha queda como «01/10/2026» y el periodo se actualiza | — | Pendiente |

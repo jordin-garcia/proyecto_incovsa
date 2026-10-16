@@ -417,7 +417,7 @@ Tabla: Diccionario de la tabla producto_industria {#tab:dic-producto-industria}
 
 ### Tabla noticia
 
-**Propósito:** Noticias del sitio.
+**Propósito:** Noticias del sitio. Toda noticia guardada se publica; para quitarla del sitio se elimina (15/10/2026).
 
 Tabla: Diccionario de la tabla noticia {#tab:dic-noticia}
 
@@ -427,7 +427,6 @@ Tabla: Diccionario de la tabla noticia {#tab:dic-noticia}
 | `titulo` | varchar | 200 |  |  | No | Título |
 | `texto` | text | — |  |  | No | Texto |
 | `fecha_publicacion` | timestamptz | — |  |  | No | Fecha de publicación |
-| `publicada` | boolean | — |  |  | No | Si se muestra en el sitio |
 | `autor_id` | text | — |  | usuario | No | Usuario que la creó |
 | `creado_en` | timestamptz | — |  |  | No | Fecha y hora exactas en que se guardó el registro. Valor por omisión now() (RN-57) |
 | `actualizado_en` | timestamptz | — |  |  | No | Fecha y hora de la última modificación (@updatedAt de Prisma) |
