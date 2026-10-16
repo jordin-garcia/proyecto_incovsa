@@ -43,11 +43,11 @@ Además se entregan el repositorio (con un README de 16 secciones obligatorias) 
 | Inventario, entradas y salidas, existencias | **No se cubre.** INCOVSA lo sacó del alcance el 29/09: el inventario lo lleva Odoo. Falta la aprobación del docente (P-58) |
 | Pedidos pendientes de despacho | Rutas y pedidos En Preparación en Bodega |
 | Generación del picking | Carga del archivo de Odoo en Facturación, armado de rutas y pedidos, y agrupación por producto y lote con su conversión en Bodega |
-| Preparación y cambios de estado | Marcado por fila y botón "Pedido Despachado" (RN-11) |
+| Preparación y cambios de estado | Marcado por fila (también todo de una vez) y botón "Ruta Despachada" o "Pedido Despachado" (RN-11) |
 | Tablero para personal de bodega | El módulo de Bodega es el tablero |
 | Carga de vehículos | El facturador arrastra los pedidos facturados a "Envío por camión", elige camión y piloto, con control de peso y alerta de sobrepeso. No hay confirmación de carga (aprobado, P-45) |
-| Despacho | "Pedido Despachado" (Despachado o En Ruta) |
-| Rutas realizadas | Módulo de Ruta y su registro histórico |
+| Despacho | "Pedido Despachado" (el pedido pasa a Despachado) o "Ruta Despachada" (la ruta pasa a En Ruta) |
+| Rutas realizadas | Módulo de Ruta para las rutas en curso; el registro histórico está en la pestaña "Rutas realizadas" de Reportes (RF-SL-79) |
 | Reportes | Módulo de Reportes del prototipo aprobado, con filtros por periodo ([10-picking-reportes.md](10-picking-reportes.md)) |
 | Usuarios y roles | Permisos por usuario; roles predeterminados Gerencia y Soporte ([03-roles-y-accesos.md](03-roles-y-accesos.md)) |
 | Historial de operaciones | Bitácora consultable en la pestaña "Bitácora" de Reportes, con inicios de sesión (RN-39), y registro histórico de rutas en Reportes |

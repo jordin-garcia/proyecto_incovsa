@@ -412,6 +412,22 @@ El 15/10/2026 el coordinador revisó el prototipo con los cambios de la reunión
 | Pantallas de acceso | El logotipo se conserva arriba a la izquierda como enlace al sitio |
 | Tarjeta seleccionada en Facturación | Queda compacta, con la altura de su contenido, sin estirarse a la de las demás |
 
+## Correcciones de alineación (15/10/2026)
+
+El 15/10/2026, después de los ajustes del coordinador, se comparó esta carpeta con el Documento 2 y con el prototipo de simulación. El coordinador resolvió las diferencias así (versión 1.4 de esta carpeta y versión 0.4 del Documento 2):
+
+| Tema | Antes | Ahora (15/10) |
+|---|---|---|
+| Nombre de los botones de Bodega y Ruta | Esta carpeta decía "Ruta Despachada", "Pedido Despachado" y "Ruta Entregada"; el prototipo, el Documento 2 y CAM-95, "Ruta despachada", "Pedido despachado" y "Ruta entregada" | Mayúscula inicial en cada palabra, como esta carpeta: "Ruta Despachada", "Pedido Despachado" y "Ruta Entregada". Se corrigieron el prototipo, el Documento 2 y CAM-95 |
+| Cuadro del número del pedido en el tablero en pantalla completa | Verde lima solo en el módulo de Bodega; en el tablero, igual que el de la ruta | Verde lima también en el tablero, en el modo claro y en el modo oscuro |
+| Sistema de las cuentas de Gerencia y Soporte | El modelo decía "sitio o picking"; el prototipo y el Documento 2 usaban "ambos" | Se documenta "ambos": un solo registro que sirve en los dos sistemas ([14](14-modelo-de-datos.md), [16](16-arquitectura-y-tecnologia.md), decisión 26) |
+| Folio de la solicitud de contacto | Solo en el prototipo y en el Documento 2 | Se agrega a SOLICITUD_CONTACTO ([14](14-modelo-de-datos.md)) |
+| Archivo de Odoo de otra bodega | Solo en el prototipo y en el Documento 2 | Se documenta: si el archivo trae un prefijo desconocido, más de una bodega o una bodega distinta de la sede de trabajo, no se carga nada ([06](06-picking-facturacion.md)) |
+| Eliminación física y falta de bloqueo por intentos en la simulación | No estaban declarados | Se declaran como simplificaciones de la simulación ([20](20-prototipo-aprobado.md)); la aplicación real sigue con eliminación lógica y bloqueo (RNF-15) |
+| Camiones en Configuración del prototipo | Se veían y editaban los de todas las sedes | Solo los de las sedes del usuario ([11](11-picking-configuracion.md)) |
+| Documentos de apoyo de `entregable-1/` | `LEEME.md` decía que el Documento 1 v0.2 estaba alineado con esta carpeta y describía el prototipo navegable y los `.dc.html` ya borrados; la guía de cambios del prototipo y Pickit Visual no decían que eran históricos | `LEEME.md` actualizado; la guía y Pickit Visual se marcan como registros históricos |
+| Textos desactualizados | [05](05-sitio-web.md) usaba el nombre anterior del permiso de documentos; [15](15-requerimientos-no-funcionales.md) (RNF-06) y [17](17-lineamientos-del-curso.md) usaban la terminología anterior al 13/10 | Se corrigieron |
+
 ## Documentos no alineados con las reuniones 4 y 5
 
 Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los cambios del 29/09, del 11/10 ni del 13/10:
@@ -419,4 +435,4 @@ Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los camb
 - el Documento 1 v0.2 y sus figuras (casos de uso, actividades, estados, arquitectura y modelos ER);
 - las capturas de los prototipos `.dc.html` (los archivos `.dc.html` y `canvas.json` se borraron del repositorio el 14/10, en el commit "Prototipo mejorado").
 
-El prototipo de simulación se actualizó el 14/10/2026 con los cambios de la reunión 5 y el 15/10/2026 con los ajustes del coordinador ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)), y el Documento 2 pasó a la versión 0.2 (la entregada el 14/10) y el 15/10 a la versión 0.3, alineada con la especificación 1.3.
+El prototipo de simulación se actualizó el 14/10/2026 con los cambios de la reunión 5 y el 15/10/2026 con los ajustes del coordinador ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)), y el Documento 2 pasó a la versión 0.2 (la entregada el 14/10) y el 15/10 a la versión 0.3, alineada con la especificación 1.3, y después a la versión 0.4, alineada con la especificación 1.4.

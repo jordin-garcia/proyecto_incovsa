@@ -72,6 +72,12 @@ Prefijos de bodega en la Referencia:
 | `GT` | Guatemala |
 | `ESC` | Escuintla |
 
+**Bodega del archivo (15/10, comportamiento del prototipo aprobado).** Se revisa el primer segmento de las referencias "Hecho". **No se carga nada** del archivo, y se avisa el motivo, si:
+
+- alguna referencia trae un prefijo que no es `XE`, `GT` ni `ESC`;
+- el archivo trae referencias de más de una bodega;
+- la bodega del archivo no es la sede en la que trabaja el facturador. En ese caso se le pide que cambie la sede con el selector de la barra superior o que cargue el archivo correcto.
+
 No se valida si una referencia ya se cargó antes: no puede pasar, porque los datos vienen de Odoo.
 
 ## Pantalla de Facturación (RF-SL-61)

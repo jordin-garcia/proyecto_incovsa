@@ -16,13 +16,13 @@ Este es el modelo **conceptual**. Los nombres físicos, los tipos, los índices 
 | Entidad | Atributos principales | Relaciones |
 |---|---|---|
 | SEDE | nombre, prefijo de Odoo (`XE`, `GT`, `ESC`), tiene oficina (sí/no) | — |
-| USUARIO | nombre completo, nombre de usuario, correo (opcional), contraseña cifrada, activo, **rol (texto libre)**, sistema (sitio o picking), fecha de eliminación | Permisos (N:M), sedes (N:M, solo picking) |
+| USUARIO | nombre completo, nombre de usuario, correo (opcional), contraseña cifrada, activo, **rol (texto libre)**, sistema (sitio, picking o ambos; "ambos" solo en las cuentas de Gerencia y Soporte, 15/10), fecha de eliminación | Permisos (N:M), sedes (N:M, solo picking) |
 | PERMISO | código, sistema (sitio o picking), módulo, acción, descripción | — |
 | USUARIO_PERMISO | — | Usuario y permiso (única por par) |
 | USUARIO_SEDE | — | Usuario del picking y sede (única por par) |
 
 - Cada sistema tiene **sus propios usuarios** y su propia administración (RN-18). El nombre de usuario es **único por sistema** (13/10, RN-54): el par (nombre de usuario, sistema) no se repite. Una cuenta del sitio y una del picking pueden tener el mismo nombre de usuario.
-- Las cuentas con rol **Gerencia** o **Soporte** tienen acceso total a los dos sistemas y a todas las sedes, y sirven en los dos inicios de sesión (RN-38). Su nombre de usuario no se puede repetir en el otro sistema (RN-54).
+- Las cuentas con rol **Gerencia** o **Soporte** tienen acceso total a los dos sistemas y a todas las sedes, y sirven en los dos inicios de sesión (RN-38). Son **un solo registro** con el sistema "ambos" (15/10). Su nombre de usuario no se puede repetir en el otro sistema (RN-54).
 - Los pilotos son los usuarios del picking con rol "Piloto" (RN-46). El rol se compara sin distinguir mayúsculas, acentos ni espacios al inicio o al final.
 - Al eliminar un usuario se guarda su fecha de eliminación: no puede iniciar sesión, su nombre de usuario queda reservado en su sistema y se conservan la bitácora y los registros donde aparece.
 
@@ -93,7 +93,7 @@ Este es el modelo **conceptual**. Los nombres físicos, los tipos, los índices 
 | NOTICIA | título, texto, fecha de publicación | Usuario que la creó, galería de imágenes. Sin atributo "publicada": toda noticia guardada se publica, y se elimina en lugar de ocultarse (15/10) |
 | IMAGEN | área (portada, misión, visión, historia, industria, producto, noticia), identificador del dueño, posición (1 a 5), URL de R2 | Pertenece a un contenido, una industria, un producto, una noticia o a la portada. Máximo 5 por dueño (RN-56) |
 | PRODUCTO_DOCUMENTADO | nombre del producto, lote (obligatorio, números y letras), enlace de la ficha técnica, enlace de la hoja de seguridad, enlace del certificado de análisis (los tres de Google Drive, opcionales) | País de origen, usuario que lo creó (13/10) |
-| SOLICITUD_CONTACTO | motivo (solicitud, queja o reclamo), nombre, empresa, correo, código de país del teléfono, teléfono, mensaje, fecha, leída, estado (vacío, Asignado, En proceso o Solucionado), comentario del responsable (uno solo) | Sede destino (Quetzaltenango o Guatemala), país (obligatorio), departamento y municipio (obligatorios si el país es Guatemala), responsable (usuario del sitio, 0..1) |
+| SOLICITUD_CONTACTO | folio (número único que se le muestra a la persona al enviar, por ejemplo `SOL-2026-0001`; 15/10, del prototipo aprobado), motivo (solicitud, queja o reclamo), nombre, empresa, correo, código de país del teléfono, teléfono, mensaje, fecha, leída, estado (vacío, Asignado, En proceso o Solucionado), comentario del responsable (uno solo) | Sede destino (Quetzaltenango o Guatemala), país (obligatorio), departamento y municipio (obligatorios si el país es Guatemala), responsable (usuario del sitio, 0..1) |
 | INFORMACION_CONTACTO | dirección, teléfono, correo, WhatsApp, horario, dirección del mapa insertado de Google Maps | Sede (solo las que tienen oficina) |
 | PAIS | nombre | — |
 | DEPARTAMENTO | nombre | — (los 22 departamentos de Guatemala) |
@@ -112,7 +112,7 @@ Este es el modelo **conceptual**. Los nombres físicos, los tipos, los índices 
 | PRODUCTO_SITIO queda con nombre, descripción, presentación y países de origen; las imágenes pasan a IMAGEN | 11/10 y 13/10 |
 | DOCUMENTO_INTERNO se reemplaza por PRODUCTO_DOCUMENTADO, con enlaces en lugar de archivos | 13/10 |
 | Se agregan IMAGEN, VALOR y CONFIGURACION_SITIO | Galerías de hasta 5 imágenes, 5 valores con imagen, portada y logotipos (13/10) |
-| SOLICITUD_CONTACTO agrega teléfono internacional, campos territoriales, estado, responsable y comentario | 29/09, 11/10 y 13/10 |
+| SOLICITUD_CONTACTO agrega teléfono internacional, campos territoriales, estado, responsable, comentario y folio | 29/09, 11/10, 13/10 y 15/10 |
 | NOTICIA lleva título, texto y galería de imágenes | 29/09 y 13/10 |
 | NOTICIA sin el atributo "publicada"; las noticias se eliminan | 15/10 |
 | INFORMACION_CONTACTO agrega el mapa de Google Maps y solo cubre las sedes con oficina | 29/09 y 11/10 |
