@@ -128,14 +128,15 @@ TABLAS = {
         CREADO]),
     'estado_envio': ('Picking', 'Estados de las rutas y los pedidos (RN-11). Los carga la semilla.', [
         C('id', 'integer', '', True, desc='Identificador'),
-        C('nombre', 'varchar', '30', desc='En Preparación, Despachado, En Ruta o Entregado. Único')]),
+        C('nombre', 'varchar', '30', desc='En Preparación, Despachado, En Ruta o Entregado. Único'),
+        CREADO]),
     'envio': ('Picking', 'Lo que el facturador envía a Bodega desde una opción: una ruta (camión) o un pedido (cliente recoge).', [
         C('id', 'integer', '', True, desc='Identificador'),
         C('sede_id', 'integer', '', fk='sede', desc='Sede'),
         C('tipo', 'varchar', '10', desc='ruta o pedido'),
         C('numero', 'integer', '', desc='Número del día. Único junto con sede, tipo y fecha de envío (RN-52)'),
         C('fecha_envio', 'date', '', desc='Fecha de envío a Bodega, en la hora de Guatemala'),
-        C('programado_para', 'timestamp', '', desc='Fecha y hora programadas de envío o despacho (RN-53)'),
+        C('programado_para', 'timestamptz', '', desc='Fecha y hora programadas de envío o despacho (RN-53)'),
         C('estado_id', 'integer', '', fk='estado_envio', desc='Estado actual'),
         C('enviado_por', 'text', '', fk='usuario', desc='Facturador que lo envió'),
         C('camion_id', 'integer', '', fk='camion', nulo=True, desc='Camión (solo ruta)'),
@@ -171,7 +172,7 @@ TABLAS = {
         C('id', 'integer', '', True, desc='Siempre 1'),
         C('logotipo_incovsa_url', 'text', '', nulo=True, desc='Logotipo subido. Vacío: el recibido de la empresa'),
         C('logotipo_inquiserca_url', 'text', '', nulo=True, desc='Logotipo de Inquiserca (recibido el 13/10)'),
-        ACTUALIZADO]),
+        CREADO, ACTUALIZADO]),
     'contenido_institucional': ('Sitio', 'Textos de misión, visión e historia.', [
         C('id', 'integer', '', True, desc='Identificador'),
         C('seccion', 'varchar', '20', desc='mision, vision o historia. Única'),
@@ -181,7 +182,7 @@ TABLAS = {
         C('id', 'integer', '', True, desc='Identificador'),
         C('posicion', 'smallint', '', desc='1 a 5. Única'),
         C('imagen_url', 'text', '', nulo=True, desc='Imagen en Cloudflare R2. Vacía hasta que se sube'),
-        ACTUALIZADO]),
+        CREADO, ACTUALIZADO]),
     'industria': ('Sitio', 'Las 9 industrias atendidas.', [
         C('id', 'integer', '', True, desc='Identificador'),
         C('nombre', 'varchar', '60', desc='Nombre. Único'),
@@ -197,7 +198,8 @@ TABLAS = {
         CREADO, ACTUALIZADO]),
     'producto_industria': ('Sitio', 'Industrias de cada producto público (N:M).', [
         C('producto_sitio_id', 'integer', '', True, 'producto_sitio', desc='Producto público'),
-        C('industria_id', 'integer', '', True, 'industria', desc='Industria')]),
+        C('industria_id', 'integer', '', True, 'industria', desc='Industria'),
+        CREADO]),
     'noticia': ('Sitio', 'Noticias del sitio. Toda noticia guardada se publica; para quitarla del sitio se elimina (15/10/2026).', [
         C('id', 'integer', '', True, desc='Identificador'),
         C('titulo', 'varchar', '200', desc='Título'),
@@ -252,18 +254,21 @@ TABLAS = {
         C('whatsapp', 'varchar', '30', desc='WhatsApp'),
         C('horario', 'varchar', '120', nulo=True, desc='Horario (P-22)'),
         C('mapa_url', 'text', '', desc='Dirección del mapa insertado de Google Maps'),
-        ACTUALIZADO]),
+        CREADO, ACTUALIZADO]),
     'pais': ('Sitio', 'Lista de todos los países (código ISO de dos letras).', [
         C('id', 'integer', '', True, desc='Identificador'),
         C('codigo', 'char', '2', desc='Código ISO 3166-1. Único'),
-        C('nombre', 'varchar', '80', desc='Nombre en español')]),
+        C('nombre', 'varchar', '80', desc='Nombre en español'),
+        CREADO]),
     'departamento': ('Sitio', 'Los 22 departamentos de Guatemala (INE).', [
         C('id', 'integer', '', True, desc='Identificador'),
-        C('nombre', 'varchar', '40', desc='Nombre')]),
+        C('nombre', 'varchar', '40', desc='Nombre'),
+        CREADO]),
     'municipio': ('Sitio', 'Los 340 municipios de Guatemala (INE).', [
         C('id', 'integer', '', True, desc='Identificador'),
         C('departamento_id', 'integer', '', fk='departamento', desc='Departamento'),
-        C('nombre', 'varchar', '60', desc='Nombre')]),
+        C('nombre', 'varchar', '60', desc='Nombre'),
+        CREADO]),
 }
 
 # Restricciones de unicidad y de verificación (CHECK) además de las claves primarias

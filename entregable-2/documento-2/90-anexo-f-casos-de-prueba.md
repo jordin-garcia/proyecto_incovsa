@@ -60,10 +60,10 @@ Tabla: Casos de prueba del flujo pedido facturado → conversión → picking �
 | CP-35 | RNF-06 | Envío a Bodega en el que falla la creación de las líneas (falla simulada en la prueba automatizada) | Ejecutar la prueba | No se guarda nada: ni el envío, ni sus líneas, ni su estado, ni su número | — | Pendiente |
 | CP-36 | RF-SL-75, RF-SL-74 | Ruta enviada con fecha y hora programadas | Abrirla en Bodega y pulsar «Detalle de Ruta» | Se ve la fecha y hora programadas, no la hora de envío; el detalle muestra completos cada pedido facturado y todas sus líneas, con sus datos del archivo, en el orden del facturador | — | Pendiente |
 | CP-37 | RF-SL-23, RNF-13 | Ruta en Bodega abierta en dos pantallas | Marcar una línea en una pantalla | La marca aparece en la otra pantalla sin recargar | — | Pendiente |
-| CP-38 | RF-SL-23, RF-SL-24, RN-11 | Ruta con todas sus líneas sin marcar | Pulsar «Marcar todo» y después «Ruta despachada» | El botón se habilita con todas marcadas; la ruta pasa a En Ruta y deja de aparecer en Bodega. Un pedido pasaría a Despachado | — | Pendiente |
+| CP-38 | RF-SL-23, RF-SL-24, RN-11 | Ruta con todas sus líneas sin marcar | Pulsar «Marcar todo» y después «Ruta Despachada» | El botón se habilita con todas marcadas; la ruta pasa a En Ruta y deja de aparecer en Bodega. Un pedido pasaría a Despachado | — | Pendiente |
 | CP-39 | RF-SL-20 | Ruta con líneas de distintos pesos | Pulsar «Ordenar por peso» | Las filas quedan de mayor a menor cantidad en kg en todas las pantallas; no queda en la bitácora | — | Pendiente |
 | CP-40 | RF-SL-77 | Ruta con más líneas de las que caben en una columna del tablero | Abrir el tablero en pantalla completa | Las líneas se numeran de arriba hacia abajo: primero la columna izquierda y después la derecha | — | Pendiente |
-| CP-41 | RF-SL-78, RF-SL-79, RF-SL-28 | Piloto con dos rutas En Ruta | Abrir Ruta, reordenar los clientes y pulsar «Ruta entregada» | Las rutas aparecen de la más reciente a la más antigua; no hay registro histórico en el módulo; el recorrido queda guardado y la ruta aparece en «Rutas realizadas» de Reportes | — | Pendiente |
+| CP-41 | RF-SL-78, RF-SL-79, RF-SL-28 | Piloto con dos rutas En Ruta | Abrir Ruta, reordenar los clientes y pulsar «Ruta Entregada» | Las rutas aparecen de la más reciente a la más antigua; no hay registro histórico en el módulo; el recorrido queda guardado y la ruta aparece en «Rutas realizadas» de Reportes | — | Pendiente |
 
 Tabla: Casos de prueba de seguridad y acceso {#tab:cp-seguridad}
 

@@ -246,6 +246,7 @@ Tabla: Diccionario de la tabla estado_envio {#tab:dic-estado-envio}
 |---|---|---|---|---|---|---|
 | `id` | integer | — | Sí |  | No | Identificador |
 | `nombre` | varchar | 30 |  |  | No | En Preparación, Despachado, En Ruta o Entregado. Único |
+| `creado_en` | timestamptz | — |  |  | No | Fecha y hora exactas en que se guardó el registro. Valor por omisión now() (RN-57) |
 
 Restricciones de unicidad: `nombre`.
 
@@ -262,7 +263,7 @@ Tabla: Diccionario de la tabla envio {#tab:dic-envio}
 | `tipo` | varchar | 10 |  |  | No | ruta o pedido |
 | `numero` | integer | — |  |  | No | Número del día. Único junto con sede, tipo y fecha de envío (RN-52) |
 | `fecha_envio` | date | — |  |  | No | Fecha de envío a Bodega, en la hora de Guatemala |
-| `programado_para` | timestamp | — |  |  | No | Fecha y hora programadas de envío o despacho (RN-53) |
+| `programado_para` | timestamptz | — |  |  | No | Fecha y hora programadas de envío o despacho (RN-53) |
 | `estado_id` | integer | — |  | estado_envio | No | Estado actual |
 | `enviado_por` | text | — |  | usuario | No | Facturador que lo envió |
 | `camion_id` | integer | — |  | camion | Sí | Camión (solo ruta) |
@@ -338,6 +339,7 @@ Tabla: Diccionario de la tabla configuracion_sitio {#tab:dic-configuracion-sitio
 | `id` | integer | — | Sí |  | No | Siempre 1 |
 | `logotipo_incovsa_url` | text | — |  |  | Sí | Logotipo subido. Vacío: el recibido de la empresa |
 | `logotipo_inquiserca_url` | text | — |  |  | Sí | Logotipo de Inquiserca (recibido el 13/10) |
+| `creado_en` | timestamptz | — |  |  | No | Fecha y hora exactas en que se guardó el registro. Valor por omisión now() (RN-57) |
 | `actualizado_en` | timestamptz | — |  |  | No | Fecha y hora de la última modificación (@updatedAt de Prisma) |
 
 ### Tabla contenido_institucional
@@ -367,6 +369,7 @@ Tabla: Diccionario de la tabla valor {#tab:dic-valor}
 | `id` | integer | — | Sí |  | No | Identificador |
 | `posicion` | smallint | — |  |  | No | 1 a 5. Única |
 | `imagen_url` | text | — |  |  | Sí | Imagen en Cloudflare R2. Vacía hasta que se sube |
+| `creado_en` | timestamptz | — |  |  | No | Fecha y hora exactas en que se guardó el registro. Valor por omisión now() (RN-57) |
 | `actualizado_en` | timestamptz | — |  |  | No | Fecha y hora de la última modificación (@updatedAt de Prisma) |
 
 Restricciones de unicidad: `posicion`.
@@ -414,6 +417,7 @@ Tabla: Diccionario de la tabla producto_industria {#tab:dic-producto-industria}
 |---|---|---|---|---|---|---|
 | `producto_sitio_id` | integer | — | Sí | producto_sitio | No | Producto público |
 | `industria_id` | integer | — | Sí | industria | No | Industria |
+| `creado_en` | timestamptz | — |  |  | No | Fecha y hora exactas en que se guardó el registro. Valor por omisión now() (RN-57) |
 
 ### Tabla noticia
 
@@ -517,6 +521,7 @@ Tabla: Diccionario de la tabla informacion_contacto {#tab:dic-informacion-contac
 | `whatsapp` | varchar | 30 |  |  | No | WhatsApp |
 | `horario` | varchar | 120 |  |  | Sí | Horario (P-22) |
 | `mapa_url` | text | — |  |  | No | Dirección del mapa insertado de Google Maps |
+| `creado_en` | timestamptz | — |  |  | No | Fecha y hora exactas en que se guardó el registro. Valor por omisión now() (RN-57) |
 | `actualizado_en` | timestamptz | — |  |  | No | Fecha y hora de la última modificación (@updatedAt de Prisma) |
 
 Restricciones de unicidad: `sede_id`.
@@ -532,6 +537,7 @@ Tabla: Diccionario de la tabla pais {#tab:dic-pais}
 | `id` | integer | — | Sí |  | No | Identificador |
 | `codigo` | char | 2 |  |  | No | Código ISO 3166-1. Único |
 | `nombre` | varchar | 80 |  |  | No | Nombre en español |
+| `creado_en` | timestamptz | — |  |  | No | Fecha y hora exactas en que se guardó el registro. Valor por omisión now() (RN-57) |
 
 Restricciones de unicidad: `codigo`.
 
@@ -545,6 +551,7 @@ Tabla: Diccionario de la tabla departamento {#tab:dic-departamento}
 |---|---|---|---|---|---|---|
 | `id` | integer | — | Sí |  | No | Identificador |
 | `nombre` | varchar | 40 |  |  | No | Nombre |
+| `creado_en` | timestamptz | — |  |  | No | Fecha y hora exactas en que se guardó el registro. Valor por omisión now() (RN-57) |
 
 ### Tabla municipio
 
@@ -557,5 +564,6 @@ Tabla: Diccionario de la tabla municipio {#tab:dic-municipio}
 | `id` | integer | — | Sí |  | No | Identificador |
 | `departamento_id` | integer | — |  | departamento | No | Departamento |
 | `nombre` | varchar | 60 |  |  | No | Nombre |
+| `creado_en` | timestamptz | — |  |  | No | Fecha y hora exactas en que se guardó el registro. Valor por omisión now() (RN-57) |
 
 \vertical

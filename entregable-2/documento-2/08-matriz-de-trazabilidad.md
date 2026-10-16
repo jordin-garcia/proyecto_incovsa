@@ -77,7 +77,7 @@ Tabla: Matriz de trazabilidad del sistema de picking {#tab:traza-picking}
 | RF-SL-26 | El piloto solo ve sus rutas | ruta · permisos | CU-05 | Documento 6 | Prototipo |
 | RF-SL-27 | Ruta con una fila por cliente | ruta | CU-05 | Documento 6 | Prototipo |
 | RF-SL-28 | El recorrido se guarda al entregar | ruta | CU-05 | CP-41 | Prototipo |
-| RF-SL-29 | «Ruta entregada» registra la entrega | ruta | CU-05 | CP-41 | Prototipo |
+| RF-SL-29 | «Ruta Entregada» registra la entrega | ruta | CU-05 | CP-41 | Prototipo |
 | RF-SL-30 | Número del día, fecha, programada, camión y piloto de la ruta | envios | CU-01 | CP-33 | Prototipo |
 | RF-SL-35 | Estados y transiciones (RN-11) | envios · bodega · ruta | CU-04, CU-05 | CP-38, CP-41 | Prototipo |
 | RF-SL-36 | Bitácora con inicios de sesión | bitacora | CU-14 | CP-45, CP-47 | Prototipo |

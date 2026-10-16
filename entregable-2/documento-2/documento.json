@@ -1,6 +1,6 @@
 {
   "titulo_documento": "DOCUMENTO 2: DOCUMENTACIÓN TÉCNICA DEL SISTEMA",
-  "archivo_salida": "Documento 2 - Documentacion tecnica del sistema v0.3.docx",
+  "archivo_salida": "Documento 2 - Documentacion tecnica del sistema v0.4.docx",
   "lugar_fecha": "Quetzaltenango, 15 de octubre de 2026",
   "portada": true,
   "control_versiones": true,
@@ -9,7 +9,8 @@
   "versiones": [
     ["0.1", "12/10/2026", "Héctor Jordin Adolfo García Coyoy", "Creación inicial para el Entregable No. 2: introducción técnica, arquitectura general y su diagrama, diagrama de componentes, tecnologías y versiones, dependencias, estructura del repositorio, autenticación, roles y permisos, manejo de archivos y de errores, servicios externos, respaldos, convenciones de desarrollo y casos de prueba iniciales"],
     ["0.2", "14/10/2026", "Héctor Jordin Adolfo García Coyoy", "Alineación con la especificación 1.2 (cambios de la reunión del 13/10/2026): diagrama de clases, diagramas de secuencia, modelo entidad-relación, diccionario de datos, reglas de integridad, migraciones, lógica de conversión y de picking y despacho, acceso personal en tres pasos, documentación interna con enlaces de Google Drive, matriz de trazabilidad y casos de prueba actualizados"],
-    ["0.3", "15/10/2026", "Héctor Jordin Adolfo García Coyoy", "Alineación con la especificación 1.3 (ajustes del coordinador del 15/10/2026): noticias que se eliminan en lugar de ocultarse (diccionario de datos, modelo entidad-relación y permisos), fechas y hora programadas escritas con el teclado, matriz de trazabilidad y casos de prueba CP-60 a CP-64"]
+    ["0.3", "15/10/2026", "Héctor Jordin Adolfo García Coyoy", "Alineación con la especificación 1.3 (ajustes del coordinador del 15/10/2026): noticias que se eliminan en lugar de ocultarse (diccionario de datos, modelo entidad-relación y permisos), fechas y hora programadas escritas con el teclado, matriz de trazabilidad y casos de prueba CP-60 a CP-64"],
+    ["0.4", "15/10/2026", "Héctor Jordin Adolfo García Coyoy", "Alineación con la especificación 1.4 (correcciones de alineación del 15/10/2026): fecha y hora de creación en todas las tablas y fecha y hora programadas con zona horaria (diccionario de datos y modelo entidad-relación), cuentas de Gerencia y Soporte con el sistema «ambos», y nombres de los botones «Ruta Despachada», «Pedido Despachado» y «Ruta Entregada» (diagramas de secuencia, lógica de picking y despacho, matriz de trazabilidad y casos de prueba)"]
   ],
   "secciones": [
     "01-introduccion-y-arquitectura.md",
