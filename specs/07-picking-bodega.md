@@ -93,7 +93,7 @@ El módulo tiene un botón para abrir el tablero en pantalla completa, que es el
 - El modo elegido vale para esa pantalla y no se comparte con las demás.
 - **Numeración de las filas (13/10):** cuando las filas se reparten en dos columnas, se numeran **de arriba hacia abajo**: primero toda la columna izquierda y después la derecha.
 - **Lote en el tablero (15/10):** en el modo claro, la etiqueta del lote es **verde**, como en el módulo; en el modo oscuro, **gris** (fondo #3A3A3E, texto #EDEDED), acorde con la escala de grises de ese modo.
-- **Cuadro del número en el tablero (15/10):** como en el módulo, el cuadro de "PEDIDO" va en **verde lima** (`--lima`), en el modo claro y en el modo oscuro, para distinguirlo del de "RUTA" (confirmado por el coordinador el 15/10).
+- **Cuadro del número en el tablero (15/10):** como en el módulo, el cuadro de "PEDIDO" se distingue del de "RUTA": en el modo claro va en **verde lima** (`--lima`) y en el modo oscuro en **gris** (fondo #3A3A3E, texto #EDEDED, como la etiqueta del lote), acorde con la escala de grises de ese modo (decisión del coordinador del 16/10; el 15/10 se había aplicado lima en los dos modos).
 - **Silueta del camión (15/10):** todas las rutas usan la **silueta del camión grande** (la que antes se usaba solo para el de 6,000 kg), cualquiera que sea la capacidad del camión, porque la empresa puede comprar camiones de otras capacidades. El nombre y la capacidad del camión se siguen mostrando arriba de la silueta.
 
 ## Legibilidad (RF-SL-25, RNF-02)

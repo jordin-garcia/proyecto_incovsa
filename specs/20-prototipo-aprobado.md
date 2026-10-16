@@ -243,5 +243,5 @@ El 15/10/2026 el coordinador revisó el prototipo con los cambios de la reunión
 | CAM-91 | Facturación y Reportes: las fechas se escriben con el teclado (dd/mm/aaaa) o se eligen con el calendario | [06](06-picking-facturacion.md), [10](10-picking-reportes.md) |
 | CAM-92 | Calendario y reloj se abren debajo del campo, no a la derecha | [06](06-picking-facturacion.md), [10](10-picking-reportes.md) |
 | CAM-93 | Bodega: lote en verde; en el modo oscuro del tablero, en gris | [07](07-picking-bodega.md) |
-| CAM-94 | Tablero: la silueta del camión grande para todos los camiones; cuadro del pedido en verde lima, distinto del verde de la ruta (antes gris), en el módulo y en el tablero en pantalla completa, en los dos modos (confirmado el 15/10) | [07](07-picking-bodega.md) |
+| CAM-94 | Tablero: la silueta del camión grande para todos los camiones; cuadro del pedido en verde lima, distinto del verde de la ruta (antes gris), en el módulo y en el modo claro del tablero en pantalla completa; en el modo oscuro del tablero, gris (16/10) | [07](07-picking-bodega.md) |
 | CAM-95 | Bodega: el "Detalle de Ruta" y el "Detalle de Pedido" muestran completos todos los pedidos facturados. Ruta: sin el texto al pie junto a "Ruta Entregada" | [07](07-picking-bodega.md), [08](08-picking-ruta.md) |
