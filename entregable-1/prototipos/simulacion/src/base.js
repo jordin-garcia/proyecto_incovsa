@@ -308,7 +308,7 @@ const pedido = (id) => S.pedidos.find((p) => p.id === id);
 const facturado = (id) => S.facturados.find((f) => f.id === id);
 const rutaDe = (pedId) => S.rutas.find((r) => r.pedido === pedId);
 const camionesDe = (sede) => S.camiones.filter((c) => c.sede === sede);
-/* El nombre se conserva aunque el usuario se elimine, para el historial (P-42) */
+/* El nombre se conserva aunque el usuario se elimine, para el historial; en la aplicación real la eliminación es lógica (specs/16, decisión 2) */
 const nombreUsuario = (id) => (usuario(id) || {}).nombre || (S.nombresEliminados || {})[id] || '—';
 const totalPedido = (p) => r3(p.lineas.reduce((a, l) => a + l.kg, 0));
 /* Lo que se envía a Bodega: ruta si sale del camión, pedido si lo recoge el cliente,

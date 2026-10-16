@@ -1,5 +1,7 @@
 # Guía para aplicar los cambios de la reunión 4 al prototipo de simulación
 
+> **Documento histórico.** Esta guía se aplicó el 12/10/2026. Después, la reunión 5 (13/10), las respuestas del 14/10 y los ajustes del 15/10 cambiaron varias de sus instrucciones (por ejemplo, misión y visión, la documentación interna, los catálogos del picking y las opciones de envío). Lo vigente está en [`specs/`](../../../specs/README.md) y en el código de `src/`. No se usa para hacer cambios nuevos.
+
 **Para:** el agente (Claude) que hará los cambios en una conversación nueva.
 **Preparada:** 11/10/2026, al cerrar la incorporación de los cambios a `specs/` (versión 1.1).
 **Resultado esperado:** `entregable-1/prototipos/prototipo-simulacion-incovsa.html` regenerado, que se comporta exactamente como describe `specs/`.

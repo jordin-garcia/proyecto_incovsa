@@ -372,7 +372,7 @@ const Panel = (() => {
         <div class="bloque-cuerpo rejilla">${[['dir', 'Dirección'], ['tel', 'Teléfono'], ['correo', 'Correo'], ['wa', 'WhatsApp'], ['horario', 'Horario'], ['mapa', 'Mapa (dirección del mapa insertado de Google Maps)']].map(([f, n]) => `<label class="campo"><span>${n}</span><input class="inp ${f === 'mapa' ? 'mono' : ''}" ${f === 'mapa' ? 'style="font-size:12px"' : ''} data-s="${k}" data-f="${f}" value="${esc(c[k][f])}" placeholder="${f === 'horario' ? 'Pendiente P-22' : f === 'mapa' ? 'https://www.google.com/maps/embed?pb=…' : ''}"></label>`).join('')}
         ${c[k].mapa ? `<iframe class="mapa" src="${esc(c[k].mapa)}" title="Mapa de ${SEDES[k]}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>` : ''}
         <button class="btn btn-p btn-sm" data-g="${k}" style="justify-self:start">Guardar</button></div></div>`).join('')}</div>
-      <div style="margin-top:20px">${pend('P-22', 'Faltan los horarios de las dos sedes y el correo que recibe el formulario.')}</div>`,
+      <div style="margin-top:20px">${pend('P-22', 'Faltan los horarios de las dos sedes.')}</div>`,
       (root) => $$('[data-g]', root).forEach((b) => b.addEventListener('click', () => {
         const k = b.dataset.g, m = $(`[data-s=${k}][data-f=mapa]`, root).value.trim();
         if (m && !/^https:\/\/(www\.)?google\.[a-z.]+\/maps\/embed/.test(m)) return toast('El mapa debe ser la dirección del mapa insertado de Google Maps (https://www.google.com/maps/embed?…).', 'error');

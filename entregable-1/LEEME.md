@@ -12,7 +12,7 @@ La especificación vigente del proyecto está en [`../specs/`](../specs/README.m
 | Archivo | Qué es |
 |---|---|
 | `Documento 1 - Memoria general y especificacion del sistema v0.1.docx` y `.pdf` | La versión **entregada** el 21/09/2026 (79 páginas). Se conserva sin cambios como registro de lo que se entregó |
-| `Documento 1 - Memoria general y especificacion del sistema v0.2.docx` y `.pdf` | La versión **vigente** (24/09/2026, 86 páginas). Incorpora las decisiones del 23 y 24/09/2026 y está alineada con `specs/`. Es la que se sigue editando para el Entregable 2 |
+| `Documento 1 - Memoria general y especificacion del sistema v0.2.docx` y `.pdf` | La versión **vigente** (24/09/2026, 86 páginas). Incorpora las decisiones del 23 y 24/09/2026. **Todavía no** incorpora los cambios de las reuniones 4 y 5 (29/09 y 13/10/2026) ni los ajustes posteriores (P-77 en `specs/19-pendientes.md`). Mientras tanto, lo vigente es `specs/` |
 
 ### Qué cambió de la v0.1 a la v0.2
 
@@ -52,8 +52,9 @@ Los índices general y de figuras ya están actualizados. Si alguien edita el te
 | `figuras/prototipos/` | Las capturas de los prototipos. El número del nombre de archivo sigue el orden del lienzo; en el Documento 1 son las figuras 20 a 36 |
 | `figuras/evidencias/` | Las once imágenes de las reuniones y de la visita (figuras 9 a 19) |
 | `diagramas/` | El código fuente de cada figura. Las figuras 1 a 5 se dibujan con guiones de Python; las figuras 6 a 8 son archivos Mermaid (`.mmd`) |
-| `prototipos/` | Las pantallas del prototipo (`.dc.html`), el lienzo (`canvas.json`), el prototipo navegable y sus herramientas |
-| `prototipos/pickit-visual/` | Design system y demo interactiva del diagrama de carga (modos iPad admin y TV). Abrir `index.html` |
+| `prototipos/simulacion/` | El código fuente del **prototipo de simulación aprobado** (ver abajo) |
+| `prototipos/herramientas/` | Las herramientas que generaron las capturas y el prototipo navegable del Documento 1. Ya no funcionan: los `.dc.html` y `canvas.json` que leían se borraron el 14/10/2026 |
+| `prototipos/pickit-visual/` | Propuesta original del tablero de carga (modos iPad admin y TV) y siluetas de los camiones. Es una referencia histórica: el diseño vigente del tablero es el del prototipo de simulación (`specs/07`, `specs/20`) |
 
 ### Para volver a generar las figuras 1 a 5
 
@@ -77,6 +78,8 @@ También se pueden editar en <https://mermaid.live>.
 
 ### Para volver a capturar los prototipos
 
+> **Ya no aplica.** Los archivos `.dc.html` y `canvas.json` se borraron del repositorio el 14/10/2026 (commit "Prototipo mejorado"); las capturas de `figuras/prototipos/` quedan como las de la v0.2. Las instrucciones se conservan como registro y para recuperar esos archivos del historial de git si hiciera falta.
+
 Con Python, Pillow y Google Chrome instalados, desde `prototipos/herramientas/`:
 
 ```
@@ -98,44 +101,14 @@ Sirve tanto para las capturas como para el prototipo navegable, pero no reproduc
 
 ---
 
-## Prototipo navegable para la validación con INCOVSA
+## Prototipo de simulación aprobado
 
-**`prototipos/prototipo-completo-incovsa.html`**
+El prototipo navegable del Entregable 1 (`prototipo-completo-incovsa.html`) se quitó del repositorio el 12/10/2026. El prototipo vigente es el **prototipo de simulación**, aprobado por el Ing. William Ambrossio y presentado al Ing. Manuel Rojas como avance del Entregable 2. Lo que tiene, cómo se usa para desarrollar y su design system están en [`specs/20-prototipo-aprobado.md`](../specs/20-prototipo-aprobado.md).
 
-Es un solo archivo. Se abre con doble clic en cualquier navegador y no necesita instalar nada. Conviene tener conexión, porque las tipografías se descargan de Google Fonts.
-
-Lo que se puede recorrer:
-
-- **Sitio público.** El menú lleva a Inicio, Quiénes somos, Industrias, Productos, Noticias y Contacto. En el catálogo, al pulsar la ficha de un producto se abre su detalle.
-- **Acceso interno.** «Acceso personal» abre el ingreso de personal. Al elegir «Administración del sitio» o «Sistema de picking» aparece el inicio de sesión de cada uno. Al pulsar **Ingresar**:
-  - el sitio abre el Panel del sitio;
-  - el picking abre el módulo de **Inventario**, que es la vista de Soporte IT, con los seis módulos en su menú.
-
-  La opción de **Odoo no hace nada**, porque todavía no se tiene el enlace.
-- **Menús por rol.** Cada pantalla muestra el menú del rol que la usa:
-  - Facturación, Bodega y Ruta muestran solo su propio módulo, como los verán el facturador, el operario de bodega y el piloto;
-  - Inventario, Reportes y Configuración, que usan Gerencia y Soporte IT, muestran los seis módulos.
-
-  Para volver desde una pantalla operativa se usa el botón **Atrás** del navegador o **Cerrar sesión**.
-- **Cerrar sesión.** Al pulsar el nombre del usuario, arriba a la derecha, aparece **Cerrar sesión**, que devuelve al ingreso.
-- **Interacción.** Se pueden marcar las líneas preparadas en Bodega, filtrar el catálogo, escribir en los formularios y usar el buscador. Los datos son de ejemplo.
-
-Hay cuatro cosas que el prototipo agrega y que la empresa todavía debe aprobar (P-16 en `specs/19-pendientes.md`):
-
-- la entrada al sistema al pulsar Ingresar;
-- el cierre de sesión en el menú del usuario;
-- el enlace de Noticias en el menú del sitio;
-- el módulo de Configuración.
-
-La pantalla de inicio en teléfono no está en este archivo; se muestra aparte.
-
-Para volver a generarlo, desde `prototipos/herramientas/`:
-
-```
-python armar_prototipo.py
-```
-
-Lee `canvas.json` y los archivos `.dc.html`, y reescribe el HTML completo.
+- **Código fuente:** `prototipos/simulacion/src/`.
+- **Cómo se arma:** desde `prototipos/simulacion/`, `python construir.py` (requiere Python 3 con Pillow, numpy y openpyxl, y la carpeta `docs_incovsa/`). Genera `prototipos/prototipo-simulacion-incovsa.html`, que se abre con doble clic.
+- El HTML armado **no se sube** al repositorio, porque contiene datos reales de la empresa (RNF-10).
+- `prototipos/simulacion/GUIA-CAMBIOS-PROTOTIPO.md` es la guía con que se aplicaron los cambios de la reunión 4 el 12/10/2026. Es un registro histórico.
 
 ---
 
@@ -155,10 +128,10 @@ Las reglas y los casos de prueba de conversión (Anexo E de los lineamientos) es
 
 ## Elementos que corresponden al Entregable No. 2
 
-Los lineamientos ubican en el segundo entregable lo siguiente, que el Documento 1 deja señalado como pendiente:
+Los lineamientos ubican en el segundo entregable lo siguiente, que el Documento 1 deja señalado como pendiente. Ya está en el Documento 2 (`../entregable-2/`), salvo el diagrama de despliegue, que se completa en el Entregable 3:
 
 - Diagramas de secuencia de los procesos críticos.
 - Diagrama de componentes, diagrama de despliegue y diagrama de clases.
 - Estructura del repositorio y detalle de dependencias.
 - Diccionario de datos completo, reglas de integridad y procedimiento de migraciones.
-- Especificación del módulo de Reportes, que sigue pendiente de definición por parte de la empresa.
+- Especificación del módulo de Reportes. Está definida en `specs/10-picking-reportes.md`, a partir del prototipo aprobado.
