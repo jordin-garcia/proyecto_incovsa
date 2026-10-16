@@ -467,6 +467,7 @@ tr.lista .cod, tr.lista .kg { color: var(--g500); }
 .tb-num { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 4.2em; height: 4.2em; border-radius: .9em; background: var(--tb-acento); color: var(--tb-sobre); flex: none; }
 .tb-num small { font: 700 .56em/1 var(--f-ui); letter-spacing: .14em; text-transform: uppercase; opacity: .8; }
 .tb-num b { font: 800 2.1em/1 var(--f-disp); letter-spacing: -.04em; }
+.tb-num.recoge { background: var(--lima); color: #fff; }       /* el pedido en verde lima, en los dos modos (specs/07) */
 .tb-cab h2 { color: var(--tb-txt); font: 700 1.6em/1.1 var(--f-disp); letter-spacing: -.02em; display: flex; align-items: center; gap: .5em; flex-wrap: wrap; }
 .tb-tipo { font: 700 .5em/1 var(--f-ui); letter-spacing: .12em; text-transform: uppercase; padding: .5em .7em; border-radius: .5em; background: var(--tb-ok-f); color: var(--tb-acento); }
 .tb-meta { display: flex; gap: 1.2em; margin-top: .45em; color: var(--tb-sua); font-size: .92em; flex-wrap: wrap; }

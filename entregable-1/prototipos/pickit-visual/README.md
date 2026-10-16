@@ -2,6 +2,8 @@
 
 Prototipo interactivo del sistema visual de carga para INCOVSA.
 
+> **Referencia histórica.** El diseño vigente del tablero de Bodega es el del prototipo de simulación aprobado (`../simulacion/`): modo claro y modo oscuro en negros y grises en lugar de "TV" en verde (29/09/2026) y la silueta del camión grande para todos los camiones (15/10/2026). Ver `specs/07-picking-bodega.md` y `specs/20-prototipo-aprobado.md`.
+
 ## Abrir
 
 Doble clic en [`index.html`](./index.html) o servir la carpeta con cualquier servidor estático:

@@ -73,17 +73,17 @@ Bodega muestra las rutas y los pedidos En Preparación en el orden de la cola, c
 
 ## Despacho y entrega (módulos `bodega` y `ruta`)
 
-- «Ruta despachada» o «Pedido despachado» se habilita cuando todas las líneas están marcadas. El pedido pasa a **Despachado** y termina; la ruta pasa a **En Ruta** y aparece en el módulo de Ruta del piloto.
-- El piloto ve sus rutas en curso, de la más reciente a la más antigua, reordena los clientes y pulsa «Ruta entregada»: el orden de ese momento queda como **recorrido** y la ruta pasa a **Entregado**. Desde ahí se consulta en Reportes.
+- «Ruta Despachada» o «Pedido Despachado» se habilita cuando todas las líneas están marcadas. El pedido pasa a **Despachado** y termina; la ruta pasa a **En Ruta** y aparece en el módulo de Ruta del piloto.
+- El piloto ve sus rutas en curso, de la más reciente a la más antigua, reordena los clientes y pulsa «Ruta Entregada»: el orden de ese momento queda como **recorrido** y la ruta pasa a **Entregado**. Desde ahí se consulta en Reportes.
 
 Tabla: Estados de las rutas y los pedidos {#tab:estados}
 
 | Estado | Cuándo |
 |---|---|
 | En Preparación | Al enviar desde Facturación |
-| Despachado | Pedido (cliente recoge), al pulsar «Pedido despachado» |
-| En Ruta | Ruta (camión), al pulsar «Ruta despachada» |
-| Entregado | Ruta, al pulsar «Ruta entregada» |
+| Despachado | Pedido (cliente recoge), al pulsar «Pedido Despachado» |
+| En Ruta | Ruta (camión), al pulsar «Ruta Despachada» |
+| Entregado | Ruta, al pulsar «Ruta Entregada» |
 
 # Manejo de archivos
 

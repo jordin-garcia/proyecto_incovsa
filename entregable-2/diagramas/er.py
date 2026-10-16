@@ -113,7 +113,7 @@ FIGURAS = {
     }),
     "sitio": (2700, 1500, "Sitio web", {
         "pais": (0, Y0), "departamento": (0, 400), "municipio": (0, 590),
-        "solicitud_contacto": (1, Y0), "producto_documentado": (0, 860), "informacion_contacto": (1, 1080),
+        "solicitud_contacto": (1, Y0), "producto_documentado": (0, 860), "informacion_contacto": (1, 930),
         "industria": (2, Y0), "producto_industria": (2, 500), "producto_sitio": (2, 720), "noticia": (2, 1100),
         "imagen": (3, Y0), "valor": (3, 640), "contenido_institucional": (3, 870), "configuracion_sitio": (3, 1120),
     }),

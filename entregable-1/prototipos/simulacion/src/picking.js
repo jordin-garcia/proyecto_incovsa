@@ -351,7 +351,7 @@ const Picking = (() => {
           <td>${htmlConversion(l.kg, l.p2)} <span class="muted mono" style="font-size:11.5px;margin-left:4px">÷ ${fmt(l.p2)}</span></td>
           <td class="cen"><button class="marca ${l.listo ? 'on' : ''}" data-marcar="${l.id}" data-p="${p.id}" aria-pressed="${l.listo}" aria-label="Marcar como listo">${ico('check')}</button></td></tr>`).join('')}</tbody></table></div>
       <div class="ped-pie"><span class="muted" style="font-size:14px">${listas === n ? `Todo listo. Al despachar pasa a <b>${esRuta(p) ? 'En Ruta' : 'Despachado'}</b>.` : `El botón se habilita cuando las ${n} líneas estén marcadas.`}</span>
-        <button class="btn btn-p" data-despachar="${p.id}" ${listas === n ? '' : 'disabled'}>${ico('check')} ${esRuta(p) ? 'Ruta despachada' : 'Pedido despachado'}</button></div>
+        <button class="btn btn-p" data-despachar="${p.id}" ${listas === n ? '' : 'disabled'}>${ico('check')} ${esRuta(p) ? 'Ruta Despachada' : 'Pedido Despachado'}</button></div>
     </article>`;
   }
   /* Detalle de Ruta o de Pedido: solo muestra lo que se armó en Facturación, con los datos del archivo (RF-SL-74) */
@@ -371,7 +371,7 @@ const Picking = (() => {
   }
   function despachar(p, u, alTerminar) {
     const destino = esRuta(p) ? 'En Ruta' : 'Despachado';
-    confirmar(`Despachar ${etiqueta(p)}`, `${esRuta(p) ? 'La ruta' : 'El pedido'} pasa a <b>${destino}</b>${esRuta(p) ? ` y aparece en el módulo de Ruta de ${esc(nombreUsuario(p.piloto))}` : ''}. No se requiere confirmar la carga en el camión.`, esRuta(p) ? 'Ruta despachada' : 'Pedido despachado', () => {
+    confirmar(`Despachar ${etiqueta(p)}`, `${esRuta(p) ? 'La ruta' : 'El pedido'} pasa a <b>${destino}</b>${esRuta(p) ? ` y aparece en el módulo de Ruta de ${esc(nombreUsuario(p.piloto))}` : ''}. No se requiere confirmar la carga en el camión.`, esRuta(p) ? 'Ruta Despachada' : 'Pedido Despachado', () => {
       opDespachar(p.id, u.id); guardar();
       if (alTerminar) alTerminar(p); else { toast(`${etiqueta(p)} → ${destino}.`); repintar(); }
     });
@@ -392,17 +392,17 @@ const Picking = (() => {
     if (!lista.find((r) => r.id === rutaSel)) rutaSel = lista[0] ? lista[0].id : null;
     const r = S.rutas.find((x) => x.id === rutaSel);
     const propias = esPiloto(u) || !tiene(u, 'pk.ruta.todas');
-    return vista('ruta', u, cab('Módulo de ruta', propias ? 'Mis rutas' : 'Rutas en curso', `${propias ? 'Sus rutas asignadas.' : 'Rutas en curso de la sede.'} Arrastre los clientes para acomodar el recorrido y pulse «Ruta entregada» al terminar.`) + `
+    return vista('ruta', u, cab('Módulo de ruta', propias ? 'Mis rutas' : 'Rutas en curso', `${propias ? 'Sus rutas asignadas.' : 'Rutas en curso de la sede.'} Arrastre los clientes para acomodar el recorrido y pulse «Ruta Entregada» al terminar.`) + `
       ${lista.length ? `<div class="ruta-lay">
         <div>${lista.map((x) => { const p = pedido(x.pedido); return `<button class="ruta-op ${x.id === rutaSel ? 'on' : ''}" data-r="${x.id}"><div style="display:flex;justify-content:space-between;align-items:center"><b>${etiqueta(p)}</b>${chipEstado(p)}</div>
           <div class="muted" style="font-size:13.5px;margin-top:8px">${fFecha(x.fecha)} · programada ${p.prog.slice(11, 16)} · ${esc((camion(x.camion) || {}).n || '—')}</div><div class="muted" style="font-size:13.5px">${esc(nombreUsuario(x.piloto))} · ${x.orden.length} cliente(s) · ${kg(totalPedido(p))}</div></button>`; }).join('')}</div>
         <div>${r ? detalleRuta(r) : ''}</div></div>`
-      : `<div class="tarjeta vacio" style="padding:60px">${ico('ruta')}<h4>No hay rutas en curso</h4><p>Una ruta aparece aquí cuando Bodega pulsa «Ruta despachada».</p></div>`}`, (root) => {
+      : `<div class="tarjeta vacio" style="padding:60px">${ico('ruta')}<h4>No hay rutas en curso</h4><p>Una ruta aparece aquí cuando Bodega pulsa «Ruta Despachada».</p></div>`}`, (root) => {
       $$('[data-r]', root).forEach((b) => b.addEventListener('click', () => { rutaSel = b.dataset.r; repintar(); }));
       const tb = $('[data-paradas]', root);
       if (tb && r) ordenable(tb, { item: 'tr', asa: '.asa', onFin: (ids) => { opOrdenRuta(r.id, ids); guardar(); repintar(); } });
       const be = $('[data-entregar]', root);
-      if (be) be.addEventListener('click', () => { const cl = clientesRuta(r); confirmar(`Entregar ${etiqueta(pedido(r.pedido))}`, `Se registra la entrega completa a los ${cl.length} clientes y la ruta pasa a <b>Entregado</b>. Se guarda este recorrido: ${cl.map((c, i) => `<b>${i + 1}.</b> ${esc(c.nombre)}`).join(' · ')}.`, 'Ruta entregada', () => {
+      if (be) be.addEventListener('click', () => { const cl = clientesRuta(r); confirmar(`Entregar ${etiqueta(pedido(r.pedido))}`, `Se registra la entrega completa a los ${cl.length} clientes y la ruta pasa a <b>Entregado</b>. Se guarda este recorrido: ${cl.map((c, i) => `<b>${i + 1}.</b> ${esc(c.nombre)}`).join(' · ')}.`, 'Ruta Entregada', () => {
         opEntregar(r.id, u.id); guardar(); toast(`Ruta ${r.num} entregada. Quedó en el registro histórico de Reportes.`); rutaSel = null; repintar();
       }); });
     }, true);
@@ -415,7 +415,7 @@ const Picking = (() => {
       <div class="tabla-caja"><table class="tabla"><thead><tr><th style="width:34px"></th><th style="width:70px">Orden</th><th>Cliente</th><th>Sector</th><th class="der">Total (kg)</th></tr></thead>
         <tbody data-paradas>${cl.map((c, i) => `<tr data-id="${esc(c.ck)}"><td><span class="asa">${ico('asa', 'ico-s')}</span></td><td><span class="parada-n">${i + 1}</span></td><td><b>${esc(c.nombre)}</b></td><td class="muted">${esc(c.sector)}</td><td class="der kg">${fmt(c.total)}</td></tr>`).join('')}</tbody>
         <tfoot><tr><td></td><td colspan="3">Total de la ruta</td><td class="der kg">${fmt(totalPedido(p))}</td></tr></tfoot></table></div>
-      <div class="ped-pie" style="justify-content:flex-end"><button class="btn btn-p btn-lg" data-entregar>${ico('check')} Ruta entregada</button></div>
+      <div class="ped-pie" style="justify-content:flex-end"><button class="btn btn-p btn-lg" data-entregar>${ico('check')} Ruta Entregada</button></div>
     </section>`;
   }
 
@@ -503,14 +503,16 @@ const Picking = (() => {
      CONFIGURACIÓN (specs/11): desde el 13/10 solo camiones y usuarios
      ====================================================================== */
   let cfgTab = null;
-  const selSedes = (nombre, valor) => `<select class="sel" name="${nombre}">${Object.entries(SEDES).map(([k, n]) => `<option value="${k}" ${k === valor ? 'selected' : ''}>${n}</option>`).join('')}</select>`;
+  const selSedes = (nombre, valor, sedes = Object.keys(SEDES)) => `<select class="sel" name="${nombre}">${sedes.map((k) => [k, SEDES[k]]).map(([k, n]) => `<option value="${k}" ${k === valor ? 'selected' : ''}>${n}</option>`).join('')}</select>`;
   function configuracion(u) {
-    const tabs = [['camiones', 'Camiones', S.camiones.length, tiene(u, 'pk.cfg.camiones')], ['usuarios', 'Usuarios', S.usuarios.filter((x) => enSistema(x, 'picking')).length, esTotal(u)]].filter((t) => t[3]);
+    // Camiones: solo los de las sedes que tiene asignadas el usuario (specs/11)
+    const misSedes = sedesDe(u), misCamiones = S.camiones.filter((c) => misSedes.includes(c.sede));
+    const tabs = [['camiones', 'Camiones', misCamiones.length, tiene(u, 'pk.cfg.camiones')], ['usuarios', 'Usuarios', S.usuarios.filter((x) => enSistema(x, 'picking')).length, esTotal(u)]].filter((t) => t[3]);
     if (!tabs.find((t) => t[0] === cfgTab)) cfgTab = tabs[0][0];
     const acc = { camiones: 'Nuevo camión', usuarios: 'Nuevo usuario' }[cfgTab];
     let tabla = '', notas = '';
     if (cfgTab === 'camiones') {
-      tabla = `<table class="tabla"><thead><tr><th>Identificación</th><th class="der">Capacidad máxima</th><th>Sede</th><th></th></tr></thead><tbody>${S.camiones.map((c) => `<tr><td><b>${esc(c.n)}</b></td><td class="der kg">${fmt(c.cap)} kg</td><td>${SEDES[c.sede]}</td><td class="der" style="white-space:nowrap"><button class="btn btn-s btn-sm" data-ed="${c.id}" title="Editar" aria-label="Editar">${ico('editar', 'ico-s')}</button> <button class="btn btn-g btn-sm" data-del="${c.id}" title="Eliminar">${ico('borrar', 'ico-s')}</button></td></tr>`).join('')}</tbody></table>`;
+      tabla = `<table class="tabla"><thead><tr><th>Identificación</th><th class="der">Capacidad máxima</th><th>Sede</th><th></th></tr></thead><tbody>${misCamiones.map((c) => `<tr><td><b>${esc(c.n)}</b></td><td class="der kg">${fmt(c.cap)} kg</td><td>${SEDES[c.sede]}</td><td class="der" style="white-space:nowrap"><button class="btn btn-s btn-sm" data-ed="${c.id}" title="Editar" aria-label="Editar">${ico('editar', 'ico-s')}</button> <button class="btn btn-g btn-sm" data-del="${c.id}" title="Eliminar">${ico('borrar', 'ico-s')}</button></td></tr>`).join('')}</tbody></table>`;
       notas = pend('P-01', 'Falta la identificación real de los 3 camiones de Quetzaltenango; aquí aparecen numerados. Los camiones de la sede son la lista desplegable de «Envío por camión» en Facturación, y su capacidad alimenta la alerta de sobrepeso.');
     } else {
       tabla = `<table class="tabla"><thead><tr><th>Nombre</th><th>Usuario</th><th>Rol</th><th>Sedes</th><th>Permisos del picking</th><th>Estado</th><th></th></tr></thead><tbody>${S.usuarios.filter((x) => enSistema(x, 'picking')).map((x) => `<tr><td><div style="display:flex;gap:10px;align-items:center"><span class="avatar" style="width:34px;height:34px;font-size:12.5px">${iniciales(x.nombre)}</span><b>${esc(x.nombre)}</b></div></td><td class="mono">${esc(x.usuario)}</td>
@@ -532,7 +534,7 @@ const Picking = (() => {
         if (cfgTab === 'camiones') {
           const c = camion(id);
           const bloqueado = (t) => modal({ titulo: 'No se puede eliminar', cuerpo: `<p style="color:var(--g600)">${t}</p>`, acciones: [{ txt: 'Entendido', cls: 'btn-p' }] });
-          if (S.rutas.some((r) => r.camion === c.id)) return bloqueado(`${esc(c.n)} tiene rutas registradas. En la aplicación real la eliminación es lógica y el historial se conserva (P-42).`);
+          if (S.rutas.some((r) => r.camion === c.id)) return bloqueado(`${esc(c.n)} tiene rutas registradas. En la aplicación real la eliminación es lógica y el historial se conserva.`);
           if (Object.values(S.opciones).some((o) => (o.camion || {}).camion === c.id)) return bloqueado(`${esc(c.n)} está elegido en «Envío por camión» de Facturación.`);
           confirmar('Eliminar', `¿Eliminar <b>${esc(c.n)}</b>?`, 'Eliminar', () => { S.camiones = S.camiones.filter((x) => x !== c); bit(u.id, 'Eliminación de camión', c.n); guardar(); toast('Camión eliminado.'); repintar(); }, 'btn-d');
         } else eliminarUsuario(usuario(id), u, 'picking', repintar);
@@ -541,7 +543,7 @@ const Picking = (() => {
         if (cfgTab === 'camiones') {
           const c = id != null ? camion(id) : null;
           modal({ titulo: c ? 'Editar camión' : 'Nuevo camión', cuerpo: `<div class="rejilla"><label class="campo"><span>Identificación ${pendIn('P-01')}</span><input class="inp" name="n" value="${esc(c ? c.n : '')}"></label>
-              <div class="rejilla r2"><label class="campo"><span>Capacidad máxima (kg)</span><input class="inp mono" name="cap" value="${c ? fmt(c.cap) : ''}"></label><label class="campo"><span>Sede</span>${selSedes('sede', c ? c.sede : 'XE')}</label></div></div>`,
+              <div class="rejilla r2"><label class="campo"><span>Capacidad máxima (kg)</span><input class="inp mono" name="cap" value="${c ? fmt(c.cap) : ''}"></label><label class="campo"><span>Sede</span>${selSedes('sede', c ? c.sede : misSedes[0], misSedes)}</label></div></div>`,
             acciones: [{ txt: 'Cancelar' }, { txt: 'Guardar', cls: 'btn-p', fn: (m) => {
               const n = $('[name=n]', m).value.trim(), cap = leerNumero($('[name=cap]', m).value), sede = $('[name=sede]', m).value;
               if (!n) throw Err('La identificación es obligatoria.'); if (!(cap > 0)) throw Err('La capacidad debe ser mayor que cero.');

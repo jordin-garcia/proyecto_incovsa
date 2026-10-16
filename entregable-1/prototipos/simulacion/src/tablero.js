@@ -58,7 +58,7 @@ const Tablero = (() => {
       : `<span>${ico('edificio')} <b>El cliente recoge en bodega</b></span>`);
     return `<section class="tb-actual">
       <div class="tb-cab">
-        <div class="tb-num"><small>${esRuta(p) ? 'Ruta' : 'Pedido'}</small><b>${p.num}</b></div>
+        <div class="tb-num ${esRuta(p) ? '' : 'recoge'}"><small>${esRuta(p) ? 'Ruta' : 'Pedido'}</small><b>${p.num}</b></div>
         <div style="min-width:0"><h2>Prioridad ${pos + 1} de ${total} <span class="tb-tipo">${esRuta(p) ? 'Envío en camión' : 'Recoge en bodega'}</span></h2>
           <div class="tb-meta">${meta}</div></div>
         <div class="tb-prog">
@@ -70,7 +70,7 @@ const Tablero = (() => {
       <div class="tb-lineas" data-lineas>${p.prep.map((l, i) => linea(l, i, p)).join('')}</div>
       <div class="tb-pie">
         <div class="txt">${listas === n ? `<b>Todo listo.</b> Al despachar, ${esRuta(p) ? 'la ruta pasa a <b>En Ruta</b>' : 'el pedido pasa a <b>Despachado</b>'}.` : `Toque cada línea cuando el producto esté fuera de la bodega. Faltan <b>${n - listas}</b>.`}</div>
-        <button class="tb-despachar" data-despachar ${listas === n ? '' : 'disabled'}>${ico('check')} ${esRuta(p) ? 'Ruta despachada' : 'Pedido despachado'}</button>
+        <button class="tb-despachar" data-despachar ${listas === n ? '' : 'disabled'}>${ico('check')} ${esRuta(p) ? 'Ruta Despachada' : 'Pedido Despachado'}</button>
       </div>
     </section>`;
   }
@@ -145,7 +145,7 @@ const Tablero = (() => {
     requestAnimationFrame(() => ajustar(tb));
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ajustar($('.tb', document)));
     marcasPrevias = {};
-    lista.forEach((x) => x.prep.forEach((l) => { marcasPrevias[x.id + ':' + l.prod] = l.listo; }));
+    lista.forEach((x) => x.prep.forEach((l) => { marcasPrevias[x.id + ':' + l.id] = l.listo; }));
     $$('[data-tema]', tb).forEach((b) => b.addEventListener('click', () => { if (b.tagName === 'BUTTON') { fijarTema(b.dataset.tema); repintar(); } }));
     $('[data-completa]', tb).addEventListener('click', () => { const d = document.documentElement; if (!document.fullscreenElement) (d.requestFullscreen || d.webkitRequestFullscreen || (() => {})).call(d); else document.exitFullscreen(); });
     if (!p) return;

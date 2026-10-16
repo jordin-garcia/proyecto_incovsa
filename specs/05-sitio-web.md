@@ -258,7 +258,7 @@ Cada sección muestra su **instrucción, lo más breve posible, a la par del tí
 
 - Se valida que cada enlace escrito sea una dirección de Google Drive (`https://drive.google.com/…` o `https://docs.google.com/…`).
 - Lo que distingue a dos productos documentados con el mismo nombre es su país de origen y su lote. El par (nombre, país, lote) no se repite.
-- Crear, editar y eliminar requieren el permiso "Subir, reemplazar y eliminar documentos".
+- Crear, editar y eliminar requieren el permiso "Crear, editar y eliminar productos documentados" (antes "Subir, reemplazar y eliminar documentos", 13/10).
 
 ### Tabla de la documentación (RF-SW-21)
 

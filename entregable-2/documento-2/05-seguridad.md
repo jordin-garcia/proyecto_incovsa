@@ -22,6 +22,7 @@ El paso 1 revela si un nombre de usuario existe; lo pidió la contraparte y el c
   - el nombre de usuario que escribe la persona (`display_username`), único junto con el sistema;
   - una **clave de acceso interna** única, formada por el sistema y el nombre de usuario (por ejemplo, `picking.maria.argueta`), que es la que recibe Better Auth;
   - un correo interno único derivado de esa clave, que nunca se muestra ni se usa para enviar correos. El correo real de la persona, opcional, se guarda aparte.
+- Las cuentas de Gerencia y Soporte, que sirven en los dos sistemas, son un solo registro con el sistema «ambos», y su clave de acceso interna se forma con él (por ejemplo, `ambos.maria.argueta`).
 - El correo electrónico de la cuenta es opcional: los pilotos y los operarios no tienen correo.
 - No hay selector de sede al iniciar sesión (RF-SL-02). Quien tiene acceso a más de una sede la elige después en la barra superior.
 
