@@ -198,12 +198,11 @@ TABLAS = {
     'producto_industria': ('Sitio', 'Industrias de cada producto público (N:M).', [
         C('producto_sitio_id', 'integer', '', True, 'producto_sitio', desc='Producto público'),
         C('industria_id', 'integer', '', True, 'industria', desc='Industria')]),
-    'noticia': ('Sitio', 'Noticias del sitio.', [
+    'noticia': ('Sitio', 'Noticias del sitio. Toda noticia guardada se publica; para quitarla del sitio se elimina (15/10/2026).', [
         C('id', 'integer', '', True, desc='Identificador'),
         C('titulo', 'varchar', '200', desc='Título'),
         C('texto', 'text', '', desc='Texto'),
         C('fecha_publicacion', 'timestamptz', '', desc='Fecha de publicación'),
-        C('publicada', 'boolean', '', desc='Si se muestra en el sitio'),
         C('autor_id', 'text', '', fk='usuario', desc='Usuario que la creó'),
         CREADO, ACTUALIZADO]),
     'imagen': ('Sitio', 'Imágenes de las galerías de hasta 5 (RN-56). Cada imagen es de un área y, según el área, de una industria, un producto o una noticia.', [

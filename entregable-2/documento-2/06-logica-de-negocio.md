@@ -53,7 +53,7 @@ El facturador sube el archivo .xlsx. El servidor lo lee con las reglas de la sec
 - Hay **dos opciones de envío** por sede: «Envío por camión» y «Cliente recoge en bodega».
 - El facturador selecciona uno, varios o todos los pedidos facturados y los arrastra a una opción, entre opciones o de regreso al tablero; dentro de una opción los ordena. El orden se guarda en `pedido_facturado.posicion`.
 - En la opción de camión elige el camión y el piloto (usuario con rol «Piloto» de la sede). El sistema suma los kg frente a la capacidad del camión y muestra la alerta de sobrepeso, que solo informa (RN-13).
-- En las dos opciones escribe la fecha y la hora programadas, que son obligatorias (RN-53).
+- En las dos opciones escribe la fecha y la hora programadas, que son obligatorias (RN-53). Se escriben con el teclado, la fecha como dd/mm/aaaa y la hora como HH:MM de 24 horas, o se eligen en el calendario y el reloj del navegador. Una fecha que no existe o una hora inválida no se guarda.
 - Todo lo anterior se guarda en la base de datos (RN-48): el tablero y las opciones siguen igual si el facturador cierra la sesión.
 
 ## Envío a Bodega
