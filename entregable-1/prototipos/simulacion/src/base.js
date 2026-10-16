@@ -138,7 +138,7 @@ const PERMISOS = [
   { c: 'sit.contenido', s: 'sitio', m: 'Contenido institucional', n: 'Editar portada, logotipos, historia, misión, visión, valores e imágenes' },
   { c: 'sit.industrias', s: 'sitio', m: 'Industrias', n: 'Editar descripción e imágenes de cada industria' },
   { c: 'sit.catalogo', s: 'sitio', m: 'Catálogo', n: 'Crear, editar y eliminar productos públicos' },
-  { c: 'sit.noticias', s: 'sitio', m: 'Noticias', n: 'Crear, editar, publicar y ocultar noticias' },
+  { c: 'sit.noticias', s: 'sitio', m: 'Noticias', n: 'Crear, editar y eliminar noticias' },
   { c: 'sit.contacto', s: 'sitio', m: 'Información de contacto', n: 'Editar los datos de las sedes' },
   { c: 'sit.sol.ver', s: 'sitio', m: 'Solicitudes', n: 'Ver la bandeja de solicitudes' },
   { c: 'sit.sol.gestionar', s: 'sitio', m: 'Solicitudes', n: 'Gestionar solicitudes: responsable, comentario y estado' },
@@ -854,10 +854,11 @@ function montarImagenes(root, alCambiar) {
 }
 
 /* Silueta del camión (vista lateral), en blanco como los de la flota de la fotografía.
-   En el modo oscuro del tablero va en grises (specs/07). */
+   En el modo oscuro del tablero va en grises (specs/07). Desde el 15/10 todos los camiones
+   usan la silueta del camión grande, porque la flota puede tener otras capacidades. */
 function siluetaCamion(cap, tema) {
-  const grande = cap > 3400, claro = tema === 'claro';
-  const L = grande ? 196 : 138;           // largo de la caja
+  const claro = tema === 'claro';
+  const L = 196;                          // largo de la caja
   const x0 = 76, W = x0 + L + 14;
   const tinta = claro ? '#1C1D1C' : '#111113', linea = claro ? '#3C3C3C' : '#CFCFCF';
   const caja = claro ? '#FFFFFF' : '#EDEDED', verde = claro ? '#126C2A' : '#3A3A3D', lima = claro ? '#8DC63F' : '#9A9A9E';
@@ -866,12 +867,12 @@ function siluetaCamion(cap, tema) {
     <ellipse cx="${W / 2 + 4}" cy="107" rx="${W / 2 - 6}" ry="4.5" fill="#000" opacity=".22"/>
     <rect x="${x0}" y="14" width="${L}" height="66" rx="4" fill="${caja}" stroke="${linea}" stroke-width="1.5"/>
     <rect x="${x0}" y="62" width="${L}" height="7" fill="${verde}"/><rect x="${x0}" y="69" width="${L}" height="2.5" fill="${lima}"/>
-    <text x="${x0 + L / 2}" y="46" text-anchor="middle" font-family="Poppins, sans-serif" font-weight="800" font-size="${grande ? 21 : 17}" fill="${verde}" letter-spacing="1.5">INCOVSA</text>
+    <text x="${x0 + L / 2}" y="46" text-anchor="middle" font-family="Poppins, sans-serif" font-weight="800" font-size="21" fill="${verde}" letter-spacing="1.5">INCOVSA</text>
     <path d="M16 82V46c0-6 3-10 9-12l16-7h28v55z" fill="${caja}" stroke="${linea}" stroke-width="1.5"/>
     <path d="M24 49l19-14h20v17H24z" fill="${claro ? '#CFE3F0' : '#BDBDBD'}" stroke="${linea}" stroke-width="1.2"/>
     <rect x="16" y="66" width="53" height="5" fill="${verde}"/>
     <rect x="10" y="80" width="${x0 + L - 4}" height="8" rx="2" fill="${tinta}"/>
     <rect x="12" y="60" width="7" height="5" rx="1" fill="${lima}"/>
-    ${rueda(42)}${rueda(x0 + L - 34)}${grande ? rueda(x0 + L - 62) : ''}
+    ${rueda(42)}${rueda(x0 + L - 34)}${rueda(x0 + L - 62)}
   </svg>`;
 }

@@ -70,7 +70,7 @@ function formUsuario(sistema, x, admin, alGuardar) {
   const otro = sistema === 'picking' ? 'sitio' : 'picking';
   modal({ titulo: (x ? 'Editar usuario' : 'Nuevo usuario') + (sistema === 'picking' ? ' del picking' : ' del sitio'), grande: true, cuerpo: `<div class="rejilla">
       <div class="rejilla r2"><label class="campo"><span>Nombre completo</span><input class="inp" name="n" value="${esc(x ? x.nombre : '')}"></label>
-        <label class="campo"><span>Usuario</span><input class="inp mono" name="us" value="${esc(x ? x.usuario : '')}" ${x ? 'readonly' : ''} placeholder="nombre.apellido" autocapitalize="off"><small>Único en ${sistema === 'picking' ? 'el picking' : 'el sitio'}. Puede ser el mismo de una cuenta ${sistema === 'picking' ? 'del sitio' : 'del picking'}, para que la persona entre a los dos con el mismo usuario.</small></label></div>
+        <label class="campo"><span>Usuario</span><input class="inp mono" name="us" value="${esc(x ? x.usuario : '')}" ${x ? 'readonly' : ''} placeholder="nombre.apellido" autocapitalize="off"></label></div>
       ${x ? '' : camposClave()}
       <div class="rejilla r2"><label class="campo"><span>Rol</span><input class="inp" name="rol" value="${esc(x ? x.rol : '')}" placeholder="Por ejemplo: Facturador"><small>Texto libre. Gerencia y Soporte tienen acceso total a los dos sistemas y a todas las sedes.</small></label>
         <label class="campo"><span>Correo (opcional)</span><input class="inp" name="c" value="${esc(x ? x.correo : '')}"></label></div>
@@ -154,6 +154,7 @@ const Panel = (() => {
   ];
   const TIPO_DOC = { FT: 'Ficha técnica', HS: 'Hoja de seguridad', COA: 'Certificado de análisis' };
   const ESTADOS_SOL = [['asignado', 'Asignado'], ['proceso', 'En proceso'], ['solucionado', 'Solucionado']];
+  const TIPO_SOL = { solicitud: 'Solicitud', queja: 'Queja', reclamo: 'Reclamo' };
   const primera = (u) => SECCIONES.find((s) => s.ok(u));
 
   function vista(sec, u, cab, cuerpo, mount) {
@@ -166,7 +167,8 @@ const Panel = (() => {
       mount(root) { montarArmazon(root, 'sitio'); mount && mount(root); },
     };
   }
-  const cab = (eyebrow, titulo, texto, acc = '') => `<div class="cab-pag"><div><p class="eyebrow">${eyebrow}</p><h1>${titulo}</h1>${texto ? `<p>${texto}</p>` : ''}</div>${acc ? `<div class="acc">${acc}</div>` : ''}</div>`;
+  /* Encabezado de cada módulo: la instrucción, breve, a la par del título (como en Facturación) */
+  const cab = (eyebrow, titulo, texto, acc = '') => `<div class="cab-pag cab-fx"><div class="cab-fx-t"><div><p class="eyebrow">${eyebrow}</p><h1>${titulo}</h1></div>${texto ? `<p class="cab-fx-txt">${texto}</p>` : ''}</div>${acc ? `<div class="acc">${acc}</div>` : ''}</div>`;
 
   function ruta(sec) {
     const u = sesion('sitio');
@@ -184,12 +186,12 @@ const Panel = (() => {
   function resumen(u) {
     const st = S.sitio;
     const t = (id, n, i, estado, cls, det) => SECCIONES.find((s) => s.id === id).ok(u) ? `<a class="tarjeta mod-t" href="#/panel/${id}"><span class="ic">${ico(i)}</span><h3 style="font-size:17px">${n}</h3><p class="muted" style="font-size:14px">${det}</p><span class="chip ${cls}" style="align-self:flex-start">${estado}</span></a>` : '';
-    return vista('', u, cab('Panel del sitio', `Hola, ${esc(u.nombre)}`, 'Todo lo que se publica en el sitio se edita desde aquí, sin tocar el código. Los cambios se ven de inmediato en el sitio público.'),
+    return vista('', u, cab('Panel del sitio', `Hola, ${esc(u.nombre)}`, 'Edite lo que se publica en el sitio; los cambios se ven de inmediato.'),
       `<div class="resumen-mods">
         ${t('contenido', 'Contenido institucional', 'noticia', st.historia && st.valores.every(Boolean) ? 'Completo' : 'Faltan historia y valores', st.historia && st.valores.every(Boolean) ? 'chip-v' : 'chip-a', 'Portada, logotipos, historia, misión, visión y valores')}
         ${t('industrias', 'Industrias', 'fabrica', 'Textos por revisar', 'chip-a', '9 industrias con descripción e imágenes')}
         ${t('catalogo', 'Catálogo', 'caja', st.productos.length + ' productos', 'chip-v', 'Productos públicos y sus industrias')}
-        ${t('noticias', 'Noticias', 'imagen', st.noticias.length ? st.noticias.filter((n) => n.pub).length + ' publicadas' : 'Sin publicar', st.noticias.length ? 'chip-v' : 'chip-a', 'Publicación y edición de noticias')}
+        ${t('noticias', 'Noticias', 'imagen', st.noticias.length ? st.noticias.length + ' publicadas' : 'Sin publicar', st.noticias.length ? 'chip-v' : 'chip-a', 'Publicación y edición de noticias')}
         ${t('solicitudes', 'Solicitudes', 'bandeja', st.solicitudes.filter((s) => !s.leida).length + ' sin leer', 'chip-z', 'Mensajes del formulario de contacto')}
         ${t('documentos', 'Documentación interna', 'archivo', st.docs.length + ' producto(s) documentado(s)', 'chip-v', 'Enlaces de fichas técnicas, hojas de seguridad y certificados')}
       </div>
@@ -208,7 +210,7 @@ const Panel = (() => {
     ];
     const chip = (ok, si = 'Publicado', no = 'Sin contenido') => `<span class="chip ${ok ? 'chip-v' : 'chip-a'}">${ok ? si : no}</span>`;
     const pendientes = {};       // galerías cambiadas que esperan «Guardar y publicar»
-    return vista('contenido', u, cab('Contenido institucional', 'Inicio y Quiénes somos', 'Lo que se guarda aquí se publica en el inicio, en los encabezados de las páginas y en «Quiénes somos».'),
+    return vista('contenido', u, cab('Contenido institucional', 'Inicio y Quiénes somos', 'Se publica en Inicio, en los encabezados de las páginas y en «Quiénes somos».'),
       `<div class="rejilla r2">
         <div class="tarjeta"><div class="bloque-cab"><div><h3>Portada</h3><p>Imágenes de la portada de Inicio y del fondo de los encabezados de las páginas. Hasta 5; rotan cada 5 s.</p></div>${chip(st.gal.portada.length, 'Publicada', 'Fotografía de la empresa')}</div>
           <div class="bloque-cuerpo rejilla">${campoGaleria('portada', st.gal.portada)}<div><button class="btn btn-p btn-sm" data-guardar-gal="portada">Guardar y publicar</button></div></div></div>
@@ -255,7 +257,7 @@ const Panel = (() => {
   /* ------------------------------------------------------------ industrias */
   function industrias(u) {
     const pendientes = {};
-    return vista('industrias', u, cab('Contenido', 'Industrias atendidas', 'Descripción e imágenes (hasta 5, rotan cada 5 s) de cada una de las 9 industrias.'),
+    return vista('industrias', u, cab('Contenido', 'Industrias atendidas', 'Descripción e imágenes (hasta 5) de cada una de las 9 industrias.'),
       `<div class="rejilla r3">${INDUSTRIAS.map((x, i) => `<div class="tarjeta tarjeta-p" style="display:flex;flex-direction:column;gap:12px">
         <div style="display:flex;gap:12px;align-items:center"><span class="ind-ic" style="width:44px;height:44px;border-radius:12px;background:var(--v50);color:var(--v600);display:grid;place-items:center">${ico(x.id)}</span><div><span class="mono muted" style="font-size:12px">${pad(i + 1)}</span><h3 style="font-size:18px">${x.n}</h3></div></div>
         ${campoGaleria(x.id, S.sitio.indImg[x.id] || [])}
@@ -276,7 +278,7 @@ const Panel = (() => {
 
   /* ------------------------------------------------------------ catálogo */
   function catalogo(u) {
-    return vista('catalogo', u, cab('Contenido', 'Catálogo de productos públicos', 'Son una entidad distinta de los productos del picking: no tienen lote ni Peso de Conversión. Un producto puede pertenecer a varias industrias.', `<button class="btn btn-p" data-nuevo>${ico('mas')} Nuevo producto</button>`),
+    return vista('catalogo', u, cab('Contenido', 'Catálogo de productos públicos', 'Productos del sitio, sin lote ni Peso de Conversión. Cada uno puede tener varias industrias.', `<button class="btn btn-p" data-nuevo>${ico('mas')} Nuevo producto</button>`),
       `<div class="tarjeta"><div class="tabla-caja"><table class="tabla"><thead><tr><th style="width:72px"></th><th>Producto</th><th>Presentación</th><th>Países de origen</th><th>Industrias</th><th></th></tr></thead><tbody>
         ${S.sitio.productos.map((p) => `<tr><td>${imgProd(p) ? `<span class="mini-img"><img src="${imgProd(p)}" alt="">${imgsProd(p).length > 1 ? `<i>${imgsProd(p).length}</i>` : ''}</span>` : `<span class="sin-img">${ico('imagen', 'ico-s')}</span>`}</td>
           <td><b>${esc(p.n)}</b>${p.desc ? `<div class="muted" style="font-size:13px;max-width:320px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.desc)}</div>` : ''}</td>
@@ -324,12 +326,12 @@ const Panel = (() => {
   /* ------------------------------------------------------------ noticias */
   function noticias(u) {
     const ns = S.sitio.noticias;
-    return vista('noticias', u, cab('Contenido', 'Noticias', 'Cada noticia lleva imágenes (de 1 a 5, rotan cada 5 s), título y texto. Lo que se publica aquí aparece en la página de Noticias del sitio.', `<button class="btn btn-p" data-nueva>${ico('mas')} Nueva noticia</button>`),
+    return vista('noticias', u, cab('Contenido', 'Noticias', 'Imágenes (de 1 a 5), título y texto. Al guardar se publica en la página de Noticias.', `<button class="btn btn-p" data-nueva>${ico('mas')} Nueva noticia</button>`),
       `${pend('P-23', 'Falta el contenido inicial de las noticias.')}
-      <div class="tarjeta" style="margin-top:18px">${ns.length ? `<div class="tabla-caja"><table class="tabla"><thead><tr><th style="width:84px"></th><th>Título</th><th>Fecha</th><th>Estado</th><th></th></tr></thead><tbody>${ns.map((n) => `<tr>
+      <div class="tarjeta" style="margin-top:18px">${ns.length ? `<div class="tabla-caja"><table class="tabla"><thead><tr><th style="width:84px"></th><th>Título</th><th>Fecha</th><th></th></tr></thead><tbody>${ns.map((n) => `<tr>
           <td>${(n.fotos || []).length ? `<span class="mini-img ancha"><img src="${n.fotos[0]}" alt="">${n.fotos.length > 1 ? `<i>${n.fotos.length}</i>` : ''}</span>` : `<span class="sin-img">${ico('imagen', 'ico-s')}</span>`}</td>
-          <td><b>${esc(n.titulo)}</b><div class="muted" style="font-size:13.5px;max-width:420px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(n.texto)}</div></td><td class="mono">${fFecha(n.fecha)}</td><td><span class="chip ${n.pub ? 'chip-v' : ''}">${n.pub ? 'Publicada' : 'Oculta'}</span></td>
-          <td class="der" style="white-space:nowrap"><button class="btn btn-s btn-sm" data-ed="${n.id}" title="Editar" aria-label="Editar">${ico('editar', 'ico-s')}</button> <button class="btn btn-s btn-sm" data-alt="${n.id}">${n.pub ? 'Ocultar' : 'Publicar'}</button></td></tr>`).join('')}</tbody></table></div>`
+          <td><b>${esc(n.titulo)}</b><div class="muted" style="font-size:13.5px;max-width:420px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(n.texto)}</div></td><td class="mono">${fFecha(n.fecha)}</td>
+          <td class="der" style="white-space:nowrap"><button class="btn btn-s btn-sm" data-ed="${n.id}" title="Editar" aria-label="Editar">${ico('editar', 'ico-s')}</button> <button class="btn btn-g btn-sm" data-del="${n.id}" title="Eliminar" aria-label="Eliminar">${ico('borrar', 'ico-s')}</button></td></tr>`).join('')}</tbody></table></div>`
         : `<div class="vacio">${ico('imagen')}<h4>No hay noticias</h4><p>Cree la primera y véala publicada en el sitio.</p></div>`}</div>`,
       (root) => {
         const editar = (n) => {
@@ -337,15 +339,14 @@ const Panel = (() => {
           modal({ titulo: n ? 'Editar noticia' : 'Nueva noticia', grande: true, cuerpo: `<div class="rejilla">
             <div class="campo"><span>Imágenes (al menos una, hasta 5)</span>${campoGaleria('fotos', fotos)}</div>
             <label class="campo"><span>Título</span><input class="inp" name="t" value="${esc(n ? n.titulo : '')}"></label>
-            <label class="campo"><span>Texto</span><textarea class="txa" name="x" rows="7">${esc(n ? n.texto : '')}</textarea></label>
-            ${n ? '' : '<label class="chk"><input type="checkbox" name="p" checked> Publicar de inmediato</label>'}</div>`,
+            <label class="campo"><span>Texto</span><textarea class="txa" name="x" rows="7">${esc(n ? n.texto : '')}</textarea></label></div>`,
             acciones: [{ txt: 'Cancelar' }, { txt: 'Guardar', cls: 'btn-p', fn: (m) => {
               const t = $('[name=t]', m).value.trim(), x = $('[name=x]', m).value.trim();
               if (!t) throw Err('Escriba el título.'); if (!x) throw Err('Escriba el texto.');
               if (!fotos.length) throw Err('Agregue al menos una imagen.');
               let nueva = null; const antes = n ? Object.assign({}, n) : null;
               if (n) Object.assign(n, { titulo: t, texto: x, fotos });
-              else { nueva = { id: 'n' + (++S.corr.not), titulo: t, texto: x, fotos, fecha: hoyISO(), creado: hoyISO(), pub: $('[name=p]', m).checked, autor: u.id }; S.sitio.noticias.unshift(nueva); }
+              else { nueva = { id: 'n' + (++S.corr.not), titulo: t, texto: x, fotos, fecha: hoyISO(), creado: hoyISO(), autor: u.id }; S.sitio.noticias.unshift(nueva); }
               if (!guardar()) { if (n) Object.assign(n, antes); else S.sitio.noticias = S.sitio.noticias.filter((y) => y !== nueva); return false; }
               bit(u.id, n ? 'Edición de noticia' : 'Creación de noticia', t); guardar();
               toast('Noticia guardada. <a href="#/noticias" style="color:var(--lima-b)">Verla en el sitio</a>'); repintar();
@@ -354,14 +355,19 @@ const Panel = (() => {
         };
         $('[data-nueva]', root).addEventListener('click', () => editar(null));
         $$('[data-ed]', root).forEach((b) => b.addEventListener('click', () => editar(ns.find((x) => x.id === b.dataset.ed))));
-        $$('[data-alt]', root).forEach((b) => b.addEventListener('click', () => { const n = ns.find((x) => x.id === b.dataset.alt); n.pub = !n.pub; bit(u.id, n.pub ? 'Publicación de noticia' : 'Noticia ocultada', n.titulo); guardar(); repintar(); }));
+        $$('[data-del]', root).forEach((b) => b.addEventListener('click', () => {
+          const n = ns.find((x) => x.id === b.dataset.del);
+          confirmar('Eliminar noticia', `¿Eliminar la noticia <b>${esc(n.titulo)}</b>? Deja de mostrarse en el sitio.`, 'Eliminar', () => {
+            S.sitio.noticias = S.sitio.noticias.filter((x) => x !== n); bit(u.id, 'Eliminación de noticia', n.titulo); guardar(); toast('Noticia eliminada.'); repintar();
+          }, 'btn-d');
+        }));
       });
   }
 
   /* ------------------------------------------------------------ contacto */
   function contacto(u) {
     const c = S.sitio.contacto;
-    return vista('contacto', u, cab('Contenido', 'Información de contacto', 'Datos de las sedes con oficina que se muestran en el sitio: Quetzaltenango y Guatemala.'),
+    return vista('contacto', u, cab('Contenido', 'Información de contacto', 'Datos de Quetzaltenango y Guatemala que se muestran en el sitio.'),
       `<div class="rejilla r2">${SEDES_SITIO.map((k) => `<div class="tarjeta"><div class="bloque-cab"><h3>${SEDES[k]}</h3>${c[k].dir ? '<span class="chip chip-v">Publicado</span>' : '<span class="chip chip-a">Faltan datos</span>'}</div>
         <div class="bloque-cuerpo rejilla">${[['dir', 'Dirección'], ['tel', 'Teléfono'], ['correo', 'Correo'], ['wa', 'WhatsApp'], ['horario', 'Horario'], ['mapa', 'Mapa (dirección del mapa insertado de Google Maps)']].map(([f, n]) => `<label class="campo"><span>${n}</span><input class="inp ${f === 'mapa' ? 'mono' : ''}" ${f === 'mapa' ? 'style="font-size:12px"' : ''} data-s="${k}" data-f="${f}" value="${esc(c[k][f])}" placeholder="${f === 'horario' ? 'Pendiente P-22' : f === 'mapa' ? 'https://www.google.com/maps/embed?pb=…' : ''}"></label>`).join('')}
         ${c[k].mapa ? `<iframe class="mapa" src="${esc(c[k].mapa)}" title="Mapa de ${SEDES[k]}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>` : ''}
@@ -385,22 +391,22 @@ const Panel = (() => {
     const responsables = S.usuarios.filter((x) => x.activo && enSistema(x, 'sitio'));
     const lugar = (s) => [s.muni, s.depto, s.pais ? nombrePais(s.pais) : ''].filter(Boolean).join(', ');
     const detalle = () => { const s = ls.find((x) => x.id === solSel); if (!s) return `<div class="vacio">${ico('bandeja')}<h4>Sin solicitudes</h4><p>Envíe un mensaje desde la página de Contacto del sitio y aparecerá aquí.</p></div>`;
-      return `<div class="bloque-cuerpo"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><span class="chip ${s.tipo === 'solicitud' ? 'chip-v' : s.tipo === 'queja' ? 'chip-a' : 'chip-r'}">${s.tipo}</span><h2 style="font-size:22px;margin-top:10px">${esc(s.nombre)}</h2>
+      return `<div class="bloque-cuerpo"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><span class="chip ${s.tipo === 'solicitud' ? 'chip-v' : s.tipo === 'queja' ? 'chip-a' : 'chip-r'}">${TIPO_SOL[s.tipo]}</span><h2 style="font-size:22px;margin-top:10px;overflow-wrap:anywhere">${esc(s.nombre)}</h2>
           <p class="muted">${esc(s.empresa || 'Sin empresa')} · <span class="mono">${esc(s.correo)}</span>${s.tel ? ` · <span class="mono">${esc(s.telCod || '')} ${esc(s.tel)}</span>` : ''}</p>
           ${lugar(s) ? `<p class="muted" style="font-size:14px;margin-top:4px">${ico('pin', 'ico-s')} ${esc(lugar(s))}</p>` : ''}</div>
           <div class="der"><b class="mono">${s.id}</b><p class="muted" style="font-size:13.5px">${fFH(s.fecha)} · ${SEDES[s.sede]}</p></div></div>
-        <div style="margin-top:20px;padding:18px;border-radius:12px;background:var(--g50);font-size:16px;line-height:1.6;white-space:pre-wrap">${esc(s.mensaje)}</div>
+        <div style="margin-top:20px;padding:18px;border-radius:12px;background:var(--g50);font-size:16px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere">${esc(s.mensaje)}</div>
         <div class="gestion">
           <div class="campo"><span>Estado</span><div class="estados-sol" data-estados>${ESTADOS_SOL.map(([k, n]) => `<button data-est="${k}" class="${s.estado === k ? 'on' : ''}" ${gestiona ? '' : 'disabled'}>${n}</button>`).join('')}</div>
             ${s.estado ? '' : '<small>Sin estado: la solicitud acaba de llegar.</small>'}</div>
           <label class="campo"><span>Responsable</span><select class="sel" data-resp ${gestiona ? '' : 'disabled'}><option value="">Sin responsable</option>${responsables.map((x) => `<option value="${x.id}" ${s.resp === x.id ? 'selected' : ''}>${esc(x.nombre)} · ${esc(x.rol)}</option>`).join('')}${s.resp && !usuario(s.resp) ? `<option value="${s.resp}" selected>${esc(nombreUsuario(s.resp))}</option>` : ''}</select></label>
-          <label class="campo" style="grid-column:1/-1"><span>Comentario del responsable</span><textarea class="txa" data-coment rows="3" ${gestiona ? '' : 'readonly'} placeholder="${gestiona ? 'Un solo comentario sobre la atención de la solicitud' : 'Sin comentario'}">${esc(s.comentario || '')}</textarea>
-            ${gestiona ? '<button class="btn btn-s btn-sm" data-g-coment style="justify-self:start;margin-top:6px">Guardar comentario</button>' : ''}</label>
+          <label class="campo" style="grid-column:1/-1"><span>Comentario del responsable</span><textarea class="txa" data-coment rows="3" ${gestiona && !s.comentario ? '' : 'readonly'} placeholder="${gestiona ? 'Un solo comentario sobre la atención de la solicitud' : 'Sin comentario'}">${esc(s.comentario || '')}</textarea>
+            ${gestiona ? `<button class="btn btn-s btn-sm" data-g-coment style="align-self:flex-start;margin-top:6px">${s.comentario ? 'Editar comentario' : 'Guardar comentario'}</button>` : ''}</label>
         </div>
       </div>`; };
     const cuenta = (m) => todas.filter((s) => m === 'todas' || s.tipo === m).length;
-    const listaH = () => ls.map((s) => `<button data-sol="${s.id}" class="${s.id === solSel ? 'on' : ''}"><div style="display:flex;justify-content:space-between;gap:8px"><b>${esc(s.nombre)}</b>${s.leida ? '' : '<span class="punto" style="color:var(--v500);margin-top:6px"></span>'}</div><div class="muted" style="font-size:13px;margin-top:3px">${s.tipo} · ${SEDES[s.sede]} · ${fFH(s.fecha)}${s.estado ? ' · ' + ESTADOS_SOL.find((e) => e[0] === s.estado)[1] : ''}</div><div style="font-size:13.5px;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--g600)">${esc(s.mensaje)}</div></button>`).join('') || '<div class="vacio" style="padding:30px">Sin solicitudes de este motivo.</div>';
-    return vista('solicitudes', u, cab('Formulario de contacto', 'Solicitudes recibidas', `Lo que llega por el formulario solo se guarda aquí: no se envía a ningún correo.${gestiona ? '' : ' Con sus permisos puede ver la bandeja, pero no gestionarla.'}`),
+    const listaH = () => ls.map((s) => `<button data-sol="${s.id}" class="${s.id === solSel ? 'on' : ''}"><div style="display:flex;justify-content:space-between;gap:8px"><b>${esc(s.nombre)}</b>${s.leida ? '' : '<span class="punto" style="color:var(--v500);margin-top:6px"></span>'}</div><div class="muted" style="font-size:13px;margin-top:3px">${TIPO_SOL[s.tipo]} · ${SEDES[s.sede]} · ${fFH(s.fecha)}${s.estado ? ' · ' + ESTADOS_SOL.find((e) => e[0] === s.estado)[1] : ''}</div><div style="font-size:13.5px;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--g600)">${esc(s.mensaje)}</div></button>`).join('') || '<div class="vacio" style="padding:30px">Sin solicitudes de este motivo.</div>';
+    return vista('solicitudes', u, cab('Formulario de contacto', 'Solicitudes recibidas', `Mensajes del formulario de contacto. No se envían a ningún correo.${gestiona ? '' : ' Usted solo puede verlos.'}`),
       `<div class="pestanas">${[['todas', 'Todas'], ['solicitud', 'Solicitudes'], ['queja', 'Quejas'], ['reclamo', 'Reclamos']].map(([k, n]) => `<button data-mot="${k}" class="${solMotivo === k ? 'on' : ''}">${n} <span class="cont">${cuenta(k)}</span></button>`).join('')}</div>
       <div class="tarjeta bandeja"><div class="bandeja-lista" data-lista>${listaH()}</div><div data-det>${detalle()}</div></div>`,
       (root) => {
@@ -409,7 +415,13 @@ const Panel = (() => {
           const s = ls.find((x) => x.id === solSel); if (!s || !gestiona) return;
           $('[data-estados]', root).addEventListener('click', (e) => { const b = e.target.closest('[data-est]'); if (!b || s.estado === b.dataset.est) return; s.estado = b.dataset.est; bit(u.id, 'Cambio de estado de solicitud', `${s.id} · ${b.textContent}`); guardar(); pintar(); });
           $('[data-resp]', root).addEventListener('change', (e) => { s.resp = e.target.value || null; bit(u.id, 'Responsable de solicitud', `${s.id} · ${s.resp ? nombreUsuario(s.resp) : 'sin responsable'}`); guardar(); toast('Responsable asignado.'); pintar(); });
-          $('[data-g-coment]', root).addEventListener('click', () => { s.comentario = $('[data-coment]', root).value.trim(); bit(u.id, 'Comentario de solicitud', s.id); guardar(); toast('Comentario guardado.'); });
+          // Con un comentario guardado, el botón es «Editar comentario»: habilita el cuadro y vuelve a ser «Guardar comentario»
+          const bc = $('[data-g-coment]', root), tx = $('[data-coment]', root);
+          bc.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (tx.readOnly) { tx.readOnly = false; tx.focus(); bc.textContent = 'Guardar comentario'; return; }
+            s.comentario = tx.value.trim(); bit(u.id, 'Comentario de solicitud', s.id); guardar(); toast('Comentario guardado.'); pintar();
+          });
         };
         const pintar = () => { $('[data-lista]', root).innerHTML = listaH(); $('[data-det]', root).innerHTML = detalle(); conectar(); };
         marcar(); conectar();
@@ -445,8 +457,7 @@ const Panel = (() => {
         <td>${esc(nombrePais(d.pais) || '—')}</td><td class="mono">${esc(d.lote)}</td><td class="muted" style="font-size:13.5px">${fFecha(d.fecha)}<br>${esc(nombreUsuario(d.usuario))}</td>
         ${gestiona ? `<td class="der" style="white-space:nowrap"><button class="btn btn-s btn-sm" data-editar="${d.id}" title="Editar" aria-label="Editar">${ico('editar', 'ico-s')}</button> <button class="btn btn-g btn-sm" data-borrar="${d.id}" title="Eliminar" aria-label="Eliminar">${ico('borrar', 'ico-s')}</button></td>` : ''}</tr>`).join('')}</tbody></table>`
       : `<div class="vacio">${ico('archivo')}<h4>Sin productos documentados</h4><p>Pruebe con otro lote, producto o país.</p></div>`; };
-    const puede = [ve && 'ver los documentos en el navegador', baja && 'descargarlos', gestiona && 'crear, editar y eliminar productos documentados'].filter(Boolean);
-    return vista('documentos', u, cab('Área protegida', 'Documentación interna', `Ficha técnica (FT), hoja de seguridad (HS) y certificado de análisis (COA) de cada producto, como enlaces de Google Drive. Haga clic en un producto para ver su documentación. Con sus permisos usted puede ${puede.join(', ').replace(/, ([^,]*)$/, ' y $1')}.`, gestiona ? `<button class="btn btn-p" data-nuevo>${ico('mas')} Nuevo producto documentado</button>` : ''),
+    return vista('documentos', u, cab('Área protegida', 'Documentación interna', 'Enlaces de Google Drive de la FT, la HS y el COA. Haga clic en un producto para ver su documentación.', gestiona ? `<button class="btn btn-p" data-nuevo>${ico('mas')} Nuevo producto documentado</button>` : ''),
       `<div class="tarjeta"><div class="herr"><label class="buscador">${ico('buscar')}<input class="inp" data-q placeholder="Buscar por lote, producto o país de origen"></label></div>
         <div class="tabla-caja" data-tabla>${tabla()}</div></div>
       <div style="margin-top:18px" class="aviso aviso-v">${ico('escudo')}<div>El sistema guarda solo los enlaces y los muestra a quien tiene permiso. Que un enlace no se abra fuera de la empresa, o que no se pueda descargar desde Google Drive, depende de cómo se comparta cada archivo en Drive (P-92). El producto de ejemplo usa los tres PDF que entregó INCOVSA (soda cáustica de México).</div></div>`,
@@ -503,7 +514,7 @@ const Panel = (() => {
   /* ------------------------------------------------------------ usuarios del sitio */
   function usuarios(u) {
     const ls = S.usuarios.filter((x) => enSistema(x, 'sitio'));
-    return vista('usuarios', u, cab('Gerencia y Soporte', 'Usuarios del sitio', 'Cada usuario tiene un rol de texto libre y los permisos del sitio que se le marquen. Las cuentas de Gerencia y Soporte sirven también en el sistema de picking.', `<button class="btn btn-p" data-nuevo>${ico('mas')} Nuevo usuario</button>`),
+    return vista('usuarios', u, cab('Gerencia y Soporte', 'Usuarios del sitio', 'Rol de texto libre y permisos del sitio. Gerencia y Soporte entran también al picking.', `<button class="btn btn-p" data-nuevo>${ico('mas')} Nuevo usuario</button>`),
       `<div class="tarjeta"><div class="tabla-caja"><table class="tabla"><thead><tr><th>Nombre</th><th>Usuario</th><th>Rol</th><th>Permisos del sitio</th><th>Correo</th><th>Estado</th><th></th></tr></thead><tbody>
         ${ls.map((x) => `<tr><td><div style="display:flex;gap:10px;align-items:center"><span class="avatar" style="width:34px;height:34px;font-size:12.5px">${iniciales(x.nombre)}</span><b>${esc(x.nombre)}</b></div></td><td class="mono">${esc(x.usuario)}</td>
           <td>${esc(x.rol)}${x.sistema === 'ambos' || esTotal(x) ? ' <span class="chip">+ picking</span>' : ''}</td><td>${resumenPermisos(x, 'sitio')}</td><td class="muted">${esc(x.correo || 'Sin correo')}</td>
