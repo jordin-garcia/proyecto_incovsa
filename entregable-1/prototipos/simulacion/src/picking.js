@@ -83,7 +83,12 @@ const Picking = (() => {
   const zonaVacia = '<div class="fx-zona-vacia">Arrastre aquí pedidos facturados</div>';
   const camposProg = (sede, op, que) => { const o = opcionDe(sede, op); return `<div class="rejilla r2 fx-prog">
       <label class="campo"><span>Fecha programada de ${que} *</span><input type="date" class="inp ${o.fecha ? '' : 'falta'}" data-prog-fecha="${op}" value="${o.fecha || ''}"></label>
-      <label class="campo"><span>Hora programada *</span><input type="time" class="inp ${o.hora ? '' : 'falta'}" data-prog-hora="${op}" value="${o.hora || ''}"></label></div>`; };
+      <label class="campo"><span>Hora programada *</span><span class="hora-caja">
+        <input type="text" class="inp ${o.hora ? '' : 'falta'}" data-prog-hora="${op}" value="${o.hora || ''}" placeholder="HH:MM" inputmode="numeric" maxlength="5" autocomplete="off">
+        <button type="button" class="hora-btn" data-reloj-hora="${op}" title="Elegir la hora" aria-label="Elegir la hora">${ico('reloj', 'ico-s')}</button>
+        <input type="time" class="hora-nativa" data-hora-nativa="${op}" tabindex="-1" aria-hidden="true"></span></label></div>`; };
+  /* Hora en formato de 24 horas: «1330», «13:30» o «9:05» → «13:30», «09:05»; vacía si no es válida */
+  const horaValida = (x) => { const m = String(x).trim().match(/^(\d{1,2}):?(\d{2})$/); return m && +m[1] < 24 && +m[2] < 60 ? pad(+m[1]) + ':' + m[2] : ''; };
   function opcionCamion(sede) {
     const fs = facturadosDe(sede, 'camion'), tot = r3(fs.reduce((a, f) => a + totalFact(f), 0));
     const o = opcionDe(sede, 'camion'), cs = camionesDe(sede), c = camion(o.camion), ps = pilotosDe(sede);
@@ -134,9 +139,9 @@ const Picking = (() => {
     const alternar = (id) => { if (selFact.has(id)) selFact.delete(id); else selFact.add(id); pintarSel(); };
     // Fecha y hora programadas: se guardan sin volver a pintar, para poder escribirlas con el teclado
     const listo = (op) => { const o = opcionDe(sede, op); return !!(facturadosDe(sede, op).length && o.fecha && o.hora && (op === 'recoge' || (camion(o.camion) && o.piloto))); };
-    const prog = (t, op, campo) => {
-      opCampoOpcion(sede, op, campo, t.value); guardar();
-      t.classList.toggle('falta', !t.value);
+    const prog = (t, op, campo, valor = t.value) => {
+      opCampoOpcion(sede, op, campo, valor); guardar();
+      t.classList.toggle('falta', !valor);
       const b = $(`[data-enviar="${op}"]`, lay), ok = listo(op);
       b.disabled = !ok; b.title = ok ? '' : (op === 'recoge' ? 'Faltan pedidos facturados, fecha u hora' : 'Faltan pedidos facturados, camión, piloto, fecha u hora');
     };
@@ -151,8 +156,26 @@ const Picking = (() => {
     lay.addEventListener('input', (e) => {
       const t = e.target;
       if (t.matches('[data-prog-fecha]')) prog(t, t.dataset.progFecha, 'fecha');
-      else if (t.matches('[data-prog-hora]')) prog(t, t.dataset.progHora, 'hora');
+      else if (t.matches('[data-prog-hora]')) {
+        // La hora se escribe como texto: solo números y «:»; con cuatro cifras se agregan los dos puntos
+        let x = t.value.replace(/[^\d:]/g, '');
+        if (/^\d{4}$/.test(x)) x = x.slice(0, 2) + ':' + x.slice(2);
+        if (x !== t.value) t.value = x;
+        t.classList.remove('error');
+        prog(t, t.dataset.progHora, 'hora', horaValida(x));
+      } else if (t.matches('[data-hora-nativa]')) elegirHora(t);
     });
+    // Al salir del campo, la hora queda completa («9:05» → «09:05») o se marca si no es válida
+    lay.addEventListener('focusout', (e) => {
+      const t = e.target; if (!t.matches('[data-prog-hora]')) return;
+      const v = horaValida(t.value);
+      if (v) t.value = v;
+      t.classList.toggle('error', !!t.value.trim() && !v);
+      t.title = t.value.trim() && !v ? 'Escriba la hora en formato de 24 horas, por ejemplo 13:30' : '';
+    });
+    // El botón del reloj abre el selector de hora del navegador
+    const elegirHora = (n) => { const t = $(`[data-prog-hora="${n.dataset.horaNativa}"]`, lay); if (!n.value) return; t.value = n.value; t.classList.remove('error'); t.title = ''; prog(t, n.dataset.horaNativa, 'hora', n.value); };
+    lay.addEventListener('change', (e) => { if (e.target.matches('[data-hora-nativa]')) elegirHora(e.target); });
     lay.addEventListener('change', (e) => {
       const t = e.target;
       if (t.matches('[data-todos]')) { selFact.clear(); if (t.checked) facturadosDe(sede, null).forEach((f) => selFact.add(f.id)); return pintarSel(); }
@@ -160,6 +183,14 @@ const Picking = (() => {
       if (t.matches('[data-op-piloto]')) { opCampoOpcion(sede, 'camion', 'piloto', t.value); guardar(); return repintar(); }
     });
     lay.addEventListener('click', (e) => {
+      const rh = e.target.closest('[data-reloj-hora]');
+      if (rh) {
+        e.preventDefault();
+        const op = rh.dataset.relojHora, n = $(`[data-hora-nativa="${op}"]`, lay);
+        n.value = horaValida($(`[data-prog-hora="${op}"]`, lay).value);
+        try { n.showPicker(); } catch (er) { $(`[data-prog-hora="${op}"]`, lay).focus(); }
+        return;
+      }
       if (e.target.closest('[data-eliminar]')) {
         const ids = [...selFact], fs = ids.map(facturado).filter(Boolean);
         return confirmar('Eliminar pedidos facturados', `¿Eliminar del tablero ${fs.length === 1 ? `el pedido facturado <b>${esc(fs[0].num)}</b> de ${esc(nombreFact(fs[0]))}` : `los <b>${fs.length}</b> pedidos facturados seleccionados`} (${kg(r3(fs.reduce((a, f) => a + totalFact(f), 0)))})? La eliminación queda en la bitácora.`, 'Eliminar', () => { opEliminarFacturados(ids, u.id); selFact.clear(); guardar(); toast('Pedidos facturados eliminados.'); repintar(); }, 'btn-d');
