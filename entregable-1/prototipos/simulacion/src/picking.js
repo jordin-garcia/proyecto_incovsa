@@ -22,12 +22,13 @@ const Picking = (() => {
       mount(root) {
         montarArmazon(root, 'picking');
         const s = $('[data-sede]', root);
-        if (s) s.addEventListener('change', () => { fijarSede(s.value); rutaSel = null; selFact.clear(); repintar(); });
+        if (s) s.addEventListener('change', () => { fijarSede(s.value); rutaSel = null; selFact.clear(); scrollTab = 0; repintar(); });
         mount && mount(root);
       },
     };
   }
-  const cab = (eyebrow, titulo, texto, acc = '') => `<div class="cab-pag"><div><p class="eyebrow">${eyebrow}</p><h1>${titulo}</h1>${texto ? `<p>${texto}</p>` : ''}</div>${acc ? `<div class="acc">${acc}</div>` : ''}</div>`;
+  /* Encabezado de cada módulo: la instrucción, breve, a la par del título */
+  const cab = (eyebrow, titulo, texto, acc = '') => `<div class="cab-pag cab-fx"><div class="cab-fx-t"><div><p class="eyebrow">${eyebrow}</p><h1>${titulo}</h1></div>${texto ? `<p class="cab-fx-txt">${texto}</p>` : ''}</div>${acc ? `<div class="acc">${acc}</div>` : ''}</div>`;
 
   function ruta(mod) {
     const u = sesion('picking');
@@ -45,20 +46,20 @@ const Picking = (() => {
      que hace de base de datos (RN-48): sobreviven a cerrar la sesión.
      ====================================================================== */
   const selFact = new Set();        // pedidos facturados seleccionados en el tablero (solo en esta pantalla)
+  let scrollTab = 0;                // desplazamiento del tablero, que se conserva al volver a pintar
+  const accSel = (n) => (n ? `<span class="chip chip-v">${n} seleccionado(s)</span><button class="btn btn-d btn-sm" data-eliminar>${ico('borrar', 'ico-s')} Eliminar</button>` : '');
   function facturacion(u) {
     const sede = sedeTrabajo(u);
     const tab = facturadosDe(sede, null);
     [...selFact].forEach((id) => { if (!tab.some((f) => f.id === id)) selFact.delete(id); });
     const totTab = r3(tab.reduce((a, f) => a + totalFact(f), 0)), nSel = selFact.size;
-    return vista('facturacion', u, `<div class="cab-pag cab-fx">
-        <div class="cab-fx-t"><div><p class="eyebrow">Módulo de facturación</p><h1>Pedidos facturados</h1></div>
-          <p class="cab-fx-txt">Cargue el .xlsx de Odoo, seleccione los pedidos facturados, arrástrelos a una opción de envío y envíela a Bodega.</p></div>
-        <div class="acc"><label class="btn btn-p" tabindex="0">${ico('subir')} Cargar archivo .xlsx<input type="file" accept=".xlsx" hidden data-archivo></label></div></div>
+    return vista('facturacion', u, cab('Módulo de facturación', 'Pedidos facturados', 'Cargue el .xlsx de Odoo, seleccione los pedidos facturados, arrástrelos a una opción de envío y envíela a Bodega.',
+        `<label class="btn btn-p" tabindex="0">${ico('subir')} Cargar archivo .xlsx<input type="file" accept=".xlsx" hidden data-archivo></label>`) + `
       <div class="fx-lay" data-fx>
         <section class="tarjeta fx-tablero">
           <div class="bloque-cab fx-tab-cab"><div><h3>Tablero de pedidos facturados</h3><p>${tab.length} pedido(s) facturado(s) · ${kg(totTab)} · ${SEDES[sede]}</p></div>
             <div class="fx-tab-acc"><label class="chk"><input type="checkbox" data-todos ${tab.length && nSel === tab.length ? 'checked' : ''} ${tab.length ? '' : 'disabled'}> Seleccionar todos</label>
-              ${nSel ? `<span class="chip chip-v">${nSel} seleccionado(s)</span><button class="btn btn-d btn-sm" data-eliminar>${ico('borrar', 'ico-s')} Eliminar</button>` : ''}</div></div>
+              <span class="fx-sel-acc" data-sel-acc>${accSel(nSel)}</span></div></div>
           <div class="fx-zona fx-lista" data-zona="tablero">${tab.length ? tab.map(tarjetaFact).join('') : `<div class="fx-vacio">${ico('archivo')}<h4>No hay pedidos facturados en el tablero</h4><p>Cargue el archivo de Odoo, o arrastre aquí un pedido facturado para regresarlo de una opción de envío.</p></div>`}</div>
         </section>
         <div class="fx-opciones">
@@ -70,7 +71,8 @@ const Picking = (() => {
       <p class="muted fx-ayuda">Clic o toque en una tarjeta para seleccionarla. Arrastre con el mouse, o con el dedo después de mantenerlo presionado sobre la tarjeta. Dentro de una opción, arrastre para cambiar el orden: con ese orden se envía a Bodega. Lo que está en el tablero y en cada opción se guarda.</p>`,
       (root) => montarFacturacion(root, u, sede), true);
   }
-  const tarjetaFact = (f) => `<article class="fx-t ${selFact.has(f.id) ? 'sel' : ''}" data-id="${f.id}" role="button" tabindex="0" aria-pressed="${selFact.has(f.id)}" title="Clic para seleccionar; arrastre para llevarlo a una opción de envío">
+  /* Seleccionada, la tarjeta muestra solo el número y el peso total */
+  const tarjetaFact = (f) => `<article class="fx-t ${selFact.has(f.id) ? 'elegida' : ''}" data-id="${f.id}" role="button" tabindex="0" aria-pressed="${selFact.has(f.id)}" title="Clic para seleccionar; arrastre para llevarlo a una opción de envío">
       <span class="fx-check" aria-hidden="true">${ico('check', 'ico-s')}</span>
       <div class="fx-t-1"><b class="mono">${esc(f.num)}</b><span class="mono fx-kg">${fmt(totalFact(f))} kg</span></div>
       <div class="fx-t-n">${esc(nombreFact(f))}</div>
@@ -118,21 +120,44 @@ const Picking = (() => {
   }
   function montarFacturacion(root, u, sede) {
     const lay = $('[data-fx]', root);
+    // El tablero conserva su desplazamiento al seleccionar y al volver a pintar
+    const tablero = $('[data-zona=tablero]', lay);
+    tablero.scrollTop = scrollTab;
+    tablero.addEventListener('scroll', () => { scrollTab = tablero.scrollTop; });
+    // Seleccionar no vuelve a pintar la pantalla: solo cambia las tarjetas y los botones del tablero
+    const pintarSel = () => {
+      $$('.fx-t', tablero).forEach((t) => { const on = selFact.has(t.dataset.id); t.classList.toggle('elegida', on); t.setAttribute('aria-pressed', on); });
+      const n = facturadosDe(sede, null).length, todos = $('[data-todos]', lay);
+      todos.checked = n > 0 && selFact.size === n;
+      $('[data-sel-acc]', lay).innerHTML = accSel(selFact.size);
+    };
+    const alternar = (id) => { if (selFact.has(id)) selFact.delete(id); else selFact.add(id); pintarSel(); };
+    // Fecha y hora programadas: se guardan sin volver a pintar, para poder escribirlas con el teclado
+    const listo = (op) => { const o = opcionDe(sede, op); return !!(facturadosDe(sede, op).length && o.fecha && o.hora && (op === 'recoge' || (camion(o.camion) && o.piloto))); };
+    const prog = (t, op, campo) => {
+      opCampoOpcion(sede, op, campo, t.value); guardar();
+      t.classList.toggle('falta', !t.value);
+      const b = $(`[data-enviar="${op}"]`, lay), ok = listo(op);
+      b.disabled = !ok; b.title = ok ? '' : (op === 'recoge' ? 'Faltan pedidos facturados, fecha u hora' : 'Faltan pedidos facturados, camión, piloto, fecha u hora');
+    };
     arrastrable(lay, { item: '.fx-t, .fx-f', zona: '.fx-zona',
       // Si la tarjeta está seleccionada, se llevan todas las seleccionadas, en el orden del tablero
       seleccionados: (it) => (it.classList.contains('fx-t') && selFact.has(it.dataset.id) ? facturadosDe(sede, null).filter((f) => selFact.has(f.id)).map((f) => f.id) : [it.dataset.id]),
       onSoltar: (ids, zona, antes) => {
         if (intentar(() => opMover(ids, zona === 'tablero' ? null : zona, antes))) { ids.forEach((id) => selFact.delete(id)); guardar(); repintar(); }
       },
-      onToque: (it) => { if (!it.classList.contains('fx-t')) return; const id = it.dataset.id; if (selFact.has(id)) selFact.delete(id); else selFact.add(id); repintar(); } });
-    lay.addEventListener('keydown', (e) => { const t = e.target.closest('.fx-t'); if (t && (e.key === ' ' || e.key === 'Enter')) { e.preventDefault(); const id = t.dataset.id; if (selFact.has(id)) selFact.delete(id); else selFact.add(id); repintar(); } });
+      onToque: (it) => { if (it.classList.contains('fx-t')) alternar(it.dataset.id); } });
+    lay.addEventListener('keydown', (e) => { const t = e.target.closest('.fx-t'); if (t && (e.key === ' ' || e.key === 'Enter')) { e.preventDefault(); alternar(t.dataset.id); } });
+    lay.addEventListener('input', (e) => {
+      const t = e.target;
+      if (t.matches('[data-prog-fecha]')) prog(t, t.dataset.progFecha, 'fecha');
+      else if (t.matches('[data-prog-hora]')) prog(t, t.dataset.progHora, 'hora');
+    });
     lay.addEventListener('change', (e) => {
       const t = e.target;
-      if (t.matches('[data-todos]')) { selFact.clear(); if (t.checked) facturadosDe(sede, null).forEach((f) => selFact.add(f.id)); return repintar(); }
+      if (t.matches('[data-todos]')) { selFact.clear(); if (t.checked) facturadosDe(sede, null).forEach((f) => selFact.add(f.id)); return pintarSel(); }
       if (t.matches('[data-op-camion]')) { opCampoOpcion(sede, 'camion', 'camion', t.value); guardar(); return repintar(); }
       if (t.matches('[data-op-piloto]')) { opCampoOpcion(sede, 'camion', 'piloto', t.value); guardar(); return repintar(); }
-      if (t.matches('[data-prog-fecha]')) { opCampoOpcion(sede, t.dataset.progFecha, 'fecha', t.value); guardar(); return repintar(); }
-      if (t.matches('[data-prog-hora]')) { opCampoOpcion(sede, t.dataset.progHora, 'hora', t.value); guardar(); return repintar(); }
     });
     lay.addEventListener('click', (e) => {
       if (e.target.closest('[data-eliminar]')) {
@@ -251,7 +276,7 @@ const Picking = (() => {
   function bodega(u) {
     const sede = sedeTrabajo(u), ps = pedidosBodega(sede);
     return vista('bodega', u, cab('Módulo de bodega · tablero de preparación', 'Rutas y pedidos por preparar',
-      'Llegan en el orden en que los envía Facturación. Arrastre una ruta, un pedido o una fila para cambiar la prioridad: el orden y las marcas se ven al instante en todas las pantallas de la sede.',
+      'Arrastre una ruta, un pedido o una fila para cambiar la prioridad; se ve al instante en todas las pantallas de la sede.',
       `<a class="btn btn-p" href="#/picking/tablero">${ico('tv')} Abrir tablero en pantalla completa</a>`) + `
       <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap"><span class="chip chip-o">${ps.length} en cola</span><span class="muted" style="font-size:14px">${SEDES[sede]} · la prioridad y las marcas no quedan en el historial</span></div>
       ${ps.length ? `<div class="ped-lista" data-pedidos>${ps.map((p, i) => tarjetaPedido(p, i)).join('')}</div>`
@@ -336,7 +361,7 @@ const Picking = (() => {
     if (!lista.find((r) => r.id === rutaSel)) rutaSel = lista[0] ? lista[0].id : null;
     const r = S.rutas.find((x) => x.id === rutaSel);
     const propias = esPiloto(u) || !tiene(u, 'pk.ruta.todas');
-    return vista('ruta', u, cab('Módulo de ruta', propias ? 'Mis rutas' : 'Rutas en curso', `${propias ? 'Solo ve las rutas que tiene asignadas.' : 'Ve las rutas en curso de la sede.'} Acomode los clientes durante la ruta: el orden que tengan al pulsar «Ruta entregada» se guarda como el recorrido. Las rutas entregadas se consultan en Reportes.`) + `
+    return vista('ruta', u, cab('Módulo de ruta', propias ? 'Mis rutas' : 'Rutas en curso', `${propias ? 'Sus rutas asignadas.' : 'Rutas en curso de la sede.'} Arrastre los clientes para acomodar el recorrido y pulse «Ruta entregada» al terminar.`) + `
       ${lista.length ? `<div class="ruta-lay">
         <div>${lista.map((x) => { const p = pedido(x.pedido); return `<button class="ruta-op ${x.id === rutaSel ? 'on' : ''}" data-r="${x.id}"><div style="display:flex;justify-content:space-between;align-items:center"><b>${etiqueta(p)}</b>${chipEstado(p)}</div>
           <div class="muted" style="font-size:13.5px;margin-top:8px">${fFecha(x.fecha)} · programada ${p.prog.slice(11, 16)} · ${esc((camion(x.camion) || {}).n || '—')}</div><div class="muted" style="font-size:13.5px">${esc(nombreUsuario(x.piloto))} · ${x.orden.length} cliente(s) · ${kg(totalPedido(p))}</div></button>`; }).join('')}</div>
@@ -359,8 +384,7 @@ const Picking = (() => {
       <div class="tabla-caja"><table class="tabla"><thead><tr><th style="width:34px"></th><th style="width:70px">Orden</th><th>Cliente</th><th>Sector</th><th class="der">Total (kg)</th></tr></thead>
         <tbody data-paradas>${cl.map((c, i) => `<tr data-id="${esc(c.ck)}"><td><span class="asa">${ico('asa', 'ico-s')}</span></td><td><span class="parada-n">${i + 1}</span></td><td><b>${esc(c.nombre)}</b></td><td class="muted">${esc(c.sector)}</td><td class="der kg">${fmt(c.total)}</td></tr>`).join('')}</tbody>
         <tfoot><tr><td></td><td colspan="3">Total de la ruta</td><td class="der kg">${fmt(totalPedido(p))}</td></tr></tfoot></table></div>
-      <div class="ped-pie"><span class="muted" style="font-size:14px">Al confirmar, la ruta pasa a Entregado y queda en el registro histórico de Reportes con su recorrido.</span>
-        <button class="btn btn-p btn-lg" data-entregar>${ico('check')} Ruta entregada</button></div>
+      <div class="ped-pie" style="justify-content:flex-end"><button class="btn btn-p btn-lg" data-entregar>${ico('check')} Ruta entregada</button></div>
     </section>`;
   }
 
@@ -426,7 +450,7 @@ const Picking = (() => {
       cuerpo = `<section class="tarjeta"><div class="bloque-cab"><div><h3>Bitácora de operaciones</h3><p>${P.txt} · Acciones de los dos sistemas, incluidos los inicios de sesión y los intentos fallidos. No se registran el marcado ni la prioridad de Bodega, ni el orden de Ruta antes de la entrega.</p></div></div><div class="tabla-caja tabla-alta"><table class="tabla"><thead><tr><th>Fecha</th><th>Usuario</th><th>Operación</th><th>Detalle</th></tr></thead><tbody>
         ${ls.map((b) => `<tr><td class="mono" style="font-size:13px;white-space:nowrap">${fFH(b.fecha)}</td><td>${esc(b.nombre)}</td><td><b>${esc(b.op)}</b></td><td style="font-size:13.5px">${esc(b.detalle)}</td></tr>`).join('') || '<tr><td colspan="4"><div class="vacio">Sin operaciones en el periodo.</div></td></tr>'}</tbody></table></div></section>`;
     }
-    return vista('reportes', u, cab('Módulo de reportes', 'Reportes y bitácora', 'Despacho y rutas realizadas por periodo, y la bitácora de operaciones de los dos sistemas.') + `
+    return vista('reportes', u, cab('Módulo de reportes', 'Reportes y bitácora', 'Despacho, rutas realizadas y bitácora de los dos sistemas, por periodo.') + `
       <div class="pestanas">${[['despacho', P.nombre, 'grafica'], ['rutas', 'Rutas realizadas', 'ruta'], ['bitacora', 'Bitácora', 'lista']].map(([k, n, i]) => `<button data-tab="${k}" class="${repTab === k ? 'on' : ''}">${ico(i, 'ico-s')} ${n}</button>`).join('')}</div>
       ${controlPeriodo()}${cuerpo}`, (root) => {
       $$('[data-tab]', root).forEach((b) => b.addEventListener('click', () => { repTab = b.dataset.tab; repintar(); }));
@@ -462,7 +486,7 @@ const Picking = (() => {
           <td class="der" style="white-space:nowrap"><button class="btn btn-s btn-sm" data-ed="${x.id}" title="Editar" aria-label="Editar">${ico('editar', 'ico-s')}</button> <button class="btn btn-s btn-sm" data-clave="${x.id}">${ico('llave', 'ico-s')} Contraseña</button> <button class="btn btn-g btn-sm" data-del="${x.id}" title="Eliminar">${ico('borrar', 'ico-s')}</button></td></tr>`).join('')}</tbody></table>`;
       notas = `<div class="aviso aviso-v">${ico('info')}<div>Las cuentas de Gerencia y Soporte sirven en los dos sistemas. Las demás son de un solo sistema, y una persona puede tener una cuenta en cada uno con el mismo nombre de usuario (RN-54).</div></div>${pend('P-02', 'Faltan los nombres y la cantidad de pilotos; aquí hay dos de ejemplo.')}${pend('P-08', 'Falta el usuario administrador inicial con el que se crean los demás.')}`;
     }
-    return vista('configuracion', u, cab('Módulo de configuración', 'Camiones y usuarios', 'Camiones de cada sede y usuarios del sistema de picking. Desde el 13/10 los productos, los clientes y los sectores llegan en el archivo de Odoo y ya no se administran aquí.', `<button class="btn btn-p" data-nuevo>${ico('mas')} ${acc}</button>`) + `
+    return vista('configuracion', u, cab('Módulo de configuración', 'Camiones y usuarios', 'Camiones de cada sede y usuarios del sistema de picking.', `<button class="btn btn-p" data-nuevo>${ico('mas')} ${acc}</button>`) + `
       <div class="pestanas">${tabs.map(([k, n, c]) => `<button data-tab="${k}" class="${cfgTab === k ? 'on' : ''}">${n} <span class="cont">${fmt(c)}</span></button>`).join('')}</div>
       <section class="tarjeta"><div class="tabla-caja tabla-alta">${tabla}</div></section>
       <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">${notas}</div>`, (root) => {

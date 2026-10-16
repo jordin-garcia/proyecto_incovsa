@@ -120,7 +120,7 @@ const Sitio = (() => {
         </div>
       </section>
 
-      <section class="sec sec-b">
+      <section class="sec sec-verde">
         <div class="wrap">
           <div class="cab-sec"><div><p class="eyebrow">Propósito</p><h2>Misión y visión</h2></div></div>
           ${misionVision()}
@@ -161,13 +161,14 @@ const Sitio = (() => {
     const st = S.sitio;
     // Banner: transición entre los logotipos de INCOVSA e Inquiserca (RF-SW-02)
     const logos = [[logoSitio(), 'INCOVSA Químicos']].concat(logoInquiserca() ? [[logoInquiserca(), 'Inquiserca']] : []);
+    const bannerLogos = (cls = '') => `<div class="banner-logos ${logos.length > 1 ? 'alterna' : ''} ${cls}">${logos.map(([src, alt]) => `<img src="${src}" alt="${alt}">`).join('')}</div>`;
     const hist = st.gal.historia || [];
     return { titulo: 'Quiénes somos', mount: montarBase, html: pagina('/nosotros', `<section class="pag-cab pag-cab-logos">
         <div class="foto">${galeria(galSitio('portada'), '', 'gal-fondo')}</div><div class="velo"></div>
         <div class="wrap banner-nos">
           <div><p class="eyebrow">Quiénes somos</p><h1>Más de treinta años abasteciendo de químicos a la industria del país</h1>
             <p>INCOVSA, Industria del Cuero Covadonga S. A., se dedica a la compra y venta de productos químicos en Guatemala. Atiende nueve industrias y lleva sus productos a clientes de todo el país.</p></div>
-          <div class="banner-logos ${logos.length > 1 ? 'alterna' : ''}">${logos.map(([src, alt]) => `<img src="${src}" alt="${alt}">`).join('')}</div>
+          ${bannerLogos()}
         </div>
       </section>
       <section class="sec"><div class="wrap dos-col ${hist.length ? '' : 'una-col'}">
@@ -178,7 +179,7 @@ const Sitio = (() => {
         </div>
         ${hist.length ? galeria(hist, 'Historia de INCOVSA', 'hist-gal') : ''}
       </div></section>
-      <section class="sec sec-b"><div class="wrap">
+      <section class="sec sec-verde"><div class="wrap">
         <div class="cab-sec"><div><p class="eyebrow">Propósito</p><h2>Misión y visión</h2></div></div>
         ${misionVision()}
       </div></section>
@@ -188,7 +189,7 @@ const Sitio = (() => {
           : `<div class="valor-t vacio-v"><span class="mono">${pad(i + 1)}</span><p class="muted">Imagen del valor pendiente de INCOVSA</p></div>`)).join('')}</div>
         ${st.valores.some((x) => !x) ? `<div style="margin-top:16px">${pend('P-19', 'Faltan las imágenes de los valores. Son 5, una por valor, y se suben desde el panel.')}</div>` : ''}
       </div></section>
-      <section class="sec sec-b"><div class="wrap">
+      <section class="sec sec-verde"><div class="wrap">
         <div class="cab-sec"><div><p class="eyebrow">A quién servimos</p><h2>Dos mercados, la misma calidad de producto</h2></div></div>
         <div class="rejilla r2">
           <div class="tarjeta tarjeta-p" style="padding:32px"><span class="ind-ic" style="width:56px;height:56px;border-radius:16px;background:var(--v600);color:#fff;display:grid;place-items:center">${ico('fabrica', 'ico-l')}</span>
@@ -198,7 +199,7 @@ const Sitio = (() => {
         </div>
       </div></section>
       <section class="sec"><div class="wrap" style="display:flex;gap:40px;align-items:center;flex-wrap:wrap">
-        <img src="${logoSitio()}" alt="INCOVSA Químicos" style="height:90px;width:auto">
+        ${bannerLogos('en-claro')}
         <div style="flex:1;min-width:280px"><p class="eyebrow">INCOVSA e Inquiserca</p><h2 style="font-size:32px;margin-top:12px">Dos empresas del mismo grupo, una sola identidad</h2>
           <p class="muted" style="margin-top:12px;font-size:17px">Comparten productos según la logística de distribución, y se presentan en este sitio bajo una misma identidad visual.</p></div>
       </div></section>`) };
@@ -287,13 +288,12 @@ const Sitio = (() => {
 
   /* ------------------------------------------------------------ noticias */
   function noticias() {
-    const ns = S.sitio.noticias.filter((n) => n.pub).sort((a, b) => b.fecha.localeCompare(a.fecha));
-    const extracto = (t) => (t.length > 220 ? t.slice(0, 220).replace(/\s+\S*$/, '') + '…' : t);
+    const ns = S.sitio.noticias.slice().sort((a, b) => b.fecha.localeCompare(a.fecha));
     return { titulo: 'Noticias', mount: montarBase, html: pagina('/noticias', cabPag('Noticias', 'Novedades de la empresa', 'Nuevos productos, ampliación de bodegas, certificaciones y avisos a clientes.') + `
       <section class="sec"><div class="wrap">
-        ${ns.length ? `<div class="rejilla r3">${ns.map((n) => `<article class="tarjeta" style="overflow:hidden">
+        ${ns.length ? `<div class="not-lista">${ns.map((n) => `<article class="tarjeta not-t">
             <div class="not-foto">${(n.fotos || []).length ? galeria(n.fotos, n.titulo) : `<div class="not-sin"><div style="position:absolute;right:18px;bottom:10px;width:34px;opacity:.9">${burbujas()}</div></div>`}</div>
-            <div class="tarjeta-p"><span class="chip">${fFecha(n.fecha)}</span><h3 style="font-size:21px;margin-top:12px">${esc(n.titulo)}</h3><p class="muted" style="margin-top:10px">${esc(extracto(n.texto || ''))}</p></div></article>`).join('')}</div>`
+            <div class="not-txt"><span class="chip">${fFecha(n.fecha)}</span><h3>${esc(n.titulo)}</h3><p class="muted">${esc(n.texto || '')}</p></div></article>`).join('')}</div>`
         : `<div class="tarjeta vacio" style="padding:70px 20px">${ico('noticia')}<h4>Todavía no hay noticias publicadas</h4><p>Las noticias se publican desde el panel del sitio, con imágenes, título y texto.</p></div>`}
         <div style="margin-top:20px">${pend('P-23', 'Falta el contenido inicial de las noticias.')}</div>
       </div></section>`) };
@@ -391,6 +391,8 @@ const Sitio = (() => {
             <p class="muted" style="margin-top:8px;font-size:14px">En la simulación, la solicitud aparece en la bandeja del panel del sitio.</p>
             <button class="btn btn-s" style="margin-top:22px" data-otra>Enviar otro mensaje</button></div>`;
           $('[data-otra]', caja).addEventListener('click', form);
+          const cab = $('.sh', root);
+          window.scrollTo({ top: caja.getBoundingClientRect().top + window.scrollY - (cab ? cab.offsetHeight : 0) - 24, behavior: 'smooth' });
         });
       };
       form();
@@ -408,9 +410,8 @@ const Sitio = (() => {
     return '#/picking/' + (m ? m.id : 'facturacion');
   }
   const marcaAcceso = (titulo, texto, foto = A.fotoEquipo) => `<aside class="acc-marca"><div class="foto" style="background-image:url(${foto})"></div><div class="velo"></div>
-        <a href="#/"><img src="${A.logoBlanco}" alt="INCOVSA Químicos" style="height:52px;width:auto"></a>
-        <h1>${titulo}</h1><p>${texto}</p>
-        <div class="nota"><b style="color:#fff">Gerencia y Soporte usan la misma cuenta en los dos sistemas.</b> Las demás personas tienen una cuenta para cada sistema, y pueden usar el mismo nombre de usuario en los dos.</div>
+        <a href="#/" class="acc-logo"><img src="${A.logoBlanco}" alt="INCOVSA Químicos" style="height:52px;width:auto"></a>
+        <div class="acc-centro"><h1>${titulo}</h1><p>${texto}</p></div>
       </aside>`;
   function acceso() {
     const u = accesoUsuario;
@@ -468,15 +469,7 @@ const Sitio = (() => {
     if (!cuenta) { location.hash = '#/acceso'; return null; }
     const titulo = sis === 'picking' ? 'Sistema de picking' : 'Administración del sitio';
     return { titulo, html: `<div class="acc-lay">
-      <aside class="acc-marca"><div class="foto" style="background-image:url(${sis === 'picking' ? A.fotoEquipo : A.fotoReunion})"></div><div class="velo"></div>
-        <a href="#/"><img src="${A.logoBlanco}" alt="INCOVSA Químicos" style="height:52px;width:auto"></a>
-        <h1>${titulo}</h1>
-        <p>${sis === 'picking' ? 'Control logístico de bodega: del pedido facturado a la entrega.' : 'Contenido del sitio público y documentación interna de productos.'}</p>
-        <div class="nota"><b style="color:#fff;display:block;margin-bottom:8px">Roles de este sistema</b>
-          <div style="padding:4px 0"><b style="color:var(--lima-b)">Gerencia</b>: acceso total a los dos sistemas.</div>
-          <div style="padding:4px 0"><b style="color:var(--lima-b)">Soporte</b>: el mismo acceso, para mantenimiento.</div>
-          <div style="padding:4px 0">Los demás usuarios entran según los permisos que les asignan Gerencia o Soporte.</div></div>
-      </aside>
+      ${marcaAcceso(titulo, sis === 'picking' ? 'Control logístico de bodega: del pedido facturado a la entrega.' : 'Contenido del sitio público y documentación interna de productos.', sis === 'picking' ? A.fotoEquipo : A.fotoReunion)}
       <section class="acc-form"><div style="max-width:440px;width:100%">
         <a href="#/acceso" class="enlace" style="display:inline-flex;gap:6px;align-items:center;margin-bottom:26px">${ico('atras', 'ico-s')} Elegir otro sistema</a>
         <p class="eyebrow">Acceso para personal · paso 3 de 3</p><h2 style="font-size:32px;margin:10px 0 8px">${titulo}</h2>
