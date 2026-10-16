@@ -82,11 +82,11 @@ const Picking = (() => {
   const filaOpcion = (f, i) => `<div class="fx-f" data-id="${f.id}" title="Arrastre para cambiar el orden, llevarlo a la otra opción o regresarlo al tablero"><span class="fx-ord">${i + 1}</span><b class="mono">${esc(f.num)}</b><span class="n">${esc(nombreFact(f))}</span><span class="mono fx-kg">${fmt(totalFact(f))} kg</span></div>`;
   const zonaVacia = '<div class="fx-zona-vacia">Arrastre aquí pedidos facturados</div>';
   const camposProg = (sede, op, que) => { const o = opcionDe(sede, op); return `<div class="rejilla r2 fx-prog">
-      <label class="campo"><span>Fecha programada de ${que} *</span><input type="date" class="inp ${o.fecha ? '' : 'falta'}" data-prog-fecha="${op}" value="${o.fecha || ''}"></label>
-      <label class="campo"><span>Hora programada *</span><span class="hora-caja">
+      <label class="campo"><span>Fecha programada de ${que} *</span>${campoFecha(`data-prog-fecha="${op}"`, o.fecha, o.fecha ? '' : 'falta')}</label>
+      <label class="campo"><span>Hora programada *</span><span class="campo-caja">
         <input type="text" class="inp ${o.hora ? '' : 'falta'}" data-prog-hora="${op}" value="${o.hora || ''}" placeholder="HH:MM" inputmode="numeric" maxlength="5" autocomplete="off">
-        <button type="button" class="hora-btn" data-reloj-hora="${op}" title="Elegir la hora" aria-label="Elegir la hora">${ico('reloj', 'ico-s')}</button>
-        <input type="time" class="hora-nativa" data-hora-nativa="${op}" tabindex="-1" aria-hidden="true"></span></label></div>`; };
+        <button type="button" class="campo-btn" data-reloj-hora="${op}" title="Elegir la hora" aria-label="Elegir la hora">${ico('reloj', 'ico-s')}</button>
+        <input type="time" class="campo-nativo" data-hora-nativa="${op}" tabindex="-1" aria-hidden="true"></span></label></div>`; };
   /* Hora en formato de 24 horas: «1330», «13:30» o «9:05» → «13:30», «09:05»; vacía si no es válida */
   const horaValida = (x) => { const m = String(x).trim().match(/^(\d{1,2}):?(\d{2})$/); return m && +m[1] < 24 && +m[2] < 60 ? pad(+m[1]) + ':' + m[2] : ''; };
   function opcionCamion(sede) {
@@ -137,7 +137,7 @@ const Picking = (() => {
       $('[data-sel-acc]', lay).innerHTML = accSel(selFact.size);
     };
     const alternar = (id) => { if (selFact.has(id)) selFact.delete(id); else selFact.add(id); pintarSel(); };
-    // Fecha y hora programadas: se guardan sin volver a pintar, para poder escribirlas con el teclado
+    // Fecha y hora programadas: se escriben como texto y se guardan sin volver a pintar
     const listo = (op) => { const o = opcionDe(sede, op); return !!(facturadosDe(sede, op).length && o.fecha && o.hora && (op === 'recoge' || (camion(o.camion) && o.piloto))); };
     const prog = (t, op, campo, valor = t.value) => {
       opCampoOpcion(sede, op, campo, valor); guardar();
@@ -155,7 +155,7 @@ const Picking = (() => {
     lay.addEventListener('keydown', (e) => { const t = e.target.closest('.fx-t'); if (t && (e.key === ' ' || e.key === 'Enter')) { e.preventDefault(); alternar(t.dataset.id); } });
     lay.addEventListener('input', (e) => {
       const t = e.target;
-      if (t.matches('[data-prog-fecha]')) prog(t, t.dataset.progFecha, 'fecha');
+      if (t.matches('[data-prog-fecha]')) prog(t, t.dataset.progFecha, 'fecha', t.dataset.iso);
       else if (t.matches('[data-prog-hora]')) {
         // La hora se escribe como texto: solo números y «:»; con cuatro cifras se agregan los dos puntos
         let x = t.value.replace(/[^\d:]/g, '');
@@ -442,7 +442,7 @@ const Picking = (() => {
     const anios = []; const y0 = Math.min(new Date().getFullYear(), ...S.pedidos.map((p) => new Date(p.fecha).getFullYear()));
     for (let y = new Date().getFullYear(); y >= y0; y--) anios.push(y);
     const [my, mm] = repMes.split('-');
-    const fecha = (attr, v) => `<input type="date" class="inp" ${attr} value="${v}">`;
+    const fecha = (attr, v) => campoFecha(attr, v);
     const ctl = repPer === 'dia' || repPer === 'semana' ? fecha('data-ref', repRef)
       : repPer === 'mes' ? `<select class="sel" data-mes-m>${MESES.map((n, i) => `<option value="${pad(i + 1)}" ${pad(i + 1) === mm ? 'selected' : ''}>${n[0].toUpperCase() + n.slice(1)}</option>`).join('')}</select><select class="sel" data-mes-y>${anios.map((y) => `<option ${String(y) === my ? 'selected' : ''}>${y}</option>`).join('')}</select>`
       : repPer === 'anio' ? `<select class="sel" data-anio>${anios.map((y) => `<option ${String(y) === repAnio ? 'selected' : ''}>${y}</option>`).join('')}</select>`
@@ -487,7 +487,8 @@ const Picking = (() => {
       $$('[data-tab]', root).forEach((b) => b.addEventListener('click', () => { repTab = b.dataset.tab; repintar(); }));
       const per = $('[data-per]', root);
       if (per) per.addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) { repPer = b.dataset.p; repintar(); } });
-      const al = (sel, fn) => { const x = $(sel, root); if (x) x.addEventListener('change', (e) => { if (e.target.value) { fn(e.target.value); repintar(); } }); };
+      // Las fechas se escriben como texto: su valor ISO está en data-iso
+      const al = (sel, fn) => { const x = $(sel, root); if (x) x.addEventListener('change', (e) => { const v = e.target.dataset.iso !== undefined ? e.target.dataset.iso : e.target.value; if (v) { fn(v); repintar(); } }); };
       al('[data-ref]', (v) => { repRef = v; });
       al('[data-desde]', (v) => { repDesde = v; });
       al('[data-hasta]', (v) => { repHasta = v; });

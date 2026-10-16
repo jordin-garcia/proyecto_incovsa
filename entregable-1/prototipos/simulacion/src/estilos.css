@@ -934,14 +934,16 @@ body.moviendo, body.moviendo * { cursor: grabbing !important; }
 .fx-f .fx-kg { font-size: 12.5px; }
 .fx-prog { gap: 10px; }
 .fx-prog .inp { min-height: 40px; cursor: pointer; }
-.fx-prog .inp::-webkit-calendar-picker-indicator { cursor: pointer; }
+
 .inp.falta { border-color: var(--v300); background: var(--v50); }
-/* Hora programada: se escribe como texto o se elige con el botón del reloj */
-.campo > .hora-caja { position: relative; display: block; font: inherit; color: inherit; }
-.hora-caja .inp { padding-right: 46px; min-height: 48px; }
-.hora-btn { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); width: 32px; height: 30px; border: 0; border-radius: 8px; background: transparent; color: var(--g800); display: grid; place-items: center; cursor: pointer; }
-.hora-btn:hover { background: var(--v100); color: var(--v700); }
-.hora-nativa { position: absolute; right: 0; bottom: 0; width: 1px; height: 1px; padding: 0; border: 0; opacity: 0; pointer-events: none; }
+/* Fechas y horas: se escriben como texto o se eligen con el botón del calendario o del reloj */
+.campo-caja { position: relative; display: block; }
+.campo > .campo-caja { font: inherit; color: inherit; }
+.campo-caja .inp { padding-right: 46px; }
+.periodo-ctl .campo-caja .inp { width: 172px; }
+.campo-btn { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); width: 32px; height: 30px; border: 0; border-radius: 8px; background: transparent; color: var(--g800); display: grid; place-items: center; cursor: pointer; }
+.campo-btn:hover { background: var(--v100); color: var(--v700); }
+.campo-nativo { position: absolute; right: 0; bottom: 0; width: 1px; height: 1px; padding: 0; border: 0; opacity: 0; pointer-events: none; }
 .fx-mini { min-height: 72px; }
 .fx-ayuda { font-size: 13.5px; margin-top: 14px; }
 .insertar-antes { box-shadow: 0 -3px 0 0 var(--v500) !important; }
