@@ -853,6 +853,51 @@ function montarImagenes(root, alCambiar) {
   });
 }
 
+/* Fechas que se escriben con el teclado (dd/mm/aaaa) o se eligen en el calendario del navegador.
+   El campo de texto guarda la fecha ISO en data-iso: los módulos la leen en sus eventos input y change. */
+const isoAFecha = (iso) => (iso ? iso.split('-').reverse().join('/') : '');
+function fechaValida(x) {
+  const s = String(x).trim(), m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/) || s.match(/^(\d{2})(\d{2})(\d{4})$/);
+  if (!m) return '';
+  const d = +m[1], mes = +m[2], a = +m[3], f = new Date(a, mes - 1, d);
+  return f.getFullYear() === a && f.getMonth() === mes - 1 && f.getDate() === d ? `${a}-${pad(mes)}-${pad(d)}` : '';
+}
+const campoFecha = (attrs, iso, cls = '') => `<span class="campo-caja"><input type="text" class="inp fecha-txt ${cls}" ${attrs} value="${isoAFecha(iso)}" data-iso="${iso || ''}" placeholder="dd/mm/aaaa" inputmode="numeric" maxlength="10" autocomplete="off">
+    <button type="button" class="campo-btn" data-cal title="Elegir la fecha" aria-label="Elegir la fecha">${ico('calendario', 'ico-s')}</button>
+    <input type="date" class="campo-nativo" tabindex="-1" aria-hidden="true"></span>`;
+const esFecha = (t) => t.classList && t.classList.contains('fecha-txt');
+/* Al escribir: solo números y «/»; las barras se agregan después del día y del mes */
+document.addEventListener('input', (e) => {
+  const t = e.target; if (!esFecha(t)) return;
+  let x = t.value.replace(/[^\d/]/g, '').replace(/\/{2,}/g, '/');
+  if (/^\d{8}$/.test(x)) x = x.slice(0, 2) + '/' + x.slice(2, 4) + '/' + x.slice(4);
+  else if (e.inputType === 'insertText' && /^(\d{2}|\d{1,2}\/\d{2})$/.test(x)) x += '/';
+  if (x !== t.value) t.value = x;
+  t.dataset.iso = fechaValida(x);
+  t.classList.remove('error'); t.title = '';
+}, true);
+/* Al salir: la fecha queda completa («5/1/2026» → «05/01/2026») o se marca si no es válida */
+document.addEventListener('focusout', (e) => {
+  const t = e.target; if (!esFecha(t)) return;
+  const iso = fechaValida(t.value), mal = !!t.value.trim() && !iso;
+  if (iso) t.value = isoAFecha(iso);
+  t.classList.toggle('error', mal); t.title = mal ? 'Escriba la fecha como dd/mm/aaaa, por ejemplo 15/10/2026' : '';
+});
+/* El botón del calendario abre el selector del navegador; la fecha elegida pasa al campo de texto */
+document.addEventListener('click', (e) => {
+  const b = e.target.closest && e.target.closest('[data-cal]'); if (!b) return;
+  e.preventDefault();
+  const t = $('.fecha-txt', b.parentElement), n = $('.campo-nativo', b.parentElement);
+  n.value = t.dataset.iso || '';
+  try { n.showPicker(); } catch (er) { t.focus(); }
+});
+document.addEventListener('change', (e) => {
+  const n = e.target; if (!n.classList || !n.classList.contains('campo-nativo') || n.type !== 'date' || !n.value) return;
+  const t = $('.fecha-txt', n.parentElement);
+  t.value = isoAFecha(n.value); t.dataset.iso = n.value; t.classList.remove('error'); t.title = '';
+  t.dispatchEvent(new Event('input', { bubbles: true })); t.dispatchEvent(new Event('change', { bubbles: true }));
+}, true);
+
 /* Silueta del camión (vista lateral), en blanco como los de la flota de la fotografía.
    En el modo oscuro del tablero va en grises (specs/07). Desde el 15/10 todos los camiones
    usan la silueta del camión grande, porque la flota puede tener otras capacidades. */
