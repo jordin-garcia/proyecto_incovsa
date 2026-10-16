@@ -419,7 +419,7 @@ El 15/10/2026, después de los ajustes del coordinador, se comparó esta carpeta
 | Tema | Antes | Ahora (15/10) |
 |---|---|---|
 | Nombre de los botones de Bodega y Ruta | Esta carpeta decía "Ruta Despachada", "Pedido Despachado" y "Ruta Entregada"; el prototipo, el Documento 2 y CAM-95, "Ruta despachada", "Pedido despachado" y "Ruta entregada" | Mayúscula inicial en cada palabra, como esta carpeta: "Ruta Despachada", "Pedido Despachado" y "Ruta Entregada". Se corrigieron el prototipo, el Documento 2 y CAM-95 |
-| Cuadro del número del pedido en el tablero en pantalla completa | Verde lima solo en el módulo de Bodega; en el tablero, igual que el de la ruta | Verde lima también en el tablero, en el modo claro y en el modo oscuro |
+| Cuadro del número del pedido en el tablero en pantalla completa | Verde lima solo en el módulo de Bodega; en el tablero, igual que el de la ruta | Verde lima también en el tablero, en el modo claro. **(16/10)** En el modo oscuro, gris (fondo #3A3A3E, texto #EDEDED, como el lote), por decisión del coordinador |
 | Sistema de las cuentas de Gerencia y Soporte | El modelo decía "sitio o picking"; el prototipo y el Documento 2 usaban "ambos" | Se documenta "ambos": un solo registro que sirve en los dos sistemas ([14](14-modelo-de-datos.md), [16](16-arquitectura-y-tecnologia.md), decisión 26) |
 | Folio de la solicitud de contacto | Solo en el prototipo y en el Documento 2 | Se agrega a SOLICITUD_CONTACTO ([14](14-modelo-de-datos.md)) |
 | Archivo de Odoo de otra bodega | Solo en el prototipo y en el Documento 2 | Se documenta: si el archivo trae un prefijo desconocido, más de una bodega o una bodega distinta de la sede de trabajo, no se carga nada ([06](06-picking-facturacion.md)) |
