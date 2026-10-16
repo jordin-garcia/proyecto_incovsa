@@ -20,6 +20,7 @@ En la barra lateral, el módulo de Bodega **no** muestra el contador de rutas y 
 - Cada uno se identifica con su **tipo y su número del día**: "Ruta 3" o "Pedido 2" (RN-52).
 - Cada uno muestra su **fecha y hora programadas** de envío (ruta) o de despacho (pedido), que se escribieron en Facturación (13/10). **No** se muestra la hora en que se envió desde Facturación, para que no se confunda con la programada.
 - La ruta muestra además su camión y su piloto.
+- **Cuadro del número (15/10):** el cuadro con "RUTA" y su número va en el **verde principal** (`--v600`), y el de "PEDIDO" en **verde lima** (`--lima`), para distinguirlos (antes el del pedido era gris).
 - Una ruta o un pedido reúne los **pedidos facturados** de su opción de envío y puede tener **varios clientes** ([06-picking-facturacion.md](06-picking-facturacion.md)). Bodega muestra una tarjeta por ruta o pedido, como en el prototipo.
 
 ## Detalle de la ruta o del pedido (13/10)
@@ -32,6 +33,7 @@ En la barra lateral, el módulo de Bodega **no** muestra el contador de rutas y 
 | Pedido facturado | Número de pedido facturado, cliente (`Contacto`), sector (`Contacto/Ciudad`) y total en kg |
 | Cada línea | Producto, lote, Peso de Conversión, cantidad en kg y su conversión a unidades |
 
+- **(15/10)** Todos los pedidos facturados se muestran **completos**, con todas sus líneas. Si no caben, se desplaza la ventana, no cada pedido facturado.
 - El botón está en el módulo y en el tablero en pantalla completa.
 
 ## Prioridad (RF-SL-20, RN-28)
@@ -46,7 +48,7 @@ En la barra lateral, el módulo de Bodega **no** muestra el contador de rutas y 
 | Columna | Contenido |
 |---|---|
 | Producto | Nombre del producto, tal como viene del archivo de Odoo |
-| Lote | Lote de la línea, **resaltado de forma prioritaria** (13/10). Si no viene en el archivo, "Sin lote" |
+| Lote | Lote de la línea, **resaltado de forma prioritaria** (13/10) en una etiqueta **verde** (`--v100`, texto `--v700`; 15/10, antes ámbar). Si no viene en el archivo, "Sin lote" en gris |
 | Cantidad | Suma en kg del mismo producto, con el mismo lote y el mismo Peso de Conversión, entre todos los clientes de la ruta o del pedido |
 | Unidades | Conversión según RN-01, en el formato **"N unidades + R kg"**, con el Peso de Conversión de la línea (RN-37) |
 | Listo | Casilla para marcar lo que ya se sacó de la bodega |
@@ -90,6 +92,8 @@ El módulo tiene un botón para abrir el tablero en pantalla completa, que es el
 - Las dos opciones se ofrecen en la barra superior del tablero.
 - El modo elegido vale para esa pantalla y no se comparte con las demás.
 - **Numeración de las filas (13/10):** cuando las filas se reparten en dos columnas, se numeran **de arriba hacia abajo**: primero toda la columna izquierda y después la derecha.
+- **Lote en el tablero (15/10):** en el modo claro, la etiqueta del lote es **verde**, como en el módulo; en el modo oscuro, **gris** (fondo #3A3A3E, texto #EDEDED), acorde con la escala de grises de ese modo.
+- **Silueta del camión (15/10):** todas las rutas usan la **silueta del camión grande** (la que antes se usaba solo para el de 6,000 kg), cualquiera que sea la capacidad del camión, porque la empresa puede comprar camiones de otras capacidades. El nombre y la capacidad del camión se siguen mostrando arriba de la silueta.
 
 ## Legibilidad (RF-SL-25, RNF-02)
 

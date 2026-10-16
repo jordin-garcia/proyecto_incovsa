@@ -368,6 +368,50 @@ Decisiones de diseño y técnicas para aplicar los cambios ([DECISIÓN TÉCNICA]
 
 Pendientes nuevos: P-90, P-91 y P-92 ([19-pendientes.md](19-pendientes.md)).
 
+## Ajustes del coordinador (15/10/2026)
+
+El 15/10/2026 el coordinador revisó el prototipo con los cambios de la reunión 5 y pidió los ajustes que siguen. El detalle está en el archivo de cada módulo y en el registro CAM-78 a CAM-95 de [20-prototipo-aprobado.md](20-prototipo-aprobado.md).
+
+### Decisiones reemplazadas el 15/10/2026
+
+| Tema | Antes | Ahora (15/10) |
+|---|---|---|
+| Noticias | Se publicaban u ocultaban; la noticia guardaba si estaba publicada | Se eliminan (botón con el basurero); toda noticia guardada se publica. El permiso pasa a "Crear, editar y eliminar noticias" y NOTICIA pierde el atributo "publicada" |
+| Página de Noticias | Tarjetas en tres columnas con un extracto del texto | Cada noticia a todo el ancho, con título y texto completos |
+| Fondos del sitio | Misión y visión y "A quién servimos" en blanco | Con el verde del pie de página |
+| Bloque "INCOVSA e Inquiserca" | Logotipo de la cabecera | Los dos logotipos alternados, como el banner |
+| Pantallas de acceso | Título, descripción y notas sobre los roles, alineados abajo a la izquierda | Solo título y descripción, centrados |
+| Encabezado de los módulos | Instrucción debajo del título (salvo Facturación) | Instrucción breve a la par del título en todos los módulos de los dos sistemas |
+| Comentario de una solicitud | Botón "Guardar comentario" siempre | "Editar comentario" cuando ya hay uno guardado |
+| Tarjeta seleccionada en Facturación | Mostraba todos sus datos; seleccionar regresaba el tablero hasta arriba | Muestra solo número y peso total; el tablero no se mueve |
+| Fecha y hora programadas | Campos del navegador, en ámbar mientras estaban vacíos | Se escriben como texto (dd/mm/aaaa y HH:MM de 24 horas) o se eligen con el calendario o el reloj, que se abren debajo del campo; en verde mientras están vacíos |
+| Fechas del filtro de Reportes | Campo de fecha del navegador | Se escriben como texto (dd/mm/aaaa) o se eligen con el calendario |
+| Lote en Bodega | Etiqueta ámbar | Verde; gris en el modo oscuro del tablero |
+| Silueta del camión en el tablero | Pequeña para 3,400 kg y grande para 6,000 kg | La grande para todos, porque la empresa puede comprar camiones de otras capacidades |
+| Cuadro del número del pedido en Bodega | Gris | Verde lima, distinto del verde de la ruta |
+| Detalle de Ruta y de Pedido | Las tablas de los pedidos facturados quedaban recortadas | Todo completo; se desplaza la ventana |
+| Nota del nombre de usuario en las ventanas de usuario | "Único en … Puede ser el mismo de una cuenta …" | Se quita; la regla RN-54 no cambia |
+| Texto al pie del módulo de Ruta | "Al confirmar, la ruta pasa a Entregado y queda en el registro histórico de Reportes con su recorrido." | Se quita |
+
+### Respuestas del coordinador del 15/10/2026
+
+| Duda | Decisión |
+|---|---|
+| ¿Qué secciones de Quiénes somos pasan al verde del pie? | Solo las que eran blancas: "Misión y visión" y "A quién servimos". Historia, Valores e "INCOVSA e Inquiserca" conservan el fondo claro |
+| Sin el botón "Ocultar", ¿qué pasa con la opción de publicar u ocultar? | Se quita: toda noticia se publica al guardarla |
+| ¿Qué campos de fecha se escriben con el teclado? | Los de Facturación y los del filtro de periodo de Reportes |
+
+### Decisiones de diseño del 15/10/2026
+
+| Tema | Decisión |
+|---|---|
+| Formato de la fecha escrita | dd/mm/aaaa, el de esta carpeta; las barras se agregan solas y al salir se completan los ceros |
+| Formato de la hora escrita | 24 horas, HH:MM; "1330" se convierte en "13:30" |
+| Color del cuadro del pedido | Verde lima (`--lima`), el acento del logotipo, para distinguirlo del verde principal de la ruta |
+| Noticia en la página pública | Galería a la izquierda y texto a la derecha; en teléfono, una debajo del otro |
+| Pantallas de acceso | El logotipo se conserva arriba a la izquierda como enlace al sitio |
+| Tarjeta seleccionada en Facturación | Queda compacta, con la altura de su contenido, sin estirarse a la de las demás |
+
 ## Documentos no alineados con las reuniones 4 y 5
 
 Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los cambios del 29/09, del 11/10 ni del 13/10:
@@ -375,4 +419,4 @@ Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los camb
 - el Documento 1 v0.2 y sus figuras (casos de uso, actividades, estados, arquitectura y modelos ER);
 - las capturas de los prototipos `.dc.html` (los archivos `.dc.html` y `canvas.json` se borraron del repositorio el 14/10, en el commit "Prototipo mejorado").
 
-El prototipo de simulación se actualizó el 14/10/2026 con los cambios de la reunión 5 ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)), y el Documento 2 pasó a la versión 0.2.
+El prototipo de simulación se actualizó el 14/10/2026 con los cambios de la reunión 5 y el 15/10/2026 con los ajustes del coordinador ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)), y el Documento 2 pasó a la versión 0.2. El Documento 2 v0.2 se armó el 14/10, así que **no** incorpora los ajustes del 15/10.

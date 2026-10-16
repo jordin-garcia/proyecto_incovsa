@@ -56,7 +56,7 @@ No se muestran la dirección ni el teléfono.
 
 ## Cierre (RF-SL-29)
 
-- Al final de la tabla está el botón **"Ruta Entregada"** (antes "Pedido Entregado"; se cambió el nombre por la terminología del 13/10).
+- Al final de la tabla está el botón **"Ruta Entregada"** (antes "Pedido Entregado"; se cambió el nombre por la terminología del 13/10), alineado a la derecha y **sin texto de ayuda** a su lado (15/10). La ventana de confirmación sigue mostrando el recorrido que se va a guardar.
 - Al pulsarlo, la ruta pasa a **Entregado**, lo que significa que se entregó completa a todos sus clientes. Queda en el registro histórico de Reportes (RF-SL-37).
 - El piloto **no** puede cambiar clientes, productos ni cantidades.
 

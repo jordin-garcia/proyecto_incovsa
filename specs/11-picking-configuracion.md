@@ -28,7 +28,7 @@ Los usuarios del sistema de picking se administran **aquí**, en la pestaña "Us
 
 - Lo hacen **Gerencia y Soporte**.
 - Campos del usuario: nombre completo, nombre de usuario, **contraseña** (al crearlo, 13/10), **rol** (texto libre), **sedes** a las que tiene acceso (casillas), **permisos** del picking (casillas), estado y correo opcional.
-- El nombre de usuario es único **dentro del picking**. Se puede usar el **mismo nombre de usuario** que tiene una cuenta del sitio, para que la persona entre a los dos sistemas con el mismo usuario (13/10, RN-54).
+- El nombre de usuario es único **dentro del picking**. Se puede usar el **mismo nombre de usuario** que tiene una cuenta del sitio, para que la persona entre a los dos sistemas con el mismo usuario (13/10, RN-54). La ventana del usuario no muestra una nota con esta regla debajo del campo "Usuario" (15/10).
 - Se pueden **crear, editar y eliminar** usuarios, y **agregar, editar o revocar** sus permisos y sedes.
 - Los pilotos son los usuarios cuyo rol es **"Piloto"**.
 - Desde aquí, Gerencia y Soporte **restablecen la contraseña** de un usuario que se lo pida, escribiendo la nueva contraseña (RF-SL-48). No hay restablecimiento por correo.
