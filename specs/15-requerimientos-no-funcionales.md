@@ -11,7 +11,7 @@
 | RNF-07 | Mantenibilidad | Escalable y modificable por un desarrollador externo, con estructura y convenciones documentadas | Vigente |
 | RNF-08 | Accesibilidad | Contraste, etiquetas en formularios y textos alternativos en imágenes | Vigente |
 | RNF-09 | Respaldo | Procedimiento documentado y probado de respaldo y restauración de la base de datos y la configuración. Las imágenes están en R2. **(12/10)** Los respaldos son automáticos. **(13/10)** Ya no hay PDF en el servidor: los documentos técnicos están en el Google Drive de la empresa, que los respalda | Modificado |
-| RNF-10 | Privacidad | El repositorio no contiene credenciales, claves, datos reales de producción ni datos personales | Vigente |
+| RNF-10 | Privacidad | El repositorio no contiene credenciales, claves, datos reales de producción ni datos personales. **(16/10)** Única excepción: el prototipo de simulación armado, que contiene nombres reales de productos y de clientes de la empresa y se sube porque el repositorio es privado ([16](16-arquitectura-y-tecnologia.md), decisión 63) | Modificado |
 | RNF-11 | Compatibilidad | Funciona en los navegadores de uso corriente en los equipos de la empresa. Cuáles son, está pendiente (P-38) | Vigente |
 | RNF-12 | Disponibilidad | Se despliega bajo el dominio de la empresa con HTTPS | Vigente |
 | RNF-13 | Tiempo real | En Bodega, el marcado de filas y el orden de prioridad se ven **al instante** en todas las pantallas de la sede, sin recargar | Nuevo |

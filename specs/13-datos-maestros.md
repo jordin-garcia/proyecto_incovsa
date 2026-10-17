@@ -80,4 +80,4 @@ Hasta el 13/10 el catálogo del picking se cargaba de `Picking II.xlsm`, convert
 
 ## Datos personales
 
-Los nombres de clientes, pilotos y personal, las coordenadas y los documentos de identidad **no se suben al repositorio** ni se escriben en esta carpeta. Las semillas de base de datos que se suban al repositorio usan solo datos ficticios o ya públicos en esta carpeta ("Usuario de ejemplo NN", "Camión 1" a "Camión 3"). Los pedidos facturados reales llegan siempre en el archivo de Odoo.
+Los nombres de clientes, pilotos y personal, las coordenadas y los documentos de identidad **no se suben al repositorio** ni se escriben en esta carpeta. La única excepción es el prototipo de simulación armado, que contiene nombres reales de productos y de clientes y se sube desde el 16/10 porque el repositorio es privado (RNF-10). Las semillas de base de datos que se suban al repositorio usan solo datos ficticios o ya públicos en esta carpeta ("Usuario de ejemplo NN", "Camión 1" a "Camión 3"). Los pedidos facturados reales llegan siempre en el archivo de Odoo.

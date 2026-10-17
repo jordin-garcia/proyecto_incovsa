@@ -29,7 +29,7 @@
 | 13/10/2026 | Reunión 5, virtual (Ing. William Ambrossio y el equipo completo), de 18:00 a 21:30. Se presentó el prototipo de simulación con los cambios de la reunión 4; el Ing. William lo aprobó y pidió nuevos cambios. Notas de Daniela Marín (dicen "14 de octubre" por error) | `docs/Reuniones/Reunion5_131026/` |
 | 13/10/2026 | Entrega del logotipo de Inquiserca | `docs_incovsa/PAGINA WEB/INFORMACION EMPRESA/Inquiserca.jpeg` |
 | 14/10/2026 | Respuestas del coordinador a las dudas sobre cómo aplicar los cambios de la reunión 5 | Esta carpeta |
-| 16/10/2026 | El coordinador informa que el Ing. Manuel Rojas aprobó la exclusión del inventario, que el Ing. William Ambrossio contratará un VPS y que el archivo de Odoo completo llegará en los próximos días. Responde las 25 preguntas técnicas del equipo, decide usar Docker solo en producción y pide la exportación en "Rutas realizadas" y "Bitácora". Después confirma que su cuenta de GitHub es de GitHub Student y que el Documento 2 v0.4 ya no se edita | Esta carpeta |
+| 16/10/2026 | El coordinador informa que el Ing. Manuel Rojas aprobó la exclusión del inventario, que el Ing. William Ambrossio contratará un VPS y que el archivo de Odoo completo llegará en los próximos días. Responde las 25 preguntas técnicas del equipo, decide usar Docker solo en producción y pide la exportación en "Rutas realizadas" y "Bitácora". Después confirma que su cuenta de GitHub es de GitHub Student y que el Documento 2 v0.4 ya no se edita. Por último adopta el método de desarrollo con agentes de IA de la investigación del mismo día y responde las preguntas sobre el bot de revisión, el reparto, el esquema, el prototipo y los controles automáticos | Esta carpeta y `plan/investigacion-desarrollo-con-agentes-ia.md` |
 
 ## Decisiones reemplazadas
 
@@ -472,6 +472,29 @@ Antes de preparar el plan de desarrollo (P-40), el equipo hizo al coordinador 25
 | P-94 (nuevo) | Correo y cuentas de INCOVSA para los servicios y el repositorio |
 | P-95 (nuevo y resuelto) | Si la cuenta de GitHub tiene GitHub Pro. **Resuelto el mismo 16/10:** la cuenta es de GitHub Student, que incluye GitHub Pro. Las reglas de protección de `develop` y `main` exigirán las revisiones de integración continua, y GHCR tiene 2 GB ([16](16-arquitectura-y-tecnologia.md)) |
 | P-96 (nuevo y resuelto) | Alinear el Documento 2 y el README del repositorio con la versión 1.5. **Resuelto el mismo 16/10:** el README se actualizó. El Documento 2 v0.4 **ya no se edita**: para el Entregable 3 se crea una nueva versión del Documento 2 con todo actualizado |
+
+## Desarrollo con agentes de IA (16/10/2026)
+
+Antes del plan de desarrollo, el equipo investigó cómo se desarrollan hoy proyectos profesionales con agentes de IA (`plan/investigacion-desarrollo-con-agentes-ia.md`). El coordinador adoptó el método del informe (instrucciones únicas en `AGENTS.md`, tareas pequeñas con referencias a `specs/`, pruebas antes del código y verificaciones automáticas) y respondió las preguntas que quedaban. El detalle está en las decisiones 59 a 70 de [16-arquitectura-y-tecnologia.md](16-arquitectura-y-tecnologia.md) (versión 1.6 de esta carpeta).
+
+### Verificaciones del 16/10/2026
+
+| Tema | Resultado |
+|---|---|
+| Avisos de seguridad de las versiones elegidas | Confirmados en la base de avisos de GitHub y en el blog de Next.js. Next.js 16.4.0 quedó vulnerable el 14/10 (corregido en 16.4.1; la última es 16.4.2). sharp necesita 0.35.5. Ningún aviso afecta a las versiones estables de Better Auth 1.7.x (la última es 1.7.10). pdfmake necesita 0.3.6 y file-type 21.3.2. La etiqueta `latest` de Prisma en npm apunta a `8.0.0-rc` (decisión 59) |
+| Skills en Claude Code | Su documentación solo menciona `.claude/skills/`, no `.agents/skills/`: se mantiene la copia (decisión 62) |
+| Bot de Claude en GitHub | La Claude Code GitHub Action acepta un token de la suscripción Pro (`claude setup-token`, `CLAUDE_CODE_OAUTH_TOKEN`). Se toma como base el bot que el coordinador ya usa en el repositorio `shapi` (decisión 60) |
+| SheetJS | Los avisos de la base de GitHub para el paquete `xlsx` no afectan a la 0.20.3. No se confirmó que Dependabot ni `npm audit` vigilen una dependencia instalada desde una dirección web, así que sigue la revisión manual de <https://cdn.sheetjs.com/advisories>. npm 12 bloquea por defecto las dependencias instaladas desde una dirección web |
+
+### Decisiones reemplazadas el 16/10/2026 (desarrollo con agentes)
+
+| Tema | Antes | Ahora (16/10) |
+|---|---|---|
+| Revisión de los pull requests | Cualquier integrante distinto del autor aprobaba; Jordin revisaba los que tocaban el esquema, los permisos, la bitácora o la autenticación (decidido el mismo 16/10) | Un bot de Claude revisa, aprueba o rechaza, y GitHub integra el PR en `develop` cuando todas las verificaciones pasan, sin aprobación humana (decisión 60) |
+| Prototipo armado en el repositorio | No se subía, porque contiene datos reales de la empresa (RNF-10) | Se sube, porque el repositorio es privado (decisión 63; RNF-10 modificado) |
+| Reparto del trabajo | Por capas: frontend del sitio, base de datos y frontend del picking, backend del picking | Por módulos completos, uno o varios por integrante (decisión 64) |
+| Base de datos | A cargo de Josué Menéndez | El esquema y las migraciones son de Jordin García (decisión 65) |
+| Recortes de alcance | El informe de la investigación proponía preparar recortes por si no alcanzaba el tiempo | No se recorta nada (decisión 68) |
 
 ## Documentos no alineados con las reuniones 4 y 5
 

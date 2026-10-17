@@ -20,9 +20,11 @@ entregable-*/**/*.pdf
 # Evidencias con fotografías de personas y de la empresa (Anexo B)
 entregable-*/figuras/evidencias/
 
-# Prototipo de simulación armado: contiene datos reales de la empresa (RNF-10).
-# Se sube solo su código fuente (entregable-1/prototipos/simulacion/)
-entregable-1/prototipos/prototipo-simulacion-incovsa.html
+# El prototipo de simulación armado (entregable-1/prototipos/prototipo-simulacion-incovsa.html) SÍ se sube
+# desde el 16/10/2026: contiene datos reales de la empresa, pero el repositorio es privado (specs/16, decisión 63).
+
+# Notas de investigación (el informe final está en plan/)
+research_notes/
 
 # Datos locales de los documentos (nombres y carnés del equipo)
 entregable-*/**/*.local.json

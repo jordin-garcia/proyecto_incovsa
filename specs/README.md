@@ -2,8 +2,8 @@
 
 Esta carpeta es la **fuente de verdad** del proyecto. Todo lo que el equipo o un agente de IA necesita saber para diseñar, programar, probar o documentar el sistema debe estar aquí.
 
-**Versión:** 1.5
-**Fecha de corte:** 16 de octubre de 2026 (incorpora los cambios de la reunión 4, del 29/09/2026, las respuestas del coordinador del 11/10/2026 y del 12/10/2026, los cambios de la reunión 5, del 13/10/2026, con las respuestas del coordinador del 14/10/2026, los ajustes del coordinador del 15/10/2026, las correcciones de alineación con el Documento 2 y el prototipo del mismo día, y las decisiones técnicas y de despliegue del 16/10/2026)
+**Versión:** 1.6
+**Fecha de corte:** 16 de octubre de 2026 (incorpora los cambios de la reunión 4, del 29/09/2026, las respuestas del coordinador del 11/10/2026 y del 12/10/2026, los cambios de la reunión 5, del 13/10/2026, con las respuestas del coordinador del 14/10/2026, los ajustes del coordinador del 15/10/2026, las correcciones de alineación con el Documento 2 y el prototipo del mismo día, y las decisiones técnicas, de despliegue y de desarrollo con agentes de IA del 16/10/2026)
 **Responsable de mantenerla:** Jordin García (coordinador)
 
 ---
@@ -62,4 +62,4 @@ Esta carpeta es la **fuente de verdad** del proyecto. Todo lo que el equipo o un
 
 ## Privacidad
 
-Esta carpeta se sube al repositorio de GitHub. Por eso **no contiene** datos personales ni nombres reales de clientes, pilotos o personal de la empresa, ni números de documento de identidad, direcciones, teléfonos, credenciales ni cantidades de inventario por cliente. Los archivos de datos de la empresa (`docs_incovsa/`) y las actas (`docs/`) **no se suben al repositorio**.
+Esta carpeta se sube al repositorio de GitHub. Por eso **no contiene** datos personales ni nombres reales de clientes, pilotos o personal de la empresa, ni números de documento de identidad, direcciones, teléfonos, credenciales ni cantidades de inventario por cliente. Los archivos de datos de la empresa (`docs_incovsa/`) y las actas (`docs/`) **no se suben al repositorio**. El prototipo de simulación armado, que sí tiene nombres reales, se sube desde el 16/10 porque el repositorio es privado (RNF-10).

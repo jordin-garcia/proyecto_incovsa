@@ -20,9 +20,9 @@ La contraparte lo revisó y no tuvo objeción.
 | Capa | Tecnología |
 |---|---|
 | Entorno de ejecución | **Node.js 24 LTS** (12/10; antes 22) |
-| Framework | **Next.js 16** (App Router) con TypeScript, en su versión más reciente con los parches de seguridad al día (16.4.0 al 12/10; antes Next.js 15) |
+| Framework | **Next.js 16** (App Router) con TypeScript, en su versión más reciente con los parches de seguridad al día (16.4.0 al 12/10; antes Next.js 15). **(16/10)** Mínimo **16.4.2**, por los avisos críticos del 14/10 (decisión 59) |
 | Base de datos | **PostgreSQL 18** (12/10; antes 16) |
-| ORM y migraciones | Prisma 7 |
+| ORM y migraciones | Prisma 7. **(16/10)** Se fija la versión 7.x: la etiqueta `latest` de npm apunta a una versión preliminar de Prisma 8 (decisión 59) |
 | Autenticación | **Better Auth 1.7** (12/10; antes Auth.js), con inicio de sesión por **nombre de usuario** y contraseña, y sesiones guardadas en la base de datos. Contraseñas con **scrypt**, el algoritmo de Better Auth (antes bcrypt) |
 | Permisos | Modelo propio de permisos por usuario en Prisma (29/09). Se verifican **en el servidor en cada operación**; el `proxy.ts` de Next.js (antes llamado middleware) es solo una primera barrera (12/10) |
 | Interfaz | Tailwind CSS y shadcn/ui, configurados con los tokens del design system del prototipo aprobado ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)) |
@@ -35,6 +35,8 @@ La contraparte lo revisó y no tuvo objeción.
 | Imágenes | **(16/10)** **`file-type`** para validar el formato por su contenido y **`sharp`** para volver a codificarlas ("Entradas y archivos") |
 | Pruebas automatizadas | Vitest. **La conversión, la lectura del archivo de Odoo y la verificación de permisos y sedes deben tener pruebas obligatoriamente** (los movimientos de existencias ya no existen; permisos y sedes desde el 12/10). **(16/10)** Además, **Playwright** para las pruebas de extremo a extremo (decisión 46) |
 | Formato y estilo del código | ESLint y **Prettier** (16/10) |
+| Calidad y seguridad automáticas | **(16/10)** husky, Semgrep, gitleaks, StrykerJS, fast-check, axe, lockfile-lint, OSV-Scanner, actionlint y OWASP ZAP (decisión 66) |
+| Revisión de los pull requests | **(16/10)** Bot de Claude en GitHub Actions (Claude Code GitHub Action con la suscripción del coordinador): revisa cada PR, lo aprueba o lo rechaza, y el PR se integra solo en `develop` cuando todas las verificaciones pasan (decisión 60) |
 | Control de versiones | Git y GitHub, repositorio privado. **(16/10)** Integración continua con **GitHub Actions** y seguimiento de tareas con **GitHub Issues y Projects** |
 | Producción | **(16/10)** **Docker Compose** en un VPS con **Caddy**, la aplicación y PostgreSQL 18. En las computadoras del equipo no se usa Docker ("Despliegue", abajo) |
 
@@ -304,6 +306,32 @@ Las tomó el coordinador (Jordin García) el 16/10/2026 a partir de las recomend
 | 57 | Orden de las listas | Posiciones enteras que se vuelven a escribir al reordenar |
 | 58 | Límite de envío al servidor | 3 MB para las acciones del servidor, para el archivo de Odoo de hasta 2 MB |
 
+## Decisiones del 16/10 sobre el desarrollo con agentes de IA
+
+Las tomó el coordinador el 16/10/2026, después de la investigación sobre cómo desarrollar con agentes de IA (`plan/investigacion-desarrollo-con-agentes-ia.md`). Todos los integrantes trabajan con un agente de IA que implementa sus tareas. Las personas intervienen solo cuando el agente necesita datos, cuentas o decisiones a los que no puede llegar con sus herramientas.
+
+### Método
+
+| # | Tema | Decisión |
+|---|---|---|
+| 59 | Versiones mínimas por seguridad | Verificado el 16/10 en la base de avisos de GitHub y en npm. **Next.js 16.4.2** o posterior: la 16.4.0 quedó expuesta a dos ejecuciones remotas de código sin autenticación (GHSA-673q-mjm6-r5xr y CVE-2026-96889) y a una denegación de servicio en Server Actions, corregidas en la 16.4.1. **sharp 0.35.5** o posterior (GHSA-wq5f-xc86-pv6w), también como dependencia propia. **Better Auth 1.7.10** o posterior estable: ningún aviso publicado afecta a las versiones estables 1.7.x; nunca una versión beta o rc. **pdfmake 0.3.6** o posterior (SSRF, GHSA-wp52-r2fp-4vmr), y el PDF se arma sin cargar imágenes ni fuentes desde direcciones remotas. **file-type 21.3.2** o posterior. **Prisma 7.x** fijo: la etiqueta `latest` de npm apunta a `8.0.0-rc`, así que se instala con versión explícita. Antes de instalar cualquier dependencia se revisan sus avisos en la base de avisos de GitHub |
+| 60 | Revisión e integración de los pull requests | **Un bot de Claude revisa, aprueba o rechaza, e integra.** El flujo `revision-claude` de GitHub Actions corre la Claude Code GitHub Action, fijada por SHA, con un token de la suscripción del coordinador (`claude setup-token`, secreto `CLAUDE_CODE_OAUTH_TOKEN`). Revisa el PR contra su tarea, `specs/` y el prototipo, publica su veredicto (`VEREDICTO: LISTO` o `VEREDICTO: CORREGIR`) y deja una revisión formal: **aprobar** o **solicitar cambios** (para eso se activa en el repositorio la opción de GitHub que permite a GitHub Actions aprobar pull requests). El veredicto es una verificación obligatoria: falla con hallazgos de corrección o si la revisión no se completó. El agente del autor activa la integración automática (`gh pr merge --auto`), y GitHub integra el PR en `develop` cuando **todas** las verificaciones obligatorias pasan. No hace falta aprobación humana. Solo el coordinador puede integrar un PR con un falso positivo del bot. Un segundo flujo, `claude-interactivo`, responde a `@claude` en issues y PR. Se toma como base el bot que el coordinador ya usa en el repositorio `shapi` |
+| 61 | Revisión local antes del PR | Además del bot, cada agente pide una revisión **en contexto limpio** antes de abrir el PR: un subagente revisor (Claude Code) o una sesión nueva (Codex, Cursor y Antigravity) con las mismas instrucciones de revisión del bot |
+| 62 | Harness y equipo de cada integrante | Jordin: Claude Code y Codex, en Windows. Carlos Hugo: Cursor, en macOS. José Daniel: Codex, en macOS. Daniela: Codex, en Windows. Josué: Antigravity (versión gratuita), en Windows. La configuración de los agentes cubre los cuatro harnesses: `AGENTS.md` como fuente única de instrucciones (los cuatro lo leen); `CLAUDE.md` contiene solo `@AGENTS.md`, sin enlaces simbólicos, por Windows; las skills viven en `.agents/skills/` y un script las copia a `.claude/skills/`, porque Claude Code solo lee esa carpeta (verificado en su documentación el 16/10) |
+| 63 | Prototipo en el repositorio | El **prototipo de simulación armado** (`entregable-1/prototipos/prototipo-simulacion-incovsa.html`) **se sube al repositorio**, aunque contiene datos reales de la empresa, porque el repositorio es privado. Así lo usan los agentes y GitHub Actions como referencia de las pantallas y del comportamiento. Cada cambio del código fuente del prototipo se sube junto con el HTML vuelto a armar. Es una excepción a RNF-10 |
+
+### Organización del trabajo
+
+| # | Tema | Decisión |
+|---|---|---|
+| 64 | Reparto por módulos | Cada integrante es dueño de módulos completos, de la base de datos a la pantalla. **Jordin:** base del proyecto (estructura, autenticación, permisos, bitácora, CI, `AGENTS.md`, el bot y la configuración de los agentes), **esquema de la base de datos**, revisión y calidad. **Josué:** Bodega con su tablero, y Ruta. **José Daniel:** Facturación (lectura del archivo de Odoo, opciones de envío, rutas y pedidos) y Reportes. **Daniela:** sitio público y panel del sitio. **Carlos Hugo:** Configuración (camiones y usuarios), despliegue y documentos. Reemplaza el reparto por capas (frontend del sitio, frontend y backend del picking) |
+| 65 | Dueño del esquema de la base de datos | **Jordin** es el único que modifica `prisma/schema.prisma` y crea migraciones. Quien necesite un cambio del esquema lo pide al coordinador. Solo hay un PR con migración abierto a la vez |
+| 66 | Calidad y seguridad automáticas | Meta de verificación: **OWASP ASVS 5.0, nivel 2**. Además de lo de la decisión 47: **husky** (formato, lint, tipos y búsqueda de secretos antes de cada *commit*); **Semgrep** (gratis hasta 10 contribuidores) con reglas propias, por ejemplo que toda acción del servidor y toda ruta de la API llamen a `exigirPermiso`, y que no se use `$queryRawUnsafe` ni `dangerouslySetInnerHTML`; **gitleaks** (secretos; GitHub Pro no incluye el escaneo de secretos en repositorios privados); **StrykerJS** (pruebas de mutación de la conversión, los permisos y los estados de rutas y pedidos) y **fast-check** (propiedades de la conversión); **`@axe-core/playwright`** (accesibilidad WCAG A y AA); **lockfile-lint** y **OSV-Scanner** (dependencias), con aviso al coordinador ante cualquier dependencia nueva; **actionlint** y acciones de GitHub fijadas por SHA, con permisos mínimos; **OWASP ZAP** (prueba básica de seguridad antes de entregar). La CI falla si se borran o se desactivan pruebas (`.skip`, `.only`) o si bajan los umbrales. Una prueba de integración comprueba que cada acción del servidor rechaza a un usuario sin sesión o sin permiso |
+| 67 | Recorrido diario del flujo completo | Mientras no exista el primer despliegue (decisión 31), GitHub Actions recorre **cada día**, sobre `develop` y en su propio entorno temporal (PostgreSQL 18 y `next start`), el flujo pedido facturado → conversión → preparación → despacho → entrega → reporte con Playwright |
+| 68 | Alcance | **No se recorta nada.** Todo se implementa como está especificado en `specs/` y como está en el prototipo aprobado |
+| 69 | Dónde vive el plan | Las **tareas** se llevan en **GitHub Issues**, con un formulario de campos obligatorios. La carpeta **`plan/`** del repositorio tiene la hoja de ruta, un plan vivo por módulo y una bitácora de avance por módulo. El informe de la investigación está en `plan/`; las notas de la investigación no se suben (`research_notes/` en `.gitignore`) |
+| 70 | Dónde trabajan los agentes | **Windows nativo** (Jordin, Daniela y Josué), con reglas que impiden a los agentes leer `.env*`, llaves y `~/.ssh`, porque el aislamiento de comandos de Claude Code no funciona en Windows nativo. En **macOS** (Carlos Hugo y José Daniel) se usa además el aislamiento del propio harness. En ningún equipo se usan los modos sin confirmación (por ejemplo `--dangerously-skip-permissions` o `--yolo`), y ninguna computadora del equipo guarda credenciales de producción: viven solo en el VPS y en los secretos de GitHub Actions |
+
 ## Estructura de carpetas
 
 ```
@@ -318,7 +346,10 @@ src/modulos/<modulo>/   de dominio: contenido, solicitudes, documentos, camiones
 src/componentes/ui/     componentes de shadcn/ui con los tokens del design system
 src/lib/                cliente de Prisma, las dos configuraciones de Better Auth, sesión
 prisma/                 schema.prisma, migraciones y seed.ts
-scripts/                crear-admin y respaldo de la base de datos (16/10)
+scripts/                crear-admin, respaldo de la base de datos y scripts del plan y de los agentes (16/10)
+plan/                   hoja de ruta, plan vivo y bitácora por módulo, informe de la investigación (16/10)
+AGENTS.md y CLAUDE.md   instrucciones para los agentes de IA (CLAUDE.md solo contiene @AGENTS.md) (16/10)
+.agents/skills/         skills de los agentes; un script las copia a .claude/skills/ (16/10)
 pruebas-e2e/            pruebas de Playwright (16/10)
 .github/workflows/      integración continua y despliegue automático (16/10)
 Dockerfile              imagen de la aplicación para producción (16/10)
@@ -338,8 +369,8 @@ La importación de datos maestros ya no hace falta (13/10). Desde el 16/10 la ca
   - `feature/<modulo>-<descripcion>`: una por tarea;
   - `fix/<descripcion>`: correcciones.
 - Todo entra a `develop` por pull request. Nadie hace push directo a `main` ni a `develop`.
-- **Revisión de los pull requests (16/10):** cualquier integrante distinto del autor puede aprobar un pull request. Jordin revisa siempre los que tocan el **esquema de la base de datos**, los **permisos**, la **bitácora** o la **autenticación**. Antes (12/10) los revisaba todos Jordin.
-- Un pull request se aprueba si corre sin errores, cumple la tarea, no incluye credenciales ni archivos generados, las migraciones corren desde cero y **(16/10)** pasan las revisiones de GitHub Actions (decisión 47). La cuenta de GitHub del repositorio es de **GitHub Student**, que incluye GitHub Pro (16/10, resuelve P-95): por eso, cuando exista la integración continua, las reglas de protección de `develop` y `main` se configuran para **exigir** que esas revisiones pasen antes de integrar.
+- **Revisión de los pull requests (16/10, decisión 60):** los revisa, aprueba o rechaza **el bot de Claude** (`revision-claude`), y GitHub los integra solos en `develop` cuando todas las verificaciones obligatorias pasan. No hace falta aprobación humana. La integración de `develop` en `main` la hace solo el coordinador. Reemplaza, el mismo 16/10, a "cualquier integrante distinto del autor aprueba y Jordin revisa los que tocan el esquema, los permisos, la bitácora o la autenticación", y a la regla del 12/10 de que todos los revisaba Jordin.
+- Un pull request se integra si corre sin errores, cumple la tarea, no incluye credenciales ni archivos generados, las migraciones corren desde cero y **(16/10)** pasan las revisiones de GitHub Actions (decisiones 47 y 66) y la del bot (decisión 60). La cuenta de GitHub del repositorio es de **GitHub Student**, que incluye GitHub Pro (16/10, resuelve P-95): por eso, cuando exista la integración continua, las reglas de protección de `develop` y `main` se configuran para **exigir** que esas revisiones pasen antes de integrar.
 - **Tareas (16/10):** se llevan en **GitHub Issues y Projects**: una tarea por issue, con el código del requerimiento (RF-xx, RN-xx) y su pull request enlazado.
 - Commits en español con prefijo: `feat:`, `fix:`, `docs:`, `db:`, `test:`, `chore:`.
 - Etiquetas por entregable: `v0.1-entregable1`, `v0.5-entregable2`, `v1.0-final`.
@@ -352,18 +383,20 @@ La importación de datos maestros ya no hace falta (13/10). Desde el 16/10 la ca
   - archivos `~$*` de Office;
   - los .docx y .pdf de los entregables (`entregable-*/**/*.docx` y `*.pdf`);
   - las evidencias fotográficas del Anexo B (`entregable-*/figuras/evidencias/`), porque tienen fotografías de personas y de la empresa;
-  - el HTML armado del prototipo de simulación (`entregable-1/prototipos/prototipo-simulacion-incovsa.html`), porque contiene datos reales de la empresa.
+  - las notas de investigación (`research_notes/`).
+
+  **(16/10)** El HTML armado del prototipo de simulación ya **no** se excluye: se sube al repositorio (decisión 63).
 
   La carpeta de archivos subidos se agrega al `.gitignore` cuando el proyecto base la defina.
 
 ### Qué va al repositorio
 
-- **Sí:** código, migraciones, semillas anonimizadas, `.env.example`, README, `specs/`, diagramas y prototipos. Del prototipo de simulación se sube el código fuente (`entregable-1/prototipos/simulacion/`), **no** el HTML armado (`prototipo-simulacion-incovsa.html`), porque contiene datos reales de la empresa (RNF-10).
-- **No:** actas, propuesta, lineamientos, datos de la empresa, documentos entregables .docx y .pdf, ni nada con datos personales. Estos se guardan en la carpeta local y en el Google Drive del equipo.
+- **Sí:** código, migraciones, semillas anonimizadas, `.env.example`, README, `specs/`, `plan/`, diagramas y prototipos. Del prototipo de simulación se suben el código fuente (`entregable-1/prototipos/simulacion/`) y, desde el 16/10, también el HTML armado (`prototipo-simulacion-incovsa.html`), aunque contiene datos reales de la empresa, porque el repositorio es privado (decisión 63).
+- **No:** actas, propuesta, lineamientos, archivos de datos de la empresa (`docs_incovsa/`), documentos entregables .docx y .pdf, ni otros archivos con datos personales. Estos se guardan en la carpeta local y en el Google Drive del equipo.
 
 ### Definición de "terminado" para una tarea
 
-1. El código está en `develop`, entrado por un pull request aprobado.
+1. El código está en `develop`, integrado por un pull request que aprobó el bot de Claude con todas las verificaciones obligatorias en verde (decisión 60).
 2. Si cambió la base de datos, las migraciones y semillas están actualizadas.
 3. Los casos de prueba del módulo están escritos y ejecutados, con evidencia.
 4. La sección correspondiente del Documento 2 y del manual está redactada.

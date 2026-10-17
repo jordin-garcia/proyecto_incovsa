@@ -47,7 +47,7 @@ En producción la aplicación corre en un VPS con Docker Compose: Caddy (HTTPS),
 | Archivos | SheetJS 0.20.3 (lectura del archivo de Odoo y Excel) · pdfmake (PDF) · file-type y sharp (imágenes) |
 | Fechas | date-fns con `@date-fns/tz` (hora de Guatemala) |
 | Pruebas | Vitest · Playwright |
-| Calidad | ESLint · Prettier · GitHub Actions |
+| Calidad y seguridad | ESLint · Prettier · husky · Semgrep · gitleaks · StrykerJS · fast-check · axe · lockfile-lint · OSV-Scanner · actionlint · OWASP ZAP · GitHub Actions · bot de revisión con Claude |
 | Servicios | Cloudflare R2 y DNS · Google Drive de la empresa |
 | Producción | Docker Compose · Caddy · VPS con Ubuntu Server 24.04 LTS |
 
@@ -108,7 +108,8 @@ Los casos de prueba iniciales están en el Anexo F del Documento 2 v0.4. *Pendie
 
 ```
 specs/            especificación vigente (fuente de verdad)
-entregable-1/     Documento 1, diagramas y prototipos (incluido el prototipo de simulación aprobado)
+plan/             plan de desarrollo, bitácoras de avance e informe de la investigación sobre agentes de IA
+entregable-1/     Documento 1, diagramas y prototipos (incluido el prototipo de simulación aprobado, ya armado)
 entregable-2/     Documento 2, diagramas y herramientas de documentación
 src/app/          rutas y pantallas: sitio, panel, picking y API
 src/modulos/      lógica de negocio por módulo de dominio
@@ -139,7 +140,8 @@ Docente: Ing. Manuel Rojas. Contraparte en INCOVSA: Ing. William Ambrossio.
 
 - Antes de cambiar una regla, revisar [`specs/`](specs/README.md) y registrar el cambio en `specs/18-historial-de-decisiones.md`.
 - Las reglas de negocio van en `src/modulos/`, nunca en las pantallas, y cada operación del servidor verifica permisos y sede.
-- Todo entra a `develop` por pull request; nadie sube cambios directamente a `main` ni a `develop`. Un pull request lo aprueba un integrante distinto del autor, debe pasar las revisiones de GitHub Actions, y el coordinador revisa siempre los que tocan el esquema de la base de datos, los permisos, la bitácora o la autenticación.
+- Todo entra a `develop` por pull request; nadie sube cambios directamente a `main` ni a `develop`. Un bot de Claude revisa cada pull request y lo aprueba o lo rechaza; GitHub lo integra solo cuando pasan todas las verificaciones. El esquema de la base de datos solo lo modifica el coordinador.
+- Cada integrante trabaja con su propio agente de IA (Claude Code, Codex, Cursor o Antigravity), que lee `AGENTS.md`. El plan y su avance están en `plan/`.
 - Cada integración en `main` se despliega automáticamente en producción.
 - Mantener las dependencias al día: Dependabot, `npm audit` y revisión manual de los avisos de SheetJS (<https://cdn.sheetjs.com/advisories>), que no está en el registro de npm.
 - No subir credenciales, datos personales ni datos reales de la empresa.
