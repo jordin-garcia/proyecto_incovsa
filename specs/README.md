@@ -2,8 +2,8 @@
 
 Esta carpeta es la **fuente de verdad** del proyecto. Todo lo que el equipo o un agente de IA necesita saber para diseñar, programar, probar o documentar el sistema debe estar aquí.
 
-**Versión:** 1.6
-**Fecha de corte:** 16 de octubre de 2026 (incorpora los cambios de la reunión 4, del 29/09/2026, las respuestas del coordinador del 11/10/2026 y del 12/10/2026, los cambios de la reunión 5, del 13/10/2026, con las respuestas del coordinador del 14/10/2026, los ajustes del coordinador del 15/10/2026, las correcciones de alineación con el Documento 2 y el prototipo del mismo día, y las decisiones técnicas, de despliegue y de desarrollo con agentes de IA del 16/10/2026)
+**Versión:** 1.7
+**Fecha de corte:** 16 de octubre de 2026 (incorpora los cambios de la reunión 4, del 29/09/2026, las respuestas del coordinador del 11/10/2026 y del 12/10/2026, los cambios de la reunión 5, del 13/10/2026, con las respuestas del coordinador del 14/10/2026, los ajustes del coordinador del 15/10/2026, las correcciones de alineación con el Documento 2 y el prototipo del mismo día, y las decisiones técnicas, de despliegue, de desarrollo con agentes de IA y del plan de desarrollo del 16/10/2026)
 **Responsable de mantenerla:** Jordin García (coordinador)
 
 ---

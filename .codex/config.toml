@@ -1,0 +1,20 @@
+# Servidores MCP del proyecto para Codex (plan/instalacion.md §6).
+# Codex solo lee este archivo si el proyecto está marcado como confiable. Context7 va en la configuración
+# personal (~/.codex/config.toml), porque lleva la clave de cada persona.
+# En Windows, si un servidor no inicia, agregue en ~/.codex/config.toml las variables de entorno que indica
+# plan/instalacion.md §6.2.
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["-y", "@playwright/mcp@latest"]
+startup_timeout_ms = 20000
+
+[mcp_servers.next-devtools]
+command = "npx"
+args = ["-y", "next-devtools-mcp@latest"]
+startup_timeout_ms = 20000
+
+[mcp_servers.shadcn]
+command = "npx"
+args = ["shadcn@latest", "mcp"]
+startup_timeout_ms = 20000

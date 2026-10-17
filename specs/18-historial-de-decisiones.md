@@ -496,6 +496,50 @@ Antes del plan de desarrollo, el equipo investigó cómo se desarrollan hoy proy
 | Base de datos | A cargo de Josué Menéndez | El esquema y las migraciones son de Jordin García (decisión 65) |
 | Recortes de alcance | El informe de la investigación proponía preparar recortes por si no alcanzaba el tiempo | No se recorta nada (decisión 68) |
 
+## Plan de desarrollo (16/10/2026)
+
+El coordinador respondió las preguntas que quedaban antes del plan y pidió crearlo (versión 1.7 de esta carpeta). El plan está en `plan/`: guía, instalación, protocolo de los agentes, convenciones, calendario, 62 tareas y una bitácora por persona. Las decisiones son la 71 a la 86 de [16-arquitectura-y-tecnologia.md](16-arquitectura-y-tecnologia.md).
+
+### Respuestas del coordinador
+
+| Tema | Decisión |
+|---|---|
+| Tareas | En archivos, como en el repositorio `shapi` (decisión 71) |
+| Cuota del bot | Le alcanza el plan Pro; si no, pasa a Max (decisión 83) |
+| Josué | Pasa a Codex; Antigravity se mantiene siempre en la configuración (decisión 84) |
+| SheetJS | Desde `vendor/` en el repositorio (decisión 85) |
+| Archivos protegidos | Solo el coordinador, con una verificación obligatoria (decisión 80) |
+| Autoridad del coordinador | Puede corregir el trabajo de cualquiera (decisión 81) |
+| Integración | *Squash* en `develop` (decisión 75) |
+| Días de trabajo | Todos los días desde el 17/10; el avance del Entregable 2 termina el 18/10 y se presenta el 19/10; el desarrollo termina el 02/11; capacitación el 03/11; entrega el 04/11 (decisión 72) |
+| Fechas con INCOVSA | VPS y DNS a más tardar el 28/10; capacitación el 03/11; entrega de accesos el 04/11 (decisión 73) |
+| Documentos y presentación | Entran en el plan (decisión 72) |
+| Rama por defecto | `develop`; `main` solo para versiones; `develop` pasa a `main` el 02/11 (decisión 75) |
+| Ramas, prefijos y cuentas de GitHub | Los de la decisión 76 |
+| Fidelidad al prototipo | Textos, estructura, orden, estados y colores, sin píxel por píxel (decisión 74) |
+| Archivo de Odoo de prueba | Copia anonimizada en el repositorio (decisión 77) |
+| Imágenes sin cuenta de Cloudflare | En disco en desarrollo (decisión 78) |
+| Demostración final | Con el contenido oficial (decisión 79) |
+| Auditorías y convergencias | Como en `shapi` (decisión 82) |
+| Avance del 19/10 | La opción A: base, flujo obligatorio del picking y panel con contenido, industrias y catálogo; solo lo presenta Jordin, sin nada más que preparar (decisión 72) |
+| Herramientas | Obligatorias GitHub CLI, Context7 y Playwright, más next-devtools y shadcn; la primera tarea de cada persona las integra (decisión 86) |
+| Limpieza del repositorio | Se borraron los 30 issues y el Project del plan anterior, y `PLAN_DE_PROYECTO.md` de `main` (PR #54). `develop` pasó a ser la rama por defecto |
+
+### Decisiones reemplazadas el 16/10/2026 (plan de desarrollo)
+
+| Tema | Antes | Ahora (16/10) |
+|---|---|---|
+| Dónde se llevan las tareas | GitHub Issues y Projects (decisión 69, del mismo 16/10) | Un archivo por tarea en `plan/tareas/` (decisión 71) |
+| Ramas de trabajo | `feature/<modulo>-<descripcion>` y `fix/<descripcion>` | `<clave>/<ID>-<descripcion>` (decisión 76) |
+| Primer despliegue | "Cuando la aplicación esté completa" | El lunes 02/11/2026 (decisión 75) |
+| Agente de Josué | Antigravity gratuito | Codex (decisión 84) |
+| Instalación de SheetJS | Desde el sitio de SheetJS | Desde `vendor/xlsx-0.20.3.tgz` (decisión 85) |
+| Presentación del avance del Entregable 2 | 14/10, con el prototipo de simulación | Lunes 19/10, con la aplicación real (decisión 72) |
+
+### Verificación del 16/10/2026
+
+npm 12, que ya es la versión `latest`, bloquea por defecto las dependencias que se instalan desde una dirección web (`--allow-remote`), como el paquete de SheetJS del sitio de SheetJS. Por eso se guarda en `vendor/` (decisión 85).
+
 ## Documentos no alineados con las reuniones 4 y 5
 
 Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los cambios del 29/09, del 11/10 ni del 13/10:

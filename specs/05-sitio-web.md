@@ -127,6 +127,7 @@ Son 9 industrias, en este orden:
 - Cada industria muestra **solo su descripción, su galería de imágenes y sus productos como texto**. No se muestran imágenes de productos.
 - **Sin pie de página.**
 - La descripción y los productos de cada industria vienen del sitio de Google de la empresa y necesitan revisión. Las descripciones definitivas y las imágenes están pendientes (P-21).
+- **De dónde salen los productos de cada industria: [PENDIENTE] P-97** (16/10). El modelo de datos no guarda la lista fija del prototipo y el panel no la edita.
 
 ### Catálogo de productos (RF-SW-04)
 

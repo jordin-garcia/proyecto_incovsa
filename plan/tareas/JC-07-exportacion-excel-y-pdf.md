@@ -1,0 +1,56 @@
+---
+id: JC-07
+titulo: Exportación de los reportes a Excel y PDF
+persona: jose-daniel
+responsable: José Daniel Cifuentes
+hito: E3
+prioridad: P1
+estado: pendiente
+depende_de: [JC-06]
+programada: 2026-10-25
+requisitos: [RF-SL-38, CU-14]
+pantallas: [picking.js › reportes (botones data-exp)]
+---
+
+# JC-07 · Exportación de los reportes a Excel y PDF
+
+**Responsable:** José Daniel Cifuentes · **Hito:** E3 · **Prioridad:** P1 · **Programada:** dom 25/10 · **Depende de:** JC-06
+
+## Objetivo
+Los botones **Excel** y **PDF** de las tres pestañas de Reportes, generados en el servidor con SheetJS y pdfmake (specs/16, decisión 43; CAM-96).
+
+## Contexto que debes leer
+- `specs/10-picking-reportes.md` §"Exportación" **completo** (contenido, formato y nombre de cada archivo)
+- `specs/16`: decisiones 43, 59 (pdfmake ≥ 0.3.6, sin recursos remotos) y 85 (SheetJS desde `vendor/`)
+- `## Resultado` de JC-06
+- Context7: SheetJS 0.20.3 (`utils.aoa_to_sheet`, `write` a *buffer*), pdfmake 0.3 en Node (fuentes propias, tablas, imágenes como datos)
+
+## Qué hacer
+1. `src/app/api/reportes/exportar/route.ts`: recibe la pestaña, el formato y el periodo; verifica la sesión, `pk.reportes` y la sede (`exigirPermiso`); valida con Zod; genera el archivo con las mismas consultas de JC-06 y lo entrega con el nombre de `specs/10` (por ejemplo `despacho-quetzaltenango-16-10-2026.xlsx`).
+2. **Excel:** una sola hoja, sin formato, con el encabezado (sede y periodo) y la tabla de la pestaña; en Despacho, los indicadores y el total.
+3. **PDF:** con el logotipo del sitio, el título de la pestaña, la sede (salvo en la Bitácora), el periodo y la tabla; fuentes Figtree y JetBrains Mono incluidas en el servidor; **sin** cargar imágenes ni fuentes desde direcciones remotas (decisión 59).
+4. Los botones del prototipo descargan el archivo de la pestaña y el periodo que se ven.
+
+## Archivos que creas o modificas
+- `src/app/api/reportes/**` (crear), `src/modulos/reportes/**` (modificar), `src/componentes/picking/reportes/**` (modificar)
+- `pruebas-e2e/picking/reportes-exportacion.spec.ts` (crear)
+
+## Criterios de aceptación
+1. **RF-SL-38 / CAM-96:** cada una de las tres pestañas descarga su Excel y su PDF con el contenido y el nombre de `specs/10`.
+2. Los valores del Excel coinciden exactamente con la tabla en pantalla para el mismo periodo.
+3. Sin sesión, sin `pk.reportes` o con otra sede, la ruta responde con error y no entrega datos.
+4. El PDF no hace ninguna petición a direcciones externas al generarse.
+
+## Pruebas obligatorias
+- Integración de la ruta: contenido del Excel (leído con SheetJS) y del PDF (que existe y tiene el título), permisos (criterios 1 a 4)
+- `pruebas-e2e/picking/reportes-exportacion.spec.ts` (descarga de los seis archivos)
+
+## Verificación
+```
+npm run verificar
+npm run build
+npm run e2e -- pruebas-e2e/picking/reportes-exportacion.spec.ts
+```
+
+## Fuera de alcance
+- Formato de colores en el Excel (la versión gratuita de SheetJS no lo permite, decisión 43).
