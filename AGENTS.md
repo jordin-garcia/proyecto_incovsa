@@ -31,7 +31,7 @@ Trabajamos con **desarrollo dirigido por especificaciones**:
 |---|---|
 | **GitHub CLI (`gh`)** | Todo lo de GitHub: PR, verificaciones, integración automática, issues del tablero |
 | **Context7** (MCP o plugin) | **Antes de escribir código con cualquier librería**, consulta su documentación vigente: Next.js 16, React 19, Prisma 7, Better Auth 1.7, Tailwind CSS 4, shadcn/ui, Zod 4, dnd-kit, React Hook Form, date-fns 4, SheetJS, pdfmake, sharp, Vitest, Playwright. No escribas APIs de memoria: estas versiones son recientes |
-| **Playwright** (MCP o plugin) | Abrir el prototipo y la aplicación, comparar pantallas, tomar capturas de evidencia y depurar pruebas de extremo a extremo |
+| **Playwright** (MCP o plugin) | Abrir el prototipo y la aplicación, comparar pantallas, **verificar que todo cambio que se vea en la aplicación funcione**, tomar capturas de evidencia y depurar pruebas de extremo a extremo |
 | **next-devtools** (MCP) | Leer los errores de compilación, de ejecución y de tipos del servidor de desarrollo de Next.js |
 | **shadcn** (MCP) | Buscar e instalar componentes de shadcn/ui correctamente |
 
@@ -68,7 +68,7 @@ La instalación en cada harness (Claude Code, Codex, Cursor y Antigravity) está
 **✅ Siempre**
 - Implementa **una sola tarea por conversación**, para no exceder la ventana de contexto del agente (`specs/16`, decisión 88). Si en esta conversación ya trabajaste otra tarea, detente y pídele al usuario que abra una nueva.
 - Trabaja en una rama `<clave>/<ID>-<descripcion-corta>` creada desde un `develop` actualizado.
-- Consulta Context7 antes de usar la API de una librería, y compara cada pantalla con el prototipo usando Playwright.
+- Consulta Context7 antes de usar la API de una librería. Con Playwright, compara cada pantalla con el prototipo y verifica que todo cambio que se vea en la aplicación funcione, aunque la tarea no tenga pantallas propias (`plan/protocolo.md` B7).
 - Escribe primero las pruebas de los criterios de aceptación y nómbralas con el código del requisito o la regla (`RN-01: …`).
 - Ejecuta los comandos de la sección **Verificación** de la tarea y muestra su salida como evidencia en el PR.
 - Haz la revisión en contexto limpio con `plan/prompts/revision.md` antes de abrir el PR.
