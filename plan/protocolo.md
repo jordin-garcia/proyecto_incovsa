@@ -78,11 +78,13 @@ npm run db:aplicar                                   # desde JG-03, por si hay m
 - Si algo falla, **corrige la causa**. Nunca debilites las pruebas.
 - Guarda la salida resumida de cada comando: es la evidencia del PR.
 
-### B7. Verificar pantallas (si la tarea tiene pantallas)
-- Levanta la aplicación (`npm run dev`) y el prototipo (`node scripts/servir-prototipo.mjs`).
+### B7. Verificar en la aplicación (si la tarea crea pantallas o cambia algo que una pantalla usa)
+Aplica a todo cambio que se vea en la aplicación, aunque la tarea no tenga pantallas propias: por ejemplo, la autenticación, los permisos y sedes, la conversión o un servicio que una pantalla muestra. Los cambios que no se ven en la aplicación (scripts, documentación, una función que ninguna pantalla usa todavía) se verifican solo con B6.
+- Levanta la aplicación (`npm run dev`) y, si la tarea tiene pantallas, el prototipo (`node scripts/servir-prototipo.mjs`).
 - Usa **next-devtools** para confirmar que no hay errores de compilación ni de ejecución.
-- Con **Playwright**, toma una captura de cada estado de la pantalla en la aplicación y en el prototipo, en 390 px, 768 px y 1440 px, y compáralas según `plan/convenciones.md` §7.
-- Corrige cualquier diferencia de textos, datos, orden, estados o colores. Ejecuta las pruebas de `pruebas-e2e/` de la tarea, con axe.
+- **Pantallas de la tarea:** con **Playwright**, toma una captura de cada estado de la pantalla en la aplicación y en el prototipo, en 390 px, 768 px y 1440 px, y compáralas según `plan/convenciones.md` §7. Corrige cualquier diferencia de textos, datos, orden, estados o colores.
+- **Pantallas afectadas por el cambio:** recórrelas con **Playwright** y confirma que siguen funcionando: que cargan sin errores en la consola, muestran los datos esperados y sus acciones hacen lo que deben.
+- Ejecuta **todas** las pruebas de `pruebas-e2e/` (`npm run e2e`), con axe, no solo las de la tarea.
 
 ### B8. Revisión en contexto limpio
 - Pide una revisión **a un agente que no escribió el código**, con las instrucciones de `plan/prompts/revision.md`:
