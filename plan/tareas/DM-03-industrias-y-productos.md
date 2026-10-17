@@ -22,13 +22,12 @@ Las páginas de **Industrias** (navegación con íconos), **Productos** (catálo
 ## Contexto que debes leer
 - `specs/05-sitio-web.md` §"Industrias", §"Catálogo de productos" y §"Detalle de producto" (con §"Productos Recomendados") **completos**
 - `specs/04`: RF-SW-03 a RF-SW-05, RF-SW-15, RF-SW-17; `specs/16`: decisión 14
-- `specs/19`: **P-97** (productos de cada industria)
 - Prototipo: `#/industrias`, `#/industrias/cuero`, `#/productos` y `#/productos/pp01`; `sitio.js` › `industrias()`, `catalogo()`, `producto()`, `tarjetaProducto()` y `tarjetaIndustria()`
 - `## Resultado` de DM-02
 
 ## Qué hacer
 1. **Industrias** (`/industrias` y `/industrias/[id]`, RF-SW-03): barra lateral izquierda **solo con íconos** de las 9 industrias; al pasar el cursor o el foco del teclado se muestra el nombre; al elegir una, la página no salta (como `conservarDesplazamiento`); la industria elegida muestra su número ("Industria 01 de 9"), su nombre, el botón "Ver en el catálogo", su **descripción**, su **galería** (sin imágenes, el ícono de la industria como en el prototipo) y **sus productos como texto**. **Sin pie de página.**
-   - **Productos de cada industria (P-97):** aplica lo que diga `specs/05` una vez resuelto P-97. Si P-97 sigue abierto en `specs/19`, **detente en este punto y pregúntale a la persona** (protocolo §C) y sigue con lo demás.
+   - **Productos de cada industria (P-97, resuelto el 17/10):** los productos públicos del catálogo que tienen esa industria, en orden alfabético por nombre, con su cuenta en el título ("Productos para esta industria · N"), como texto. **No** se usa la lista fija de `base.js` › `INDUSTRIAS` (specs/05).
 2. **Productos** (`/productos`, RF-SW-04): solo informativo, sin precios; búsqueda y filtro por industria como el prototipo (incluido "Todas las industrias" con su cuenta); tarjeta con la galería, el nombre, los países de origen y la presentación; **nunca el lote**. **Sin pie de página.**
 3. **Detalle** (`/productos/[id]`, RF-SW-05): galería, nombre, descripción, presentación, países de origen e industrias; sin documentos técnicos; **sin pie de página**.
 4. **Productos Recomendados** (RF-SW-17, decisión 14): siempre aparece; hasta 4 productos: primero los que comparten alguna industria con el producto, en orden alfabético por nombre; si no alcanzan, se completa con otros productos del catálogo, en orden alfabético; nunca el mismo producto.
@@ -40,7 +39,7 @@ Las páginas de **Industrias** (navegación con íconos), **Productos** (catálo
 - `pruebas-e2e/sitio/industrias-y-productos.spec.ts` (crear)
 
 ## Criterios de aceptación
-1. **RF-SW-03:** la barra de industrias muestra solo íconos y el nombre al pasar el cursor o con el foco; cada industria muestra su descripción, su galería y sus productos en texto.
+1. **RF-SW-03:** la barra de industrias muestra solo íconos y el nombre al pasar el cursor o con el foco; cada industria muestra su descripción, su galería y, como texto, los productos públicos que tienen esa industria (P-97); al agregarle o quitarle una industria a un producto en el catálogo, la lista cambia.
 2. **RF-SW-04:** la búsqueda y el filtro por industria funcionan como en el prototipo; ningún producto muestra un lote.
 3. **RF-SW-17** (CP-55): un producto sin industrias en común muestra 4 recomendados de relleno en orden alfabético, sin repetirse; uno con industrias en común muestra primero esos.
 4. **RF-SW-15:** Industrias, Productos y el detalle no tienen pie de página.

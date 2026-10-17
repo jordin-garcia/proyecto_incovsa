@@ -98,4 +98,4 @@ npm run build
 ## Notas
 - Los demás integrantes aplican las migraciones con `npm run db:aplicar`. Si después alguien necesita un cambio del esquema, lo pide al coordinador (protocolo §C).
 - En el `## Resultado`, deja el nombre de cada modelo de Prisma y cómo usar `pruebas/bd.ts` en las pruebas de integración.
-- El dato pendiente de los productos de cada industria se resuelve antes de DM-03 (pregunta abierta del coordinador; ver `specs/19-pendientes.md`).
+- Los productos de cada industria son los productos públicos con esa industria (P-97, specs/05): el esquema no necesita una lista aparte.
