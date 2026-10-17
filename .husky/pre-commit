@@ -1,0 +1,3 @@
+npm run formato
+npm run lint
+npm run tipos
