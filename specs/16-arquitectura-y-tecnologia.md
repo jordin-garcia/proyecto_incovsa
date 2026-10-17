@@ -173,7 +173,7 @@ En el VPS, un archivo `docker-compose.yml` con tres servicios:
   2. compila la imagen de Docker de la aplicación y la guarda en el registro de GitHub (GHCR), privado;
   3. entra al VPS por SSH, descarga la imagen, aplica las migraciones (`prisma migrate deploy`) y reinicia la aplicación con la imagen nueva.
 - El VPS no compila: solo descarga la imagen, así que el sitio no se pone lento durante un despliegue.
-- **Volver atrás:** se arranca la imagen anterior. GitHub Actions conserva solo las **últimas 5 imágenes**, porque GHCR da 500 MB de almacenamiento a un repositorio privado de cuenta gratuita (2 GB con GitHub Pro).
+- **Volver atrás:** se arranca la imagen anterior. GitHub Actions conserva solo las **últimas 5 imágenes**. La cuenta es de GitHub Student, que incluye GitHub Pro y da 2 GB de almacenamiento en GHCR (500 MB en una cuenta gratuita); con 5 imágenes se queda holgadamente dentro del límite. Al transferir el repositorio a INCOVSA, el límite depende del plan de su cuenta (P-94).
 - Los registros de la aplicación salen por la salida estándar y los guarda Docker en el VPS (`docker compose logs`), con rotación para que no llenen el disco.
 
 ### Cuentas de los servicios
@@ -339,7 +339,7 @@ La importación de datos maestros ya no hace falta (13/10). Desde el 16/10 la ca
   - `fix/<descripcion>`: correcciones.
 - Todo entra a `develop` por pull request. Nadie hace push directo a `main` ni a `develop`.
 - **Revisión de los pull requests (16/10):** cualquier integrante distinto del autor puede aprobar un pull request. Jordin revisa siempre los que tocan el **esquema de la base de datos**, los **permisos**, la **bitácora** o la **autenticación**. Antes (12/10) los revisaba todos Jordin.
-- Un pull request se aprueba si corre sin errores, cumple la tarea, no incluye credenciales ni archivos generados, las migraciones corren desde cero y **(16/10)** pasan las revisiones de GitHub Actions (decisión 47). Que GitHub impida integrar sin esas revisiones requiere GitHub Pro en un repositorio privado (P-95); mientras tanto es un acuerdo del equipo.
+- Un pull request se aprueba si corre sin errores, cumple la tarea, no incluye credenciales ni archivos generados, las migraciones corren desde cero y **(16/10)** pasan las revisiones de GitHub Actions (decisión 47). La cuenta de GitHub del repositorio es de **GitHub Student**, que incluye GitHub Pro (16/10, resuelve P-95): por eso, cuando exista la integración continua, las reglas de protección de `develop` y `main` se configuran para **exigir** que esas revisiones pasen antes de integrar.
 - **Tareas (16/10):** se llevan en **GitHub Issues y Projects**: una tarea por issue, con el código del requerimiento (RF-xx, RN-xx) y su pull request enlazado.
 - Commits en español con prefijo: `feat:`, `fix:`, `docs:`, `db:`, `test:`, `chore:`.
 - Etiquetas por entregable: `v0.1-entregable1`, `v0.5-entregable2`, `v1.0-final`.

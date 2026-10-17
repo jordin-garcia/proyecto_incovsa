@@ -4,7 +4,7 @@ Al resolver un pendiente: se actualiza el archivo afectado, se registra en [18-h
 
 **Prioridad:** P1 = bloquea el diseño de la base de datos o el desarrollo; P2 = antes del Entregable 3 (04/11) y necesario para desarrollar; P3 = antes del Entregable 3 (04/11).
 
-Las dudas sobre los cambios de la reunión 5 (13/10/2026) las resolvió el coordinador el 14/10/2026 ([18-historial-de-decisiones.md](18-historial-de-decisiones.md)). El 16/10/2026 se resolvió P-58 y se agregaron P-93 a P-96.
+Las dudas sobre los cambios de la reunión 5 (13/10/2026) las resolvió el coordinador el 14/10/2026 ([18-historial-de-decisiones.md](18-historial-de-decisiones.md)). El 16/10/2026 se resolvió P-58, se agregaron P-93 a P-96 y se resolvieron P-95 y P-96.
 
 ## Con INCOVSA
 
@@ -42,7 +42,4 @@ Las dudas sobre los cambios de la reunión 5 (13/10/2026) las resolvió el coord
 | Id | Pendiente | Prioridad |
 |---|---|---|
 | P-04 | Archivar la evidencia (correos o WhatsApp) del cuestionario del 09–11/09, la reunión del 18/09, las aclaraciones del 19–20/09 y las respuestas del 23–24/09 | P1 |
-| P-40 | Plan de trabajo v1.2: tareas, responsables y fechas alineadas a los 5 módulos y a los cambios de las reuniones 4 y 5 | P1 |
-| P-95 | Confirmar si la cuenta de GitHub del repositorio tiene **GitHub Pro** (por ejemplo, con el GitHub Student Developer Pack), para que GitHub impida integrar un pull request sin las revisiones de integración continua y para tener 2 GB en GHCR ([16](16-arquitectura-y-tecnologia.md)) | P3 |
-| P-96 | Alinear el Documento 2 y el README del repositorio con las decisiones del 16/10 (versión 1.5 de esta carpeta) | P2 |
-| P-77 | Actualizar el Documento 1 y los diagramas con los cambios de las reuniones 4 y 5, y archivar las actas en Markdown de las reuniones 4 y 5 como las de las reuniones 1 a 3. Las notas de la reunión 5 dicen "Fecha: 14 de octubre de 2026", pero la reunión fue el 13/10/2026 (lo confirman la captura de la reunión y el coordinador): corregirlo en el acta | P2 |
+| P-40 | Plan de trabajo v1.2: tareas, responsables y fechas alineadas a los 5 módulos y a los cambios de las reuniones 4 y 5 | P1 || P-77 | Actualizar el Documento 1 y los diagramas con los cambios de las reuniones 4 y 5, y archivar las actas en Markdown de las reuniones 4 y 5 como las de las reuniones 1 a 3. Las notas de la reunión 5 dicen "Fecha: 14 de octubre de 2026", pero la reunión fue el 13/10/2026 (lo confirman la captura de la reunión y el coordinador): corregirlo en el acta | P2 |

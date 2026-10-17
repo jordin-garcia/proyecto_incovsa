@@ -29,7 +29,7 @@
 | 13/10/2026 | Reunión 5, virtual (Ing. William Ambrossio y el equipo completo), de 18:00 a 21:30. Se presentó el prototipo de simulación con los cambios de la reunión 4; el Ing. William lo aprobó y pidió nuevos cambios. Notas de Daniela Marín (dicen "14 de octubre" por error) | `docs/Reuniones/Reunion5_131026/` |
 | 13/10/2026 | Entrega del logotipo de Inquiserca | `docs_incovsa/PAGINA WEB/INFORMACION EMPRESA/Inquiserca.jpeg` |
 | 14/10/2026 | Respuestas del coordinador a las dudas sobre cómo aplicar los cambios de la reunión 5 | Esta carpeta |
-| 16/10/2026 | El coordinador informa que el Ing. Manuel Rojas aprobó la exclusión del inventario, que el Ing. William Ambrossio contratará un VPS y que el archivo de Odoo completo llegará en los próximos días. Responde las 25 preguntas técnicas del equipo, decide usar Docker solo en producción y pide la exportación en "Rutas realizadas" y "Bitácora" | Esta carpeta |
+| 16/10/2026 | El coordinador informa que el Ing. Manuel Rojas aprobó la exclusión del inventario, que el Ing. William Ambrossio contratará un VPS y que el archivo de Odoo completo llegará en los próximos días. Responde las 25 preguntas técnicas del equipo, decide usar Docker solo en producción y pide la exportación en "Rutas realizadas" y "Bitácora". Después confirma que su cuenta de GitHub es de GitHub Student y que el Documento 2 v0.4 ya no se edita | Esta carpeta |
 
 ## Decisiones reemplazadas
 
@@ -470,8 +470,8 @@ Antes de preparar el plan de desarrollo (P-40), el equipo hizo al coordinador 25
 | P-58 | El docente aprobó la exclusión del inventario |
 | P-93 (nuevo) | DNS de incovsa.com en Cloudflare |
 | P-94 (nuevo) | Correo y cuentas de INCOVSA para los servicios y el repositorio |
-| P-95 (nuevo) | Si la cuenta de GitHub tiene GitHub Pro |
-| P-96 (nuevo) | Alinear el Documento 2 y el README del repositorio con la versión 1.5 |
+| P-95 (nuevo y resuelto) | Si la cuenta de GitHub tiene GitHub Pro. **Resuelto el mismo 16/10:** la cuenta es de GitHub Student, que incluye GitHub Pro. Las reglas de protección de `develop` y `main` exigirán las revisiones de integración continua, y GHCR tiene 2 GB ([16](16-arquitectura-y-tecnologia.md)) |
+| P-96 (nuevo y resuelto) | Alinear el Documento 2 y el README del repositorio con la versión 1.5. **Resuelto el mismo 16/10:** el README se actualizó. El Documento 2 v0.4 **ya no se edita**: para el Entregable 3 se crea una nueva versión del Documento 2 con todo actualizado |
 
 ## Documentos no alineados con las reuniones 4 y 5
 
@@ -482,4 +482,4 @@ Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los camb
 
 El prototipo de simulación se actualizó el 14/10/2026 con los cambios de la reunión 5 y el 15/10/2026 con los ajustes del coordinador ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)), y el Documento 2 pasó a la versión 0.2 (la entregada el 14/10) y el 15/10 a la versión 0.3, alineada con la especificación 1.3, y después a la versión 0.4, alineada con la especificación 1.4.
 
-El Documento 2 v0.4 y el README del repositorio **todavía no** incorporan las decisiones del 16/10/2026 (versión 1.5 de esta carpeta; P-96). Mientras tanto vale lo que dice esta carpeta.
+El README del repositorio se actualizó el 16/10/2026 con la versión 1.5 de esta carpeta. El Documento 2 v0.4 **no** incorpora las decisiones del 16/10/2026 y, por decisión del coordinador del mismo día, **ya no se edita**: queda como la versión del Entregable 2, y para el Entregable 3 se crea una nueva versión del Documento 2 con todo actualizado. Mientras tanto vale lo que dice esta carpeta.
