@@ -107,7 +107,7 @@ El prototipo navegable del Entregable 1 (`prototipo-completo-incovsa.html`) se q
 
 - **Código fuente:** `prototipos/simulacion/src/`.
 - **Cómo se arma:** desde `prototipos/simulacion/`, `python construir.py` (requiere Python 3 con Pillow, numpy y openpyxl, y la carpeta `docs_incovsa/`). Genera `prototipos/prototipo-simulacion-incovsa.html`, que se abre con doble clic.
-- El HTML armado **no se sube** al repositorio, porque contiene datos reales de la empresa (RNF-10).
+- El HTML armado (`prototipos/prototipo-simulacion-incovsa.html`) **se sube** al repositorio desde el 16/10/2026, aunque contiene datos reales de la empresa, porque el repositorio es privado (`specs/16`, decisión 63). Cada cambio del código fuente se sube junto con el HTML vuelto a armar.
 - `prototipos/simulacion/GUIA-CAMBIOS-PROTOTIPO.md` es la guía con que se aplicaron los cambios de la reunión 4 el 12/10/2026. Es un registro histórico.
 
 ---

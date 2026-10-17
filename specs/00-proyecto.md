@@ -39,17 +39,17 @@ El sistema se implementa y se prueba **solo con Quetzaltenango** (ubicaciones de
 
 ## Equipo
 
-| Integrante | Rol principal en el proyecto |
-|---|---|
-| Héctor Jordin Adolfo García Coyoy | Coordinador, arquitecto e integrador, responsable de calidad (QA). Responsable del Documento 6 |
-| Carlos Hugo Escobar Gómez | Requerimientos, documentación general y despliegue. Responsable de los Documentos 1 y 5 |
-| Daniela Alexandra Marín Orozco | Frontend del sitio y del panel administrativo. Actas. Responsable del Documento 3 |
-| Josué André Menéndez Juárez | Base de datos y frontend del sistema logístico. Responsable del Documento 4 |
-| José Daniel Cifuentes Carrascosa | Backend del sistema logístico y documentación técnica. Responsable del Documento 2 |
+| Integrante | Rol principal en el proyecto | Módulos que desarrolla (16/10) | Agente de IA y equipo (16/10) |
+|---|---|---|---|
+| Héctor Jordin Adolfo García Coyoy | Coordinador, arquitecto e integrador, responsable de calidad (QA). Responsable del Documento 6 | Base del proyecto (estructura, autenticación, permisos, bitácora, CI, configuración de los agentes y bot de revisión) y **esquema de la base de datos** | Claude Code y Codex, en Windows |
+| Carlos Hugo Escobar Gómez | Requerimientos, documentación general y despliegue. Responsable de los Documentos 1 y 5 | Configuración (camiones y usuarios) y despliegue | Cursor, en macOS |
+| Daniela Alexandra Marín Orozco | Sitio y panel administrativo. Actas. Responsable del Documento 3 | Sitio público y panel del sitio | Codex, en Windows |
+| Josué André Menéndez Juárez | Sistema logístico. Responsable del Documento 4 | Bodega con su tablero, y Ruta | Antigravity (versión gratuita), en Windows |
+| José Daniel Cifuentes Carrascosa | Sistema logístico y documentación técnica. Responsable del Documento 2 | Facturación (archivo de Odoo, opciones de envío, rutas y pedidos) y Reportes | Codex, en macOS |
 
 > El apellido correcto es **Cifuentes**. Las notas de reunión originales decían "Fuentes" por error.
 >
-> La asignación de tareas por módulo del plan anterior quedó desactualizada con los cambios de alcance y debe rehacerse (P-40 en [19-pendientes.md](19-pendientes.md)).
+> **(16/10)** Cada integrante es dueño de módulos completos, de la base de datos a la pantalla, y trabaja con su propio agente de IA ([16-arquitectura-y-tecnologia.md](16-arquitectura-y-tecnologia.md), decisiones 62 a 65). Las tareas con fechas están pendientes del plan de desarrollo (P-40 en [19-pendientes.md](19-pendientes.md)).
 
 ## Entregables y fechas
 
@@ -71,6 +71,6 @@ Lo que exige cada entregable está en [17-lineamientos-del-curso.md](17-lineamie
 - El **15/10/2026** el coordinador revisó el prototipo y pidió ajustes de presentación y de uso en el sitio, la administración del sitio y el picking (CAM-78 a CAM-95), entre ellos eliminar noticias en lugar de ocultarlas y escribir con el teclado las fechas y la hora. Se incorporaron al prototipo y a esta carpeta (versión 1.3).
 - El mismo **15/10/2026** se revisó que esta carpeta, el Documento 2 y el prototipo dijeran lo mismo y se corrigieron las diferencias (versión 1.4 de esta carpeta y versión 0.4 del Documento 2). El coordinador confirmó los nombres de los botones con mayúscula inicial en cada palabra ("Ruta Despachada", "Pedido Despachado", "Ruta Entregada") y el cuadro verde lima del pedido también en el modo claro del tablero en pantalla completa; en el modo oscuro va en gris (16/10).
 - El Ing. Manuel Rojas autorizó presentar el prototipo como avance del Entregable 2.
-- El **16/10/2026** el coordinador informó que el **Ing. Manuel Rojas aprobó la exclusión del control de inventario** (P-58), que el **Ing. William Ambrossio se comprometió a contratar un VPS** para el despliegue (P-10) y que el **archivo de Odoo con todos los datos** se compartirá en los próximos días (P-91). Ese día se tomaron las decisiones técnicas y de despliegue que faltaban ([16-arquitectura-y-tecnologia.md](16-arquitectura-y-tecnologia.md), versión 1.5 de esta carpeta) y se agregó la exportación a Excel y PDF en "Rutas realizadas" y "Bitácora" (CAM-96). El mismo día se actualizó el README del repositorio, y el coordinador decidió que el **Documento 2 v0.4 ya no se edita**: para el Entregable 3 se crea una nueva versión del Documento 2 con todo actualizado.
+- El **16/10/2026** el coordinador informó que el **Ing. Manuel Rojas aprobó la exclusión del control de inventario** (P-58), que el **Ing. William Ambrossio se comprometió a contratar un VPS** para el despliegue (P-10) y que el **archivo de Odoo con todos los datos** se compartirá en los próximos días (P-91). Ese día se tomaron las decisiones técnicas y de despliegue que faltaban ([16-arquitectura-y-tecnologia.md](16-arquitectura-y-tecnologia.md), versión 1.5 de esta carpeta) y se agregó la exportación a Excel y PDF en "Rutas realizadas" y "Bitácora" (CAM-96). El mismo día se actualizó el README del repositorio, y el coordinador decidió que el **Documento 2 v0.4 ya no se edita**: para el Entregable 3 se crea una nueva versión del Documento 2 con todo actualizado. Ese mismo día, después de una investigación sobre el desarrollo con agentes de IA, se decidió cómo trabajará el equipo con sus agentes, quién desarrolla cada módulo, que un bot de Claude revise e integre los PR, y que el prototipo armado se suba al repositorio (decisiones 59 a 70 de [16](16-arquitectura-y-tecnologia.md), versión 1.6 de esta carpeta).
 - **No existe código** de la aplicación real.
 - El Documento 1 v0.2, los diagramas y las capturas de `entregable-1/` reflejan el estado del 24/09 y **todavía no** incorporan los cambios de las reuniones 4 y 5.
