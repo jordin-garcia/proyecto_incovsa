@@ -44,7 +44,7 @@ El sistema se implementa y se prueba **solo con Quetzaltenango** (ubicaciones de
 | Héctor Jordin Adolfo García Coyoy | Coordinador, arquitecto e integrador, responsable de calidad (QA). Responsable del Documento 6 | Base del proyecto (estructura, autenticación, permisos, bitácora, CI, configuración de los agentes y bot de revisión) y **esquema de la base de datos** | Claude Code y Codex, en Windows |
 | Carlos Hugo Escobar Gómez | Requerimientos, documentación general y despliegue. Responsable de los Documentos 1 y 5 | Configuración (camiones y usuarios) y despliegue | Cursor, en macOS |
 | Daniela Alexandra Marín Orozco | Sitio y panel administrativo. Actas. Responsable del Documento 3 | Sitio público y panel del sitio | Codex, en Windows |
-| Josué André Menéndez Juárez | Sistema logístico. Responsable del Documento 4 | Bodega con su tablero, y Ruta | Antigravity (versión gratuita), en Windows |
+| Josué André Menéndez Juárez | Sistema logístico. Responsable del Documento 4 | Bodega con su tablero, y Ruta | Codex, en Windows (antes Antigravity; decisión 84) |
 | José Daniel Cifuentes Carrascosa | Sistema logístico y documentación técnica. Responsable del Documento 2 | Facturación (archivo de Odoo, opciones de envío, rutas y pedidos) y Reportes | Codex, en macOS |
 
 > El apellido correcto es **Cifuentes**. Las notas de reunión originales decían "Fuentes" por error.
@@ -56,8 +56,8 @@ El sistema se implementa y se prueba **solo con Quetzaltenango** (ubicaciones de
 | Fecha | Entregable | Valor |
 |---|---|---|
 | Lunes 21/09/2026 | **Entregable 1.** Definición, análisis y diseño inicial. Se presenta en clase | 10 puntos |
-| Miércoles 14/10/2026 | **Entregable 2.** Avance funcional y documentación técnica. Se presenta solo al Ing. Manuel Rojas, no en clase (12/10) | 10 puntos |
-| Miércoles 04/11/2026 | **Entregable 3.** Entrega final con el sistema desplegado. Se presenta en clase | 30 puntos |
+| Miércoles 14/10/2026 | **Entregable 2.** Avance funcional y documentación técnica. Se presenta solo al Ing. Manuel Rojas, no en clase (12/10). **(16/10)** El avance funcional con la aplicación real se presenta el **lunes 19/10/2026**, y queda terminado el domingo 18/10 | 10 puntos |
+| Miércoles 04/11/2026 | **Entregable 3.** Entrega final con el sistema desplegado. Se presenta en clase. **(16/10)** El desarrollo queda completo y se despliega el lunes 02/11, y la capacitación es el martes 03/11 ([16](16-arquitectura-y-tecnologia.md), decisión 72) | 30 puntos |
 
 Lo que exige cada entregable está en [17-lineamientos-del-curso.md](17-lineamientos-del-curso.md).
 
@@ -72,5 +72,6 @@ Lo que exige cada entregable está en [17-lineamientos-del-curso.md](17-lineamie
 - El mismo **15/10/2026** se revisó que esta carpeta, el Documento 2 y el prototipo dijeran lo mismo y se corrigieron las diferencias (versión 1.4 de esta carpeta y versión 0.4 del Documento 2). El coordinador confirmó los nombres de los botones con mayúscula inicial en cada palabra ("Ruta Despachada", "Pedido Despachado", "Ruta Entregada") y el cuadro verde lima del pedido también en el modo claro del tablero en pantalla completa; en el modo oscuro va en gris (16/10).
 - El Ing. Manuel Rojas autorizó presentar el prototipo como avance del Entregable 2.
 - El **16/10/2026** el coordinador informó que el **Ing. Manuel Rojas aprobó la exclusión del control de inventario** (P-58), que el **Ing. William Ambrossio se comprometió a contratar un VPS** para el despliegue (P-10) y que el **archivo de Odoo con todos los datos** se compartirá en los próximos días (P-91). Ese día se tomaron las decisiones técnicas y de despliegue que faltaban ([16-arquitectura-y-tecnologia.md](16-arquitectura-y-tecnologia.md), versión 1.5 de esta carpeta) y se agregó la exportación a Excel y PDF en "Rutas realizadas" y "Bitácora" (CAM-96). El mismo día se actualizó el README del repositorio, y el coordinador decidió que el **Documento 2 v0.4 ya no se edita**: para el Entregable 3 se crea una nueva versión del Documento 2 con todo actualizado. Ese mismo día, después de una investigación sobre el desarrollo con agentes de IA, se decidió cómo trabajará el equipo con sus agentes, quién desarrolla cada módulo, que un bot de Claude revise e integre los PR, y que el prototipo armado se suba al repositorio (decisiones 59 a 70 de [16](16-arquitectura-y-tecnologia.md), versión 1.6 de esta carpeta).
+- El mismo **16/10/2026** se creó el **plan de desarrollo** (`plan/`): 62 tareas, una por archivo, con su responsable, su fecha y su verificación, del 17/10 al 04/11, para que cada integrante trabaje con su agente de IA ([16](16-arquitectura-y-tecnologia.md), decisiones 71 a 86).
 - **No existe código** de la aplicación real.
 - El Documento 1 v0.2, los diagramas y las capturas de `entregable-1/` reflejan el estado del 24/09 y **todavía no** incorporan los cambios de las reuniones 4 y 5.
