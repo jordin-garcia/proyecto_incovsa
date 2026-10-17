@@ -92,7 +92,7 @@ test("decisión 87: al integrar una tarea se menciona a todo el equipo con quié
   assert.equal(
     avisos,
     [
-      "**Novedades del plan** (2026-10-17)",
+      "**Novedades del plan** (sáb 17 oct)",
       "",
       EQUIPO,
       "",
@@ -105,7 +105,7 @@ test("decisión 87: al integrar una tarea se menciona a todo el equipo con quié
 test("decisión 87: si la tarea integrada desbloquea varias, se nombran todas con su dueño", () => {
   const { cuerpo: anterior } = generar(conJG08(), "", "2026-10-18", 6);
   const { avisos } = generar(conJG02(), anterior, "2026-10-18", 6);
-  assert.match(avisos, new RegExp(`^\\*\\*Novedades del plan\\*\\* \\(2026-10-18\\)\\n\\n${EQUIPO}\\n`));
+  assert.match(avisos, new RegExp(`^\\*\\*Novedades del plan\\*\\* \\(dom 18 oct\\)\\n\\n${EQUIPO}\\n`));
   assert.match(
     avisos,
     /- ✅ \*\*JG-02\*\* \(Título JG-02\), de Jordin García, quedó integrada\. Quedan disponibles: \*\*JM-02\*\* \(Título JM-02\), de Josué Menéndez, y \*\*JC-02\*\* \(Título JC-02\), de José Daniel Cifuentes\./,
@@ -145,7 +145,7 @@ test("decisión 87: una tarea que se bloquea menciona al coordinador con el due�
   const { avisos } = generar(plan, anterior, "2026-10-17", 6);
   assert.equal(
     avisos,
-    "**Novedades del plan** (2026-10-17)\n\n**Jordin García**\n- @jordin-garcia: la tarea DM-01 (Título DM-01), de Daniela Marín, quedó bloqueada: falta la cuenta de ChatGPT.\n",
+    "**Novedades del plan** (sáb 17 oct)\n\n**Jordin García**\n- @jordin-garcia: la tarea DM-01 (Título DM-01), de Daniela Marín, quedó bloqueada: falta la cuenta de ChatGPT.\n",
   );
 });
 
@@ -286,7 +286,7 @@ test("decisión 87: el recordatorio y las novedades van en un solo comentario, p
       "**Jordin García**",
       "- @jordin-garcia: hoy te toca **JG-02** (Título JG-02).",
       "",
-      "**Novedades del plan** (2026-10-18)",
+      "**Novedades del plan** (dom 18 oct)",
       "",
       EQUIPO,
       "",

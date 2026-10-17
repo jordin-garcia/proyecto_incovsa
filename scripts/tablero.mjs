@@ -138,7 +138,7 @@ function avisos(tareas, anterior, fecha) {
   }
   if (!equipo.length && !porPersona.size) return "";
 
-  const lineas = [`**Novedades del plan** (${fecha})`];
+  const lineas = [`**Novedades del plan** (${fechaCorta(fecha)})`];
   if (equipo.length) {
     lineas.push("", Object.values(PERSONAS).map((p) => `@${p.github}`).join(" "), "", ...equipo);
   }

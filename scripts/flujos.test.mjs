@@ -83,7 +83,8 @@ test("decisión 66: todas las acciones van fijadas por un SHA de 40 caracteres",
 
 test("decisión 66: ningún flujo usa pull_request_target y todos declaran permisos mínimos", () => {
   for (const [archivo, flujo] of flujos()) {
-    assert.doesNotMatch(flujo, /pull_request_target/, `${archivo} no puede usar pull_request_target`);
+    const sinComentarios = flujo.split("\n").filter((l) => !/^\s*#/.test(l)).join("\n");
+    assert.doesNotMatch(sinComentarios, /pull_request_target/, `${archivo} no puede usar pull_request_target`);
     assert.match(flujo, /^permissions:\n {2}contents: read$/m, `${archivo}: faltan los permisos mínimos del flujo`);
     assert.doesNotMatch(flujo.split("\njobs:\n")[0], /write/, `${archivo}: los permisos de escritura van por trabajo`);
   }
