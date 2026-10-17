@@ -544,6 +544,7 @@ El coordinador respondió las preguntas que quedaban antes del plan y pidió cre
 | Bot de revisión | Funciona desde el primer PR: JG-08 se adelanta al sábado 17/10, antes de JG-02, y el coordinador guarda el token del bot ese mismo día |
 | Ramas | Se borraron todas las ramas salvo `main` y `develop`, y GitHub borra cada rama al integrar su PR |
 | Avisos por correo | Con las notificaciones de GitHub: recordatorio diario por persona, aviso a todo el equipo cuando una tarea termina y desbloquea otras, y aviso al autor cuando el bot rechaza su PR (decisión 87) |
+| Una tarea por conversación | Cada tarea se implementa en su propia conversación con el agente, para no exceder su ventana de contexto; la siguiente empieza en una conversación nueva (decisión 88) |
 
 ### Verificación del 16/10/2026
 

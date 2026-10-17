@@ -32,6 +32,8 @@ Este es el procedimiento **obligatorio** para cualquier agente (Claude Code, Cod
 
 Si la persona dice "continúa" o "la siguiente", toma la primera disponible con `node scripts/tareas.mjs --siguiente <clave>`.
 
+**Una sola tarea por conversación** (`specs/16`, decisión 88), para que no se exceda la ventana de contexto del agente. Si en esta conversación ya implementaste o empezaste otra tarea, detente y pídele a la persona que abra una conversación nueva para esta. Si una tarea se interrumpe antes de integrarse, se retoma en una conversación nueva desde su rama.
+
 Desde aquí trabaja **sin pedir confirmación** en cada paso. Solo te detienes en los casos de §C.
 
 ### B0. Herramientas obligatorias
@@ -121,7 +123,7 @@ gh pr checks --watch
 - Ejecuta `git switch develop && git pull --ff-only`, borra tu rama local (`git branch -D <rama>`) y limpia las referencias de las ramas remotas ya borradas (`git fetch --prune`). GitHub borra la rama remota sola al integrar el PR.
 - Dale a la persona un resumen breve: qué se hizo, el enlace al PR, la evidencia y las decisiones tomadas.
 - Muéstrale lo que le toca después con `node scripts/tareas.mjs --hoy <clave>`.
-- Si pidió que continuaras con varias tareas, sigue con la siguiente.
+- **No sigas con otra tarea en esta conversación**, aunque te haya pedido varias: dile que abra una conversación nueva para la siguiente (decisión 88).
 
 ---
 
