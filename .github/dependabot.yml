@@ -1,0 +1,22 @@
+# Actualizaciones automáticas de dependencias (JG-08). Las propuestas llegan como PR a develop, una vez por semana.
+# Esos PR los revisa y los integra el coordinador: tocan archivos protegidos (package.json, package-lock.json y
+# .github/), y toda dependencia nueva o actualizada es una decisión suya (specs/16, decisión 66).
+# Esos PR fallan siempre en `titulo` (sin [ID]), `archivos-protegidos` (el autor es dependabot[bot]) y
+# `revision-claude` (los flujos de Dependabot no reciben CLAUDE_CODE_OAUTH_TOKEN): el coordinador los revisa y los
+# integra con `gh pr merge <n> --admin --squash`. Hasta JG-02 no hay package.json y el ecosistema npm da error.
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"
+      timezone: "America/Guatemala"
+    open-pull-requests-limit: 5
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"
+      timezone: "America/Guatemala"
+    open-pull-requests-limit: 5

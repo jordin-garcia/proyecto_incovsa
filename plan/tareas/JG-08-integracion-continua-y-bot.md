@@ -5,7 +5,7 @@ persona: jordin
 responsable: Jordin García
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JG-01]
 programada: 2026-10-17
 requisitos: [RNF-16]
@@ -62,6 +62,7 @@ Se hace antes de JG-02: los trabajos de la CI que necesitan la aplicación compr
 - `.github/workflows/ci.yml`, `titulo-pr.yml`, `archivos-protegidos.yml`, `revision-claude.yml`, `claude-interactivo.yml`, `tablero-plan.yml` (crear)
 - `.github/dependabot.yml` (crear)
 - `scripts/archivos-protegidos.mjs`, `scripts/veredicto-revision.mjs`, `scripts/tablero.mjs` y sus pruebas `*.test.mjs` (crear)
+- `scripts/flujos.test.mjs` (crear): pruebas de los flujos y de Dependabot (agregado al implementar la tarea)
 
 ## Criterios de aceptación
 1. En un PR de prueba, aparecen las ocho verificaciones obligatorias del paso 8 y ninguna se puede omitir.
@@ -93,3 +94,47 @@ gh api repos/jordin-garcia/proyecto_incovsa/rulesets
 ## Notas
 - Mientras esta tarea no esté integrada, los demás integran sus PR a mano después de verificar en local (protocolo B10).
 - Si la cuota del plan de Claude no alcanza para revisar los PR del equipo, el coordinador pasa a Claude Max (decisión 83). Anótalo en la bitácora si ocurre.
+
+## Resultado
+
+Quedaron funcionando en GitHub la integración continua, las verificaciones de título, cierre y archivos protegidos, el bot de revisión con Claude, Claude interactivo, el tablero del plan con sus avisos por correo y Dependabot. El repositorio integra solo con *squash*, borra la rama al integrar, tiene activada la integración automática y permite que GitHub Actions apruebe PR. `develop` y `main` quedan protegidas con rulesets.
+
+**Archivos principales**
+- `.github/workflows/ci.yml`: trabajos `plan`, `calidad`, `pruebas` (PostgreSQL 18 como servicio y migraciones desde cero), `compilacion` y `dependencias`.
+- `.github/workflows/titulo-pr.yml` (`titulo`), `archivos-protegidos.yml` (`archivos-protegidos`), `revision-claude.yml` (`revision-claude`), `claude-interactivo.yml` y `tablero-plan.yml`.
+- `.github/dependabot.yml`.
+- `scripts/archivos-protegidos.mjs`, `scripts/veredicto-revision.mjs` (de shapi), `scripts/tablero.mjs` (de shapi, adaptado a la decisión 87) y sus pruebas, más `scripts/flujos.test.mjs` (78 pruebas en total).
+
+**Acciones fijadas por SHA**, todas con más de dos semanas: `actions/checkout` v7.0.1 (`3d3c42e5…`), `actions/setup-node` v7.0.0 (`82076278…`) y `anthropics/claude-code-action` v1.0.240 (`ed670b4c…`).
+
+**Configuración del repositorio** (con `gh api`):
+- Integración automática activada, solo *squash*, borrar la rama al integrar, y GitHub Actions puede aprobar PR (`can_approve_pull_request_reviews`).
+- Ruleset **`develop`**: solo por PR, sin aprobación humana, solo *squash*, sin *push* forzado ni borrado, rama al día (`strict`) y las ocho verificaciones obligatorias, exigidas a la app de GitHub Actions (`integration_id` 15368) para que nadie las imite con la API.
+- Ruleset **`main`**: las mismas reglas. Ruleset **`main: solo integra el coordinador`**: regla `update` (restringir actualizaciones).
+- En `develop` y en `main: solo integra el coordinador`, el rol administrador (el coordinador) puede saltarse las reglas **solo al integrar un PR** (`bypass_mode: pull_request`), nunca con *push* directo. Así puede integrar un falso positivo del bot con `gh pr merge <n> --admin --squash` (protocolo B10).
+- Secreto `CLAUDE_CODE_OAUTH_TOKEN`, guardado por el coordinador con `claude setup-token`.
+
+**Decisiones tomadas**
+- **La revisión formal la deja el flujo, no el bot.** Después de leer el veredicto con `scripts/veredicto-revision.mjs`, el paso "Revisión formal" aprueba con LISTO o solicita cambios con CORREGIR, mencionando al autor, y no repite la misma revisión sobre el mismo commit. Por eso el bot no recibe la herramienta `gh pr review` que enumera el paso 4: así el check y la revisión formal no pueden contradecirse, y un PR con instrucciones escondidas no puede hacer que el bot apruebe.
+- **Mención al autor con CORREGIR:** la pide el prompt en la tercera línea del comentario del bot, y la repite la revisión formal de "solicitar cambios". Las dos generan el correo de GitHub (decisión 87).
+- **`archivos-protegidos` ejecuta la versión del script de la rama base** (`git show HEAD^1:…`), para que un PR no pueda cambiar el script y aprobarse solo. Límite conocido: con `pull_request`, GitHub ejecuta el YAML del propio PR, así que un PR que modifique `archivos-protegidos.yml` podría anular la verificación. Sin `pull_request_target` no se puede evitar. Lo cubren el bot (revision.md, punto 3) y la auditoría.
+- **"Los scripts de la CI"** de convenciones §3 son `scripts/tareas.mjs`, `archivos-protegidos.mjs`, `veredicto-revision.mjs`, `tablero.mjs`, sus pruebas y `flujos.test.mjs`.
+- **Aviso por tarea integrada:** un solo comentario que menciona a los cinco, con una línea por tarea integrada ("✅ **ID** (título), de <persona>, quedó integrada. Queda disponible: …"). Lo que no viene de una integración (una tarea que sale de bloqueada o que llega a su fecha) se avisa solo a su dueño.
+- **`tablero-plan.yml` se puede ejecutar a mano con `forzar_recordatorio`**, para publicar el recordatorio del día aunque ya haya salido (criterio 7).
+- Los PR de Dependabot fallan siempre en `titulo`, `archivos-protegidos` y `revision-claude`: los integra el coordinador con `--admin`.
+
+**Evidencia**
+- Criterio 1: en el PR #58 aparecen las ocho verificaciones, y los rulesets las exigen (`gh api repos/jordin-garcia/proyecto_incovsa/rulesets`). Ninguna tiene `if` a nivel de trabajo (`scripts/flujos.test.mjs`).
+- Criterio 2: lo prueba `scripts/archivos-protegidos.test.mjs`. En local, con el diff de esta rama, `node scripts/archivos-protegidos.mjs Josh-JM` falla con la lista de archivos y `jordin-garcia` pasa. No hubo un PR real desde otra cuenta.
+- Criterio 3: con el PR #58 en borrador, `titulo` falló por el cierre ("debe cerrar la tarea con estado: hecha", "falta la sección ## Resultado"). Con el título cambiado a "Integración continua sin ID de tarea", falló con "no sigue el formato [<ID>] <título>".
+- Criterio 4: el comentario del bot, la revisión formal y la integración automática quedan en el PR #58. El caso CORREGIR lo cubren `scripts/veredicto-revision.test.mjs` y `scripts/flujos.test.mjs`.
+- Criterio 8: en el PR #58, `plan`, `calidad`, `pruebas`, `compilacion`, `dependencias` y `archivos-protegidos` pasaron sin `package.json`.
+- Criterio 9: `scripts/flujos.test.mjs` revisa las interpolaciones y los SHA de todos los flujos. Se comprobó que detecta los fallos introduciéndolos a propósito.
+- Criterios 5, 6 y 7: se comprueban al integrar este PR. La primera ejecución del tablero solo crea y fija el issue, sin mencionar a nadie. El aviso de "tarea integrada" sale desde la siguiente integración (JG-02), y el recordatorio, con la ejecución manual o con el cron de las 07:00. El coordinador anota el resultado en su bitácora con JG-02. La confirmación de que llegó el correo depende de cada integrante.
+
+**Cómo usarlo**
+- Cada PR: `gh pr create` con el título `[<ID>] <título>`, luego `gh pr merge --auto --squash --delete-branch` y `gh pr checks --watch`. Se integra solo cuando pasan las ocho verificaciones.
+- `revision-claude` en rojo: con hallazgos, corregir y hacer *push*. Si la revisión no se completó, `gh run rerun <id> --failed`.
+- Pedirle algo a Claude en un issue o PR: comentar con `@claude` (solo usuarios con permiso de escritura).
+- Recordatorio manual: `gh workflow run tablero-plan.yml -f forzar_recordatorio=true`.
+- Desde JG-02, `calidad`, `pruebas`, `compilacion` y `dependencias` corren completos sin tocar los flujos. En el trabajo `pruebas`, `DATABASE_URL` y `DATABASE_URL_PRUEBAS` apuntan a la base temporal `incovsa_pruebas`. Si JG-02 o JG-03 necesitan más variables en la CI, las agrega el coordinador en `ci.yml`.

@@ -1,0 +1,46 @@
+# Verificación obligatoria `archivos-protegidos` (JG-08, specs/16 decisión 80): falla si un PR cuyo autor no es el
+# coordinador modifica un archivo protegido de plan/convenciones.md §3 (con la excepción de Carlos para los flujos de
+# despliegue y producción). La lógica está en scripts/archivos-protegidos.mjs.
+# Se ejecuta la versión de ese script que está en la rama base, no la del PR, para que un PR no pueda cambiarlo y
+# aprobarse solo. Solo si la rama base todavía no lo tiene (el PR que lo crea) se usa el del PR.
+# Límite conocido: con `pull_request`, GitHub ejecuta este YAML tal como viene en el PR, así que un PR que lo
+# modifique podría anular la verificación (sin pull_request_target no se puede evitar). Ese cambio lo detectan la
+# revisión con Claude (revision.md, punto 3: alcance) y la auditoría del coordinador.
+# El trabajo no lleva `if`: un check obligatorio omitido cuenta como aprobado.
+name: Archivos protegidos
+
+on:
+  pull_request:
+    branches: [develop, main]
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: archivos-protegidos-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  archivos-protegidos:
+    name: archivos-protegidos
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # fetch-depth 2: el commit de integración del PR y su primer padre, la punta de la rama base.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      - name: Comprobar los archivos protegidos
+        env:
+          AUTOR_PR: ${{ github.event.pull_request.user.login }}
+        run: |
+          script="$RUNNER_TEMP/archivos-protegidos.mjs"
+          if ! git show HEAD^1:scripts/archivos-protegidos.mjs > "$script" 2>/dev/null; then
+            echo "::notice::La rama base todavía no tiene scripts/archivos-protegidos.mjs: se usa el del PR."
+            cp scripts/archivos-protegidos.mjs "$script"
+          fi
+          node "$script"

@@ -1,0 +1,37 @@
+# Responde a @claude en comentarios de issues y PR (JG-08, specs/16 decisión 60). Adaptado de shapi. Usa la
+# suscripción del coordinador (CLAUDE_CODE_OAUTH_TOKEN). La acción solo acepta a usuarios con permiso de escritura.
+# Vive aparte de revision-claude.yml para que los comentarios no generen un check "revision-claude" omitido, que
+# contaría como aprobado.
+name: Claude interactivo
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+permissions:
+  contents: read
+
+jobs:
+  interactivo:
+    name: claude-interactivo
+    if: contains(github.event.comment.body, '@claude')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+
+      - uses: anthropics/claude-code-action@ed670b4cf9de2a5a570d130d2f6197b9e543cd64 # v1.0.240 (fijada por SHA: recibe el token del coordinador)
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          claude_args: >-
+            --model claude-opus-5-5
+            --effort high

@@ -1,0 +1,89 @@
+# Tablero del plan (JG-08, specs/16 decisiones 71 y 87). Adaptado de shapi. Mantiene el issue fijo "Tablero del plan"
+# con el estado de todas las tareas y publica en él los avisos que llegan por correo con las notificaciones de GitHub:
+#   - cada día desde las 07:00 (Guatemala), el recordatorio de las tareas del día y las atrasadas, a cada persona;
+#   - cada integración a develop, la tarea terminada y las que desbloqueó, a todo el equipo;
+#   - una tarea bloqueada, al coordinador.
+# La lógica está en scripts/tablero.mjs; el estado anterior se guarda en el propio cuerpo del issue.
+# La ejecución manual puede forzar el recordatorio del día (forzar_recordatorio), aunque ya haya salido.
+name: Tablero del plan
+
+on:
+  push:
+    branches: [develop]
+  schedule:
+    # 07:00 en Guatemala (UTC-6, sin horario de verano).
+    - cron: "0 13 * * *"
+  workflow_dispatch:
+    inputs:
+      forzar_recordatorio:
+        description: "Publicar el recordatorio del día aunque ya haya salido"
+        type: boolean
+        default: false
+
+# Una sola ejecución a la vez y sin cancelar la anterior, para que no se pierdan avisos.
+concurrency:
+  group: tablero-plan
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  tablero:
+    name: tablero
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      # Las fechas de programada y no_antes_de, y la hora del recordatorio, se toman de Guatemala, no de UTC.
+      TZ: America/Guatemala
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+
+      - name: Buscar o crear el issue
+        id: issue
+        run: |
+          gh label create tablero --color 0E8A16 --description "Tablero del plan (se actualiza solo)" --force
+          # API de listado (sin el retraso de indexación de --search), filtrando además por título.
+          numero=$(gh issue list --label tablero --state all --limit 100 --json number,title --jq 'map(select(.title == "Tablero del plan")) | .[0].number // empty')
+          if [ -z "$numero" ]; then
+            url=$(gh issue create --title "Tablero del plan" --label tablero --body "Generando el tablero…")
+            numero="${url##*/}"
+          elif [ "$(gh issue view "$numero" --json state --jq .state)" = "CLOSED" ]; then
+            gh issue reopen "$numero"
+          fi
+          # Se revisa en cada ejecución, por si el pin falló la primera vez o alguien lo quitó.
+          if [ "$(gh issue view "$numero" --json isPinned --jq .isPinned)" != "true" ]; then
+            gh issue pin "$numero"
+          fi
+          echo "numero=$numero" >> "$GITHUB_OUTPUT"
+
+      - name: Generar el tablero y los avisos
+        env:
+          NUMERO: ${{ steps.issue.outputs.numero }}
+          FORZAR_RECORDATORIO: ${{ inputs.forzar_recordatorio }}
+        run: |
+          gh issue view "$NUMERO" --json body --jq .body > "$RUNNER_TEMP/cuerpo-anterior.md"
+          node scripts/tablero.mjs "$RUNNER_TEMP/cuerpo-anterior.md" "$RUNNER_TEMP/cuerpo-nuevo.md" "$RUNNER_TEMP/avisos.md"
+
+      # Primero el comentario y después el cuerpo (que guarda el estado): si algo falla a la mitad,
+      # la siguiente ejecución repite el aviso en lugar de perderlo.
+      - name: Publicar los avisos
+        env:
+          NUMERO: ${{ steps.issue.outputs.numero }}
+        run: |
+          if [ -s "$RUNNER_TEMP/avisos.md" ]; then
+            gh issue comment "$NUMERO" --body-file "$RUNNER_TEMP/avisos.md"
+          fi
+
+      - name: Actualizar el tablero
+        env:
+          NUMERO: ${{ steps.issue.outputs.numero }}
+        run: gh issue edit "$NUMERO" --body-file "$RUNNER_TEMP/cuerpo-nuevo.md"
