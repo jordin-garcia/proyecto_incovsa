@@ -1,0 +1,41 @@
+# Verificación obligatoria `titulo` (JG-08, protocolo B10): el título del PR es "[<ID>] <título>", con una tarea que
+# existe, y el PR cierra su tarea (estado, "## Resultado" y bitácora). Sin el ID, la revisión con Claude no revisa
+# criterios ni alcance.
+# Va aparte de ci.yml para que editar el PR solo repita esta validación, que tarda segundos, y no toda la CI.
+# El trabajo no lleva `if`: un check obligatorio omitido cuenta como aprobado.
+name: Título del PR
+
+on:
+  pull_request:
+    branches: [develop, main]
+    types: [opened, synchronize, reopened, edited]
+
+concurrency:
+  group: titulo-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  titulo:
+    name: titulo
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # fetch-depth 2: el commit de integración del PR y su primer padre, la punta de la rama base (para el diff).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      # El título va en una variable de entorno, nunca interpolado en el comando.
+      - name: Validar el título del PR
+        env:
+          TITULO_PR: ${{ github.event.pull_request.title }}
+        run: node scripts/tareas.mjs --validar-titulo
+      - name: Validar el cierre de la tarea
+        env:
+          TITULO_PR: ${{ github.event.pull_request.title }}
+        run: node scripts/tareas.mjs --validar-cierre

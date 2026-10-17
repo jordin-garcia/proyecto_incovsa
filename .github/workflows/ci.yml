@@ -1,0 +1,170 @@
+# Integración continua (JG-08, specs/16 decisión 47). Verificaciones obligatorias de develop y main: plan, calidad,
+# pruebas, compilacion y dependencias. Los nombres de los trabajos son los que exige la protección de ramas: no
+# cambiarlos. Ningún trabajo lleva `if`: un trabajo omitido cuenta como aprobado.
+# Mientras no exista el proyecto base (JG-02), los trabajos que necesitan la aplicación lo detectan en un paso y
+# terminan bien sin ejecutar nada. Desde JG-02 corren completos sin tocar este archivo.
+# El título del PR lo valida titulo-pr.yml (check `titulo`), para que editar el PR no repita esta CI.
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+    # Sin edited: editar el título o la descripción no cambia el código.
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [develop]
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  # En los PR se cancela la ejecución anterior; en develop se verifica cada commit.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    name: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      - name: Validar las tareas del plan
+        run: node scripts/tareas.mjs --validar
+      # Node no recorre directorios con --test: se le pasa el patrón entre comillas y lo expande él.
+      - name: Pruebas de los scripts
+        run: node --test "scripts/*.test.mjs"
+
+  calidad:
+    name: calidad
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # Los pasos comparan con != 'false': si la detección no escribe su salida, se verifica todo.
+      - name: Detectar el proyecto base
+        id: proyecto
+        run: |
+          if [ -f package.json ]; then
+            echo "app=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "app=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Todavía no hay package.json (llega con JG-02): este trabajo termina sin ejecutar nada."
+          fi
+      - if: steps.proyecto.outputs.app != 'false'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+      - if: steps.proyecto.outputs.app != 'false'
+        run: npm ci
+      - if: steps.proyecto.outputs.app != 'false'
+        run: npm run formato
+      - if: steps.proyecto.outputs.app != 'false'
+        run: npm run lint
+      - if: steps.proyecto.outputs.app != 'false'
+        run: npm run tipos
+
+  pruebas:
+    name: pruebas
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Base vacía en cada ejecución: las migraciones corren desde cero (decisión 47). La contraseña es solo de este
+    # contenedor temporal de la CI.
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: incovsa
+          POSTGRES_PASSWORD: incovsa
+          POSTGRES_DB: incovsa_pruebas
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U incovsa -d incovsa_pruebas"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://incovsa:incovsa@localhost:5432/incovsa_pruebas
+      DATABASE_URL_PRUEBAS: postgresql://incovsa:incovsa@localhost:5432/incovsa_pruebas
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Detectar el proyecto base
+        id: proyecto
+        run: |
+          if [ -f package.json ]; then
+            echo "app=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "app=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Todavía no hay package.json (llega con JG-02): este trabajo termina sin ejecutar nada."
+          fi
+          if [ -f prisma/schema.prisma ]; then
+            echo "prisma=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "prisma=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Todavía no hay prisma/schema.prisma (llega con JG-03): no se aplican migraciones."
+          fi
+      - if: steps.proyecto.outputs.app != 'false'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+      - if: steps.proyecto.outputs.app != 'false'
+        run: npm ci
+      - name: Aplicar las migraciones desde cero
+        if: steps.proyecto.outputs.prisma != 'false'
+        run: npm run db:aplicar
+      - if: steps.proyecto.outputs.app != 'false'
+        run: npm test
+
+  compilacion:
+    name: compilacion
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Detectar el proyecto base
+        id: proyecto
+        run: |
+          if [ -f package.json ]; then
+            echo "app=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "app=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Todavía no hay package.json (llega con JG-02): este trabajo termina sin ejecutar nada."
+          fi
+      - if: steps.proyecto.outputs.app != 'false'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+      - if: steps.proyecto.outputs.app != 'false'
+        run: npm ci
+      - if: steps.proyecto.outputs.app != 'false'
+        run: npm run build
+
+  dependencias:
+    name: dependencias
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Detectar el proyecto base
+        id: proyecto
+        run: |
+          if [ -f package.json ]; then
+            echo "app=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "app=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Todavía no hay package.json (llega con JG-02): este trabajo termina sin ejecutar nada."
+          fi
+      - if: steps.proyecto.outputs.app != 'false'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      # npm audit lee package-lock.json: no hace falta instalar.
+      - if: steps.proyecto.outputs.app != 'false'
+        run: npm audit --audit-level=high
