@@ -61,7 +61,7 @@ Análisis del equipo del 09/10/2026 y del 14/10/2026, sin datos personales:
 | Producto cuyo peso no coincide con la presentación de su nombre | `SODA ASH (CHI-SAC/0040KG)`: peso 25 en sus 12 líneas. Se usa 25, como viene (P-90) |
 | Líneas con cantidad decimal | 4 |
 
-El Ing. William se comprometió a entregar el archivo con **todos los datos** de las columnas que usa el sistema (13/10). El archivo de ejemplo actual no los trae completos (columna de peso).
+El Ing. William se comprometió a entregar el archivo con **todos los datos** de las columnas que usa el sistema (13/10). El archivo de ejemplo actual no los trae completos (columna de peso). El 16/10 el coordinador informó que se compartirá en los próximos días (P-91).
 
 ## Carga inicial
 
@@ -70,7 +70,8 @@ El Ing. William se comprometió a entregar el archivo con **todos los datos** de
 | Productos, clientes y sectores del picking | **Ninguna** (13/10). No existen como catálogos |
 | Camiones | Los 3 de Quetzaltenango: dos de 3,400 kg y uno de 6,000 kg. Falta su identificación (P-01) |
 | Sedes, permisos y estados | Fijos, en la semilla ([16](16-arquitectura-y-tecnologia.md)) |
-| Usuarios | El usuario administrador inicial (P-08). Los demás los crean Gerencia y Soporte |
+| Países, departamentos y municipios | En la semilla: los países con sus nombres en español y los departamentos y municipios de Guatemala del INE (16/10, decisión 45) |
+| Usuarios | El usuario administrador inicial (P-08), creado con el comando `crear-admin` (16/10). Los demás los crean Gerencia y Soporte |
 | Contenido del sitio | Los textos e imágenes que entregue INCOVSA (P-17 a P-23) |
 
 ### Decisiones anteriores sobre el catálogo de `Picking II` que ya no se aplican

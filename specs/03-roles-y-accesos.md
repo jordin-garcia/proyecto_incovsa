@@ -122,8 +122,10 @@ Para recuperar su contraseña, el usuario **la solicita a Gerencia o a Soporte**
 ## Sesiones
 
 - **TV y tableta del tablero:** la sesión queda abierta con **cualquier usuario que tenga acceso al módulo de Bodega**.
-- Tiempo de expiración de las sesiones: [PENDIENTE] P-07.
-- Usuario administrador inicial: [PENDIENTE] P-08.
+- **Una sesión por sistema (16/10):** como en el prototipo, cada sistema tiene **su propia sesión**. Una persona puede estar conectada a la administración del sitio y al picking al mismo tiempo en el mismo navegador, y cerrar la sesión de uno no cierra la del otro. Las cuentas de Gerencia y Soporte inician sesión aparte en cada sistema.
+- **Expiración (16/10):** la sesión vence después de un tiempo sin uso y se renueva mientras se usa. Mientras INCOVSA no defina el tiempo (P-07), son **7 días**, renovados con el uso una vez al día. Con eso la TV y la tableta del tablero no se desconectan. El tiempo se configura en el servidor, sin cambiar el código.
+- **Cierre forzado (16/10):** al eliminar o desactivar un usuario, o al restablecer su contraseña, se cierran **al instante todas sus sesiones abiertas**.
+- Usuario administrador inicial: quién es está [PENDIENTE] P-08. **Cómo se crea (16/10):** con un comando de la aplicación (`crear-admin`) que pide en la terminal el nombre de usuario y la contraseña. Ninguna credencial queda en el repositorio ni en la semilla.
 
 ## Bitácora (RN-39)
 

@@ -47,7 +47,7 @@ En el prototipo se llama "Despacho diario"; con el filtro de periodo, el nombre 
 
 Al pie, el total del periodo en kg y en "N unidades + R kg".
 
-- Botones **Excel** y **PDF** para exportar el reporte, como en el prototipo.
+- Botones **Excel** y **PDF** para exportar el reporte, como en el prototipo ("Exportación", abajo).
 - El reporte diario de "kilogramos y sacos despachados" de la propuesta de INCOVSA (01/09) queda cubierto por esta pestaña: los "sacos" se cuentan como **unidades** según RN-01.
 
 ## Pestaña "Rutas realizadas" (RF-SL-37)
@@ -67,6 +67,8 @@ Registro histórico de las rutas de la sede, filtrado por el periodo elegido. De
 
 La columna "Pedido" se quitó el 13/10: la ruta ya no tiene un pedido aparte.
 
+- **(16/10)** Botones **Excel** y **PDF**, como en Despacho ("Exportación", abajo).
+
 ## Pestaña "Bitácora" (RN-39)
 
 | Columna | Contenido |
@@ -79,6 +81,23 @@ La columna "Pedido" se quitó el 13/10: la ruta ya no tiene un pedido aparte.
 - Se ve con el permiso de Reportes.
 - Se filtra con el mismo periodo que las otras pestañas.
 - Qué registra está en [12-reglas-de-negocio.md](12-reglas-de-negocio.md).
+- **(16/10)** Botones **Excel** y **PDF**, como en Despacho ("Exportación", abajo).
+
+## Exportación (RF-SL-38, 16/10)
+
+> **Cambio del 16/10/2026 (coordinador).** Hasta el 15/10 solo la pestaña "Despacho" se exportaba. Desde el 16/10 las **tres pestañas** tienen sus botones **Excel** y **PDF** (CAM-96).
+
+| Pestaña | Contenido del archivo |
+|---|---|
+| Despacho | Sede, periodo, los cuatro indicadores, la tabla por producto (Producto, Cantidad (kg), Unidades) y el total del periodo en kg y en "N unidades + R kg". La barra proporcional solo se muestra en pantalla |
+| Rutas realizadas | Sede, periodo y la tabla de la pestaña, con sus mismas columnas |
+| Bitácora | Periodo y la tabla de la pestaña, con sus mismas columnas |
+
+- Cada archivo lleva las filas de la pestaña con el periodo elegido.
+- **Excel:** una sola hoja, sin colores ni formato, generada con SheetJS (la versión gratuita no permite formato).
+- **PDF:** generado con **pdfmake**, con el logotipo de INCOVSA, el título de la pestaña, la sede (salvo en la Bitácora), el periodo y la tabla.
+- Los dos se generan **en el servidor**, que verifica el permiso de Reportes y la sede antes de entregar el archivo ([16](16-arquitectura-y-tecnologia.md)).
+- **Nombre del archivo:** la pestaña, la sede (salvo en la Bitácora) y el periodo, con las fechas en dd-mm-aaaa. Por ejemplo, `despacho-quetzaltenango-16-10-2026.xlsx`, `rutas-realizadas-quetzaltenango-del-01-10-2026-al-31-10-2026.pdf` o `bitacora-16-10-2026.xlsx`.
 
 ## Lo que se quitó
 

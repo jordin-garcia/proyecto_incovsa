@@ -455,6 +455,8 @@ const Picking = (() => {
     const enP = (iso) => { const d = diaDe(iso); return d >= P.ini && d <= P.fin; };
     const cerrados = S.pedidos.filter((p) => p.sede === sede && p.hist.some((h) => ['DESP', 'RUTA'].includes(h.estado) && enP(h.fecha)));
     let cuerpo = '';
+    // Exportación a Excel y PDF en las tres pestañas (16/10)
+    const exportar = `<div style="display:flex;gap:8px;flex-shrink:0;margin-left:auto"><button class="btn btn-s btn-sm" data-exp>${ico('descargar', 'ico-s')} Excel</button><button class="btn btn-s btn-sm" data-exp>${ico('descargar', 'ico-s')} PDF</button></div>`;
     if (repTab === 'despacho') {
       const ag = {};
       cerrados.forEach((p) => p.prep.forEach((l) => { const k = l.prod + '|' + l.p2; ag[k] = ag[k] || { prod: l.prod, p2: l.p2, kg: 0 }; ag[k].kg = r3(ag[k].kg + l.kg); }));
@@ -467,18 +469,18 @@ const Picking = (() => {
           <div class="tarjeta kpi"><span class="etq">Unidades completas</span><b>${fmt(uni)}</b><small>más ${kg(resto)} sueltos</small></div>
           <div class="tarjeta kpi"><span class="etq">Rutas y pedidos cerrados</span><b>${cerrados.length}</b><small>${cerrados.filter(esRuta).length} rutas · ${cerrados.filter((p) => !esRuta(p)).length} pedidos</small></div>
           <div class="tarjeta kpi"><span class="etq">Rutas entregadas</span><b>${entregadas}</b><small>en el periodo</small></div></div>
-        <section class="tarjeta"><div class="bloque-cab"><div><h3>${P.nombre} por producto</h3><p>${SEDES[sede]} · ${P.txt}</p></div><div style="display:flex;gap:8px"><button class="btn btn-s btn-sm" data-exp>${ico('descargar', 'ico-s')} Excel</button><button class="btn btn-s btn-sm" data-exp>${ico('descargar', 'ico-s')} PDF</button></div></div>
+        <section class="tarjeta"><div class="bloque-cab"><div><h3>${P.nombre} por producto</h3><p>${SEDES[sede]} · ${P.txt}</p></div>${exportar}</div>
           <div class="tabla-caja"><table class="tabla"><thead><tr><th>Producto</th><th class="der">Cantidad (kg)</th><th style="width:22%"></th><th>Unidades</th></tr></thead><tbody>
           ${filas.map((x) => `<tr><td class="cod">${esc(x.prod)}</td><td class="der kg">${fmt(x.kg)}</td><td><div class="medidor" style="height:8px"><i style="width:${(x.kg / max) * 100}%"></i></div></td><td>${htmlConversion(x.kg, x.p2)} <span class="muted mono" style="font-size:11.5px;margin-left:4px">÷ ${fmt(x.p2)}</span></td></tr>`).join('') || `<tr><td colspan="4"><div class="vacio">Sin despachos en el periodo.</div></td></tr>`}</tbody>
           ${filas.length ? `<tfoot><tr><td>Total del periodo</td><td class="der kg">${fmt(tot)}</td><td></td><td class="mono">${fmt(uni)} unidades + ${fmt(resto)} kg</td></tr></tfoot>` : ''}</table></div></section>`;
     } else if (repTab === 'rutas') {
       const rs = S.rutas.filter((r) => r.sede === sede && enP(r.fecha)).sort((a, b) => b.fecha.localeCompare(a.fecha) || b.num - a.num);
-      cuerpo = `<section class="tarjeta"><div class="bloque-cab"><div><h3>Registro histórico de rutas</h3><p>${SEDES[sede]} · ${P.txt} · desde el envío a bodega hasta el cierre de la entrega.</p></div></div><div class="tabla-caja"><table class="tabla"><thead><tr><th>Ruta</th><th>Fecha</th><th>Programada</th><th>Camión</th><th>Piloto</th><th class="der">Total (kg)</th><th>Estado</th><th>Recorrido</th></tr></thead><tbody>
+      cuerpo = `<section class="tarjeta"><div class="bloque-cab"><div style="flex:1 1 0;min-width:240px"><h3>Registro histórico de rutas</h3><p>${SEDES[sede]} · ${P.txt} · desde el envío a bodega hasta el cierre de la entrega.</p></div>${exportar}</div><div class="tabla-caja"><table class="tabla"><thead><tr><th>Ruta</th><th>Fecha</th><th>Programada</th><th>Camión</th><th>Piloto</th><th class="der">Total (kg)</th><th>Estado</th><th>Recorrido</th></tr></thead><tbody>
         ${rs.map((r) => { const p = pedido(r.pedido); return `<tr><td><b>${r.num}</b></td><td class="mono">${fFecha(r.fecha)}</td><td class="mono">${fProg(p)}</td><td>${esc((camion(r.camion) || {}).n || '—')}</td><td>${esc(nombreUsuario(r.piloto))}</td><td class="der kg">${fmt(totalPedido(p))}</td><td>${chipEstado(p)}</td>
           <td style="font-size:13px">${r.recorrido ? clientesRuta(r).map((c, i) => `${i + 1}. ${esc(c.nombre)}`).join(' → ') : '<span class="muted">Se guarda al entregar</span>'}</td></tr>`; }).join('') || '<tr><td colspan="8"><div class="vacio">Sin rutas en el periodo.</div></td></tr>'}</tbody></table></div></section>`;
     } else {
       const ls = S.bitacora.filter((b) => enP(b.fecha)).slice(0, 250);
-      cuerpo = `<section class="tarjeta"><div class="bloque-cab"><div><h3>Bitácora de operaciones</h3><p>${P.txt} · Acciones de los dos sistemas, incluidos los inicios de sesión y los intentos fallidos. No se registran el marcado ni la prioridad de Bodega, ni el orden de Ruta antes de la entrega.</p></div></div><div class="tabla-caja tabla-alta"><table class="tabla"><thead><tr><th>Fecha</th><th>Usuario</th><th>Operación</th><th>Detalle</th></tr></thead><tbody>
+      cuerpo = `<section class="tarjeta"><div class="bloque-cab"><div style="flex:1 1 0;min-width:240px"><h3>Bitácora de operaciones</h3><p>${P.txt} · Acciones de los dos sistemas, incluidos los inicios de sesión y los intentos fallidos. No se registran el marcado ni la prioridad de Bodega, ni el orden de Ruta antes de la entrega.</p></div>${exportar}</div><div class="tabla-caja tabla-alta"><table class="tabla"><thead><tr><th>Fecha</th><th>Usuario</th><th>Operación</th><th>Detalle</th></tr></thead><tbody>
         ${ls.map((b) => `<tr><td class="mono" style="font-size:13px;white-space:nowrap">${fFH(b.fecha)}</td><td>${esc(b.nombre)}</td><td><b>${esc(b.op)}</b></td><td style="font-size:13.5px">${esc(b.detalle)}</td></tr>`).join('') || '<tr><td colspan="4"><div class="vacio">Sin operaciones en el periodo.</div></td></tr>'}</tbody></table></div></section>`;
     }
     return vista('reportes', u, cab('Módulo de reportes', 'Reportes y bitácora', 'Despacho, rutas realizadas y bitácora de los dos sistemas, por periodo.') + `

@@ -89,6 +89,7 @@ No se valida si una referencia ya se cargó antes: no puede pasar, porque los da
 
 - Muestra los pedidos facturados que **todavía no están en ninguna opción de envío**.
 - **Se guarda en la base de datos**: si el facturador cierra la sesión, o entra otro facturador de la misma sede, el tablero sigue igual.
+- **Dos facturadores en la misma sede (16/10):** el servidor valida cada movimiento contra el estado guardado; si otro facturador ya movió, envió o eliminó un pedido facturado, el cambio se rechaza con un aviso y la pantalla se actualiza. Además, Facturación recibe el mismo aviso en tiempo real que Bodega, para que cada facturador vea al instante los cambios del otro ([16](16-arquitectura-y-tecnologia.md)).
 - Una tarjeta por pedido facturado, que usa **todo el ancho** (sin el asa de arrastre ni la "x" de eliminar, 13/10), con:
 
 | Dato | Origen |
@@ -159,6 +160,8 @@ Solo hay **dos** opciones, sin importar cuántos camiones tenga la sede:
 | **Cancelar** | Los pedidos facturados de esa opción **regresan al tablero**. No se pierde nada y no se crea nada. La bitácora registra la cancelación |
 
 Antes de enviar se muestra la ventana de confirmación del prototipo, con el número que va a recibir la ruta o el pedido.
+
+**Envíos simultáneos y doble clic (16/10):** el envío bloquea su opción de envío mientras dura la transacción. Como hay una sola opción de cada tipo por sede, dos envíos que compiten por el mismo número del día esperan su turno, y un segundo clic encuentra la opción ya vacía y no crea nada ([16](16-arquitectura-y-tecnologia.md), decisión 41).
 
 ## Restricciones
 

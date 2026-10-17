@@ -290,6 +290,8 @@ Cada sección muestra su **instrucción, lo más breve posible, a la par del tí
 
 Todas las imágenes del sitio se guardan en **Cloudflare R2, plan gratuito**: las de la portada, misión, visión, historia, valores, industrias, productos y noticias, y los logotipos.
 
+**(16/10)** Se aceptan imágenes **JPG, PNG o WebP** de hasta **5 MB**. El servidor las reduce a un máximo de 2000 px de ancho, les quita los metadatos (incluida la ubicación GPS de las fotos) y las guarda en WebP. Se sirven desde `imagenes.incovsa.com` ([16](16-arquitectura-y-tecnologia.md), decisiones 32 y 44).
+
 ## Confidencialidad
 
 La contraparte autorizó mostrar la estructura de los documentos internos y de los productos en la documentación académica, pero no todos los datos. En desarrollo se trabaja con estructura y datos de prueba. Los datos finales se cargan en producción cuando la empresa lo indique.

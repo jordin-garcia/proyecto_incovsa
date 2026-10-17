@@ -31,4 +31,4 @@ Los códigos no se reutilizan. Los requerimientos y reglas eliminados conservan 
 - La conversión a unidades sigue igual (RN-01). Desde el 13/10 el Peso de Conversión viene en el archivo de Odoo y el picking ya no tiene catálogo de productos ([11-picking-configuracion.md](11-picking-configuracion.md)).
 - El sistema sigue sin controlar lotes ni ubicaciones (RN-32); desde el 13/10 solo muestra el lote que trae el archivo.
 
-> **P-58.** Los lineamientos del curso piden inventario, entradas, salidas y existencias en el Entregable 2, y "actualización de inventario" en la demostración del Entregable 3. Falta que el docente apruebe esta exclusión ([17-lineamientos-del-curso.md](17-lineamientos-del-curso.md)).
+> **P-58 (resuelto el 16/10).** Los lineamientos del curso piden inventario, entradas, salidas y existencias en el Entregable 2, y "actualización de inventario" en la demostración del Entregable 3. El Ing. Manuel Rojas **aprobó esta exclusión** ([17-lineamientos-del-curso.md](17-lineamientos-del-curso.md)).

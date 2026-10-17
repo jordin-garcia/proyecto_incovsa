@@ -1,4 +1,4 @@
-# 20. Prototipo aprobado y cambios de las reuniones 4 y 5 y del 15/10
+# 20. Prototipo aprobado y cambios de las reuniones 4 y 5, del 15/10 y del 16/10
 
 ## El prototipo
 
@@ -10,7 +10,7 @@
 | Datos | Toma imágenes, logotipos (incluido el de Inquiserca), documentos de ejemplo y, de `Picking II.xlsm`, nombres reales de productos con su Peso de Conversión y sus lotes, y de clientes con su sector, **solo para armar las rutas y los pedidos de ejemplo** con que arranca la simulación (desde el 13/10 el sistema no tiene esos catálogos). El HTML armado no se sube al repositorio. Los usuarios siguen anonimizados. Los departamentos y municipios de Guatemala salen del INE (Censo 2018), en `simulacion/datos/guatemala.json` |
 | Repositorio | Se sube el código fuente. El HTML armado **no se sube**, porque contiene datos reales de la empresa (RNF-10) |
 | Presentado | 29/09/2026 (reunión 4) y 13/10/2026 (reunión 5), al Ing. William Ambrossio. El 14/10/2026 se presenta al Ing. Manuel Rojas como avance del Entregable 2 |
-| Aprobación | El 09/10/2026 el coordinador confirmó que el **design system** y la **mayoría de las funcionalidades** están aprobados por el Ing. William Ambrossio y por el Ing. Manuel Rojas, salvo los cambios de la reunión 4. El **13/10/2026** el Ing. William **aprobó** el prototipo con esos cambios y pidió los de la reunión 5 (CAM-40 a CAM-77), que se aplicaron el 14/10. El **15/10/2026** el coordinador revisó el prototipo y pidió los ajustes CAM-78 a CAM-95, que se aplicaron ese día. El mismo 15/10 se corrigieron las diferencias que quedaban entre el prototipo y esta carpeta (versión 1.4) |
+| Aprobación | El 09/10/2026 el coordinador confirmó que el **design system** y la **mayoría de las funcionalidades** están aprobados por el Ing. William Ambrossio y por el Ing. Manuel Rojas, salvo los cambios de la reunión 4. El **13/10/2026** el Ing. William **aprobó** el prototipo con esos cambios y pidió los de la reunión 5 (CAM-40 a CAM-77), que se aplicaron el 14/10. El **15/10/2026** el coordinador revisó el prototipo y pidió los ajustes CAM-78 a CAM-95, que se aplicaron ese día. El mismo 15/10 se corrigieron las diferencias que quedaban entre el prototipo y esta carpeta (versión 1.4). El **16/10/2026** el coordinador pidió la exportación a Excel y PDF en "Rutas realizadas" y "Bitácora" (CAM-96), que se aplicó ese día |
 
 ## Cómo se usa para desarrollar
 
@@ -35,6 +35,7 @@
 | Nombres "Usuario de ejemplo NN" | Anonimización. La aplicación real usa los datos que cargue la empresa |
 | Eliminación física de usuarios y camiones: el usuario eliminado desaparece y su nombre de usuario queda libre; un camión que ya tiene rutas no se puede eliminar | Simplificación de la simulación. La aplicación real usa eliminación lógica: el nombre de usuario queda reservado, el camión desaparece de las listas y el historial se conserva ([16](16-arquitectura-y-tecnologia.md), decisión 2) (15/10) |
 | Sin bloqueo después de varios intentos fallidos de inicio de sesión: la simulación solo los registra en la bitácora | Simplificación de la simulación. La aplicación real bloquea 15 minutos después de 5 intentos fallidos del mismo usuario o de 20 desde la misma dirección IP (RNF-15, [16](16-arquitectura-y-tecnologia.md)) (15/10) |
+| Botones Excel y PDF de Reportes que solo muestran un aviso | La simulación no genera archivos. La aplicación real genera el Excel con SheetJS y el PDF con pdfmake, en el servidor ([10](10-picking-reportes.md), [16](16-arquitectura-y-tecnologia.md)) (16/10) |
 
 El módulo de Inventario, la captura manual de pedidos, la unidad de medida, el nombre "Peso2", la recuperación por correo, Escuintla en el sitio, los roles fijos y, desde el 14/10, la validación de productos y clientes, la corrección del sector y una opción por camión ya **no** están en el prototipo.
 
@@ -128,7 +129,7 @@ Cada cambio que pidió el Ing. William el 29/09/2026, con su estado después de 
 
 | Id | Cambio | Estado | Dónde |
 |---|---|---|---|
-| CAM-29 | Sin control de inventario: se quitan el módulo de Inventario, la validación de existencias, las columnas de existencia y las devoluciones | Definido (docente: P-58) | [09](09-picking-inventario.md) |
+| CAM-29 | Sin control de inventario: se quitan el módulo de Inventario, la validación de existencias, las columnas de existencia y las devoluciones | Definido (aprobado por el docente el 16/10) | [09](09-picking-inventario.md) |
 | CAM-30 | Facturación: carga del .xlsx de Odoo al tablero de pedidos facturados (guardado en la base); opciones de envío a la derecha; arrastrar pedidos facturados de varios clientes a camiones o a "Cliente recoge en bodega" y de regreso; control de peso; botones por opción; cada envío crea un pedido con correlativo | Definido | [06](06-picking-facturacion.md) |
 | CAM-31 | Tablero: "Modo claro" y "Modo oscuro" en lugar de "TV" y "Tableta" | Definido | [07](07-picking-bodega.md) |
 | CAM-32 | Reportes: filtros diario, semanal (lunes a domingo), mensual, anual y por rango, también en "Rutas realizadas" | Definido | [10](10-picking-reportes.md) |
@@ -245,3 +246,11 @@ El 15/10/2026 el coordinador revisó el prototipo con los cambios de la reunión
 | CAM-93 | Bodega: lote en verde; en el modo oscuro del tablero, en gris | [07](07-picking-bodega.md) |
 | CAM-94 | Tablero: la silueta del camión grande para todos los camiones; cuadro del pedido en verde lima, distinto del verde de la ruta (antes gris), en el módulo y en el modo claro del tablero en pantalla completa; en el modo oscuro del tablero, gris (16/10) | [07](07-picking-bodega.md) |
 | CAM-95 | Bodega: el "Detalle de Ruta" y el "Detalle de Pedido" muestran completos todos los pedidos facturados. Ruta: sin el texto al pie junto a "Ruta Entregada" | [07](07-picking-bodega.md), [08](08-picking-ruta.md) |
+
+## Ajustes del coordinador del 16/10/2026
+
+Definidos e implementados en el prototipo el 16/10/2026.
+
+| Id | Cambio | Dónde |
+|---|---|---|
+| CAM-96 | Reportes: botones **Excel** y **PDF** también en "Rutas realizadas" y "Bitácora", como en Despacho | [10](10-picking-reportes.md) |

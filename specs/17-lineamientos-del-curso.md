@@ -31,7 +31,7 @@ Además se entregan el repositorio (con un README de 16 secciones obligatorias) 
 | 2 (14/10) | **Avance funcional real**, con lógica y persistencia: sitio con CMS, autenticación y roles, contenido, industrias y catálogo; picking con productos, equivalencias (Peso de Conversión), inventario, pedidos y generación del picking, y avance en preparación, estados y tablero. Además: arquitectura actualizada, diagramas de componentes, clases y secuencia, ER actualizado, diccionario de datos, estructura del repositorio, migraciones, dependencias, seguridad, README preliminar, casos de prueba iniciales y matriz de trazabilidad. **Demostración obligatoria:** pedido facturado → conversión → picking → preparación |
 | 3 (04/11) | Sistema completo y desplegado, los 6 documentos finales, pruebas con evidencia, capacitación y transferencia de accesos. **Demostración obligatoria del flujo completo:** pedido facturado → conversión → picking → preparación → actualización de inventario → carga → despacho → estado → reporte |
 
-> **P-58 (con el docente).** Desde el 29/09 el sistema no lleva inventario por decisión de INCOVSA. El Entregable 2 pide "inventario" y la demostración del Entregable 3 incluye "actualización de inventario". La exclusión se le explicará al docente en el Entregable 2. El coordinador espera que la apruebe, porque son requerimientos de la empresa, y **no impide seguir adelante** con el proyecto (11/10).
+> **P-58 (resuelto el 16/10).** Desde el 29/09 el sistema no lleva inventario por decisión de INCOVSA. El Entregable 2 pide "inventario" y la demostración del Entregable 3 incluye "actualización de inventario". La exclusión se le explicó al docente con la nota del 14/10 y el **Ing. Manuel Rojas la aprobó** (informado por el coordinador el 16/10).
 
 ## Cómo cubre el sistema lo que piden los lineamientos
 
@@ -40,7 +40,7 @@ Además se entregan el repositorio (con un README de 16 secciones obligatorias) 
 | Conversión de kilogramos a unidades | RN-01, con resto en kg para ventas fraccionadas |
 | Productos | **(13/10)** El producto llega en cada línea del archivo de Odoo, con su Peso de Conversión y su lote, y se usa tal como viene. El picking ya no tiene catálogo de productos |
 | Presentaciones y equivalencias | La presentación está en el nombre del producto de Odoo y la equivalencia es el **Peso de Conversión** en kg que trae cada línea del archivo (13/10). No hay entidades separadas de presentación o equivalencia |
-| Inventario, entradas y salidas, existencias | **No se cubre.** INCOVSA lo sacó del alcance el 29/09: el inventario lo lleva Odoo. Falta la aprobación del docente (P-58) |
+| Inventario, entradas y salidas, existencias | **No se cubre.** INCOVSA lo sacó del alcance el 29/09: el inventario lo lleva Odoo. El docente aprobó la exclusión (16/10) |
 | Pedidos pendientes de despacho | Rutas y pedidos En Preparación en Bodega |
 | Generación del picking | Carga del archivo de Odoo en Facturación, armado de rutas y pedidos, y agrupación por producto y lote con su conversión en Bodega |
 | Preparación y cambios de estado | Marcado por fila (también todo de una vez) y botón "Ruta Despachada" o "Pedido Despachado" (RN-11) |
