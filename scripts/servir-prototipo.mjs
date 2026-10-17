@@ -16,13 +16,24 @@ import { fileURLToPath } from "node:url";
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..", "entregable-1", "prototipos");
 const PUERTO = Number(process.argv[2] || 4173);
-const TIPOS = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".svg": "image/svg+xml", ".json": "application/json", ".png": "image/png", ".jpg": "image/jpeg" };
+const TIPOS = {
+  ".html": "text/html; charset=utf-8",
+  ".js": "text/javascript",
+  ".css": "text/css",
+  ".svg": "image/svg+xml",
+  ".json": "application/json",
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+};
 
 createServer(async (req, res) => {
   const ruta = decodeURIComponent(new URL(req.url, "http://localhost").pathname);
   const relativa = ruta === "/" ? "prototipo-simulacion-incovsa.html" : ruta.slice(1);
   const archivo = normalize(join(RAIZ, relativa));
-  if (!archivo.startsWith(RAIZ)) { res.writeHead(403).end(); return; }
+  if (!archivo.startsWith(RAIZ)) {
+    res.writeHead(403).end();
+    return;
+  }
   try {
     const datos = await readFile(archivo);
     res.writeHead(200, { "Content-Type": TIPOS[extname(archivo)] || "application/octet-stream" }).end(datos);

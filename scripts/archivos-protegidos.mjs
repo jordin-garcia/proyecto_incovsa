@@ -92,23 +92,31 @@ export function archivosDelPr(git = gitPorDefecto, entorno = process.env) {
       git(["rev-parse", "--verify", "--quiet", "origin/develop"]);
       rango = ["origin/develop...HEAD"];
     }
-    return git(["diff", "--name-only", "--no-renames", ...rango]).split(/\r?\n/).filter(Boolean);
+    return git(["diff", "--name-only", "--no-renames", ...rango])
+      .split(/\r?\n/)
+      .filter(Boolean);
   } catch {
     return null;
   }
 }
 
-const esPrincipal = import.meta.main ?? (process.argv[1] && pathToFileURL(realpathSync(resolve(process.argv[1]))).href === import.meta.url);
+const esPrincipal =
+  import.meta.main ??
+  (process.argv[1] && pathToFileURL(realpathSync(resolve(process.argv[1]))).href === import.meta.url);
 
 if (esPrincipal) {
   const autor = process.argv[2] ?? process.env.AUTOR_PR;
   if (!autor) {
-    console.error("Uso: AUTOR_PR=<usuario> node scripts/archivos-protegidos.mjs  (o: node scripts/archivos-protegidos.mjs <usuario>)");
+    console.error(
+      "Uso: AUTOR_PR=<usuario> node scripts/archivos-protegidos.mjs  (o: node scripts/archivos-protegidos.mjs <usuario>)",
+    );
     process.exit(2);
   }
   const archivos = archivosDelPr();
   if (archivos === null) {
-    console.error("No se pudo leer el diff del PR (¿falta fetch-depth: 2 en actions/checkout?): no se puede comprobar.");
+    console.error(
+      "No se pudo leer el diff del PR (¿falta fetch-depth: 2 en actions/checkout?): no se puede comprobar.",
+    );
     process.exit(1);
   }
   const prohibidos = archivosNoPermitidos(autor, archivos);
