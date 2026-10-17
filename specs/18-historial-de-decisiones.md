@@ -536,6 +536,15 @@ El coordinador respondió las preguntas que quedaban antes del plan y pidió cre
 | Instalación de SheetJS | Desde el sitio de SheetJS | Desde `vendor/xlsx-0.20.3.tgz` (decisión 85) |
 | Presentación del avance del Entregable 2 | 14/10, con el prototipo de simulación | Lunes 19/10, con la aplicación real (decisión 72) |
 
+### Respuestas del coordinador del 17/10/2026
+
+| Tema | Decisión |
+|---|---|
+| P-97: productos de cada industria | Opción (a): son los productos públicos del catálogo que tienen esa industria, en orden alfabético; se administran desde el Catálogo. La lista fija del prototipo no se usa ([05](05-sitio-web.md)) |
+| Bot de revisión | Funciona desde el primer PR: JG-08 se adelanta al sábado 17/10, antes de JG-02, y el coordinador guarda el token del bot ese mismo día |
+| Ramas | Se borraron todas las ramas salvo `main` y `develop`, y GitHub borra cada rama al integrar su PR |
+| Avisos por correo | Con las notificaciones de GitHub: recordatorio diario por persona, aviso a todo el equipo cuando una tarea termina y desbloquea otras, y aviso al autor cuando el bot rechaza su PR (decisión 87) |
+
 ### Verificación del 16/10/2026
 
 npm 12, que ya es la versión `latest`, bloquea por defecto las dependencias que se instalan desde una dirección web (`--allow-remote`), como el paquete de SheetJS del sitio de SheetJS. Por eso se guarda en `vendor/` (decisión 85).

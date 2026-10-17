@@ -35,6 +35,11 @@ gh auth setup-git
 ```
 Solo en Windows: `git config --global core.longpaths true`.
 
+**Avisos por correo (specs/16, decisión 87).** Los avisos del plan (tus tareas de cada día, las tareas que se desbloquean y los rechazos del bot) llegan como notificaciones de GitHub. Para recibirlos por correo:
+1. En https://github.com/settings/notifications, en "Participating, @mentions and custom", marca **Email**.
+2. En el repositorio, botón **Watch** → **Participating and @mentions** (o **All Activity** si quieres todo).
+3. Comprueba que el correo de tu cuenta de GitHub sea uno que revisas (https://github.com/settings/emails).
+
 ## 4. Clonar el repositorio y verificar el equipo
 
 ```bash

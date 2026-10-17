@@ -4,7 +4,7 @@
 
 ## ¿Cómo trabajamos?
 
-Usamos **desarrollo dirigido por especificaciones** con agentes de IA (specs/16, decisiones 59 a 86):
+Usamos **desarrollo dirigido por especificaciones** con agentes de IA (specs/16, decisiones 59 a 87):
 
 1. **Lo que hay que construir ya está escrito.** `specs/` describe todo el sistema (requisitos, reglas, datos, decisiones) y el prototipo aprobado (`entregable-1/prototipos/`) muestra cómo se ve y cómo se comporta cada pantalla.
 2. **El trabajo está dividido en tareas pequeñas.** Cada una está en un archivo de `plan/tareas/`, con su responsable, qué leer, qué hacer, qué archivos tocar, cómo verificar que funciona, de qué depende y qué día se hace.

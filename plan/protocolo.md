@@ -118,7 +118,7 @@ gh pr checks --watch
 - **Antes de que termine JG-08** todavía no hay CI ni integración automática: después de tu verificación local, integra con `gh pr merge --squash --delete-branch`.
 
 ### B11. Terminar
-- Ejecuta `git switch develop && git pull --ff-only`.
+- Ejecuta `git switch develop && git pull --ff-only`, borra tu rama local (`git branch -D <rama>`) y limpia las referencias de las ramas remotas ya borradas (`git fetch --prune`). GitHub borra la rama remota sola al integrar el PR.
 - Dale a la persona un resumen breve: qué se hizo, el enlace al PR, la evidencia y las decisiones tomadas.
 - Muéstrale lo que le toca después con `node scripts/tareas.mjs --hoy <clave>`.
 - Si pidió que continuaras con varias tareas, sigue con la siguiente.

@@ -6,7 +6,7 @@ responsable: Jordin García
 hito: E2
 prioridad: P1
 estado: pendiente
-depende_de: [JG-01]
+depende_de: [JG-01, JG-08]
 programada: 2026-10-17
 requisitos: [RNF-07, RNF-10, RNF-16]
 pantallas: []
@@ -14,7 +14,7 @@ pantallas: []
 
 # JG-02 · Proyecto base de Next.js, dependencias y calidad local
 
-**Responsable:** Jordin García · **Hito:** E2 · **Prioridad:** P1 · **Programada:** sáb 17/10 · **Depende de:** JG-01
+**Responsable:** Jordin García · **Hito:** E2 · **Prioridad:** P1 · **Programada:** sáb 17/10 · **Depende de:** JG-01, JG-08
 
 ## Objetivo
 Crear la aplicación vacía con el stack de `specs/16`, **todas** las dependencias del proyecto ya instaladas (así nadie más toca `package.json`), la estructura de carpetas de `plan/convenciones.md` §1, las herramientas de calidad locales y los scripts de `npm` que usa todo el plan. Es la base de todas las demás tareas.
@@ -82,5 +82,5 @@ npm ls xlsx next sharp better-auth prisma @prisma/client pdfmake file-type
 - Esquema de Prisma y semillas (JG-03), design system y componentes (JG-05), autenticación (JG-06), permisos (JG-07), CI (JG-08), cabeceras de seguridad y herramientas de seguridad (JG-11).
 
 ## Notas
-- Antes de esta tarea no hay CI: integra con `gh pr merge --squash --delete-branch` después de verificar en local (protocolo B10).
+- Esta tarea ya pasa por la CI y el bot de JG-08. Desde aquí, los trabajos de la CI que dependen de la aplicación corren completos.
 - En el `## Resultado`, deja la lista de versiones exactas instaladas y cómo usar `src/lib/fechas.ts`, `errores.ts` y `roles.ts`.

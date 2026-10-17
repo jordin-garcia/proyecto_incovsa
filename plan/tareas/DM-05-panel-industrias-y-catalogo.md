@@ -22,12 +22,11 @@ Las secciones **Industrias** (descripción y galería de cada una) y **Catálogo
 ## Contexto que debes leer
 - `specs/05` §"Panel administrativo" (filas Industrias y Catálogo) y §"Producto público en el panel" **completos**
 - `specs/03` (permisos `sit.industrias` y `sit.catalogo`); `specs/14` (PRODUCTO_SITIO, PRODUCTO_INDUSTRIA, IMAGEN)
-- `specs/19`: **P-97** (productos de cada industria)
 - Prototipo: `#/panel/industrias?cuenta=ejemplo.08` y `#/panel/catalogo?cuenta=ejemplo.08`; `panel.js` › `industrias()` y `catalogo()` (tabla, ventana del producto, eliminar con confirmación)
 - `## Resultado` de DM-03 y DM-04
 
 ## Qué hacer
-1. **Industrias** (`/panel/industrias`, `sit.industrias`): una tarjeta por industria con su ícono y número, su galería (hasta 5) y su descripción, con "Guardar"; bitácora "Cambio de contenido del sitio" con la industria. Si P-97 dice que los productos de cada industria se editan aquí, se agregan según `specs/05`.
+1. **Industrias** (`/panel/industrias`, `sit.industrias`): una tarjeta por industria con su ícono y número, su galería (hasta 5) y su descripción, con "Guardar"; bitácora "Cambio de contenido del sitio" con la industria. Los productos de cada industria **no** se editan aquí: salen del Catálogo (P-97, specs/05).
 2. **Catálogo** (`/panel/catalogo`, `sit.catalogo`): tabla con imagen (con el número de imágenes si hay más de una), nombre, presentación, países de origen e industrias, y acciones editar y eliminar; botón "Nuevo producto". La ventana del producto pide nombre (obligatorio), descripción, presentación, países de origen (texto), industrias (una o varias) y galería (hasta 5). Eliminar pide confirmación y borra sus imágenes. La bitácora registra "Creación de producto público", "Edición de producto público" y "Eliminación de producto público" (los nombres del prototipo).
 3. Acciones con `exigirPermiso` y Zod; los cambios se ven de inmediato en el sitio público.
 
