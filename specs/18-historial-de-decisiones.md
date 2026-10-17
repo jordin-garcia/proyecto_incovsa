@@ -29,6 +29,7 @@
 | 13/10/2026 | Reunión 5, virtual (Ing. William Ambrossio y el equipo completo), de 18:00 a 21:30. Se presentó el prototipo de simulación con los cambios de la reunión 4; el Ing. William lo aprobó y pidió nuevos cambios. Notas de Daniela Marín (dicen "14 de octubre" por error) | `docs/Reuniones/Reunion5_131026/` |
 | 13/10/2026 | Entrega del logotipo de Inquiserca | `docs_incovsa/PAGINA WEB/INFORMACION EMPRESA/Inquiserca.jpeg` |
 | 14/10/2026 | Respuestas del coordinador a las dudas sobre cómo aplicar los cambios de la reunión 5 | Esta carpeta |
+| 16/10/2026 | El coordinador informa que el Ing. Manuel Rojas aprobó la exclusión del inventario, que el Ing. William Ambrossio contratará un VPS y que el archivo de Odoo completo llegará en los próximos días. Responde las 25 preguntas técnicas del equipo, decide usar Docker solo en producción y pide la exportación en "Rutas realizadas" y "Bitácora" | Esta carpeta |
 
 ## Decisiones reemplazadas
 
@@ -428,6 +429,50 @@ El 15/10/2026, después de los ajustes del coordinador, se comparó esta carpeta
 | Documentos de apoyo de `entregable-1/` | `LEEME.md` decía que el Documento 1 v0.2 estaba alineado con esta carpeta y describía el prototipo navegable y los `.dc.html` ya borrados; la guía de cambios del prototipo y Pickit Visual no decían que eran históricos | `LEEME.md` actualizado; la guía y Pickit Visual se marcan como registros históricos |
 | Textos desactualizados | [05](05-sitio-web.md) usaba el nombre anterior del permiso de documentos; [15](15-requerimientos-no-funcionales.md) (RNF-06) y [17](17-lineamientos-del-curso.md) usaban la terminología anterior al 13/10 | Se corrigieron |
 
+## Decisiones del 16/10/2026
+
+Antes de preparar el plan de desarrollo (P-40), el equipo hizo al coordinador 25 preguntas sobre las decisiones técnicas que faltaban, cada una con su recomendación. El coordinador aceptó las recomendaciones, con los cambios que se indican abajo. El detalle está en las decisiones 27 a 58 de [16-arquitectura-y-tecnologia.md](16-arquitectura-y-tecnologia.md) (versión 1.5 de esta carpeta).
+
+### Novedades informadas por el coordinador
+
+| Tema | Novedad |
+|---|---|
+| Exclusión del inventario (P-58) | El Ing. Manuel Rojas la **aprobó**. P-58 se cierra |
+| Hosting (P-10) | El Ing. William Ambrossio se comprometió a contratar un **VPS**. Queda pendiente la fecha de acceso |
+| Archivo de Odoo completo (P-91) | Se compartirá en los próximos días |
+
+### Respuestas del coordinador que cambian la recomendación del equipo
+
+| Pregunta | Recomendación del equipo | Decisión del coordinador |
+|---|---|---|
+| Ambientes | Producción y un ambiente de pruebas en el mismo VPS | **Solo producción** |
+| Despliegue | Script manual por SSH sobre una etiqueta de `main` | El primer despliegue se hace **cuando la aplicación esté completa**; después, **cada despliegue es automático desde GitHub** |
+| Instalación en el VPS | Directa, con `systemd` | El coordinador preguntó si Docker no era más fácil. El equipo explicó que en las computadoras del equipo no conviene (ya tienen Node y PostgreSQL, y en Windows Docker hace lenta la recarga), pero en producción sí, porque con el despliegue automático el VPS solo descarga la imagen ya compilada y se puede volver a la anterior. El coordinador aprobó **Docker Compose solo en producción** (Caddy, aplicación y PostgreSQL 18) |
+| Exportación de reportes | PDF con pdfmake y Excel con SheetJS, solo en "Despacho" | Las mismas opciones también en **"Rutas realizadas"** y **"Bitácora"** (CAM-96), en esta carpeta y en el prototipo |
+
+### Decisiones reemplazadas el 16/10/2026
+
+| Tema | Antes | Ahora (16/10) |
+|---|---|---|
+| Exportación de reportes | Solo la pestaña "Despacho" | Las tres pestañas de Reportes ([10](10-picking-reportes.md)) |
+| Librería para el PDF de los reportes | Se definía en el Entregable 3 (Documento 2 v0.4) | pdfmake, en el servidor |
+| Despliegue | Dependía del hosting que definiera INCOVSA (P-10) | VPS con Docker Compose; primer despliegue con la aplicación completa y después automático desde `main` |
+| Tiempo de expiración de las sesiones | Pendiente, sin valor provisional (P-07) | 7 días renovados con el uso, configurable, mientras INCOVSA define el valor (P-07 sigue abierto) |
+| Consulta de respaldo del tiempo real | "Cada pocos segundos" | Cada 5 segundos |
+| Revisión de los pull requests | La hacía Jordin (o otro integrante si el autor era Jordin) | Cualquier integrante distinto del autor; Jordin revisa siempre los que tocan el esquema, los permisos, la bitácora o la autenticación |
+| Carpeta `scripts/` | Ya no hacía falta (13/10) | Contiene el comando `crear-admin` y el script de respaldo |
+| Lote vacío | Podía guardarse como nulo | Se guarda como texto vacío ([14](14-modelo-de-datos.md)) |
+
+### Pendientes resueltos y nuevos el 16/10/2026
+
+| Pendiente | Resolución |
+|---|---|
+| P-58 | El docente aprobó la exclusión del inventario |
+| P-93 (nuevo) | DNS de incovsa.com en Cloudflare |
+| P-94 (nuevo) | Correo y cuentas de INCOVSA para los servicios y el repositorio |
+| P-95 (nuevo) | Si la cuenta de GitHub tiene GitHub Pro |
+| P-96 (nuevo) | Alinear el Documento 2 y el README del repositorio con la versión 1.5 |
+
 ## Documentos no alineados con las reuniones 4 y 5
 
 Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los cambios del 29/09, del 11/10 ni del 13/10:
@@ -436,3 +481,5 @@ Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los camb
 - las capturas de los prototipos `.dc.html` (los archivos `.dc.html` y `canvas.json` se borraron del repositorio el 14/10, en el commit "Prototipo mejorado").
 
 El prototipo de simulación se actualizó el 14/10/2026 con los cambios de la reunión 5 y el 15/10/2026 con los ajustes del coordinador ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)), y el Documento 2 pasó a la versión 0.2 (la entregada el 14/10) y el 15/10 a la versión 0.3, alineada con la especificación 1.3, y después a la versión 0.4, alineada con la especificación 1.4.
+
+El Documento 2 v0.4 y el README del repositorio **todavía no** incorporan las decisiones del 16/10/2026 (versión 1.5 de esta carpeta; P-96). Mientras tanto vale lo que dice esta carpeta.

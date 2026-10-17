@@ -33,7 +33,7 @@ Este es el modelo **conceptual**. Los nombres físicos, los tipos, los índices 
 | CAMION | identificación, capacidad máxima en kg, fecha de eliminación | Sede |
 | OPCION_ENVIO | tipo (camión o cliente recoge en bodega), fecha y hora programadas (vacías hasta que se escriben) | Sede, camión elegido (0..1, solo en la de camión), piloto elegido (usuario con rol "Piloto", 0..1). Hay **dos por sede**, una de cada tipo (13/10) |
 | PEDIDO_FACTURADO | **número de Odoo** (tercer segmento de la Referencia), referencia completa, **nombre del cliente** (`Contacto`), **sector** (`Contacto/Ciudad`), fecha de carga, posición (orden en el tablero o en la opción de envío) | Sede, usuario que lo cargó, opción de envío (0..1; vacía = en el tablero), envío (0..1; se llena al enviar) |
-| DETALLE_PEDIDO_FACTURADO | **producto** (texto del archivo), **lote** (texto, puede venir vacío), **Peso de Conversión** en kg, cantidad en kg, orden en el archivo | Pedido facturado |
+| DETALLE_PEDIDO_FACTURADO | **producto** (texto del archivo), **lote** (texto; si viene vacío se guarda como texto vacío, 16/10), **Peso de Conversión** en kg, cantidad en kg, orden en el archivo | Pedido facturado |
 | ENVIO | tipo (**ruta** o **pedido**), **número del día**, fecha de envío a bodega, **fecha y hora programadas**, posición actual en la cola de Bodega | Sede, estado actual (ESTADO_ENVIO), usuario que lo envió, camión y piloto (solo ruta), pedidos facturados (1:N) |
 | LINEA_PREPARACION | producto, lote, Peso de Conversión en kg, cantidad total en kg, marcado, posición actual | Envío. Única por (envío, producto, lote, Peso de Conversión) (RN-51) |
 | ESTADO_ENVIO | nombre: En Preparación, Despachado, En Ruta o Entregado | — |
@@ -52,6 +52,7 @@ Este es el modelo **conceptual**. Los nombres físicos, los tipos, los índices 
 - El orden de prioridad de Bodega y el orden de las filas de Ruta antes de la entrega **no** se guardan como historial ni en la bitácora (RN-28, RN-29). Se guarda **solo el orden actual**.
 - El marcado de LINEA_PREPARACION no guarda quién marcó (RN-20).
 - Las líneas guardan el Peso de Conversión con el que llegaron en el archivo (RN-33).
+- **Lote vacío (16/10):** en DETALLE_PEDIDO_FACTURADO y LINEA_PREPARACION el lote **no** admite nulo. Un lote que no viene en el archivo se guarda como **texto vacío**, y Bodega lo muestra como "Sin lote". Así la regla de una línea de preparación por (envío, producto, lote, Peso de Conversión) se cumple también sin lote: en PostgreSQL dos valores nulos no se consideran iguales en una restricción de unicidad.
 - BITACORA registra también los inicios de sesión, los intentos fallidos y las consultas de usuarios inexistentes del acceso personal (RN-39). En esos casos el usuario puede no existir: el registro guarda el nombre de usuario escrito y la relación con USUARIO queda vacía.
 
 ### Entidades y atributos eliminados

@@ -79,7 +79,7 @@ Catálogo único de requerimientos funcionales. La columna **Estado** compara ca
 | RF-SL-35 | El sistema maneja los estados de la ruta y del pedido y sus transiciones según RN-11 | Vigente (RN-11 modificada) |
 | RF-SL-36 | La bitácora registra las operaciones de los usuarios, incluidos los inicios de sesión, y se consulta en la pestaña "Bitácora" de Reportes | Modificado |
 | RF-SL-37 | El sistema guarda el registro histórico de las rutas y lo muestra en Reportes. **(13/10)** Es el único lugar donde se consulta | Modificado |
-| RF-SL-38 | Módulo de Reportes: despacho por producto con indicadores y exportación a Excel y PDF, rutas realizadas y bitácora | Modificado |
+| RF-SL-38 | Módulo de Reportes: despacho por producto con indicadores y exportación a Excel y PDF, rutas realizadas y bitácora. **(16/10)** "Rutas realizadas" y "Bitácora" también se exportan a Excel y PDF | Modificado |
 | RF-SL-39 | Acceso al módulo de Inventario | **Eliminado** (29/09) |
 | RF-SL-40 | Consulta de existencias por sede | **Eliminado** (29/09) |
 | RF-SL-41 | Registro de compras | **Eliminado** (29/09) |

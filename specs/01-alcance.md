@@ -58,7 +58,7 @@ El módulo de **Inventario se eliminó** el 29/09/2026 ([09-picking-inventario.m
 - Tablero de preparación con lote, marcado por línea, prioridad y orden por peso compartidos en tiempo real, en modo claro u oscuro.
 - Ruta del piloto, con recorrido y cierre de entrega.
 - Estados de rutas y pedidos y registro histórico de rutas en Reportes.
-- Reportes de despacho y rutas, con filtros por periodo y exportación a Excel y PDF.
+- Reportes de despacho, rutas realizadas y bitácora, con filtros por periodo y exportación a Excel y PDF en las tres pestañas (16/10).
 - Configuración de camiones.
 - Administración de usuarios del picking con rol, sedes y permisos por casillas.
 - Bitácora de las acciones de los usuarios, incluidos los inicios de sesión, consultable en Reportes.
@@ -69,7 +69,7 @@ Cada exclusión tiene su motivo. Ninguna se debe presentar como implementada.
 
 | Exclusión | Motivo |
 |---|---|
-| **Control de inventario**: existencias, entradas (compras, ajustes, traslados, devoluciones) y salidas | Decisión de INCOVSA (29/09). El sistema está pensado para integrarse en el futuro con Odoo, que es el que lleva el inventario de todas las bodegas. Falta la aprobación del docente (P-58) |
+| **Control de inventario**: existencias, entradas (compras, ajustes, traslados, devoluciones) y salidas | Decisión de INCOVSA (29/09). El sistema está pensado para integrarse en el futuro con Odoo, que es el que lleva el inventario de todas las bodegas. Aprobada por el docente (16/10) |
 | Validación y descuento de existencias al registrar un pedido | Consecuencia de lo anterior (29/09) |
 | Devoluciones y marca "Con devolución" | Eran entradas de inventario (29/09) |
 | Captura manual de pedidos fila por fila | Reemplazada por la carga del archivo de Odoo (29/09) |

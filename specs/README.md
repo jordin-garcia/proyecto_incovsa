@@ -2,8 +2,8 @@
 
 Esta carpeta es la **fuente de verdad** del proyecto. Todo lo que el equipo o un agente de IA necesita saber para diseñar, programar, probar o documentar el sistema debe estar aquí.
 
-**Versión:** 1.4
-**Fecha de corte:** 15 de octubre de 2026 (incorpora los cambios de la reunión 4, del 29/09/2026, las respuestas del coordinador del 11/10/2026 y del 12/10/2026, los cambios de la reunión 5, del 13/10/2026, con las respuestas del coordinador del 14/10/2026, los ajustes del coordinador del 15/10/2026 y las correcciones de alineación con el Documento 2 y el prototipo del mismo día)
+**Versión:** 1.5
+**Fecha de corte:** 16 de octubre de 2026 (incorpora los cambios de la reunión 4, del 29/09/2026, las respuestas del coordinador del 11/10/2026 y del 12/10/2026, los cambios de la reunión 5, del 13/10/2026, con las respuestas del coordinador del 14/10/2026, los ajustes del coordinador del 15/10/2026, las correcciones de alineación con el Documento 2 y el prototipo del mismo día, y las decisiones técnicas y de despliegue del 16/10/2026)
 **Responsable de mantenerla:** Jordin García (coordinador)
 
 ---
@@ -41,15 +41,15 @@ Esta carpeta es la **fuente de verdad** del proyecto. Todo lo que el equipo o un
 | [17-lineamientos-del-curso.md](17-lineamientos-del-curso.md) | Exigencias del docente y cómo las cubre el sistema |
 | [18-historial-de-decisiones.md](18-historial-de-decisiones.md) | Fuentes, decisiones y decisiones reemplazadas |
 | [19-pendientes.md](19-pendientes.md) | Todo lo que falta definir o recibir |
-| [20-prototipo-aprobado.md](20-prototipo-aprobado.md) | Prototipo de simulación aprobado, design system y registro de cambios de las reuniones 4 y 5 y de los ajustes del 15/10 |
+| [20-prototipo-aprobado.md](20-prototipo-aprobado.md) | Prototipo de simulación aprobado, design system y registro de cambios de las reuniones 4 y 5 y de los ajustes del 15/10 y del 16/10 |
 
 ## Convenciones
 
-- **Códigos de requerimiento:** `RF-SW-xx` (sitio web), `RF-SL-xx` (sistema logístico o picking), `RNF-xx` (no funcionales), `RN-xx` (reglas de negocio), `CU-xx` (casos de uso), `P-xx` (pendientes), `CAM-xx` (cambios de las reuniones 4 y 5 y ajustes del 15/10, en [20-prototipo-aprobado.md](20-prototipo-aprobado.md)).
+- **Códigos de requerimiento:** `RF-SW-xx` (sitio web), `RF-SL-xx` (sistema logístico o picking), `RNF-xx` (no funcionales), `RN-xx` (reglas de negocio), `CU-xx` (casos de uso), `P-xx` (pendientes), `CAM-xx` (cambios de las reuniones 4 y 5 y ajustes del 15/10 y del 16/10, en [20-prototipo-aprobado.md](20-prototipo-aprobado.md)).
 - **Estado de un requerimiento o regla:** *Vigente* (sin cambios desde el Documento 1), *Modificado* (cambió su contenido), *Nuevo* (no existía en el Documento 1), *Eliminado* (ya no aplica) o *Pendiente* (falta definirlo).
 - **Los códigos no se reutilizan.** Un requerimiento eliminado conserva su código con estado *Eliminado*, para que la trazabilidad con el Documento 1 no se rompa.
 - **Unidades:** todas las cantidades del sistema de picking están en **kilogramos (kg)**. Las capacidades de camión también.
-- **Cambios de las reuniones 4 y 5 y respuestas posteriores:** se marcan en el texto con **(29/09)**, **(11/10)**, **(13/10)**, **(14/10)** o **(15/10)**, o con una nota "Cambio del …".
+- **Cambios de las reuniones 4 y 5 y respuestas posteriores:** se marcan en el texto con **(29/09)**, **(11/10)**, **(13/10)**, **(14/10)**, **(15/10)** o **(16/10)**, o con una nota "Cambio del …".
 - **Peso de Conversión:** desde el 11/10 es el nombre del dato que antes se llamaba "Peso2". Desde el 13/10 se toma de la columna `Movimientos de stock/Producto/Peso` del archivo de Odoo.
 - **Fechas:** formato dd/mm/aaaa.
 

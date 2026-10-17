@@ -28,16 +28,22 @@ La contraparte lo revisó y no tuvo objeción.
 | Interfaz | Tailwind CSS y shadcn/ui, configurados con los tokens del design system del prototipo aprobado ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)) |
 | Lectura de .xlsx | **SheetJS Community Edition 0.20.3**, instalada desde el sitio oficial (`npm i --save https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz`), **no** desde el registro de npm, cuya versión 0.18.5 está abandonada y es vulnerable. Medidas en "Decisiones técnicas" (12/10) |
 | Validación | Zod, en cliente y servidor |
-| Exportación de reportes | PDF y Excel, como en el prototipo aprobado ([10-picking-reportes.md](10-picking-reportes.md)) |
-| Pruebas automatizadas | Vitest. **La conversión, la lectura del archivo de Odoo y la verificación de permisos y sedes deben tener pruebas obligatoriamente** (los movimientos de existencias ya no existen; permisos y sedes desde el 12/10) |
-| Control de versiones | Git y GitHub, repositorio privado |
+| Exportación de reportes | **(16/10)** Excel con **SheetJS** y PDF con **pdfmake**, generados en el servidor, en las tres pestañas de Reportes ([10-picking-reportes.md](10-picking-reportes.md)) |
+| Formularios | **(16/10)** **React Hook Form** con su resolvedor de Zod: valida al salir de cada campo con el mismo esquema que vuelve a validar el servidor |
+| Arrastrar y soltar | **(16/10)** **`@dnd-kit/core`** y **`@dnd-kit/sortable`**, en Facturación, Bodega y Ruta |
+| Fechas y zona horaria | **(16/10)** **date-fns 4** con **`@date-fns/tz`**, fijado a `America/Guatemala` |
+| Imágenes | **(16/10)** **`file-type`** para validar el formato por su contenido y **`sharp`** para volver a codificarlas ("Entradas y archivos") |
+| Pruebas automatizadas | Vitest. **La conversión, la lectura del archivo de Odoo y la verificación de permisos y sedes deben tener pruebas obligatoriamente** (los movimientos de existencias ya no existen; permisos y sedes desde el 12/10). **(16/10)** Además, **Playwright** para las pruebas de extremo a extremo (decisión 46) |
+| Formato y estilo del código | ESLint y **Prettier** (16/10) |
+| Control de versiones | Git y GitHub, repositorio privado. **(16/10)** Integración continua con **GitHub Actions** y seguimiento de tareas con **GitHub Issues y Projects** |
+| Producción | **(16/10)** **Docker Compose** en un VPS con **Caddy**, la aplicación y PostgreSQL 18. En las computadoras del equipo no se usa Docker ("Despliegue", abajo) |
 
 ## Almacenamiento
 
 | Qué | Dónde |
 |---|---|
 | Datos | PostgreSQL |
-| Imágenes del sitio | **Cloudflare R2, plan gratuito**. En la base de datos solo se guarda su dirección |
+| Imágenes del sitio | **Cloudflare R2, plan gratuito**. En la base de datos solo se guarda su dirección. **(16/10)** Se sirven desde el subdominio `imagenes.incovsa.com`, conectado al bucket, lo que requiere que el DNS de incovsa.com esté en Cloudflare (P-93). La dirección gratuita de R2 (`r2.dev`) tiene límite de uso y no se usa en producción |
 | Documentos técnicos (FT, HS, COA) | **Google Drive de la empresa** (13/10). En la base de datos solo se guardan los enlaces, que el sistema muestra únicamente a quien tiene permiso. El sistema ya no guarda archivos PDF |
 
 ## Servicios externos
@@ -47,10 +53,13 @@ La contraparte lo revisó y no tuvo objeción.
 | Cloudflare R2 | Imágenes del sitio y, en un bucket privado aparte, los respaldos (12/10) |
 | Google Drive de la empresa | Aloja los documentos técnicos. El sistema guarda sus enlaces, muestra la vista previa de Drive y el enlace de descarga según los permisos (13/10) |
 | Odoo | Un enlace al inicio de sesión. Además, Facturación **lee el archivo .xlsx que el facturador exporta de Odoo** (29/09). No hay conexión directa con Odoo |
+| Cloudflare DNS | **(16/10)** DNS de incovsa.com, plan gratuito, para conectar `imagenes.incovsa.com` al bucket de R2 (P-93) |
+| GitHub | **(16/10)** Repositorio, integración continua (GitHub Actions) y registro de imágenes de Docker (GHCR) del despliegue automático |
+| VPS | **(16/10)** Servidor de producción, que contrata INCOVSA (P-10) |
 
 No hay más integraciones. La integración directa con Odoo es a futuro y está fuera del alcance (29/09). **El sistema no envía correos** (13/10): las solicitudes de contacto solo se guardan en el sistema y las contraseñas las restablecen Gerencia o Soporte, así que no hace falta una cuenta SMTP.
 
-## Seguridad (12/10 y 14/10)
+## Seguridad (12/10, 14/10 y 16/10)
 
 Medidas que el equipo adoptó el 12/10/2026 para que la aplicación sea segura y mantenible en el tiempo. Complementan RNF-03 a RNF-05, RNF-09, RNF-10, RNF-12, RNF-15 y RNF-16 ([15-requerimientos-no-funcionales.md](15-requerimientos-no-funcionales.md)).
 
@@ -69,7 +78,11 @@ Medidas que el equipo adoptó el 12/10/2026 para que la aplicación sea segura y
 - **Límite de intentos de inicio de sesión** (RNF-15): 5 intentos fallidos seguidos de un mismo usuario lo bloquean 15 minutos, y 20 intentos fallidos desde una misma dirección IP en 15 minutos la bloquean 15 minutos. Un inicio de sesión correcto reinicia el conteo del usuario. Los intentos se cuentan en la base de datos, a partir de la bitácora (RN-39), para que no se pierdan si se reinicia el servidor.
 - **Paso del usuario del acceso personal (13/10 y 14/10):** dice si el usuario existe, por pedido de la contraparte ([03](03-roles-y-accesos.md)). Cada consulta de un usuario que no existe cuenta como intento fallido de la dirección IP (20 en 15 minutos la bloquean) y queda en la bitácora.
 - El mensaje de la contraseña incorrecta no dice si lo que falló es el usuario o la contraseña.
-- El tiempo de expiración de las sesiones sigue pendiente (P-07).
+- **Una configuración de Better Auth por sistema (16/10):** la administración del sitio y el picking tienen cada uno su configuración de Better Auth, con **su propia cookie de sesión** (prefijo distinto). Así una persona puede estar conectada a los dos sistemas a la vez en el mismo navegador, como en el prototipo, y cerrar uno no cierra el otro. Cada configuración solo acepta las cuentas de su sistema y las del sistema "ambos" (Gerencia y Soporte). `proxy.ts` y `exigirPermiso` leen la cookie del sistema al que pertenece cada área. Las dos comparten las tablas de usuarios y sesiones.
+- **Expiración (16/10):** la sesión vence por falta de uso y se renueva mientras se usa. Mientras INCOVSA no defina el tiempo (P-07) se usa el valor por omisión de Better Auth: **7 días**, renovados con el uso una vez al día. El tiempo se configura con una variable de entorno.
+- **Cierre forzado (16/10):** al eliminar o desactivar un usuario, o al restablecer su contraseña, se borran todas sus sesiones.
+- **Dirección IP (16/10):** la aplicación toma la dirección IP del usuario solo de la cabecera que agrega Caddy, para que nadie pueda falsearla y saltarse el límite de intentos por dirección IP.
+- **Primer administrador (16/10):** se crea con el comando `npm run crear-admin`, que pide en la terminal el nombre de usuario y la contraseña; en producción se ejecuta dentro del contenedor de la aplicación. Ninguna credencial queda en el repositorio ni en la semilla. Quién es está pendiente (P-08).
 
 ### Entradas y archivos
 
@@ -77,8 +90,14 @@ Medidas que el equipo adoptó el 12/10/2026 para que la aplicación sea segura y
 - Archivos subidos:
   - el .xlsx de Odoo y las imágenes se validan por su **contenido**, no solo por la extensión;
   - el servidor genera el nombre con que se guarda cada imagen en R2.
+- **Imágenes (16/10):**
+  - se aceptan solo **JPG, PNG y WebP**, comprobados por su contenido con `file-type`. No se aceptan SVG, porque pueden llevar código, ni GIF;
+  - máximo **5 MB** por imagen;
+  - el servidor las vuelve a codificar con `sharp`: quita los metadatos (EXIF y ubicación GPS), las reduce a un máximo de **2000 px de ancho** y las guarda en **WebP**, que conserva la transparencia de los logotipos;
+  - la imagen pasa siempre por el servidor antes de guardarse en R2; el navegador no la sube directo a R2.
+- **Tamaño de lo que se envía al servidor (16/10):** el límite de las acciones del servidor sube a **3 MB**, para que entre el archivo de Odoo de hasta 2 MB.
 - Enlaces de la documentación interna (13/10): se aceptan solo direcciones `https://` de Google Drive (`drive.google.com` o `docs.google.com`). El sistema obtiene el identificador del archivo y arma con él la dirección de la vista previa y la de descarga; nunca inserta en la página una dirección que no sea de Google Drive.
-- **Base de datos:** solo consultas de Prisma, que son parametrizadas. No se arman consultas SQL uniendo textos (no se usa `$queryRawUnsafe` con datos del usuario).
+- **Base de datos:** solo consultas de Prisma, que son parametrizadas. No se arman consultas SQL uniendo textos (no se usa `$queryRawUnsafe` con datos del usuario). El bloqueo de la opción de envío (decisión 41) usa `$queryRaw` con plantilla, que también es parametrizada.
 - **Contenido de los usuarios y del archivo de Odoo** (noticias, solicitudes, clientes, sectores, productos y lotes del archivo): se muestra siempre escapado. No se usa `dangerouslySetInnerHTML` con ese contenido.
 - **Peticiones falsificadas (CSRF):** las acciones del servidor de Next.js verifican el origen; las rutas de la API que cambian datos también lo verifican.
 
@@ -87,6 +106,7 @@ Medidas que el equipo adoptó el 12/10/2026 para que la aplicación sea segura y
 - HTTPS en todo el sitio (RNF-12), con HSTS.
 - Cabeceras de seguridad (RNF-16): `Content-Security-Policy` (que permita las imágenes de Cloudflare R2, los mapas insertados de Google Maps y la vista previa de Google Drive, specs/05), `X-Content-Type-Options: nosniff`, `Referrer-Policy` y protección contra que otro sitio inserte el nuestro en un marco (`frame-ancestors`).
 - Los errores que ve el usuario no muestran detalles técnicos; el detalle queda solo en el registro del servidor.
+- **(16/10)** Caddy obtiene y renueva solo el certificado HTTPS y agrega la cabecera HSTS.
 
 ### Secretos y dependencias
 
@@ -97,7 +117,8 @@ Medidas que el equipo adoptó el 12/10/2026 para que la aplicación sea segura y
 
 - Los respaldos de PostgreSQL son **automáticos** y se prueba la restauración (RNF-09). Desde el 13/10 no hay PDF en el servidor: los documentos técnicos están en el Google Drive de la empresa.
 - Frecuencia: **diaria, en la noche** (`pg_dump` de la base). Se conservan **7 diarios y 4 semanales**.
-- Destino: fuera del servidor, en un bucket **privado** de Cloudflare R2, distinto del de las imágenes. Los detalles dependen del hosting (P-10).
+- Destino: fuera del servidor, en un bucket **privado** de Cloudflare R2, distinto del de las imágenes.
+- **Cómo (16/10):** una tarea de `cron` del VPS ejecuta `pg_dump` dentro del contenedor de PostgreSQL y sube el archivo a R2 con `rclone`. El mismo script borra los respaldos que sobran (conserva 7 diarios y 4 semanales). La credencial de R2 del VPS solo tiene acceso a ese bucket. No se agrega un cifrado propio: R2 cifra lo que guarda, y una llave de cifrado perdida dejaría los respaldos inservibles.
 
 ### Mantenibilidad
 
@@ -107,9 +128,58 @@ Medidas que el equipo adoptó el 12/10/2026 para que la aplicación sea segura y
 ## Despliegue
 
 - Hace falta un servidor capaz de ejecutar Node.js y PostgreSQL. Un hosting compartido tradicional (cPanel con PHP) no sirve.
-- La contraparte iba a probar la compatibilidad del hosting actual; el resultado está pendiente (P-10).
 - La empresa paga el hosting y el dominio.
 - El Entregable 2 se prueba **solo en las computadoras del equipo**. No hay entorno de pruebas en internet ni se contrata un servicio de terceros (12/10, resuelve P-11).
+
+> **Decisiones del 16/10/2026.** El Ing. William Ambrossio se comprometió a contratar un **VPS** (P-10). El equipo definió cómo se instala, se despliega y se respalda la aplicación.
+
+### Servidor (VPS)
+
+Características que se le piden a INCOVSA:
+
+| Recurso | Mínimo |
+|---|---|
+| Sistema operativo | Ubuntu Server 24.04 LTS |
+| Procesador | 2 vCPU |
+| Memoria | 4 GB de RAM |
+| Disco | 80 GB SSD |
+| Red | Dirección IP fija |
+| Acceso | SSH con llave |
+
+### Ambientes
+
+- **Desarrollo:** en las computadoras del equipo, **sin Docker**, con el Node.js 24 y el PostgreSQL 18 que ya tienen instalados (`npm run dev`).
+- **Integración continua:** GitHub Actions, con su propio PostgreSQL 18.
+- **Producción:** el VPS, en `incovsa.com`. **Solo hay ambiente de producción**: no hay ambiente de pruebas en internet.
+
+### Producción con Docker Compose
+
+En el VPS, un archivo `docker-compose.yml` con tres servicios:
+
+| Servicio | Qué hace |
+|---|---|
+| Caddy | HTTPS con certificado automático, HSTS y redirección al puerto de la aplicación. Maneja sin configuración extra los avisos en tiempo real (SSE) |
+| Aplicación | Next.js compilado como servidor independiente (`output: 'standalone'`), en **un solo proceso**, porque el aviso en tiempo real vive en la memoria del servidor (decisión 10) |
+| PostgreSQL 18 | La base de datos, con sus datos en un volumen de Docker |
+
+- Las credenciales están en un archivo de variables de entorno del VPS, **nunca dentro de la imagen** ni en el repositorio.
+- Solo quien despliega necesita conocer Docker; el resto del equipo no lo usa.
+
+### Despliegue
+
+- **Primer despliegue:** cuando la aplicación esté **completa**. Antes no se despliega.
+- **Después, cada despliegue es automático desde GitHub.** Al integrar en `main`, GitHub Actions:
+  1. corre las revisiones de integración continua ("Forma de trabajo");
+  2. compila la imagen de Docker de la aplicación y la guarda en el registro de GitHub (GHCR), privado;
+  3. entra al VPS por SSH, descarga la imagen, aplica las migraciones (`prisma migrate deploy`) y reinicia la aplicación con la imagen nueva.
+- El VPS no compila: solo descarga la imagen, así que el sitio no se pone lento durante un despliegue.
+- **Volver atrás:** se arranca la imagen anterior. GitHub Actions conserva solo las **últimas 5 imágenes**, porque GHCR da 500 MB de almacenamiento a un repositorio privado de cuenta gratuita (2 GB con GitHub Pro).
+- Los registros de la aplicación salen por la salida estándar y los guarda Docker en el VPS (`docker compose logs`), con rotación para que no llenen el disco.
+
+### Cuentas de los servicios
+
+- La cuenta de **Cloudflare** (R2 y DNS) y la del **VPS** se crean desde el inicio **a nombre de INCOVSA**, con un correo de la empresa, y se invita al equipo (P-94).
+- El **repositorio** se transfiere a una cuenta u organización de INCOVSA el día de la entrega (Anexo J).
 
 ## Decisiones técnicas (12/10)
 
@@ -138,7 +208,7 @@ Las tomó el equipo el 12/10/2026 (coordinador Jordin García). Resuelven P-37, 
 
 | # | Tema | Decisión |
 |---|---|---|
-| 10 | Tiempo real en Bodega (P-39, RNF-13) | **SSE** desde una ruta de la API con el entorno de Node.js. Ante cualquier cambio, el servidor avisa "cambió la sede X" y cada pantalla vuelve a pedir el estado. Si la conexión se cae, la pantalla consulta cada pocos segundos hasta reconectarse. El aviso vive en la memoria del servidor (un solo proceso); si algún día hay varios procesos, se cambia a `LISTEN/NOTIFY` de PostgreSQL. Para el Entregable 2 se puede empezar con la consulta periódica, porque la pantalla funciona igual |
+| 10 | Tiempo real en Bodega (P-39, RNF-13) | **SSE** desde una ruta de la API con el entorno de Node.js. Ante cualquier cambio, el servidor avisa "cambió la sede X" y cada pantalla vuelve a pedir el estado. Si la conexión se cae, la pantalla consulta cada pocos segundos hasta reconectarse (**cada 5 segundos**, 16/10). El aviso vive en la memoria del servidor (un solo proceso); si algún día hay varios procesos, se cambia a `LISTEN/NOTIFY` de PostgreSQL. Para el Entregable 2 se puede empezar con la consulta periódica, porque la pantalla funciona igual |
 | 11 | Dónde vive el orden compartido | En la base de datos se guarda **solo el orden actual**, sin historial ni bitácora: la posición de cada ruta o pedido en la cola de Bodega, la de cada línea de preparación y la de cada cliente de la ruta antes de entregar. Al pulsar "Ruta Entregada", el orden de la ruta queda como recorrido (RN-29). El marcado ya se guarda en LINEA_PREPARACION ([14](14-modelo-de-datos.md)) |
 | 12 | Lectura del archivo de Odoo | SheetJS 0.20.3 (ver "Stack"), con la versión y la huella fijas en `package-lock.json`. Como `npm audit` y Dependabot no vigilan esa librería, en cada entrega se revisa a mano <https://cdn.sheetjs.com/advisories>. El archivo se rechaza si pesa más de **2 MB** (el de ejemplo pesa 25 KB con 80 referencias). Se lee solo en el servidor, solo las columnas que se usan, y todo se valida con Zod. Se ignoran las filas de agrupación (Referencia con texto, sin Contacto ni Producto). Si una línea de una referencia "Hecho" trae una cantidad o un Peso de Conversión vacío, no numérico o menor o igual a 0, ese pedido facturado no se carga y se avisa en el resumen de la carga (RN-50). **(13/10)** Se leen también las columnas `Movimientos de stock/Producto/Peso` y `Movimientos de stock/Números de serie`; el lote se guarda como texto, tal como viene |
 | 13 | Comparación del nombre del producto | **Ya no aplica** (13/10): el picking no tiene catálogo de productos. Bodega agrupa las líneas por el texto exacto del producto, el lote y el Peso de Conversión (RN-51) |
@@ -173,6 +243,67 @@ Las tomó el equipo el 14/10/2026 para aplicar los cambios de la reunión 5 (coo
 | 25 | Cierre de sesión (RF-SW-30) | Después de cerrar la sesión, la aplicación redirige a la página de inicio del sitio |
 | 26 | Cuentas en Better Auth con el mismo nombre de usuario en los dos sistemas (RN-54) | Better Auth exige que su nombre de usuario y su correo sean únicos en toda la tabla de usuarios, y el correo es obligatorio. Cada cuenta guarda: el nombre de usuario que escribe la persona (`display_username`), único junto con el sistema; una **clave de acceso interna** única formada por el sistema y el nombre de usuario (`username`, por ejemplo `picking.maria.argueta`), que es la que recibe Better Auth al iniciar sesión; y un correo interno único derivado de esa clave, que nunca se muestra ni se usa para enviar correos. El correo real, opcional, se guarda en un campo aparte. **(15/10)** Las cuentas de Gerencia y Soporte, que sirven en los dos sistemas, guardan el sistema "ambos", y su clave de acceso interna se forma con él (por ejemplo, `ambos.maria.argueta`) |
 
+## Decisiones técnicas del 16/10
+
+Las tomó el coordinador (Jordin García) el 16/10/2026 a partir de las recomendaciones del equipo, para dejar especificado todo lo necesario antes del plan de desarrollo.
+
+### Despliegue y operación
+
+| # | Tema | Decisión |
+|---|---|---|
+| 27 | Docker | **Solo en producción.** En el VPS, Docker Compose con Caddy, la aplicación y PostgreSQL 18. En las computadoras del equipo no se usa Docker: ya tienen Node.js 24 y PostgreSQL 18, y en Windows Docker hace lenta la recarga automática de Next.js ("Despliegue") |
+| 28 | Servidor (VPS) | Ubuntu Server 24.04 LTS, 2 vCPU, 4 GB de RAM, 80 GB SSD, IP fija y SSH con llave. Lo contrata INCOVSA (P-10) |
+| 29 | HTTPS y proxy inverso | **Caddy**, en un contenedor: certificado automático, HSTS y avisos en tiempo real sin configuración extra. La aplicación toma la IP del usuario solo de la cabecera de Caddy (RNF-15) |
+| 30 | Ambientes | **Solo producción** en internet. Desarrollo en las computadoras del equipo |
+| 31 | Despliegue | El primero, cuando la aplicación esté completa. Después, **automático** al integrar en `main`: GitHub Actions compila la imagen, la guarda en GHCR y la despliega en el VPS por SSH, con las migraciones. Se conservan las últimas 5 imágenes para volver atrás |
+| 32 | DNS e imágenes | El DNS de incovsa.com pasa a **Cloudflare** (plan gratuito) para servir las imágenes de R2 desde `imagenes.incovsa.com`. Si no se pudiera (P-93), la aplicación serviría las imágenes desde una ruta propia |
+| 33 | Cuentas de servicios | Cloudflare y el VPS a nombre de INCOVSA, con un correo de la empresa, con el equipo invitado (P-94). El repositorio se transfiere a INCOVSA el día de la entrega |
+| 34 | Respaldos | `cron` en el VPS, `pg_dump` dentro del contenedor de PostgreSQL y `rclone` hacia el bucket privado de R2; 7 diarios y 4 semanales; sin cifrado propio ("Respaldos") |
+
+### Acceso y sesiones
+
+| # | Tema | Decisión |
+|---|---|---|
+| 35 | Sesión por sistema | Dos configuraciones de Better Auth, una por sistema, cada una con su propia cookie. Se puede estar conectado a los dos sistemas a la vez y cerrar uno no cierra el otro, como en el prototipo |
+| 36 | Expiración y cierre forzado | 7 días sin uso, renovados una vez al día mientras se usa, configurable por variable de entorno, mientras INCOVSA no defina el tiempo (P-07). Al eliminar o desactivar un usuario, o al restablecer su contraseña, se borran todas sus sesiones |
+| 37 | Primer administrador | Comando `npm run crear-admin`, que pide en la terminal el usuario y la contraseña. Quién es: P-08 |
+
+### Picking
+
+| # | Tema | Decisión |
+|---|---|---|
+| 38 | Arrastrar y soltar | `@dnd-kit/core` y `@dnd-kit/sortable`: pulsación larga en pantallas táctiles (decisión de diseño del 14/10), uso con teclado (RNF-08) y arrastre de varias tarjetas seleccionadas |
+| 39 | Dos facturadores en la misma sede | El servidor valida cada movimiento contra el estado guardado y rechaza el que ya no corresponde; Facturación recibe el mismo aviso en tiempo real que Bodega ([06](06-picking-facturacion.md)) |
+| 40 | Actualización de las pantallas en tiempo real | Al recibir el aviso, la pantalla vuelve a pedir su contenido al servidor (`router.refresh()`). El marcado se ve al instante en la pantalla de quien marca, antes de que conteste el servidor (`useOptimistic`). Sin conexión de avisos, consulta cada 5 segundos (decisión 10) |
+| 41 | Numeración diaria y doble clic | El envío a Bodega bloquea la fila de su opción de envío (`SELECT … FOR UPDATE`) dentro de la transacción. Como hay una sola opción de cada tipo por sede, los envíos que compiten por el mismo número esperan su turno, y un segundo clic encuentra la opción vacía. Se mantiene la restricción única de la decisión 18 |
+| 42 | Lote vacío | Se guarda como texto vacío, no como nulo, en las líneas del pedido facturado y en las de preparación; Bodega muestra "Sin lote" ([14](14-modelo-de-datos.md)) |
+
+### Reportes y sitio
+
+| # | Tema | Decisión |
+|---|---|---|
+| 43 | Exportación de reportes | Excel con SheetJS (una hoja, sin formato) y PDF con pdfmake, generados en el servidor, en Despacho, Rutas realizadas y Bitácora ([10](10-picking-reportes.md)) |
+| 44 | Imágenes | JPG, PNG o WebP validados con `file-type`; máximo 5 MB; `sharp` quita los metadatos, reduce a 2000 px de ancho y guarda en WebP; siempre pasan por el servidor ("Entradas y archivos") |
+| 45 | Lista de países | La semilla la genera con los códigos de `libphonenumber-js` y los nombres en español de `Intl.DisplayNames`, como el prototipo. Departamentos y municipios, de `guatemala.json` (INE, Censo 2018) |
+
+### Calidad y código
+
+| # | Tema | Decisión |
+|---|---|---|
+| 46 | Pruebas | **Vitest** contra una base PostgreSQL de pruebas real (no simulada), para la conversión, la lectura del archivo de Odoo, los permisos y sedes, y el envío a Bodega con su transacción y su numeración. **Playwright** para el flujo completo, los permisos, las pruebas responsive (teléfono, tableta y escritorio) y las de navegadores (Chromium, Firefox y WebKit), con capturas como evidencia del Documento 6 |
+| 47 | Integración continua | GitHub Actions en cada pull request: ESLint, Prettier, revisión de tipos de TypeScript, Vitest sobre PostgreSQL 18, migraciones desde cero, `npm audit` y compilación. Playwright se corre antes de cada versión, no en cada pull request |
+| 48 | Formularios | React Hook Form con el resolvedor de Zod; el servidor vuelve a validar con el mismo esquema |
+| 49 | Formato del código | Prettier, junto con ESLint |
+| 50 | Fechas | date-fns 4 con `@date-fns/tz` y la zona `America/Guatemala` |
+| 51 | Tipografías | Poppins, Figtree y JetBrains Mono se sirven desde el propio servidor con `next/font`, no desde Google Fonts |
+| 52 | Animaciones y galerías | Con CSS y la detección de desplazamiento del navegador (`IntersectionObserver`), como en el prototipo, sin librerías |
+| 53 | Íconos | Los SVG del prototipo |
+| 54 | Design system | Los tokens de `estilos.css` del prototipo pasan al tema de Tailwind CSS |
+| 55 | Sede de trabajo | La sede elegida en la barra superior se guarda en una cookie; el servidor verifica en cada operación que el usuario la tenga asignada |
+| 56 | Modo claro u oscuro del tablero | Se guarda en cada pantalla (en el navegador) y no se comparte |
+| 57 | Orden de las listas | Posiciones enteras que se vuelven a escribir al reordenar |
+| 58 | Límite de envío al servidor | 3 MB para las acciones del servidor, para el archivo de Odoo de hasta 2 MB |
+
 ## Estructura de carpetas
 
 ```
@@ -185,23 +316,31 @@ src/modulos/<modulo>/   de dominio: contenido, solicitudes, documentos, camiones
                         permisos, usuarios, bitacora, tiempo-real. Cada uno con
                         servicio.ts, esquemas.ts (Zod), acciones.ts y sus pruebas *.test.ts
 src/componentes/ui/     componentes de shadcn/ui con los tokens del design system
-src/lib/                cliente de Prisma, Better Auth, sesión
+src/lib/                cliente de Prisma, las dos configuraciones de Better Auth, sesión
 prisma/                 schema.prisma, migraciones y seed.ts
+scripts/                crear-admin y respaldo de la base de datos (16/10)
+pruebas-e2e/            pruebas de Playwright (16/10)
+.github/workflows/      integración continua y despliegue automático (16/10)
+Dockerfile              imagen de la aplicación para producción (16/10)
+docker-compose.yml      Caddy, aplicación y PostgreSQL en el VPS (16/10)
+Caddyfile               configuración de Caddy (16/10)
 ```
 
-La carpeta `scripts/` con la importación de datos maestros ya no hace falta (13/10).
+La importación de datos maestros ya no hace falta (13/10). Desde el 16/10 la carpeta `scripts/` contiene solo el comando `crear-admin` y el script de respaldo.
 
 ## Forma de trabajo
 
 ### Git
 
 - Ramas:
-  - `main`: solo versiones entregadas;
+  - `main`: solo versiones entregadas. **(16/10)** Después del primer despliegue, cada integración en `main` se despliega automáticamente en producción;
   - `develop`: integración;
   - `feature/<modulo>-<descripcion>`: una por tarea;
   - `fix/<descripcion>`: correcciones.
-- Todo entra a `develop` por pull request, que revisa Jordin (o otro integrante si el autor es Jordin). Nadie hace push directo a `main` ni a `develop`.
-- Un pull request se aprueba si corre sin errores, cumple la tarea, no incluye credenciales ni archivos generados, y las migraciones corren desde cero.
+- Todo entra a `develop` por pull request. Nadie hace push directo a `main` ni a `develop`.
+- **Revisión de los pull requests (16/10):** cualquier integrante distinto del autor puede aprobar un pull request. Jordin revisa siempre los que tocan el **esquema de la base de datos**, los **permisos**, la **bitácora** o la **autenticación**. Antes (12/10) los revisaba todos Jordin.
+- Un pull request se aprueba si corre sin errores, cumple la tarea, no incluye credenciales ni archivos generados, las migraciones corren desde cero y **(16/10)** pasan las revisiones de GitHub Actions (decisión 47). Que GitHub impida integrar sin esas revisiones requiere GitHub Pro en un repositorio privado (P-95); mientras tanto es un acuerdo del equipo.
+- **Tareas (16/10):** se llevan en **GitHub Issues y Projects**: una tarea por issue, con el código del requerimiento (RF-xx, RN-xx) y su pull request enlazado.
 - Commits en español con prefijo: `feat:`, `fix:`, `docs:`, `db:`, `test:`, `chore:`.
 - Etiquetas por entregable: `v0.1-entregable1`, `v0.5-entregable2`, `v1.0-final`.
 - El `.gitignore` excluye:
