@@ -40,7 +40,7 @@ La instalación en cada harness (Claude Code, Codex, Cursor y Antigravity) está
 ## Pedidos habituales del usuario
 
 - **"¿Qué me toca?" / "Revisa el plan"**: ejecuta `node scripts/tareas.mjs --hoy <clave>` y `node scripts/tareas.mjs --persona <clave>`, lee los archivos de las tareas disponibles y resúmelas: qué hace cada una, su fecha programada y de quién depende lo que está en espera. Empieza por lo atrasado y lo de hoy. Incluye los avisos que los demás le dejaron en sus bitácoras (`plan/protocolo.md` §A, paso 5). Recomienda la siguiente según el calendario. **No implementes nada todavía.**
-- **"Implementa <ID>"** o **"continúa"**: sigue la sección B de `plan/protocolo.md` de principio a fin, hasta que el *pull request* quede integrado en `develop`, **sin volver a preguntarle al usuario**, salvo en los casos de "Preguntar antes" o si necesitas algo a lo que no puedes acceder.
+- **"Implementa <ID>"** o **"continúa"**: sigue la sección B de `plan/protocolo.md` de principio a fin, hasta que el *pull request* quede integrado en `develop`, **sin volver a preguntarle al usuario**, salvo en los casos de "Preguntar antes" o si necesitas algo a lo que no puedes acceder. **Una sola tarea por conversación**: al integrarla, no sigas con otra; pídele al usuario que abra una conversación nueva.
 - **"Audita <ID>"** o **"audita lo integrado"** (solo el coordinador): `plan/protocolo.md` §E2.
 
 ## Comandos
@@ -66,6 +66,7 @@ La instalación en cada harness (Claude Code, Codex, Cursor y Antigravity) está
 ## Límites
 
 **✅ Siempre**
+- Implementa **una sola tarea por conversación**, para no exceder la ventana de contexto del agente (`specs/16`, decisión 88). Si en esta conversación ya trabajaste otra tarea, detente y pídele al usuario que abra una nueva.
 - Trabaja en una rama `<clave>/<ID>-<descripcion-corta>` creada desde un `develop` actualizado.
 - Consulta Context7 antes de usar la API de una librería, y compara cada pantalla con el prototipo usando Playwright.
 - Escribe primero las pruebas de los criterios de aceptación y nómbralas con el código del requisito o la regla (`RN-01: …`).
