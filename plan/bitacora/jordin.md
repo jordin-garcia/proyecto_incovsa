@@ -39,3 +39,11 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 **CE-05:** `next.config.ts` ya tiene `output: "standalone"`. El script `prepare` ejecuta `husky`: en la imagen de Docker instala con `npm ci --omit=dev --ignore-scripts` (o `HUSKY=0`).
 **JG-04:** la aplicación no tiene ícono (`/favicon.ico` da 404) y el prototipo tampoco; si INCOVSA entrega uno, se agrega con los recursos gráficos.
 **JG-16:** los proyectos de Playwright usan solo Chromium; agrega Firefox y WebKit (decisión 46).
+
+## 2026-10-17 · JG-04 · Datos de prueba y recursos gráficos del prototipo
+- Hecho: copia anonimizada del archivo de Odoo con las cifras de `specs/13` (52 contactos `Cliente de ejemplo NNN`, sin calles, estados ni documentos reales, ni las propiedades del libro), los 6 archivos inválidos para JC-02, los 5 recursos de `public/marca/` y las 28 imágenes del catálogo de prueba, con tres scripts reproducibles y 27 pruebas nuevas. El trabajo `plan` de la CI ahora instala las dependencias antes de las pruebas de los scripts.
+- Decisiones: las imágenes son los mismos bytes WebP del prototipo; los defectos de cada archivo inválido están en `pruebas/fixtures/odoo/README.md`; `Documento origen` se numera por fila; sigue sin haber ícono (`/favicon.ico`) porque INCOVSA no lo ha entregado.
+- Pendiente o aviso para otros:
+**JC-02:** usa `pruebas/fixtures/odoo/`: con el anonimizado se cargan 33 pedidos facturados (46 se rechazan por peso 0 y 1 está cancelado) y con `cantidad-invalida.xlsx`, 30. El README tiene las cifras y el defecto de cada archivo; el de más de 2 MB se genera en memoria en tu prueba.
+**Todos:** los logotipos y las fotografías están en `public/marca/` (rutas y uso en el `## Resultado` de JG-04). No usen `docs_incovsa/` ni el prototipo como fuente de imágenes.
+**Todos:** si agregan un script con dependencias, sus pruebas `scripts/*.test.mjs` ya corren con `npm ci` en el trabajo `plan` de la CI.

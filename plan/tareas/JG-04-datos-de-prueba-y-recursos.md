@@ -5,7 +5,7 @@ persona: jordin
 responsable: Jordin García
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JG-02]
 programada: 2026-10-17
 requisitos: [RF-SL-50, RF-SL-51, RF-SL-53, RN-35, RN-50, RNF-10]
@@ -77,3 +77,27 @@ npm run verificar
 ## Notas
 - **Cuando llegue el archivo completo de Odoo (P-91)**, el coordinador vuelve a ejecutar el script con el archivo nuevo, actualiza las cifras esperadas de este README y avisa a José Daniel en su bitácora.
 - Solo el equipo del coordinador tiene `docs_incovsa/`. Ninguna prueba debe depender del archivo real.
+
+## Resultado
+
+Hecha por el coordinador el 17/10/2026.
+
+**Qué se hizo**
+- `scripts/anonimizar-odoo.mjs`: copia del archivo de Odoo sin datos personales. Cada `Contacto` distinto → `Cliente de ejemplo NNN` (en orden de aparición); `Contacto/Calle`, `Contacto/Calle2` y `Contacto/Estado` vacíos; `Documento origen` → `S9NNNN` consecutivo por fila. Todo lo demás queda igual, valor y tipo (el lote sigue siendo texto, con sus ceros a la izquierda). El libro de salida es nuevo: no copia las propiedades del real (autor ni fechas). Es determinista: el mismo archivo real produce los mismos bytes.
+- `pruebas/fixtures/odoo/odoo-ejemplo-anonimizado.xlsx`, generado con el archivo real. Comparado celda por celda con el real: 0 diferencias fuera de las 5 columnas anonimizadas, 0 valores reales de esas columnas en la copia y 52 contactos con la misma agrupación.
+- `scripts/generar-fixtures-odoo.mjs`: a partir del anonimizado, genera `otra-bodega-gt.xlsx`, `bodegas-mezcladas.xlsx`, `prefijo-desconocido.xlsx`, `sin-columna-peso.xlsx`, `cantidad-invalida.xlsx` y `no-es-xlsx.xlsx`, cada uno con solo su defecto.
+- `scripts/extraer-recursos-prototipo.mjs`: lee `window.RECURSOS` del prototipo armado y escribe los 5 archivos de `public/marca/` y las 28 imágenes de `pruebas/fixtures/catalogo/`. Las imágenes ya eran WebP dentro del HTML: se escriben los mismos bytes, así que se ven igual y pesan lo mismo.
+- Pruebas (`node:test`): `scripts/anonimizar-odoo.test.mjs` (criterios 1, 2 y 4), `scripts/generar-fixtures-odoo.test.mjs` (criterio 3) y `scripts/extraer-recursos-prototipo.test.mjs` (criterio 5).
+- CI: el trabajo `plan` ahora ejecuta `npm ci` (con caché de npm y 10 minutos de límite) antes de `node --test "scripts/*.test.mjs"`, porque las pruebas nuevas importan `xlsx`. `scripts/flujos.test.mjs` lo comprueba.
+
+**Decisiones**
+- `bodegas-mezcladas.xlsx`: referencias 1 a 40 con `XE-` y 41 a 80 con `GT-`. `prefijo-desconocido.xlsx`: la última referencia del archivo (`XE-IN/SALIDA/03626`) con `ZZ-`. En `otra-bodega-gt.xlsx` y estos dos solo cambia la columna `Referencia` (no `Bodega de Ingreso/Salida` ni `Ubicación de origen`, que no se usan).
+- `cantidad-invalida.xlsx`: la primera línea de las 3 primeras referencias "Hecho" que sí se cargarían (todos sus pesos y cantidades > 0) tiene, en orden, cantidad vacía, `"diez"` y `0`. Con RN-50 se cargan 30 pedidos facturados en vez de 33.
+- `Documento origen` se numera por fila, como dice la tarea: en el real dos referencias comparten documento y en la copia no. La columna no se usa.
+- No hay ícono (`/favicon.ico`): ni el prototipo ni INCOVSA lo han entregado.
+
+**Cómo usarlo**
+- Lectura del archivo (JC-02): `pruebas/fixtures/odoo/odoo-ejemplo-anonimizado.xlsx` con las cifras esperadas de `pruebas/fixtures/odoo/README.md` (80 referencias, 79 "Hecho", 205 líneas, 46 pedidos con peso 0 y **33 que se cargan**), y los 6 inválidos. El de más de 2 MB se genera en memoria en la prueba. Desde código: `leerFilas(bytes)` y `indices(encabezado)` de `scripts/anonimizar-odoo.mjs` y `referencias(filas)` de `scripts/generar-fixtures-odoo.mjs` sirven para preparar casos en las pruebas.
+- Marca (JG-05, DM-02 y quien dibuje el acceso): `/marca/incovsa-quimicos.webp` (logotipo a color), `/marca/incovsa-quimicos-blanco.webp` (sobre fondo oscuro: menú lateral del panel, pantallas de acceso y tablero oscuro), `/marca/inquiserca.webp`, `/marca/foto-equipo.webp` (acceso al picking y fondo de la portada sin imágenes subidas) y `/marca/foto-reunion.webp` (acceso al sitio).
+- Semilla de demostración: `pruebas/fixtures/catalogo/NN.webp` es la imagen del producto `NN` de `PRODUCTOS_PUB_BASE` (tabla en `pruebas/fixtures/catalogo/README.md`). No se sirven desde `public/`.
+- Cuando llegue el archivo completo de Odoo (P-91): `node scripts/anonimizar-odoo.mjs "<archivo nuevo>" pruebas/fixtures/odoo/odoo-ejemplo-anonimizado.xlsx`, luego `node scripts/generar-fixtures-odoo.mjs`, y actualizar las cifras del README, de `specs/13` y de `scripts/anonimizar-odoo.test.mjs`.
