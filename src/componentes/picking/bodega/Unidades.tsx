@@ -1,35 +1,41 @@
 import React from "react";
 import { convertir, fmt, textoUnidades, type DecimalExacto } from "@/modulos/conversion/servicio";
 
-export interface UnidadesProps {
-  /** Cantidad en kilogramos. Si se provee junto a pesoConversionKg, calcula la conversión. */
-  cantidadKg?: DecimalExacto;
-  /** Peso de Conversión en kilogramos. */
-  pesoConversionKg?: DecimalExacto;
-  /** Unidades completas ya calculadas (opcional si se pasa cantidadKg y pesoConversionKg). */
-  unidades?: number;
-  /** Resto en kilogramos ya calculado (opcional si se pasa cantidadKg y pesoConversionKg). */
-  restoKg?: number;
-  /** Clases adicionales CSS para el contenedor. */
-  className?: string;
-}
+export type UnidadesProps =
+  | {
+      /** Cantidad en kilogramos. Debe acompañarse de pesoConversionKg. */
+      cantidadKg: DecimalExacto;
+      /** Peso de Conversión en kilogramos. */
+      pesoConversionKg: DecimalExacto;
+      unidades?: never;
+      restoKg?: never;
+      className?: string;
+    }
+  | {
+      cantidadKg?: never;
+      pesoConversionKg?: never;
+      /** Unidades completas ya calculadas. */
+      unidades: number;
+      /** Resto en kilogramos ya calculado. */
+      restoKg?: number;
+      className?: string;
+    };
 
 /**
  * Componente visual que muestra la conversión de kilogramos a unidades físicas,
- * con unidades destacadas y el resto aparte, idéntico a `htmlConversion()` del prototipo.
+ * con unidades destacadas y el resto aparte, fiel a `htmlConversion()` de base.js
+ * y con los estilos del design system (`.unid` y `.unid .resto` de estilos.css:390-391).
  */
-export function Unidades({
-  cantidadKg,
-  pesoConversionKg,
-  unidades: unidadesProp,
-  restoKg: restoKgProp,
-  className = "",
-}: UnidadesProps) {
-  let u = unidadesProp ?? 0;
-  let r = restoKgProp ?? 0;
+export function Unidades(props: UnidadesProps) {
+  const { className = "" } = props;
+  let u: number;
+  let r: number;
 
-  if (unidadesProp === undefined && cantidadKg !== undefined && pesoConversionKg !== undefined) {
-    const res = convertir(cantidadKg, pesoConversionKg);
+  if (props.unidades !== undefined) {
+    u = props.unidades;
+    r = props.restoKg ?? 0;
+  } else {
+    const res = convertir(props.cantidadKg, props.pesoConversionKg);
     u = res.unidades;
     r = res.restoKg;
   }
@@ -37,10 +43,22 @@ export function Unidades({
   const resto = r > 0 ? r : null;
 
   return (
-    <span className={`unid font-bold font-mono text-[#1b2a1a] ${className}`.trim()}>
+    <span
+      className={`unid font-bold font-mono text-[15px] leading-none text-[#1C1D1C] ${className}`.trim()}
+      style={{
+        font: "700 15px/1 var(--f-mono, ui-monospace, monospace)",
+        color: "var(--g900, #1C1D1C)",
+      }}
+    >
       {textoUnidades(u)}
       {resto !== null && (
-        <span className="resto ml-1.5 inline-block rounded-md bg-[#EEF6E2] px-1.5 py-0.5 text-xs font-semibold text-[#45691A]">
+        <span
+          className="resto ml-[6px] inline-block rounded-[6px] bg-[#EEF6E2] px-[7px] py-[4px] text-[12.5px] text-[#45691A]"
+          style={{
+            background: "#EEF6E2",
+            color: "#45691A",
+          }}
+        >
           {`+ ${fmt(resto)} kg`}
         </span>
       )}

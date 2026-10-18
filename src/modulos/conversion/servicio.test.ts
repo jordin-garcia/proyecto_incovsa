@@ -200,7 +200,7 @@ describe("Módulo de conversión de kilogramos a unidades (JM-02)", () => {
     });
   });
 
-  describe("Criterio 5: RN-50 (Peso de Conversión cero o negativo lanza ErrorNegocio)", () => {
+  describe("Criterio 5: RN-50 (Peso de Conversión cero o negativo lanza ErrorNegocio y validaciones de entrada)", () => {
     it("RN-50 criterio 5: Peso de Conversión en 0 lanza ErrorNegocio", () => {
       expect(() => convertir("50", "0")).toThrow(ErrorNegocio);
       expect(() => convertir("50", "0.000")).toThrow(ErrorNegocio);
@@ -210,6 +210,22 @@ describe("Módulo de conversión de kilogramos a unidades (JM-02)", () => {
     it("RN-50 criterio 5: Peso de Conversión negativo lanza ErrorNegocio", () => {
       expect(() => convertir("50", "-25")).toThrow(ErrorNegocio);
       expect(() => textoConversion("50", "-25")).toThrow(ErrorNegocio);
+    });
+
+    it("RN-01: cantidad negativa lanza ErrorNegocio", () => {
+      expect(() => convertir("-10", "25")).toThrow(ErrorNegocio);
+      expect(() => textoConversion("-10", "25")).toThrow(ErrorNegocio);
+    });
+
+    it("RN-05: valores con más de 3 decimales lanzan ErrorNegocio", () => {
+      expect(() => convertir("10.1234", "25")).toThrow(ErrorNegocio);
+      expect(() => convertir("10", "25.1234")).toThrow(ErrorNegocio);
+    });
+
+    it("RN-01: texto no numérico o uso erróneo de comas lanza ErrorNegocio", () => {
+      expect(() => convertir("abc", "25")).toThrow(ErrorNegocio);
+      expect(() => convertir("37,5", "25")).toThrow(ErrorNegocio);
+      expect(() => convertir("50", "xyz")).toThrow(ErrorNegocio);
     });
   });
 

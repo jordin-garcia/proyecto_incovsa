@@ -2,8 +2,8 @@
 // Calcula en gramos enteros para evitar errores de redondeo de punto flotante (specs/16, decisión 1).
 import { ErrorNegocio } from "@/lib/errores";
 
-/** Tipo aceptado para cantidades en kg y Peso de Conversión exactos (texto, Decimal de Prisma o número). */
-export type DecimalExacto = string | number | { toFixed: (dp?: number) => string; toString: () => string };
+/** Tipo aceptado para cantidades en kg y Peso de Conversión exactos (texto o Decimal de Prisma, nunca Number). */
+export type DecimalExacto = string | { toFixed: (dp?: number) => string; toString: () => string };
 
 /** Resultado del cálculo de conversión. */
 export interface ResultadoConversion {
@@ -11,14 +11,10 @@ export interface ResultadoConversion {
   unidades: number;
   /** Resto en kilogramos que no completa una unidad física. */
   restoKg: number;
-  /** Alias breve de unidades, correspondiente a `u` del prototipo en base.js. */
-  u?: number;
-  /** Alias breve de restoKg, correspondiente a `r` del prototipo en base.js. */
-  r?: number;
 }
 
 /**
- * Convierte un valor en kg (texto, Decimal de Prisma o número) a gramos enteros exactos.
+ * Convierte un valor en kg (texto o Decimal de Prisma) a gramos enteros exactos.
  * Maneja hasta 3 decimales sin perder precisión por coma flotante IEEE 754.
  */
 function aGramos(valor: DecimalExacto, nombreCampo: string): bigint {
@@ -28,12 +24,14 @@ function aGramos(valor: DecimalExacto, nombreCampo: string): bigint {
 
   let texto: string;
   if (typeof valor === "string") {
-    texto = valor.trim().replace(/,/g, "");
-  } else if (typeof valor === "number") {
-    if (!Number.isFinite(valor)) {
-      throw new ErrorNegocio(`${nombreCampo} no es un número válido.`);
+    const s = valor.trim();
+    if (s.includes(",")) {
+      // Si incluye comas, solo se admiten separadores de miles válidos (ej: 1,000 o 1,000.500)
+      if (!/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(s)) {
+        throw new ErrorNegocio(`${nombreCampo} no es un número válido.`);
+      }
     }
-    texto = valor.toString();
+    texto = s.replace(/,/g, "");
   } else if (typeof valor === "object" && valor !== null && "toFixed" in valor) {
     texto = (valor as { toFixed: (dp: number) => string }).toFixed(3);
   } else {
@@ -48,15 +46,12 @@ function aGramos(valor: DecimalExacto, nombreCampo: string): bigint {
   const limpio = esNegativo ? texto.slice(1) : texto;
   const [enteroStr, decimalStr = ""] = limpio.split(".");
 
-  let gramosEnteros: bigint;
-  if (decimalStr.length <= 3) {
-    const dec = (decimalStr + "000").slice(0, 3);
-    gramosEnteros = BigInt(enteroStr) * 1000n + BigInt(dec);
-  } else {
-    const dec = BigInt(decimalStr.slice(0, 3));
-    const extra = Number(decimalStr[3]) >= 5 ? 1n : 0n;
-    gramosEnteros = BigInt(enteroStr) * 1000n + dec + extra;
+  if (decimalStr.length > 3) {
+    throw new ErrorNegocio(`${nombreCampo} no puede tener más de 3 decimales.`);
   }
+
+  const dec = (decimalStr + "000").slice(0, 3);
+  const gramosEnteros = BigInt(enteroStr) * 1000n + BigInt(dec);
 
   return esNegativo ? -gramosEnteros : gramosEnteros;
 }
@@ -99,10 +94,10 @@ export function textoUnidades(u: number): string {
 /**
  * Convierte una cantidad en kg a unidades completas y resto en kg dado el Peso de Conversión.
  *
- * @param cantidadKg Cantidad total en kilogramos.
- * @param pesoConversionKg Peso en kg de una unidad física completa del producto.
+ * @param cantidadKg Cantidad total en kilogramos (texto o Decimal de Prisma).
+ * @param pesoConversionKg Peso en kg de una unidad física completa del producto (texto o Decimal de Prisma).
  * @returns { unidades, restoKg } con unidades = parte entera (cantidad ÷ peso) y resto = cantidad − unidades × peso.
- * @throws ErrorNegocio si el Peso de Conversión no es mayor que cero (RN-50).
+ * @throws ErrorNegocio si el Peso de Conversión no es mayor que cero (RN-50) o si la cantidad es negativa.
  */
 export function convertir(cantidadKg: DecimalExacto, pesoConversionKg: DecimalExacto): ResultadoConversion {
   const pesoGramos = aGramos(pesoConversionKg, "Peso de Conversión");
@@ -124,12 +119,6 @@ export function convertir(cantidadKg: DecimalExacto, pesoConversionKg: DecimalEx
   return {
     unidades,
     restoKg,
-    get u() {
-      return unidades;
-    },
-    get r() {
-      return restoKg;
-    },
   };
 }
 
