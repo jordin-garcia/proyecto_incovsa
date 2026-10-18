@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "next dev",
+    "crear-admin": "tsx scripts/crear-admin.ts",
     "build": "next build",
     "start": "next start",
     "formato": "prettier --check .",

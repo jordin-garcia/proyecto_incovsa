@@ -1,0 +1,175 @@
+/* Pantallas de sitio.js › acceso/login/marcaAcceso, con los tokens aprobados de JG-05. */
+.acc-lay {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+.acc-marca {
+  position: relative;
+  overflow: hidden;
+  background: var(--v900);
+  color: var(--color-blanco);
+  padding: 48px 56px;
+  display: flex;
+  flex-direction: column;
+}
+.acc-marca .foto {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: 55% 20%;
+  opacity: 0.35;
+}
+.acc-marca .equipo {
+  background-image: url("/marca/foto-equipo.webp");
+}
+.acc-marca .reunion {
+  background-image: url("/marca/foto-reunion.webp");
+}
+.acc-marca .velo {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, var(--color-acceso-velo-inicial) 20%, var(--color-acceso-velo-final));
+}
+.acc-marca > :not(.foto):not(.velo):not(.acc-logo) {
+  position: relative;
+}
+.acc-marca > .acc-logo {
+  position: absolute;
+  top: 48px;
+  left: 56px;
+  z-index: 1;
+}
+.acc-logo img {
+  height: 52px;
+  width: auto;
+}
+.acc-centro {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.acc-marca h1 {
+  color: var(--color-blanco);
+  font-size: clamp(32px, 3.6vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.acc-marca p {
+  color: var(--color-acceso-descripcion);
+  font-size: 17px;
+  margin-top: 16px;
+  max-width: 480px;
+}
+.acc-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px clamp(24px, 6vw, 88px);
+  background: var(--g50);
+}
+.acc-campos {
+  max-width: 440px;
+  width: 100%;
+}
+.acc-form .muted {
+  color: var(--g600);
+}
+.acc-form h2 {
+  font-size: 32px;
+  margin: 10px 0 8px;
+}
+.acc-volver {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 26px;
+}
+.acc-formulario {
+  margin-top: 24px;
+}
+.acc-usuario {
+  color: var(--g900);
+}
+.acc-opciones {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 22px;
+}
+.acc-op {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 18px;
+  align-items: center;
+  width: 100%;
+  padding: 22px;
+  background: var(--color-blanco);
+  border: 1.5px solid var(--g150);
+  border-radius: var(--r-l);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+.acc-op:hover {
+  border-color: var(--v400);
+  transform: translateY(-2px);
+  box-shadow: var(--s2);
+}
+.acc-op .ic {
+  width: 54px;
+  height: 54px;
+  border-radius: var(--radius-acceso-icono);
+  background: var(--v50);
+  color: var(--v600);
+  display: grid;
+  place-items: center;
+}
+.acc-op h3 {
+  font-size: 19px;
+}
+.acc-op p {
+  color: var(--g600);
+  font-size: 14.5px;
+  margin-top: 4px;
+}
+.acc-op.deshabilitada {
+  cursor: not-allowed;
+  opacity: 0.55;
+  background: var(--g100);
+}
+.acc-op.deshabilitada:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--g150);
+}
+.acc-clave {
+  position: relative;
+  display: block;
+}
+.acc-clave input {
+  padding-right: 48px;
+}
+.acc-clave button {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+}
+.acc-olvido {
+  justify-self: start;
+}
+@media (max-width: 1024px) {
+  .acc-lay {
+    grid-template-columns: 1fr;
+  }
+  .acc-marca {
+    min-height: 340px;
+    padding-top: 120px;
+  }
+}

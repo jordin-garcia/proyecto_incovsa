@@ -1,7 +1,8 @@
 "use client";
 
 import { createContext, useContext, useState, type ReactNode } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { salir } from "@/app/acceso/acciones";
 import { Armazon, type OpcionNavegacion } from "./Armazon";
 
 export const SEDES_EJEMPLO = [
@@ -40,7 +41,6 @@ const Contexto = createContext<ContextoEjemplo | null>(null);
 // JG-07 reemplaza este adaptador: Armazon no obtiene sesiones ni concede permisos.
 export function ArmazonEjemplo({ sistema, children }: { sistema: "sitio" | "picking"; children: ReactNode }) {
   const ruta = usePathname();
-  const enrutador = useRouter();
   const [modulo, cambiarModulo] = useState("facturacion");
   const [sedes, cambiarSedes] = useState(["XE", "GT", "ES"]);
   const [sede, cambiarSede] = useState("XE");
@@ -63,8 +63,8 @@ export function ArmazonEjemplo({ sistema, children }: { sistema: "sitio" | "pick
         sedes={SEDES_EJEMPLO.filter((s) => sedes.includes(s.id))}
         sede={sede}
         alCambiarSede={cambiarSede}
-        alSalir={() => {
-          enrutador.push("/");
+        alSalir={async () => {
+          await salir(sistema);
         }}
       >
         {children}

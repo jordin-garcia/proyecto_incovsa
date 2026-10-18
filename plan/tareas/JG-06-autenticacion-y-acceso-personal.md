@@ -5,7 +5,7 @@ persona: jordin
 responsable: Jordin García
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JG-03, JG-05]
 programada: 2026-10-17
 requisitos: [RF-SW-09, RF-SW-11, RF-SW-30, RF-SL-01, RF-SL-02, RF-SL-36, RN-18, RN-39, RN-47, RN-54, RNF-03, RNF-15, CU-11]
@@ -87,3 +87,39 @@ npm run e2e -- pruebas-e2e/acceso
 
 ## Notas
 - En el `## Resultado`, explica cómo obtener la sesión en una acción y en una página, cómo llamar a `registrarBitacora` dentro de una transacción y cómo usar `revocarSesiones`.
+
+## Resultado
+
+Implementación verificada en la rama `jordin/JG-06-autenticacion-acceso-personal`, con el reinicio de la base desechable autorizado expresamente por Jordin y ejecutado correctamente junto con las dos semillas.
+
+### Implementación
+
+- Better Auth con una configuración, clave de firma, prefijo de cookie y ruta por sistema; las tablas existentes se comparten. No se agregaron dependencias ni migraciones. Las cuentas inactivas, eliminadas o del otro sistema no pueden iniciar sesión.
+- Acceso personal en tres pasos, con los textos y recursos aprobados, ventanas de Odoo y recuperación interna, mostrar contraseña y destinos según permisos. La cookie breve del paso de usuario solo conserva la selección: no autentica ni concede permisos.
+- Sesiones en la base, sin caché de cookie ni permisos. La lectura vuelve a consultar cuentas, permisos y sedes; Gerencia y Soporte reciben el catálogo y todas las sedes. `SESION_DIAS` configura la expiración y Better Auth renueva una vez al día.
+- Los fallos, inicios y bloqueos quedan en la bitácora. Los bloqueos transaccionales de PostgreSQL serializan intentos por IP y usuario incluso entre procesos. Sesión y bitácora usan el mismo cliente de la transacción. La API solo expone inicio por usuario, consulta mínima de sesión y cierre, y verifica el origen de los POST.
+- `npm run crear-admin` pide los datos en una terminal interactiva, sin eco ni historial de las contraseñas, y crea una cuenta `ambos` con scrypt. La validación rechaza claves cortas o distintas y nombres reservados.
+
+### Uso para las siguientes tareas
+
+- **Página o acción:** `const sesion = await obtenerSesion("picking")`, de `@/lib/sesion`. Devuelve `null` o `{ sistema, usuario: { id, nombre, usuario, rol }, permisos: string[], sedes: { id, nombre, prefijoOdoo }[] }`. Una página lee la sesión sin renovar su cookie: los componentes del servidor no pueden escribir cookies.
+- **Renovación:** las rutas pueden usar `leerSesion("picking", request.headers)` y reenviar cada `cabeceras.getSetCookie()` a la respuesta. `/api/auth/picking/get-session` ya lo hace y devuelve solo la sesión mínima. JG-07 debe usar este patrón en su primera barrera o integración del armazón para conservar la renovación durante el uso continuado. Las acciones que necesiten renovar pueden llamar `leerSesion` y después `aplicarCookiesAuth(cabeceras)`.
+- **Cierre:** `await salir("sitio")`, de `@/app/acceso/acciones`, borra solo la sesión del sistema y redirige a `/`. El botón del armazón de ejemplo ya llama esta acción; el resto de la conexión del armazón corresponde a JG-07.
+- **Revocación:** dentro de la transacción de CE-03, `await revocarSesiones(usuarioId, tx)` elimina todas las sesiones del usuario junto con el cambio de cuenta. Sin segundo parámetro, ejecuta una revocación independiente. Es una función interna: la operación llamadora debe autorizarse primero.
+- **Bitácora:** dentro de `prisma.$transaction(async tx => { … })`, llamar `await registrarBitacora(tx, { sistema: "picking", operacion: "…", entidad: "…", registroId, detalle: { … }, usuarioId: sesion.usuario.id })`. No pasar contraseñas ni tokens al detalle. Para Reportes: `await consultarBitacora({ desde, hasta })` exige una sesión del picking con `pk.reportes` o acceso total y ordena por fecha e ID descendentes. JG-07 sustituirá su control local `exigirConsultaBitacora` por el control central `exigirPermiso`.
+- **Configuración:** usar las variables de `.env.example`. Producción exige claves de firma distintas de al menos 32 caracteres. En desarrollo, si faltan, se generan claves efímeras separadas conservadas durante las recargas; reiniciar el proceso invalida esas sesiones. Los secretos nunca se registran.
+
+### Correcciones y límites de alcance
+
+- `logging.serverFunctions: false` en `next.config.ts`: Next.js 16 registra por omisión los argumentos de las acciones en desarrollo, incluidas contraseñas. Las acciones de autenticación también sanitizan los errores antes de registrarlos.
+- Se fijó `options: "-c timezone=UTC"` en el cliente PostgreSQL: el servidor nativo de Windows puede tener `America/Guatemala` por omisión y el adaptador de Prisma reemplaza el desplazamiento de `timestamptz` sin convertir la hora. La prueba existente RN-57 detectó seis horas de diferencia; una prueba nueva exige UTC y comprueba la hora real. La presentación sigue usando `@/lib/fechas`.
+- El texto secundario del acceso usa `--g600` sobre `--g50` por RNF-08, igual que la precisión del design system de JG-05. Los colores laterales y el radio de icono agregados al tema son los valores originales del prototipo.
+- Los módulos de destino todavía pertenecen a sus tareas: las pruebas verifican las redirecciones a `/panel/documentos` y `/picking/facturacion`; esas páginas aún no existen. No se implementó JG-07.
+
+### Evidencia
+
+- [Comparación visual en los tres tamaños y 42 capturas](../evidencias/JG-06/README.md).
+- [Revisión independiente en contexto limpio y correcciones](../evidencias/JG-06/revision.md).
+- Pruebas primero: la suite de acceso falló por el servicio ausente; la de consulta de bitácora rechazó la falta de cabeceras explícitas fuera de una petición; la nueva prueba de UTC falló con `America/Guatemala`. No se debilitaron pruebas ni umbrales.
+- `crear-admin` probado en terminal real contra una base desechable: se ocultaron ambas contraseñas y se creó la cuenta para los dos sistemas. No se usaron datos ni credenciales de INCOVSA.
+- [Verificación local](../evidencias/JG-06/verificacion.md): `npm run verificar` aprobó formato, lint, tipos y 108 pruebas; los scripts aprobaron 109; `npm run build` y las 63 pruebas de `npm run e2e -- --workers=1` pasaron. next-devtools sin errores. El reinicio autorizado de `incovsa_jg06_reinicio` y las dos semillas también pasaron.
