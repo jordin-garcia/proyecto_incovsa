@@ -5,7 +5,7 @@ persona: jose-daniel
 responsable: José Daniel Cifuentes
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: []
 programada: 2026-10-17
 requisitos: []
@@ -70,3 +70,14 @@ node scripts/tareas.mjs --persona jose-daniel
 ## Notas
 - next-devtools solo responde con `npm run dev` corriendo (desde JG-02), y shadcn necesita `components.json` (desde JG-05). En esta tarea basta con que aparezcan registrados; su prueba real ocurre en la primera tarea con pantallas.
 - En el `## Resultado`, anota las versiones instaladas (Node, npm, Git, gh, PostgreSQL y el harness) y cualquier ajuste personal que haya hecho falta, para que el resto del equipo lo aproveche.
+
+## Resultado
+- Hecho: equipo verificado: Node.js 24.22.0, npm 11.19.1, Git 2.54.0 (Apple Git-157), GitHub CLI 2.96.0, PostgreSQL 18.6 y Codex CLI 0.163.0-alpha.10.2. `node scripts/verificar-entorno.mjs` terminó con “El equipo tiene todo lo necesario.”
+- Hecho: `gh api user --jq .login` devolvió `JDaniC` y `gh repo view jordin-garcia/proyecto_incovsa` confirmó acceso al repositorio.
+- Hecho: `/mcp` en Codex mostró `playwright` conectado (25 herramientas), `next-devtools` conectado (4), `shadcn` conectado (7) y `context7` conectado (2). Al inicio, los tres servidores del proyecto fallaban porque `npx` no confiaba en la CA TLS de la red; los configuré en `~/.codex/config.toml` con `NODE_EXTRA_CA_CERTS` apuntando al bundle de certificados raíz de macOS guardado fuera del repositorio en `~/.codex/certs/macOS-roots.pem`. El proyecto está marcado como confiable. Context7 ya estaba configurado en la configuración personal y autenticó mediante OAuth; no hizo falta una clave personal. Context7 resolvió Next.js como `/vercel/next.js` y devolvió documentación v16.0.3 de Server Actions: un formulario usa `action={createPost}` y pasa `FormData` a la función del servidor.
+- Hecho: con Playwright 1.63.0 abrí `http://127.0.0.1:4173/`, leí el título `Inicio · INCOVSA` y guardé `/tmp/JC-01-inicio-playwright.png`. Usé Google Chrome instalado en macOS porque la descarga del navegador de Playwright falló por el certificado de la red; no desactivé la validación TLS.
+- Hecho: la configuración personal de Codex usa `sandbox_mode = workspace-write` y `approval_policy = on-request`; el proyecto tiene `trust_level = trusted`. No se usó un modo sin confirmaciones. `.env` no estaba presente en esta copia y no se leyó.
+- Hecho: `node scripts/tareas.mjs --persona jose-daniel` identificó JC-01 como disponible y JC-02 esperando a JC-01; `node scripts/tareas.mjs --validar` informó “Plan válido: 62 tareas.”
+- Verificación: `npm ci --prefer-offline` instaló 689 paquetes, generó Prisma Client y reportó 0 vulnerabilidades. `npm run verificar` pasó con PostgreSQL 18 temporal y aislado: formato, lint, tipos y 14 archivos/129 pruebas. `npm run build` compiló correctamente. La base temporal quedó fuera del repositorio y se eliminó al terminar.
+- Decisiones: se reutilizó la autenticación OAuth existente de Context7 sin guardar claves en el repositorio. Para npm, la descarga TLS se completó usando temporalmente los certificados raíz del sistema; no se cambió la configuración permanente ni se desactivó TLS.
+- Archivos principales: `plan/tareas/JC-01-herramientas-del-agente.md` y `plan/bitacora/jose-daniel.md`. En este proyecto confiable, Codex carga los tres MCP del proyecto; Context7 queda disponible desde la configuración personal. Para que `npx` inicie los tres MCP detrás de la CA TLS de esta red en macOS, su entorno personal tiene `NODE_EXTRA_CA_CERTS` con las raíces del sistema. next-devtools requiere levantar la aplicación y shadcn requiere `components.json` para su uso en tareas posteriores, según la guía.
