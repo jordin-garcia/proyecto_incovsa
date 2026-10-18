@@ -5,8 +5,7 @@ persona: carlos
 responsable: Carlos Hugo Escobar
 hito: E2
 prioridad: P1
-estado: bloqueada
-bloqueo: Se hizo en Cursor Cloud Agent, donde `gh` usa el token de la App `cursor[bot]` y `gh api user` responde 403. Decisión del coordinador (18/10): la tarea se repite en **Cursor local en la Mac de Carlos** (decisión 70 de `specs/16`), con `gh auth login` como `carloshugoeg`. No se usa Cursor Cloud Agent ni un token personal (PAT) en servicios externos.
+estado: hecha
 depende_de: []
 programada: 2026-10-17
 requisitos: []
@@ -74,32 +73,25 @@ node scripts/tareas.mjs --persona carlos
 
 ## Resultado
 
-**Estado:** bloqueada (falta sesión de GitHub CLI como `carloshugoeg`). Trabajo hecho en el entorno de **Cursor Cloud Agent** (Linux), no en la Mac local de Carlos; la guía de macOS de `plan/instalacion.md` §2 sigue siendo la referencia para su máquina personal.
+**Estado:** hecha. Cerrada en **Cursor local en la Mac de Carlos** (macOS 26.6.2, arm64), con identidad GitHub `carloshugoeg`, según la decisión del coordinador (18/10) y la decisión 70 de `specs/16`. El trabajo previo en Cursor Cloud Agent quedó solo como contexto; el entorno válido es esta Mac.
 
-### Versiones en el Cloud Agent
-- Node.js **24.22.0** (nvm + enlaces en `/usr/local/bin` y `~/.local/bin`; el `node` del PATH del agente antes era 22.14.0)
+### Versiones en la Mac (Hugo's MacBook Pro)
+- Node.js **24.22.0** (`brew install node@24`; PATH: `/opt/homebrew/opt/node@24/bin` en `~/.zshrc`; el `node` global de Homebrew seguía en 26.9.0)
 - npm **11.19.1**
-- Git **2.43.0** · `user.name=Hugo Escobar` · `user.email=chescobarg@correo.url.edu.gt` · `core.autocrlf=false` · `pull.rebase=true`
-- GitHub CLI **2.102.0** · autenticado como App `cursor[bot]` (GraphQL `viewer.login` = `cursor[bot]`); `gh api user` → 403
-- PostgreSQL **18.6** (`psql` y servidor local en el puerto 5432)
-- Harness: **Cursor Cloud Agent** (modo agente; sin modo sin permisos)
+- Git **2.50.1 (Apple Git-155)** · `user.name=Hugo Escobar` · `user.email=chescobarg@correo.url.edu.gt` · `core.autocrlf=false` · `pull.rebase=true`
+- GitHub CLI **2.97.0** · `gh api user --jq .login` → **`carloshugoeg`** (keyring; scopes `repo`, `read:org`, `gist`, `admin:public_key`) · `gh auth setup-git` OK
+- PostgreSQL **18.6** (`psql`; `brew services start postgresql@18`)
+- Harness: **Cursor** (local, macOS) · modo agente con aislamiento; sin modo sin permisos
+- Repo local: `/Users/carloshugoeg/Projects/proyecto_incovsa` (clon fresco de `develop`)
 
 ### Evidencia por criterio
-1. `node scripts/verificar-entorno.mjs`: Node, npm, Git, gh (instalado), acceso al repo, PostgreSQL 18 y `core.autocrlf` en ✅. **Único ❌:** «GitHub CLI con sesión iniciada» porque `gh api user` falla con el token de la App.
-2. `gh api user --jq .login` **no** puede devolver `carloshugoeg` con el token Cloud (`cursor[bot]`). `gh repo view jordin-garcia/proyecto_incovsa` sí funciona.
-3. **Context7** (sin clave API, configuración personal `~/.cursor/mcp.json` solo con `url`): resolvió Next.js → `/vercel/next.js` (versiones hasta `v16.2.9`). `query-docs` sobre Server Actions en `/vercel/next.js/v16.2.9` devolvió fragmentos de `docs/01-app/01-getting-started/07-mutating-data.mdx` y `02-guides/forms.mdx`: `<form action={createPost}>`, acción async con `'use server'`, comprobación de sesión y `useActionState`.
-4. **Playwright:** con `node scripts/servir-prototipo.mjs` en http://127.0.0.1:4173/, captura de Inicio → título `Inicio · INCOVSA`, h1 «Química que sostiene a la industria guatemalteca». Evidencia en el store del proyecto: `media/ce-01/prototipo-inicio.png`.
-5. MCP del proyecto (`.cursor/mcp.json`): `playwright`, `next-devtools`, `shadcn` presentes. `context7` en configuración personal. En Cloud Agent no hay UI de «punto verde»; en la Mac, Carlos debe activarlos en Cursor Settings → MCP.
-6. `node scripts/tareas.mjs --persona carlos` y `--hoy carlos` responden: CE-01 atrasada; siguientes CE-02/CE-03 (hoy, esperan CE-01 y JG-07) y CE-05 disponible el 21/10.
-7. Modo agente con aislamiento (no modo sin permisos). `.env` no existe; `.cursorignore` y `.gitignore` bloquean `.env*`.
-
-### Cómo desbloquear (Carlos, en Cursor local en la Mac)
-Decisión del coordinador (18/10): CE-01 y todas las tareas de Carlos se trabajan en **Cursor local en su Mac**, como dice la decisión 70 de `specs/16`. No se usa Cursor Cloud Agent ni un token personal (PAT) guardado en servicios externos: el criterio 2 existe para comprobar que el trabajo sale con la identidad de la persona.
-1. Clonar el repositorio en la Mac, abrirlo en Cursor local e instalar lo que falte con la columna macOS de `plan/instalacion.md` §2: lo instalado en el Cloud Agent no sirve en la Mac. Los pasos 2 a 4 detallan los pasos 2, 7 y 4 de "Qué hacer"; los demás (Context7, modo de trabajo y evidencia) se repiten igual.
-2. En Terminal (Mac): `gh auth login` → GitHub.com → HTTPS → navegador, con la cuenta **`carloshugoeg`**. Luego `gh auth setup-git`.
-3. Comprobar: `gh api user --jq .login` → `carloshugoeg` y `node scripts/verificar-entorno.mjs` → «El equipo tiene todo lo necesario.»
-4. En Cursor (Mac): Settings → MCP → punto verde en `playwright`, `next-devtools`, `shadcn` (proyecto) y `context7` (personal; clave opcional en https://context7.com/dashboard).
-5. Reabrir la tarea en una conversación nueva: quitar `bloqueo`, poner `estado: hecha` y actualizar este Resultado con las versiones y la evidencia de la Mac.
+1. `node scripts/verificar-entorno.mjs` → «El equipo tiene todo lo necesario.» (todo ✅: Node 24.22.0, npm 11.19.1, Git, gh, sesión `carloshugoeg`, acceso al repo, PostgreSQL 18, `core.autocrlf=false`).
+2. `gh api user --jq .login` → `carloshugoeg`. `gh repo view jordin-garcia/proyecto_incovsa` → OK.
+3. **Context7** (configuración personal `~/.cursor/mcp.json`, URL `https://mcp.context7.com/mcp`, sin clave API): `resolve-library-id` → `/vercel/next.js` (versiones hasta `v16.2.9`). `query-docs` en `/vercel/next.js/v16.2.9` sobre Server Actions devolvió fragmentos de `docs/01-app/02-guides/forms.mdx` y `03-api-reference/02-components/form.mdx`: `<form action={createInvoice}>` / `<Form action={createPost}>`, acción async con `'use server'`, comprobación de sesión (`auth()`), y `FormData`.
+4. **Playwright:** con `node scripts/servir-prototipo.mjs` en http://127.0.0.1:4173/, captura de Inicio → título `Inicio · INCOVSA`, h1 «Química que sostiene a la industria guatemalteca». Evidencia: store del proyecto `media/ce-01/prototipo-inicio-mac.png` (y la captura previa del Cloud Agent en `media/ce-01/prototipo-inicio.png`).
+5. MCP del proyecto (`.cursor/mcp.json`): `playwright`, `next-devtools`, `shadcn`. `context7` en configuración personal. Registrados en Cursor; next-devtools/shadcn pueden quedar sin conexión hasta JG-02/JG-05 (nota de la tarea).
+6. `node scripts/tareas.mjs --persona carlos` y `--hoy carlos`: CE-01 era la única bloqueada; tras el cierre, CE-02/CE-03 siguen esperando JG-07; CE-05 disponible el 21/10.
+7. Modo agente con aislamiento (no modo sin permisos). `.env` no existe en el clon; `.cursorignore` y `.gitignore` bloquean `.env*`.
 
 ### Cómo usarlo
-Hasta desbloquear, **ninguna otra tarea de Carlos** (CE-02…) debe empezarse (B0). Lo que quedó operativo en el Cloud Agent (Node 24, npm 11.19+, PostgreSQL 18, Context7, Playwright y el prototipo) no se usa: Carlos trabaja en Cursor local en su Mac.
+B0 queda satisfecho para Carlos: las siguientes tareas CE pueden empezar cuando sus dependencias lo permitan. Trabajar siempre en **Cursor local en esta Mac** con `gh` como `carloshugoeg` (no Cloud Agent para tareas CE). Abrir el repo en `/Users/carloshugoeg/Projects/proyecto_incovsa`.
