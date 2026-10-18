@@ -1,6 +1,6 @@
 "use client";
-import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useTransition, type ReactNode } from "react";
 import { Armazon, type OpcionNavegacion, type SedeArmazon } from "./Armazon";
 import { salir } from "@/app/acceso/acciones";
 import { cambiarSede } from "@/modulos/permisos/acciones";
@@ -25,10 +25,12 @@ export function ArmazonConSesion({
   children: ReactNode;
 }) {
   const ruta = usePathname();
+  const router = useRouter();
+  const [cambiandoSede, iniciarCambio] = useTransition();
   const mensaje = useMensajes();
   const modulo = ruta.split("/")[2] ?? "";
   const actual = catalogo.find((o) => o.href === `/${sistema === "sitio" ? "panel" : "picking"}/${modulo}`);
-  useCambiosDeSede(sistema === "picking" ? sede : null);
+  useCambiosDeSede(sistema === "picking" && !cambiandoSede ? sede : null);
   return (
     <Armazon
       sistema={sistema}
@@ -37,13 +39,17 @@ export function ArmazonConSesion({
       usuario={usuario}
       sedes={sedes}
       sede={sede === null ? undefined : String(sede)}
+      cambiandoSede={cambiandoSede}
       opciones={opciones.map((o) => ({ ...o, activa: o.href === actual?.href }))}
       alSalir={async () => {
         await salir(sistema);
       }}
-      alCambiarSede={async (valor) => {
-        const resultado = await cambiarSede({ sede: Number(valor), modulo });
-        if (!resultado.ok) mensaje(resultado.error, "error");
+      alCambiarSede={(valor) => {
+        iniciarCambio(async () => {
+          const resultado = await cambiarSede({ sede: Number(valor), modulo });
+          if (!resultado.ok) mensaje(resultado.error, "error");
+          iniciarCambio(() => router.refresh());
+        });
       }}
     >
       {children}

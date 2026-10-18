@@ -20,7 +20,11 @@ describe("Autorización central", () => {
     const s = sesionDePrueba({ usuario: { ...sesionDePrueba().usuario, rol }, permisos: [], sedes: [] });
     for (const modulo of ["facturacion", "bodega", "ruta", "reportes", "configuracion", "tablero"])
       expect(accesoModulo(s, modulo)).toBe(true);
-    expect(await sedesDelUsuario(s)).toEqual(await prisma.sede.findMany({ orderBy: { id: "asc" } }));
+    const sedes = await sedesDelUsuario(s);
+    expect(sedes).toEqual(
+      await prisma.sede.findMany({ orderBy: { id: "asc" }, select: { id: true, nombre: true, prefijoOdoo: true } }),
+    );
+    expect(sedes.map((sede) => sede.nombre)).toEqual(["Quetzaltenango", "Guatemala", "Escuintla"]);
     expect(() => exigirPermiso(s, "pk.bodega", 2)).not.toThrow();
     expect(tienePermiso({ ...s, sistema: "sitio" }, "sit.contenido")).toBe(true);
   });

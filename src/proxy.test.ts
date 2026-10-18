@@ -7,7 +7,12 @@ import { proxy } from "./proxy";
 it("RNF-04: una cookie de otro sistema no permite pasar la primera barrera", async () => {
   estado.leer.mockClear();
   for (const ruta of ["/panel/documentos", "/picking/bodega"]) {
-    const respuesta = await proxy(new NextRequest(`http://localhost:3000${ruta}`));
+    const otroSistema = ruta.startsWith("/panel") ? "picking" : "sitio";
+    const respuesta = await proxy(
+      new NextRequest(`http://localhost:3000${ruta}`, {
+        headers: { cookie: `incovsa-${otroSistema}.session_token=sesion-del-otro-sistema` },
+      }),
+    );
     expect(respuesta.headers.get("location")).toBe("http://localhost:3000/acceso");
   }
   expect(estado.leer).not.toHaveBeenCalled();

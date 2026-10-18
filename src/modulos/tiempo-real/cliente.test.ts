@@ -34,3 +34,14 @@ it("RNF-13: refresca cada 5000 ms visible, se detiene oculta y libera el interva
   vi.advanceTimersByTime(5000);
   expect(refrescar).toHaveBeenCalledTimes(2);
 });
+
+it("RNF-13 / RN-17: null pausa las consultas durante un cambio de sede", () => {
+  vi.useFakeTimers();
+  vi.stubGlobal("document", { visibilityState: "visible" });
+  useCambiosDeSede(null);
+  vi.advanceTimersByTime(10000);
+  expect(refrescar).not.toHaveBeenCalled();
+  useCambiosDeSede(2);
+  vi.advanceTimersByTime(5000);
+  expect(refrescar).toHaveBeenCalledTimes(1);
+});

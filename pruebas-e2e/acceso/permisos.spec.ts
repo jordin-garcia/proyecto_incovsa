@@ -14,6 +14,7 @@ async function abrirMenu(page: Page) {
 }
 for (const caso of [
   { usuario: "ejemplo.03", sistema: "picking", opciones: ["Facturación"] },
+  { usuario: "ejemplo.03", sistema: "sitio", opciones: ["Documentación interna"] },
   { usuario: "ejemplo.05", sistema: "picking", opciones: ["Bodega", "Tablero"] },
   { usuario: "ejemplo.06", sistema: "picking", opciones: ["Ruta"] },
   {
@@ -88,13 +89,25 @@ test("RN-17 / RF-SL-66: cookie ajena se ignora y la sede autorizada persiste", a
   await expect(page.getByRole("combobox", { name: "Sede", exact: true })).toHaveCount(0);
   await entrar(context, "ejemplo.01", "picking");
   await page.goto("/picking/facturacion");
+  await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   const sede = page.getByRole("combobox", { name: "Sede", exact: true });
   await expect(sede.getByRole("option")).toHaveText(["Quetzaltenango", "Guatemala", "Escuintla"]);
-  await Promise.all([
-    page.waitForResponse((r) => r.request().method() === "POST" && !!r.request().headers()["next-action"]),
-    sede.selectOption({ label: "Escuintla" }),
-  ]);
+  let liberar = () => {};
+  const pendiente = new Promise<void>((resolver) => {
+    liberar = resolver;
+  });
+  await page.route("**/picking/facturacion", async (ruta) => {
+    if (ruta.request().method() === "POST" && ruta.request().headers()["next-action"]) await pendiente;
+    await ruta.continue();
+  });
+  try {
+    await sede.selectOption({ label: "Escuintla" });
+    await expect(sede).toBeDisabled();
+  } finally {
+    liberar();
+  }
   await expect(sede).toHaveValue("3");
+  await expect(sede).toBeEnabled();
   await page.reload();
   await expect(sede).toHaveValue("3");
   await page.goto("/picking/bodega");

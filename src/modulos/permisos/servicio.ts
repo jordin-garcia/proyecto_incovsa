@@ -21,19 +21,21 @@ export function exigirPermiso(
   permiso: string,
   sede?: number,
 ): asserts sesion is SesionActual {
+  if (!sesion || !tienePermiso(sesion, permiso)) throw new ErrorAcceso();
   if (
-    !tienePermiso(sesion, permiso) ||
-    (sede !== undefined &&
-      (!Number.isSafeInteger(sede) ||
-        sede < 1 ||
-        (!esAccesoTotal(sesion!.usuario.rol) && !sesion!.sedes.some((s) => s.id === sede))))
+    sede !== undefined &&
+    (!Number.isSafeInteger(sede) ||
+      sede < 1 ||
+      (!esAccesoTotal(sesion.usuario.rol) && !sesion.sedes.some((s) => s.id === sede)))
   )
     throw new ErrorAcceso();
 }
 
 export async function sedesDelUsuario(sesion: SesionActual | null) {
   if (!sesion) return [];
-  return esAccesoTotal(sesion.usuario.rol) ? prisma.sede.findMany({ orderBy: { id: "asc" } }) : sesion.sedes;
+  return esAccesoTotal(sesion.usuario.rol)
+    ? prisma.sede.findMany({ orderBy: { id: "asc" }, select: { id: true, nombre: true, prefijoOdoo: true } })
+    : sesion.sedes;
 }
 
 export function esPiloto(sesion: SesionActual | null): boolean {

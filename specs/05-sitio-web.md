@@ -6,10 +6,6 @@
 
 ## Identidad
 
-### Rutas internas del panel (18/10/2026, JG-07)
-
-`/panel` redirige a la primera sección permitida. El Resumen conserva las reglas de `Panel.SECCIONES` del prototipo y usa `/panel/resumen`, para que la entrada no se redirija a sí misma. Los nombres, el orden y los permisos de las secciones no cambian.
-
 | Elemento | Valor |
 |---|---|
 | Dominio | incovsa.com (reservado y disponible, según la contraparte) |
@@ -25,6 +21,8 @@
 Archivos recibidos (`docs_incovsa/PAGINA WEB/INFORMACION EMPRESA/`): los logotipos "INCOVSA Químicos", "Transformamos INCOVSA" e Inquiserca, y las imágenes `MISION.jpg` y `VISION.jpg`.
 
 ## Estructura y navegación
+
+**Rutas internas del panel (18/10/2026, JG-07):** `/panel` redirige a la primera sección permitida. El Resumen conserva las reglas de `Panel.SECCIONES` del prototipo y usa `/panel/resumen`, para que la entrada no se redirija a sí misma. Los nombres, el orden y los permisos de las secciones no cambian.
 
 - **Secciones aprobadas**, en este orden: **Inicio, Quiénes somos, Industrias, Productos, Noticias y Contacto**. Es la navegación del prototipo.
 - **Diseño responsivo:** la arquitectura visual se adapta correctamente a teléfono y escritorio (RF-SW-08).
