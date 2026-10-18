@@ -25,6 +25,7 @@ const eslintConfig = defineConfig([
     "playwright-report/**",
     "test-results/**",
     "coverage/**",
+    "src/generated/**",
   ]),
 ]);
 

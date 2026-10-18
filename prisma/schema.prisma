@@ -1,0 +1,598 @@
+// Esquema completo de la base de datos de INCOVSA (JG-03): sitio web y picking.
+// Fuente: specs/14-modelo-de-datos.md y el diccionario del Documento 2 (entregable-2/documento-2/02b-diccionario-de-datos.md),
+// con las decisiones de specs/16. Si difieren, manda specs/14.
+// Solo el coordinador lo modifica (specs/16, decisión 65). Los CHECK y el disparador de la bitácora están en la
+// migración con SQL propio (prisma/migrations/*_restricciones).
+
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  // Índices únicos parciales de `imagen` (Prisma 7.4+).
+  previewFeatures = ["partialIndexes"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------- Acceso
+
+model Sede {
+  id           Int      @id @default(autoincrement())
+  nombre       String   @unique @db.VarChar(40)
+  prefijoOdoo  String   @unique @map("prefijo_odoo") @db.VarChar(5)
+  tieneOficina Boolean  @map("tiene_oficina")
+  creadoEn     DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  usuarios            UsuarioSede[]
+  camiones            Camion[]
+  opcionesEnvio       OpcionEnvio[]
+  pedidosFacturados   PedidoFacturado[]
+  envios              Envio[]
+  solicitudesContacto SolicitudContacto[]
+  informacionContacto InformacionContacto?
+
+  @@map("sede")
+}
+
+/// Tabla `user` de Better Auth con los campos propios del proyecto (decisión 26).
+model Usuario {
+  id              String    @id
+  name            String
+  /// Correo interno único que exige Better Auth; no se muestra ni se usa para enviar correos.
+  email           String    @unique
+  emailVerified   Boolean   @default(false) @map("email_verified")
+  image           String?
+  /// Clave de acceso interna: sistema + "." + nombre de usuario (por ejemplo, picking.maria.argueta).
+  username        String    @unique
+  /// Nombre de usuario que escribe la persona. Único junto con el sistema (RN-54).
+  displayUsername String    @map("display_username")
+  /// sitio, picking o ambos (solo Gerencia y Soporte).
+  sistema         String    @db.VarChar(10)
+  /// Rol en texto libre (RN-38).
+  rol             String    @db.VarChar(60)
+  correo          String?   @db.VarChar(120)
+  activo          Boolean   @default(true)
+  eliminadoEn     DateTime? @map("eliminado_en") @db.Timestamptz(3)
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  cuentas                Cuenta[]
+  sesiones               Sesion[]
+  permisos               UsuarioPermiso[]
+  sedes                  UsuarioSede[]
+  bitacora               Bitacora[]
+  opcionesEnvioPiloto    OpcionEnvio[]         @relation("OpcionEnvioPiloto")
+  pedidosCargados        PedidoFacturado[]
+  enviosEnviados         Envio[]               @relation("EnvioEnviadoPor")
+  enviosPiloto           Envio[]               @relation("EnvioPiloto")
+  historialEstados       HistorialEstado[]
+  noticias               Noticia[]
+  productosDocumentados  ProductoDocumentado[]
+  solicitudesResponsable SolicitudContacto[]
+
+  @@unique([displayUsername, sistema])
+  @@map("usuario")
+}
+
+/// Tabla `account` de Better Auth: guarda el hash scrypt de la contraseña.
+model Cuenta {
+  id                    String    @id
+  accountId             String    @map("account_id")
+  providerId            String    @map("provider_id")
+  userId                String    @map("user_id")
+  password              String?
+  accessToken           String?   @map("access_token")
+  refreshToken          String?   @map("refresh_token")
+  idToken               String?   @map("id_token")
+  scope                 String?
+  accessTokenExpiresAt  DateTime? @map("access_token_expires_at") @db.Timestamptz(3)
+  refreshTokenExpiresAt DateTime? @map("refresh_token_expires_at") @db.Timestamptz(3)
+  createdAt             DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt             DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  usuario Usuario @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("cuenta")
+}
+
+/// Tabla `session` de Better Auth.
+model Sesion {
+  id        String   @id
+  token     String   @unique
+  expiresAt DateTime @map("expires_at") @db.Timestamptz(3)
+  ipAddress String?  @map("ip_address")
+  userAgent String?  @map("user_agent")
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  usuario Usuario @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sesion")
+}
+
+/// Tabla `verification` de Better Auth. El sistema no la usa (no hay recuperación por correo).
+model Verificacion {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime @map("expires_at") @db.Timestamptz(3)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([identifier])
+  @@map("verificacion")
+}
+
+model Permiso {
+  id          Int      @id @default(autoincrement())
+  /// Por ejemplo, pk.facturacion (specs/03).
+  codigo      String   @unique @db.VarChar(40)
+  sistema     String   @db.VarChar(10)
+  modulo      String   @db.VarChar(60)
+  /// Acción que permite.
+  descripcion String   @db.VarChar(200)
+  creadoEn    DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  usuarios UsuarioPermiso[]
+
+  @@map("permiso")
+}
+
+model UsuarioPermiso {
+  usuarioId String   @map("usuario_id")
+  permisoId Int      @map("permiso_id")
+  creadoEn  DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
+  permiso Permiso @relation(fields: [permisoId], references: [id])
+
+  @@id([usuarioId, permisoId])
+  @@map("usuario_permiso")
+}
+
+model UsuarioSede {
+  usuarioId String   @map("usuario_id")
+  sedeId    Int      @map("sede_id")
+  creadoEn  DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
+  sede    Sede    @relation(fields: [sedeId], references: [id])
+
+  @@id([usuarioId, sedeId])
+  @@map("usuario_sede")
+}
+
+/// Registro de operaciones (RN-39). No se edita ni se borra: un disparador rechaza UPDATE, DELETE y TRUNCATE.
+model Bitacora {
+  id             BigInt   @id @default(autoincrement())
+  /// sitio o picking.
+  sistema        String   @db.VarChar(10)
+  operacion      String   @db.VarChar(80)
+  entidad        String?  @db.VarChar(40)
+  registroId     String?  @map("registro_id") @db.VarChar(40)
+  detalle        Json
+  /// Vacío en un intento con un usuario que no existe.
+  usuarioId      String?  @map("usuario_id")
+  usuarioEscrito String?  @map("usuario_escrito") @db.VarChar(60)
+  ip             String?  @db.VarChar(45)
+  creadoEn       DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  usuario Usuario? @relation(fields: [usuarioId], references: [id])
+
+  @@map("bitacora")
+}
+
+// ---------------------------------------------------------------- Picking
+
+model Camion {
+  id             Int       @id @default(autoincrement())
+  identificacion String    @db.VarChar(40)
+  capacidadKg    Decimal   @map("capacidad_kg") @db.Decimal(12, 3)
+  sedeId         Int       @map("sede_id")
+  /// Eliminación lógica (decisión 2).
+  eliminadoEn    DateTime? @map("eliminado_en") @db.Timestamptz(3)
+  creadoEn       DateTime  @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn  DateTime  @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  sede          Sede          @relation(fields: [sedeId], references: [id])
+  opcionesEnvio OpcionEnvio[]
+  envios        Envio[]
+
+  @@map("camion")
+}
+
+/// Las dos opciones de envío de cada sede: camion y recoge (RN-48).
+model OpcionEnvio {
+  id              Int       @id @default(autoincrement())
+  sedeId          Int       @map("sede_id")
+  /// camion o recoge.
+  tipo            String    @db.VarChar(10)
+  camionId        Int?      @map("camion_id")
+  pilotoId        String?   @map("piloto_id")
+  fechaProgramada DateTime? @map("fecha_programada") @db.Date
+  horaProgramada  DateTime? @map("hora_programada") @db.Time(0)
+  creadoEn        DateTime  @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn   DateTime  @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  sede              Sede              @relation(fields: [sedeId], references: [id])
+  camion            Camion?           @relation(fields: [camionId], references: [id])
+  piloto            Usuario?          @relation("OpcionEnvioPiloto", fields: [pilotoId], references: [id])
+  pedidosFacturados PedidoFacturado[]
+
+  @@unique([sedeId, tipo])
+  @@map("opcion_envio")
+}
+
+/// Una referencia de Odoo de un solo cliente, tal como viene en el archivo (RN-35).
+model PedidoFacturado {
+  id            Int      @id @default(autoincrement())
+  sedeId        Int      @map("sede_id")
+  /// Tercer segmento de la Referencia. No es único (decisión 4).
+  numeroOdoo    String   @map("numero_odoo") @db.VarChar(20)
+  referencia    String   @db.VarChar(40)
+  cliente       String   @db.VarChar(200)
+  sector        String   @db.VarChar(200)
+  /// Vacía: está en el tablero.
+  opcionEnvioId Int?     @map("opcion_envio_id")
+  envioId       Int?     @map("envio_id")
+  posicion      Int
+  cargadoPorId  String   @map("cargado_por")
+  creadoEn      DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  /// specs/14: las entidades que se modifican guardan su fecha de modificación (el diccionario no la tenía).
+  actualizadoEn DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  sede        Sede                     @relation(fields: [sedeId], references: [id])
+  opcionEnvio OpcionEnvio?             @relation(fields: [opcionEnvioId], references: [id])
+  envio       Envio?                   @relation(fields: [envioId], references: [id])
+  cargadoPor  Usuario                  @relation(fields: [cargadoPorId], references: [id])
+  detalles    DetallePedidoFacturado[]
+
+  @@index([numeroOdoo])
+  @@map("pedido_facturado")
+}
+
+model DetallePedidoFacturado {
+  id                Int      @id @default(autoincrement())
+  pedidoFacturadoId Int      @map("pedido_facturado_id")
+  producto          String   @db.VarChar(200)
+  /// Texto vacío si no viene en el archivo, nunca nulo (decisión 42).
+  lote              String   @default("") @db.VarChar(40)
+  pesoConversionKg  Decimal  @map("peso_conversion_kg") @db.Decimal(12, 3)
+  cantidadKg        Decimal  @map("cantidad_kg") @db.Decimal(12, 3)
+  orden             Int
+  creadoEn          DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  pedidoFacturado PedidoFacturado @relation(fields: [pedidoFacturadoId], references: [id], onDelete: Cascade)
+
+  @@map("detalle_pedido_facturado")
+}
+
+/// En Preparación, Despachado, En Ruta o Entregado (RN-11).
+model EstadoEnvio {
+  id       Int      @id @default(autoincrement())
+  nombre   String   @unique @db.VarChar(30)
+  creadoEn DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  envios    Envio[]
+  historial HistorialEstado[]
+
+  @@map("estado_envio")
+}
+
+/// Lo que se envía a Bodega: una ruta (camión) o un pedido (cliente recoge).
+model Envio {
+  id             Int      @id @default(autoincrement())
+  sedeId         Int      @map("sede_id")
+  /// ruta o pedido.
+  tipo           String   @db.VarChar(10)
+  /// Número del día (RN-52).
+  numero         Int
+  /// Fecha de envío a Bodega, en la hora de Guatemala.
+  fechaEnvio     DateTime @map("fecha_envio") @db.Date
+  programadoPara DateTime @map("programado_para") @db.Timestamptz(3)
+  estadoId       Int      @map("estado_id")
+  enviadoPorId   String   @map("enviado_por")
+  camionId       Int?     @map("camion_id")
+  pilotoId       String?  @map("piloto_id")
+  posicionCola   Int?     @map("posicion_cola")
+  creadoEn       DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn  DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  sede              Sede               @relation(fields: [sedeId], references: [id])
+  estado            EstadoEnvio        @relation(fields: [estadoId], references: [id])
+  enviadoPor        Usuario            @relation("EnvioEnviadoPor", fields: [enviadoPorId], references: [id])
+  camion            Camion?            @relation(fields: [camionId], references: [id])
+  piloto            Usuario?           @relation("EnvioPiloto", fields: [pilotoId], references: [id])
+  pedidosFacturados PedidoFacturado[]
+  lineas            LineaPreparacion[]
+  historial         HistorialEstado[]
+  entregas          EntregaRuta[]
+
+  @@unique([sedeId, tipo, fechaEnvio, numero])
+  @@map("envio")
+}
+
+/// Filas de Bodega: una por producto, lote y Peso de Conversión en cada envío (RN-51).
+model LineaPreparacion {
+  id               Int      @id @default(autoincrement())
+  envioId          Int      @map("envio_id")
+  producto         String   @db.VarChar(200)
+  /// Texto vacío si no hay lote, nunca nulo (decisión 42).
+  lote             String   @default("") @db.VarChar(40)
+  pesoConversionKg Decimal  @map("peso_conversion_kg") @db.Decimal(12, 3)
+  cantidadKg       Decimal  @map("cantidad_kg") @db.Decimal(12, 3)
+  /// No guarda quién marcó (RN-20).
+  marcado          Boolean  @default(false)
+  posicion         Int
+  creadoEn         DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn    DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  envio Envio @relation(fields: [envioId], references: [id], onDelete: Cascade)
+
+  @@unique([envioId, producto, lote, pesoConversionKg])
+  @@map("linea_preparacion")
+}
+
+model HistorialEstado {
+  id        Int      @id @default(autoincrement())
+  envioId   Int      @map("envio_id")
+  estadoId  Int      @map("estado_id")
+  usuarioId String   @map("usuario_id")
+  creadoEn  DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  envio   Envio       @relation(fields: [envioId], references: [id])
+  estado  EstadoEnvio @relation(fields: [estadoId], references: [id])
+  usuario Usuario     @relation(fields: [usuarioId], references: [id])
+
+  @@map("historial_estado")
+}
+
+/// Clientes de una ruta, uno por fila (RN-49), y su orden (RN-29).
+model EntregaRuta {
+  id            Int      @id @default(autoincrement())
+  envioId       Int      @map("envio_id")
+  cliente       String   @db.VarChar(200)
+  sector        String   @db.VarChar(200)
+  totalKg       Decimal  @map("total_kg") @db.Decimal(12, 3)
+  orden         Int
+  creadoEn      DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  envio Envio @relation(fields: [envioId], references: [id], onDelete: Cascade)
+
+  @@map("entrega_ruta")
+}
+
+// ---------------------------------------------------------------- Sitio web
+
+/// Un solo registro (id 1) con los logotipos del sitio.
+model ConfiguracionSitio {
+  id                    Int      @id @default(1)
+  /// Vacío: el logotipo recibido de la empresa.
+  logotipoIncovsaUrl    String?  @map("logotipo_incovsa_url")
+  logotipoInquisercaUrl String?  @map("logotipo_inquiserca_url")
+  creadoEn              DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn         DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  @@map("configuracion_sitio")
+}
+
+model ContenidoInstitucional {
+  id            Int      @id @default(autoincrement())
+  /// mision, vision o historia.
+  seccion       String   @unique @db.VarChar(20)
+  texto         String
+  creadoEn      DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  @@map("contenido_institucional")
+}
+
+/// Las 5 imágenes de los valores, sin texto (RF-SW-29).
+model Valor {
+  id            Int      @id @default(autoincrement())
+  posicion      Int      @unique @db.SmallInt
+  imagenUrl     String?  @map("imagen_url")
+  creadoEn      DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  @@map("valor")
+}
+
+model Industria {
+  id            Int      @id @default(autoincrement())
+  nombre        String   @unique @db.VarChar(60)
+  descripcion   String
+  orden         Int      @db.SmallInt
+  creadoEn      DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  productos ProductoIndustria[]
+  imagenes  Imagen[]
+
+  @@map("industria")
+}
+
+model ProductoSitio {
+  id            Int      @id @default(autoincrement())
+  nombre        String   @db.VarChar(150)
+  descripcion   String?
+  presentacion  String?  @db.VarChar(150)
+  paisesOrigen  String?  @map("paises_origen") @db.VarChar(200)
+  creadoEn      DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  industrias ProductoIndustria[]
+  imagenes   Imagen[]
+
+  @@map("producto_sitio")
+}
+
+model ProductoIndustria {
+  productoSitioId Int      @map("producto_sitio_id")
+  industriaId     Int      @map("industria_id")
+  creadoEn        DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  productoSitio ProductoSitio @relation(fields: [productoSitioId], references: [id])
+  industria     Industria     @relation(fields: [industriaId], references: [id])
+
+  @@id([productoSitioId, industriaId])
+  @@map("producto_industria")
+}
+
+/// Toda noticia guardada se publica; para quitarla se elimina (15/10).
+model Noticia {
+  id               Int      @id @default(autoincrement())
+  titulo           String   @db.VarChar(200)
+  texto            String
+  fechaPublicacion DateTime @map("fecha_publicacion") @db.Timestamptz(3)
+  autorId          String   @map("autor_id")
+  creadoEn         DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn    DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  autor    Usuario  @relation(fields: [autorId], references: [id])
+  imagenes Imagen[]
+
+  @@map("noticia")
+}
+
+/// Imágenes de las galerías de hasta 5 (RN-56). La unicidad del diccionario (área, dueño, posición) se declara con
+/// índices parciales: en PostgreSQL una restricción única con columnas nulas no impide repetidos.
+model Imagen {
+  id              Int      @id @default(autoincrement())
+  /// portada, mision, vision, historia, industria, producto o noticia.
+  area            String   @db.VarChar(20)
+  industriaId     Int?     @map("industria_id")
+  productoSitioId Int?     @map("producto_sitio_id")
+  noticiaId       Int?     @map("noticia_id")
+  /// 1 a 5: orden de rotación.
+  posicion        Int      @db.SmallInt
+  url             String
+  creadoEn        DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  industria     Industria?     @relation(fields: [industriaId], references: [id], onDelete: Cascade)
+  productoSitio ProductoSitio? @relation(fields: [productoSitioId], references: [id], onDelete: Cascade)
+  noticia       Noticia?       @relation(fields: [noticiaId], references: [id], onDelete: Cascade)
+
+  @@unique([area, posicion], map: "imagen_area_posicion_key", where: raw("industria_id IS NULL AND producto_sitio_id IS NULL AND noticia_id IS NULL"))
+  @@unique([industriaId, posicion], map: "imagen_industria_posicion_key", where: raw("industria_id IS NOT NULL"))
+  @@unique([productoSitioId, posicion], map: "imagen_producto_sitio_posicion_key", where: raw("producto_sitio_id IS NOT NULL"))
+  @@unique([noticiaId, posicion], map: "imagen_noticia_posicion_key", where: raw("noticia_id IS NOT NULL"))
+  @@map("imagen")
+}
+
+/// Documentación interna: un producto con los enlaces de Google Drive de su FT, HS y COA (RN-55).
+model ProductoDocumentado {
+  id            Int      @id @default(autoincrement())
+  producto      String   @db.VarChar(150)
+  paisId        Int      @map("pais_id")
+  /// Letras y números. Obligatorio (RN-41).
+  lote          String   @db.VarChar(40)
+  enlaceFt      String?  @map("enlace_ft")
+  enlaceHs      String?  @map("enlace_hs")
+  enlaceCoa     String?  @map("enlace_coa")
+  creadoPorId   String   @map("creado_por")
+  creadoEn      DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  pais      Pais    @relation(fields: [paisId], references: [id])
+  creadoPor Usuario @relation(fields: [creadoPorId], references: [id])
+
+  @@unique([producto, paisId, lote])
+  @@map("producto_documentado")
+}
+
+/// Mensajes del formulario de contacto. Solo se guardan en el sistema (RF-SW-06).
+model SolicitudContacto {
+  id             Int      @id @default(autoincrement())
+  /// Por ejemplo, SOL-2026-0001.
+  folio          String   @unique @db.VarChar(20)
+  /// solicitud, queja o reclamo.
+  motivo         String   @db.VarChar(10)
+  nombre         String   @db.VarChar(150)
+  empresa        String?  @db.VarChar(150)
+  correo         String   @db.VarChar(150)
+  telefonoCodigo String?  @map("telefono_codigo") @db.VarChar(6)
+  telefono       String?  @db.VarChar(20)
+  paisId         Int      @map("pais_id")
+  departamentoId Int?     @map("departamento_id")
+  municipioId    Int?     @map("municipio_id")
+  sedeId         Int      @map("sede_id")
+  mensaje        String
+  leida          Boolean  @default(false)
+  /// Vacío, asignado, en_proceso o solucionado (RN-42).
+  estado         String?  @db.VarChar(12)
+  responsableId  String?  @map("responsable_id")
+  comentario     String?
+  creadoEn       DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn  DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  pais         Pais          @relation(fields: [paisId], references: [id])
+  departamento Departamento? @relation(fields: [departamentoId], references: [id])
+  municipio    Municipio?    @relation(fields: [municipioId], references: [id])
+  sede         Sede          @relation(fields: [sedeId], references: [id])
+  responsable  Usuario?      @relation(fields: [responsableId], references: [id])
+
+  @@map("solicitud_contacto")
+}
+
+/// Datos de contacto de las sedes con oficina.
+model InformacionContacto {
+  id            Int      @id @default(autoincrement())
+  sedeId        Int      @unique @map("sede_id")
+  direccion     String   @db.VarChar(250)
+  telefono      String   @db.VarChar(60)
+  correo        String   @db.VarChar(120)
+  whatsapp      String   @db.VarChar(30)
+  horario       String?  @db.VarChar(120)
+  /// Dirección `src` del mapa insertado de Google Maps.
+  mapaUrl       String   @map("mapa_url")
+  creadoEn      DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  sede Sede @relation(fields: [sedeId], references: [id])
+
+  @@map("informacion_contacto")
+}
+
+model Pais {
+  id       Int      @id @default(autoincrement())
+  /// Código ISO 3166-1 de dos letras.
+  codigo   String   @unique @db.Char(2)
+  nombre   String   @db.VarChar(80)
+  creadoEn DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  productosDocumentados ProductoDocumentado[]
+  solicitudesContacto   SolicitudContacto[]
+
+  @@map("pais")
+}
+
+/// Los 22 departamentos de Guatemala (INE).
+model Departamento {
+  id       Int      @id @default(autoincrement())
+  nombre   String   @db.VarChar(40)
+  creadoEn DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  municipios          Municipio[]
+  solicitudesContacto SolicitudContacto[]
+
+  @@map("departamento")
+}
+
+/// Los 340 municipios de Guatemala (INE).
+model Municipio {
+  id             Int      @id @default(autoincrement())
+  departamentoId Int      @map("departamento_id")
+  nombre         String   @db.VarChar(60)
+  creadoEn       DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  departamento        Departamento        @relation(fields: [departamentoId], references: [id])
+  solicitudesContacto SolicitudContacto[]
+
+  @@map("municipio")
+}

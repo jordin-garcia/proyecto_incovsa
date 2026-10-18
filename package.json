@@ -17,6 +17,12 @@
     "test": "vitest run",
     "e2e": "playwright test",
     "verificar": "npm run formato && npm run lint && npm run tipos && npm test",
+    "db:migrar": "prisma migrate dev",
+    "db:aplicar": "prisma migrate deploy",
+    "db:reiniciar": "prisma migrate reset --force",
+    "db:semilla": "tsx prisma/seed.ts",
+    "semilla:demo": "tsx prisma/semilla-demo.ts",
+    "postinstall": "prisma generate",
     "prepare": "husky"
   },
   "dependencies": {
