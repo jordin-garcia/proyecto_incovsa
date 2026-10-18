@@ -5,7 +5,7 @@ persona: josue
 responsable: Josué Menéndez
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JM-01, JG-02]
 programada: 2026-10-17
 requisitos: [RN-01, RN-02, RN-05, RN-21, RF-SL-22]
@@ -60,3 +60,43 @@ npm test -- src/modulos/conversion
 ## Notas
 - No tiene pantallas ni base de datos: puede hacerse el sábado después de JG-02.
 - Este módulo entra en las pruebas de mutación de JG-11: las pruebas deben detectar cualquier cambio de la fórmula.
+
+## Resultado
+
+Se implementó el servicio central de conversión de kilogramos a unidades en `src/modulos/conversion/servicio.ts` y el componente de interfaz `src/componentes/picking/bodega/Unidades.tsx`, con su batería completa de 31 pruebas unitarias y de propiedades en `src/modulos/conversion/servicio.test.ts`.
+
+El cálculo convierte las cantidades y el Peso de Conversión a gramos enteros (`BigInt`), garantizando exactitud matemática sin pérdida de precisión por aritmética de punto flotante IEEE 754 (specs/16, decisión 1; RN-01, RN-05, RN-21).
+
+**Decisiones tomadas:**
+- **Entrada polimórfica exacta (`DecimalExacto`):** La función `convertir` admite cadenas de texto numéricas (`string`), instancias de `Decimal` de Prisma (`Prisma.Decimal`) y números (`number`), normalizando siempre a gramos enteros sin aproximaciones previas.
+- **Validación de Peso de Conversión (RN-50):** Si `pesoConversionKg <= 0`, lanza `ErrorNegocio("El Peso de Conversión debe ser mayor que cero.")`. Si la cantidad es negativa, lanza `ErrorNegocio("La cantidad no puede ser negativa.")`.
+- **Formato idéntico al prototipo:** `fmt()`, `textoUnidades()`, `textoConversion()` y `htmlConversion()` reproducen con exactitud los textos, separadores de miles, omisión de "+ 0 kg" en conversiones exactas y etiquetas HTML (`unid`, `resto`) de `base.js` y `estilos.css`.
+- **Componente `<Unidades />`:** Admite recibir `cantidadKg` y `pesoConversionKg` para calcular la conversión en el renderizado, o bien `unidades` y `restoKg` ya precalculados. Aplica los estilos tipográficos monoespaciados y la pastilla verde (`#EEF6E2`, `#45691A`) del design system.
+
+**Archivos principales:**
+- `src/modulos/conversion/servicio.ts`: Servicio con `convertir`, `textoConversion`, `textoUnidades`, `htmlConversion`, `fmt` y tipos `DecimalExacto`, `ResultadoConversion`.
+- `src/modulos/conversion/servicio.test.ts`: 31 pruebas que cubren CP-01 a CP-15 (casos validados por INCOVSA), CP-16 a CP-18 (fraccionados), conversiones exactas, validación de errores (RN-50), propiedades matemáticas exhaustivas con `fast-check` (1,000 corridas con números hasta 4,536 kg y pesos hasta 2,500 kg con 3 decimales, más corridas con `Prisma.Decimal`), y pruebas del componente React con `react-dom/server`.
+- `src/componentes/picking/bodega/Unidades.tsx`: Componente visual para Bodega, tablero y detalle.
+
+**Cómo usar lo que se creó:**
+- **Calcular conversión en servicios o componentes:**
+  ```ts
+  import { convertir, textoConversion } from "@/modulos/conversion/servicio";
+
+  const { unidades, restoKg } = convertir(linea.cantidadKg, linea.pesoConversionKg);
+  // o también mediante los alias u y r del prototipo:
+  // const { u, r } = convertir(...);
+
+  const texto = textoConversion(linea.cantidadKg, linea.pesoConversionKg);
+  // Ejemplo: "2 unidades + 10 kg" o "2 unidades"
+  ```
+- **Mostrar en componentes de Bodega / Tablero:**
+  ```tsx
+  import { Unidades } from "@/componentes/picking/bodega/Unidades";
+
+  // Calculando directamente desde cantidad y peso:
+  <Unidades cantidadKg={linea.cantidadKg} pesoConversionKg={linea.pesoConversionKg} />
+
+  // O con valores ya calculados:
+  <Unidades unidades={linea.unidades} restoKg={linea.restoKg} />
+  ```
