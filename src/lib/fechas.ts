@@ -15,7 +15,16 @@ export type Instante = Date | number | string;
 
 const enGuatemala = { in: tz(ZONA_GUATEMALA) };
 const PATRON_DIA = /^(\d{4})-(\d{2})-(\d{2})$/;
-const PATRON_ISO_CON_ZONA = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d{1,3})?)?(Z|[+-]\d{2}:\d{2})$/;
+const PATRON_ISO_CON_ZONA =
+  /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.\d{1,3})?)?(?:Z|[+-](\d{2}):(\d{2}))$/;
+
+/** Texto ISO 8601 con Z o desfase cuya fecha, hora y desfase existen (new Date pasaría 31/02 al 03/03 sin avisar). */
+function esIsoConZonaValido(texto: string): boolean {
+  const m = PATRON_ISO_CON_ZONA.exec(texto);
+  if (!m || !partesDeDia(Number(m[1]), Number(m[2]), Number(m[3]))) return false;
+  const [horas, minutos, segundos, horasDesfase, minutosDesfase] = [m[4], m[5], m[6], m[7], m[8]].map(Number);
+  return horas < 24 && minutos < 60 && !(segundos >= 60) && !(horasDesfase > 23) && !(minutosDesfase > 59);
+}
 const dosDigitos = (n: number) => String(n).padStart(2, "0");
 
 /** Devuelve el año, el mes y el día si existen en el calendario; si no, null. */
@@ -41,7 +50,7 @@ function inicioDeDia(dia: Dia): TZDate {
 function aInstante(valor: Instante): Date {
   if (typeof valor === "string") {
     if (PATRON_DIA.test(valor)) return inicioDeDia(valor);
-    if (!PATRON_ISO_CON_ZONA.test(valor)) throw new RangeError(`Instante sin zona o con otro formato: "${valor}"`);
+    if (!esIsoConZonaValido(valor)) throw new RangeError(`Instante sin zona o con otro formato: "${valor}"`);
   }
   const instante = new Date(valor);
   if (Number.isNaN(+instante)) throw new RangeError(`Instante inválido: "${String(valor)}"`);

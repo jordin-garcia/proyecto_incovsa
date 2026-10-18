@@ -77,6 +77,13 @@ describe("textos que no son un día ni un instante con zona", () => {
     expect(fechaGuatemala("2026-10-18T00:30:00.000+01:00")).toBe("2026-10-17");
   });
 
+  it("Decisión 6: un instante ISO con una fecha u hora que no existe se rechaza en lugar de pasar al día siguiente", () => {
+    expect(() => fechaGuatemala("2026-02-31T10:00:00Z")).toThrow(RangeError);
+    expect(() => fechaGuatemala("2026-10-17T24:00:00Z")).toThrow(RangeError);
+    expect(() => fechaGuatemala("2026-10-17T10:60:00Z")).toThrow(RangeError);
+    expect(() => fechaGuatemala("2026-10-17T10:00:00+25:00")).toThrow(RangeError);
+  });
+
   it("Decisión 6: un Date inválido se rechaza", () => {
     expect(() => fechaGuatemala(new Date(Number.NaN))).toThrow(RangeError);
   });
