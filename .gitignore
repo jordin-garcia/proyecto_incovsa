@@ -11,6 +11,8 @@ __pycache__/
 /coverage/
 *.tsbuildinfo
 next-env.d.ts
+# Cliente de Prisma: lo genera `prisma generate` (postinstall)
+/src/generated/
 .DS_Store
 npm-debug.log*
 

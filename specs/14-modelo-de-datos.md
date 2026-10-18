@@ -25,6 +25,8 @@ Este es el modelo **conceptual**. Los nombres físicos, los tipos, los índices 
 - Las cuentas con rol **Gerencia** o **Soporte** tienen acceso total a los dos sistemas y a todas las sedes, y sirven en los dos inicios de sesión (RN-38). Son **un solo registro** con el sistema "ambos" (15/10). Su nombre de usuario no se puede repetir en el otro sistema (RN-54).
 - Los pilotos son los usuarios del picking con rol "Piloto" (RN-46). El rol se compara sin distinguir mayúsculas, acentos ni espacios al inicio o al final.
 - Al eliminar un usuario se guarda su fecha de eliminación: no puede iniciar sesión, su nombre de usuario queda reservado en su sistema y se conservan la bitácora y los registros donde aparece.
+- **Clave de acceso interna y correo interno (17/10, JG-03):** la clave es `<sistema>.<nombre de usuario>` en minúsculas (`sitio.`, `picking.` o `ambos.`) y el correo interno que exige Better Auth es `<clave>@incovsa.invalid`, un dominio reservado que no recibe correos (decisión 26).
+- La "acción" de PERMISO es su descripción (por ejemplo, "Ver todas las rutas"), como en el catálogo de [03](03-roles-y-accesos.md).
 
 ## Sistema de picking
 
@@ -53,6 +55,7 @@ Este es el modelo **conceptual**. Los nombres físicos, los tipos, los índices 
 - El marcado de LINEA_PREPARACION no guarda quién marcó (RN-20).
 - Las líneas guardan el Peso de Conversión con el que llegaron en el archivo (RN-33).
 - **Lote vacío (16/10):** en DETALLE_PEDIDO_FACTURADO y LINEA_PREPARACION el lote **no** admite nulo. Un lote que no viene en el archivo se guarda como **texto vacío**, y Bodega lo muestra como "Sin lote". Así la regla de una línea de preparación por (envío, producto, lote, Peso de Conversión) se cumple también sin lote: en PostgreSQL dos valores nulos no se consideran iguales en una restricción de unicidad.
+- PEDIDO_FACTURADO guarda su fecha de última modificación, porque cambian su opción de envío, su posición y su envío (17/10, JG-03).
 - BITACORA registra también los inicios de sesión, los intentos fallidos y las consultas de usuarios inexistentes del acceso personal (RN-39). En esos casos el usuario puede no existir: el registro guarda el nombre de usuario escrito y la relación con USUARIO queda vacía.
 
 ### Entidades y atributos eliminados
@@ -101,6 +104,8 @@ Este es el modelo **conceptual**. Los nombres físicos, los tipos, los índices 
 | MUNICIPIO | nombre | Departamento |
 
 - La relación N:M entre productos públicos e industrias se implementa con **PRODUCTO_INDUSTRIA**.
+- CONFIGURACION_SITIO: el logotipo de INCOVSA vacío es el recibido de la empresa (`public/marca/`); el de Inquiserca **viene cargado** con el recibido el 13/10 (`/marca/inquiserca.webp`) y vacío significa que se quitó desde el panel (17/10, JG-03).
+- Una posición de IMAGEN no se repite en la misma galería (el área y su dueño). Como el dueño queda vacío en la portada, la misión, la visión y la historia, la base lo garantiza con índices únicos parciales (17/10, JG-03).
 - PAIS es la lista de todos los países, que usan el formulario de contacto y la documentación interna.
 - Las imágenes se guardan en Cloudflare R2; en la base de datos solo se guarda su dirección (URL).
 - La solicitud de contacto solo se guarda en el sistema; no se envía por correo (13/10).
