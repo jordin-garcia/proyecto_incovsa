@@ -6,6 +6,10 @@
 
 ## Identidad
 
+### Rutas internas del panel (18/10/2026, JG-07)
+
+`/panel` redirige a la primera sección permitida. El Resumen conserva las reglas de `Panel.SECCIONES` del prototipo y usa `/panel/resumen`, para que la entrada no se redirija a sí misma. Los nombres, el orden y los permisos de las secciones no cambian.
+
 | Elemento | Valor |
 |---|---|
 | Dominio | incovsa.com (reservado y disponible, según la contraparte) |

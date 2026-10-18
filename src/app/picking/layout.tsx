@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { ArmazonEjemplo } from "@/componentes/comunes/armazon/ArmazonEjemplo";
+import { ArmazonServidor } from "@/componentes/comunes/armazon/ArmazonServidor";
 
 export default function PickingLayout({ children }: { children: ReactNode }) {
-  return <ArmazonEjemplo sistema="picking">{children}</ArmazonEjemplo>;
+  return <ArmazonServidor sistema="picking">{children}</ArmazonServidor>;
 }
