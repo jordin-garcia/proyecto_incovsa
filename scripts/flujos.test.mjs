@@ -10,7 +10,10 @@ import { fileURLToPath } from "node:url";
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DIR_FLUJOS = join(RAIZ, ".github", "workflows");
 const leer = (...ruta) => readFileSync(join(RAIZ, ...ruta), "utf8").replace(/\r\n/g, "\n");
-const flujos = () => readdirSync(DIR_FLUJOS).filter((a) => a.endsWith(".yml")).map((a) => [a, leer(".github", "workflows", a)]);
+const flujos = () =>
+  readdirSync(DIR_FLUJOS)
+    .filter((a) => a.endsWith(".yml"))
+    .map((a) => [a, leer(".github", "workflows", a)]);
 
 // { nombreDelTrabajo: textoDelTrabajo }. Los trabajos van con 2 espacios bajo `jobs:`.
 function trabajos(flujo) {
@@ -66,7 +69,11 @@ test("RNF-16: las verificaciones obligatorias corren en los PR a develop y main"
     const flujo = leer(".github", "workflows", archivo);
     assert.match(flujo, /^ {2}pull_request:\n/m, `${archivo} debe escuchar pull_request`);
     const ramas = flujo.match(/^ {2}pull_request:\n(?: {4}#.*\n)*(?: {4}.*\n)*? {4}branches: \[([^\]]*)\]/m)?.[1];
-    assert.deepEqual(ramas?.split(",").map((r) => r.trim()), ["develop", "main"], `${archivo}: ramas de pull_request`);
+    assert.deepEqual(
+      ramas?.split(",").map((r) => r.trim()),
+      ["develop", "main"],
+      `${archivo}: ramas de pull_request`,
+    );
   }
   assert.match(leer(".github", "workflows", "ci.yml"), /^ {2}push:\n {4}branches: \[develop\]$/m);
 });
@@ -83,7 +90,10 @@ test("decisión 66: todas las acciones van fijadas por un SHA de 40 caracteres",
 
 test("decisión 66: ningún flujo usa pull_request_target y todos declaran permisos mínimos", () => {
   for (const [archivo, flujo] of flujos()) {
-    const sinComentarios = flujo.split("\n").filter((l) => !/^\s*#/.test(l)).join("\n");
+    const sinComentarios = flujo
+      .split("\n")
+      .filter((l) => !/^\s*#/.test(l))
+      .join("\n");
     assert.doesNotMatch(sinComentarios, /pull_request_target/, `${archivo} no puede usar pull_request_target`);
     assert.match(flujo, /^permissions:\n {2}contents: read$/m, `${archivo}: faltan los permisos mínimos del flujo`);
     assert.doesNotMatch(flujo.split("\njobs:\n")[0], /write/, `${archivo}: los permisos de escritura van por trabajo`);
@@ -92,7 +102,8 @@ test("decisión 66: ningún flujo usa pull_request_target y todos declaran permi
 
 test("JG-08, criterio 9: el título, el cuerpo y la rama de un PR nunca se interpolan en un comando", () => {
   // Solo se aceptan como valor de una variable de entorno: `NOMBRE: ${{ github.event.pull_request.title }}`.
-  const peligrosos = /\$\{\{\s*github\.(event\.(pull_request\.(title|body|head\.ref|head\.label)|issue\.(title|body)|comment\.body|review\.body)|head_ref)\b/;
+  const peligrosos =
+    /\$\{\{\s*github\.(event\.(pull_request\.(title|body|head\.ref|head\.label)|issue\.(title|body)|comment\.body|review\.body)|head_ref)\b/;
   for (const [archivo, flujo] of flujos()) {
     for (const linea of flujo.split("\n")) {
       if (!peligrosos.test(linea)) continue;
@@ -120,7 +131,11 @@ test("JG-08, criterio 8: antes de JG-02, los trabajos que necesitan la aplicaci�
     assert.doesNotMatch(lista[decision], /^ {8}(if|continue-on-error):/m, `${check}: la detección no se puede omitir`);
     // Todos los pasos posteriores dependen de la detección y ninguno puede fallar en silencio.
     for (const paso of lista.slice(decision + 1)) {
-      assert.match(paso, /^(?: {6}- | {8})if: steps\.proyecto\.outputs\.\w+ != 'false'$/m, `${check}: paso sin la condición:\n${paso}`);
+      assert.match(
+        paso,
+        /^(?: {6}- | {8})if: steps\.proyecto\.outputs\.\w+ != 'false'$/m,
+        `${check}: paso sin la condición:\n${paso}`,
+      );
       assert.doesNotMatch(paso, /continue-on-error/, `${check}: paso con continue-on-error:\n${paso}`);
     }
   }
@@ -130,7 +145,8 @@ test("decisión 47: la CI ejecuta formato, lint, tipos, pruebas sobre PostgreSQL
   const ci = trabajos(leer(".github", "workflows", "ci.yml"));
   assert.match(ci.plan, /node scripts\/tareas\.mjs --validar/);
   assert.match(ci.plan, /node --test "scripts\/\*\.test\.mjs"/);
-  for (const comando of ["npm ci", "npm run formato", "npm run lint", "npm run tipos"]) assert.match(ci.calidad, new RegExp(comando));
+  for (const comando of ["npm ci", "npm run formato", "npm run lint", "npm run tipos"])
+    assert.match(ci.calidad, new RegExp(comando));
   assert.match(ci.pruebas, /image: postgres:18\n/);
   assert.match(ci.pruebas, /\[ -f prisma\/schema\.prisma \]/);
   const lista = pasos(ci.pruebas);
@@ -152,7 +168,10 @@ test("JG-08, criterio 3: titulo valida el formato y el cierre de la tarea, con e
     assert.doesNotMatch(paso, /^ {8}(if|continue-on-error):/m);
   }
   assert.deepEqual(
-    leer(".github", "workflows", "titulo-pr.yml").match(/types: \[([^\]]*)\]/)[1].split(",").map((e) => e.trim()),
+    leer(".github", "workflows", "titulo-pr.yml")
+      .match(/types: \[([^\]]*)\]/)[1]
+      .split(",")
+      .map((e) => e.trim()),
     ["opened", "synchronize", "reopened", "edited"],
   );
 });
@@ -177,13 +196,19 @@ test("decisión 60: revision-claude siempre decide el veredicto y deja la revisi
   assert.match(accion, /^ {8}continue-on-error: true$/m);
   assert.match(veredicto, /^ {8}if: \$\{\{ !cancelled\(\) \}\}$/m);
   assert.doesNotMatch(veredicto, /continue-on-error/);
-  assert.match(veredicto, /node scripts\/veredicto-revision\.mjs "\$RUNNER_TEMP\/comentarios\.jsonl" "\$SHA" "\$TAREA"/);
+  assert.match(
+    veredicto,
+    /node scripts\/veredicto-revision\.mjs "\$RUNNER_TEMP\/comentarios\.jsonl" "\$SHA" "\$TAREA"/,
+  );
   // Aprobar con LISTO y solicitar cambios con CORREGIR; el autor se menciona para que le llegue el correo.
   assert.match(formal, /gh pr review "\$PR" --approve/);
   assert.match(formal, /gh pr review "\$PR" --request-changes/);
   assert.match(formal, /@\$AUTOR/);
   // Las herramientas del bot son las mínimas.
-  assert.match(accion, /--allowedTools "Read,Grep,Glob,Bash\(git diff:\*\),Bash\(gh pr view:\*\),Bash\(gh pr diff:\*\),Bash\(gh pr comment:\*\)"/);
+  assert.match(
+    accion,
+    /--allowedTools "Read,Grep,Glob,Bash\(git diff:\*\),Bash\(gh pr view:\*\),Bash\(gh pr diff:\*\),Bash\(gh pr comment:\*\)"/,
+  );
   assert.match(trabajo, /^ {6}pull-requests: write$/m);
 });
 
@@ -208,7 +233,9 @@ test("decisión 87: el tablero corre en cada integración a develop, cada día a
 test("JG-08: Dependabot propone actualizaciones semanales de npm y de GitHub Actions a develop", () => {
   const dependabot = leer(".github", "dependabot.yml");
   for (const ecosistema of ["npm", "github-actions"]) {
-    const bloque = dependabot.split(/\n(?= {2}- package-ecosystem:)/).find((b) => b.includes(`package-ecosystem: "${ecosistema}"`));
+    const bloque = dependabot
+      .split(/\n(?= {2}- package-ecosystem:)/)
+      .find((b) => b.includes(`package-ecosystem: "${ecosistema}"`));
     assert.ok(bloque, `falta ${ecosistema}`);
     assert.match(bloque, /interval: "weekly"/);
     assert.match(bloque, /target-branch: "develop"/);

@@ -60,12 +60,17 @@ test("decisión 80: los archivos de las tareas no son protegidos", () => {
 });
 
 test("decisión 80: un PR de otra cuenta que cambia prisma/schema.prisma o AGENTS.md no se permite", () => {
-  assert.deepEqual(archivosNoPermitidos("Josh-JM", ["src/lib/conversion.ts", "prisma/schema.prisma"]), ["prisma/schema.prisma"]);
+  assert.deepEqual(archivosNoPermitidos("Josh-JM", ["src/lib/conversion.ts", "prisma/schema.prisma"]), [
+    "prisma/schema.prisma",
+  ]);
   assert.deepEqual(archivosNoPermitidos("InAlexa", ["AGENTS.md", "plan/bitacora/daniela.md"]), ["AGENTS.md"]);
 });
 
 test("decisión 80: el coordinador puede cambiar cualquier archivo protegido", () => {
-  assert.deepEqual(archivosNoPermitidos("jordin-garcia", ["prisma/schema.prisma", "AGENTS.md", ".github/workflows/ci.yml"]), []);
+  assert.deepEqual(
+    archivosNoPermitidos("jordin-garcia", ["prisma/schema.prisma", "AGENTS.md", ".github/workflows/ci.yml"]),
+    [],
+  );
 });
 
 test("decisión 80: Carlos puede cambiar los flujos de despliegue y producción, y nada más de .github", () => {
@@ -77,13 +82,20 @@ test("decisión 80: Carlos puede cambiar los flujos de despliegue y producción,
   ];
   assert.deepEqual(archivosNoPermitidos("carloshugoeg", archivos), [".github/workflows/ci.yml", "package.json"]);
   // La excepción es solo de Carlos.
-  assert.deepEqual(archivosNoPermitidos("JDaniC", [".github/workflows/despliegue.yml"]), [".github/workflows/despliegue.yml"]);
+  assert.deepEqual(archivosNoPermitidos("JDaniC", [".github/workflows/despliegue.yml"]), [
+    ".github/workflows/despliegue.yml",
+  ]);
   // Y solo para archivos directos de .github/workflows/, no en subcarpetas.
-  assert.deepEqual(archivosNoPermitidos("carloshugoeg", [".github/workflows/produccion-x/otro.yml"]), [".github/workflows/produccion-x/otro.yml"]);
+  assert.deepEqual(archivosNoPermitidos("carloshugoeg", [".github/workflows/produccion-x/otro.yml"]), [
+    ".github/workflows/produccion-x/otro.yml",
+  ]);
 });
 
 test("decisión 80: un bot (por ejemplo Dependabot) tampoco puede cambiar archivos protegidos", () => {
-  assert.deepEqual(archivosNoPermitidos("dependabot[bot]", ["package.json", "package-lock.json"]), ["package.json", "package-lock.json"]);
+  assert.deepEqual(archivosNoPermitidos("dependabot[bot]", ["package.json", "package-lock.json"]), [
+    "package.json",
+    "package-lock.json",
+  ]);
 });
 
 test("decisión 80: el usuario de GitHub se compara sin distinguir mayúsculas", () => {

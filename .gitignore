@@ -6,8 +6,22 @@
 node_modules/
 .next/
 __pycache__/
+/out/
+/build/
+/coverage/
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+npm-debug.log*
 
-# Archivos subidos por los usuarios: agregar aquí su carpeta cuando se defina en el proyecto base
+# Resultados de Playwright
+/playwright-report/
+/test-results/
+/blob-report/
+/playwright/.cache/
+
+# Archivos subidos por los usuarios: imágenes con ALMACENAMIENTO=disco (specs/16, decisión 78)
+/almacenamiento-local/
 
 # Documentación del curso y datos de la empresa: se guardan en la carpeta local y en Google Drive
 docs/

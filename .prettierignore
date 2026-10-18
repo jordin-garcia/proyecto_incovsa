@@ -1,0 +1,24 @@
+# Documentación, prototipo y plan: no son código
+entregable-*/
+specs/
+plan/
+docs/
+docs_incovsa/
+research_notes/
+
+# De terceros
+vendor/
+
+# Generados
+.next/
+out/
+build/
+coverage/
+playwright-report/
+test-results/
+almacenamiento-local/
+package-lock.json
+next-env.d.ts
+
+# Documentación en Markdown: no es código
+*.md

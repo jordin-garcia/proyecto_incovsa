@@ -33,14 +33,23 @@ export function leerEstado(cuerpo) {
   if (!m) return null;
   try {
     const e = JSON.parse(m[1]);
-    return { disponibles: e.disponibles ?? [], hechas: e.hechas ?? [], bloqueadas: e.bloqueadas ?? [], recordatorio: e.recordatorio ?? null };
+    return {
+      disponibles: e.disponibles ?? [],
+      hechas: e.hechas ?? [],
+      bloqueadas: e.bloqueadas ?? [],
+      recordatorio: e.recordatorio ?? null,
+    };
   } catch {
     return null;
   }
 }
 
 function estadoActual(tareas, recordatorio) {
-  const ids = (filtro) => tareas.filter(filtro).map((t) => t.id).sort();
+  const ids = (filtro) =>
+    tareas
+      .filter(filtro)
+      .map((t) => t.id)
+      .sort();
   return {
     disponibles: ids((t) => t.situacion === "disponible"),
     hechas: ids((t) => t.estado === "hecha"),
@@ -54,7 +63,8 @@ const nombre = (persona) => PERSONAS[persona]?.nombre ?? persona;
 // Por qué todavía no se puede empezar una tarea: "espera a JG-02 (Jordin García)".
 function motivoEspera(t, porId, fecha) {
   const motivos = [];
-  if (t.faltan?.length) motivos.push("espera a " + t.faltan.map((d) => `${d} (${nombre(porId[d]?.persona) ?? "?"})`).join(", "));
+  if (t.faltan?.length)
+    motivos.push("espera a " + t.faltan.map((d) => `${d} (${nombre(porId[d]?.persona) ?? "?"})`).join(", "));
   if (t.no_antes_de && t.no_antes_de > fecha) motivos.push(`no antes del ${t.no_antes_de}`);
   return motivos.join("; ");
 }
@@ -73,13 +83,17 @@ function recordatorio(tareas, fecha) {
   };
   const lineas = [`**Tareas del día** (${fechaCorta(fecha)})`];
   for (const [clave, p] of Object.entries(PERSONAS)) {
-    const pendientes = tareas.filter((t) => t.persona === clave && t.estado !== "hecha" && t.programada && t.programada <= fecha);
+    const pendientes = tareas.filter(
+      (t) => t.persona === clave && t.estado !== "hecha" && t.programada && t.programada <= fecha,
+    );
     if (!pendientes.length) continue;
     const mencion = `@${p.github}`;
     lineas.push("", `**${p.nombre}**`);
     // Primero las atrasadas: son las que están deteniendo a los demás.
     for (const t of pendientes.filter((x) => x.programada < fecha)) {
-      lineas.push(`- ${mencion}: ⏰ **${t.id}** (${t.titulo}) está atrasada: estaba programada para el ${fechaCorta(t.programada)}.${detalle(t)}`);
+      lineas.push(
+        `- ${mencion}: ⏰ **${t.id}** (${t.titulo}) está atrasada: estaba programada para el ${fechaCorta(t.programada)}.${detalle(t)}`,
+      );
     }
     for (const t of pendientes.filter((x) => x.programada === fecha)) {
       lineas.push(`- ${mencion}: hoy te toca **${t.id}** (${t.titulo}).${detalle(t)}`);
@@ -89,7 +103,9 @@ function recordatorio(tareas, fecha) {
 }
 
 function sinPunto(texto) {
-  return String(texto ?? "").trim().replace(/\.$/, "");
+  return String(texto ?? "")
+    .trim()
+    .replace(/\.$/, "");
 }
 
 function avisos(tareas, anterior, fecha) {
@@ -126,21 +142,34 @@ function avisos(tareas, anterior, fecha) {
     if (antes.bloqueadas.has(t.id)) {
       agregar(t.persona, `${mencion}: tu tarea ${t.id} (${t.titulo}) ya no está bloqueada y está disponible.`);
     } else if (t.no_antes_de) {
-      agregar(t.persona, `${mencion}: tu tarea ${t.id} (${t.titulo}) ya está disponible: llegó su fecha (${t.no_antes_de}).`);
+      agregar(
+        t.persona,
+        `${mencion}: tu tarea ${t.id} (${t.titulo}) ya está disponible: llegó su fecha (${t.no_antes_de}).`,
+      );
     } else {
       agregar(t.persona, `${mencion}: tu tarea ${t.id} (${t.titulo}) ya está disponible.`);
     }
   }
   for (const t of tareas) {
     if (t.situacion === "bloqueada" && !antes.bloqueadas.has(t.id)) {
-      agregar(COORDINADOR, `@${PERSONAS[COORDINADOR].github}: la tarea ${t.id} (${t.titulo}), de ${nombre(t.persona)}, quedó bloqueada: ${sinPunto(t.bloqueo)}.`);
+      agregar(
+        COORDINADOR,
+        `@${PERSONAS[COORDINADOR].github}: la tarea ${t.id} (${t.titulo}), de ${nombre(t.persona)}, quedó bloqueada: ${sinPunto(t.bloqueo)}.`,
+      );
     }
   }
   if (!equipo.length && !porPersona.size) return "";
 
   const lineas = [`**Novedades del plan** (${fechaCorta(fecha)})`];
   if (equipo.length) {
-    lineas.push("", Object.values(PERSONAS).map((p) => `@${p.github}`).join(" "), "", ...equipo);
+    lineas.push(
+      "",
+      Object.values(PERSONAS)
+        .map((p) => `@${p.github}`)
+        .join(" "),
+      "",
+      ...equipo,
+    );
   }
   for (const [clave, p] of Object.entries(PERSONAS)) {
     if (!porPersona.has(clave)) continue;
@@ -168,7 +197,9 @@ function cuerpo(tareas, estado, fecha) {
 
   lineas.push("", `## Hoy (${fechaCorta(fecha)})`, "");
   for (const [clave, p] of Object.entries(PERSONAS)) {
-    const pendientes = tareas.filter((t) => t.persona === clave && t.estado !== "hecha" && t.programada && t.programada <= fecha);
+    const pendientes = tareas.filter(
+      (t) => t.persona === clave && t.estado !== "hecha" && t.programada && t.programada <= fecha,
+    );
     const ids = pendientes.map((t) => (t.programada < fecha ? `⏰ ${t.id} (atrasada)` : t.id));
     lineas.push(`- ${p.nombre}: ${ids.length ? ids.join(", ") : "nada programado"}`);
   }
@@ -178,7 +209,8 @@ function cuerpo(tareas, estado, fecha) {
     lineas.push("", `## ${p.nombre} (${p.github}) · ${de("hecha").length}/${mias.length} hechas`);
     lineas.push("", "**Disponibles**", ...(de("disponible").length ? de("disponible").map(item) : ["- Ninguna"]));
     lineas.push("", "**En espera**", ...(de("en_espera").length ? de("en_espera").map(espera) : ["- Ninguna"]));
-    if (de("bloqueada").length) lineas.push("", "**Bloqueadas**", ...de("bloqueada").map((t) => `${item(t)} — ${sinPunto(t.bloqueo)}`));
+    if (de("bloqueada").length)
+      lineas.push("", "**Bloqueadas**", ...de("bloqueada").map((t) => `${item(t)} — ${sinPunto(t.bloqueo)}`));
   }
 
   lineas.push("", "## Avance por hito", "", "| Hito | Hechas | Total | % |", "|---|---:|---:|---:|");
@@ -195,9 +227,16 @@ function cuerpo(tareas, estado, fecha) {
 // tareas: arreglo con la forma de `tareas.mjs --json`. Devuelve el cuerpo nuevo del issue y el comentario de avisos.
 // El comentario junta el recordatorio del día (una vez al día, desde HORA_RECORDATORIO, o cuando se fuerza) y las
 // novedades. En la primera ejecución (sin estado anterior) no sale nada: esa solo crea el tablero y no menciona a nadie.
-export function generar(tareas, cuerpoAnterior, fecha = hoy(), hora = new Date().getHours(), { forzarRecordatorio = false } = {}) {
+export function generar(
+  tareas,
+  cuerpoAnterior,
+  fecha = hoy(),
+  hora = new Date().getHours(),
+  { forzarRecordatorio = false } = {},
+) {
   const anterior = leerEstado(cuerpoAnterior);
-  const tocaRecordatorio = Boolean(anterior) && (forzarRecordatorio || (hora >= HORA_RECORDATORIO && anterior.recordatorio !== fecha));
+  const tocaRecordatorio =
+    Boolean(anterior) && (forzarRecordatorio || (hora >= HORA_RECORDATORIO && anterior.recordatorio !== fecha));
   const estado = estadoActual(tareas, tocaRecordatorio ? fecha : (anterior?.recordatorio ?? null));
   const partes = [tocaRecordatorio ? recordatorio(tareas, fecha) : "", avisos(tareas, anterior, fecha)].filter(Boolean);
   return {
@@ -206,7 +245,9 @@ export function generar(tareas, cuerpoAnterior, fecha = hoy(), hora = new Date()
   };
 }
 
-const esPrincipal = import.meta.main ?? (process.argv[1] && pathToFileURL(realpathSync(resolve(process.argv[1]))).href === import.meta.url);
+const esPrincipal =
+  import.meta.main ??
+  (process.argv[1] && pathToFileURL(realpathSync(resolve(process.argv[1]))).href === import.meta.url);
 
 if (esPrincipal) {
   const [entrada, salidaCuerpo, salidaAvisos] = process.argv.slice(2);
@@ -215,10 +256,15 @@ if (esPrincipal) {
     process.exit(2);
   }
   const { tareas, errores } = cargar();
-  if (errores.length) console.error("Advertencia, el plan tiene errores de formato (corra tareas.mjs --validar):\n- " + errores.join("\n- "));
+  if (errores.length)
+    console.error(
+      "Advertencia, el plan tiene errores de formato (corra tareas.mjs --validar):\n- " + errores.join("\n- "),
+    );
   clasificar(tareas);
   const anterior = existsSync(entrada) ? readFileSync(entrada, "utf8") : "";
-  const r = generar(tareas.map(aJson), anterior, hoy(), new Date().getHours(), { forzarRecordatorio: process.env.FORZAR_RECORDATORIO === "true" });
+  const r = generar(tareas.map(aJson), anterior, hoy(), new Date().getHours(), {
+    forzarRecordatorio: process.env.FORZAR_RECORDATORIO === "true",
+  });
   writeFileSync(salidaCuerpo, r.cuerpo);
   writeFileSync(salidaAvisos, r.avisos);
   console.log(r.avisos ? `Avisos:\n${r.avisos}` : "Sin novedades: no hay avisos.");

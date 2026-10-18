@@ -19,7 +19,7 @@ La contraparte lo revisó y no tuvo objeción.
 
 | Capa | Tecnología |
 |---|---|
-| Entorno de ejecución | **Node.js 24 LTS** (12/10; antes 22) |
+| Entorno de ejecución | **Node.js 24 LTS** (12/10; antes 22). **(17/10)** Con **npm 11.19** o posterior, y las dependencias se instalan con `npm ci` |
 | Framework | **Next.js 16** (App Router) con TypeScript, en su versión más reciente con los parches de seguridad al día (16.4.0 al 12/10; antes Next.js 15). **(16/10)** Mínimo **16.4.2**, por los avisos críticos del 14/10 (decisión 59) |
 | Base de datos | **PostgreSQL 18** (12/10; antes 16) |
 | ORM y migraciones | Prisma 7. **(16/10)** Se fija la versión 7.x: la etiqueta `latest` de npm apunta a una versión preliminar de Prisma 8 (decisión 59) |
@@ -107,7 +107,7 @@ Medidas que el equipo adoptó el 12/10/2026 para que la aplicación sea segura y
 
 - HTTPS en todo el sitio (RNF-12), con HSTS.
 - Cabeceras de seguridad (RNF-16): `Content-Security-Policy` (que permita las imágenes de Cloudflare R2, los mapas insertados de Google Maps y la vista previa de Google Drive, specs/05), `X-Content-Type-Options: nosniff`, `Referrer-Policy` y protección contra que otro sitio inserte el nuestro en un marco (`frame-ancestors`).
-- Los errores que ve el usuario no muestran detalles técnicos; el detalle queda solo en el registro del servidor.
+- Los errores que ve el usuario no muestran detalles técnicos; el detalle queda solo en el registro del servidor. **(17/10)** Ante un error inesperado, el mensaje es "No se pudo completar la operación. Inténtelo de nuevo." (`src/lib/errores.ts`); los errores de las reglas de negocio muestran su propio mensaje.
 - **(16/10)** Caddy obtiene y renueva solo el certificado HTTPS y agrega la cabecera HSTS.
 
 ### Secretos y dependencias

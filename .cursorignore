@@ -1,0 +1,4 @@
+# Cursor no lee los archivos con secretos (specs/16, decisión 70)
+.env
+.env.local
+.env.*.local

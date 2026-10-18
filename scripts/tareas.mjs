@@ -64,7 +64,11 @@ function parsearFrontmatter(texto, archivo) {
     const clave = linea.slice(0, i).trim();
     let valor = linea.slice(i + 1).trim();
     if (valor.startsWith("[") && valor.endsWith("]")) {
-      valor = valor.slice(1, -1).split(",").map((v) => v.trim().replace(/^["']|["']$/g, "")).filter(Boolean);
+      valor = valor
+        .slice(1, -1)
+        .split(",")
+        .map((v) => v.trim().replace(/^["']|["']$/g, ""))
+        .filter(Boolean);
     } else {
       valor = valor.replace(/^["']|["']$/g, "");
     }
@@ -98,17 +102,31 @@ export function validar(tareas, erroresIniciales = []) {
     ids.set(t.id, t.archivo);
     const p = PERSONAS[t.persona];
     if (!p) errores.push(`${t.archivo}: persona "${t.persona}" no válida (${Object.keys(PERSONAS).join(", ")})`);
-    else if (!String(t.id).startsWith(p.prefijo + "-") && t.reasignada !== "si") errores.push(`${t.archivo}: el ID ${t.id} no coincide con el prefijo ${p.prefijo} de ${t.persona} (si se reasignó, agregue reasignada: si)`);
-    if (!t.archivo.includes(`/${t.id}-`)) errores.push(`${t.archivo}: el nombre del archivo debe empezar con "${t.id}-"`);
-    if (!ESTADOS.includes(t.estado)) errores.push(`${t.archivo}: estado "${t.estado}" no válido (${ESTADOS.join(", ")})`);
+    else if (!String(t.id).startsWith(p.prefijo + "-") && t.reasignada !== "si")
+      errores.push(
+        `${t.archivo}: el ID ${t.id} no coincide con el prefijo ${p.prefijo} de ${t.persona} (si se reasignó, agregue reasignada: si)`,
+      );
+    if (!t.archivo.includes(`/${t.id}-`))
+      errores.push(`${t.archivo}: el nombre del archivo debe empezar con "${t.id}-"`);
+    if (!ESTADOS.includes(t.estado))
+      errores.push(`${t.archivo}: estado "${t.estado}" no válido (${ESTADOS.join(", ")})`);
     if (!HITOS.includes(String(t.hito))) errores.push(`${t.archivo}: hito "${t.hito}" no válido (${HITOS.join(", ")})`);
-    if (!PRIORIDADES.includes(t.prioridad)) errores.push(`${t.archivo}: prioridad "${t.prioridad}" no válida (${PRIORIDADES.join(", ")})`);
-    if (!Array.isArray(t.depende_de)) errores.push(`${t.archivo}: depende_de debe ser una lista, por ejemplo [JG-02, JM-02] o []`);
-    if (t.estado === "bloqueada" && !t.bloqueo) errores.push(`${t.archivo}: una tarea bloqueada debe explicar el motivo en el campo "bloqueo"`);
-    if (t.no_antes_de && !FORMATO_FECHA.test(t.no_antes_de)) errores.push(`${t.archivo}: no_antes_de debe tener el formato AAAA-MM-DD`);
-    if (t.programada !== undefined && !FORMATO_FECHA.test(t.programada)) errores.push(`${t.archivo}: programada debe tener el formato AAAA-MM-DD`);
-    else if (t.programada === undefined && t.estado !== "hecha") errores.push(`${t.archivo}: falta el campo "programada" (el día del calendario en que se hace la tarea, AAAA-MM-DD)`);
-    else if (t.programada && t.no_antes_de && t.programada < t.no_antes_de) errores.push(`${t.archivo}: programada (${t.programada}) es antes de no_antes_de (${t.no_antes_de})`);
+    if (!PRIORIDADES.includes(t.prioridad))
+      errores.push(`${t.archivo}: prioridad "${t.prioridad}" no válida (${PRIORIDADES.join(", ")})`);
+    if (!Array.isArray(t.depende_de))
+      errores.push(`${t.archivo}: depende_de debe ser una lista, por ejemplo [JG-02, JM-02] o []`);
+    if (t.estado === "bloqueada" && !t.bloqueo)
+      errores.push(`${t.archivo}: una tarea bloqueada debe explicar el motivo en el campo "bloqueo"`);
+    if (t.no_antes_de && !FORMATO_FECHA.test(t.no_antes_de))
+      errores.push(`${t.archivo}: no_antes_de debe tener el formato AAAA-MM-DD`);
+    if (t.programada !== undefined && !FORMATO_FECHA.test(t.programada))
+      errores.push(`${t.archivo}: programada debe tener el formato AAAA-MM-DD`);
+    else if (t.programada === undefined && t.estado !== "hecha")
+      errores.push(
+        `${t.archivo}: falta el campo "programada" (el día del calendario en que se hace la tarea, AAAA-MM-DD)`,
+      );
+    else if (t.programada && t.no_antes_de && t.programada < t.no_antes_de)
+      errores.push(`${t.archivo}: programada (${t.programada}) es antes de no_antes_de (${t.no_antes_de})`);
   }
   const porId = Object.fromEntries(tareas.map((t) => [t.id, t]));
   for (const t of tareas) {
@@ -119,18 +137,25 @@ export function validar(tareas, erroresIniciales = []) {
       // (se hace después de ella), pero nunca antes.
       const dep = porId[d];
       if (dep && dep.estado !== "hecha" && t.programada && dep.programada && t.programada < dep.programada) {
-        errores.push(`${t.archivo}: programada (${t.programada}) no puede ser antes de la de su dependencia ${d} (${dep.programada})`);
+        errores.push(
+          `${t.archivo}: programada (${t.programada}) no puede ser antes de la de su dependencia ${d} (${dep.programada})`,
+        );
       }
     }
   }
   // detectar ciclos
-  const visitando = new Set(), listo = new Set();
+  const visitando = new Set(),
+    listo = new Set();
   const dfs = (id, camino) => {
     if (listo.has(id) || !porId[id]) return;
-    if (visitando.has(id)) { errores.push(`Dependencia circular: ${[...camino, id].join(" → ")}`); return; }
+    if (visitando.has(id)) {
+      errores.push(`Dependencia circular: ${[...camino, id].join(" → ")}`);
+      return;
+    }
     visitando.add(id);
     for (const d of porId[id].depende_de || []) dfs(d, [...camino, id]);
-    visitando.delete(id); listo.add(id);
+    visitando.delete(id);
+    listo.add(id);
   };
   for (const t of tareas) dfs(t.id, []);
   return errores;
@@ -165,14 +190,19 @@ export function clasificar(tareas) {
 
 function cuando(t) {
   if (!t.programada || t.estado === "hecha") return "";
-  return t.atrasada ? ` · ⏰ atrasada (programada: ${fechaCorta(t.programada)})` : ` · programada: ${fechaCorta(t.programada)}`;
+  return t.atrasada
+    ? ` · ⏰ atrasada (programada: ${fechaCorta(t.programada)})`
+    : ` · programada: ${fechaCorta(t.programada)}`;
 }
 
 function linea(t, porId) {
   const base = `  ${t.id.padEnd(6)} [${String(t.hito).padEnd(7)} ${t.prioridad}] ${t.titulo}${cuando(t)}`;
   if (t.situacion === "en_espera") {
     const motivos = [];
-    if (t.faltan.length) motivos.push("espera a " + t.faltan.map((d) => `${d} (${PERSONAS[porId[d]?.persona]?.nombre ?? "?"})`).join(", "));
+    if (t.faltan.length)
+      motivos.push(
+        "espera a " + t.faltan.map((d) => `${d} (${PERSONAS[porId[d]?.persona]?.nombre ?? "?"})`).join(", "),
+      );
     if (t.esperaFecha) motivos.push(`no antes del ${t.no_antes_de}`);
     return `${base}\n         ↳ ${motivos.join("; ")}`;
   }
@@ -182,7 +212,10 @@ function linea(t, porId) {
 
 function mostrarPersona(persona, tareas) {
   const p = PERSONAS[persona];
-  if (!p) { console.error(`Persona desconocida "${persona}". Use: ${Object.keys(PERSONAS).join(", ")}`); process.exit(2); }
+  if (!p) {
+    console.error(`Persona desconocida "${persona}". Use: ${Object.keys(PERSONAS).join(", ")}`);
+    process.exit(2);
+  }
   const porId = Object.fromEntries(tareas.map((t) => [t.id, t]));
   const mias = tareas.filter((t) => t.persona === persona);
   const grupos = { disponible: [], en_espera: [], bloqueada: [], hecha: [] };
@@ -192,10 +225,14 @@ function mostrarPersona(persona, tareas) {
   console.log(grupos.disponible.length ? grupos.disponible.map((t) => linea(t, porId)).join("\n") : "  (ninguna)");
   console.log(`\nEN ESPERA (dependencias o fecha):`);
   console.log(grupos.en_espera.length ? grupos.en_espera.map((t) => linea(t, porId)).join("\n") : "  (ninguna)");
-  if (grupos.bloqueada.length) { console.log(`\nBLOQUEADAS:`); console.log(grupos.bloqueada.map((t) => linea(t, porId)).join("\n")); }
+  if (grupos.bloqueada.length) {
+    console.log(`\nBLOQUEADAS:`);
+    console.log(grupos.bloqueada.map((t) => linea(t, porId)).join("\n"));
+  }
   console.log(`\nHECHAS:`);
   console.log(grupos.hecha.length ? grupos.hecha.map((t) => `  ${t.id} ${t.titulo}`).join("\n") : "  (ninguna)");
-  if (grupos.disponible[0]) console.log(`\nSiguiente recomendada: ${grupos.disponible[0].id} → ${grupos.disponible[0].archivo}`);
+  if (grupos.disponible[0])
+    console.log(`\nSiguiente recomendada: ${grupos.disponible[0].id} → ${grupos.disponible[0].archivo}`);
 }
 
 // Tareas pendientes de otras personas que esperan a t: "Josué Menéndez (JM-03), Daniela Marín (DM-04)".
@@ -226,35 +263,49 @@ export function resumenHoy(tareas, persona, fecha) {
 }
 
 function mostrarHoy(tareas, persona) {
-  if (persona && !PERSONAS[persona]) { console.error(`Persona desconocida "${persona}". Use: ${Object.keys(PERSONAS).join(", ")}`); process.exit(2); }
+  if (persona && !PERSONAS[persona]) {
+    console.error(`Persona desconocida "${persona}". Use: ${Object.keys(PERSONAS).join(", ")}`);
+    process.exit(2);
+  }
   const fecha = hoy();
   const porId = Object.fromEntries(tareas.map((t) => [t.id, t]));
-  const describir = ({ tarea, laEsperan: esperan }) => linea(tarea, porId) + (esperan ? `\n         ↳ la esperan: ${esperan}` : "");
+  const describir = ({ tarea, laEsperan: esperan }) =>
+    linea(tarea, porId) + (esperan ? `\n         ↳ la esperan: ${esperan}` : "");
   console.log(`\nCalendario de hoy, ${fechaCorta(fecha)} (${fecha})`);
   for (const { nombre, deHoy, atrasadas, proxima } of resumenHoy(tareas, persona, fecha)) {
     console.log(`\n${nombre}`);
     console.log(`  HOY:${deHoy.length ? "" : " nada programado"}`);
     for (const t of deHoy) console.log(describir(t));
-    if (atrasadas.length) { console.log(`  ATRASADAS:`); for (const t of atrasadas) console.log(describir(t)); }
-    console.log(`  DESPUÉS: ${proxima ? `${proxima.id} (${proxima.titulo}), el ${fechaCorta(proxima.programada)}` : "nada programado"}`);
+    if (atrasadas.length) {
+      console.log(`  ATRASADAS:`);
+      for (const t of atrasadas) console.log(describir(t));
+    }
+    console.log(
+      `  DESPUÉS: ${proxima ? `${proxima.id} (${proxima.titulo}), el ${fechaCorta(proxima.programada)}` : "nada programado"}`,
+    );
   }
 }
 
-const INICIO_CALENDARIO = "<!-- calendario:inicio (lo genera node scripts/tareas.mjs --calendario --escribir; no lo edites a mano) -->";
+const INICIO_CALENDARIO =
+  "<!-- calendario:inicio (lo genera node scripts/tareas.mjs --calendario --escribir; no lo edites a mano) -->";
 const FIN_CALENDARIO = "<!-- calendario:fin -->";
 
 // Tabla Markdown con una fila por día programado y una columna por persona.
 export function tablaCalendario(tareas) {
   const claves = Object.keys(PERSONAS);
   const dias = [...new Set(tareas.filter((t) => t.programada).map((t) => t.programada))].sort();
-  const lineas = [`| Día | ${claves.map((c) => PERSONAS[c].corto).join(" | ")} |`, `|---|${claves.map(() => "---").join("|")}|`];
+  const lineas = [
+    `| Día | ${claves.map((c) => PERSONAS[c].corto).join(" | ")} |`,
+    `|---|${claves.map(() => "---").join("|")}|`,
+  ];
   for (const dia of dias) {
-    const celdas = claves.map((c) =>
-      tareas
-        .filter((t) => t.programada === dia && t.persona === c)
-        .sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }))
-        .map((t) => `**${t.id}** ${t.titulo}`)
-        .join("<br>") || "—",
+    const celdas = claves.map(
+      (c) =>
+        tareas
+          .filter((t) => t.programada === dia && t.persona === c)
+          .sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }))
+          .map((t) => `**${t.id}** ${t.titulo}`)
+          .join("<br>") || "—",
     );
     const corta = fechaCorta(dia);
     lineas.push(`| ${corta[0].toUpperCase()}${corta.slice(1)} | ${celdas.join(" | ")} |`);
@@ -276,15 +327,22 @@ function resumen(tareas) {
   for (const [clave, p] of Object.entries(PERSONAS)) {
     const mias = tareas.filter((t) => t.persona === clave);
     const cuenta = (s) => mias.filter((t) => t.situacion === s).length;
-    console.log(`  ${p.nombre.padEnd(22)} hechas ${String(cuenta("hecha")).padStart(2)}/${String(mias.length).padEnd(3)} disponibles ${cuenta("disponible")}  en espera ${cuenta("en_espera")}  bloqueadas ${cuenta("bloqueada")}`);
+    console.log(
+      `  ${p.nombre.padEnd(22)} hechas ${String(cuenta("hecha")).padStart(2)}/${String(mias.length).padEnd(3)} disponibles ${cuenta("disponible")}  en espera ${cuenta("en_espera")}  bloqueadas ${cuenta("bloqueada")}`,
+    );
   }
   for (const h of HITOS) {
     const del = tareas.filter((t) => String(t.hito) === h);
     const hechas = del.filter((t) => t.estado === "hecha").length;
     console.log(`\n  Hito ${h}: ${hechas}/${del.length} hechas`);
-    for (const t of del.filter((x) => x.estado !== "hecha")) console.log(`    ${t.id.padEnd(6)} ${t.prioridad} ${PERSONAS[t.persona]?.nombre.padEnd(22)} ${t.situacion.padEnd(10)} ${t.titulo}`);
+    for (const t of del.filter((x) => x.estado !== "hecha"))
+      console.log(
+        `    ${t.id.padEnd(6)} ${t.prioridad} ${PERSONAS[t.persona]?.nombre.padEnd(22)} ${t.situacion.padEnd(10)} ${t.titulo}`,
+      );
   }
-  console.log(`\nPara ver las tareas de una persona: node scripts/tareas.mjs --persona <${Object.keys(PERSONAS).join("|")}>`);
+  console.log(
+    `\nPara ver las tareas de una persona: node scripts/tareas.mjs --persona <${Object.keys(PERSONAS).join("|")}>`,
+  );
 }
 
 // Título de un PR: "[<ID>] <título>", con el ID de una tarea que existe (plan/protocolo.md §B11).
@@ -294,7 +352,9 @@ export const FORMATO_TITULO = /^\[([A-Z]{2}-\d{2,})\] +\S/;
 export function validarTituloPr(titulo, ids) {
   const coincidencia = FORMATO_TITULO.exec(titulo ?? "");
   if (!coincidencia) {
-    return [`El título "${(titulo ?? "").trim()}" no sigue el formato "[<ID>] <título>", por ejemplo "[JM-03] Bodega: preparación de rutas y pedidos".`];
+    return [
+      `El título "${(titulo ?? "").trim()}" no sigue el formato "[<ID>] <título>", por ejemplo "[JM-03] Bodega: preparación de rutas y pedidos".`,
+    ];
   }
   if (!ids.includes(coincidencia[1])) {
     return [`La tarea ${coincidencia[1]} del título no existe en plan/tareas/.`];
@@ -315,16 +375,29 @@ export function validarCierrePr(titulo, tarea, textoTarea, archivos, estadoAnter
   if (/^Plan de la auditoría\b/.test(resto)) return [];
   const errores = [];
   if (/^Bloqueada:/.test(resto)) {
-    if (tarea.estado !== "bloqueada") errores.push(`${tarea.archivo}: un PR "Bloqueada:" deja la tarea con "estado: bloqueada" y el campo "bloqueo" (protocolo §C).`);
+    if (tarea.estado !== "bloqueada")
+      errores.push(
+        `${tarea.archivo}: un PR "Bloqueada:" deja la tarea con "estado: bloqueada" y el campo "bloqueo" (protocolo §C).`,
+      );
   } else {
-    if (tarea.estado !== "hecha") errores.push(`${tarea.archivo}: el PR debe cerrar la tarea con "estado: hecha" (protocolo B10).`);
-    if (!/^## Resultado[ \t]*\r?$/m.test(textoTarea)) errores.push(`${tarea.archivo}: falta la sección "## Resultado" al final (protocolo B10).`);
-    if (/^Correcciones de la auditoría\b/.test(resto) && estadoAnterior === "hecha" && !/^### Correcciones de la auditoría \(\d{4}-\d{2}-\d{2}\)/m.test(textoTarea)) {
-      errores.push(`${tarea.archivo}: falta la subsección "### Correcciones de la auditoría (AAAA-MM-DD)" dentro de "## Resultado" (protocolo §E3).`);
+    if (tarea.estado !== "hecha")
+      errores.push(`${tarea.archivo}: el PR debe cerrar la tarea con "estado: hecha" (protocolo B10).`);
+    if (!/^## Resultado[ \t]*\r?$/m.test(textoTarea))
+      errores.push(`${tarea.archivo}: falta la sección "## Resultado" al final (protocolo B10).`);
+    if (
+      /^Correcciones de la auditoría\b/.test(resto) &&
+      estadoAnterior === "hecha" &&
+      !/^### Correcciones de la auditoría \(\d{4}-\d{2}-\d{2}\)/m.test(textoTarea)
+    ) {
+      errores.push(
+        `${tarea.archivo}: falta la subsección "### Correcciones de la auditoría (AAAA-MM-DD)" dentro de "## Resultado" (protocolo §E3).`,
+      );
     }
   }
   if (enLaCi && archivos === null) {
-    errores.push("No se pudo leer el diff del PR en la CI (¿falta fetch-depth: 2 en actions/checkout?): no se puede comprobar el cierre.");
+    errores.push(
+      "No se pudo leer el diff del PR en la CI (¿falta fetch-depth: 2 en actions/checkout?): no se puede comprobar el cierre.",
+    );
   }
   if (archivos && !archivos.some((a) => /^plan\/bitacora\/[^/]+\.md$/.test(a))) {
     errores.push(`El PR no agrega ninguna entrada en plan/bitacora/<persona>.md (protocolo B10).`);
@@ -351,7 +424,9 @@ export function baseDelPr(entorno = process.env, git = gitPorDefecto) {
 export function archivosDelPr(git = gitPorDefecto, entorno = process.env) {
   try {
     const { rango } = baseDelPr(entorno, git);
-    return git(["diff", "--name-only", "--no-renames", ...rango]).split(/\r?\n/).filter(Boolean);
+    return git(["diff", "--name-only", "--no-renames", ...rango])
+      .split(/\r?\n/)
+      .filter(Boolean);
   } catch {
     return null;
   }
@@ -387,7 +462,9 @@ export function aJson(t) {
 }
 
 // Solo se ejecuta como programa, no cuando otro script lo importa.
-const esPrincipal = import.meta.main ?? (process.argv[1] && pathToFileURL(realpathSync(resolve(process.argv[1]))).href === import.meta.url);
+const esPrincipal =
+  import.meta.main ??
+  (process.argv[1] && pathToFileURL(realpathSync(resolve(process.argv[1]))).href === import.meta.url);
 
 if (esPrincipal) {
   const args = process.argv.slice(2);
@@ -398,16 +475,27 @@ if (esPrincipal) {
     const actual = readFileSync(CALENDARIO, "utf8");
     const esperado = reemplazarCalendario(actual, tablaCalendario(tareas));
     if (esperado === null) errores.push("plan/calendario.md: faltan las marcas del calendario por día");
-    else if (esperado !== actual) errores.push("plan/calendario.md: el calendario por día no coincide con las fechas programadas de las tareas (corra node scripts/tareas.mjs --calendario --escribir)");
-    if (errores.length) { console.error("El plan tiene errores:\n- " + errores.join("\n- ")); process.exit(1); }
+    else if (esperado !== actual)
+      errores.push(
+        "plan/calendario.md: el calendario por día no coincide con las fechas programadas de las tareas (corra node scripts/tareas.mjs --calendario --escribir)",
+      );
+    if (errores.length) {
+      console.error("El plan tiene errores:\n- " + errores.join("\n- "));
+      process.exit(1);
+    }
     console.log(`Plan válido: ${tareas.length} tareas.`);
     process.exit(0);
   }
   if (args[0] === "--validar-titulo") {
     const titulo = args[1] ?? process.env.TITULO_PR;
-    const erroresTitulo = validarTituloPr(titulo, tareas.map((t) => t.id));
+    const erroresTitulo = validarTituloPr(
+      titulo,
+      tareas.map((t) => t.id),
+    );
     if (erroresTitulo.length) {
-      console.error(`${erroresTitulo.join("\n")}\nCorrija el título del PR: la verificación «titulo» se vuelve a ejecutar sola al editarlo.`);
+      console.error(
+        `${erroresTitulo.join("\n")}\nCorrija el título del PR: la verificación «titulo» se vuelve a ejecutar sola al editarlo.`,
+      );
       process.exit(1);
     }
     console.log(`Título válido: ${titulo}`);
@@ -417,16 +505,27 @@ if (esPrincipal) {
     const titulo = args[1] ?? process.env.TITULO_PR;
     const tarea = tareas.find((t) => t.id === FORMATO_TITULO.exec(titulo ?? "")?.[1]);
     const texto = tarea ? readFileSync(join(RAIZ, tarea.archivo), "utf8") : "";
-    const erroresCierre = validarCierrePr(titulo, tarea, texto, archivosDelPr(), tarea ? estadoEnBase(tarea.archivo) : null,
-      process.env.GITHUB_EVENT_NAME === "pull_request");
+    const erroresCierre = validarCierrePr(
+      titulo,
+      tarea,
+      texto,
+      archivosDelPr(),
+      tarea ? estadoEnBase(tarea.archivo) : null,
+      process.env.GITHUB_EVENT_NAME === "pull_request",
+    );
     if (erroresCierre.length) {
-      console.error(`El PR no cierra su tarea:\n- ${erroresCierre.join("\n- ")}\nCorríjalo y haga push: la verificación «titulo» se vuelve a ejecutar sola.`);
+      console.error(
+        `El PR no cierra su tarea:\n- ${erroresCierre.join("\n- ")}\nCorríjalo y haga push: la verificación «titulo» se vuelve a ejecutar sola.`,
+      );
       process.exit(1);
     }
-    console.log(tarea ? `Cierre válido: ${tarea.id} (${tarea.estado}).` : "Sin tarea en el título: lo rechaza --validar-titulo.");
+    console.log(
+      tarea ? `Cierre válido: ${tarea.id} (${tarea.estado}).` : "Sin tarea en el título: lo rechaza --validar-titulo.",
+    );
     process.exit(0);
   }
-  if (errores.length) console.error("Advertencia, el plan tiene errores de formato (corra --validar):\n- " + errores.join("\n- ") + "\n");
+  if (errores.length)
+    console.error("Advertencia, el plan tiene errores de formato (corra --validar):\n- " + errores.join("\n- ") + "\n");
 
   clasificar(tareas);
 
@@ -437,17 +536,22 @@ if (esPrincipal) {
     const tabla = tablaCalendario(tareas);
     if (args[1] === "--escribir") {
       const nuevo = reemplazarCalendario(readFileSync(CALENDARIO, "utf8"), tabla);
-      if (nuevo === null) { console.error("plan/calendario.md no tiene las marcas del calendario por día."); process.exit(1); }
+      if (nuevo === null) {
+        console.error("plan/calendario.md no tiene las marcas del calendario por día.");
+        process.exit(1);
+      }
       writeFileSync(CALENDARIO, nuevo);
       console.log("Calendario por día actualizado en plan/calendario.md.");
     } else console.log(tabla);
-  }
-  else if (args[0] === "--siguiente" && args[1]) {
+  } else if (args[0] === "--siguiente" && args[1]) {
     const t = tareas.find((x) => x.persona === args[1] && x.situacion === "disponible");
     console.log(t ? t.id : "NINGUNA");
   } else if (args[0] === "--ver" && args[1]) {
     const t = tareas.find((x) => x.id === args[1]);
-    if (!t) { console.error(`No existe la tarea ${args[1]}`); process.exit(2); }
+    if (!t) {
+      console.error(`No existe la tarea ${args[1]}`);
+      process.exit(2);
+    }
     const porId = Object.fromEntries(tareas.map((x) => [x.id, x]));
     console.log(linea(t, porId));
     console.log(`  Archivo: ${t.archivo}`);

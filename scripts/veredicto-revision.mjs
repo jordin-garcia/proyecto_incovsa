@@ -32,15 +32,27 @@ function encabezado(mayusculas, inicial, cierreInicial) {
   return PREFIJO + String.raw`(?:${mayusculas}${CIERRE_MAYUSCULAS}|${inicial}\**[ \t]*(?:${cierreInicial}|$))`;
 }
 const PALABRA_CORRECCION = String.raw`(?:CORRECCI[ÓO]N(?:ES)?|Correcci[óo]n(?:es)?)`;
-const RE_CORRECCION = new RegExp(encabezado(String.raw`CORRECCI[ÓO]N(?:ES)?`, String.raw`Correcci[óo]n(?:es)?`, "[(:]"), "m");
+const RE_CORRECCION = new RegExp(
+  encabezado(String.raw`CORRECCI[ÓO]N(?:ES)?`, String.raw`Correcci[óo]n(?:es)?`, "[(:]"),
+  "m",
+);
 const RE_CORRECCION_MAYUSCULAS = new RegExp(PREFIJO + String.raw`CORRECCI[ÓO]N(?:ES)?` + CIERRE_MAYUSCULAS, "m");
-const RE_OPCIONAL = new RegExp(encabezado(String.raw`OPCIONAL(?:ES)?`, String.raw`Opcional(?:es)?`, String.raw`(?:\([^)\n]*\))?[ \t]*:?\**[ \t]*$`), "m");
+const RE_OPCIONAL = new RegExp(
+  encabezado(String.raw`OPCIONAL(?:ES)?`, String.raw`Opcional(?:es)?`, String.raw`(?:\([^)\n]*\))?[ \t]*:?\**[ \t]*$`),
+  "m",
+);
 // El veredicto también se acepta como "Veredicto:" o "**Veredicto:** LISTO"; LISTO y CORREGIR van en mayúsculas.
-const RE_VEREDICTO = new RegExp(PREFIJO + String.raw`(?:VEREDICTO|Veredicto)\**[ \t]*:[ \t]*\**[ \t]*(LISTO|CORREGIR)`, "m");
+const RE_VEREDICTO = new RegExp(
+  PREFIJO + String.raw`(?:VEREDICTO|Veredicto)\**[ \t]*:[ \t]*\**[ \t]*(LISTO|CORREGIR)`,
+  "m",
+);
 // Se quita de la línea del encabezado su descripción ("(obligatorio corregir):", "— obligatorio corregir"); lo que
 // quede después también es un hallazgo.
-const RE_RESTO_CABECERA = new RegExp(PREFIJO + PALABRA_CORRECCION +
-  String.raw`\**[ \t]*(?:[—–\-][ \t]*)?(?:\([^)]*\)|obligatorio corregir)?[ \t]*[—–\-]?[ \t]*:?\**`);
+const RE_RESTO_CABECERA = new RegExp(
+  PREFIJO +
+    PALABRA_CORRECCION +
+    String.raw`\**[ \t]*(?:[—–\-][ \t]*)?(?:\([^)]*\)|obligatorio corregir)?[ \t]*[—–\-]?[ \t]*:?\**`,
+);
 const RE_NINGUNO = /^\(?(?:ningun[oa]|no hay(?: hallazgos)?)\.?\)?\.?$/i;
 // Otra sección que la revisión agrega por su cuenta ("Comprobado:", "### Lo que comprobé"): un título de Markdown, o
 // una línea corta que no es un elemento de lista y termina en ":". Solo se usa después de un "Ninguno" (PR #30), y
@@ -59,7 +71,10 @@ function esOtraSeccion(linea, limpia) {
 
 /** Convierte la salida de `gh api --paginate --jq '.[] | {usuario, body, fecha, editado}'` (un JSON por línea) en un arreglo. */
 export function leerComentarios(texto) {
-  return texto.split(/\r?\n/).filter((linea) => linea.trim()).map((linea) => JSON.parse(linea));
+  return texto
+    .split(/\r?\n/)
+    .filter((linea) => linea.trim())
+    .map((linea) => JSON.parse(linea));
 }
 
 /**
@@ -81,7 +96,8 @@ function analizar(cuerpo) {
   if (!veredicto) return null;
   // La sección de corrección llega hasta OPCIONAL o hasta el veredicto, lo que venga primero.
   const fin = [resto.slice(1).search(RE_OPCIONAL), resto.slice(1).search(RE_VEREDICTO)]
-    .filter((i) => i >= 0).map((i) => i + 1);
+    .filter((i) => i >= 0)
+    .map((i) => i + 1);
   const [cabecera, ...siguientes] = resto.slice(0, fin.length ? Math.min(...fin) : undefined).split(/\r?\n/);
   const lineas = [cabecera.replace(RE_RESTO_CABECERA, ""), ...siguientes];
   // Cualquier contenido que no sea "Ninguno" es un hallazgo, venga numerado o con viñetas. Se ignoran las líneas
@@ -97,13 +113,20 @@ function analizar(cuerpo) {
   }
   // Una línea separadora ("---") no es un hallazgo.
   const correcciones = relevantes.some((texto) => texto !== "" && !RE_NINGUNO.test(texto) && !RE_SEPARADOR.test(texto));
-  return { veredicto: veredicto[1].toUpperCase(), correcciones, tarea: cuerpo.match(/REVISI[ÓO]N\s+([A-Z]{2}-\d{2,})/)?.[1] ?? "" };
+  return {
+    veredicto: veredicto[1].toUpperCase(),
+    correcciones,
+    tarea: cuerpo.match(/REVISI[ÓO]N\s+([A-Z]{2}-\d{2,})/)?.[1] ?? "",
+  };
 }
 
 /** ¿El comentario es una revisión de este commit? El SHA tiene que estar en la línea "Commit revisado". */
 function esRevisionDe(c, sha) {
-  return c.usuario === BOT && c.body?.trimStart().startsWith(MARCA) &&
-    new RegExp(String.raw`commit revisado:?\s*${sha}\b`, "i").test(c.body);
+  return (
+    c.usuario === BOT &&
+    c.body?.trimStart().startsWith(MARCA) &&
+    new RegExp(String.raw`commit revisado:?\s*${sha}\b`, "i").test(c.body)
+  );
 }
 
 /**
@@ -166,7 +189,9 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const decidir = args[0] === "--decidir";
   const [archivo, sha, tarea = ""] = decidir ? args.slice(1) : args;
   if (!archivo || !/^[0-9a-f]{40}$/.test(sha ?? "")) {
-    console.error("Uso: node scripts/veredicto-revision.mjs [--decidir] <comentarios.jsonl> <sha de 40 caracteres> [id]");
+    console.error(
+      "Uso: node scripts/veredicto-revision.mjs [--decidir] <comentarios.jsonl> <sha de 40 caracteres> [id]",
+    );
     process.exit(2);
   }
   const comentarios = leerComentarios(readFileSync(archivo, "utf8"));
@@ -178,7 +203,10 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   console.log(resultado.mensaje);
   if (process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT, `estado=${resultado.estado}\n`);
   if (process.env.GITHUB_STEP_SUMMARY) {
-    appendFileSync(process.env.GITHUB_STEP_SUMMARY, `### Revisión con Claude: ${resultado.estado}\n\n${resultado.mensaje}\n`);
+    appendFileSync(
+      process.env.GITHUB_STEP_SUMMARY,
+      `### Revisión con Claude: ${resultado.estado}\n\n${resultado.mensaje}\n`,
+    );
   }
   process.exit(resultado.estado === "aprobada" ? 0 : 1);
 }
