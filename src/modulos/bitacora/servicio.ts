@@ -1,10 +1,9 @@
 import { z } from "zod";
 import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
-import { ErrorNegocio } from "@/lib/errores";
-import { esAccesoTotal } from "@/lib/roles";
+import { exigirPermiso } from "@/modulos/permisos/servicio";
 import { esquemaSistema } from "@/app/acceso/esquemas";
-import { obtenerSesion, type SesionActual } from "@/lib/sesion";
+import { obtenerSesion } from "@/lib/sesion";
 
 const esquemaRegistro = z.object({
   sistema: esquemaSistema,
@@ -23,18 +22,8 @@ export async function registrarBitacora(tx: Prisma.TransactionClient, registro: 
   return tx.bitacora.create({ data: { ...esquemaRegistro.parse(campos), detalle } });
 }
 
-// Hasta JG-07 este control local protege la única lectura nueva de bitácora. Allí se sustituirá por exigirPermiso.
-export function exigirConsultaBitacora(sesion: SesionActual | null) {
-  if (
-    !sesion ||
-    sesion.sistema !== "picking" ||
-    (!esAccesoTotal(sesion.usuario.rol) && !sesion.permisos.includes("pk.reportes"))
-  ) {
-    throw new ErrorNegocio("No tiene permisos para acceder a este módulo.");
-  }
-}
 export async function consultarBitacora(entrada: { desde: Date; hasta: Date }, cabeceras?: Headers) {
-  exigirConsultaBitacora(await obtenerSesion("picking", cabeceras));
+  exigirPermiso(await obtenerSesion("picking", cabeceras), "pk.reportes");
   const rango = z
     .object({ desde: z.date(), hasta: z.date() })
     .refine((r) => r.desde <= r.hasta)

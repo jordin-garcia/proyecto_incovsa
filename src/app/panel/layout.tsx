@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
-import { ArmazonEjemplo } from "@/componentes/comunes/armazon/ArmazonEjemplo";
+import { ArmazonServidor } from "@/componentes/comunes/armazon/ArmazonServidor";
+
+export const dynamic = "force-dynamic";
 
 export default function PanelLayout({ children }: { children: ReactNode }) {
-  return <ArmazonEjemplo sistema="sitio">{children}</ArmazonEjemplo>;
+  return <ArmazonServidor sistema="sitio">{children}</ArmazonServidor>;
 }

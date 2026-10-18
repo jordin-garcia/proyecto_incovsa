@@ -20,6 +20,7 @@ export type PropsArmazon = {
   sedes?: SedeArmazon[];
   sede?: string;
   alCambiarSede?: (id: string) => void;
+  cambiandoSede?: boolean;
   alSalir: () => void;
   children: ReactNode;
 };
@@ -66,6 +67,7 @@ export function Armazon({
   sedes = [],
   sede,
   alCambiarSede,
+  cambiandoSede = false,
   alSalir,
   children,
 }: PropsArmazon) {
@@ -240,6 +242,7 @@ export function Armazon({
                       <SelectNativo
                         aria-label="Sede"
                         value={sedeSeleccionada?.id ?? ""}
+                        disabled={cambiandoSede}
                         onChange={(e) => alCambiarSede?.(e.target.value)}
                       >
                         {sedes.map((s) => (

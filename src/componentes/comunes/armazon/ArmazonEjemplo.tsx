@@ -44,10 +44,12 @@ export function ArmazonEjemplo({ sistema, children }: { sistema: "sitio" | "pick
   const [modulo, cambiarModulo] = useState("facturacion");
   const [sedes, cambiarSedes] = useState(["XE", "GT", "ES"]);
   const [sede, cambiarSede] = useState("XE");
-  const temporal = ruta === "/panel" || ruta === "/picking";
+  const temporal = ruta.startsWith("/muestras/");
   const moduloActual = temporal ? modulo : (ruta.split("/")[2] ?? "");
   const opciones = sistema === "sitio" ? MODULOS_PANEL : MODULOS_PICKING;
-  const seleccionada = opciones.find((o) => o.href === (sistema === "sitio" ? ruta : `/picking/${moduloActual}`));
+  const seleccionada = opciones.find(
+    (o) => o.href === (sistema === "sitio" ? (temporal ? "/panel" : ruta) : `/picking/${moduloActual}`),
+  );
   return (
     <Contexto.Provider value={{ modulo, cambiarModulo, sedes, cambiarSedes }}>
       <Armazon

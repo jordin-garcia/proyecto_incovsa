@@ -568,6 +568,11 @@ Al trasladar el prototipo se comprobó con axe que `--g500` sobre `--g50` da un 
 - RNF-03: se desactiva únicamente el registro de argumentos de las acciones del servidor de Next.js (`logging.serverFunctions: false`), que de otro modo muestra contraseñas en desarrollo. Se conservan los diagnósticos de errores.
 - RN-57 y decisión 6: cada conexión PostgreSQL del adaptador de Prisma fija UTC, aunque el servidor local tenga otra zona por omisión. Esto evita que la normalización de `timestamptz` del adaptador desplace las fechas de sesiones y bitácora. La presentación y los rangos siguen usando `America/Guatemala`.
 
+## Conexión del armazón a permisos y sedes (18/10/2026, JG-07)
+
+- La entrada `/panel` redirige a la primera sección permitida; el Resumen se sirve en `/panel/resumen` para evitar una redirección circular. Conserva el nombre y la regla de permisos del prototipo (`specs/05`).
+- Las muestras de componentes de JG-05 se conservan para las pruebas en `/muestras/panel` y `/muestras/picking`, exclusivamente en desarrollo; en producción responden como rutas inexistentes.
+
 ## Documentos no alineados con las reuniones 4 y 5
 
 Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los cambios del 29/09, del 11/10 ni del 13/10:
