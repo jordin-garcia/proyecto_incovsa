@@ -5,7 +5,7 @@ persona: josue
 responsable: Josué Menéndez
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: []
 programada: 2026-10-17
 requisitos: []
@@ -70,3 +70,31 @@ node scripts/tareas.mjs --persona josue
 ## Notas
 - next-devtools solo responde con `npm run dev` corriendo (desde JG-02), y shadcn necesita `components.json` (desde JG-05). En esta tarea basta con que aparezcan registrados; su prueba real ocurre en la primera tarea con pantallas.
 - En el `## Resultado`, anota las versiones instaladas (Node, npm, Git, gh, PostgreSQL y el harness) y cualquier ajuste personal que haya hecho falta, para que el resto del equipo lo aproveche.
+
+## Resultado
+
+- **Entorno y herramientas base verificadas en Windows:**
+  - Node.js: `v24.21.0`
+  - npm: `11.19.0`
+  - Git: `2.55.0.windows.3` (`core.autocrlf false`, `pull.rebase true`, `core.longpaths true`)
+  - GitHub CLI (`gh`): `2.102.0` autenticado con la cuenta `Josh-JM` y acceso confirmado a `jordin-garcia/proyecto_incovsa`.
+  - PostgreSQL 18: `18.6`
+- **Harness y servidores MCP:**
+  - Codex CLI (`@openai/codex`): `0.163.0` instalado globalmente.
+  - Servidores configurados en `~/.codex/config.toml` y `~/.gemini/config/mcp_config.json`: `playwright`, `next-devtools`, `shadcn` y `context7`.
+  - En Codex, `codex mcp list` muestra los 4 servidores habilitados.
+- **Context7:**
+  - Se probó la resolución de librerías y consulta de documentación. Resolvió `/vercel/next.js/v16.2.9` y devolvió documentación oficial de Server Actions y la directiva `'use server'`:
+    ```tsx
+    'use server'
+
+    export async function create() {}
+    ```
+- **Playwright:**
+  - Navegador Chromium instalado (`156.0.8078.4`, v1248).
+  - Con el prototipo servido mediante `node scripts/servir-prototipo.mjs`, Playwright navegó a `http://127.0.0.1:4173/`, obtuvo el título `Inicio · INCOVSA` y tomó captura de pantalla completa de la página de inicio.
+- **Seguridad y plan:**
+  - Aislamiento activo, `.env` fuera del alcance de lectura del agente.
+  - `node scripts/verificar-entorno.mjs` pasa con "El equipo tiene todo lo necesario." (todo en ✅).
+  - `node scripts/tareas.mjs --persona josue` muestra correctamente las tareas de Josué Menéndez.
+
