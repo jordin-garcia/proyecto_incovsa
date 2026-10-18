@@ -21,6 +21,7 @@ npm-debug.log*
 /test-results/
 /blob-report/
 /playwright/.cache/
+/.playwright-mcp/
 
 # Archivos subidos por los usuarios: imágenes con ALMACENAMIENTO=disco (specs/16, decisión 78)
 /almacenamiento-local/

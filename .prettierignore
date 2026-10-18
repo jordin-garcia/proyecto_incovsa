@@ -16,6 +16,7 @@ build/
 coverage/
 playwright-report/
 test-results/
+.playwright-mcp/
 almacenamiento-local/
 package-lock.json
 next-env.d.ts

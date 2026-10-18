@@ -67,6 +67,7 @@ Los colores se tomaron de los dos logotipos recibidos. Los códigos exactos de l
 ### Formas y componentes
 
 - Radios: 8, 12, 18 y 26 px. Sombras suaves en tono verde oscuro.
+- **Accesibilidad de los textos secundarios (18/10, JG-05):** para cumplir RNF-08, la miga de navegación, el eyebrow y la instrucción del encabezado de módulo y los encabezados de tabla usan `--g600` sobre `--g50`. La combinación `--g500`/`--g50` del prototipo tiene contraste 4.46:1, inferior al mínimo 4.5:1. Se conserva la paleta aprobada y no se reduce el umbral de axe.
 - Íconos de trazo, dibujados en SVG dentro del código.
 - **Encabezado de los módulos (15/10):** en todos los módulos de la administración del sitio y del picking, el título va con su instrucción, lo más breve posible, a la par (como en Facturación, CAM-55).
 - **Secciones verdes del sitio (15/10):** misión y visión (Inicio y Quiénes somos) y "A quién servimos" usan el verde del pie (`--v950`), con títulos en blanco y el acento `--lima-b`.

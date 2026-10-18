@@ -558,6 +558,10 @@ El coordinador respondió las preguntas que quedaban antes del plan y pidió cre
 
 npm 12, que ya es la versión `latest`, bloquea por defecto las dependencias que se instalan desde una dirección web (`--allow-remote`), como el paquete de SheetJS del sitio de SheetJS. Por eso se guarda en `vendor/` (decisión 85).
 
+### Verificación del design system del 18/10/2026 (JG-05)
+
+Al trasladar el prototipo se comprobó con axe que `--g500` sobre `--g50` da un contraste de 4.46:1. Para cumplir RNF-08, los textos secundarios del encabezado del módulo, la miga de navegación y los encabezados de tabla usan el token existente `--g600`; la paleta sigue intacta ([20](20-prototipo-aprobado.md), design system). Los campos inválidos entregan un valor ISO vacío al consumidor y conservan el texto para corregirlo; el selector nativo ocupa la misma caja del campo, como en el prototipo, para abrirse debajo.
+
 ## Documentos no alineados con las reuniones 4 y 5
 
 Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los cambios del 29/09, del 11/10 ni del 13/10:
