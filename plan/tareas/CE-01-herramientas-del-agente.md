@@ -6,7 +6,7 @@ responsable: Carlos Hugo Escobar
 hito: E2
 prioridad: P1
 estado: bloqueada
-bloqueo: En Cursor Cloud Agent, `gh` usa el token de la App `cursor[bot]` (GraphQL viewer = `cursor[bot]`); `gh api user` responde 403 y no puede devolver `carloshugoeg`. Carlos debe ejecutar `gh auth login` como `carloshugoeg` en su Mac (Cursor local) o aportar un PAT de usuario (`GH_TOKEN`) para que `verificar-entorno` y el criterio 2 pasen. El resto de herramientas ya están listas en este entorno.
+bloqueo: Se hizo en Cursor Cloud Agent, donde `gh` usa el token de la App `cursor[bot]` y `gh api user` responde 403. Decisión del coordinador (18/10): la tarea se repite en **Cursor local en la Mac de Carlos** (decisión 70), con `gh auth login` como `carloshugoeg`. No se usa Cursor Cloud Agent ni un token personal (PAT) en servicios externos.
 depende_de: []
 programada: 2026-10-17
 requisitos: []
@@ -93,12 +93,13 @@ node scripts/tareas.mjs --persona carlos
 6. `node scripts/tareas.mjs --persona carlos` y `--hoy carlos` responden: CE-01 atrasada; siguientes CE-02/CE-03 (hoy, esperan CE-01 y JG-07) y CE-05 disponible el 21/10.
 7. Modo agente con aislamiento (no modo sin permisos). `.env` no existe; `.cursorignore` y `.gitignore` bloquean `.env*`.
 
-### Cómo desbloquear (Carlos, en Mac o con PAT)
-1. En Terminal (Mac): `gh auth login` → GitHub.com → HTTPS → navegador, con la cuenta **`carloshugoeg`**. Luego `gh auth setup-git`.
-2. O en el Cloud Agent: exportar `GH_TOKEN` con un PAT clásico/fine-grained de `carloshugoeg` que permita `gh api user`.
+### Cómo desbloquear (Carlos, en Cursor local en la Mac)
+Decisión del coordinador (18/10): CE-01 y todas las tareas de Carlos se trabajan en **Cursor local en su Mac**, como dice la decisión 70 de `specs/16`. No se usa Cursor Cloud Agent ni un token personal (PAT) guardado en servicios externos: el criterio 2 existe para comprobar que el trabajo sale con la identidad de la persona.
+1. Clonar el repositorio en la Mac y abrirlo en Cursor local. Repetir los pasos 1 a 7 de "Qué hacer" con la columna macOS de `plan/instalacion.md` §2: lo instalado en el Cloud Agent no sirve en la Mac.
+2. En Terminal (Mac): `gh auth login` → GitHub.com → HTTPS → navegador, con la cuenta **`carloshugoeg`**. Luego `gh auth setup-git`.
 3. Comprobar: `gh api user --jq .login` → `carloshugoeg` y `node scripts/verificar-entorno.mjs` → «El equipo tiene todo lo necesario.»
 4. En Cursor (Mac): Settings → MCP → punto verde en `playwright`, `next-devtools`, `shadcn` (proyecto) y `context7` (personal; clave opcional en https://context7.com/dashboard).
-5. Reabrir la tarea en una conversación nueva: quitar `bloqueo`, poner `estado: hecha` y actualizar este Resultado.
+5. Reabrir la tarea en una conversación nueva: quitar `bloqueo`, poner `estado: hecha` y actualizar este Resultado con las versiones y la evidencia de la Mac.
 
 ### Cómo usarlo
 Hasta desbloquear, **ninguna otra tarea de Carlos** (CE-02…) debe empezarse (B0). Node 24, npm 11.19+, PostgreSQL 18, Context7, Playwright y el prototipo ya están operativos en este Cloud Agent.
