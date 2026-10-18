@@ -56,6 +56,32 @@ describe("inicioDelDiaGuatemala y finDelDiaGuatemala", () => {
   });
 });
 
+describe("textos que no son un día ni un instante con zona", () => {
+  // new Date() los leería según la zona del equipo (UTC en producción, Guatemala en desarrollo).
+  const ambiguos = ["05/10/2026", "10/02/2026", "2026-10-17T03:00", "2026-10-17 03:00:00", "Oct 17 2026", ""];
+
+  it("Decisión 6: se rechazan en lugar de leerse con la zona del equipo", () => {
+    for (const texto of ambiguos) {
+      expect(() => fechaGuatemala(texto), texto).toThrow(RangeError);
+      expect(() => formatoFecha(texto), texto).toThrow(RangeError);
+      expect(() => formatoHora(texto), texto).toThrow(RangeError);
+      expect(() => inicioDelDiaGuatemala(texto), texto).toThrow(RangeError);
+      expect(() => finDelDiaGuatemala(texto), texto).toThrow(RangeError);
+      expect(() => semanaLunesADomingo(texto), texto).toThrow(RangeError);
+    }
+  });
+
+  it("Decisión 6: los instantes ISO con Z o con desfase sí se aceptan", () => {
+    expect(fechaGuatemala("2026-10-18T05:30Z")).toBe("2026-10-17");
+    expect(fechaGuatemala("2026-10-17T23:30:00-06:00")).toBe("2026-10-17");
+    expect(fechaGuatemala("2026-10-18T00:30:00.000+01:00")).toBe("2026-10-17");
+  });
+
+  it("Decisión 6: un Date inválido se rechaza", () => {
+    expect(() => fechaGuatemala(new Date(Number.NaN))).toThrow(RangeError);
+  });
+});
+
 describe("semanaLunesADomingo", () => {
   it("Decisión 6: la semana del miércoles 21/10/2026 va del lunes 19/10 al domingo 25/10", () => {
     expect(semanaLunesADomingo("2026-10-21")).toEqual({ inicio: "2026-10-19", fin: "2026-10-25" });

@@ -2,7 +2,8 @@
 // las semanas de lunes a domingo y los rangos se calculan aquí. En pantalla: dd/mm/aaaa y HH:MM de 24 horas.
 //
 // Un "día" es un texto AAAA-MM-DD que representa ese día del calendario de Guatemala. Un "instante" es un Date, una
-// marca de tiempo en milisegundos o un texto ISO con zona. Las funciones que reciben un instante también aceptan un día.
+// marca de tiempo en milisegundos o un texto ISO 8601 con Z o desfase (2026-10-18T05:30:00Z). Las funciones que reciben
+// un instante también aceptan un día.
 import { TZDate, tz } from "@date-fns/tz";
 import { endOfDay, endOfWeek, format, startOfDay, startOfWeek } from "date-fns";
 
@@ -14,6 +15,7 @@ export type Instante = Date | number | string;
 
 const enGuatemala = { in: tz(ZONA_GUATEMALA) };
 const PATRON_DIA = /^(\d{4})-(\d{2})-(\d{2})$/;
+const PATRON_ISO_CON_ZONA = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d{1,3})?)?(Z|[+-]\d{2}:\d{2})$/;
 const dosDigitos = (n: number) => String(n).padStart(2, "0");
 
 /** Devuelve el año, el mes y el día si existen en el calendario; si no, null. */
@@ -32,11 +34,15 @@ function inicioDeDia(dia: Dia): TZDate {
 }
 
 /**
- * Un texto AAAA-MM-DD es un día de Guatemala (su medianoche), no la medianoche UTC que daría new Date(). Lanza
- * RangeError si el valor no es un instante válido.
+ * Un texto AAAA-MM-DD es un día de Guatemala (su medianoche), no la medianoche UTC que daría new Date(). Los demás
+ * textos deben ser ISO 8601 con Z o con desfase: sin zona, new Date() los leería en la hora del equipo, que en
+ * producción es UTC. Lanza RangeError si el valor no es un instante válido.
  */
 function aInstante(valor: Instante): Date {
-  if (typeof valor === "string" && PATRON_DIA.test(valor)) return inicioDeDia(valor);
+  if (typeof valor === "string") {
+    if (PATRON_DIA.test(valor)) return inicioDeDia(valor);
+    if (!PATRON_ISO_CON_ZONA.test(valor)) throw new RangeError(`Instante sin zona o con otro formato: "${valor}"`);
+  }
   const instante = new Date(valor);
   if (Number.isNaN(+instante)) throw new RangeError(`Instante inválido: "${String(valor)}"`);
   return instante;
