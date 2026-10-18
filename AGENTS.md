@@ -50,7 +50,7 @@ La instalación en cada harness (Claude Code, Codex, Cursor y Antigravity) está
 | Plan | `node scripts/tareas.mjs --persona <clave>` · `--hoy [<clave>]` · `--ver <ID>` · `--siguiente <clave>` · `--validar` · `--validar-cierre "[<ID>] <título>"` |
 | Entorno | `node scripts/verificar-entorno.mjs` |
 | Prototipo | `node scripts/servir-prototipo.mjs` → http://127.0.0.1:4173/ |
-| Aplicación (desde JG-02) | `npm install` · `npm run dev` · `npm run build` |
+| Aplicación (desde JG-02) | `npm ci` (instala sin reescribir `package-lock.json`; exige npm 11.19 o posterior) · `npm run dev` · `npm run build` |
 | Calidad (desde JG-02) | `npm run formato` · `npm run lint` · `npm run tipos` · `npm test` · `npm run e2e` · `npm run verificar` (formato, lint, tipos y pruebas) |
 | Base de datos (desde JG-03) | `npm run db:aplicar` (migraciones) · `npm run db:semilla` · `npm run semilla:demo` · `npm run db:reiniciar` (solo tu base local). **`npm run db:migrar` (crear migraciones) solo lo usa el coordinador** |
 | Administrador inicial (desde JG-06) | `npm run crear-admin` |

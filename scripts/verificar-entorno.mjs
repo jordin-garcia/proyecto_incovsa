@@ -34,7 +34,19 @@ revisar(
   "Instale Node.js 24 LTS (plan/instalacion.md §2)",
 );
 
-revisar("npm", true, () => ejecutar("npm", ["--version"]), "npm viene con Node.js");
+revisar(
+  "npm 11.19 o posterior",
+  true,
+  () => {
+    // Un npm más antiguo reescribe package-lock.json sin dependencias opcionales que exige el `npm ci` de la CI (JG-02).
+    const v = ejecutar("npm", ["--version"]);
+    const [mayor, menor] = v.split(".").map(Number);
+    if (mayor < 11 || (mayor === 11 && menor < 19))
+      throw new Error(`Se encontró npm ${v}; el proyecto exige 11.19.0 o posterior`);
+    return v;
+  },
+  "Actualice Node.js 24 a la última versión 24.x, o ejecute npm i -g npm@11.19.0 (plan/instalacion.md §2)",
+);
 revisar("Git", true, () => ejecutar("git", ["--version"]), "Instale Git (plan/instalacion.md §2)");
 revisar(
   "GitHub CLI",

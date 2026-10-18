@@ -48,7 +48,7 @@ Antes de cualquier tarea que no sea la `XX-01` de la persona, comprueba que tien
 ```
 git switch develop && git pull --ff-only
 git switch -c <clave>/<ID>-<descripcion-corta>      # ejemplo: josue/JM-03-bodega-preparacion
-npm install                                          # desde JG-02, por si cambió package-lock.json
+npm ci                                               # desde JG-02, por si cambió package-lock.json (nunca npm install)
 npm run db:aplicar                                   # desde JG-03, por si hay migraciones nuevas
 ```
 

@@ -19,7 +19,7 @@ La contraparte lo revisó y no tuvo objeción.
 
 | Capa | Tecnología |
 |---|---|
-| Entorno de ejecución | **Node.js 24 LTS** (12/10; antes 22) |
+| Entorno de ejecución | **Node.js 24 LTS** (12/10; antes 22). **(17/10)** Con **npm 11.19** o posterior, y las dependencias se instalan con `npm ci` |
 | Framework | **Next.js 16** (App Router) con TypeScript, en su versión más reciente con los parches de seguridad al día (16.4.0 al 12/10; antes Next.js 15). **(16/10)** Mínimo **16.4.2**, por los avisos críticos del 14/10 (decisión 59) |
 | Base de datos | **PostgreSQL 18** (12/10; antes 16) |
 | ORM y migraciones | Prisma 7. **(16/10)** Se fija la versión 7.x: la etiqueta `latest` de npm apunta a una versión preliminar de Prisma 8 (decisión 59) |

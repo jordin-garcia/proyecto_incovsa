@@ -97,6 +97,7 @@ La aplicación base de Next.js 16.4.2 está en la raíz del repositorio, con **t
 
 **Decisiones tomadas**
 - **`braces` (GHSA-vfj7-8cjw-p6xm, alta y sin versión corregida):** llegaba solo por `eslint-config-next` → `@next/eslint-plugin-next` → `fast-glob` → `micromatch`. Con la aprobación del coordinador, un `overrides` de `package.json` reemplaza ese `fast-glob` por `npm:tinyglobby@^0.2.17`. El plugin solo usa `globSync(patrón, { onlyDirectories: true })` en `dist/utils/get-root-dirs.js`, y solo si se configura `settings.next.rootDir`; tinyglobby tiene esa misma función. **El override se quita** cuando `@next/eslint-plugin-next` deje `fast-glob` o salga una versión corregida de `braces`. Mientras tanto, cada vez que se actualice el plugin hay que revisar que siga usando solo `globSync`.
+- **npm 11.19 o posterior y `npm ci`** (aprobado por el coordinador). La primera ejecución de la CI falló en `npm ci`: el `package-lock.json` que escribió npm 11.6.2 (Node 24.13) no traía `@emnapi/runtime` ni `@emnapi/core` 1.11.3, dependencias opcionales de wasm de sharp y de Tailwind que exige el npm 11.19.0 de la CI (Node 24.21). Se regeneró el lockfile con npm 11.19.0. Para que no se vuelva a dañar: `engines.npm` es `>=11.19.0` (con `engine-strict`, un npm más antiguo se niega a instalar), `scripts/verificar-entorno.mjs` comprueba la versión, y `AGENTS.md`, `plan/protocolo.md` (B2) y `plan/instalacion.md` usan `npm ci`, que nunca reescribe el lockfile. Quedó en `specs/16` y `specs/18`.
 - **ESLint 9 y TypeScript 6.0** (aprobado por el coordinador): ESLint 9 terminó su soporte, pero los plugins de `eslint-config-next` 16.4.2 todavía no admiten ESLint 10. TypeScript queda en `~6.0.3` porque `typescript-eslint` exige una versión menor que la 6.1.
 - **Tailwind con PostCSS** (`@tailwindcss/postcss` y `postcss.config.mjs`), en lugar del cargador `@tailwindcss/turbopack` que ahora genera create-next-app, para que `next.config.ts` quede como pide la tarea.
 - **`agentRules: false` en `next.config.ts`:** cada vez que arranca, `next dev` 16.4 escribe sus instrucciones en `AGENTS.md`, que es un archivo protegido. Con esta opción ya no lo hace, y si encuentra el bloque, lo quita.
@@ -117,6 +118,7 @@ La aplicación base de Next.js 16.4.2 está en la raíz del repositorio, con **t
 - `src/modulos/<módulo>/README.md` (15), las carpetas `src/componentes/{ui,comunes,sitio,panel,picking}/` y `pruebas/fixtures/`, y `pruebas-e2e/comunes/aplicacion.spec.ts`.
 
 **Evidencia**
+- `npm ci` con npm 11.19.0 en una carpeta limpia (solo `package.json`, el lockfile y `vendor/`): instala 687 paquetes sin errores. Con npm 11.19, `npm install` deja el lockfile igual.
 - `npm run verificar`: formato, lint y tipos sin errores; Vitest, 34 de 34. `node --test "scripts/*.test.mjs"`: 78 de 78.
 - `npm run build`: compila (Next.js 16.4.2, Turbopack, salida `standalone`).
 - `npm run e2e`: 6 de 6 (dos pruebas en cada proyecto: `telefono`, `tableta` y `escritorio`), incluida la de axe, sin violaciones serias ni críticas.
@@ -143,4 +145,5 @@ La aplicación base de Next.js 16.4.2 está en la raíz del repositorio, con **t
   ```
   `aResultadoDeError` vuelve a lanzar `redirect()` y `notFound()` de Next.js, y deja los errores inesperados en el registro del servidor. El tipo `Resultado<T>` describe lo que devuelve cada acción.
 - **Roles** (`@/lib/roles`): `normalizarRol(texto)` para comparar roles, y `esAccesoTotal(rol)`, que es verdadero para Gerencia y Soporte (RN-38).
+- **Instalar:** `npm ci` (nunca `npm install`, que puede reescribir `package-lock.json`), con npm 11.19 o posterior.
 - **Comandos:** `npm run dev`, `build`, `start`, `formato`, `formato:arreglar`, `lint`, `tipos`, `test`, `e2e` y `verificar`. Antes del primer `npm run e2e` hay que ejecutar `npx playwright install chromium` (o la lista de `plan/instalacion.md` §5).
