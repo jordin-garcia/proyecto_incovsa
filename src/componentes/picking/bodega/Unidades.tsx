@@ -43,25 +43,9 @@ export function Unidades(props: UnidadesProps) {
   const resto = r > 0 ? r : null;
 
   return (
-    <span
-      className={`unid font-bold font-mono text-[15px] leading-none text-[#1C1D1C] ${className}`.trim()}
-      style={{
-        font: "700 15px/1 var(--f-mono, ui-monospace, monospace)",
-        color: "var(--g900, #1C1D1C)",
-      }}
-    >
+    <span className={`unid ${className}`.trim()}>
       {textoUnidades(u)}
-      {resto !== null && (
-        <span
-          className="resto ml-[6px] inline-block rounded-[6px] bg-[#EEF6E2] px-[7px] py-[4px] text-[12.5px] text-[#45691A]"
-          style={{
-            background: "#EEF6E2",
-            color: "#45691A",
-          }}
-        >
-          {`+ ${fmt(resto)} kg`}
-        </span>
-      )}
+      {resto !== null && <span className="resto">{`+ ${fmt(resto)} kg`}</span>}
     </span>
   );
 }

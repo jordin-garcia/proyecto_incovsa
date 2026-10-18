@@ -62,6 +62,7 @@
   --radius-prototipo-7: 20px;
   --radius-prototipo-8: 14px;
   --radius-prototipo-9: 11px;
+  --radius-resto: 6px;
   --shadow-prototipo-1: 0 6px 16px -8px var(--color-prototipo-2);
   --shadow-prototipo-2: 0 0 0 4px var(--color-prototipo-4);
   --shadow-prototipo-3: 0 0 0 4px var(--color-prototipo-6);
@@ -555,6 +556,19 @@ img {
   color: var(--color-blanco);
 }
 .chip-l {
+  background: var(--color-prototipo-7);
+  color: var(--color-prototipo-8);
+}
+.unid {
+  font: 700 15px/1 var(--f-mono);
+  color: var(--g900);
+}
+.unid .resto {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 12.5px;
+  padding: 4px 7px;
+  border-radius: var(--radius-resto);
   background: var(--color-prototipo-7);
   color: var(--color-prototipo-8);
 }

@@ -10,3 +10,5 @@ OPCIONAL (no bloquea):
 Ninguno.
 VEREDICTO: LISTO
 ```
+
+Al incorporar JM-02 desde `develop`, el mismo revisor comprobó también la adaptación de `Unidades.tsx`: mantiene API y cálculos, reproduce `.unid` y `.resto` con tokens centralizados y tiene el aviso a Josué. Segundo veredicto: **LISTO**, sin hallazgos de corrección ni opcionales.
