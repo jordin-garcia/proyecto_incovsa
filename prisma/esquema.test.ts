@@ -95,6 +95,8 @@ type ColumnaDiccionario = {
   pk: boolean;
   fk: string;
   nulo: boolean;
+  /** La descripción del diccionario dice "Se borra en cascada". */
+  cascada: boolean;
 };
 
 function leerDiccionario() {
@@ -105,7 +107,7 @@ function leerDiccionario() {
     const tabla = bloque.slice(0, bloque.indexOf("\n")).trim();
     for (const linea of bloque.split("\n")) {
       if (linea.startsWith("| `")) {
-        const [campo, tipo, longitud, pk, fk, nulo] = linea
+        const [campo, tipo, longitud, pk, fk, nulo, descripcion] = linea
           .split("|")
           .slice(1)
           .map((c) => c.trim());
@@ -113,7 +115,8 @@ function leerDiccionario() {
           .replaceAll("`", "")
           .split(",")
           .map((c) => c.trim())) {
-          columnas.push({ tabla, columna, tipo, longitud, pk: pk === "Sí", fk, nulo: nulo === "Sí" });
+          const cascada = descripcion.includes("Se borra en cascada");
+          columnas.push({ tabla, columna, tipo, longitud, pk: pk === "Sí", fk, nulo: nulo === "Sí", cascada });
         }
       }
       if (linea.startsWith("Restricciones de unicidad:")) {
@@ -148,7 +151,7 @@ const NULOS_DE_SPECS_14: Record<string, string> = {
 };
 
 describe("esquema de la base de datos", () => {
-  it("las tablas, columnas, tipos, nulos, claves e índices únicos son los del diccionario", async () => {
+  it("JG-03 criterio 2: las tablas, columnas, tipos, nulos, claves, cascadas e índices únicos son los del diccionario", async () => {
     const { columnas, unicidades } = leerDiccionario();
     expect(columnas.length).toBeGreaterThan(200);
 
@@ -167,9 +170,10 @@ describe("esquema de la base de datos", () => {
     const porNombre = new Map(reales.map((c) => [`${c.table_name}.${c.column_name}`, c]));
 
     const claves = await prisma.$queryRaw<
-      { tabla: string; columna: string; tipo: string; referencia: string | null }[]
+      { tabla: string; columna: string; tipo: string; referencia: string | null; borrado: string }[]
     >`
-      SELECT cl.relname::text AS tabla, a.attname::text AS columna, c.contype::text AS tipo, cf.relname::text AS referencia
+      SELECT cl.relname::text AS tabla, a.attname::text AS columna, c.contype::text AS tipo, cf.relname::text AS referencia,
+        c.confdeltype::text AS borrado
       FROM pg_constraint c
       JOIN pg_class cl ON cl.oid = c.conrelid
       JOIN pg_namespace n ON n.oid = cl.relnamespace
@@ -178,6 +182,9 @@ describe("esquema de la base de datos", () => {
       WHERE n.nspname = 'public' AND c.contype IN ('p', 'f')`;
     const pk = new Set(claves.filter((c) => c.tipo === "p").map((c) => `${c.tabla}.${c.columna}`));
     const fk = new Map(claves.filter((c) => c.tipo === "f").map((c) => [`${c.tabla}.${c.columna}`, c.referencia]));
+    // Reglas de integridad del Documento 2: los hijos que dice el diccionario se borran en cascada (c); las demás
+    // claves foráneas impiden borrar al padre (r)
+    const borrado = new Map(claves.filter((c) => c.tipo === "f").map((c) => [`${c.tabla}.${c.columna}`, c.borrado]));
 
     const diferencias: string[] = [];
     for (const d of columnas) {
@@ -205,6 +212,10 @@ describe("esquema de la base de datos", () => {
       if (pk.has(nombre) !== d.pk) diferencias.push(`${nombre}: clave primaria ${pk.has(nombre)}, se esperaba ${d.pk}`);
       if ((fk.get(nombre) ?? "") !== d.fk)
         diferencias.push(`${nombre}: FK ${fk.get(nombre)}, se esperaba ${d.fk || "ninguna"}`);
+      if (d.fk && borrado.get(nombre) !== (d.cascada ? "c" : "r"))
+        diferencias.push(
+          `${nombre}: ON DELETE ${borrado.get(nombre)}, se esperaba ${d.cascada ? "CASCADE" : "RESTRICT"}`,
+        );
     }
 
     const indices = await prisma.$queryRaw<{ tabla: string; unico: boolean; parcial: boolean; columnas: string[] }[]>`
@@ -314,7 +325,7 @@ describe("esquema de la base de datos", () => {
     expect(await errorDe(prisma.entregaRuta.create({ data: entrega }))).toMatch(/entrega_ruta_total_kg_positivo/);
   });
 
-  it("rechaza capacidades de camión menores o iguales a cero", async () => {
+  it("JG-03 criterio 5: rechaza capacidades de camión menores o iguales a cero", async () => {
     const sede = await sedeXE();
     for (const capacidadKg of ["0", "-3400"]) {
       expect(
@@ -368,7 +379,7 @@ describe("esquema de la base de datos", () => {
     for (const sistema of ["sitio", "picking", "ambos"]) await expect(crearUsuario({ sistema })).resolves.toBeDefined();
   });
 
-  it("rechaza un tipo de envío distinto de ruta o pedido", async () => {
+  it("JG-03 criterio 5: rechaza un tipo de envío distinto de ruta o pedido", async () => {
     expect(await errorDe(crearEnvio({ tipo: "camion" }))).toMatch(/envio_tipo_valido/);
   });
 
@@ -413,7 +424,18 @@ describe("esquema de la base de datos", () => {
     expect(Math.abs(fila.creado_en.getTime() - Date.now())).toBeLessThan(60_000);
   });
 
-  it("los hijos que dice el diccionario se borran en cascada; los demás impiden borrar al padre", async () => {
+  it("RN-57: todas las tablas ponen la fecha de creación con now()", async () => {
+    const tablas = await prisma.$queryRaw<{ tabla: string; valor: string | null }[]>`
+      SELECT t.table_name::text AS tabla, c.column_default::text AS valor
+      FROM information_schema.tables t
+      LEFT JOIN information_schema.columns c ON c.table_schema = t.table_schema AND c.table_name = t.table_name
+        AND c.column_name IN ('creado_en', 'created_at')
+      WHERE t.table_schema = 'public' AND t.table_type = 'BASE TABLE' AND t.table_name <> '_prisma_migrations'`;
+    expect(tablas.length).toBe(32);
+    expect(tablas.filter((t) => t.valor !== "CURRENT_TIMESTAMP" && t.valor !== "now()")).toEqual([]);
+  });
+
+  it("JG-03 criterio 2: los hijos que dice el diccionario se borran en cascada; los demás impiden borrar al padre", async () => {
     const pedido = await crearPedidoFacturado();
     await prisma.detallePedidoFacturado.create({
       data: { pedidoFacturadoId: pedido.id, producto: "X", pesoConversionKg: "25", cantidadKg: "25", orden: 1 },
@@ -433,7 +455,7 @@ describe("esquema de la base de datos", () => {
 // ------------------------------------------------------------------ Semillas
 
 describe("semillas", () => {
-  it("la semilla base se puede ejecutar dos veces sin duplicar nada", async () => {
+  it("JG-03 criterio 8: la semilla base se puede ejecutar dos veces sin duplicar nada", async () => {
     await sembrarBase(prisma);
     await sembrarBase(prisma);
     const conteos = {
@@ -466,7 +488,7 @@ describe("semillas", () => {
     });
   });
 
-  it("la semilla base carga los datos de specs/03, specs/05 y specs/13", async () => {
+  it("JG-03 criterio 8: la semilla base carga los datos de specs/03, specs/05 y specs/13", async () => {
     const sedes = await prisma.sede.findMany({ orderBy: { id: "asc" } });
     expect(sedes.map((s) => [s.prefijoOdoo, s.nombre, s.tieneOficina])).toEqual([
       ["XE", "Quetzaltenango", true],
@@ -527,7 +549,7 @@ describe("semillas", () => {
     expect(contenido.historia).toBe("");
     expect(await prisma.configuracionSitio.findUniqueOrThrow({ where: { id: 1 } })).toMatchObject({
       logotipoIncovsaUrl: null,
-      logotipoInquisercaUrl: null,
+      logotipoInquisercaUrl: "/marca/inquiserca.webp",
     });
     expect((await prisma.valor.findMany()).every((v) => v.imagenUrl === null)).toBe(true);
     const contactos = await prisma.informacionContacto.findMany({ include: { sede: true } });
@@ -540,7 +562,7 @@ describe("semillas", () => {
     expect(await prisma.pais.findUniqueOrThrow({ where: { codigo: "MX" } })).toMatchObject({ nombre: "México" });
   });
 
-  it("la semilla base no sobrescribe el contenido que INCOVSA editó", async () => {
+  it("JG-03 criterio 8: la semilla base no sobrescribe el contenido que INCOVSA editó", async () => {
     await prisma.contenidoInstitucional.update({ where: { seccion: "historia" }, data: { texto: "Historia editada" } });
     await sembrarBase(prisma);
     expect((await prisma.contenidoInstitucional.findUniqueOrThrow({ where: { seccion: "historia" } })).texto).toBe(
@@ -548,53 +570,57 @@ describe("semillas", () => {
     );
   });
 
-  it("la semilla de demostración se detiene si CLAVE_DEMO falta o tiene menos de 8 caracteres", async () => {
+  it("JG-03 criterio 8: la semilla de demostración se detiene si CLAVE_DEMO falta o tiene menos de 8 caracteres", async () => {
     await expect(sembrarDemo(prisma, { claveDemo: undefined })).rejects.toThrow(/CLAVE_DEMO/);
     await expect(sembrarDemo(prisma, { claveDemo: "1234567" })).rejects.toThrow(/menos de 8 caracteres/);
     expect(await prisma.usuario.count()).toBe(0);
   });
 
-  it("la semilla de demostración se puede ejecutar dos veces sin duplicar nada", { timeout: 60_000 }, async () => {
-    await sembrarDemo(prisma, { claveDemo: CLAVE_DEMO });
-    await sembrarDemo(prisma, { claveDemo: CLAVE_DEMO });
-    const industriasPorProducto = PRODUCTOS_DEMO.reduce((total, [, industrias]) => total + industrias.length, 0);
-    expect({
-      usuarios: await prisma.usuario.count(),
-      credenciales: await prisma.cuenta.count(),
-      camiones: await prisma.camion.count(),
-      productos: await prisma.productoSitio.count(),
-      imagenes: await prisma.imagen.count(),
-      productoIndustria: await prisma.productoIndustria.count(),
-    }).toEqual({
-      usuarios: 11,
-      credenciales: 11,
-      camiones: 3,
-      productos: 28,
-      imagenes: 28,
-      productoIndustria: industriasPorProducto,
-    });
+  it(
+    "JG-03 criterio 8: la semilla de demostración se puede ejecutar dos veces sin duplicar nada",
+    { timeout: 60_000 },
+    async () => {
+      await sembrarDemo(prisma, { claveDemo: CLAVE_DEMO });
+      await sembrarDemo(prisma, { claveDemo: CLAVE_DEMO });
+      const industriasPorProducto = PRODUCTOS_DEMO.reduce((total, [, industrias]) => total + industrias.length, 0);
+      expect({
+        usuarios: await prisma.usuario.count(),
+        credenciales: await prisma.cuenta.count(),
+        camiones: await prisma.camion.count(),
+        productos: await prisma.productoSitio.count(),
+        imagenes: await prisma.imagen.count(),
+        productoIndustria: await prisma.productoIndustria.count(),
+      }).toEqual({
+        usuarios: 11,
+        credenciales: 11,
+        camiones: 3,
+        productos: 28,
+        imagenes: 28,
+        productoIndustria: industriasPorProducto,
+      });
 
-    const camiones = await prisma.camion.findMany({ include: { sede: true }, orderBy: { id: "asc" } });
-    expect(camiones.map((c) => [c.identificacion, c.capacidadKg.toString(), c.sede.prefijoOdoo])).toEqual([
-      ["Camión 1", "3400", "XE"],
-      ["Camión 2", "3400", "XE"],
-      ["Camión 3", "6000", "XE"],
-    ]);
-    const imagen = await prisma.imagen.findFirstOrThrow({
-      where: { url: "/api/imagenes/demo/01.webp" },
-      include: { productoSitio: true },
-    });
-    expect(imagen).toMatchObject({ area: "producto", posicion: 1 });
-    expect(imagen.productoSitio).toMatchObject({
-      nombre: "Ácido Acético",
-      descripcion: null,
-      presentacion: null,
-      paisesOrigen: null,
-    });
-    const xe = await prisma.informacionContacto.findFirstOrThrow({ where: { sede: { prefijoOdoo: "XE" } } });
-    expect(xe).toMatchObject({ telefono: "7926-7951", correo: "facturacion@incovsa.com", whatsapp: "4073-0766" });
-    expect(xe.mapaUrl).toMatch(/^https:\/\/www\.google\.com\/maps\/embed/);
-  });
+      const camiones = await prisma.camion.findMany({ include: { sede: true }, orderBy: { id: "asc" } });
+      expect(camiones.map((c) => [c.identificacion, c.capacidadKg.toString(), c.sede.prefijoOdoo])).toEqual([
+        ["Camión 1", "3400", "XE"],
+        ["Camión 2", "3400", "XE"],
+        ["Camión 3", "6000", "XE"],
+      ]);
+      const imagen = await prisma.imagen.findFirstOrThrow({
+        where: { url: "/api/imagenes/demo/01.webp" },
+        include: { productoSitio: true },
+      });
+      expect(imagen).toMatchObject({ area: "producto", posicion: 1 });
+      expect(imagen.productoSitio).toMatchObject({
+        nombre: "Ácido Acético",
+        descripcion: null,
+        presentacion: null,
+        paisesOrigen: null,
+      });
+      const xe = await prisma.informacionContacto.findFirstOrThrow({ where: { sede: { prefijoOdoo: "XE" } } });
+      expect(xe).toMatchObject({ telefono: "7926-7951", correo: "facturacion@incovsa.com", whatsapp: "4073-0766" });
+      expect(xe.mapaUrl).toMatch(/^https:\/\/www\.google\.com\/maps\/embed/);
+    },
+  );
 
   it(
     "RN-54: después de la semilla de demostración, ejemplo.03 tiene dos cuentas y ejemplo.01 y ejemplo.02 son de ambos sistemas",
@@ -643,7 +669,7 @@ describe("semillas", () => {
 // ------------------------------------------------------------------ Criterio 10
 
 describe("base de pruebas", () => {
-  it("npm test usa DATABASE_URL_PRUEBAS, nunca la base de desarrollo", async () => {
+  it("JG-03 criterio 10: npm test usa DATABASE_URL_PRUEBAS, nunca la base de desarrollo", async () => {
     const urlPruebas = process.env.DATABASE_URL_PRUEBAS;
     expect(urlPruebas).toBeTruthy();
     expect(process.env.DATABASE_URL).toBe(urlPruebas);

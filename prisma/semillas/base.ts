@@ -155,6 +155,9 @@ export const MAPAS = {
   GT: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3859.898369446534!2d-90.56218562536918!3d14.661708575578558!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85899fe9da39aa29%3A0x5f1c10c1ff4a038a!2sIncovsa!5e0!3m2!1ses-419!2sus!4v1791772376935!5m2!1ses-419!2sus",
 } as const;
 
+/** Logotipo de Inquiserca recibido el 13/10 (JG-04, `public/marca/`). */
+export const LOGOTIPO_INQUISERCA = "/marca/inquiserca.webp";
+
 /** Países de `libphonenumber-js` con su nombre en español, como el prototipo (decisión 45). */
 export function listaPaises(): { codigo: string; nombre: string }[] {
   const nombres = new Intl.DisplayNames(["es"], { type: "region" });
@@ -194,7 +197,11 @@ export async function sembrarDatosEditables(prisma: PrismaClient): Promise<void>
     data: Object.entries(CONTENIDO_INSTITUCIONAL).map(([seccion, texto]) => ({ seccion, texto })),
     skipDuplicates: true,
   });
-  await prisma.configuracionSitio.createMany({ data: [{ id: 1 }], skipDuplicates: true });
+  // El logotipo de INCOVSA vacío es el recibido; el de Inquiserca viene cargado (specs/05) y vacío es "quitado".
+  await prisma.configuracionSitio.createMany({
+    data: [{ id: 1, logotipoInquisercaUrl: LOGOTIPO_INQUISERCA }],
+    skipDuplicates: true,
+  });
   await prisma.valor.createMany({ data: [1, 2, 3, 4, 5].map((posicion) => ({ posicion })), skipDuplicates: true });
   await prisma.informacionContacto.createMany({
     data: sedes

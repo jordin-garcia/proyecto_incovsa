@@ -181,7 +181,7 @@ model Bitacora {
   ip             String?  @db.VarChar(45)
   creadoEn       DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
 
-  usuario Usuario? @relation(fields: [usuarioId], references: [id])
+  usuario Usuario? @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
 
   @@map("bitacora")
 }
@@ -219,8 +219,8 @@ model OpcionEnvio {
   actualizadoEn   DateTime  @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
 
   sede              Sede              @relation(fields: [sedeId], references: [id])
-  camion            Camion?           @relation(fields: [camionId], references: [id])
-  piloto            Usuario?          @relation("OpcionEnvioPiloto", fields: [pilotoId], references: [id])
+  camion            Camion?           @relation(fields: [camionId], references: [id], onDelete: Restrict)
+  piloto            Usuario?          @relation("OpcionEnvioPiloto", fields: [pilotoId], references: [id], onDelete: Restrict)
   pedidosFacturados PedidoFacturado[]
 
   @@unique([sedeId, tipo])
@@ -246,8 +246,8 @@ model PedidoFacturado {
   actualizadoEn DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
 
   sede        Sede                     @relation(fields: [sedeId], references: [id])
-  opcionEnvio OpcionEnvio?             @relation(fields: [opcionEnvioId], references: [id])
-  envio       Envio?                   @relation(fields: [envioId], references: [id])
+  opcionEnvio OpcionEnvio?             @relation(fields: [opcionEnvioId], references: [id], onDelete: Restrict)
+  envio       Envio?                   @relation(fields: [envioId], references: [id], onDelete: Restrict)
   cargadoPor  Usuario                  @relation(fields: [cargadoPorId], references: [id])
   detalles    DetallePedidoFacturado[]
 
@@ -305,8 +305,8 @@ model Envio {
   sede              Sede               @relation(fields: [sedeId], references: [id])
   estado            EstadoEnvio        @relation(fields: [estadoId], references: [id])
   enviadoPor        Usuario            @relation("EnvioEnviadoPor", fields: [enviadoPorId], references: [id])
-  camion            Camion?            @relation(fields: [camionId], references: [id])
-  piloto            Usuario?           @relation("EnvioPiloto", fields: [pilotoId], references: [id])
+  camion            Camion?            @relation(fields: [camionId], references: [id], onDelete: Restrict)
+  piloto            Usuario?           @relation("EnvioPiloto", fields: [pilotoId], references: [id], onDelete: Restrict)
   pedidosFacturados PedidoFacturado[]
   lineas            LineaPreparacion[]
   historial         HistorialEstado[]
@@ -374,6 +374,7 @@ model ConfiguracionSitio {
   id                    Int      @id @default(1)
   /// Vacío: el logotipo recibido de la empresa.
   logotipoIncovsaUrl    String?  @map("logotipo_incovsa_url")
+  /// Viene cargado con el recibido el 13/10 (/marca/inquiserca.webp). Vacío: se quitó desde el panel.
   logotipoInquisercaUrl String?  @map("logotipo_inquiserca_url")
   creadoEn              DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
   actualizadoEn         DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
@@ -532,10 +533,10 @@ model SolicitudContacto {
   actualizadoEn  DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
 
   pais         Pais          @relation(fields: [paisId], references: [id])
-  departamento Departamento? @relation(fields: [departamentoId], references: [id])
-  municipio    Municipio?    @relation(fields: [municipioId], references: [id])
+  departamento Departamento? @relation(fields: [departamentoId], references: [id], onDelete: Restrict)
+  municipio    Municipio?    @relation(fields: [municipioId], references: [id], onDelete: Restrict)
   sede         Sede          @relation(fields: [sedeId], references: [id])
-  responsable  Usuario?      @relation(fields: [responsableId], references: [id])
+  responsable  Usuario?      @relation(fields: [responsableId], references: [id], onDelete: Restrict)
 
   @@map("solicitud_contacto")
 }

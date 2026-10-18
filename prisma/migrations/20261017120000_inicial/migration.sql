@@ -526,7 +526,7 @@ ALTER TABLE "usuario_sede" ADD CONSTRAINT "usuario_sede_usuario_id_fkey" FOREIGN
 ALTER TABLE "usuario_sede" ADD CONSTRAINT "usuario_sede_sede_id_fkey" FOREIGN KEY ("sede_id") REFERENCES "sede"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "bitacora" ADD CONSTRAINT "bitacora_usuario_id_fkey" FOREIGN KEY ("usuario_id") REFERENCES "usuario"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "bitacora" ADD CONSTRAINT "bitacora_usuario_id_fkey" FOREIGN KEY ("usuario_id") REFERENCES "usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "camion" ADD CONSTRAINT "camion_sede_id_fkey" FOREIGN KEY ("sede_id") REFERENCES "sede"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -535,19 +535,19 @@ ALTER TABLE "camion" ADD CONSTRAINT "camion_sede_id_fkey" FOREIGN KEY ("sede_id"
 ALTER TABLE "opcion_envio" ADD CONSTRAINT "opcion_envio_sede_id_fkey" FOREIGN KEY ("sede_id") REFERENCES "sede"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "opcion_envio" ADD CONSTRAINT "opcion_envio_camion_id_fkey" FOREIGN KEY ("camion_id") REFERENCES "camion"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "opcion_envio" ADD CONSTRAINT "opcion_envio_camion_id_fkey" FOREIGN KEY ("camion_id") REFERENCES "camion"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "opcion_envio" ADD CONSTRAINT "opcion_envio_piloto_id_fkey" FOREIGN KEY ("piloto_id") REFERENCES "usuario"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "opcion_envio" ADD CONSTRAINT "opcion_envio_piloto_id_fkey" FOREIGN KEY ("piloto_id") REFERENCES "usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "pedido_facturado" ADD CONSTRAINT "pedido_facturado_sede_id_fkey" FOREIGN KEY ("sede_id") REFERENCES "sede"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "pedido_facturado" ADD CONSTRAINT "pedido_facturado_opcion_envio_id_fkey" FOREIGN KEY ("opcion_envio_id") REFERENCES "opcion_envio"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "pedido_facturado" ADD CONSTRAINT "pedido_facturado_opcion_envio_id_fkey" FOREIGN KEY ("opcion_envio_id") REFERENCES "opcion_envio"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "pedido_facturado" ADD CONSTRAINT "pedido_facturado_envio_id_fkey" FOREIGN KEY ("envio_id") REFERENCES "envio"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "pedido_facturado" ADD CONSTRAINT "pedido_facturado_envio_id_fkey" FOREIGN KEY ("envio_id") REFERENCES "envio"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "pedido_facturado" ADD CONSTRAINT "pedido_facturado_cargado_por_fkey" FOREIGN KEY ("cargado_por") REFERENCES "usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -565,10 +565,10 @@ ALTER TABLE "envio" ADD CONSTRAINT "envio_estado_id_fkey" FOREIGN KEY ("estado_i
 ALTER TABLE "envio" ADD CONSTRAINT "envio_enviado_por_fkey" FOREIGN KEY ("enviado_por") REFERENCES "usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "envio" ADD CONSTRAINT "envio_camion_id_fkey" FOREIGN KEY ("camion_id") REFERENCES "camion"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "envio" ADD CONSTRAINT "envio_camion_id_fkey" FOREIGN KEY ("camion_id") REFERENCES "camion"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "envio" ADD CONSTRAINT "envio_piloto_id_fkey" FOREIGN KEY ("piloto_id") REFERENCES "usuario"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "envio" ADD CONSTRAINT "envio_piloto_id_fkey" FOREIGN KEY ("piloto_id") REFERENCES "usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "linea_preparacion" ADD CONSTRAINT "linea_preparacion_envio_id_fkey" FOREIGN KEY ("envio_id") REFERENCES "envio"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -613,16 +613,16 @@ ALTER TABLE "producto_documentado" ADD CONSTRAINT "producto_documentado_creado_p
 ALTER TABLE "solicitud_contacto" ADD CONSTRAINT "solicitud_contacto_pais_id_fkey" FOREIGN KEY ("pais_id") REFERENCES "pais"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "solicitud_contacto" ADD CONSTRAINT "solicitud_contacto_departamento_id_fkey" FOREIGN KEY ("departamento_id") REFERENCES "departamento"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "solicitud_contacto" ADD CONSTRAINT "solicitud_contacto_departamento_id_fkey" FOREIGN KEY ("departamento_id") REFERENCES "departamento"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "solicitud_contacto" ADD CONSTRAINT "solicitud_contacto_municipio_id_fkey" FOREIGN KEY ("municipio_id") REFERENCES "municipio"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "solicitud_contacto" ADD CONSTRAINT "solicitud_contacto_municipio_id_fkey" FOREIGN KEY ("municipio_id") REFERENCES "municipio"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "solicitud_contacto" ADD CONSTRAINT "solicitud_contacto_sede_id_fkey" FOREIGN KEY ("sede_id") REFERENCES "sede"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "solicitud_contacto" ADD CONSTRAINT "solicitud_contacto_responsable_id_fkey" FOREIGN KEY ("responsable_id") REFERENCES "usuario"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "solicitud_contacto" ADD CONSTRAINT "solicitud_contacto_responsable_id_fkey" FOREIGN KEY ("responsable_id") REFERENCES "usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "informacion_contacto" ADD CONSTRAINT "informacion_contacto_sede_id_fkey" FOREIGN KEY ("sede_id") REFERENCES "sede"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

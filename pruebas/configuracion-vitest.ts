@@ -4,6 +4,15 @@ import { execSync } from "node:child_process";
 import { crearClientePrisma } from "../src/lib/prisma";
 import { sembrarBase } from "../prisma/semillas/base";
 
+/** Compara servidor, puerto y nombre de la base, no el texto: `postgres://` y `postgresql://` son la misma. */
+function mismaBase(a: string, b: string): boolean {
+  const clave = (texto: string) => {
+    const url = new URL(texto);
+    return `${url.hostname.replace(/^127\.0\.0\.1$|^\[::1\]$/, "localhost")}:${url.port || "5432"}${url.pathname}`;
+  };
+  return clave(a) === clave(b);
+}
+
 export default async function prepararBaseDePruebas(): Promise<void> {
   const url = process.env.DATABASE_URL_PRUEBAS;
   if (!url) {
@@ -12,7 +21,7 @@ export default async function prepararBaseDePruebas(): Promise<void> {
     );
   }
   // En la CI las dos variables apuntan a la misma base temporal; en un equipo, deben ser bases distintas.
-  if (!process.env.CI && url === process.env.DATABASE_URL) {
+  if (!process.env.CI && process.env.DATABASE_URL && mismaBase(url, process.env.DATABASE_URL)) {
     throw new Error("DATABASE_URL_PRUEBAS no puede ser la base de desarrollo (DATABASE_URL): las pruebas la vacían.");
   }
 

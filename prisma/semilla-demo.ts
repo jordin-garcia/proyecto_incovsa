@@ -18,7 +18,9 @@ async function principal(): Promise<void> {
   const prisma = crearClientePrisma(process.env.DATABASE_URL);
   try {
     await sembrarDemo(prisma, { claveDemo: process.env.CLAVE_DEMO });
-    console.log("Datos de demostración cargados: cuentas ejemplo.01 a ejemplo.11, 3 camiones y 28 productos públicos.");
+    console.log(
+      "Datos de demostración cargados: 11 cuentas de ejemplo (ejemplo.01 a ejemplo.10, y ejemplo.03 también en el sitio), 3 camiones y 28 productos públicos.",
+    );
   } catch (error) {
     console.error(error instanceof ErrorSemillaDemo ? error.message : error);
     process.exitCode = 1;

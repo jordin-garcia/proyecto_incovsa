@@ -104,6 +104,7 @@ Este es el modelo **conceptual**. Los nombres físicos, los tipos, los índices 
 | MUNICIPIO | nombre | Departamento |
 
 - La relación N:M entre productos públicos e industrias se implementa con **PRODUCTO_INDUSTRIA**.
+- CONFIGURACION_SITIO: el logotipo de INCOVSA vacío es el recibido de la empresa (`public/marca/`); el de Inquiserca **viene cargado** con el recibido el 13/10 (`/marca/inquiserca.webp`) y vacío significa que se quitó desde el panel (17/10, JG-03).
 - Una posición de IMAGEN no se repite en la misma galería (el área y su dueño). Como el dueño queda vacío en la portada, la misión, la visión y la historia, la base lo garantiza con índices únicos parciales (17/10, JG-03).
 - PAIS es la lista de todos los países, que usan el formulario de contacto y la documentación interna.
 - Las imágenes se guardan en Cloudflare R2; en la base de datos solo se guarda su dirección (URL).
