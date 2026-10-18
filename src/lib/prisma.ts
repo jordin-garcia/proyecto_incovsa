@@ -3,7 +3,9 @@ import { PrismaClient } from "@/generated/prisma/client";
 
 /** Crea un cliente de Prisma con el adaptador de PostgreSQL (Prisma 7). Lo usan `prisma`, las semillas y las pruebas. */
 export function crearClientePrisma(urlBaseDatos: string | undefined): PrismaClient {
-  return new PrismaClient({ adapter: new PrismaPg({ connectionString: urlBaseDatos }) });
+  // El adaptador pg de Prisma interpreta timestamptz como UTC: la conexión debe usar UTC incluso si el servidor
+  // local tiene America/Guatemala por omisión. La presentación sigue usando @/lib/fechas (RN-57).
+  return new PrismaClient({ adapter: new PrismaPg({ connectionString: urlBaseDatos, options: "-c timezone=UTC" }) });
 }
 
 // Un solo cliente por proceso. En desarrollo, la recarga de Next.js vuelve a evaluar los módulos: el cliente se
