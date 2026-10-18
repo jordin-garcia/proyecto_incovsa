@@ -5,7 +5,8 @@ persona: carlos
 responsable: Carlos Hugo Escobar
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: bloqueada
+bloqueo: En Cursor Cloud Agent, `gh` usa el token de la App `cursor[bot]` (GraphQL viewer = `cursor[bot]`); `gh api user` responde 403 y no puede devolver `carloshugoeg`. Carlos debe ejecutar `gh auth login` como `carloshugoeg` en su Mac (Cursor local) o aportar un PAT de usuario (`GH_TOKEN`) para que `verificar-entorno` y el criterio 2 pasen. El resto de herramientas ya están listas en este entorno.
 depende_de: []
 programada: 2026-10-17
 requisitos: []
@@ -70,3 +71,34 @@ node scripts/tareas.mjs --persona carlos
 ## Notas
 - next-devtools solo responde con `npm run dev` corriendo (desde JG-02), y shadcn necesita `components.json` (desde JG-05). En esta tarea basta con que aparezcan registrados; su prueba real ocurre en la primera tarea con pantallas.
 - En el `## Resultado`, anota las versiones instaladas (Node, npm, Git, gh, PostgreSQL y el harness) y cualquier ajuste personal que haya hecho falta, para que el resto del equipo lo aproveche.
+
+## Resultado
+
+**Estado:** bloqueada (falta sesión de GitHub CLI como `carloshugoeg`). Trabajo hecho en el entorno de **Cursor Cloud Agent** (Linux), no en la Mac local de Carlos; la guía de macOS de `plan/instalacion.md` §2 sigue siendo la referencia para su máquina personal.
+
+### Versiones en el Cloud Agent
+- Node.js **24.22.0** (nvm + enlaces en `/usr/local/bin` y `~/.local/bin`; el `node` del PATH del agente antes era 22.14.0)
+- npm **11.19.1**
+- Git **2.43.0** · `user.name=Hugo Escobar` · `user.email=chescobarg@correo.url.edu.gt` · `core.autocrlf=false` · `pull.rebase=true`
+- GitHub CLI **2.102.0** · autenticado como App `cursor[bot]` (GraphQL `viewer.login` = `cursor[bot]`); `gh api user` → 403
+- PostgreSQL **18.6** (`psql` y servidor local en el puerto 5432)
+- Harness: **Cursor Cloud Agent** (modo agente; sin modo sin permisos)
+
+### Evidencia por criterio
+1. `node scripts/verificar-entorno.mjs`: Node, npm, Git, gh (instalado), acceso al repo, PostgreSQL 18 y `core.autocrlf` en ✅. **Único ❌:** «GitHub CLI con sesión iniciada» porque `gh api user` falla con el token de la App.
+2. `gh api user --jq .login` **no** puede devolver `carloshugoeg` con el token Cloud (`cursor[bot]`). `gh repo view jordin-garcia/proyecto_incovsa` sí funciona.
+3. **Context7** (sin clave API, configuración personal `~/.cursor/mcp.json` solo con `url`): resolvió Next.js → `/vercel/next.js` (versiones hasta `v16.2.9`). `query-docs` sobre Server Actions en `/vercel/next.js/v16.2.9` devolvió fragmentos de `docs/01-app/01-getting-started/07-mutating-data.mdx` y `02-guides/forms.mdx`: `<form action={createPost}>`, acción async con `'use server'`, comprobación de sesión y `useActionState`.
+4. **Playwright:** con `node scripts/servir-prototipo.mjs` en http://127.0.0.1:4173/, captura de Inicio → título `Inicio · INCOVSA`, h1 «Química que sostiene a la industria guatemalteca». Evidencia en el store del proyecto: `media/ce-01/prototipo-inicio.png`.
+5. MCP del proyecto (`.cursor/mcp.json`): `playwright`, `next-devtools`, `shadcn` presentes. `context7` en configuración personal. En Cloud Agent no hay UI de «punto verde»; en la Mac, Carlos debe activarlos en Cursor Settings → MCP.
+6. `node scripts/tareas.mjs --persona carlos` y `--hoy carlos` responden: CE-01 atrasada; siguientes CE-02/CE-03 (hoy, esperan CE-01 y JG-07) y CE-05 disponible el 21/10.
+7. Modo agente con aislamiento (no modo sin permisos). `.env` no existe; `.cursorignore` y `.gitignore` bloquean `.env*`.
+
+### Cómo desbloquear (Carlos, en Mac o con PAT)
+1. En Terminal (Mac): `gh auth login` → GitHub.com → HTTPS → navegador, con la cuenta **`carloshugoeg`**. Luego `gh auth setup-git`.
+2. O en el Cloud Agent: exportar `GH_TOKEN` con un PAT clásico/fine-grained de `carloshugoeg` que permita `gh api user`.
+3. Comprobar: `gh api user --jq .login` → `carloshugoeg` y `node scripts/verificar-entorno.mjs` → «El equipo tiene todo lo necesario.»
+4. En Cursor (Mac): Settings → MCP → punto verde en `playwright`, `next-devtools`, `shadcn` (proyecto) y `context7` (personal; clave opcional en https://context7.com/dashboard).
+5. Reabrir la tarea en una conversación nueva: quitar `bloqueo`, poner `estado: hecha` y actualizar este Resultado.
+
+### Cómo usarlo
+Hasta desbloquear, **ninguna otra tarea de Carlos** (CE-02…) debe empezarse (B0). Node 24, npm 11.19+, PostgreSQL 18, Context7, Playwright y el prototipo ya están operativos en este Cloud Agent.
