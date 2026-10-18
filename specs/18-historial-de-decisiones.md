@@ -545,6 +545,9 @@ El coordinador respondió las preguntas que quedaban antes del plan y pidió cre
 | Ramas | Se borraron todas las ramas salvo `main` y `develop`, y GitHub borra cada rama al integrar su PR |
 | Avisos por correo | Con las notificaciones de GitHub: recordatorio diario por persona, aviso a todo el equipo cuando una tarea termina y desbloquea otras, y aviso al autor cuando el bot rechaza su PR (decisión 87) |
 | Una tarea por conversación | Cada tarea se implementa en su propia conversación con el agente, para no exceder su ventana de contexto; la siguiente empieza en una conversación nueva (decisión 88) |
+| Mensaje de los errores inesperados (JG-02) | "No se pudo completar la operación. Inténtelo de nuevo.", con el estilo "No se pudo …" del prototipo; el detalle queda solo en el registro del servidor ([16](16-arquitectura-y-tecnologia.md), "Cabeceras y transporte") |
+| Aviso alto de `braces` (JG-02) | GHSA-vfj7-8cjw-p6xm (braces ≤ 3.0.3, sin versión corregida) llega solo por `eslint-config-next` → `@next/eslint-plugin-next` → `fast-glob`. Un `overrides` de `package.json` reemplaza ese `fast-glob` por `tinyglobby`, que el plugin usa con la misma función `globSync`; se quita cuando Next lo corrija. `npm audit --audit-level=high` sigue sin excepciones |
+| Versión de ESLint (JG-02) | ESLint 9, aunque terminó su soporte el 06/08/2026: los plugins de `eslint-config-next` 16.4.2 todavía no admiten ESLint 10. Se actualiza cuando lo admitan. TypeScript 6.0, porque `typescript-eslint` exige una versión menor que la 6.1 |
 
 ### Verificación del 16/10/2026
 

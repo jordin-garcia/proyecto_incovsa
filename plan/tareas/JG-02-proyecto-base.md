@@ -5,7 +5,7 @@ persona: jordin
 responsable: Jordin García
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JG-01, JG-08]
 programada: 2026-10-17
 requisitos: [RNF-07, RNF-10, RNF-16]
@@ -84,3 +84,63 @@ npm ls xlsx next sharp better-auth prisma @prisma/client pdfmake file-type
 ## Notas
 - Esta tarea ya pasa por la CI y el bot de JG-08. Desde aquí, los trabajos de la CI que dependen de la aplicación corren completos.
 - En el `## Resultado`, deja la lista de versiones exactas instaladas y cómo usar `src/lib/fechas.ts`, `errores.ts` y `roles.ts`.
+
+## Resultado
+
+La aplicación base de Next.js 16.4.2 está en la raíz del repositorio, con **todas** las dependencias del proyecto, la calidad local (Prettier, ESLint, TypeScript estricto, Vitest, Playwright y husky), la estructura de carpetas de `plan/convenciones.md` §1 y las utilidades de `src/lib` para fechas, errores y roles. Desde ahora corren completos los trabajos `calidad`, `pruebas`, `compilacion` y `dependencias` de la CI.
+
+**Versiones exactas instaladas** (`package-lock.json`)
+- Producción: next 16.4.2, react y react-dom 19.3.1, @prisma/client y @prisma/adapter-pg 7.10.1, pg 8.23.1, better-auth 1.7.10, zod 4.6.7, react-hook-form 7.90.0, @hookform/resolvers 5.9.2, @dnd-kit/core 6.3.1, @dnd-kit/sortable 10.0.0, @dnd-kit/utilities 3.2.2, date-fns 4.4.0, @date-fns/tz 1.5.0, libphonenumber-js 1.13.15, pdfmake 0.3.12, sharp 0.35.5, file-type 22.2.0, @aws-sdk/client-s3 3.1152.0, class-variance-authority 0.7.1, clsx 2.1.1, tailwind-merge 3.7.0, radix-ui 1.8.1 y xlsx 0.20.3.
+- Desarrollo: prisma 7.10.1, typescript 6.0.3, tsx 4.23.15, vitest 5.0.5, @playwright/test 1.64.1, @axe-core/playwright 4.14.0, fast-check 4.10.2, eslint 9.39.5, eslint-config-next 16.4.2, eslint-config-prettier 10.1.8, prettier 3.9.10, husky 9.1.7, tailwindcss y @tailwindcss/postcss 4.3.3, postcss 8.5.30, @types/node 24.19.2, @types/react y @types/react-dom 19.3.0, y @types/pg 8.23.1.
+- **SheetJS** desde `vendor/xlsx-0.20.3.tgz` (`"xlsx": "file:vendor/xlsx-0.20.3.tgz"`), con la huella `sha512-oLDq3jw7AcLqKWH2AhCpVTZl8mf6X2YReP+Neh0SJUzV/BdZYjth94tG5toiMB1PPrYtxOCfaoUCkvtuH+3AJA==`, igual a la del archivo que se descarga de cdn.sheetjs.com.
+- Antes de instalar cada paquete se consultaron sus avisos en la base de avisos de GitHub, en la versión elegida: ninguno tiene avisos. `npm audit --audit-level=high`: 0 vulnerabilidades.
+
+**Decisiones tomadas**
+- **`braces` (GHSA-vfj7-8cjw-p6xm, alta y sin versión corregida):** llegaba solo por `eslint-config-next` → `@next/eslint-plugin-next` → `fast-glob` → `micromatch`. Con la aprobación del coordinador, un `overrides` de `package.json` reemplaza ese `fast-glob` por `npm:tinyglobby@^0.2.17`. El plugin solo usa `globSync(patrón, { onlyDirectories: true })` en `dist/utils/get-root-dirs.js`, y solo si se configura `settings.next.rootDir`; tinyglobby tiene esa misma función. **El override se quita** cuando `@next/eslint-plugin-next` deje `fast-glob` o salga una versión corregida de `braces`. Mientras tanto, cada vez que se actualice el plugin hay que revisar que siga usando solo `globSync`.
+- **ESLint 9 y TypeScript 6.0** (aprobado por el coordinador): ESLint 9 terminó su soporte, pero los plugins de `eslint-config-next` 16.4.2 todavía no admiten ESLint 10. TypeScript queda en `~6.0.3` porque `typescript-eslint` exige una versión menor que la 6.1.
+- **Tailwind con PostCSS** (`@tailwindcss/postcss` y `postcss.config.mjs`), en lugar del cargador `@tailwindcss/turbopack` que ahora genera create-next-app, para que `next.config.ts` quede como pide la tarea.
+- **`agentRules: false` en `next.config.ts`:** cada vez que arranca, `next dev` 16.4 escribe sus instrucciones en `AGENTS.md`, que es un archivo protegido. Con esta opción ya no lo hace, y si encuentra el bloque, lo quita.
+- **Vitest** (`vitest.config.mts`) incluye `src/**/*.test.ts` y `scripts/**/*.test.ts`, no `scripts/**/*.test.mjs`. Las pruebas `.mjs` de los scripts usan `node:test` y las corre `node --test "scripts/*.test.mjs"` en el trabajo `plan` de la CI: una prueba de Vitest con ese patrón rompería ese trabajo. Los scripts nuevos en TypeScript (por ejemplo `crear-admin.ts`) ponen sus pruebas en `*.test.ts`. La extensión `.mts` evita el aviso de Vite por cargar ESM como CommonJS.
+- **Prettier** ignora además los `*.md` (documentación, igual que `specs/` y `plan/`). Los scripts `.mjs` del plan y de la CI se formatearon con Prettier, sin cambios de comportamiento: las 78 pruebas siguen pasando.
+- **Mensaje general de error**, elegido por el coordinador: "No se pudo completar la operación. Inténtelo de nuevo." Quedó registrado en `specs/16` y `specs/18`.
+- **Fechas:** solo se aceptan textos `AAAA-MM-DD` o ISO 8601 con `Z` o desfase, con una fecha y una hora que existan. Un texto sin zona se leería con la hora del equipo: UTC en producción y Guatemala en desarrollo. Es el hallazgo de la revisión en contexto limpio.
+- No se instalaron `tw-animate-css` ni `lucide-react`, que agrega `shadcn init`: la tarea prohíbe las librerías de animación y de íconos (decisiones 52 y 53).
+- La página mínima no tiene ícono (`/favicon.ico` da 404). El prototipo tampoco tiene uno, así que no se inventó.
+- `playwright.config.ts`: los proyectos `telefono`, `tableta` y `escritorio` corren todas las pruebas, y `tv` solo las de `tablero*.spec.ts` (JM-05 crea `pruebas-e2e/picking/tablero.spec.ts`). Todos usan Chromium; Firefox y WebKit los agrega JG-16.
+- El script `prepare` ejecuta `husky`. En una instalación sin dependencias de desarrollo (`npm ci --omit=dev`, por ejemplo en Docker) hay que usar `--ignore-scripts` o `HUSKY=0`.
+
+**Archivos principales**
+- `package.json`, `package-lock.json`, `.npmrc` y `vendor/xlsx-0.20.3.tgz`.
+- `next.config.ts`, `tsconfig.json`, `eslint.config.mjs`, `.prettierrc.json`, `.prettierignore`, `postcss.config.mjs`, `vitest.config.mts`, `playwright.config.ts`, `.husky/pre-commit`, `.env.example`, `.gitignore` y `.cursorignore`.
+- `src/app/layout.tsx` (título "INCOVSA" con la plantilla "<página> · INCOVSA" del prototipo, y `lang="es"`), `src/app/page.tsx` (página mínima) y `src/app/globals.css` (solo Tailwind).
+- `src/lib/fechas.ts`, `src/lib/errores.ts` y `src/lib/roles.ts`, con sus pruebas (34).
+- `src/modulos/<módulo>/README.md` (15), las carpetas `src/componentes/{ui,comunes,sitio,panel,picking}/` y `pruebas/fixtures/`, y `pruebas-e2e/comunes/aplicacion.spec.ts`.
+
+**Evidencia**
+- `npm run verificar`: formato, lint y tipos sin errores; Vitest, 34 de 34. `node --test "scripts/*.test.mjs"`: 78 de 78.
+- `npm run build`: compila (Next.js 16.4.2, Turbopack, salida `standalone`).
+- `npm run e2e`: 6 de 6 (dos pruebas en cada proyecto: `telefono`, `tableta` y `escritorio`), incluida la de axe, sin violaciones serias ni críticas.
+- `npm audit --audit-level=high`: 0 vulnerabilidades. `npm ls xlsx` muestra `xlsx@0.20.3`, instalado desde `vendor/`.
+- Criterio 4: un *commit* con un archivo mal formateado falló en `npm run formato`, y otro con un error de tipos falló en `npm run tipos` ("husky - pre-commit script failed"). HEAD no cambió.
+- Las pruebas de fechas pasan con el sistema en UTC, America/Guatemala, Asia/Tokyo y America/New_York.
+- `npm run dev`: http://localhost:3000 muestra "INCOVSA", y next-devtools no reporta errores de compilación ni de ejecución.
+
+**Cómo usar lo que se creó**
+- **Fechas** (`@/lib/fechas`). Un *día* es un texto `AAAA-MM-DD` del calendario de Guatemala. Un *instante* es un `Date`, una marca de tiempo en milisegundos o un texto ISO con `Z` o desfase. Un texto sin zona o con otro formato lanza `RangeError`.
+  - `fechaGuatemala(instante)` → `"2026-10-17"`: el día de Guatemala, para la numeración diaria y los filtros por día.
+  - `inicioDelDiaGuatemala(día | Date)` y `finDelDiaGuatemala(día | Date)` → `Date`, el primer y el último milisegundo del día en Guatemala. Sirven para consultar por rango: `{ gte: inicioDelDiaGuatemala(d), lte: finDelDiaGuatemala(d) }`.
+  - `semanaLunesADomingo(día | Date)` → `{ inicio: "2026-10-19", fin: "2026-10-25" }`.
+  - `formatoFecha(instante)` → `"17/10/2026"` y `formatoHora(instante)` → `"23:30"`, en la hora de Guatemala. Con un día, `formatoFecha("2026-10-17")` da `"17/10/2026"`.
+  - `leerFecha("17/10/2026")` → `"2026-10-17"` y `leerHora("8:30")` → `"08:30"`. Aceptan lo mismo que el prototipo (`d/m/aaaa`, `ddmmaaaa`, `H:MM` y `HHMM`) y devuelven `null` si la fecha o la hora no existe (`31/02/2026`, `25:90`). Se pueden usar en los esquemas de Zod.
+- **Errores** (`@/lib/errores`). Las reglas de negocio lanzan `new ErrorNegocio("mensaje para el usuario")`. Las acciones terminan así:
+  ```ts
+  try {
+    // exigirPermiso, validar con Zod y llamar al servicio
+    return { ok: true, datos };
+  } catch (error) {
+    return aResultadoDeError(error); // { ok: false, error } sin detalles técnicos
+  }
+  ```
+  `aResultadoDeError` vuelve a lanzar `redirect()` y `notFound()` de Next.js, y deja los errores inesperados en el registro del servidor. El tipo `Resultado<T>` describe lo que devuelve cada acción.
+- **Roles** (`@/lib/roles`): `normalizarRol(texto)` para comparar roles, y `esAccesoTotal(rol)`, que es verdadero para Gerencia y Soporte (RN-38).
+- **Comandos:** `npm run dev`, `build`, `start`, `formato`, `formato:arreglar`, `lint`, `tipos`, `test`, `e2e` y `verificar`. Antes del primer `npm run e2e` hay que ejecutar `npx playwright install chromium` (o la lista de `plan/instalacion.md` §5).

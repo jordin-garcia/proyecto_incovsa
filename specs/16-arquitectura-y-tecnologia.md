@@ -107,7 +107,7 @@ Medidas que el equipo adoptó el 12/10/2026 para que la aplicación sea segura y
 
 - HTTPS en todo el sitio (RNF-12), con HSTS.
 - Cabeceras de seguridad (RNF-16): `Content-Security-Policy` (que permita las imágenes de Cloudflare R2, los mapas insertados de Google Maps y la vista previa de Google Drive, specs/05), `X-Content-Type-Options: nosniff`, `Referrer-Policy` y protección contra que otro sitio inserte el nuestro en un marco (`frame-ancestors`).
-- Los errores que ve el usuario no muestran detalles técnicos; el detalle queda solo en el registro del servidor.
+- Los errores que ve el usuario no muestran detalles técnicos; el detalle queda solo en el registro del servidor. **(17/10)** Ante un error inesperado, el mensaje es "No se pudo completar la operación. Inténtelo de nuevo." (`src/lib/errores.ts`); los errores de las reglas de negocio muestran su propio mensaje.
 - **(16/10)** Caddy obtiene y renueva solo el certificado HTTPS y agrega la cabecera HSTS.
 
 ### Secretos y dependencias
