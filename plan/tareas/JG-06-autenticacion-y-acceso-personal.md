@@ -5,7 +5,7 @@ persona: jordin
 responsable: Jordin García
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JG-03, JG-05]
 programada: 2026-10-17
 requisitos: [RF-SW-09, RF-SW-11, RF-SW-30, RF-SL-01, RF-SL-02, RF-SL-36, RN-18, RN-39, RN-47, RN-54, RNF-03, RNF-15, CU-11]
@@ -90,7 +90,7 @@ npm run e2e -- pruebas-e2e/acceso
 
 ## Resultado
 
-Implementación preparada en la rama `jordin/JG-06-autenticacion-acceso-personal`. El cierre y la integración siguen pendientes hasta completar la verificación autorizada de reinicio de la base desechable.
+Implementación verificada en la rama `jordin/JG-06-autenticacion-acceso-personal`, con el reinicio de la base desechable autorizado expresamente por Jordin y ejecutado correctamente junto con las dos semillas.
 
 ### Implementación
 
@@ -122,4 +122,4 @@ Implementación preparada en la rama `jordin/JG-06-autenticacion-acceso-personal
 - [Revisión independiente en contexto limpio y correcciones](../evidencias/JG-06/revision.md).
 - Pruebas primero: la suite de acceso falló por el servicio ausente; la de consulta de bitácora rechazó la falta de cabeceras explícitas fuera de una petición; la nueva prueba de UTC falló con `America/Guatemala`. No se debilitaron pruebas ni umbrales.
 - `crear-admin` probado en terminal real contra una base desechable: se ocultaron ambas contraseñas y se creó la cuenta para los dos sistemas. No se usaron datos ni credenciales de INCOVSA.
-- [Verificación local](../evidencias/JG-06/verificacion.md): `npm run verificar` aprobó formato, lint, tipos y 108 pruebas; los scripts aprobaron 109; `npm run build` y las 63 pruebas de `npm run e2e -- --workers=1` pasaron. next-devtools sin errores. El reinicio continúa pendiente del consentimiento explícito que exige Prisma; no se ha abierto ni integrado el PR y la tarea conserva `estado: pendiente`.
+- [Verificación local](../evidencias/JG-06/verificacion.md): `npm run verificar` aprobó formato, lint, tipos y 108 pruebas; los scripts aprobaron 109; `npm run build` y las 63 pruebas de `npm run e2e -- --workers=1` pasaron. next-devtools sin errores. El reinicio autorizado de `incovsa_jg06_reinicio` y las dos semillas también pasaron.

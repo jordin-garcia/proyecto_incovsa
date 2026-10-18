@@ -6,6 +6,7 @@ Entorno local desechable con PostgreSQL 18.6 nativo, sin datos ni credenciales d
 |---|---|
 | `npm ci` | 687 paquetes instalados; auditoría: 0 vulnerabilidades |
 | `npm run db:aplicar` | Las dos migraciones se aplicaron desde cero a una base nueva |
+| `npm run db:reiniciar` | Autorizado expresamente por Jordin; `Database reset successful`, dos migraciones aplicadas a `incovsa_jg06_reinicio` en `127.0.0.1:55436` |
 | `npm run db:semilla` | Semilla base cargada |
 | `npm run semilla:demo` | 11 cuentas, 3 camiones y 28 productos de ejemplo |
 | `npm run verificar` | Formato, lint y tipos aprobados; **9 archivos y 108 pruebas aprobadas** |
@@ -26,8 +27,8 @@ Entorno local desechable con PostgreSQL 18.6 nativo, sin datos ni credenciales d
 - Se separaron las IP de los navegadores de prueba para que los fallos de distintos proyectos y trabajadores no activen el bloqueo de una IP compartida. El servicio conserva los límites reales; las pruebas de concurrencia y de bloqueo usan PostgreSQL real.
 - Una ejecución bajo compilación y pruebas simultáneas agotó tiempos locales. La ejecución final completa del navegador, sin esas cargas concurrentes, aprobó las 63 pruebas sin cambiar tiempos máximos, exclusiones ni criterios.
 
-## Reinicio pendiente de consentimiento explícito
+## Reinicio autorizado
 
-Prisma rechazó `npm run db:reiniciar` (`prisma migrate reset --force`) mediante su protección para agentes de IA. El destino era únicamente `incovsa_jg06_reinicio`, una base desechable vacía creada para esta comprobación en `127.0.0.1:55436`. No se ejecutó el reinicio, no se anuló la protección y se solicitó el consentimiento explícito de Jordin. La aplicación y las pruebas se verificaron en otras dos bases desechables migradas desde cero.
+Prisma rechazó inicialmente `npm run db:reiniciar` (`prisma migrate reset --force`) mediante su protección para agentes de IA. Jordin autorizó expresamente reiniciar únicamente `incovsa_jg06_reinicio` en `127.0.0.1:55436`, una base desechable vacía creada para esta comprobación. El comando se repitió con ese consentimiento y terminó con `Database reset successful`; aplicó las dos migraciones. Después se ejecutaron `npm run db:semilla` y `npm run semilla:demo` sobre ese mismo destino, ambas correctamente. No se reinició ninguna otra base.
 
-El archivo de la tarea conserva `estado: pendiente`; el PR y la integración se harán cuando se complete esa comprobación y el cierre. No se presenta esta ejecución como una tarea terminada.
+La aplicación y las pruebas se verificaron en otras dos bases desechables migradas desde cero. El archivo de la tarea registra el cierre y las interfaces que usarán las tareas siguientes.
