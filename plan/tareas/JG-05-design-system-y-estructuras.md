@@ -5,10 +5,10 @@ persona: jordin
 responsable: Jordin García
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JG-02, JG-04]
 programada: 2026-10-17
-requisitos: [RF-SW-08, RF-SW-26, RF-SL-60, RF-SL-61, RNF-01, RNF-08]
+requisitos: [RF-SW-08, RF-SW-26, RF-SL-60, RF-SL-61, RF-SL-70, RNF-01, RNF-08]
 pantallas: [base.js › ico, toast, modal, confirmar, campoFecha; panel.js › armazon; picking.js › vista, cab; estilos.css]
 ---
 
@@ -84,3 +84,51 @@ npm run e2e -- pruebas-e2e/comunes
 
 ## Notas
 - En el `## Resultado`, deja la lista de componentes comunes con un ejemplo de uso de cada uno y la correspondencia entre las clases del prototipo y los componentes (por ejemplo, `.btn.btn-p` → `<Button variant="primario">`). Es lo que leen todas las tareas con pantallas.
+
+## Resultado
+
+El design system está centralizado en `src/app/globals.css`: paleta exclusiva de Tailwind 4 (sin sus colores predeterminados), tokens originales y auxiliares de las clases del prototipo, radios, sombras, espaciado base de 4 px, tipografías y alias semánticos de shadcn. Poppins 500–800, Figtree 400–800 y JetBrains Mono 400–700 se sirven localmente con `next/font/google`. `components.json` configura las rutas españolas y el tema CSS; el MCP de shadcn responde desde el proyecto con `@shadcn`. No se agregaron dependencias.
+
+### Componentes y correspondencia con el prototipo
+
+Los ejemplos interactivos son componentes del cliente. Los imports comunes salen de `@/componentes/comunes/<Nombre>` y las bases de `@/componentes/ui/<nombre>`.
+
+| Prototipo | Componente y ejemplo de uso |
+|---|---|
+| `.btn.btn-p`, `.btn-s`, `.btn-g`, `.btn-d`, `.btn-lima` | `<Button variant="primario">Guardar</Button>`; variantes `secundario`, `fantasma`, `peligro`, `lima`; `size="pequeno"`, `grande`, `icono`; `asChild` permite un `Link` |
+| `.inp`, `.txa`, `.sel`, `.chk` | `<Input aria-label="Buscar" />`, `<Textarea aria-label="Comentario" />`, `<Select value={opcion} onValueChange={cambiar}><SelectTrigger aria-label="Opción de envío"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="camion">Envío por camión</SelectItem></SelectContent></Select>`, `<label><Checkbox checked={marcado} onCheckedChange={cambiar} />Seleccionar todos</label>` |
+| `.sel` nativo | `<SelectNativo aria-label="Sede" value={sede} onChange={cambiar}><option value="XE">Quetzaltenango</option></SelectNativo>`; conserva el desplegable del navegador y usa la misma flecha original que `SelectTrigger`, con `--g600` |
+| `modal()` / `.modal-*` | `Dialog`, `DialogTrigger`, `DialogContent`, `DialogTitle`, `DialogDescription`, `DialogClose` en `ui/dialog`; `grande` en `DialogContent` reproduce `.modal-g` |
+| `confirmar()` | `<VentanaConfirmacion titulo="Eliminar pedidos facturados" texto="La eliminación queda en la bitácora." textoConfirmar="Eliminar" variante="peligro" alConfirmar={eliminar}><Button variant="peligro">Eliminar</Button></VentanaConfirmacion>`; admite confirmación asíncrona, evita doble envío, muestra errores y restaura el foco |
+| `toast()` | `const mensaje = useMensajes(); mensaje("Usuario guardado.", "exito")`; tipos `exito` (por omisión), `aviso`, `error`; 4000 ms; `ProveedorMensajes` ya está en el layout raíz |
+| información emergente | `<TooltipProvider><Tooltip><TooltipTrigger asChild><Button>Información</Button></TooltipTrigger><TooltipContent>Seleccione uno o varios pedidos facturados.</TooltipContent></Tooltip></TooltipProvider>` |
+| `IC` / `ico()` | `<Icono nombre="bodega" />`; `NombreIcono` limita los nombres a los originales; incluye las nueve industrias; SVG decorativo con `aria-hidden` |
+| `cab()` / `.cab-pag.cab-fx` | `<EncabezadoModulo eyebrow="Módulo de reportes" titulo="Reportes y bitácora" instruccion="Despacho, rutas realizadas y bitácora de los dos sistemas, por periodo." acciones={acciones} />` |
+| `.aviso-v/a/r/z` | `<Aviso tipo="verde">La fecha y la hora programadas son obligatorias.</Aviso>`; tipos `verde`, `ambar`, `rojo`, `azul` |
+| `chipEstado()` / `.estado-*` | `<ChipEstado estado="PREP" />`; `PREP` = En Preparación, `DESP` = Despachado, `RUTA` = En Ruta, `ENTR` = Entregado |
+| `.tabla-caja` / `.tabla` | `<Tabla><caption>Rutas y pedidos</caption><thead>…</thead><tbody>…</tbody></Tabla>`; conserva `der`, `cen`, `cod`, `kg` |
+| `.pestanas` | `<Pestanas etiqueta="Reportes" valor={pestana} alCambiar={cambiar} opciones={[{ valor: "despacho", texto: "Despacho", contenido: tabla }]} />`; cada opción admite `contador` |
+| `.seg` | `<BotonesSegmentados etiqueta="Periodo" valor={periodo} alCambiar={cambiar} opciones={[{ valor: "dia", texto: "Día" }, { valor: "semana", texto: "Semana" }]} />` |
+| `.medidor` | `<Medidor etiqueta="Peso total" valor={peso} maximo={capacidad} />`; limita la barra a 0–100 %, conserva los estados lleno y exceso |
+| `.vacio` | `<Vacio icono="ruta" titulo="No hay rutas en este periodo" />`; admite texto hijo |
+| `campoFecha()` | `<CampoFecha etiqueta="Fecha programada" name="fechaProgramada" valor={fecha} alCambiar={cambiarFecha} />` |
+| hora de `montarFacturacion()` | `<CampoHora etiqueta="Hora programada" name="horaProgramada" valor={hora} alCambiar={cambiarHora} />` |
+| `fmt()` / `kg()` | `formatoNumero(2500.125)` → `"2,500.125"`; `formatoKg(2500)` → `"2,500 kg"`, en `comunes/formato`; son solo presentación, no conversión ni cálculos de negocio |
+
+`CampoFecha` y `CampoHora` usan `@/lib/fechas`: `valor` y `alCambiar` trabajan con `AAAA-MM-DD` y `HH:MM`, o `""`. Un borrador inválido se conserva para corregirlo, entrega ISO vacío, muestra el formato esperado al salir y bloquea la validación HTML del formulario. Si se proporciona `name`, un campo oculto envía solo el valor ISO. Admiten las propiedades del input como `required` y `disabled`; el consumidor sigue validando la entrada con Zod en el servidor. El selector nativo ocupa la caja completa del campo y por ello se abre debajo, alineado a la izquierda, como en el prototipo.
+
+### Armazón e integración posterior
+
+`@/componentes/comunes/armazon/Armazon` es presentacional. Recibe `sistema` (`sitio` o `picking`), `modulo`, `nombreModulo`, `usuario` (`nombre`, `rol`, `sede`), `opciones` (`href`, `texto`, `icono`, `activa`, `contador` opcional), `sedes` (`id`, `nombre`), `sede`, `alCambiarSede`, `alSalir` e hijos. El selector solo aparece con varias sedes y en `facturacion`, `bodega`, `ruta`, `reportes`. El menú reducido se recuerda con la preferencia visual `incovsa-menu-reducido`; no se guardan datos de negocio en el navegador. En teléfono y tableta el menú mantiene el foco dentro, cierra con Escape o al tocar afuera y devuelve el foco al botón Menú.
+
+Los layouts `/panel` y `/picking` usan `ArmazonEjemplo`, con datos fijos y sin lecturas internas ni operaciones del servidor. Las páginas raíz muestran `MuestraComponentes`, con controles de módulo y sedes solo para probar el armazón. **JG-07 reemplaza ese adaptador** por sesión, permisos, sede en cookie y cierre real de sesión; las tareas de los módulos reemplazan las páginas temporales. Los enlaces del menú ya apuntan a sus rutas definitivas; las pantallas de negocio están fuera de JG-05.
+
+### Decisiones y evidencia
+
+- RNF-08 prevalece sobre el contraste insuficiente del prototipo: la miga, los textos del encabezado de módulo y los encabezados de tabla usan el gris aprobado `--g600` sobre `--g50`, sin agregar colores. Precisión registrada en `specs/20` y `specs/18`.
+- Componentes de shadcn adaptados manualmente con `radix-ui`, `clsx` y `tailwind-merge`, ya declarados por JG-02; sin `cn`, `lucide-react` ni librerías de animación adicionales. Los SVG y las animaciones CSS son los originales.
+- Al actualizar desde `develop` se incorporó JM-02. `Unidades` ahora usa `.unid` y `.resto` del CSS global y los tokens existentes, con el radio original de 6 px centralizado; conserva su API, textos y cálculos. La prueba general de tokens detectó primero los colores literales y pasa después de la adaptación.
+- `devIndicators: false` evita que el botón flotante de Next.js cubra controles en teléfono. No desactiva los errores ni next-devtools. `.playwright-mcp/` se ignora como salida generada.
+- Las pruebas y capturas esperan la hidratación antes de tocar controles o de ocultar el cursor, evitando cambios del DOM anteriores a que React esté listo. La comprobación de ancho compara el documento con el viewport configurado, también con el menú abierto.
+- [Comparación visual y 33 capturas en los tres tamaños](../evidencias/JG-05/README.md), incluidos los componentes, los errores de fecha/hora y la confirmación. Playwright: 51 pruebas aprobadas en los tres tamaños; next-devtools sin errores de compilación ni de ejecución.
+- Verificación final: `npm run verificar` aprobó formato, lint, tipos y 91 pruebas después de incorporar JM-02 (57 antes de actualizar); `npm run build` generó correctamente `/`, `/panel` y `/picking`; los scripts aprobaron 109 pruebas y el plan validó sus 62 tareas. No se cambiaron umbrales ni se omitieron pruebas.
