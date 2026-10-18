@@ -145,6 +145,14 @@ test("decisión 47: la CI ejecuta formato, lint, tipos, pruebas sobre PostgreSQL
   const ci = trabajos(leer(".github", "workflows", "ci.yml"));
   assert.match(ci.plan, /node scripts\/tareas\.mjs --validar/);
   assert.match(ci.plan, /node --test "scripts\/\*\.test\.mjs"/);
+  // JG-04: las pruebas de los scripts importan dependencias (xlsx), así que se instalan antes
+  const pasosPlan = pasos(ci.plan);
+  const instalar = pasosPlan.findIndex((p) => /run: npm ci$/m.test(p));
+  const pruebasScripts = pasosPlan.findIndex((p) => p.includes('node --test "scripts/*.test.mjs"'));
+  assert.ok(
+    instalar >= 0 && instalar < pruebasScripts,
+    "plan instala las dependencias antes de las pruebas de los scripts",
+  );
   for (const comando of ["npm ci", "npm run formato", "npm run lint", "npm run tipos"])
     assert.match(ci.calidad, new RegExp(comando));
   assert.match(ci.pruebas, /image: postgres:18\n/);
