@@ -69,6 +69,11 @@
   --shadow-prototipo-4: 0 0 0 2px var(--v400) inset, var(--s2);
   --shadow-prototipo-5: inset 3px 0 0 var(--lima-v);
   --color-blanco: #fff;
+  /* Valores originales de .acc-marca en el prototipo aprobado. */
+  --color-acceso-velo-inicial: rgba(3, 31, 11, 0.96);
+  --color-acceso-velo-final: rgba(6, 45, 18, 0.7);
+  --color-acceso-descripcion: #c6d9cb;
+  --radius-acceso-icono: 15px;
   --color-prototipo-2: rgba(18, 108, 42, 0.8);
   --color-prototipo-3: #f3c4bf;
   --color-prototipo-4: rgba(27, 130, 56, 0.14);

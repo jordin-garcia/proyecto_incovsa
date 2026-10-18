@@ -562,6 +562,12 @@ npm 12, que ya es la versión `latest`, bloquea por defecto las dependencias que
 
 Al trasladar el prototipo se comprobó con axe que `--g500` sobre `--g50` da un contraste de 4.46:1. Para cumplir RNF-08, los textos secundarios del encabezado del módulo, la miga de navegación y los encabezados de tabla usan el token existente `--g600`; la paleta sigue intacta ([20](20-prototipo-aprobado.md), design system). Los campos inválidos entregan un valor ISO vacío al consumidor y conservan el texto para corregirlo; el selector nativo ocupa la misma caja del campo, como en el prototipo, para abrirse debajo.
 
+## Implementación del acceso personal (18/10/2026, JG-06)
+
+- Se extiende la precisión de contraste de JG-05 a los textos secundarios del acceso: `--g600` sobre `--g50`, para cumplir RNF-08 sin agregar colores.
+- RNF-03: se desactiva únicamente el registro de argumentos de las acciones del servidor de Next.js (`logging.serverFunctions: false`), que de otro modo muestra contraseñas en desarrollo. Se conservan los diagnósticos de errores.
+- RN-57 y decisión 6: cada conexión PostgreSQL del adaptador de Prisma fija UTC, aunque el servidor local tenga otra zona por omisión. Esto evita que la normalización de `timestamptz` del adaptador desplace las fechas de sesiones y bitácora. La presentación y los rangos siguen usando `America/Guatemala`.
+
 ## Documentos no alineados con las reuniones 4 y 5
 
 Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los cambios del 29/09, del 11/10 ni del 13/10:
