@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { beforeEach, expect, it } from "vitest";
 import { prisma } from "@/lib/prisma";
+import type { SesionActual } from "@/lib/sesion";
 import { leerArchivoOdoo } from "@/modulos/odoo/servicio";
 import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import { sembrarDemo } from "../../../prisma/semillas/demo";
@@ -8,6 +9,12 @@ import { consultarTableroFacturacion, eliminarDelTablero, guardarCargaDeOdoo } f
 
 const claveDemo = "Clave-de-prueba-envios";
 const archivo = readFileSync(new URL("../../../pruebas/fixtures/odoo/odoo-ejemplo-anonimizado.xlsx", import.meta.url));
+const sesionFacturador: SesionActual = {
+  sistema: "picking",
+  usuario: { id: "facturador", usuario: "facturador", nombre: "Facturador de prueba", rol: "Facturador" },
+  permisos: ["pk.facturacion"],
+  sedes: [{ id: 1, nombre: "Quetzaltenango", prefijoOdoo: "XE" }],
+};
 
 beforeEach(async () => {
   await limpiarTablasDeNegocio();
@@ -23,10 +30,20 @@ async function datosCarga() {
   };
 }
 
+it("RN-17 / RNF-04: rechaza listar el tablero sin sesión, permiso o sede autorizada", async () => {
+  await expect(consultarTableroFacturacion(null, 1)).rejects.toThrow("No tiene permisos para acceder a este módulo.");
+  await expect(consultarTableroFacturacion({ ...sesionFacturador, permisos: [] }, 1)).rejects.toThrow(
+    "No tiene permisos para acceder a este módulo.",
+  );
+  await expect(consultarTableroFacturacion(sesionFacturador, 2)).rejects.toThrow(
+    "No tiene permisos para acceder a este módulo.",
+  );
+});
+
 it("RF-SL-50 / CU-01: guarda los 33 pedidos válidos, sus líneas y el resumen del prototipo", async () => {
   const { lectura, entrada, usuarioId } = await datosCarga();
   const resumen = await guardarCargaDeOdoo({ ...entrada, lectura });
-  const tablero = await consultarTableroFacturacion(1);
+  const tablero = await consultarTableroFacturacion(sesionFacturador, 1);
   const bitacora = await prisma.bitacora.findFirstOrThrow({ where: { operacion: "Carga de archivo de Odoo" } });
 
   expect(resumen).toEqual({ pedidosCargados: 33, noCargados: 46, otrosEstados: 1 });
@@ -57,9 +74,9 @@ it("RF-SL-50 / CU-01: guarda los 33 pedidos válidos, sus líneas y el resumen d
 it("RN-48: conserva el tablero por sede y no deduplica números de Odoo", async () => {
   const { lectura, entrada } = await datosCarga();
   await guardarCargaDeOdoo({ ...entrada, lectura });
-  const primero = await consultarTableroFacturacion(1);
+  const primero = await consultarTableroFacturacion(sesionFacturador, 1);
   await guardarCargaDeOdoo({ ...entrada, lectura });
-  const segundo = await consultarTableroFacturacion(1);
+  const segundo = await consultarTableroFacturacion(sesionFacturador, 1);
 
   expect(primero).toHaveLength(33);
   expect(segundo).toHaveLength(66);
@@ -70,7 +87,7 @@ it("RN-48: conserva el tablero por sede y no deduplica números de Odoo", async 
 it("RF-SL-68 / decisión 3: elimina pedidos del tablero y registra número, cliente y total en la bitácora", async () => {
   const { lectura, entrada, usuarioId } = await datosCarga();
   await guardarCargaDeOdoo({ ...entrada, lectura });
-  const tablero = await consultarTableroFacturacion(1);
+  const tablero = await consultarTableroFacturacion(sesionFacturador, 1);
   const seleccionados = tablero.slice(0, 2);
 
   const resultado = await eliminarDelTablero(
@@ -82,7 +99,7 @@ it("RF-SL-68 / decisión 3: elimina pedidos del tablero y registra número, clie
   });
 
   expect(resultado).toBe(2);
-  expect(await consultarTableroFacturacion(1)).toHaveLength(31);
+  expect(await consultarTableroFacturacion(sesionFacturador, 1)).toHaveLength(31);
   expect(eliminacion.detalle).toMatchObject({
     pedidos: expect.arrayContaining([
       expect.objectContaining({
@@ -102,11 +119,11 @@ it("RF-SL-68 / decisión 3: elimina pedidos del tablero y registra número, clie
 it("RN-48 / RN-17: rechaza la eliminación completa si algún pedido ya no pertenece al tablero de esa sede", async () => {
   const { lectura, entrada, usuarioId } = await datosCarga();
   await guardarCargaDeOdoo({ ...entrada, lectura });
-  const tablero = await consultarTableroFacturacion(1);
+  const tablero = await consultarTableroFacturacion(sesionFacturador, 1);
 
   await expect(eliminarDelTablero([tablero[0]!.id, 999_999], { sedeId: 1, usuarioId })).rejects.toThrow(
     "Esos pedidos facturados ya no están disponibles.",
   );
-  expect(await consultarTableroFacturacion(1)).toHaveLength(33);
+  expect(await consultarTableroFacturacion(sesionFacturador, 1)).toHaveLength(33);
   expect(await prisma.bitacora.count({ where: { operacion: "Eliminación de pedidos facturados" } })).toBe(0);
 });

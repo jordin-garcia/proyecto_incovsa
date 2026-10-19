@@ -292,8 +292,8 @@ export function FacturacionTablero({
                 <div className={`aviso ${resumen?.pedidosCargados ? "aviso-v" : "aviso-r"}`}>
                   <Icono nombre={resumen?.pedidosCargados ? "check" : "alerta"} aria-hidden="true" />
                   <div>
-                    <b>{resumen?.pedidosCargados ?? 0} pedido(s) facturado(s)</b> se agregaron al tablero, con los datos
-                    tal como vienen en el archivo.
+                    <b>{resumen?.pedidosCargados ?? 0} pedido(s) facturado(s)</b> de {sedeNombre} se agregaron al
+                    tablero, con los datos tal como vienen en el archivo.
                   </div>
                 </div>
                 {motivos.map((motivo) => {

@@ -1,7 +1,9 @@
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { ErrorNegocio } from "@/lib/errores";
+import type { SesionActual } from "@/lib/sesion";
 import { registrarBitacora } from "@/modulos/bitacora/servicio";
+import { exigirPermiso } from "@/modulos/permisos/servicio";
 import { esquemaEntradaCargaDeOdoo, esquemaEntradaEliminarDelTablero, esquemaEntradaTablero } from "./esquemas";
 
 const nombresSede = new Map([
@@ -19,7 +21,11 @@ export type PedidoEnTablero = {
   lineas: { producto: string; lote: string; cantidadKg: string }[];
 };
 
-export async function consultarTableroFacturacion(sedeId: number): Promise<PedidoEnTablero[]> {
+export async function consultarTableroFacturacion(
+  sesion: SesionActual | null,
+  sedeId: number,
+): Promise<PedidoEnTablero[]> {
+  exigirPermiso(sesion, "pk.facturacion", sedeId);
   const sedeAutorizada = esquemaEntradaTablero.parse(sedeId);
   const pedidos = await prisma.pedidoFacturado.findMany({
     where: { sedeId: sedeAutorizada, opcionEnvioId: null, envioId: null },
@@ -159,7 +165,10 @@ export async function eliminarDelTablero(
         pedidos: bitacoraPedidos,
       },
     });
-    await tx.pedidoFacturado.deleteMany({ where: { id: { in: ids }, sedeId } });
+    const eliminacion = await tx.pedidoFacturado.deleteMany({
+      where: { id: { in: ids }, sedeId, opcionEnvioId: null, envioId: null },
+    });
+    if (eliminacion.count !== ids.length) throw new ErrorNegocio("Esos pedidos facturados ya no están disponibles.");
     return pedidos.length;
   });
 }

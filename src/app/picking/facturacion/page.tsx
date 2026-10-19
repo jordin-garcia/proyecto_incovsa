@@ -28,6 +28,6 @@ export default async function FacturacionPage() {
     );
   }
 
-  const pedidos = await consultarTableroFacturacion(sede.id);
+  const pedidos = await consultarTableroFacturacion(sesion, sede.id);
   return <FacturacionTablero pedidos={pedidos} sedeId={sede.id} sedeNombre={sede.nombre} />;
 }

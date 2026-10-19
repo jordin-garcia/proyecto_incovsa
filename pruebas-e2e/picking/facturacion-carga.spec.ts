@@ -31,7 +31,9 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
   }
 
   await page.getByLabel("Cargar archivo .xlsx").setInputFiles("pruebas/fixtures/odoo/odoo-ejemplo-anonimizado.xlsx");
-  await expect(page.getByRole("dialog")).toContainText("33 pedido(s) facturado(s)");
+  await expect(page.getByRole("dialog")).toContainText(
+    "33 pedido(s) facturado(s) de Quetzaltenango se agregaron al tablero",
+  );
   await expect(page.getByRole("dialog")).toContainText("46 pedido(s) facturado(s) no se cargaron");
   for (const width of [390, 768, 1440]) {
     await page.setViewportSize({ width, height: width === 390 ? 844 : width === 768 ? 1024 : 900 });
