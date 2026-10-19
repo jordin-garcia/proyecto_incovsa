@@ -339,7 +339,8 @@
 }
 .zonaSobre {
   background: var(--v50);
-  box-shadow: inset 0 0 0 2px var(--v400);
+  outline: 2px solid var(--v400);
+  outline-offset: -2px;
 }
 .vacioOpcion {
   margin: auto;
@@ -369,7 +370,7 @@
   width: 22px;
   height: 22px;
   flex: none;
-  border-radius: 50%;
+  border-radius: var(--radius-prototipo-6);
   display: grid;
   place-items: center;
   background: var(--v100);
