@@ -72,3 +72,13 @@ npm run e2e -- pruebas-e2e/sitio/inicio.spec.ts
 
 ## Notas
 - Con la semilla de demostración, la portada, misión y visión no tienen imágenes: súbelas desde el panel cuando exista DM-04 para probar la rotación, o crea los registros de imagen en la prueba.
+
+## Avance pendiente de integración (19/10/2026)
+
+La implementación, sus pruebas y la comparación visual están en la rama `daniela/DM-02-sitio-publico-inicio`. Se conservan `estado: pendiente` y la ausencia de cierre hasta que pase toda la verificación del protocolo.
+
+- Inicio y los componentes públicos compartidos están implementados, leyendo textos, galerías, industrias y oficinas desde la base.
+- Las 15 pruebas E2E propias pasan en teléfono, tableta y escritorio; las 3 pruebas nuevas de lecturas públicas también pasan. La verificación general aprobó formato, lint, tipos y 209 pruebas.
+- El build de producción pasó. Las ocho capturas comparativas y la revisión independiente LISTO están en `pruebas-e2e/sitio/evidencias/`.
+- La suite completa con un trabajador terminó con 126 pruebas aprobadas, 2 omisiones preexistentes de Facturación y 1 fallo de contraste en Bodega (RNF-08). Se registró `JM-08-contraste-accesible-de-bodega.md` para su dueño, según protocolo §C. Daniela eligió esperar esa corrección; no se modificó código ajeno ni se debilitó ninguna prueba.
+- Para retomar: integrar JM-08, actualizar esta rama, ejecutar de nuevo B6 y B7, completar `## Resultado` y la bitácora de cierre y convertir el PR borrador en listo para revisión antes de B10.
