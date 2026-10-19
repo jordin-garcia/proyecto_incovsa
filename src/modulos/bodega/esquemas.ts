@@ -19,7 +19,12 @@ export const esquemaDespachar = z.object({
   envioId: z.number().int().positive(),
 });
 
+export const esquemaDetalleEnvio = z.object({
+  envioId: z.number().int().positive(),
+});
+
 export type EntradaMarcarLinea = z.infer<typeof esquemaMarcarLinea>;
 export type EntradaMarcarTodo = z.infer<typeof esquemaMarcarTodo>;
 export type EntradaOrdenarPorPeso = z.infer<typeof esquemaOrdenarPorPeso>;
 export type EntradaDespachar = z.infer<typeof esquemaDespachar>;
+export type EntradaDetalleEnvio = z.infer<typeof esquemaDetalleEnvio>;

@@ -362,8 +362,41 @@ describe("Módulo de Bodega - Servicio", () => {
     const bitacoraRuta = await prisma.bitacora.findFirstOrThrow({
       where: { operacion: "Cambio de estado", registroId: String(ruta.id) },
     });
-    expect(bitacoraRuta.detalle).toContain("Ruta 2");
-    expect(bitacoraRuta.detalle).toContain("En Ruta");
+    expect(bitacoraRuta.detalle).toBe("Quetzaltenango · Ruta 2 del 18/10/2026 pasa a En Ruta");
+  });
+
+  it("RF-SL-24 / decisión 41: dos despachos concurrentes del mismo envío solo permiten uno y no duplican historial ni bitácora", async () => {
+    const envioConcurrente = await crearEnvioDePrueba({
+      sedeId: 1,
+      tipo: "ruta",
+      numero: 99,
+      lineas: [{ producto: "P1", lote: "L1", pesoConversionKg: 25, cantidadKg: 50, posicion: 1, marcado: true }],
+    });
+
+    const contexto = { usuarioId: usuarioBodegaId, sedeId: 1 };
+
+    // Dos despachos simultáneos
+    const resultados = await Promise.allSettled([
+      despacharEnvio({ envioId: envioConcurrente.id }, contexto),
+      despacharEnvio({ envioId: envioConcurrente.id }, contexto),
+    ]);
+
+    const exitosos = resultados.filter((r) => r.status === "fulfilled");
+    const fallidos = resultados.filter((r) => r.status === "rejected");
+
+    expect(exitosos).toHaveLength(1);
+    expect(fallidos).toHaveLength(1);
+    expect((fallidos[0] as PromiseRejectedResult).reason.message).toMatch(/ya no está en preparación/);
+
+    const historiales = await prisma.historialEstado.findMany({
+      where: { envioId: envioConcurrente.id },
+    });
+    expect(historiales).toHaveLength(1);
+
+    const bitacoras = await prisma.bitacora.findMany({
+      where: { operacion: "Cambio de estado", registroId: String(envioConcurrente.id) },
+    });
+    expect(bitacoras).toHaveLength(1);
   });
 
   it("RF-SL-74 / RF-SL-75 (CP-36): detalle muestra completos todos los pedidos facturados y sus líneas con fecha/hora programadas", async () => {

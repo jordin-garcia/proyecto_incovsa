@@ -72,14 +72,14 @@ npm run e2e -- pruebas-e2e/picking/bodega.spec.ts
 
 ## Resultado
 - **Implementación**:
-  - `src/modulos/bodega/esquemas.ts`: Esquemas Zod para marcado individual, marcado en bloque, ordenamiento por peso y despacho.
-  - `src/modulos/bodega/servicio.ts`: Lógica de negocio completa (`listarEnviosEnPreparacion`, `obtenerDetalleEnvio`, `marcarLinea`, `marcarTodasLineas`, `ordenarLineasPorPeso`, `despacharEnvio`). Manejo transaccional en despacho actualizando estado, creando `historialEstado` y registrando bitácora (`Cambio de estado`). Aislamiento multi-sede mediante enmascaramiento con `ErrorAcceso`.
-  - `src/modulos/bodega/acciones.ts`: Server Actions (`marcarLineaAccion`, `marcarTodoAccion`, `ordenarPorPesoAccion`, `despacharAccion`) protegidas con `exigirPermiso(sesion, "pk.bodega", sede.id)`, validación Zod y notificación reactiva con `avisarCambio(sede.id)`.
+  - `src/modulos/bodega/esquemas.ts`: Esquemas Zod para marcado individual, marcado en bloque, ordenamiento por peso, despacho y detalle de envío (`esquemaDetalleEnvio`).
+  - `src/modulos/bodega/servicio.ts`: Lógica de negocio completa (`listarEnviosEnPreparacion`, `obtenerDetalleEnvio`, `marcarLinea`, `marcarTodasLineas`, `ordenarLineasPorPeso`, `despacharEnvio`). Manejo transaccional en despacho con bloqueo pesimista `SELECT ... FOR UPDATE` (decisión 41 de specs/16) para prevenir carreras de concurrencia, conversión de `@db.Date` a día ISO (evitando desfase horario UTC−6), actualizando estado, creando `historialEstado` y registrando bitácora (`Cambio de estado`). Aislamiento multi-sede mediante enmascaramiento con `ErrorAcceso`.
+  - `src/modulos/bodega/acciones.ts`: Server Actions (`marcarLineaAccion`, `marcarTodoAccion`, `ordenarPorPesoAccion`, `despacharAccion`, `obtenerDetalleEnvioAccion`) protegidas con `exigirPermiso(sesion, "pk.bodega", sede.id)`, validación Zod y notificación reactiva con `avisarCambio(sede.id)`.
   - `src/componentes/picking/bodega/`: Componentes modulares `TarjetaEnvio`, `ModalDetalle` y orquestador `BodegaCliente` con suscripción `useCambiosDeSede(sede.id)`.
-  - `src/app/picking/bodega/`: Página de servidor con `exigirPermiso` y estilos de `bodega.css` idénticos al prototipo (`estilos.css`).
+  - `src/app/picking/bodega/`: Página de servidor con `exigirPermiso` y estilos de `bodega.css` apegados estrictamente al sistema de diseño y tokens CSS (`design-system.test.mjs`), idénticos al prototipo (`estilos.css`).
 - **Verificación**:
-  - `npm run verificar` aprobado: formato, lint, tipos y 149 pruebas en Vitest (20 pruebas específicas de Bodega en `servicio.test.ts` y `acciones.test.ts`).
+  - `npm run verificar` aprobado: formato, lint, tipos y 153 pruebas en Vitest (24 pruebas específicas de Bodega en `servicio.test.ts` y `acciones.test.ts`).
   - `npm run build` aprobado: generación de ruta `/picking/bodega`.
-  - `pruebas-e2e/picking/bodega.spec.ts`: 15 pruebas Playwright aprobadas en teléfono, tableta y escritorio, incluyendo análisis de accesibilidad con axe.
+  - `pruebas-e2e/picking/bodega.spec.ts`: 15 pruebas Playwright aprobadas en teléfono, tableta y escritorio, incluyendo análisis de accesibilidad con axe y verificación de fecha del detalle.
   - Evidencias visuales y dictamen de revisión en `plan/evidencias/JM-03/`.
 

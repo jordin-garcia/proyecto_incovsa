@@ -90,7 +90,9 @@ test.describe("Módulo de Bodega E2E", () => {
     await expect(modal).toBeVisible();
     await expect(modal.locator(".modal-cab")).toContainText("Detalle de Ruta 1");
 
-    // Verificar pedidos facturados del archivo
+    // Verificar fecha del envío y pedidos facturados del archivo
+    await expect(modal.locator(".det-env")).toContainText("Fecha");
+    await expect(modal.locator(".det-env")).toContainText("18/10/2026");
     await expect(modal).toContainText("3 pedido(s) facturado(s)");
     await expect(modal).toContainText("90001 · Cliente A");
     await expect(modal).toContainText("90002 · Cliente B");

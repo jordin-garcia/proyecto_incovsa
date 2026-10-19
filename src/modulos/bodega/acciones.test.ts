@@ -18,7 +18,13 @@ vi.mock("next/headers", () => ({
   }),
 }));
 
-import { marcarLineaAccion, marcarTodoAccion, ordenarPorPesoAccion, despacharAccion } from "./acciones";
+import {
+  marcarLineaAccion,
+  marcarTodoAccion,
+  ordenarPorPesoAccion,
+  despacharAccion,
+  obtenerDetalleEnvioAccion,
+} from "./acciones";
 
 describe("Módulo de Bodega - Acciones del servidor", () => {
   const sesion: SesionActual = {
@@ -85,6 +91,19 @@ describe("Módulo de Bodega - Acciones del servidor", () => {
     });
   });
 
+  describe("obtenerDetalleEnvioAccion", () => {
+    comprobarRechazosDeAccion({
+      accion: obtenerDetalleEnvioAccion,
+      establecerSesion: (s) => {
+        estado.sesion = s;
+      },
+      sesion,
+      permiso: "pk.bodega",
+      entrada: { envioId: 1 },
+      entradaOtraSede: { envioId: 1 },
+    });
+  });
+
   it("rechaza entradas con formato inválido", async () => {
     const res1 = await marcarLineaAccion({ envioId: -1, lineaId: 1 });
     expect(res1.ok).toBe(false);
@@ -97,5 +116,8 @@ describe("Módulo de Bodega - Acciones del servidor", () => {
 
     const res4 = await despacharAccion({ envioId: null });
     expect(res4.ok).toBe(false);
+
+    const res5 = await obtenerDetalleEnvioAccion({ envioId: "invalido" });
+    expect(res5.ok).toBe(false);
   });
 });

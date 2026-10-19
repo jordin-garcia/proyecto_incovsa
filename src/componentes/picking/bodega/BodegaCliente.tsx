@@ -25,7 +25,7 @@ export function BodegaCliente({ sede, enviosIniciales }: BodegaClienteProps) {
   useCambiosDeSede(sede.id);
 
   const alVerDetalle = async (envioId: number) => {
-    const res = await obtenerDetalleEnvioAccion(envioId);
+    const res = await obtenerDetalleEnvioAccion({ envioId });
     if (!res.ok) {
       mostrarMensaje(res.error, "error");
       return;

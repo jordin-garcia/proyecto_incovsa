@@ -134,7 +134,10 @@ export async function obtenerDetalleEnvio(envioId: number, sedeId: number) {
     tipo: envio.tipo,
     numero: envio.numero,
     etiqueta: etiquetaEnvio(envio.tipo, envio.numero),
-    fechaEnvio: envio.fechaEnvio,
+    fechaEnvio:
+      envio.fechaEnvio instanceof Date
+        ? envio.fechaEnvio.toISOString().slice(0, 10)
+        : String(envio.fechaEnvio).slice(0, 10),
     programadoPara: envio.programadoPara,
     sede: envio.sede,
     camion: envio.camion,
@@ -244,6 +247,15 @@ export async function ordenarLineasPorPeso(entrada: EntradaOrdenarPorPeso, conte
 
 export async function despacharEnvio(entrada: EntradaDespachar, contexto: ContextoOperacion) {
   return prisma.$transaction(async (tx) => {
+    // Bloqueo exclusivo de fila para evitar condiciones de carrera (specs/16, decisión 41)
+    const bloqueados = await tx.$queryRaw<{ id: number }[]>`
+      SELECT id FROM envio WHERE id = ${entrada.envioId} AND sede_id = ${contexto.sedeId} FOR UPDATE
+    `;
+
+    if (!bloqueados || bloqueados.length === 0) {
+      throw new ErrorAcceso();
+    }
+
     const envio = await tx.envio.findFirst({
       where: {
         id: entrada.envioId,
@@ -290,7 +302,11 @@ export async function despacharEnvio(entrada: EntradaDespachar, contexto: Contex
     });
 
     const etiqueta = etiquetaEnvio(envio.tipo, envio.numero);
-    const detalleBitacora = `${envio.sede.nombre} · ${etiqueta} del ${formatoFecha(envio.fechaEnvio)} pasa a ${estadoDestinoNombre}`;
+    const fechaDia =
+      envio.fechaEnvio instanceof Date
+        ? envio.fechaEnvio.toISOString().slice(0, 10)
+        : String(envio.fechaEnvio).slice(0, 10);
+    const detalleBitacora = `${envio.sede.nombre} · ${etiqueta} del ${formatoFecha(fechaDia)} pasa a ${estadoDestinoNombre}`;
 
     await registrarBitacora(tx, {
       sistema: "picking",

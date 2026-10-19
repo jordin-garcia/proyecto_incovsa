@@ -58,7 +58,11 @@ export function ModalDetalle({ abierto, alCerrar, datos }: ModalDetalleProps) {
           <div className="det-env">
             <div>
               <small>Fecha</small>
-              <b>{formatoFecha(datos.fechaEnvio)}</b>
+              <b>
+                {formatoFecha(
+                  typeof datos.fechaEnvio === "string" ? datos.fechaEnvio : datos.fechaEnvio.toISOString().slice(0, 10),
+                )}
+              </b>
             </div>
             <div>
               <small>Programada</small>
