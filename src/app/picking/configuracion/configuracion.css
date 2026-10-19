@@ -1,0 +1,4 @@
+.lista-configuracion {
+  max-height: 560px;
+  overflow: auto;
+}
