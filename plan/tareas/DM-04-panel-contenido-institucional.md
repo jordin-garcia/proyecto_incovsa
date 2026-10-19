@@ -70,3 +70,11 @@ npm run e2e -- pruebas-e2e/panel/contenido.spec.ts
 
 ## Fuera de alcance
 - Industrias y catálogo en el panel (DM-05); la configuración de R2 en producción (CE-05 y P-94).
+
+## Avance (19/10/2026; pendiente de integración)
+
+Implementados almacenamiento de imágenes, campo de galería, resumen en `/panel/resumen` y contenido institucional. Se conserva `/panel` como entrada que redirige, conforme a `specs/05` y JG-07. Publicación con Zod, permiso en servidor, transacción y bitácora; eliminación de imágenes sustituidas y revalidación del sitio.
+
+La usuaria autorizó avanzar DM-04 y esperar a DM-02 para integrar. Inicio, cabecera y pie aún no existen: faltan las verificaciones públicas de los criterios 3 y 5. La tarea permanece pendiente y no se declara terminada.
+
+Evidencia, interfaces, pruebas, revisión y capturas: [avance de DM-04](../../pruebas-e2e/panel/evidencias/README.md). Verificación local: 219 pruebas y compilación correctas; las 12 pruebas propias de Playwright pasan. La suite general detectó además un contraste insuficiente en Bodega, ajeno a estos cambios, que debe atender su responsable.

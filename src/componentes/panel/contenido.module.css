@@ -1,0 +1,159 @@
+.galeria {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+.lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.miniatura {
+  position: relative;
+  width: 110px;
+  height: 100px;
+  overflow: hidden;
+  border: 1px solid var(--g200);
+  border-radius: var(--r);
+}
+.miniatura img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.numero {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: var(--v950);
+  color: var(--color-blanco);
+  border-radius: var(--r-s);
+  padding: 0 6px;
+}
+.acciones {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  display: flex;
+  gap: 4px;
+}
+.acciones button {
+  width: 28px;
+  height: 28px;
+}
+.suelta {
+  width: 100%;
+  height: 150px;
+}
+.suelta img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.subida {
+  border: 2px dashed var(--g300);
+  border-radius: var(--radius-prototipo-8);
+  padding: 22px;
+  color: var(--g600);
+  background: var(--g50);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  white-space: normal;
+  height: auto;
+}
+.subida:hover {
+  border-color: var(--v400);
+  background: var(--v50);
+}
+.individual {
+  position: relative;
+  min-height: 150px;
+}
+.individual .lista {
+  position: absolute;
+  inset: 0;
+}
+.individual .subida {
+  position: relative;
+  min-height: 150px;
+  background: transparent;
+}
+.individual:has(img) .subida {
+  justify-content: end;
+  flex-direction: row;
+  align-items: end;
+  padding: 10px;
+}
+.individual:has(img) .subida span {
+  background: var(--color-blanco);
+}
+.cuerpoIndividual {
+  max-width: 520px;
+}
+.dos,
+.tres,
+.valores,
+.resumen {
+  display: grid;
+  gap: 22px;
+  align-items: start;
+}
+.dos {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.tres,
+.resumen {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.valores {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+.bloques {
+  display: grid;
+  gap: 22px;
+}
+.cuerpo {
+  display: grid;
+  gap: 14px;
+  padding: 22px;
+  min-width: 0;
+}
+.botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.resumen a {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px;
+}
+.resumen h3 {
+  font-size: 17px;
+}
+.resumen p {
+  font-size: 14px;
+}
+.resumen :global(.chip) {
+  align-self: flex-start;
+}
+@media (max-width: 1180px) {
+  .valores,
+  .resumen {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 1024px) {
+  .tres {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 720px) {
+  .dos,
+  .resumen {
+    grid-template-columns: 1fr;
+  }
+}
