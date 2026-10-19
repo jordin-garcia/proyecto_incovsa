@@ -91,7 +91,7 @@ Pestaña Usuarios de `/picking/configuracion` para Gerencia y Soporte: alta con 
 
 ### Evidencia
 
-`npm run verificar`, `npm run build`, `npm run e2e -- pruebas-e2e/picking/usuarios.spec.ts` (390/768/1440).
+`npm run verificar`, `npm run build`, `npm run e2e -- pruebas-e2e/picking/usuarios.spec.ts` (390/768/1440). Capturas de aplicación y prototipo en `evidencia/CE-03/`.
 
 ### Notas de revisión B9
 
