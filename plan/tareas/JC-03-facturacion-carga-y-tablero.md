@@ -5,7 +5,7 @@ persona: jose-daniel
 responsable: José Daniel Cifuentes
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JC-02, JG-07]
 programada: 2026-10-18
 requisitos: [RF-SL-07, RF-SL-13, RF-SL-50, RF-SL-61, RF-SL-67, RF-SL-68, RF-SL-69, RN-48, CU-01]
@@ -64,3 +64,11 @@ npm run e2e -- pruebas-e2e/picking/facturacion-carga.spec.ts
 
 ## Notas
 - La carga del archivo usa la acción del servidor con el límite de 3 MB (decisión 58).
+
+## Resultado
+- Hecho: pantalla de Facturación con carga `.xlsx`, resumen de lectura, tablero persistente por sede, selección y eliminación confirmada con bitácora transaccional. Acciones y listado validan sesión, permiso y sede.
+- Decisiones: límite de 2 MB para el archivo según `specs/16` y tope de 3 MB para la acción del servidor (decisión 58); las opciones de envío se dejan como estructura vacía para JC-04, como indica el alcance. Se conserva el orden de lectura de Odoo y se usa Prisma.Decimal para los totales.
+- Archivos principales: `src/modulos/envios/`, `src/app/picking/facturacion/`, `src/componentes/picking/facturacion/` y `pruebas-e2e/picking/facturacion-carga.spec.ts`.
+- Uso: entre a Facturación con `pk.facturacion`, cargue el `.xlsx` de Odoo de hasta 2 MB, revise el resumen y seleccione uno o varios pedidos para eliminarlos después de confirmar. La carga queda disponible al recargar o al entrar con otra persona autorizada de la misma sede.
+- Verificación: `npm run verificar` (179 pruebas), `npm run build`, prueba E2E de JC-03 (94 pruebas generales aprobadas; 2 proyectos de JC-03 saltados porque el caso recorre los tres anchos en escritorio), compilación y errores de Next.js sin hallazgos. Revisión independiente: hallazgos corregidos.
+- Capturas comparativas de aplicación y prototipo en 390, 768 y 1440 px y estados vacío, resumen, con datos, seleccionado y confirmación; el panel de opciones de envío queda vacío hasta JC-04.
