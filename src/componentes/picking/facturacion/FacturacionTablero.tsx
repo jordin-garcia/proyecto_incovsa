@@ -163,8 +163,8 @@ export function FacturacionTablero({
                       seleccionadosEnTablero.length === 1 ? (
                         <>
                           ¿Eliminar del tablero el pedido facturado <strong>{seleccionadosEnTablero[0]!.numero}</strong>{" "}
-                          de {seleccionadosEnTablero[0]!.cliente || "Sin nombre"} (
-                          {formatoKg(seleccionadosEnTablero[0]!.totalKg)})? La eliminación queda en la bitácora.
+                          de {seleccionadosEnTablero[0]!.cliente} ({formatoKg(seleccionadosEnTablero[0]!.totalKg)})? La
+                          eliminación queda en la bitácora.
                         </>
                       ) : (
                         <>
@@ -212,8 +212,8 @@ export function FacturacionTablero({
                       <b className="mono">{pedido.numero}</b>
                       <span className={`mono ${estilos.peso}`}>{formatoKg(pedido.totalKg)}</span>
                     </div>
-                    <div className={estilos.cliente}>{pedido.cliente || "Sin nombre"}</div>
-                    <div className={estilos.sector}>{pedido.sector || "Sin sector"}</div>
+                    <div className={estilos.cliente}>{pedido.cliente}</div>
+                    <div className={estilos.sector}>{pedido.sector}</div>
                     <ul className={estilos.productos} aria-label="Productos del pedido facturado">
                       {pedido.lineas.map((linea, indice) => (
                         <li key={`${linea.producto}-${linea.lote}-${indice}`}>
