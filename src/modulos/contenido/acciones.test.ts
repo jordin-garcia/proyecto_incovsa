@@ -38,7 +38,7 @@ beforeEach(async () => {
 });
 it("RN-56: rechaza la sexta imagen sin publicar ni registrar cambios", async () => {
   const r = await publicarContenido(formulario("mision", Array(6).fill("/api/imagenes/demo/01.webp"), "No publicar"));
-  expect(r.ok).toBe(false);
+  expect(r).toEqual({ ok: false, error: "El contenido o la cantidad de imágenes no es válido." });
   expect(await prisma.bitacora.count()).toBe(0);
   expect((await prisma.contenidoInstitucional.findUniqueOrThrow({ where: { seccion: "mision" } })).texto).not.toBe(
     "No publicar",

@@ -11,6 +11,7 @@ La usuaria autorizó implementar el panel y el almacenamiento y esperar a DM-02 
 - `npm run build`: compilación de producción correcta, incluidas `/panel/contenido`, `/panel/resumen` y las rutas de imágenes.
 - Playwright con la configuración local cargada en el proceso, sin mostrar sus valores: `node --env-file=.env node_modules/@playwright/test/cli.js test pruebas-e2e/panel/contenido.spec.ts --workers=1`: **12 aprobadas**. Cubre 390, 768 y 1440 px, axe sin infracciones serias/críticas, permisos, borradores, arrastre vacío, carga real de 5 MB, publicación y eliminación física.
 - Se ejecutó también toda la suite de extremo a extremo. Se identificó una infracción ajena de contraste en Bodega: `src/componentes/picking/bodega/BodegaCliente.tsx:61`, texto «Quetzaltenango · la prioridad y las marcas no quedan en el historial», `--g500` sobre `--g50`, 4.46:1. Ese archivo no tiene cambios en DM-04. No se debilitó axe ni se modificaron pruebas ajenas.
+- Resultado final de la suite completa: **123 aprobadas, 1 fallida (el contraste de Bodega) y 2 omitidas por condiciones preexistentes de las pruebas de Facturación**. DM-04 no agrega omisiones. Las 12 pruebas de DM-04 pasan también dentro de esta ejecución completa.
 - Context7 consultado para sharp, file-type, S3, Zod, Next.js, Prisma, React, React Hook Form y Playwright. shadcn confirmó el registro `@shadcn`; next-devtools reconoció el servidor en el puerto 3000 y confirmó ausencia de errores en las consultas realizadas.
 
 ## Pruebas primero y revisión independiente
