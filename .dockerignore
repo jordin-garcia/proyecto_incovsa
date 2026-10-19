@@ -6,6 +6,11 @@ entregable-*
 docs*
 pruebas*
 pruebas-e2e
+# Las pruebas importan pruebas/ y no entran en la imagen. next build las revisaría si se copiaran.
+**/*.test.ts
+**/*.test.tsx
+**/*.test.mts
+**/*.test.mjs
 test-results
 playwright-report
 coverage
