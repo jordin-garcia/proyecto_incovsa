@@ -79,7 +79,7 @@ La administración de usuarios vive en `src/modulos/usuarios/` y sirve a los dos
 
 ### Decisiones
 
-- La página `/picking/configuracion` no existía (la crea esta tarea, aunque el archivo de CE-02 también la nombra). La pestaña Camiones muestra los camiones activos, sin crear, editar ni eliminar. Eso queda en CE-02.
+- CE-02 ya integró la pestaña Camiones. Esta tarea solo llena la pestaña Usuarios sobre esa pantalla.
 - El rol y el nombre de usuario se guardan sin espacios alrededor, como el formulario del prototipo. Un rol escrito `piloto ` queda `piloto` y Facturación ya lo reconoce con `normalizarRol`. No hizo falta tocar `src/modulos/envios/`.
 - Gerencia y Soporte quedan en el sistema `ambos`, sin filas de permisos ni de sedes. Al restablecer la contraseña, al desactivar y al eliminar se llama `revocarSesiones` dentro de la misma transacción. La contraseña se cifra con `hashPassword` de Better Auth, igual que `crear-admin`.
 - La nota verde de RN-54 sí se muestra. Las franjas amarillas P-02 y P-08 del prototipo no: el design system no tiene esa pieza y CE-02 ya quita la nota amarilla de P-01.

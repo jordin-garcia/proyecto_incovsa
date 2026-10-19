@@ -28,9 +28,16 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
   - **Todos:** B0 de Carlos ya está cumplido; CE-02 sigue esperando JG-07.
   - **Jordin:** confirmado en Mac que el criterio 2 (`gh api user` → cuenta personal) es incompatible con el token App de Cursor Cloud Agent; las tareas CE se hacen en Cursor local.
 
-## 2026-10-19 · CE-03 · Configuración: usuarios del picking
-- Hecho: Gerencia y Soporte crean, editan, restablecen y eliminan usuarios del picking desde Configuración. El módulo `usuarios` también acepta el sistema `sitio` para CE-04. La contraseña no sale en la bitácora ni en la respuesta, y restablecer o eliminar cierra las sesiones.
-- Decisiones: la página de Configuración nace aquí, con la pestaña Camiones en solo lectura hasta CE-02. El nombre de usuario se normaliza en minúsculas y el rol se recorta, como el prototipo.
+## 2026-10-19 · CE-02 · Configuración: camiones
+- Hecho: la pestaña Camiones de `/picking/configuracion` lista, crea, edita y elimina de forma lógica los camiones de las sedes del usuario. Permiso `pk.cfg.camiones`. Bitácora "Creación de camión", "Edición de camión" y "Eliminación de camión". `camionesActivosDeSede(sedeId)` queda lista para Facturación. La pestaña Usuarios, solo para Gerencia y Soporte, muestra la cuenta y no el CRUD. Corrección B8: un camión elegido en «Envío por camión» no se elimina y la pantalla abre «No se puede eliminar». El formulario valida en `onBlur`. El contraste de las pestañas inactivas se corrigió en `src/app/picking/configuracion/configuracion.css` con `--g600`. No se tocó `globals.css`.
+- Decisiones: la identificación es un texto normal, sin la nota amarilla de P-01. La capacidad se lee como el prototipo (comas de miles) y rechaza cero, negativos, texto y más de tres decimales. La pantalla no usa la sede de la cookie. Usa todas las sedes de `sedesDelUsuario`.
 - Pendiente o aviso para otros:
-  - **CE-02:** la pestaña Camiones de `/picking/configuracion` lista los camiones activos y no tiene alta, edición ni baja. Esas acciones son tuyas; el archivo de la página va a chocar con este PR.
+  - **JC-04:** Facturación puede dejar de consultar `camion` en `src/modulos/envios/opciones.ts` y usar `camionesActivosDeSede` de `src/modulos/camiones/servicio.ts`. El nombre del desplegable es `identificacion` y la capacidad es `capacidadKg` con tres decimales. La función no autoriza. La sede ya tiene que estar autorizada.
+  - **CE-03:** la pestaña Usuarios ya existe, con los encabezados del prototipo y la cuenta de usuarios del picking. El botón "Nuevo usuario" y el CRUD no están.
+  - **Jordin:** las pestañas globales siguen en g500 y fallan axe si se activa color-contrast fuera de Configuración.
+
+## 2026-10-19 · CE-03 · Configuración: usuarios del picking
+- Hecho: Gerencia y Soporte crean, editan, restablecen y eliminan usuarios del picking desde la pestaña Usuarios. El módulo `usuarios` también acepta el sistema `sitio` para CE-04. La contraseña no sale en la bitácora ni en la respuesta, y restablecer o eliminar cierra las sesiones.
+- Decisiones: la pestaña Camiones es la de CE-02, ya integrada. El nombre de usuario se normaliza en minúsculas y el rol se recorta, como el prototipo.
+- Pendiente o aviso para otros:
   - **CE-04:** usa `AdministracionUsuarios` y las acciones de `@/modulos/usuarios/acciones` con `sistema: "sitio"`. El servicio ya ignora las sedes del sitio.

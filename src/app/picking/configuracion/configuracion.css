@@ -1,0 +1,13 @@
+.lista-configuracion {
+  max-height: 560px;
+  overflow: auto;
+}
+
+/* RNF-08: pestaña inactiva g500/g50 = 4.46:1; g600 aprobado (specs/20). */
+.pestanas button {
+  color: var(--g600);
+}
+
+.lista-configuracion td.der {
+  white-space: nowrap;
+}
