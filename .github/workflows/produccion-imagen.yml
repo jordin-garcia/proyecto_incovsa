@@ -84,10 +84,15 @@ jobs:
 
       - name: PostgreSQL no se publica y las migraciones corren en el contenedor
         run: |
-          if docker compose port postgres 5432; then
-            echo "PostgreSQL quedó publicado fuera de la red interna."
-            exit 1
-          fi
+          # Compose imprime ":0" cuando el puerto solo está expuesto en la red interna.
+          mapa="$(docker compose port postgres 5432 2>/dev/null || true)"
+          case "$mapa" in
+            "" | *:0) ;;
+            *)
+              echo "PostgreSQL quedó publicado fuera de la red interna: $mapa"
+              exit 1
+              ;;
+          esac
           docker compose exec -T app ./node_modules/.bin/prisma migrate deploy
           docker compose exec -T postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 1 FROM usuario LIMIT 1;"'
 
