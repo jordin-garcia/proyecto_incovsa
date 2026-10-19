@@ -1,6 +1,7 @@
 import { Prisma } from "@/generated/prisma/client";
 import { formatoKg } from "@/componentes/comunes/formato";
 import { prisma } from "@/lib/prisma";
+import { ErrorNegocio } from "@/lib/errores";
 import { ErrorAcceso } from "@/modulos/permisos/servicio";
 import { registrarBitacora } from "@/modulos/bitacora/servicio";
 import type { EntradaCamion, EntradaEditarCamion, EntradaEliminarCamion } from "./esquemas";
@@ -17,7 +18,7 @@ export type CamionActivo = {
   sedeId: number;
 };
 
-export type CamionDeLista = CamionActivo & { sedeNombre: string };
+export type CamionDeLista = CamionActivo & { sedeNombre: string; elegidoEnFacturacion: boolean };
 
 const seleccion = { id: true, identificacion: true, capacidadKg: true, sedeId: true } as const;
 
@@ -64,9 +65,17 @@ export async function listarCamionesDeSedes(sedesIds: readonly number[]): Promis
   const camiones = await prisma.camion.findMany({
     where: { eliminadoEn: null, sedeId: { in: [...sedesIds] } },
     orderBy: [{ sedeId: "asc" }, { id: "asc" }],
-    select: { ...seleccion, sede: { select: { nombre: true } } },
+    select: {
+      ...seleccion,
+      sede: { select: { nombre: true } },
+      _count: { select: { opcionesEnvio: true } },
+    },
   });
-  return camiones.map((camion) => ({ ...presentar(camion), sedeNombre: camion.sede.nombre }));
+  return camiones.map((camion) => ({
+    ...presentar(camion),
+    sedeNombre: camion.sede.nombre,
+    elegidoEnFacturacion: camion._count.opcionesEnvio > 0,
+  }));
 }
 
 export async function contarUsuariosDelPicking(): Promise<number> {
@@ -155,6 +164,13 @@ export async function eliminarCamion(
       select: { id: true, identificacion: true, capacidadKg: true, sedeId: true, sede: { select: { nombre: true } } },
     });
     if (!actual) throw new ErrorAcceso();
+    const elegido = await tx.opcionEnvio.findFirst({
+      where: { camionId: actual.id },
+      select: { id: true },
+    });
+    if (elegido) {
+      throw new ErrorNegocio(`${actual.identificacion} está elegido en «Envío por camión» de Facturación.`);
+    }
     const cambio = await tx.camion.updateMany({
       where: { id: actual.id, eliminadoEn: null, sedeId: actual.sedeId },
       data: { eliminadoEn: new Date() },

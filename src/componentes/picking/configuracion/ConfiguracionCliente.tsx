@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/componentes/ui/button";
 import { Input } from "@/componentes/ui/input";
 import { SelectNativo } from "@/componentes/ui/select-nativo";
-import { Dialog, DialogClose, DialogContent, DialogTitle } from "@/componentes/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@/componentes/ui/dialog";
 import { EncabezadoModulo } from "@/componentes/comunes/EncabezadoModulo";
 import { Icono } from "@/componentes/comunes/iconos";
 import { useMensajes } from "@/componentes/comunes/Mensajes";
@@ -25,6 +25,7 @@ export type CamionVisible = {
   capacidadKg: string;
   sedeId: number;
   sedeNombre: string;
+  elegidoEnFacturacion: boolean;
 };
 
 type SedeVisible = { id: number; nombre: string };
@@ -43,6 +44,7 @@ export function ConfiguracionCliente({
   const mensaje = useMensajes();
   const [pestana, cambiarPestana] = useState("camiones");
   const [edicion, abrirEdicion] = useState<CamionVisible | null | false>(false);
+  const [bloqueo, fijarBloqueo] = useState<string | null>(null);
 
   async function quitarCamion(id: number) {
     const resultado = await eliminarCamionAccion({ id });
@@ -86,21 +88,33 @@ export function ConfiguracionCliente({
                       >
                         <Icono nombre="editar" className="ico-s" />
                       </Button>{" "}
-                      <VentanaConfirmacion
-                        titulo="Eliminar"
-                        texto={
-                          <>
-                            ¿Eliminar <b>{camion.identificacion}</b>?
-                          </>
-                        }
-                        textoConfirmar="Eliminar"
-                        variante="peligro"
-                        alConfirmar={() => quitarCamion(camion.id)}
-                      >
-                        <Button variant="fantasma" size="pequeno" aria-label="Eliminar" title="Eliminar">
+                      {camion.elegidoEnFacturacion ? (
+                        <Button
+                          variant="fantasma"
+                          size="pequeno"
+                          aria-label="Eliminar"
+                          title="Eliminar"
+                          onClick={() => fijarBloqueo(camion.identificacion)}
+                        >
                           <Icono nombre="borrar" className="ico-s" />
                         </Button>
-                      </VentanaConfirmacion>
+                      ) : (
+                        <VentanaConfirmacion
+                          titulo="Eliminar"
+                          texto={
+                            <>
+                              ¿Eliminar <b>{camion.identificacion}</b>?
+                            </>
+                          }
+                          textoConfirmar="Eliminar"
+                          variante="peligro"
+                          alConfirmar={() => quitarCamion(camion.id)}
+                        >
+                          <Button variant="fantasma" size="pequeno" aria-label="Eliminar" title="Eliminar">
+                            <Icono nombre="borrar" className="ico-s" />
+                          </Button>
+                        </VentanaConfirmacion>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -167,6 +181,32 @@ export function ConfiguracionCliente({
           )}
         </DialogContent>
       </Dialog>
+      <Dialog
+        open={bloqueo !== null}
+        onOpenChange={(abierta) => {
+          if (!abierta) fijarBloqueo(null);
+        }}
+      >
+        <DialogContent>
+          {bloqueo !== null && (
+            <>
+              <div className="modal-cab">
+                <DialogTitle>No se puede eliminar</DialogTitle>
+              </div>
+              <div className="modal-cuerpo">
+                <DialogDescription className="confirmacion-texto">
+                  {bloqueo} está elegido en «Envío por camión» de Facturación.
+                </DialogDescription>
+              </div>
+              <div className="modal-pie">
+                <DialogClose asChild>
+                  <Button>Entendido</Button>
+                </DialogClose>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
@@ -184,6 +224,7 @@ function FormularioCamion({
   const mensaje = useMensajes();
   const formulario = useForm<ValoresFormulario, unknown, EntradaCamion>({
     resolver: zodResolver(esquemaCamion),
+    mode: "onBlur",
     defaultValues: {
       identificacion: camion?.identificacion ?? "",
       capacidadKg: camion ? formatoNumero(camion.capacidadKg) : "",

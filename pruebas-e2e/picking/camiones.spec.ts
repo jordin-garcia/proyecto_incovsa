@@ -74,7 +74,7 @@ test.describe("Configuración: camiones", () => {
     await entrar(context, "ejemplo.01");
     await abrirConfiguracion(page);
     await expect(page.getByRole("heading", { name: "Camiones y usuarios" })).toBeVisible();
-    const resultados = await new AxeBuilder({ page }).disableRules(["color-contrast"]).analyze();
+    const resultados = await new AxeBuilder({ page }).analyze();
     const graves = resultados.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
     expect(graves).toEqual([]);
   });

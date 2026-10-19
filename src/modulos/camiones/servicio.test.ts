@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { prisma } from "@/lib/prisma";
+import { ErrorNegocio } from "@/lib/errores";
 import { ErrorAcceso } from "@/modulos/permisos/servicio";
 import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import { esquemaCamion, esquemaEditarCamion } from "./esquemas";
@@ -116,6 +117,7 @@ describe("camiones", () => {
         capacidadKg: "3400.000",
         sedeId: quetzaltenango,
         sedeNombre: "Quetzaltenango",
+        elegidoEnFacturacion: false,
       },
     ]);
     expect(await camionesActivosDeSede(guatemala)).toMatchObject([{ id: ajeno.id, identificacion: "Camión GT" }]);
@@ -183,5 +185,27 @@ describe("camiones", () => {
       identificacion: "Camión 9",
     });
     expect(await prisma.bitacora.count({ where: { registroId: String(creado.id) } })).toBe(3);
+  });
+
+  it("RF-SL-04: no elimina un camión elegido en Envío por camión", async () => {
+    const creado = await crearCamion(
+      esquemaCamion.parse({ identificacion: "Camión facturación", capacidadKg: "3400", sedeId: quetzaltenango }),
+      contexto(quetzaltenango),
+    );
+    await prisma.opcionEnvio.update({
+      where: { sedeId_tipo: { sedeId: quetzaltenango, tipo: "camion" } },
+      data: { camionId: creado.id },
+    });
+
+    const mensaje = "Camión facturación está elegido en «Envío por camión» de Facturación.";
+    await expect(eliminarCamion({ id: creado.id }, contexto(quetzaltenango))).rejects.toThrow(
+      new ErrorNegocio(mensaje),
+    );
+
+    const fila = await prisma.camion.findUniqueOrThrow({ where: { id: creado.id } });
+    expect(fila.eliminadoEn).toBeNull();
+    expect(await listarCamionesDeSedes([quetzaltenango])).toMatchObject([
+      { id: creado.id, elegidoEnFacturacion: true },
+    ]);
   });
 });
