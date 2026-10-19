@@ -56,7 +56,7 @@ gh pr checks --watch
 
 ## Resultado
 
-La imagen de producción es Node 24 en varias etapas. `npm ci` corre con `HUSKY=0` porque la imagen no trae el repositorio git. La etapa final copia la salida `standalone`, los estáticos, `prisma/`, `scripts/`, `src/` (incluye el cliente generado) y `node_modules` completo: `prisma` y `tsx` son devDependencies y hacen falta para `prisma migrate deploy` y `npm run crear-admin`. El proceso de entrada aplica las migraciones y luego hace `exec node server.js` (un solo proceso, decisión 27). El usuario del contenedor es `nextjs` (uid 1001).
+La imagen de producción es Node 24 en varias etapas. `npm ci` corre con `HUSKY=0` porque la imagen no trae el repositorio git. El esquema de Prisma se copia antes de `npm ci`: el postinstall ejecuta `prisma generate`. La etapa final copia la salida `standalone`, los estáticos, `prisma/`, `scripts/`, `src/` (incluye el cliente generado) y `node_modules` completo: `prisma` y `tsx` son devDependencies y hacen falta para `prisma migrate deploy` y `npm run crear-admin`. El proceso de entrada aplica las migraciones y luego hace `exec node server.js` (un solo proceso, decisión 27). El usuario del contenedor es `nextjs` (uid 1001).
 
 `docker-compose.yml` publica solo 80 y 443 de Caddy. PostgreSQL 18 no tiene puerto hacia afuera y el volumen es `/var/lib/postgresql`. La aplicación usa la imagen `ghcr.io/jordin-garcia/proyecto_incovsa:latest`, salvo que `IMAGEN_APP` diga otra. Los tres servicios reinician con `unless-stopped` y rotan registros json-file a 10 MB por 5 archivos.
 

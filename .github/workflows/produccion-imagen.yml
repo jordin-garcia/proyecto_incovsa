@@ -127,4 +127,7 @@ jobs:
 
       - name: Bajar el entorno
         if: always()
-        run: IMAGEN_APP=incovsa-app:ci CADDYFILE=./Caddyfile.ci docker compose down -v
+        run: |
+          if [ -f .env ]; then
+            IMAGEN_APP=incovsa-app:ci CADDYFILE=./Caddyfile.ci docker compose down -v
+          fi

@@ -6,9 +6,11 @@ WORKDIR /app
 RUN apt-get update \
   && apt-get install -y --no-install-recommends openssl ca-certificates \
   && rm -rf /var/lib/apt/lists/*
-COPY package.json package-lock.json .npmrc ./
+COPY package.json package-lock.json .npmrc prisma.config.ts ./
 COPY vendor ./vendor
+COPY prisma ./prisma
 # No hay repositorio git en la imagen: husky no debe correr en `prepare`.
+# `prisma generate` es el postinstall y necesita el esquema antes de `npm ci`.
 ENV HUSKY=0
 RUN npm ci
 
