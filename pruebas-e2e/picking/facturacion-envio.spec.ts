@@ -156,8 +156,8 @@ test("RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bo
       type: "touchStart",
       touchPoints: [{ x: desde!.x + 30, y: desde!.y + desde!.height / 2 }],
     });
-    // La espera corresponde al umbral de 280 ms de pulsación larga del sensor.
-    await page.waitForTimeout(320);
+    // La espera corresponde al umbral de 380 ms de pulsación larga (prototipo) del sensor.
+    await page.waitForTimeout(420);
     await tactil.send("Input.dispatchTouchEvent", {
       type: "touchMove",
       touchPoints: [{ x: hasta!.x + 30, y: hasta!.y + hasta!.height / 2 }],

@@ -430,3 +430,26 @@
   color: var(--v700);
   font-size: 13.5px;
 }
+
+/* Copia que sigue al puntero durante el arrastre (prototipo: .fantasma y .fantasma-n). */
+.fantasma {
+  position: relative;
+  opacity: 0.95;
+  transform: rotate(-1.5deg);
+  box-shadow: var(--s3);
+  cursor: grabbing;
+}
+.fantasmaN {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  display: grid;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 7px;
+  place-items: center;
+  border-radius: var(--radius-prototipo-5);
+  background: var(--v700);
+  color: var(--color-blanco);
+  font: 700 13px/1 var(--f-mono);
+}

@@ -58,9 +58,10 @@ export function FacturacionTablero({
   puedeVerBodega: boolean;
 }) {
   const [arrastrados, arrastrar] = useState<number[]>([]);
+  const [activo, fijarActivo] = useState<{ id: number; zona: string } | null>(null);
   const sensores = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 280, tolerance: 8 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 380, tolerance: 8 } }),
     useSensor(KeyboardSensor, {
       coordinateGetter: coordenadasTeclado,
       keyboardCodes: { start: ["Space"], end: ["Space"], cancel: ["Escape"] },
@@ -202,13 +203,14 @@ export function FacturacionTablero({
           );
         return closestCenter(dentro);
       }}
-      onDragStart={({ active }) =>
+      onDragStart={({ active }) => {
+        fijarActivo({ id: Number(active.id), zona: String(active.data.current?.zona ?? "tablero") });
         arrastrar(
           active.data.current?.zona === "tablero" && seleccionados.has(Number(active.id))
             ? idsSeleccionados
             : [Number(active.id)],
-        )
-      }
+        );
+      }}
       onDragCancel={() => arrastrar([])}
       onDragEnd={soltar}
       accessibility={{
@@ -426,11 +428,53 @@ export function FacturacionTablero({
           </div>
         </DialogContent>
       </Dialog>
-      <DragOverlay>
-        {arrastrados.length > 0 && (
-          <div className={estilos.tarjetaPedido}>{arrastrados.length} pedido(s) facturado(s)</div>
-        )}
-      </DragOverlay>
+      <DragOverlay>{arrastrados.length > 0 && activo ? fantasma(activo, arrastrados.length) : null}</DragOverlay>
     </DndContext>
   );
+
+  /** Copia de la tarjeta o fila que se arrastra, con el número de pedidos si son varios (prototipo: `arrastrable()`). */
+  function fantasma({ id, zona }: { id: number; zona: string }, cantidad: number) {
+    const contador = cantidad > 1 ? <span className={estilos.fantasmaN}>{cantidad}</span> : null;
+    if (zona === "tablero") {
+      const pedido = pedidos.find((p) => p.id === id);
+      if (!pedido) return null;
+      return (
+        <div
+          className={`${estilos.tarjetaPedido} ${seleccionados.has(id) ? estilos.seleccionada : ""} ${estilos.fantasma}`}
+        >
+          <span className={estilos.marcaSeleccion} aria-hidden="true">
+            <Icono nombre="check" />
+          </span>
+          <div className={estilos.filaNumero}>
+            <b className="mono">{pedido.numero}</b>
+            <span className={`mono ${estilos.peso}`}>{formatoKg(pedido.totalKg)}</span>
+          </div>
+          <div className={estilos.cliente}>{pedido.cliente}</div>
+          <div className={estilos.sector}>{pedido.sector}</div>
+          <ul className={estilos.productos}>
+            {pedido.lineas.map((linea, indice) => (
+              <li key={`${linea.producto}-${linea.lote}-${indice}`}>
+                <span>{linea.producto}</span>
+                <span className={`mono ${estilos.cantidad}`}>{formatoKg(linea.cantidadKg)}</span>
+              </li>
+            ))}
+          </ul>
+          {contador}
+        </div>
+      );
+    }
+    const lista = opciones.opciones.find((o) => o.tipo === zona)?.pedidos ?? [];
+    const indice = lista.findIndex((p) => p.id === id);
+    const pedido = lista[indice];
+    if (!pedido) return null;
+    return (
+      <div className={`${estilos.filaOpcion} ${estilos.fantasma}`}>
+        <span className={estilos.orden}>{indice + 1}</span>
+        <b className="mono">{pedido.numero}</b>
+        <span className={estilos.nombreCliente}>{pedido.cliente}</span>
+        <span className={`mono ${estilos.kgOpcion}`}>{formatoKg(pedido.totalKg)}</span>
+        {contador}
+      </div>
+    );
+  }
 }

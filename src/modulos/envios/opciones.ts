@@ -2,6 +2,7 @@ import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { ErrorNegocio } from "@/lib/errores";
 import { fechaGuatemala, formatoFecha, inicioDelDiaGuatemala } from "@/lib/fechas";
+import { formatoKg } from "@/componentes/comunes/formato";
 import type { SesionActual } from "@/lib/sesion";
 import { normalizarRol } from "@/lib/roles";
 import { exigirPermiso } from "@/modulos/permisos/servicio";
@@ -338,7 +339,7 @@ export async function enviarOpcion(sesion: SesionActual | null, entrada: unknown
         totalKg: totalKg.toFixed(3),
         camion: camion?.identificacion ?? null,
         piloto: piloto?.name ?? null,
-        resumen: `${sede.nombre} · ${etiqueta} del ${formatoFecha(fecha)} · programada ${formatoFecha(diaProgramado)} ${hora} · ${camion ? `${camion.identificacion}, ${piloto!.name}` : "cliente recoge en bodega"} · pedidos facturados ${pedidos.map((p) => p.numeroOdoo).join(", ")} · ${totalKg.toFixed(3)} kg`,
+        resumen: `${sede.nombre} · ${etiqueta} del ${formatoFecha(fecha)} · programada ${formatoFecha(diaProgramado)} · ${hora} · ${camion ? `${camion.identificacion}, ${piloto!.name}` : "cliente recoge en bodega"} · pedidos facturados ${pedidos.map((p) => p.numeroOdoo).join(", ")} · ${formatoKg(totalKg.toString())}`,
       },
     });
     return { id: envio.id, numero, tipo, fecha };
