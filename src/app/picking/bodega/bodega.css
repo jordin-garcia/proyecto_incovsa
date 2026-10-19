@@ -1,0 +1,218 @@
+/* Estilos específicos del módulo de Bodega, calcados del prototipo aprobado (specs/07, estilos.css:380-398, 958-970) */
+
+.ped-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.ped {
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.ped-cab {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--g100);
+  flex-wrap: wrap;
+}
+
+.ped-num {
+  width: 54px;
+  height: 54px;
+  border-radius: 15px;
+  background: var(--v600);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font: 700 22px / 1 var(--f-disp);
+  flex: none;
+}
+
+.ped-num.recoge {
+  background: var(--lima);
+}
+
+.ped-num small {
+  display: block;
+  font: 600 9px / 1 var(--f-ui);
+  letter-spacing: 0.12em;
+  opacity: 0.75;
+  margin-bottom: -10px;
+}
+
+.ped-cab h3 {
+  font-size: 18.5px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.ped-meta {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  color: var(--g500);
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.ped-meta span {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.ped-avance {
+  margin-left: auto;
+  min-width: 190px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--g600);
+  font-weight: 600;
+}
+
+.ped-herr {
+  display: flex;
+  gap: 10px;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--g100);
+  flex-wrap: wrap;
+}
+
+.ped-pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 22px;
+  background: var(--g50);
+  flex-wrap: wrap;
+}
+
+.marca {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  border: 2px solid var(--g300);
+  background: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: transparent;
+}
+
+.marca:hover {
+  border-color: var(--v500);
+}
+
+.marca.on {
+  background: var(--v600);
+  border-color: var(--v600);
+  color: #fff;
+}
+
+.marca .ico {
+  width: 18px;
+  height: 18px;
+  stroke-width: 3;
+}
+
+tr.lista td {
+  background: #f6fbf3;
+}
+
+tr.lista .cod,
+tr.lista .kg {
+  color: var(--g500);
+}
+
+.lote {
+  display: inline-block;
+  padding: 4px 9px;
+  border-radius: 7px;
+  background: var(--v100);
+  color: var(--v700);
+  border: 1px solid var(--v300);
+  font: 700 13px / 1.1 var(--f-mono);
+  white-space: nowrap;
+}
+
+.lote.sin {
+  background: var(--g100);
+  color: var(--g500);
+  border-color: var(--g200);
+  font-weight: 600;
+}
+
+/* Detalle de Ruta o Pedido (RF-SL-74) */
+.det-env {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  padding: 14px;
+  border-radius: 12px;
+  background: var(--g50);
+  border: 1px solid var(--g150);
+}
+
+.det-env small {
+  display: block;
+  color: var(--g500);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.det-env b {
+  display: block;
+  margin-top: 4px;
+  font-size: 15px;
+}
+
+.det-grupos {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.det-g {
+  flex: none;
+  border: 1px solid var(--g150);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.det-g-cab {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--g50);
+  border-bottom: 1px solid var(--g150);
+}
+
+.det-g-cab .kg {
+  margin-left: auto;
+  font-weight: 700;
+}
+
+.parada-n {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--v600);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font: 700 14px / 1 var(--f-disp);
+}
