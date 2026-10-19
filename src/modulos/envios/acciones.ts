@@ -9,6 +9,7 @@ import { esquemaBodegaOdoo } from "@/modulos/odoo/esquemas";
 import { leerArchivoOdoo } from "@/modulos/odoo/servicio";
 import { esquemaFormularioCarga, esquemaFormularioEliminar } from "./esquemas";
 import { eliminarDelTablero, guardarCargaDeOdoo } from "./servicio";
+import { guardarCampoOpcion, moverPedidos, cancelarOpcion, enviarOpcion } from "./opciones";
 
 export async function cargarArchivo(formData: FormData) {
   try {
@@ -55,6 +56,60 @@ export async function eliminarPedidosFacturados(entradaSinValidar: unknown) {
     });
     avisarCambio(sede.id);
     return { ok: true as const, datos: { eliminados } };
+  } catch (error) {
+    return aResultadoDeError(error);
+  }
+}
+
+async function autorizarOpcion(entradaSinValidar: unknown) {
+  const sesion = await obtenerSesion("picking");
+  exigirPermiso(sesion, "pk.facturacion");
+  const { sedeId } = esquemaFormularioEliminar.pick({ sedeId: true }).parse(entradaSinValidar);
+  const sede = await obtenerSedeDeTrabajo(sesion);
+  if (!sede || sede.id !== sedeId) throw new ErrorAcceso();
+  exigirPermiso(sesion, "pk.facturacion", sede.id);
+  return { sesion, sedeId };
+}
+
+export async function guardarCampoDeOpcion(entrada: unknown) {
+  try {
+    const { sesion, sedeId } = await autorizarOpcion(entrada);
+    await guardarCampoOpcion(sesion, entrada);
+    avisarCambio(sedeId);
+    return { ok: true as const, datos: null };
+  } catch (error) {
+    return aResultadoDeError(error);
+  }
+}
+
+export async function moverPedidosFacturados(entrada: unknown) {
+  try {
+    const { sesion, sedeId } = await autorizarOpcion(entrada);
+    await moverPedidos(sesion, entrada);
+    avisarCambio(sedeId);
+    return { ok: true as const, datos: null };
+  } catch (error) {
+    return aResultadoDeError(error);
+  }
+}
+
+export async function cancelarOpcionDeEnvio(entrada: unknown) {
+  try {
+    const { sesion, sedeId } = await autorizarOpcion(entrada);
+    const cantidad = await cancelarOpcion(sesion, entrada);
+    avisarCambio(sedeId);
+    return { ok: true as const, datos: cantidad };
+  } catch (error) {
+    return aResultadoDeError(error);
+  }
+}
+
+export async function enviarOpcionABodega(entrada: unknown) {
+  try {
+    const { sesion, sedeId } = await autorizarOpcion(entrada);
+    const envio = await enviarOpcion(sesion, entrada);
+    if (envio) avisarCambio(sedeId);
+    return { ok: true as const, datos: envio };
   } catch (error) {
     return aResultadoDeError(error);
   }
