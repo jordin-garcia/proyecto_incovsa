@@ -17,21 +17,40 @@ async function entrar(context: BrowserContext, usuario = "ejemplo.05") {
   expect(r.ok()).toBe(true);
 }
 
+const NUMEROS_POR_PROYECTO: Record<string, number> = {
+  telefono: 1,
+  tableta: 2,
+  escritorio: 3,
+};
+
 test.describe("Módulo de Bodega E2E", () => {
   test.describe.configure({ mode: "serial" });
 
-  test.beforeAll(() => {
-    execSync("npx tsx pruebas-e2e/picking/preparar-envio.ts", { stdio: "inherit" });
+  let datosEnvio: { envioId: number; numero: number };
+
+  test.beforeAll(async ({}, testInfo) => {
+    const numero = NUMEROS_POR_PROYECTO[testInfo.project.name] ?? 1;
+    const salida = execSync(`npx tsx pruebas-e2e/picking/preparar-envio.ts crear ${numero}`, {
+      encoding: "utf-8",
+    });
+    datosEnvio = JSON.parse(salida.trim());
   });
 
-  test.afterAll(() => {
-    execSync("npx tsx pruebas-e2e/picking/preparar-envio.ts limpiar", { stdio: "inherit" });
+  test.afterAll(async () => {
+    if (datosEnvio?.envioId) {
+      execSync(`npx tsx pruebas-e2e/picking/preparar-envio.ts limpiar ${datosEnvio.envioId}`, {
+        stdio: "inherit",
+      });
+    }
   });
 
   test("Criterio 8: sin violaciones serias de accesibilidad (axe)", async ({ page, context }) => {
     await entrar(context);
     await page.goto("/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
+
+    const tarjeta = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
+    await expect(tarjeta).toBeVisible();
 
     const resultadosAxe = await new AxeBuilder({ page })
       .disableRules(["color-contrast"]) // los contrastes los controla el design system
@@ -49,12 +68,12 @@ test.describe("Módulo de Bodega E2E", () => {
     await page.goto("/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
-    const tarjeta = page.locator("article.ped").first();
+    const tarjeta = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
     await expect(tarjeta).toBeVisible();
 
-    // Ver cuadro RUTA 1
+    // Ver cuadro RUTA {numero}
     await expect(tarjeta.locator(".ped-num")).toContainText("RUTA");
-    await expect(tarjeta.locator(".ped-num")).toContainText("1");
+    await expect(tarjeta.locator(".ped-num")).toContainText(String(datosEnvio.numero));
 
     // Verificar filas
     const fila5287 = tarjeta.locator("tr", { hasText: "Lote 5287" });
@@ -80,7 +99,7 @@ test.describe("Módulo de Bodega E2E", () => {
     await page.goto("/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
-    const tarjeta = page.locator("article.ped").first();
+    const tarjeta = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
     await expect(tarjeta.locator(".ped-meta .prog")).toContainText("Programada 18/10/2026 · 13:30");
 
     // Abrir detalle
@@ -88,7 +107,7 @@ test.describe("Módulo de Bodega E2E", () => {
 
     const modal = page.locator("[role=dialog]");
     await expect(modal).toBeVisible();
-    await expect(modal.locator(".modal-cab")).toContainText("Detalle de Ruta 1");
+    await expect(modal.locator(".modal-cab")).toContainText(`Detalle de Ruta ${datosEnvio.numero}`);
 
     // Verificar fecha del envío y pedidos facturados del archivo
     await expect(modal.locator(".det-env")).toContainText("Fecha");
@@ -108,7 +127,7 @@ test.describe("Módulo de Bodega E2E", () => {
     await page.goto("/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
-    const tarjeta = page.locator("article.ped").first();
+    const tarjeta = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
     const fila5287 = tarjeta.locator("tr", { hasText: "Lote 5287" });
     const botonMarca = fila5287.locator("button.marca");
 
@@ -120,7 +139,7 @@ test.describe("Módulo de Bodega E2E", () => {
     // Recargar y confirmar persistencia
     await page.reload();
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
-    const tarjetaRecargada = page.locator("article.ped").first();
+    const tarjetaRecargada = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
     const filaRecargada = tarjetaRecargada.locator("tr", { hasText: "Lote 5287" });
     await expect(filaRecargada.locator("button.marca")).toHaveClass(/on/);
 
@@ -145,7 +164,7 @@ test.describe("Módulo de Bodega E2E", () => {
     await page.goto("/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
-    const tarjeta = page.locator("article.ped").first();
+    const tarjeta = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
     const botonDespacho = tarjeta.getByRole("button", { name: "Ruta Despachada" });
 
     // Deshabilitado inicialmente
@@ -161,14 +180,13 @@ test.describe("Módulo de Bodega E2E", () => {
     // Modal de confirmación
     const modalConfirmacion = page.locator("[role=dialog]");
     await expect(modalConfirmacion).toBeVisible();
-    await expect(modalConfirmacion.locator(".modal-cab")).toContainText("Despachar Ruta 1");
+    await expect(modalConfirmacion.locator(".modal-cab")).toContainText(`Despachar Ruta ${datosEnvio.numero}`);
     await expect(modalConfirmacion).toContainText("La ruta pasa a En Ruta");
 
     // Confirmar
     await modalConfirmacion.getByRole("button", { name: "Ruta Despachada" }).click();
 
     // Ya no aparece en Bodega
-    await expect(page.locator("article.ped")).toHaveCount(0);
-    await expect(page.locator(".vacio")).toContainText("No hay rutas ni pedidos por preparar");
+    await expect(page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`)).toHaveCount(0);
   });
 });

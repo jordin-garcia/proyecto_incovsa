@@ -44,7 +44,7 @@ export function TarjetaEnvio({ envio, prioridad, alVerDetalle, alActualizar }: T
   const mostrarMensaje = useMensajes();
   const [pendiente, startTransition] = useTransition();
 
-  const esRuta = envio.tipo === "ruta" || envio.tipo === "camion";
+  const esRuta = envio.tipo === "ruta";
   const etiqueta = (esRuta ? "Ruta " : "Pedido ") + envio.numero;
   const destino = esRuta ? "En Ruta" : "Despachado";
   const todasMarcadas = envio.lineas.length > 0 && envio.lineas.every((l) => l.marcado);

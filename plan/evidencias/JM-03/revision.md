@@ -11,6 +11,7 @@ Se verificaron las observaciones de la revisión automática con Claude:
 2. Despacho concurrente: se protege la transacción con bloqueo pesimista `SELECT id FROM envio WHERE ... FOR UPDATE` (decisión 41 de specs/16), previniendo carreras en doble clic o pantallas simultáneas, validado con prueba de ejecución en paralelo.
 3. Validación Zod en acciones: `obtenerDetalleEnvioAccion` valida la entrada mediante `esquemaDetalleEnvio` y cuenta con pruebas completas de rechazo de sesión, permiso y sede.
 4. Tokens de diseño: `bodega.css` sustituyó todos los literales por tokens del design system (`--color-blanco`, `--v50`, `--r`, `--radius-acceso-icono`), pasando `node --test scripts/design-system.test.mjs`.
+5. Aislamiento de pruebas E2E: cada proyecto de Playwright (teléfono, tableta, escritorio) crea y limpia su propio envío con número independiente (`NUMEROS_POR_PROYECTO`), ubicando las tarjetas mediante selector `article.ped[data-id=...]`, previniendo colisiones en workers paralelos (`fullyParallel: true`) y limpiando únicamente los registros creados por la prueba. Adicionalmente, se filtró `updateMany` por `estado: { nombre: 'En Preparación' }` en marcado/ordenamiento y se simplificó `esTipoRuta` a solo `ruta`.
 
 CORRECCIÓN (obligatorio corregir):
 Ninguno.

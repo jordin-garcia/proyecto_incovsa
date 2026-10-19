@@ -12,7 +12,7 @@ export interface ContextoOperacion {
 }
 
 function esTipoRuta(tipo: string): boolean {
-  return tipo === "ruta" || tipo === "camion";
+  return tipo === "ruta";
 }
 
 function etiquetaEnvio(tipo: string, numero: number): string {
@@ -171,14 +171,25 @@ export async function marcarLinea(entrada: EntradaMarcarLinea, contexto: Context
   const nuevoMarcado = entrada.marcado !== undefined ? entrada.marcado : !linea.marcado;
 
   // RN-20: no registra quién marcó y no va a la bitácora
-  const lineaActualizada = await prisma.lineaPreparacion.update({
-    where: { id: entrada.lineaId },
+  const resultado = await prisma.lineaPreparacion.updateMany({
+    where: {
+      id: entrada.lineaId,
+      envioId: entrada.envioId,
+      envio: {
+        sedeId: contexto.sedeId,
+        estado: { nombre: "En Preparación" },
+      },
+    },
     data: { marcado: nuevoMarcado },
   });
 
+  if (resultado.count === 0) {
+    throw new ErrorAcceso();
+  }
+
   return {
-    lineaId: lineaActualizada.id,
-    marcado: lineaActualizada.marcado,
+    lineaId: entrada.lineaId,
+    marcado: nuevoMarcado,
   };
 }
 
@@ -197,7 +208,13 @@ export async function marcarTodasLineas(entrada: EntradaMarcarTodo, contexto: Co
 
   // RN-20: marcar todo no va a la bitácora
   await prisma.lineaPreparacion.updateMany({
-    where: { envioId: entrada.envioId },
+    where: {
+      envioId: entrada.envioId,
+      envio: {
+        sedeId: contexto.sedeId,
+        estado: { nombre: "En Preparación" },
+      },
+    },
     data: { marcado: entrada.marcado },
   });
 
@@ -232,8 +249,15 @@ export async function ordenarLineasPorPeso(entrada: EntradaOrdenarPorPeso, conte
 
   await prisma.$transaction(
     lineasOrdenadas.map((l, index) =>
-      prisma.lineaPreparacion.update({
-        where: { id: l.id },
+      prisma.lineaPreparacion.updateMany({
+        where: {
+          id: l.id,
+          envioId: entrada.envioId,
+          envio: {
+            sedeId: contexto.sedeId,
+            estado: { nombre: "En Preparación" },
+          },
+        },
         data: { posicion: index + 1 },
       }),
     ),
