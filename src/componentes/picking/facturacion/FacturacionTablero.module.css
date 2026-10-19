@@ -49,8 +49,8 @@
   width: 100%;
   padding: 10px 12px;
   border: 1.5px solid var(--g150);
-  border-radius: 12px;
-  background: #fff;
+  border-radius: var(--radius-r);
+  background: var(--color-blanco);
   color: inherit;
   cursor: pointer;
   text-align: left;
@@ -144,9 +144,9 @@
   width: 22px;
   height: 22px;
   place-items: center;
-  border-radius: 50%;
+  border-radius: var(--radius-prototipo-6);
   background: var(--v600);
-  color: #fff;
+  color: var(--color-blanco);
   opacity: 0;
   transform: scale(0.6);
   transition:
@@ -163,7 +163,7 @@
 .seleccionada {
   border-color: var(--v500);
   background: var(--v50);
-  box-shadow: 0 0 0 3px rgb(27 130 56 / 15%);
+  box-shadow: var(--shadow-prototipo-2);
 }
 
 .seleccionada .marcaSeleccion {
@@ -246,7 +246,7 @@
   height: 42px;
   flex: none;
   place-items: center;
-  border-radius: 12px;
+  border-radius: var(--radius-r);
   background: var(--v50);
   color: var(--v600);
 }
@@ -258,7 +258,7 @@
   justify-content: center;
   padding: 12px;
   border: 1.5px dashed var(--g200);
-  border-radius: 10px;
+  border-radius: var(--radius-prototipo-1);
   background: var(--g50);
   color: var(--g600);
   font-size: 13.5px;
