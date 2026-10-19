@@ -84,6 +84,29 @@ it("RN-48: conserva el tablero por sede y no deduplica números de Odoo", async 
   expect(segundo[0]?.numero).toBe(segundo[33]?.numero);
 });
 
+it("RN-48: serializa las cargas simultáneas y asigna posiciones consecutivas", async () => {
+  const { lectura, entrada } = await datosCarga();
+  await Promise.all([guardarCargaDeOdoo({ ...entrada, lectura }), guardarCargaDeOdoo({ ...entrada, lectura })]);
+
+  const pedidos = await prisma.pedidoFacturado.findMany({
+    where: { sedeId: entrada.sedeId, opcionEnvioId: null, envioId: null },
+    orderBy: { posicion: "asc" },
+    select: { posicion: true },
+  });
+  expect(pedidos).toHaveLength(66);
+  expect(pedidos.map((pedido) => pedido.posicion)).toEqual(Array.from({ length: 66 }, (_, indice) => indice + 1));
+});
+
+it("RF-SL-67: muestra el respaldo del prototipo cuando cliente o sector vienen vacíos", async () => {
+  const { lectura, entrada } = await datosCarga();
+  await guardarCargaDeOdoo({ ...entrada, lectura });
+  const pedido = await prisma.pedidoFacturado.findFirstOrThrow({ where: { numeroOdoo: "03543" } });
+  await prisma.pedidoFacturado.update({ where: { id: pedido.id }, data: { cliente: "", sector: "" } });
+
+  const tablero = await consultarTableroFacturacion(sesionFacturador, 1);
+  expect(tablero[0]).toMatchObject({ numero: "03543", cliente: "Sin nombre", sector: "Sin sector" });
+});
+
 it("RF-SL-68 / decisión 3: elimina pedidos del tablero y registra número, cliente y total en la bitácora", async () => {
   const { lectura, entrada, usuarioId } = await datosCarga();
   await guardarCargaDeOdoo({ ...entrada, lectura });

@@ -6,12 +6,6 @@ import { registrarBitacora } from "@/modulos/bitacora/servicio";
 import { exigirPermiso } from "@/modulos/permisos/servicio";
 import { esquemaEntradaCargaDeOdoo, esquemaEntradaEliminarDelTablero, esquemaEntradaTablero } from "./esquemas";
 
-const nombresSede = new Map([
-  ["XE", "Quetzaltenango"],
-  ["GT", "Guatemala"],
-  ["ESC", "Escuintla"],
-]);
-
 export type PedidoEnTablero = {
   id: number;
   numero: string;
@@ -36,8 +30,8 @@ export async function consultarTableroFacturacion(
   return pedidos.map((pedido) => ({
     id: pedido.id,
     numero: pedido.numeroOdoo,
-    cliente: pedido.cliente,
-    sector: pedido.sector,
+    cliente: pedido.cliente || "Sin nombre",
+    sector: pedido.sector || "Sin sector",
     totalKg: pedido.detalles.reduce((total, linea) => total.add(linea.cantidadKg), new Prisma.Decimal(0)).toFixed(3),
     lineas: pedido.detalles.map((linea) => ({
       producto: linea.producto,
@@ -76,7 +70,8 @@ export async function guardarCargaDeOdoo(
   ].filter(Boolean);
 
   await prisma.$transaction(async (tx) => {
-    const sede = await tx.sede.findUniqueOrThrow({ where: { id: sedeId }, select: { prefijoOdoo: true } });
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${`facturacion:sede:${sedeId}`}, 0))`;
+    const sede = await tx.sede.findUniqueOrThrow({ where: { id: sedeId }, select: { nombre: true } });
     const ultimaPosicion = await tx.pedidoFacturado.aggregate({
       where: { sedeId, opcionEnvioId: null, envioId: null },
       _max: { posicion: true },
@@ -115,7 +110,7 @@ export async function guardarCargaDeOdoo(
       registroId: creados[0] ? String(creados[0].id) : null,
       usuarioId,
       detalle: {
-        sede: nombresSede.get(sede.prefijoOdoo) ?? String(sedeId),
+        sede: sede.nombre,
         nombreArchivo,
         pedidosCargados: lectura.pedidos.length,
         noCargados: lectura.noCargados,
@@ -151,6 +146,7 @@ export async function eliminarDelTablero(
       cliente: pedido.cliente,
       totalKg: pedido.detalles.reduce((total, linea) => total.add(linea.cantidadKg), new Prisma.Decimal(0)).toFixed(3),
     }));
+    const sede = await tx.sede.findUniqueOrThrow({ where: { id: sedeId }, select: { nombre: true } });
     await registrarBitacora(tx, {
       sistema: "picking",
       operacion: "Eliminación de pedidos facturados",
@@ -158,10 +154,7 @@ export async function eliminarDelTablero(
       registroId: pedidos.length === 1 ? String(pedidos[0]!.id) : null,
       usuarioId,
       detalle: {
-        sede:
-          nombresSede.get(
-            (await tx.sede.findUniqueOrThrow({ where: { id: sedeId }, select: { prefijoOdoo: true } })).prefijoOdoo,
-          ) ?? String(sedeId),
+        sede: sede.nombre,
         pedidos: bitacoraPedidos,
       },
     });

@@ -34,7 +34,13 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
   await expect(page.getByRole("dialog")).toContainText(
     "33 pedido(s) facturado(s) de Quetzaltenango se agregaron al tablero",
   );
-  await expect(page.getByRole("dialog")).toContainText("46 pedido(s) facturado(s) no se cargaron");
+  await expect(page.getByRole("dialog")).toContainText(
+    "46 pedido(s) facturado(s) no se cargaron porque tienen líneas con el Peso de Conversión en 0 o vacío (RN-50): 03539, 03540, 03541, 03545, 03547, 03549, 03550, 03551, 03552, 03542, 03557, 03554, 03555, 03565, 03567, 03568, 03570, 03594, 03595, 03597, 03572, 03576, 03577, 03578, 03581, 03582, 03583, 03585, 03610, 03590, 03592, 03611, 03600, 03601, 03603, 03608, 03609, 03627, 03612, 03613, 03614, 03615, 03616, 03623, 03624, 03625.",
+  );
+  await expect(page.getByRole("dialog")).toContainText("Se ignoraron 1 referencia(s) que no están en estado «Hecho».");
+  await expect(page.getByRole("dialog")).toContainText(
+    "Los datos de esos pedidos facturados deben corregirse en Odoo y volver a exportarse (P-91).",
+  );
   for (const width of [390, 768, 1440]) {
     await page.setViewportSize({ width, height: width === 390 ? 844 : width === 768 ? 1024 : 900 });
     await capturar(`facturacion-resumen-${width}`);
