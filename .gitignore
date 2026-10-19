@@ -1,6 +1,7 @@
 # Variables de entorno: solo se sube el ejemplo
 .env*
 !.env.example
+!.env.produccion.example
 
 # Dependencias y archivos generados
 node_modules/

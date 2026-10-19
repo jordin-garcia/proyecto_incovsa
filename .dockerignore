@@ -1,0 +1,13 @@
+node_modules
+.next
+.git
+.env*
+entregable-*
+docs*
+pruebas*
+pruebas-e2e
+test-results
+playwright-report
+coverage
+*.md
+.worktrees

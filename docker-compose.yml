@@ -1,0 +1,75 @@
+# Producción en el VPS (specs/16, decisiones 27 a 29). Un solo proceso de aplicación.
+# PostgreSQL 18 guarda el clúster en /var/lib/postgresql. No se publica su puerto.
+
+name: incovsa
+
+services:
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMINIO: ${DOMINIO:-incovsa.com}
+    volumes:
+      - ${CADDYFILE:-./Caddyfile}:/etc/caddy/Caddyfile:ro
+      - caddy-datos:/data
+      - caddy-config:/config
+    networks: [interna]
+    depends_on:
+      app:
+        condition: service_healthy
+    logging: &registros
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  app:
+    image: ${IMAGEN_APP:-ghcr.io/jordin-garcia/proyecto_incovsa:latest}
+    restart: unless-stopped
+    env_file: .env
+    expose: ["3000"]
+    networks: [interna]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+    logging: *registros
+
+  postgres:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres-datos:/var/lib/postgresql
+    networks: [interna]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    logging: *registros
+
+networks:
+  interna:
+
+volumes:
+  caddy-datos:
+  caddy-config:
+  postgres-datos:

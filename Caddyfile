@@ -1,0 +1,14 @@
+{
+	admin off
+}
+
+{$DOMINIO:incovsa.com} {
+	header Strict-Transport-Security "max-age=31536000; includeSubDomains"
+	request_body {
+		max_size 5MB
+	}
+	reverse_proxy app:3000 {
+		header_up X-Real-IP {remote_host}
+		flush_interval -1
+	}
+}

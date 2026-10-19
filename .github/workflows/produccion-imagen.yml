@@ -1,0 +1,130 @@
+# CE-05. Construye la imagen y la levanta con Caddy y un certificado local.
+# No despliega. Solo corre cuando el PR toca estos archivos.
+
+name: Imagen de producción
+
+on:
+  pull_request:
+    branches: [develop, main]
+    types: [opened, synchronize, reopened]
+    paths:
+      - Dockerfile
+      - .dockerignore
+      - docker-compose.yml
+      - Caddyfile
+      - .env.produccion.example
+      - .github/workflows/produccion-imagen.yml
+      - package.json
+      - package-lock.json
+      - prisma/**
+
+permissions:
+  contents: read
+
+jobs:
+  imagen:
+    name: produccion-imagen
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Construir la imagen
+        run: docker build -t incovsa-app:ci .
+
+      - name: Confirmar que la imagen no lleva secretos
+        run: docker run --rm --entrypoint sh incovsa-app:ci -c 'test ! -e .env && test ! -e .env.produccion.example'
+
+      - name: Preparar el certificado local y las variables de prueba
+        run: |
+          cat > Caddyfile.ci <<'EOF'
+          {
+            admin off
+            local_certs
+          }
+          localhost {
+            tls internal
+            header Strict-Transport-Security "max-age=31536000; includeSubDomains"
+            request_body {
+              max_size 5MB
+            }
+            reverse_proxy app:3000 {
+              header_up X-Real-IP {remote_host}
+              flush_interval -1
+            }
+          }
+          EOF
+          cat > .env <<'EOF'
+          POSTGRES_USER=incovsa
+          POSTGRES_PASSWORD=incovsa_ci_local
+          POSTGRES_DB=incovsa
+          DATABASE_URL=postgresql://incovsa:incovsa_ci_local@postgres:5432/incovsa
+          BETTER_AUTH_SECRET_SITIO=ci-sitio-clave-de-prueba-32-caracteres
+          BETTER_AUTH_SECRET_PICKING=ci-picking-clave-de-prueba-32-caracteres
+          BETTER_AUTH_URL=https://localhost
+          SESION_DIAS=7
+          ALMACENAMIENTO=disco
+          DOMINIO=localhost
+          EOF
+
+      - name: Levantar Compose
+        run: IMAGEN_APP=incovsa-app:ci CADDYFILE=./Caddyfile.ci docker compose up -d
+
+      - name: La aplicación responde por HTTPS a través de Caddy
+        run: |
+          listo=0
+          for _ in $(seq 1 36); do
+            if curl -kfsS --resolve localhost:443:127.0.0.1 https://localhost/ -o /dev/null; then listo=1; break; fi
+            sleep 5
+          done
+          test "$listo" = 1
+          curl -kfsSI --resolve localhost:443:127.0.0.1 https://localhost/ | grep -i '^strict-transport-security:'
+          docker compose exec -T caddy grep -q 'X-Real-IP' /etc/caddy/Caddyfile
+          docker compose exec -T caddy grep -q 'flush_interval -1' /etc/caddy/Caddyfile
+
+      - name: PostgreSQL no se publica y las migraciones corren en el contenedor
+        run: |
+          if docker compose port postgres 5432; then
+            echo "PostgreSQL quedó publicado fuera de la red interna."
+            exit 1
+          fi
+          docker compose exec -T app ./node_modules/.bin/prisma migrate deploy
+          docker compose exec -T postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 1 FROM usuario LIMIT 1;"'
+
+      - name: crear-admin funciona dentro del contenedor
+        run: |
+          python3 - <<'PY'
+          import os, pty, select, time
+          pid, fd = pty.fork()
+          if pid == 0:
+              os.execvp("docker", ["docker", "compose", "exec", "app", "npm", "run", "crear-admin"])
+          def esperar(marca, limite=90):
+              buf = ""
+              fin = time.time() + limite
+              while marca not in buf:
+                  if time.time() > fin:
+                      raise SystemExit(buf[-2000:])
+                  listo, _, _ = select.select([fd], [], [], 1)
+                  if listo:
+                      buf += os.read(fd, 4096).decode("utf-8", "replace")
+              return buf
+          esperar("Nombre completo:")
+          os.write(fd, b"Admin CI\n")
+          esperar("Nombre de usuario:")
+          os.write(fd, b"admin.ci\n")
+          esperar("Rol")
+          os.write(fd, b"Gerencia\n")
+          esperar("Contraseña")
+          os.write(fd, b"Clave-ci-1234\n")
+          esperar("Repita")
+          os.write(fd, b"Clave-ci-1234\n")
+          esperar("Cuenta administradora creada")
+          _, estado = os.waitpid(pid, 0)
+          codigo = os.waitstatus_to_exitcode(estado)
+          if codigo != 0:
+              raise SystemExit(codigo)
+          PY
+
+      - name: Bajar el entorno
+        if: always()
+        run: IMAGEN_APP=incovsa-app:ci CADDYFILE=./Caddyfile.ci docker compose down -v
