@@ -5,7 +5,7 @@ persona: daniela
 responsable: Daniela Marín
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: []
 programada: 2026-10-17
 requisitos: []
@@ -70,3 +70,24 @@ node scripts/tareas.mjs --persona daniela
 ## Notas
 - next-devtools solo responde con `npm run dev` corriendo (desde JG-02), y shadcn necesita `components.json` (desde JG-05). En esta tarea basta con que aparezcan registrados; su prueba real ocurre en la primera tarea con pantallas.
 - En el `## Resultado`, anota las versiones instaladas (Node, npm, Git, gh, PostgreSQL y el harness) y cualquier ajuste personal que haya hecho falta, para que el resto del equipo lo aproveche.
+
+## Resultado
+
+Comprobaciones realizadas el 18/10/2026 para Daniela Marín (`InAlexa`):
+
+- Entorno: Node.js 24.22.0, npm 11.19.1, Git 2.49.0.windows.1, GitHub CLI 2.102.0 y PostgreSQL 18.1. `node scripts/verificar-entorno.mjs` terminó con «El equipo tiene todo lo necesario.». Harness: Codex CLI 0.163.0-alpha.10.2, invocado desde Codex de escritorio.
+- GitHub: `gh api user --jq .login` devolvió `InAlexa` y `gh repo view jordin-garcia/proyecto_incovsa` confirmó el acceso. El remoto local usa HTTPS y `gh auth setup-git`, porque SSH rechazaba la autenticación. Git quedó configurado localmente con `core.autocrlf=false` y `core.longpaths=true`.
+- Context7: resolvió Next.js como `/vercel/next.js`; la consulta de `/vercel/next.js/v16.2.9` devolvió documentación de Server Actions: función asíncrona con `'use server'`, comprobación de sesión y conexión del formulario mediante `action`. No se cambió ninguna dependencia del proyecto.
+- Playwright MCP: abrió el prototipo servido con `node scripts/servir-prototipo.mjs` en `http://127.0.0.1:4173/`, leyó el título «Inicio · INCOVSA» y el encabezado «Química que sostiene a la industria guatemalteca», y guardó una captura de Inicio en 1440 × 900. Evidencia local: `C:/Users/danie/.codex/visualizations/2026/10/19/01a1528e-1e4f-75d1-8230-0315cb4dcb9f/DM-01-inicio.png`. Se verificó visualmente. La consola solo notificó un 404 de `favicon.ico`.
+- Registro: `codex mcp list` mostró habilitados `context7`, `playwright`, `next-devtools` y `shadcn`. Conforme a las notas de esta tarea, se comprobó el registro de los dos últimos; su uso con la aplicación corresponde a la primera tarea con pantallas.
+- Plan: `node scripts/tareas.mjs --validar` confirmó «Plan válido: 62 tareas.». Se ejecutaron `--persona daniela` y `--hoy daniela`: DM-01 era la única disponible; al integrarla se desbloquean DM-02 y DM-04. DM-03 depende de DM-02 y DM-05 de DM-03 y DM-04; el resto continúa según las dependencias del plan.
+- Seguridad del harness: esta sesión usa aislamiento `workspace-write`, red restringida y elevaciones revisadas; no se utilizó ningún modo sin confirmación ni se leyó ningún archivo `.env` ni credenciales. La autenticación la gestiona GitHub CLI. No se inspeccionó ni trasladó la clave personal de Context7.
+
+Ajustes y uso posterior: Chrome 155.0.8059.85 se instaló con ayuda de Daniela desde PowerShell como administrador, tras fallar la instalación por permisos. Para comprobar el navegador, levantar el prototipo y abrirlo desde Playwright MCP. La captura necesitó ampliar el tiempo de espera. El cambio local preexistente de `.codex/config.toml` se conserva intacto y se excluye de este PR por indicación expresa de Daniela. Solo se cierran esta tarea y su bitácora; no se implementa DM-02 ni DM-04 en esta conversación.
+
+### Verificación general
+
+- `npm ci`: completado; 687 paquetes instalados, cero vulnerabilidades. Sin cambios de dependencias ni del archivo de bloqueo.
+- `npm run verificar`: aprobado; formato, lint, tipos y 169 pruebas en 15 archivos. Daniela preparó su configuración local según `plan/instalacion.md` §5, sin compartir credenciales. No se omitieron ni modificaron pruebas.
+- `npm run build`: aprobado con Turbopack, incluidos TypeScript y generación de páginas. Los intentos anteriores fallaron al iniciar un proceso de CSS; limpiar únicamente la caché generada `.next` resolvió el fallo. La compilación de diagnóstico con webpack también pasó. No se cambió la configuración del proyecto. Las verificaciones finales se ejecutaron en secuencia para evitar interferencias entre tipos y archivos generados de compilación.
+- Revisión independiente con `plan/prompts/revision.md`: sin hallazgos de corrección ni opcionales en los dos Markdown.
