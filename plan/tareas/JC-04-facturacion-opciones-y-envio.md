@@ -5,7 +5,7 @@ persona: jose-daniel
 responsable: José Daniel Cifuentes
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JC-03]
 programada: 2026-10-18
 requisitos: [RF-SL-05, RF-SL-06, RF-SL-13, RF-SL-14, RF-SL-16, RF-SL-17, RF-SL-18, RF-SL-63, RF-SL-70, RF-SL-71, RF-SL-72, RN-12, RN-13, RN-16, RN-29, RN-30, RN-31, RN-33, RN-48, RN-49, RN-51, RN-52, RN-53, RN-57, RNF-06, CU-01, CU-02]
@@ -51,6 +51,9 @@ El lado derecho de Facturación: las **dos opciones de envío** ("Envío por cam
 - `src/modulos/envios/**` (modificar)
 - `src/app/picking/facturacion/**`, `src/componentes/picking/facturacion/**` (modificar)
 - `pruebas-e2e/picking/facturacion-envio.spec.ts` (crear)
+- `evidencia/JC-04/**` (capturas comparativas)
+- `pruebas-e2e/comunes/componentes.spec.ts` (solo esperar la animación antes de axe; autorización explícita del usuario el 19/10/2026)
+- `src/componentes/picking/bodega/BodegaCliente.tsx` (solo color del texto de prioridad; autorización explícita del usuario el 19/10/2026)
 
 ## Criterios de aceptación
 1. **RN-52** (CP-33, CP-34): dos envíos por camión el mismo día crean la Ruta 1 y la Ruta 2; uno de "Cliente recoge" ese día crea el Pedido 1; al día siguiente (en la hora de Guatemala) vuelve a empezar en 1.
@@ -83,3 +86,13 @@ npm run e2e -- pruebas-e2e/picking/facturacion-envio.spec.ts
 
 ## Notas
 - En el `## Resultado`, documenta la función que crea el envío y cómo leer las líneas de preparación y las filas de entrega de un envío: JM-03, JM-06 y JC-06 las usan.
+
+## Resultado
+- Hecho: opciones persistentes por sede, selección de camión y piloto activos, fecha y hora con guardado durante la escritura, arrastre múltiple con mouse, pulsación larga y teclado, reordenamiento, peso y alerta informativa, cancelación y confirmación del envío con su número diario.
+- Transacción: `enviarOpcion(sesion, { sedeId, tipo })`, en `src/modulos/envios/opciones.ts`, bloquea la opción con `SELECT … FOR UPDATE`, calcula el siguiente número por sede/tipo/día de Guatemala, crea el envío En Preparación, agrupa líneas por producto/lote/Peso de Conversión y entregas por nombre/sector exactos, guarda el historial y la bitácora, liga los pedidos y vacía la opción. Devuelve `{ id, numero, tipo, fecha }`; una opción vacía devuelve `null`, evitando un segundo envío por doble clic. La acción `enviarOpcionABodega` autoriza la sede de trabajo y avisa después de confirmar.
+- Lecturas para JM-03, JM-06 y JC-06: buscar `envio` por `{ id, sedeId }` tras autorizar el permiso del módulo; `lineas` por `posicion`, `entregas` por `orden`, `pedidosFacturados` por `posicion` con `detalles` por `orden`, e `historial` por `creadoEn`. Las líneas guardan `cantidadKg` y `pesoConversionKg` como Decimal; lote vacío es `""`. Las entregas solo se crean en rutas. El contrato completo está en `src/modulos/envios/README.md`.
+- Decisiones: los campos se guardan individualmente y en una cola local, sin refrescar la pantalla al escribir; las mutaciones se coordinan por sede y el envío bloquea además su opción. Las cantidades se suman con Decimal y, en la interfaz, gramos enteros; los valores numéricos del medidor solo representan el porcentaje visual. Se sigue el prototipo al vaciar los campos después del envío y conservarlos al cancelar. Sin dependencias ni cambios del esquema.
+- Excepciones autorizadas explícitamente por José Daniel en esta conversación (19/10/2026): esperar a que termine la animación antes de ejecutar axe en `pruebas-e2e/comunes/componentes.spec.ts`, y cambiar únicamente el color del texto de prioridad de `src/componentes/picking/bodega/BodegaCliente.tsx` a `var(--g600)` para cumplir RNF-08. No se eliminaron comprobaciones ni se desactivaron reglas de accesibilidad.
+- Verificación: `npm run verificar` (230 pruebas, 21 archivos), `npm run build`, comando E2E de JC-04 (3 proyectos, sin omisiones nuevas) y suite E2E completa con `--workers=1` (115 aprobadas; las 2 omisiones ya existentes son las de JC-03, que recorre los tres anchos desde escritorio). Next.js sin errores de compilación ni ejecución. Las pruebas usan bases locales desechables y cubren el fallo real de inserción de líneas, su reversión y el doble clic simultáneo.
+- Revisión en contexto limpio: LISTO; corregidos el orden descendente, la detección del destino y la cobertura táctil, los colores del prototipo y el presupuesto de espera de las pruebas que comparten tablero.
+- Evidencia: `evidencia/JC-04/README.md`, con 36 capturas comparativas de aplicación y prototipo en 390, 768 y 1440 px: vacío, datos/sobrepeso, fecha inválida, cancelar, confirmar envío y envío creado.

@@ -57,7 +57,7 @@ export function BodegaCliente({ sede, enviosIniciales }: BodegaClienteProps) {
 
       <div style={{ display: "flex", gap: "10px", alignItems: "center", marginBottom: "16px", flexWrap: "wrap" }}>
         <span className="chip chip-o">{enviosIniciales.length} en cola</span>
-        <span className="muted" style={{ fontSize: "14px" }}>
+        <span className="muted" style={{ fontSize: "14px", color: "var(--g600)" }}>
           {sede.nombre} · la prioridad y las marcas no quedan en el historial
         </span>
       </div>

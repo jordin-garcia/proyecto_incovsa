@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
 import { obtenerSesion } from "@/lib/sesion";
+import { consultarOpciones } from "@/modulos/envios/opciones";
+import { tienePermiso } from "@/modulos/permisos/servicio";
 import { consultarTableroFacturacion } from "@/modulos/envios/servicio";
 import { obtenerSedeDeTrabajo } from "@/modulos/permisos/sede";
 import { exigirPermiso } from "@/modulos/permisos/servicio";
@@ -29,5 +31,15 @@ export default async function FacturacionPage() {
   }
 
   const pedidos = await consultarTableroFacturacion(sesion, sede.id);
-  return <FacturacionTablero pedidos={pedidos} sedeId={sede.id} sedeNombre={sede.nombre} />;
+  const opciones = await consultarOpciones(sesion, sede.id);
+  return (
+    <FacturacionTablero
+      key={sede.id}
+      pedidos={pedidos}
+      opciones={opciones}
+      sedeId={sede.id}
+      sedeNombre={sede.nombre}
+      puedeVerBodega={tienePermiso(sesion, "pk.bodega")}
+    />
+  );
 }

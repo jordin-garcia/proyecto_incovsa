@@ -573,6 +573,11 @@ Al trasladar el prototipo se comprobó con axe que `--g500` sobre `--g50` da un 
 - La entrada `/panel` redirige a la primera sección permitida; el Resumen se sirve en `/panel/resumen` para evitar una redirección circular. Conserva el nombre y la regla de permisos del prototipo (`specs/05`).
 - Las muestras de componentes de JG-05 se conservan para las pruebas en `/muestras/panel` y `/muestras/picking`, exclusivamente en desarrollo; en producción responden como rutas inexistentes.
 
+## Opciones de envío y envío a Bodega (19/10/2026, JC-04)
+
+- En las tarjetas del tablero de Facturación, **Enter** selecciona y **Espacio** levanta y suelta la tarjeta para moverla con las flechas, porque así el arrastre funciona con teclado (RF-SL-63). En el prototipo, las dos teclas seleccionan.
+- RN-49 agrupa las filas de entrega de una ruta solo si el nombre del cliente y el sector son exactamente iguales a los del archivo (`specs/12`). Falta que el coordinador confirme si deben compararse sin mayúsculas, tildes ni espacios sobrantes, como hace `claveRuta()` en el prototipo.
+
 ## Documentos no alineados con las reuniones 4 y 5
 
 Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los cambios del 29/09, del 11/10 ni del 13/10:
