@@ -27,3 +27,10 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Pendiente o aviso para otros:
   - **Todos:** B0 de Carlos ya está cumplido; CE-02 sigue esperando JG-07.
   - **Jordin:** confirmado en Mac que el criterio 2 (`gh api user` → cuenta personal) es incompatible con el token App de Cursor Cloud Agent; las tareas CE se hacen en Cursor local.
+
+## 2026-10-19 · CE-02 · Configuración: camiones
+- Hecho: Configuración lista, crea, edita y elimina camiones de las sedes del usuario. La baja es lógica. `camionesActivosDeSede` queda disponible para Facturación.
+- Decisiones: la identificación no lleva la nota amarilla de P-01. La pestaña Usuarios solo muestra el aviso de RN-54. La tabla de usuarios es de CE-03.
+- Pendiente o aviso para otros:
+  - **CE-03:** esta rama también crea `/picking/configuracion`. Al juntarla con la tuya, deja la pestaña Usuarios completa y sustituye la lista de camiones en solo lectura por `Camiones`.
+  - **JC-04:** `camionesActivosDeSede(sedeId)` está en `src/modulos/camiones/servicio.ts`. Facturación puede usarla. Este PR no modifica `src/modulos/envios`.

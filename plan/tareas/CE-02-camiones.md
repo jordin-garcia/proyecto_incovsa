@@ -5,7 +5,7 @@ persona: carlos
 responsable: Carlos Hugo Escobar
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [CE-01, JG-07]
 programada: 2026-10-18
 requisitos: [RF-SL-04, RN-17, CU-13]
@@ -57,3 +57,11 @@ npm run e2e -- pruebas-e2e/picking/camiones.spec.ts
 
 ## Fuera de alcance
 - Usuarios (CE-03 y CE-04).
+
+## Resultado
+
+La pestaña Camiones de `/picking/configuracion` lista, crea, edita y elimina de forma lógica los camiones de las sedes del usuario. El permiso es `pk.cfg.camiones`. Gerencia y Soporte entran por acceso total. La identificación es un campo de texto, sin la nota amarilla P-01 del prototipo. La capacidad se guarda con tres decimales como máximo y tiene que ser mayor que cero.
+
+`camionesActivosDeSede(sedeId)` queda en `src/modulos/camiones/servicio.ts` para Facturación. JC-04 sigue leyendo `camion` por su cuenta. Un camión eliminado sale de esa lista y de Configuración. La fila, la ruta y la opción de envío que ya lo citan se conservan.
+
+La pestaña Usuarios se muestra a Gerencia y Soporte, con la cuenta de usuarios del picking, y no administra cuentas. Esa administración está en CE-03. Las dos ramas tocan `src/app/picking/configuracion/**`. Al integrarlas hay que conservar las dos pestañas.
