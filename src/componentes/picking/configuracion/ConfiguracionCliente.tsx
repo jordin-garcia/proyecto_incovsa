@@ -15,9 +15,15 @@ import { Pestanas } from "@/componentes/comunes/Pestanas";
 import { Tabla } from "@/componentes/comunes/Tabla";
 import { VentanaConfirmacion } from "@/componentes/comunes/VentanaConfirmacion";
 import { formatoKg, formatoNumero } from "@/componentes/comunes/formato";
+import { Aviso } from "@/componentes/comunes/Aviso";
+import { DialogoClave } from "@/componentes/usuarios/DialogoClave";
+import { FormularioUsuario } from "@/componentes/usuarios/FormularioUsuario";
+import { TablaUsuarios } from "@/componentes/usuarios/TablaUsuarios";
 import { ErrorNegocio } from "@/lib/errores";
 import { esquemaCamion, type EntradaCamion } from "@/modulos/camiones/esquemas";
 import { crearCamionAccion, editarCamionAccion, eliminarCamionAccion } from "@/modulos/camiones/acciones";
+import { eliminarUsuarioAccion } from "@/modulos/usuarios/acciones";
+import type { PermisoCatalogo, UsuarioVisible } from "@/modulos/usuarios/tipos";
 
 export type CamionVisible = {
   id: number;
@@ -35,21 +41,34 @@ export function ConfiguracionCliente({
   camiones,
   sedes,
   usuarios,
+  permisos,
+  usuarioActualId,
 }: {
   camiones: CamionVisible[];
   sedes: SedeVisible[];
-  usuarios: number | null;
+  usuarios: UsuarioVisible[] | null;
+  permisos: PermisoCatalogo[];
+  usuarioActualId: string;
 }) {
   const router = useRouter();
   const mensaje = useMensajes();
   const [pestana, cambiarPestana] = useState("camiones");
   const [edicion, abrirEdicion] = useState<CamionVisible | null | false>(false);
   const [bloqueo, fijarBloqueo] = useState<string | null>(null);
+  const [usuarioEdicion, abrirUsuario] = useState<UsuarioVisible | null | false>(false);
+  const [claveDe, abrirClave] = useState<UsuarioVisible | null>(null);
 
   async function quitarCamion(id: number) {
     const resultado = await eliminarCamionAccion({ id });
     if (!resultado.ok) throw new ErrorNegocio(resultado.error);
     mensaje("Camión eliminado.");
+    router.refresh();
+  }
+
+  async function quitarUsuario(id: string) {
+    const resultado = await eliminarUsuarioAccion({ id });
+    if (!resultado.ok) throw new ErrorNegocio(resultado.error);
+    mensaje("Usuario eliminado.");
     router.refresh();
   }
 
@@ -130,26 +149,27 @@ export function ConfiguracionCliente({
     opciones.push({
       valor: "usuarios",
       texto: "Usuarios",
-      contador: usuarios,
+      contador: usuarios.length,
       contenido: (
-        <section className="tarjeta">
-          <div className="lista-configuracion">
-            <Tabla>
-              <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>Usuario</th>
-                  <th>Rol</th>
-                  <th>Sedes</th>
-                  <th>Permisos del picking</th>
-                  <th>Estado</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody />
-            </Tabla>
+        <>
+          <section className="tarjeta">
+            <div className="lista-configuracion">
+              <TablaUsuarios
+                usuarios={usuarios}
+                usuarioActualId={usuarioActualId}
+                alEditar={abrirUsuario}
+                alRestablecer={abrirClave}
+                alEliminar={quitarUsuario}
+              />
+            </div>
+          </section>
+          <div style={{ marginTop: 16 }}>
+            <Aviso>
+              Las cuentas de Gerencia y Soporte sirven en los dos sistemas. Las demás son de un solo sistema, y una
+              persona puede tener una cuenta en cada uno con el mismo nombre de usuario (RN-54).
+            </Aviso>
           </div>
-        </section>
+        </>
       ),
     });
   }
@@ -164,6 +184,10 @@ export function ConfiguracionCliente({
           pestana === "camiones" ? (
             <Button onClick={() => abrirEdicion(null)}>
               <Icono nombre="mas" /> Nuevo camión
+            </Button>
+          ) : usuarios !== null ? (
+            <Button onClick={() => abrirUsuario(null)}>
+              <Icono nombre="mas" /> Nuevo usuario
             </Button>
           ) : null
         }
@@ -180,6 +204,31 @@ export function ConfiguracionCliente({
             <FormularioCamion camion={edicion} sedes={sedes} alCerrar={() => abrirEdicion(false)} />
           )}
         </DialogContent>
+      </Dialog>
+      <Dialog
+        open={usuarioEdicion !== false}
+        onOpenChange={(abierta) => {
+          if (!abierta) abrirUsuario(false);
+        }}
+      >
+        <DialogContent grande aria-describedby={undefined}>
+          {usuarioEdicion !== false && (
+            <FormularioUsuario
+              usuario={usuarioEdicion}
+              sedes={sedes}
+              permisos={permisos}
+              alCerrar={() => abrirUsuario(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+      <Dialog
+        open={claveDe !== null}
+        onOpenChange={(abierta) => {
+          if (!abierta) abrirClave(null);
+        }}
+      >
+        <DialogContent>{claveDe && <DialogoClave usuario={claveDe} alCerrar={() => abrirClave(null)} />}</DialogContent>
       </Dialog>
       <Dialog
         open={bloqueo !== null}

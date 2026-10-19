@@ -66,7 +66,7 @@ test.describe("Configuración: camiones", () => {
 
     await page.getByRole("tab", { name: /Usuarios/ }).click();
     await expect(page.getByRole("columnheader", { name: "Nombre" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Nuevo usuario" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Nuevo usuario" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Nuevo camión" })).toHaveCount(0);
   });
 
