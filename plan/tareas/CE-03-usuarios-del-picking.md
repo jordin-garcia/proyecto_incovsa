@@ -5,7 +5,7 @@ persona: carlos
 responsable: Carlos Hugo Escobar
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [CE-02]
 programada: 2026-10-18
 requisitos: [RF-SL-03, RF-SL-48, RF-SL-56, RF-SL-57, RF-SL-66, RN-17, RN-18, RN-38, RN-46, RN-47, RN-54, CU-12]
@@ -66,3 +66,29 @@ npm run e2e -- pruebas-e2e/picking/usuarios.spec.ts
 
 ## Fuera de alcance
 - Los usuarios del sitio en el panel (CE-04).
+
+## Resultado
+
+Pestaña Usuarios de `/picking/configuracion` para Gerencia y Soporte: alta con contraseña, edición (usuario de lectura), restablecimiento y eliminación lógica. Módulo `src/modulos/usuarios/` listo para CE-04.
+
+### Cómo usarlo
+
+- **Listar:** `listarUsuariosDelPicking()` o `listarUsuarios("picking" | "sitio")` → `UsuarioVisible[]` (sin contraseña).
+- **Catálogo de casillas:** `listarPermisos("picking")`.
+- **Acciones del servidor** (`acciones.ts`): `crearUsuarioAccion`, `editarUsuarioAccion`, `eliminarUsuarioAccion`, `restablecerClaveAccion`. Exigen sesión picking y `esAccesoTotal` (no hay permiso asignable).
+- **Servicio:** recibe entrada Zod ya validada y `ContextoUsuario { actorId, actorRol, sistema }`. Gerencia/Soporte → `sistema: "ambos"` y `username` `ambos.<usuario>`; resto → `picking.<usuario>` con ≥1 sede y solo `pk.*`.
+- **Componentes compartidos** (`src/componentes/usuarios/`): `FormularioUsuario`, `CasillasPermisos`, `CasillasSedes`, `TablaUsuarios`, `ResumenPermisos`, `DialogoClave`.
+- **Sesiones:** al restablecer, desactivar o eliminar, `revocarSesiones(id, tx)` en la misma transacción.
+- **Bitácora:** «Creación de usuario», «Edición de usuario», «Restablecimiento de contraseña», «Eliminación de usuario»; detalle con `cambiosAcceso` (permisos/sedes); nunca la contraseña.
+
+### Decisiones
+
+- Autorización de usuarios solo con `esAccesoTotal` (specs/03). `pk.cfg.camiones` sigue abriendo Configuración (CE-02).
+- `displayUsername` de solo lectura al editar (prototipo). Editables: nombre, rol, correo, sedes, permisos, activo.
+- RN-54 en el servicio además del unique `(displayUsername, sistema)`: rechaza nombres de cuentas `ambos` o de acceso total.
+- Contraste de leyendas/ayuda del modal con `--g600` en `configuracion.css` (axe).
+- Se quitó `contarUsuariosDelPicking` del módulo camiones: la pestaña lista las cuentas.
+
+### Evidencia
+
+`npm run verificar` (263 pruebas), `npm run build`, `npm run e2e -- pruebas-e2e/picking/usuarios.spec.ts` (6 en 390/768/1440).
