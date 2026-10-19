@@ -28,6 +28,9 @@ test("RNF-08: pestañas, botones segmentados y lista desplegable con teclado", a
 test("RNF-08: la ventana de confirmación no tiene violaciones serias ni críticas", async ({ page }) => {
   await page.getByRole("button", { name: "Eliminar", exact: true }).click();
   await expect(page.getByRole("dialog", { name: "Eliminar pedidos facturados" })).toBeVisible();
+  await page.getByRole("dialog").evaluate(async (elemento) => {
+    await Promise.all(elemento.getAnimations().map((animacion) => animacion.finished));
+  });
   const resultado = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
   expect(resultado.violations.filter((v) => v.impact === "serious" || v.impact === "critical")).toEqual([]);
 });

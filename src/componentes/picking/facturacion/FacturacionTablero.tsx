@@ -1,6 +1,23 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState, useTransition } from "react";
+import {
+  DndContext,
+  DragOverlay,
+  MouseSensor,
+  TouchSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  pointerWithin,
+  closestCenter,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
+import { OpcionEnvio } from "./OpcionEnvio";
+import { PedidoArrastrable, ZonaArrastre, coordenadasTeclado } from "./ArrastreFacturacion";
+import type { OpcionesFacturacion } from "@/modulos/envios/opciones";
+import type { TipoOpcion } from "@/modulos/envios/esquemas";
 import { useRouter } from "next/navigation";
 import { Button } from "@/componentes/ui/button";
 import { Checkbox } from "@/componentes/ui/checkbox";
@@ -11,7 +28,7 @@ import { VentanaConfirmacion } from "@/componentes/comunes/VentanaConfirmacion";
 import { formatoKg } from "@/componentes/comunes/formato";
 import { useMensajes } from "@/componentes/comunes/Mensajes";
 import { ErrorNegocio } from "@/lib/errores";
-import { cargarArchivo, eliminarPedidosFacturados } from "@/modulos/envios/acciones";
+import { cargarArchivo, eliminarPedidosFacturados, moverPedidosFacturados } from "@/modulos/envios/acciones";
 import type { PedidoEnTablero } from "@/modulos/envios/servicio";
 import estilos from "./FacturacionTablero.module.css";
 
@@ -31,11 +48,24 @@ export function FacturacionTablero({
   pedidos,
   sedeId,
   sedeNombre,
+  opciones,
+  puedeVerBodega,
 }: {
   pedidos: PedidoEnTablero[];
   sedeId: number;
   sedeNombre: string;
+  opciones: OpcionesFacturacion;
+  puedeVerBodega: boolean;
 }) {
+  const [arrastrados, arrastrar] = useState<number[]>([]);
+  const sensores = useSensors(
+    useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 280, tolerance: 8 } }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: coordenadasTeclado,
+      keyboardCodes: { start: ["Space"], end: ["Space"], cancel: ["Escape"] },
+    }),
+  );
   const router = useRouter();
   const mensaje = useMensajes();
   const [seleccionados, seleccionar] = useState<Set<number>>(() => new Set());
@@ -121,8 +151,82 @@ export function FacturacionTablero({
     router.refresh();
   }
 
+  function soltar(evento: DragEndEvent) {
+    const ids = arrastrados;
+    arrastrar([]);
+    if (!evento.over || evento.active.id === evento.over.id) return;
+    const origen = evento.active.data.current?.zona;
+    const destino = evento.over.data.current?.zona;
+    if (!origen || !destino) return;
+    let antesDe = typeof evento.over.id === "number" ? evento.over.id : null;
+    if (origen === destino && antesDe !== null) {
+      const orden = origen === "tablero" ? pedidos : (opciones.opciones.find((o) => o.tipo === origen)?.pedidos ?? []);
+      const desde = orden.findIndex((p) => p.id === evento.active.id);
+      const hasta = orden.findIndex((p) => p.id === antesDe);
+      if (desde < hasta) antesDe = orden.slice(hasta + 1).find((p) => !ids.includes(p.id))?.id ?? null;
+    }
+    if (antesDe !== null && ids.includes(antesDe)) return;
+    iniciarTransicion(async () => {
+      const resultado = await moverPedidosFacturados({
+        sedeId,
+        ids,
+        origen: origen === "tablero" ? null : (origen as TipoOpcion),
+        destino: destino === "tablero" ? null : (destino as TipoOpcion),
+        antesDe,
+      });
+      if (!resultado.ok) mensaje(resultado.error, "error");
+      else seleccionar(new Set());
+      router.refresh();
+    });
+  }
+
   return (
-    <>
+    <DndContext
+      sensors={sensores}
+      collisionDetection={(contexto) => {
+        // Primero la zona visible: las tarjetas recortadas por el scroll del tablero
+        // no pueden interceptar el puntero sobre las opciones que están debajo.
+        const zonas = contexto.droppableContainers.filter((c) => typeof c.id === "string");
+        const zonasDebajo = contexto.pointerCoordinates
+          ? pointerWithin({ ...contexto, droppableContainers: zonas })
+          : closestCenter({ ...contexto, droppableContainers: zonas });
+        const zona = zonas.find((c) => c.id === zonasDebajo[0]?.id)?.data.current?.zona;
+        if (!zona) return [];
+        const dentro = {
+          ...contexto,
+          droppableContainers: contexto.droppableContainers.filter((c) => c.data.current?.zona === zona),
+        };
+        if (contexto.pointerCoordinates)
+          return pointerWithin(dentro).sort(
+            (a, b) => Number(typeof b.id === "number") - Number(typeof a.id === "number"),
+          );
+        return closestCenter(dentro);
+      }}
+      onDragStart={({ active }) =>
+        arrastrar(
+          active.data.current?.zona === "tablero" && seleccionados.has(Number(active.id))
+            ? idsSeleccionados
+            : [Number(active.id)],
+        )
+      }
+      onDragCancel={() => arrastrar([])}
+      onDragEnd={soltar}
+      accessibility={{
+        screenReaderInstructions: {
+          draggable:
+            "Pulse espacio para arrastrar. Use las flechas arriba y abajo para ordenar; derecha e izquierda para cambiar de opción o regresar al tablero. Pulse espacio para soltar o Escape para cancelar. Enter selecciona una tarjeta del tablero.",
+        },
+        announcements: {
+          onDragStart: () => "Arrastre iniciado.",
+          onDragOver: ({ over }) =>
+            over
+              ? `Destino: ${over.data.current?.zona === "tablero" ? "Tablero de pedidos facturados" : over.data.current?.zona === "camion" ? "Envío por camión" : "Cliente recoge en bodega"}.`
+              : "Fuera de una opción de envío.",
+          onDragEnd: () => "Arrastre terminado.",
+          onDragCancel: () => "Arrastre cancelado.",
+        },
+      }}
+    >
       <EncabezadoModulo
         eyebrow="Módulo de facturación"
         titulo="Pedidos facturados"
@@ -185,94 +289,89 @@ export function FacturacionTablero({
               )}
             </div>
           </div>
-          <div className={estilos.lista} data-testid="tablero-pedidos" ref={lista}>
-            {pedidos.length ? (
-              pedidos.map((pedido) => {
-                const seleccionado = seleccionados.has(pedido.id);
-                return (
-                  <article
-                    key={pedido.id}
-                    className={`${estilos.tarjetaPedido} ${seleccionado ? estilos.seleccionada : ""}`}
-                    role="button"
-                    tabIndex={0}
-                    aria-pressed={seleccionado}
-                    title="Clic para seleccionar"
-                    onClick={() => alternarSeleccion(pedido.id)}
-                    onKeyDown={(evento) => {
-                      if (evento.key === " " || evento.key === "Enter") {
-                        evento.preventDefault();
-                        alternarSeleccion(pedido.id);
-                      }
-                    }}
-                  >
-                    <span className={estilos.marcaSeleccion} aria-hidden="true">
-                      <Icono nombre="check" />
-                    </span>
-                    <div className={estilos.filaNumero}>
-                      <b className="mono">{pedido.numero}</b>
-                      <span className={`mono ${estilos.peso}`}>{formatoKg(pedido.totalKg)}</span>
-                    </div>
-                    <div className={estilos.cliente}>{pedido.cliente}</div>
-                    <div className={estilos.sector}>{pedido.sector}</div>
-                    <ul className={estilos.productos} aria-label="Productos del pedido facturado">
-                      {pedido.lineas.map((linea, indice) => (
-                        <li key={`${linea.producto}-${linea.lote}-${indice}`}>
-                          <span>{linea.producto}</span>
-                          <span className={`mono ${estilos.cantidad}`}>{formatoKg(linea.cantidadKg)}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </article>
-                );
-              })
-            ) : (
-              <div className={estilos.vacio}>
-                <Icono nombre="archivo" aria-hidden="true" />
-                <h3>No hay pedidos facturados en el tablero</h3>
-                <p>
-                  Cargue el archivo de Odoo, o arrastre aquí un pedido facturado para regresarlo de una opción de envío.
-                </p>
-              </div>
-            )}
-          </div>
+          <ZonaArrastre
+            zona="tablero"
+            className={estilos.lista}
+            referencia={(n) => {
+              lista.current = n;
+            }}
+          >
+            <SortableContext items={pedidos.map((p) => p.id)} strategy={rectSortingStrategy}>
+              {pedidos.length ? (
+                pedidos.map((pedido) => {
+                  const seleccionado = seleccionados.has(pedido.id);
+                  return (
+                    <PedidoArrastrable
+                      idPedido={pedido.id}
+                      zona="tablero"
+                      key={pedido.id}
+                      className={`${estilos.tarjetaPedido} ${seleccionado ? estilos.seleccionada : ""}`}
+                      role="button"
+                      tabIndex={0}
+                      aria-pressed={seleccionado}
+                      title="Clic para seleccionar"
+                      onClick={() => alternarSeleccion(pedido.id)}
+                      onKeyDown={(evento) => {
+                        if (evento.key === "Enter") {
+                          evento.preventDefault();
+                          alternarSeleccion(pedido.id);
+                        }
+                      }}
+                    >
+                      <span className={estilos.marcaSeleccion} aria-hidden="true">
+                        <Icono nombre="check" />
+                      </span>
+                      <div className={estilos.filaNumero}>
+                        <b className="mono">{pedido.numero}</b>
+                        <span className={`mono ${estilos.peso}`}>{formatoKg(pedido.totalKg)}</span>
+                      </div>
+                      <div className={estilos.cliente}>{pedido.cliente}</div>
+                      <div className={estilos.sector}>{pedido.sector}</div>
+                      <ul className={estilos.productos} aria-label="Productos del pedido facturado">
+                        {pedido.lineas.map((linea, indice) => (
+                          <li key={`${linea.producto}-${linea.lote}-${indice}`}>
+                            <span>{linea.producto}</span>
+                            <span className={`mono ${estilos.cantidad}`}>{formatoKg(linea.cantidadKg)}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </PedidoArrastrable>
+                  );
+                })
+              ) : (
+                <div className={estilos.vacio}>
+                  <Icono nombre="archivo" aria-hidden="true" />
+                  <h3>No hay pedidos facturados en el tablero</h3>
+                  <p>
+                    Cargue el archivo de Odoo, o arrastre aquí un pedido facturado para regresarlo de una opción de
+                    envío.
+                  </p>
+                </div>
+              )}
+            </SortableContext>
+          </ZonaArrastre>
         </section>
 
         <aside className={estilos.opciones} aria-labelledby="titulo-opciones">
           <h2 id="titulo-opciones">Opciones de envío</h2>
-          <section className={`tarjeta ${estilos.opcion}`}>
-            <div className={estilos.cabeceraOpcion}>
-              <span className={estilos.iconoOpcion}>
-                <Icono nombre="camion" aria-hidden="true" />
-              </span>
-              <div>
-                <h3>Envío por camión</h3>
-                <small>
-                  Al enviarse se crea una <b>ruta</b>
-                </small>
-              </div>
-              <span className="chip">0 pedido(s) facturado(s)</span>
-            </div>
-            <div className={estilos.zonaVacia}>Arrastre aquí pedidos facturados</div>
-          </section>
-          <section className={`tarjeta ${estilos.opcion}`}>
-            <div className={estilos.cabeceraOpcion}>
-              <span className={estilos.iconoOpcion}>
-                <Icono nombre="edificio" aria-hidden="true" />
-              </span>
-              <div>
-                <h3>Cliente recoge en bodega</h3>
-                <small>
-                  Al enviarse se crea un <b>pedido</b>; no pasa por Ruta
-                </small>
-              </div>
-              <span className="chip">0 pedido(s) facturado(s)</span>
-            </div>
-            <div className={estilos.zonaVacia}>Arrastre aquí pedidos facturados</div>
-          </section>
+          {opciones.opciones.map((opcion) => (
+            <OpcionEnvio
+              key={opcion.tipo}
+              opcion={opcion}
+              camiones={opciones.camiones}
+              pilotos={opciones.pilotos}
+              sedeId={sedeId}
+              sedeNombre={sedeNombre}
+              ocupado={ocupado}
+              puedeVerBodega={puedeVerBodega}
+            />
+          ))}
         </aside>
       </div>
       <p className={estilos.ayuda}>
-        Clic o toque en una tarjeta para seleccionarla. Lo que está en el tablero se guarda.
+        Clic o toque en una tarjeta para seleccionarla. Arrastre con el mouse, o con el dedo después de mantenerlo
+        presionado sobre la tarjeta. Dentro de una opción, arrastre para cambiar el orden: con ese orden se envía a
+        Bodega. Lo que está en el tablero y en cada opción se guarda.
       </p>
 
       <div className={estilos.entradaArchivo}>
@@ -327,6 +426,11 @@ export function FacturacionTablero({
           </div>
         </DialogContent>
       </Dialog>
-    </>
+      <DragOverlay>
+        {arrastrados.length > 0 && (
+          <div className={estilos.tarjetaPedido}>{arrastrados.length} pedido(s) facturado(s)</div>
+        )}
+      </DragOverlay>
+    </DndContext>
   );
 }
