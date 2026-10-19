@@ -32,7 +32,7 @@
 
 .permisos fieldset {
   border: 1px solid var(--g150);
-  border-radius: 12px;
+  border-radius: var(--r);
   padding: 10px 14px 12px;
   margin: 0;
   display: flex;
