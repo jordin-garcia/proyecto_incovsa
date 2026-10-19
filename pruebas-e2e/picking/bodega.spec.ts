@@ -189,4 +189,18 @@ test.describe("Módulo de Bodega E2E", () => {
     // Ya no aparece en Bodega
     await expect(page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`)).toHaveCount(0);
   });
+
+  test("Criterio 7: usuario sin pk.bodega ve pantalla sin acceso con textos del prototipo", async ({
+    page,
+    context,
+  }) => {
+    await entrar(context, "ejemplo.04");
+    await page.goto("/picking/bodega");
+    await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
+
+    const sinAcceso = page.locator(".sin-acceso");
+    await expect(sinAcceso).toBeVisible();
+    await expect(sinAcceso).toContainText("Sus permisos no incluyen Bodega. Los asignan Gerencia o Soporte.");
+    await expect(sinAcceso.getByRole("link", { name: "Ir a mi módulo" })).toBeVisible();
+  });
 });
