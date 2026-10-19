@@ -78,12 +78,6 @@ export async function listarCamionesDeSedes(sedesIds: readonly number[]): Promis
   }));
 }
 
-export async function contarUsuariosDelPicking(): Promise<number> {
-  return prisma.usuario.count({
-    where: { eliminadoEn: null, sistema: { in: ["picking", "ambos"] } },
-  });
-}
-
 export async function crearCamion(entrada: EntradaCamion, contexto: ContextoCamion): Promise<CamionActivo> {
   exigirSede(contexto, entrada.sedeId);
   return prisma.$transaction(async (tx) => {

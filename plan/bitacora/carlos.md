@@ -35,3 +35,10 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
   - **JC-04:** Facturación puede dejar de consultar `camion` en `src/modulos/envios/opciones.ts` y usar `camionesActivosDeSede` de `src/modulos/camiones/servicio.ts`. El nombre del desplegable es `identificacion` y la capacidad es `capacidadKg` con tres decimales. La función no autoriza. La sede ya tiene que estar autorizada.
   - **CE-03:** la pestaña Usuarios ya existe, con los encabezados del prototipo y la cuenta de usuarios del picking. El botón "Nuevo usuario" y el CRUD no están.
   - **Jordin:** las pestañas globales siguen en g500 y fallan axe si se activa color-contrast fuera de Configuración.
+
+## 2026-10-19 · CE-03 · Configuración: usuarios del picking
+- Hecho: pestaña Usuarios en `/picking/configuracion` con alta, edición, restablecimiento de contraseña y eliminación lógica. Módulo `src/modulos/usuarios/` (esquemas, servicio, acciones, pruebas) y componentes en `src/componentes/usuarios/` reutilizables por CE-04. E2E en 390/768/1440 con axe. Solo Gerencia y Soporte (`esAccesoTotal`).
+- Decisiones: usuario de solo lectura al editar; RN-54 en servicio (rechaza nombres de `ambos`); contraste de ayuda del modal con `--g600`; se eliminó `contarUsuariosDelPicking` de camiones.
+- Pendiente o aviso para otros:
+  - **CE-04:** reutilizar `listarUsuarios("sitio")`, `listarPermisos("sitio")` y los componentes de `src/componentes/usuarios/` en el panel del sitio.
+  - **Todos:** no hay permiso `pk.usuarios`; la administración de cuentas es solo Gerencia/Soporte.

@@ -5,7 +5,8 @@ import { esAccesoTotal } from "@/lib/roles";
 import { exigirPermiso, ErrorAcceso, sedesDelUsuario } from "@/modulos/permisos/servicio";
 import { opcionesPermitidas } from "@/modulos/permisos/navegacion";
 import { SinAcceso } from "@/componentes/comunes/armazon/SinAcceso";
-import { contarUsuariosDelPicking, listarCamionesDeSedes } from "@/modulos/camiones/servicio";
+import { listarCamionesDeSedes } from "@/modulos/camiones/servicio";
+import { listarPermisos, listarUsuariosDelPicking } from "@/modulos/usuarios/servicio";
 import { ConfiguracionCliente } from "@/componentes/picking/configuracion/ConfiguracionCliente";
 import "./configuracion.css";
 
@@ -36,16 +37,19 @@ export default async function PaginaConfiguracion() {
   }
 
   const mostrarUsuarios = esAccesoTotal(sesion.usuario.rol);
-  const [camiones, usuarios] = await Promise.all([
+  const [camiones, usuarios, permisos] = await Promise.all([
     listarCamionesDeSedes(sedes.map((sede) => sede.id)),
-    mostrarUsuarios ? contarUsuariosDelPicking() : Promise.resolve(0),
+    mostrarUsuarios ? listarUsuariosDelPicking() : Promise.resolve(null),
+    mostrarUsuarios ? listarPermisos("picking") : Promise.resolve([]),
   ]);
 
   return (
     <ConfiguracionCliente
       camiones={camiones}
       sedes={sedes.map((sede) => ({ id: sede.id, nombre: sede.nombre }))}
-      usuarios={mostrarUsuarios ? usuarios : null}
+      usuarios={usuarios}
+      permisos={permisos}
+      usuarioActualId={sesion.usuario.id}
     />
   );
 }
