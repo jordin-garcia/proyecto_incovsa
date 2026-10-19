@@ -5,7 +5,7 @@ persona: carlos
 responsable: Carlos Hugo Escobar
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [CE-02]
 programada: 2026-10-18
 requisitos: [RF-SL-03, RF-SL-48, RF-SL-56, RF-SL-57, RF-SL-66, RN-17, RN-18, RN-38, RN-46, RN-47, RN-54, CU-12]
@@ -66,3 +66,27 @@ npm run e2e -- pruebas-e2e/picking/usuarios.spec.ts
 
 ## Fuera de alcance
 - Los usuarios del sitio en el panel (CE-04).
+
+## Resultado
+
+La administración de usuarios vive en `src/modulos/usuarios/` y sirve a los dos sistemas. La pestaña Usuarios de `/picking/configuracion` la usa con `sistema: "picking"`.
+
+### Cómo usarlo (CE-04)
+
+- Acciones del servidor, en `@/modulos/usuarios/acciones`: `listarUsuariosAccion`, `crearUsuarioAccion`, `editarUsuarioAccion`, `restablecerContrasenaAccion` y `eliminarUsuarioAccion`. Cada una lee la sesión del `sistema` que trae la entrada y exige Gerencia o Soporte. No devuelven la contraseña.
+- Reglas, en `@/modulos/usuarios/servicio`: `listarUsuarios`, `crearUsuario`, `editarUsuario`, `restablecerContrasena` y `eliminarUsuario`. El actor es `{ id, rol, sistema }` sacado de la sesión, nunca del navegador.
+- Pantalla compartida: `AdministracionUsuarios` en `@/componentes/usuarios/AdministracionUsuarios`. Recibe `sistema`, la lista, los grupos de permisos, las sedes y el id de quien administra. En el sitio no pidas sedes: el servicio las ignora.
+
+### Decisiones
+
+- La página `/picking/configuracion` no existía (la crea esta tarea, aunque el archivo de CE-02 también la nombra). La pestaña Camiones muestra los camiones activos, sin crear, editar ni eliminar. Eso queda en CE-02.
+- El rol y el nombre de usuario se guardan sin espacios alrededor, como el formulario del prototipo. Un rol escrito `piloto ` queda `piloto` y Facturación ya lo reconoce con `normalizarRol`. No hizo falta tocar `src/modulos/envios/`.
+- Gerencia y Soporte quedan en el sistema `ambos`, sin filas de permisos ni de sedes. Al restablecer la contraseña, al desactivar y al eliminar se llama `revocarSesiones` dentro de la misma transacción. La contraseña se cifra con `hashPassword` de Better Auth, igual que `crear-admin`.
+- La nota verde de RN-54 sí se muestra. Las franjas amarillas P-02 y P-08 del prototipo no: el design system no tiene esa pieza y CE-02 ya quita la nota amarilla de P-01.
+
+### Archivos
+
+- `src/modulos/usuarios/` (esquemas, servicio, acciones y pruebas)
+- `src/componentes/usuarios/AdministracionUsuarios.tsx`
+- `src/app/picking/configuracion/`
+- `pruebas-e2e/picking/usuarios.spec.ts`

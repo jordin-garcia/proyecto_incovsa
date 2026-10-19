@@ -27,3 +27,10 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Pendiente o aviso para otros:
   - **Todos:** B0 de Carlos ya está cumplido; CE-02 sigue esperando JG-07.
   - **Jordin:** confirmado en Mac que el criterio 2 (`gh api user` → cuenta personal) es incompatible con el token App de Cursor Cloud Agent; las tareas CE se hacen en Cursor local.
+
+## 2026-10-19 · CE-03 · Configuración: usuarios del picking
+- Hecho: Gerencia y Soporte crean, editan, restablecen y eliminan usuarios del picking desde Configuración. El módulo `usuarios` también acepta el sistema `sitio` para CE-04. La contraseña no sale en la bitácora ni en la respuesta, y restablecer o eliminar cierra las sesiones.
+- Decisiones: la página de Configuración nace aquí, con la pestaña Camiones en solo lectura hasta CE-02. El nombre de usuario se normaliza en minúsculas y el rol se recorta, como el prototipo.
+- Pendiente o aviso para otros:
+  - **CE-02:** la pestaña Camiones de `/picking/configuracion` lista los camiones activos y no tiene alta, edición ni baja. Esas acciones son tuyas; el archivo de la página va a chocar con este PR.
+  - **CE-04:** usa `AdministracionUsuarios` y las acciones de `@/modulos/usuarios/acciones` con `sistema: "sitio"`. El servicio ya ignora las sedes del sitio.
