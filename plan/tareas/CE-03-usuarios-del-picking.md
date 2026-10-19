@@ -91,4 +91,9 @@ Pestaña Usuarios de `/picking/configuracion` para Gerencia y Soporte: alta con 
 
 ### Evidencia
 
-`npm run verificar` (263 pruebas), `npm run build`, `npm run e2e -- pruebas-e2e/picking/usuarios.spec.ts` (6 en 390/768/1440).
+`npm run verificar`, `npm run build`, `npm run e2e -- pruebas-e2e/picking/usuarios.spec.ts` (390/768/1440).
+
+### Notas de revisión B9
+
+- Criterio 4 (registros en reportes): se verifica conservación en bitácora; el módulo de reportes aún no existe.
+- Criterio 6: e2e comprueba que un usuario con solo `pk.cfg.camiones` no ve la pestaña Usuarios.

@@ -73,6 +73,35 @@ test.describe("Configuración: usuarios del picking", () => {
     await expect(page.getByRole("heading", { name: "Sin acceso a este módulo" })).toBeVisible();
   });
 
+  test("criterio 6: con pk.cfg.camiones sin Gerencia no ve la pestaña Usuarios", async ({ page, context }, prueba) => {
+    const usuario = `cfg.${prueba.project.name}.${Date.now().toString(36)}`;
+    const clave = "Camiones-e2e-1";
+    await entrar(context, "ejemplo.01");
+    await abrirConfiguracion(page);
+    await page.getByRole("tab", { name: /Usuarios/ }).click();
+    await page.getByRole("button", { name: "Nuevo usuario" }).click();
+
+    const dialogo = page.getByRole("dialog");
+    await dialogo.getByLabel("Nombre completo").fill(`Camiones ${prueba.project.name}`);
+    await dialogo.getByLabel("Usuario", { exact: true }).fill(usuario);
+    await dialogo.getByLabel("Contraseña", { exact: true }).fill(clave);
+    await dialogo.getByLabel("Repita la contraseña").fill(clave);
+    await dialogo.getByLabel("Rol").fill("Bodega");
+    await dialogo.getByRole("checkbox", { name: "Quetzaltenango" }).check();
+    await dialogo.getByRole("checkbox", { name: "Administrar camiones" }).check();
+    await dialogo.getByRole("button", { name: "Guardar" }).click();
+    await expect(page.locator(".toast").filter({ hasText: "Usuario guardado." })).toBeVisible();
+
+    await context.clearCookies();
+    await entrar(context, usuario, clave);
+    await abrirConfiguracion(page);
+    await expect(page.getByRole("heading", { name: "Camiones y usuarios" })).toBeVisible();
+    await expect(page.getByRole("tab", { name: /Camiones/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Nuevo camión" })).toBeVisible();
+    await expect(page.getByRole("tab", { name: /Usuarios/ })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Nuevo usuario" })).toHaveCount(0);
+  });
+
   test("criterio 8: la pestaña Usuarios no tiene violaciones serias de axe", async ({ page, context }) => {
     await entrar(context, "ejemplo.01");
     await abrirConfiguracion(page);

@@ -385,7 +385,7 @@ describe("usuarios del picking", () => {
     expect((await prisma.usuario.findUniqueOrThrow({ where: { id: jefe.id } })).username).toBe("picking.promovido");
   });
 
-  it("criterio 7: una sede inexistente no se asigna y el correo opcional se guarda", async () => {
+  it("RF-SL-66: una sede inexistente no se asigna y el correo opcional se guarda", async () => {
     await expect(crearUsuario({ ...entrada(), sedesIds: [quetzaltenango, 999_999] }, contexto)).rejects.toBeInstanceOf(
       ErrorAcceso,
     );
