@@ -26,3 +26,10 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 **JC-06:** La lógica de conversión requerida para Reportes está disponible en `@/modulos/conversion/servicio` (`convertir`, `textoConversion`).
 **JM-05:** El componente `<Unidades />` y el cálculo de conversión están listos para la proyección del tablero en pantalla completa.
 
+## 2026-10-18 · JM-03 · Bodega: preparación, detalle y despacho de rutas y pedidos
+- Hecho: Se implementó el módulo completo de Bodega (`src/modulos/bodega/`, `src/componentes/picking/bodega/`, `src/app/picking/bodega/`). Incluye la consulta de envíos En Preparación filtrados por sede y ordenados por cola, el marcado individual y masivo de líneas sin bitácora (RN-20), el ordenamiento persistente por peso (RN-28), la visualización de unidades con `<Unidades />` (JM-02), la fecha y hora programada, el modal de detalle con pedidos facturados (RF-SL-74) y el despacho con confirmación, cambio transaccional a En Ruta / Despachado, registro de historial y bitácora ("Cambio de estado") y notificación reactiva mediante `avisarCambio`. Se verificó con 20 pruebas en Vitest y 15 pruebas E2E en Playwright en teléfono, tableta y escritorio con accesibilidad axe y capturas de evidencia.
+- Decisiones: Se enmascara cualquier intento de consulta u operación sobre envíos de otra sede o inexistentes mediante `ErrorAcceso` para evitar revelación de datos según specs/16 y JG-07. Las Server Actions se ejecutan con `useTransition` para mantener la interfaz receptiva.
+- Pendiente o aviso para otros:
+**JM-04:** La estructura de tarjetas de Bodega y las Server Actions están listas para integrar el arrastre dnd-kit y la suscripción en tiempo real por SSE.
+**JM-05:** El servicio `listarEnviosEnPreparacion` está listo para ser consumido por el Tablero de pantalla completa.
+

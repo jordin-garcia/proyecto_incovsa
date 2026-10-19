@@ -1,6 +1,12 @@
+import { execSync } from "node:child_process";
 import { expect, test, type BrowserContext } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { prisma } from "../../src/lib/prisma";
+
+try {
+  process.loadEnvFile();
+} catch {
+  // Ignorar si no existe
+}
 
 async function entrar(context: BrowserContext, usuario = "ejemplo.05") {
   expect(process.env.CLAVE_DEMO, "Se requiere la clave demo").toBeTruthy();
@@ -12,104 +18,27 @@ async function entrar(context: BrowserContext, usuario = "ejemplo.05") {
 }
 
 test.describe("Módulo de Bodega E2E", () => {
-  let envioIdEjemplo: number;
+  test.describe.configure({ mode: "serial" });
 
-  test.beforeAll(async () => {
-    // Asegurar que existe el estado y usuarios
-    const estadoPrep = await prisma.estadoEnvio.findUniqueOrThrow({ where: { nombre: "En Preparación" } });
-    const usuarioBodega = await prisma.usuario.findFirstOrThrow({ where: { displayUsername: "ejemplo.05" } });
-    const usuarioPiloto = await prisma.usuario.findFirstOrThrow({ where: { displayUsername: "ejemplo.06" } });
-    const camion = await prisma.camion.findFirstOrThrow({ where: { sedeId: 1 } });
+  test.beforeAll(() => {
+    execSync("npx tsx pruebas-e2e/picking/preparar-envio.ts", { stdio: "inherit" });
+  });
 
-    // Limpiar envíos de prueba previos en sede 1 para un estado predecible
-    await prisma.lineaPreparacion.deleteMany({ where: { envio: { sedeId: 1 } } });
-    await prisma.detallePedidoFacturado.deleteMany({ where: { pedidoFacturado: { sedeId: 1 } } });
-    await prisma.pedidoFacturado.deleteMany({ where: { sedeId: 1 } });
-    await prisma.envio.deleteMany({ where: { sedeId: 1 } });
+  test.afterAll(() => {
+    execSync("npx tsx pruebas-e2e/picking/preparar-envio.ts limpiar", { stdio: "inherit" });
+  });
 
-    // Crear el envío del ejemplo de los tres clientes (specs/07)
-    const envio = await prisma.envio.create({
-      data: {
-        sedeId: 1,
-        tipo: "ruta",
-        numero: 1,
-        fechaEnvio: new Date("2026-10-18T00:00:00Z"),
-        programadoPara: new Date("2026-10-18T13:30:00-06:00"),
-        estadoId: estadoPrep.id,
-        enviadoPorId: usuarioBodega.id,
-        camionId: camion.id,
-        pilotoId: usuarioPiloto.id,
-        posicionCola: 1,
-        lineas: {
-          create: [
-            {
-              producto: "SULFATO DE SODIO",
-              lote: "5287",
-              pesoConversionKg: 25,
-              cantidadKg: 40,
-              marcado: false,
-              posicion: 1,
-            },
-            {
-              producto: "SULFATO DE SODIO",
-              lote: "9221",
-              pesoConversionKg: 25,
-              cantidadKg: 10,
-              marcado: false,
-              posicion: 2,
-            },
-          ],
-        },
-        pedidosFacturados: {
-          create: [
-            {
-              sedeId: 1,
-              numeroOdoo: "90001",
-              referencia: "XE-IN/SALIDA/90001",
-              cliente: "Cliente A",
-              sector: "Zona 1",
-              posicion: 1,
-              cargadoPorId: usuarioBodega.id,
-              detalles: {
-                create: [
-                  { producto: "SULFATO DE SODIO", lote: "5287", pesoConversionKg: 25, cantidadKg: 25, orden: 1 },
-                ],
-              },
-            },
-            {
-              sedeId: 1,
-              numeroOdoo: "90002",
-              referencia: "XE-IN/SALIDA/90002",
-              cliente: "Cliente B",
-              sector: "Zona 2",
-              posicion: 2,
-              cargadoPorId: usuarioBodega.id,
-              detalles: {
-                create: [
-                  { producto: "SULFATO DE SODIO", lote: "5287", pesoConversionKg: 25, cantidadKg: 15, orden: 1 },
-                ],
-              },
-            },
-            {
-              sedeId: 1,
-              numeroOdoo: "90003",
-              referencia: "XE-IN/SALIDA/90003",
-              cliente: "Cliente C",
-              sector: "Zona 3",
-              posicion: 3,
-              cargadoPorId: usuarioBodega.id,
-              detalles: {
-                create: [
-                  { producto: "SULFATO DE SODIO", lote: "9221", pesoConversionKg: 25, cantidadKg: 10, orden: 1 },
-                ],
-              },
-            },
-          ],
-        },
-      },
-    });
+  test("Criterio 8: sin violaciones serias de accesibilidad (axe)", async ({ page, context }) => {
+    await entrar(context);
+    await page.goto("/picking/bodega");
+    await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
-    envioIdEjemplo = envio.id;
+    const resultadosAxe = await new AxeBuilder({ page })
+      .disableRules(["color-contrast"]) // los contrastes los controla el design system
+      .analyze();
+
+    const fallosGraves = resultadosAxe.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
+    expect(fallosGraves).toEqual([]);
   });
 
   test("RF-SL-21 / RN-51 (CP-19): el envío muestra dos filas con lote resaltado y unidades correctas", async ({
@@ -120,7 +49,7 @@ test.describe("Módulo de Bodega E2E", () => {
     await page.goto("/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
-    const tarjeta = page.locator(`article[data-id="${envioIdEjemplo}"]`);
+    const tarjeta = page.locator("article.ped").first();
     await expect(tarjeta).toBeVisible();
 
     // Ver cuadro RUTA 1
@@ -151,7 +80,7 @@ test.describe("Módulo de Bodega E2E", () => {
     await page.goto("/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
-    const tarjeta = page.locator(`article[data-id="${envioIdEjemplo}"]`);
+    const tarjeta = page.locator("article.ped").first();
     await expect(tarjeta.locator(".ped-meta .prog")).toContainText("Programada 18/10/2026 · 13:30");
 
     // Abrir detalle
@@ -168,7 +97,7 @@ test.describe("Módulo de Bodega E2E", () => {
     await expect(modal).toContainText("90003 · Cliente C");
 
     // Cerrar detalle
-    await modal.getByRole("button", { name: "Cerrar" }).click();
+    await modal.locator(".modal-cerrar").click();
     await expect(modal).not.toBeVisible();
   });
 
@@ -177,7 +106,7 @@ test.describe("Módulo de Bodega E2E", () => {
     await page.goto("/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
-    const tarjeta = page.locator(`article[data-id="${envioIdEjemplo}"]`);
+    const tarjeta = page.locator("article.ped").first();
     const fila5287 = tarjeta.locator("tr", { hasText: "Lote 5287" });
     const botonMarca = fila5287.locator("button.marca");
 
@@ -189,7 +118,7 @@ test.describe("Módulo de Bodega E2E", () => {
     // Recargar y confirmar persistencia
     await page.reload();
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
-    const tarjetaRecargada = page.locator(`article[data-id="${envioIdEjemplo}"]`);
+    const tarjetaRecargada = page.locator("article.ped").first();
     const filaRecargada = tarjetaRecargada.locator("tr", { hasText: "Lote 5287" });
     await expect(filaRecargada.locator("button.marca")).toHaveClass(/on/);
 
@@ -214,7 +143,7 @@ test.describe("Módulo de Bodega E2E", () => {
     await page.goto("/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
-    const tarjeta = page.locator(`article[data-id="${envioIdEjemplo}"]`);
+    const tarjeta = page.locator("article.ped").first();
     const botonDespacho = tarjeta.getByRole("button", { name: "Ruta Despachada" });
 
     // Deshabilitado inicialmente
@@ -237,20 +166,7 @@ test.describe("Módulo de Bodega E2E", () => {
     await modalConfirmacion.getByRole("button", { name: "Ruta Despachada" }).click();
 
     // Ya no aparece en Bodega
-    await expect(page.locator(`article[data-id="${envioIdEjemplo}"]`)).not.toBeVisible();
+    await expect(page.locator("article.ped")).toHaveCount(0);
     await expect(page.locator(".vacio")).toContainText("No hay rutas ni pedidos por preparar");
-  });
-
-  test("Criterio 8: sin violaciones serias de accesibilidad (axe)", async ({ page, context }) => {
-    await entrar(context);
-    await page.goto("/picking/bodega");
-    await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
-
-    const resultadosAxe = await new AxeBuilder({ page })
-      .disableRules(["color-contrast"]) // los contrastes los controla el design system
-      .analyze();
-
-    const fallosGraves = resultadosAxe.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
-    expect(fallosGraves).toEqual([]);
   });
 });

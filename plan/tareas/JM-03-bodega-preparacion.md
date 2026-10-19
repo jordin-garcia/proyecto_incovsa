@@ -5,7 +5,7 @@ persona: josue
 responsable: Josué Menéndez
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JM-02, JG-07]
 programada: 2026-10-18
 requisitos: [RF-SL-19, RF-SL-20, RF-SL-21, RF-SL-22, RF-SL-23, RF-SL-24, RF-SL-35, RF-SL-74, RF-SL-75, RF-SL-76, RN-11, RN-20, RN-51, CU-03, CU-04]
@@ -69,3 +69,17 @@ npm run e2e -- pruebas-e2e/picking/bodega.spec.ts
 
 ## Notas
 - JC-04 se hace el mismo día. Para no esperarla, las pruebas crean los envíos y sus líneas de preparación directamente con Prisma en la base de pruebas, con los mismos datos de `specs/07` (ejemplo de los tres clientes). Si JC-04 ya está integrada, usa su función de envío. Para ver la pantalla con datos en local antes de JC-04, crea los envíos con un script de prueba, nunca en la semilla.
+
+## Resultado
+- **Implementación**:
+  - `src/modulos/bodega/esquemas.ts`: Esquemas Zod para marcado individual, marcado en bloque, ordenamiento por peso y despacho.
+  - `src/modulos/bodega/servicio.ts`: Lógica de negocio completa (`listarEnviosEnPreparacion`, `obtenerDetalleEnvio`, `marcarLinea`, `marcarTodasLineas`, `ordenarLineasPorPeso`, `despacharEnvio`). Manejo transaccional en despacho actualizando estado, creando `historialEstado` y registrando bitácora (`Cambio de estado`). Aislamiento multi-sede mediante enmascaramiento con `ErrorAcceso`.
+  - `src/modulos/bodega/acciones.ts`: Server Actions (`marcarLineaAccion`, `marcarTodoAccion`, `ordenarPorPesoAccion`, `despacharAccion`) protegidas con `exigirPermiso(sesion, "pk.bodega", sede.id)`, validación Zod y notificación reactiva con `avisarCambio(sede.id)`.
+  - `src/componentes/picking/bodega/`: Componentes modulares `TarjetaEnvio`, `ModalDetalle` y orquestador `BodegaCliente` con suscripción `useCambiosDeSede(sede.id)`.
+  - `src/app/picking/bodega/`: Página de servidor con `exigirPermiso` y estilos de `bodega.css` idénticos al prototipo (`estilos.css`).
+- **Verificación**:
+  - `npm run verificar` aprobado: formato, lint, tipos y 149 pruebas en Vitest (20 pruebas específicas de Bodega en `servicio.test.ts` y `acciones.test.ts`).
+  - `npm run build` aprobado: generación de ruta `/picking/bodega`.
+  - `pruebas-e2e/picking/bodega.spec.ts`: 15 pruebas Playwright aprobadas en teléfono, tableta y escritorio, incluyendo análisis de accesibilidad con axe.
+  - Evidencias visuales y dictamen de revisión en `plan/evidencias/JM-03/`.
+
