@@ -42,3 +42,9 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Pendiente o aviso para otros:
   - **CE-04:** reutilizar `listarUsuarios("sitio")`, `listarPermisos("sitio")` y los componentes de `src/componentes/usuarios/` en el panel del sitio.
   - **Todos:** no hay permiso `pk.usuarios`; la administración de cuentas es solo Gerencia/Soporte.
+
+## 2026-10-19 · CE-04 · Panel: usuarios del sitio
+- Hecho: `/panel/usuarios` con alta, edición, restablecimiento y eliminación lógica para el sistema `sitio`. Componentes compartidos con `sistema="sitio"`. Acciones `*SitioAccion`. E2E 390/768/1440 con axe. Solo Gerencia y Soporte.
+- Decisiones: esquemas de sitio sin sede; al degradar `ambos` desde el sitio se vacían sedes; textos en `textos.ts`.
+- Pendiente o aviso para otros:
+  - **Todos:** no hay permiso `sit.usuarios`; la sección del panel sigue abierta solo con `esAccesoTotal`.

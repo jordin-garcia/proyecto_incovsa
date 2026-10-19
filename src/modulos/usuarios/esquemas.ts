@@ -76,27 +76,36 @@ function revisarSedes(sistema: SistemaPestana, valor: { rol: string; sedesIds: n
   }
 }
 
-export const esquemaCrearUsuarioPicking = z
-  .object({
-    ...campos,
-    usuario: esquemaNombreUsuario,
-    clave: z.string({ error: MENSAJE_CLAVE_CORTA }),
-    confirmarClave: z.string({ error: MENSAJE_CLAVE_DISTINTA }),
-  })
-  .superRefine((valor, ctx) => {
-    revisarClave(valor, ctx);
-    revisarSedes("picking", valor, ctx);
-  });
+const camposCrear = {
+  ...campos,
+  usuario: esquemaNombreUsuario,
+  clave: z.string({ error: MENSAJE_CLAVE_CORTA }),
+  confirmarClave: z.string({ error: MENSAJE_CLAVE_DISTINTA }),
+};
 
-export const esquemaEditarUsuarioPicking = z
-  .object({
-    ...campos,
-    id: z.string().min(1),
-    activo: z.boolean(),
-  })
-  .superRefine((valor, ctx) => {
-    revisarSedes("picking", valor, ctx);
-  });
+const camposEditar = {
+  ...campos,
+  id: z.string().min(1),
+  activo: z.boolean(),
+};
+
+export const esquemaCrearUsuarioPicking = z.object(camposCrear).superRefine((valor, ctx) => {
+  revisarClave(valor, ctx);
+  revisarSedes("picking", valor, ctx);
+});
+
+export const esquemaCrearUsuarioSitio = z.object(camposCrear).superRefine((valor, ctx) => {
+  revisarClave(valor, ctx);
+  revisarSedes("sitio", valor, ctx);
+});
+
+export const esquemaEditarUsuarioPicking = z.object(camposEditar).superRefine((valor, ctx) => {
+  revisarSedes("picking", valor, ctx);
+});
+
+export const esquemaEditarUsuarioSitio = z.object(camposEditar).superRefine((valor, ctx) => {
+  revisarSedes("sitio", valor, ctx);
+});
 
 export const esquemaEliminarUsuario = z.object({
   id: z.string().min(1),

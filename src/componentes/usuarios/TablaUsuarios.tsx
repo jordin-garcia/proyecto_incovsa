@@ -5,8 +5,9 @@ import { Icono } from "@/componentes/comunes/iconos";
 import { useMensajes } from "@/componentes/comunes/Mensajes";
 import { Tabla } from "@/componentes/comunes/Tabla";
 import { VentanaConfirmacion } from "@/componentes/comunes/VentanaConfirmacion";
-import type { UsuarioVisible } from "@/modulos/usuarios/tipos";
+import type { SistemaPestana, UsuarioVisible } from "@/modulos/usuarios/tipos";
 import { ResumenPermisos } from "./ResumenPermisos";
+import { TEXTOS_USUARIO } from "./textos";
 
 function iniciales(nombre: string) {
   const partes = nombre.split(/\s+/).filter((parte) => /^[A-Za-zÁÉÍÓÚÑáéíóúñ]/.test(parte[0] ?? ""));
@@ -21,17 +22,20 @@ function iniciales(nombre: string) {
 export function TablaUsuarios({
   usuarios,
   usuarioActualId,
+  sistema = "picking",
   alEditar,
   alRestablecer,
   alEliminar,
 }: {
   usuarios: readonly UsuarioVisible[];
   usuarioActualId: string;
+  sistema?: SistemaPestana;
   alEditar: (usuario: UsuarioVisible) => void;
   alRestablecer: (usuario: UsuarioVisible) => void;
   alEliminar: (id: string) => Promise<void>;
 }) {
   const mensaje = useMensajes();
+  const textos = TEXTOS_USUARIO[sistema];
   return (
     <Tabla>
       <thead>
@@ -39,8 +43,9 @@ export function TablaUsuarios({
           <th>Nombre</th>
           <th>Usuario</th>
           <th>Rol</th>
-          <th>Sedes</th>
-          <th>Permisos del picking</th>
+          {textos.muestraSedes && <th>Sedes</th>}
+          <th>{textos.columnaPermisos}</th>
+          {textos.muestraCorreo && <th>Correo</th>}
           <th>Estado</th>
           <th></th>
         </tr>
@@ -62,12 +67,13 @@ export function TablaUsuarios({
               <td>
                 {usuario.rol}
                 {total ? " " : ""}
-                {total && <span className="chip">+ sitio</span>}
+                {total && <span className="chip">{textos.chipOtro}</span>}
               </td>
-              <td>{usuario.accesoTotal ? "Todas" : usuario.sedesNombres.join(", ") || "—"}</td>
+              {textos.muestraSedes && <td>{usuario.accesoTotal ? "Todas" : usuario.sedesNombres.join(", ") || "—"}</td>}
               <td>
                 <ResumenPermisos accesoTotal={usuario.accesoTotal} cantidad={usuario.permisosCodigos.length} />
               </td>
+              {textos.muestraCorreo && <td className="muted">{usuario.correo || "Sin correo"}</td>}
               <td>
                 <span className={usuario.activo ? "chip chip-v" : "chip"}>
                   {usuario.activo ? "Activo" : "Inactivo"}

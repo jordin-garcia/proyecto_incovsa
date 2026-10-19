@@ -8,14 +8,23 @@ import { DialogClose, DialogDescription, DialogTitle } from "@/componentes/ui/di
 import { Input } from "@/componentes/ui/input";
 import { useMensajes } from "@/componentes/comunes/Mensajes";
 import { esquemaRestablecerClave, type EntradaRestablecerClave } from "@/modulos/usuarios/esquemas";
-import { restablecerClaveAccion } from "@/modulos/usuarios/acciones";
-import type { UsuarioVisible } from "@/modulos/usuarios/tipos";
+import { restablecerClaveAccion, restablecerClaveSitioAccion } from "@/modulos/usuarios/acciones";
+import type { SistemaPestana, UsuarioVisible } from "@/modulos/usuarios/tipos";
 
 type Valores = { id: string; clave: string; confirmarClave: string };
 
-export function DialogoClave({ usuario, alCerrar }: { usuario: UsuarioVisible; alCerrar: () => void }) {
+export function DialogoClave({
+  usuario,
+  sistema = "picking",
+  alCerrar,
+}: {
+  usuario: UsuarioVisible;
+  sistema?: SistemaPestana;
+  alCerrar: () => void;
+}) {
   const router = useRouter();
   const mensaje = useMensajes();
+  const restablecer = sistema === "sitio" ? restablecerClaveSitioAccion : restablecerClaveAccion;
   const formulario = useForm<Valores, unknown, EntradaRestablecerClave>({
     resolver: zodResolver(esquemaRestablecerClave),
     mode: "onBlur",
@@ -27,7 +36,7 @@ export function DialogoClave({ usuario, alCerrar }: { usuario: UsuarioVisible; a
   return (
     <form
       onSubmit={formulario.handleSubmit(async (valores) => {
-        const resultado = await restablecerClaveAccion(valores);
+        const resultado = await restablecer(valores);
         if (!resultado.ok) {
           mensaje(resultado.error, "error");
           return;

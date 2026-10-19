@@ -1,0 +1,59 @@
+.lista-usuarios td.der {
+  white-space: nowrap;
+}
+
+.fila-usuario {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.fila-usuario .avatar {
+  width: 34px;
+  height: 34px;
+  font-size: 12.5px;
+}
+
+.permisos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.permisos fieldset {
+  border: 1px solid var(--g150);
+  border-radius: var(--r);
+  padding: 10px 14px 12px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.permisos legend {
+  font: 700 11.5px/1 var(--f-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--g600);
+  padding: 0 6px;
+}
+
+.modal .campo small,
+.modal .muted {
+  color: var(--g600);
+}
+
+.permisos .chk {
+  font-size: 14px;
+}
+
+.apagado {
+  opacity: 0.5;
+}
+
+@media (max-width: 720px) {
+  .permisos {
+    grid-template-columns: 1fr;
+  }
+}

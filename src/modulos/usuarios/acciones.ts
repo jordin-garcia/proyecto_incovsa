@@ -6,11 +6,14 @@ import { ErrorNegocio, MENSAJE_ERROR_GENERAL, aResultadoDeError } from "@/lib/er
 import { ErrorAcceso } from "@/modulos/permisos/servicio";
 import {
   esquemaCrearUsuarioPicking,
+  esquemaCrearUsuarioSitio,
   esquemaEditarUsuarioPicking,
+  esquemaEditarUsuarioSitio,
   esquemaEliminarUsuario,
   esquemaRestablecerClave,
 } from "./esquemas";
 import { crearUsuario, editarUsuario, eliminarUsuario, restablecerClave, type ContextoUsuario } from "./servicio";
+import type { SistemaPestana } from "./tipos";
 
 function leer<T>(
   esquema: {
@@ -25,52 +28,67 @@ function leer<T>(
   return resultado.data;
 }
 
-async function sesionAdmin() {
-  const sesion = await obtenerSesion("picking");
-  if (!sesion || !esAccesoTotal(sesion.usuario.rol)) throw new ErrorAcceso();
+async function sesionAdmin(sistema: SistemaPestana) {
+  const sesion = await obtenerSesion(sistema);
+  if (!sesion || sesion.sistema !== sistema || !esAccesoTotal(sesion.usuario.rol)) throw new ErrorAcceso();
   return sesion;
 }
 
-function contexto(sesion: SesionActual): ContextoUsuario {
-  return { actorId: sesion.usuario.id, actorRol: sesion.usuario.rol, sistema: "picking" };
+function contexto(sesion: SesionActual, sistema: SistemaPestana): ContextoUsuario {
+  return { actorId: sesion.usuario.id, actorRol: sesion.usuario.rol, sistema };
+}
+
+async function guardar<T>(sistema: SistemaPestana, trabajo: (sesion: SesionActual) => Promise<T>) {
+  try {
+    const sesion = await sesionAdmin(sistema);
+    return { ok: true as const, datos: await trabajo(sesion) };
+  } catch (error) {
+    return aResultadoDeError(error);
+  }
 }
 
 export async function crearUsuarioAccion(entrada: unknown) {
-  try {
-    const sesion = await sesionAdmin();
-    const datos = leer(esquemaCrearUsuarioPicking, entrada);
-    return { ok: true as const, datos: await crearUsuario(datos, contexto(sesion)) };
-  } catch (error) {
-    return aResultadoDeError(error);
-  }
+  return guardar("picking", (sesion) =>
+    crearUsuario(leer(esquemaCrearUsuarioPicking, entrada), contexto(sesion, "picking")),
+  );
 }
 
 export async function editarUsuarioAccion(entrada: unknown) {
-  try {
-    const sesion = await sesionAdmin();
-    const datos = leer(esquemaEditarUsuarioPicking, entrada);
-    return { ok: true as const, datos: await editarUsuario(datos, contexto(sesion)) };
-  } catch (error) {
-    return aResultadoDeError(error);
-  }
+  return guardar("picking", (sesion) =>
+    editarUsuario(leer(esquemaEditarUsuarioPicking, entrada), contexto(sesion, "picking")),
+  );
 }
 
 export async function eliminarUsuarioAccion(entrada: unknown) {
-  try {
-    const sesion = await sesionAdmin();
-    const datos = leer(esquemaEliminarUsuario, entrada);
-    return { ok: true as const, datos: await eliminarUsuario(datos, contexto(sesion)) };
-  } catch (error) {
-    return aResultadoDeError(error);
-  }
+  return guardar("picking", (sesion) =>
+    eliminarUsuario(leer(esquemaEliminarUsuario, entrada), contexto(sesion, "picking")),
+  );
 }
 
 export async function restablecerClaveAccion(entrada: unknown) {
-  try {
-    const sesion = await sesionAdmin();
-    const datos = leer(esquemaRestablecerClave, entrada);
-    return { ok: true as const, datos: await restablecerClave(datos, contexto(sesion)) };
-  } catch (error) {
-    return aResultadoDeError(error);
-  }
+  return guardar("picking", (sesion) =>
+    restablecerClave(leer(esquemaRestablecerClave, entrada), contexto(sesion, "picking")),
+  );
+}
+
+export async function crearUsuarioSitioAccion(entrada: unknown) {
+  return guardar("sitio", (sesion) => crearUsuario(leer(esquemaCrearUsuarioSitio, entrada), contexto(sesion, "sitio")));
+}
+
+export async function editarUsuarioSitioAccion(entrada: unknown) {
+  return guardar("sitio", (sesion) =>
+    editarUsuario(leer(esquemaEditarUsuarioSitio, entrada), contexto(sesion, "sitio")),
+  );
+}
+
+export async function eliminarUsuarioSitioAccion(entrada: unknown) {
+  return guardar("sitio", (sesion) =>
+    eliminarUsuario(leer(esquemaEliminarUsuario, entrada), contexto(sesion, "sitio")),
+  );
+}
+
+export async function restablecerClaveSitioAccion(entrada: unknown) {
+  return guardar("sitio", (sesion) =>
+    restablecerClave(leer(esquemaRestablecerClave, entrada), contexto(sesion, "sitio")),
+  );
 }

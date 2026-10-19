@@ -15,7 +15,16 @@ vi.mock("@/lib/sesion", async (importOriginal) => {
   return { ...real, obtenerSesion: async () => estado.sesion };
 });
 
-import { crearUsuarioAccion, editarUsuarioAccion, eliminarUsuarioAccion, restablecerClaveAccion } from "./acciones";
+import {
+  crearUsuarioAccion,
+  crearUsuarioSitioAccion,
+  editarUsuarioAccion,
+  editarUsuarioSitioAccion,
+  eliminarUsuarioAccion,
+  eliminarUsuarioSitioAccion,
+  restablecerClaveAccion,
+  restablecerClaveSitioAccion,
+} from "./acciones";
 
 const MENSAJE_PERMISO = "No tiene permisos para acceder a este módulo.";
 const CLAVE = "Clave-accion-1";
@@ -136,5 +145,79 @@ describe("acciones de usuarios del picking", () => {
     ).toMatchObject({
       usuarioId: id,
     });
+  });
+
+  it("criterio 4: sin sesión del sitio no se crean, editan, restablecen ni eliminan usuarios del sitio", async () => {
+    const entrada = {
+      nombre: "Ana",
+      usuario: "ana.sitio",
+      clave: CLAVE,
+      confirmarClave: CLAVE,
+      rol: "Operativo",
+      correo: "",
+      sedesIds: [],
+      permisosCodigos: ["sit.doc.ver"],
+    };
+    estado.sesion = { ...facturador, sistema: "sitio" };
+    expect(await crearUsuarioSitioAccion(entrada)).toEqual({ ok: false, error: MENSAJE_PERMISO });
+    expect(await editarUsuarioSitioAccion({ ...entrada, id: "x", activo: true })).toEqual({
+      ok: false,
+      error: MENSAJE_PERMISO,
+    });
+    expect(await restablecerClaveSitioAccion({ id: "x", clave: CLAVE, confirmarClave: CLAVE })).toEqual({
+      ok: false,
+      error: MENSAJE_PERMISO,
+    });
+    expect(await eliminarUsuarioSitioAccion({ id: "x" })).toEqual({ ok: false, error: MENSAJE_PERMISO });
+
+    estado.sesion = {
+      sistema: "picking",
+      usuario: { id: "u-gerencia", usuario: "gerencia", nombre: "Gerencia", rol: "Gerencia" },
+      permisos: [],
+      sedes: [],
+    };
+    expect(await crearUsuarioSitioAccion(entrada)).toEqual({ ok: false, error: MENSAJE_PERMISO });
+  });
+
+  it("RF-SW-13: Gerencia crea por la acción del sitio y la respuesta no lleva la contraseña", async () => {
+    await limpiarTablasDeNegocio();
+    const id = randomUUID();
+    const username = claveAccesoInterna("ambos", "gerencia.sitio");
+    await prisma.usuario.create({
+      data: {
+        id,
+        name: "Gerencia sitio",
+        email: correoInterno(username),
+        username,
+        displayUsername: "gerencia.sitio",
+        sistema: "ambos",
+        rol: "Gerencia",
+      },
+    });
+    estado.sesion = {
+      sistema: "sitio",
+      usuario: { id, usuario: "gerencia.sitio", nombre: "Gerencia sitio", rol: "Gerencia" },
+      permisos: [],
+      sedes: [],
+    };
+    const resultado = await crearUsuarioSitioAccion({
+      nombre: "Lector Acción",
+      usuario: "Lector.Accion",
+      clave: CLAVE,
+      confirmarClave: CLAVE,
+      rol: "Operativo",
+      correo: "",
+      sedesIds: [],
+      permisosCodigos: ["sit.doc.ver"],
+    });
+    expect(resultado.ok).toBe(true);
+    if (!resultado.ok) return;
+    expect(resultado.datos).toMatchObject({
+      usuario: "lector.accion",
+      sistema: "sitio",
+      sedesIds: [],
+      permisosCodigos: ["sit.doc.ver"],
+    });
+    expect(JSON.stringify(resultado)).not.toContain(CLAVE);
   });
 });
