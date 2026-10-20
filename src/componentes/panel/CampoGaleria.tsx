@@ -107,8 +107,10 @@ export function CampoGaleria({
             disabled={deshabilitado}
             onClick={() => input.current?.click()}
           >
-            <Icono nombre="subir" />
-            <span>{elegir}</span>
+            <span data-aviso>
+              <Icono nombre="subir" />
+              <span>{elegir}</span>
+            </span>
           </Button>
           <input
             ref={input}

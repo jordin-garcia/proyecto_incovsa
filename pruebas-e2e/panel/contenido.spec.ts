@@ -49,6 +49,18 @@ test("RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y 
   await logotipo.locator("[data-galeria]").dispatchEvent("drop", { dataTransfer: arrastre });
   await arrastre.dispose();
   await expect(logotipo.getByRole("img")).toHaveAttribute("src", imagenAnterior!);
+  for (const nombre of ["Logotipo de INCOVSA", "Logotipo de Inquiserca"]) {
+    const campo = page.getByRole("region", { name: nombre, exact: true }).locator("[data-galeria]");
+    const limites = await campo.boundingBox();
+    const imagen = campo.getByRole("img");
+    const vista = await imagen.boundingBox();
+    expect(vista!.x).toBeGreaterThanOrEqual(limites!.x);
+    expect(vista!.x + vista!.width).toBeLessThanOrEqual(limites!.x + limites!.width);
+    const aviso = await campo.locator("[data-aviso]").boundingBox();
+    expect(vista!.y + vista!.height).toBeLessThanOrEqual(aviso!.y);
+    await expect(campo.locator("[data-aviso]")).toHaveCSS("font-size", "13px");
+    await expect(campo.locator("[data-aviso]")).toHaveCSS("border-radius", "10px");
+  }
   expect(publicaciones).toBe(0);
   expect(
     (await new AxeBuilder({ page }).analyze()).violations.filter((v) =>
