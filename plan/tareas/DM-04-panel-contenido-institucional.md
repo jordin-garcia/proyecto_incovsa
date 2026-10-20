@@ -5,7 +5,7 @@ persona: daniela
 responsable: Daniela Marín
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [DM-01, JG-07]
 programada: 2026-10-18
 requisitos: [RF-SW-07, RF-SW-23, RF-SW-28, RF-SW-29, RN-56, RNF-05, CU-07]
@@ -78,3 +78,16 @@ Implementados almacenamiento de imágenes, campo de galería, resumen en `/panel
 La usuaria autorizó avanzar DM-04 y esperar a DM-02 para integrar. Inicio, cabecera y pie aún no existen: faltan las verificaciones públicas de los criterios 3 y 5. La tarea permanece pendiente y no se declara terminada.
 
 Evidencia, interfaces, pruebas, revisión y capturas: [avance de DM-04](../../pruebas-e2e/panel/evidencias/README.md). Verificación local: 219 pruebas y compilación correctas; las 12 pruebas propias de Playwright pasan. La suite general detectó además un contraste insuficiente en Bodega, ajeno a estos cambios, que debe atender su responsable.
+
+## Resultado
+
+Se completó el 20/10/2026 después de incorporar `develop` con DM-02 y la corrección de Bodega del coordinador. Se conservaron las lecturas públicas y ambas entradas de bitácora al resolver los conflictos de integración.
+
+- **Almacenamiento:** `src/modulos/almacenamiento/servicio.ts` ofrece `guardarImagen(bytes)` y `borrarImagen(direccion)`. Valida JPG, PNG y WebP por contenido con `file-type`, limita a 5 MB, recodifica con `sharp` a WebP de hasta 2000 px, elimina metadatos y conserva transparencia. Genera claves en el servidor. Usa disco en desarrollo o R2 según la configuración existente; no borra los originales de `/marca/`. La ruta GET `/api/imagenes/[...clave]` devuelve 404 en producción.
+- **Panel:** `/panel` conserva la entrada de JG-07; `/panel/resumen` muestra tarjetas y estados según los permisos. `/panel/contenido` administra portada, logotipos, misión, visión, historia y las cinco posiciones de valores. `CampoGaleria` acepta imágenes elegidas o arrastradas, permite quitar y mover antes, y conserva los borradores hasta publicar. Los logotipos y valores se publican al elegirlos, como el prototipo.
+- **Publicación segura:** `publicarContenido(FormData)` exige sesión del sitio y `sit.contenido`, valida con Zod y llama a `guardarPublicacion`. Contenido y bitácora «Cambio de contenido del sitio» se guardan en la misma transacción. Solo se conservan referencias de imágenes que pertenecen al bloque; las sustituidas o retiradas se borran. El formulario usa `/api/imagenes/publicar`, con control de origen, sesión, permiso y tamaño, para admitir imágenes de 5 MB sin modificar el límite de las acciones de Odoo. Revalida el layout raíz para actualizar el sitio.
+- **Integración pública:** se conservan `leerEstructuraSitio()` y `leerInicioSitio()` de DM-02. El contrato público añade `logotipoInquiserca: string | null`; quitarlo devuelve `null` y recuperarlo devuelve el original. Las pruebas verifican misión e imagen en Inicio sin sesión y sustitución del logotipo en cabecera y pie.
+- **Alcance autorizado:** la usuaria autorizó cerrar DM-04 comprobando Inquiserca en la base y en el contrato público. Su comprobación visual en Quiénes somos queda expresamente para DM-06, cuya pantalla aún no existe. No se implementó DM-06 ni se cambiaron requisitos de producto.
+- **Cómo reutilizarlo:** DM-05 y DM-07 pueden usar `guardarImagen` y `borrarImagen` después de autorizar su permiso; `CampoGaleria` trabaja con `string | File` y no publica por sí solo. Sus operaciones deben validar propietario y límite de cinco imágenes. DM-06 debe consumir `logotipoInquiserca` y comprobar que `null` elimina el logotipo y su alternancia.
+- **Verificación:** `npm run verificar` pasó formato, lint, tipos y **279 pruebas en 30 archivos**. `npm run build` pasó. Las **18 pruebas propias de Playwright** pasaron en 390, 768 y 1440 px, con axe, carga real de 5 MB, persistencia, limpieza física y publicación pública. La suite completa aprobó **178 pruebas**, con **2 omisiones preexistentes de Facturación** y sin fallos. Plan válido: 63 tareas; sin archivos protegidos no permitidos para InAlexa. Revisión independiente: **LISTO**, sin hallazgos pendientes.
+- **Evidencia:** [verificación, capturas e interfaces](../../pruebas-e2e/panel/evidencias/README.md) y [revisión en contexto limpio](../../pruebas-e2e/panel/evidencias/revision.md). No se agregaron dependencias, migraciones ni credenciales de servicios externos. La configuración de producción de R2 sigue siendo CE-05/P-94.

@@ -142,6 +142,8 @@ test("RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visi
   page,
   browser,
 }, info) => {
+  // Hasta cinco imágenes a intervalos de 5 s: se permite recorrer el ciclo para ver la recién publicada.
+  test.setTimeout(60_000);
   await page.goto("/panel/contenido");
   const bloque = page.getByRole("region", { name: "Misión", exact: true });
   const textoAnterior = await bloque.getByLabel("Texto", { exact: true }).inputValue();
@@ -167,13 +169,21 @@ test("RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visi
     await expect(mision.locator(".mv-txt")).toContainText("Misión publicada desde el panel · DM-04");
     await expect(mision.locator(`img[src="${imagen}"]`)).toBeAttached();
     await mision.scrollIntoViewIfNeeded();
+    await expect(mision.locator(`img[src="${imagen}"]`)).toHaveClass(/on/, { timeout: 25_000 });
+    await expect
+      .poll(() =>
+        mision
+          .locator(`img[src="${imagen}"]`)
+          .evaluate((img) => (img as HTMLImageElement).complete && (img as HTMLImageElement).naturalWidth > 0),
+      )
+      .toBe(true);
     const texto = (await mision.locator(".mv-txt").boundingBox())!;
     const galeria = (await mision.locator(".mv-gal").boundingBox())!;
     if (page.viewportSize()!.width > 900) expect(texto.x + texto.width).toBeLessThanOrEqual(galeria.x);
     else expect(texto.y + texto.height).toBeLessThanOrEqual(galeria.y);
     expect(errores).toEqual([]);
     await publico.screenshot({
-      fullPage: true,
+      fullPage: false,
       path: `pruebas-e2e/panel/evidencias/publicacion-inicio-${page.viewportSize()!.width}.png`,
     });
     await info.attach("publicacion-en-inicio", { body: await publico.screenshot(), contentType: "image/png" });
