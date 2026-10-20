@@ -5,7 +5,7 @@ persona: josue
 responsable: Josué Menéndez
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JM-03]
 programada: 2026-10-19
 requisitos: [RNF-08, RN-38]
@@ -71,4 +71,16 @@ npm run e2e -- --workers=1
 
 - Reproducción del 19/10/2026 en DM-02: suite completa con un trabajador, 126 aprobadas, 2 omisiones preexistentes de Facturación y 1 fallo de contraste de Bodega. Las 15 pruebas de DM-02 pasaron.
 - El fallo persiste de forma aislada al seleccionar los archivos de permisos e Inicio (este último proporciona la carga de variables), con `--project=escritorio --grep "RN-38: ejemplo.05" --workers=1`.
-- Tras integrar esta corrección, Daniela debe actualizar la rama de DM-02 y repetir la suite completa antes de cerrarla.
+- Tras integrar esta corrección, el coordinador termina DM-02 a partir de la rama de Daniela (protocolo §E4) y repite la suite completa antes de cerrarla.
+
+## Resultado
+
+Lo terminó el coordinador (protocolo §E1), a partir de la reproducción que dejó Daniela en DM-02.
+
+- **Qué se hizo:** la prueba de Bodega ya no desactiva `color-contrast`. Ahora analiza con todas las reglas de axe cuatro estados en cada tamaño: Bodega con datos (una ruta en Quetzaltenango), el pedido que recoge el cliente con una línea «Sin lote» y su Detalle (Gerencia en Guatemala), líneas marcadas, Detalle de Ruta y Bodega vacía (Gerencia en Escuintla, donde las pruebas no crean envíos). El pedido va a otra sede para no coincidir con `RN-38: ejemplo.05 en picking solo ve sus módulos`, que analiza la Bodega de Quetzaltenango sin exclusiones. Antes de medir espera a que terminen las animaciones finitas de entrada.
+- **Correcciones**, solo en `src/app/picking/bodega/bodega.css` y con tokens existentes: `--g600` en `.ped-pie .muted`, `tr.lista .muted`, `tr.lista .cod`, `tr.lista .kg`, `.lote.sin`, `.det-env small` y `.det-g-cab .muted` (precedente de JG-05). La etiqueta «RUTA» de `.ped-num` pierde la opacidad 0.75 (de 4.44:1 a 6.55:1). No hizo falta tocar `BodegaCliente.tsx` ni `TarjetaEnvio.tsx`: el texto de la cabecera ya usaba `--g600` desde JC-04 (#81), y por eso `RN-38: ejemplo.05 en picking solo ve sus módulos` ya pasaba en `develop`.
+- **Detalle de Ruta en teléfono:** axe completo encontró además `scrollable-region-focusable`: la lista de pedidos facturados y cada tabla se desplazan, pero no podían enfocarse con teclado. En `ModalDetalle.tsx` esas zonas llevan `tabIndex={0}`, `role="region"` y un nombre accesible («Pedidos facturados» y «Productos del pedido <número>»), sin cambios visibles.
+- **Decisión del coordinador:** el cuadro lima del pedido que recoge el cliente conserva exactamente los colores del prototipo, con la etiqueta «PEDIDO» en opacidad 0.75 (2.76:1). Es una excepción documentada a RNF-08 en `specs/18` y el único nodo que excluye la prueba (`.exclude(".ped-num.recoge small")`).
+- **Apoyo de pruebas:** `pruebas-e2e/picking/preparar-envio.ts` acepta el tipo y la sede como argumentos (`crear <numero> pedido <sede>`). El pedido se crea sin camión ni piloto y con una línea y un detalle sin lote.
+- **Cómo usarlo:** cualquier pantalla nueva de Bodega debe pasar `violacionesGraves(page)` de `bodega.spec.ts` sin exclusiones adicionales. Para textos secundarios sobre fondos claros, usa `--g600`, no `--g500`.
+

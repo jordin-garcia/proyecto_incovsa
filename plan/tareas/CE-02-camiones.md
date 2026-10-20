@@ -5,7 +5,7 @@ persona: carlos
 responsable: Carlos Hugo Escobar
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [CE-01, JG-07]
 programada: 2026-10-18
 requisitos: [RF-SL-04, RN-17, CU-13]
@@ -57,3 +57,21 @@ npm run e2e -- pruebas-e2e/picking/camiones.spec.ts
 
 ## Fuera de alcance
 - Usuarios (CE-03 y CE-04).
+
+## Resultado
+
+La pestaña Camiones de `/picking/configuracion` crea, edita y elimina camiones de las sedes del usuario. Eliminar escribe `eliminadoEn`. La fila, las rutas y la bitácora se quedan. Si el camión está elegido en «Envío por camión» de Facturación, no se elimina. `eliminarCamion` avisa con el texto del prototipo y la lista trae `elegidoEnFacturacion` para el diálogo «No se puede eliminar».
+
+`camionesActivosDeSede(sedeId)` está en `src/modulos/camiones/servicio.ts`. Devuelve los camiones activos de esa sede, del id más bajo al más alto. Cada uno trae `id`, `identificacion`, `capacidadKg` y `sedeId`. `capacidadKg` es texto con tres decimales, por ejemplo `3400.000`. La función no revisa la sesión. Quien la llama ya tiene que haber autorizado la sede.
+
+**JC-04.** Facturación puede reemplazar la consulta de camiones de `src/modulos/envios/opciones.ts` por `camionesActivosDeSede`. El nombre del desplegable es `identificacion`. La capacidad del medidor es `capacidadKg`.
+
+Las acciones `crearCamionAccion`, `editarCamionAccion` y `eliminarCamionAccion` exigen sesión de picking y el permiso `pk.cfg.camiones`. La sede elegida pasa por `exigirPermiso`. La bitácora usa las operaciones "Creación de camión", "Edición de camión" y "Eliminación de camión". `detalle.resumen` guarda el texto del prototipo.
+
+Gerencia y Soporte ven la pestaña Usuarios con la cuenta de usuarios del picking. El alta, la edición y la baja de esas cuentas quedan en CE-03.
+
+Verificación local, el 19/10/2026.
+
+- `npm run verificar` pasó. Formato, lint, tipos y 249 pruebas.
+- `npm run build` pasó. La ruta `/picking/configuracion` queda dinámica.
+- `npm run e2e -- pruebas-e2e/picking/camiones.spec.ts` pasó. 9 pruebas, en 390, 768 y 1440 px, con color-contrast activo y sin violaciones serias de axe.
