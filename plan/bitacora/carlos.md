@@ -84,3 +84,11 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
   - **Jordin:** CE-07 agregó `scripts/lib-respaldo.mjs` y `scripts/respaldo.test.mjs` (regla de retención/confirmación y sus pruebas). `convenciones.md` §2 deja `scripts/**` en tu zona salvo `respaldo.sh`; aquí son soporte directo de ese script.
   - **CE-08:** instalar en el VPS Node 24 y rclone en el `PATH` del usuario de Docker, configurar el remoto del bucket privado y el cron `15 2 * * * cd "$HOME/incovsa" && set -a && . ./.env && set +a && ./scripts/respaldo.sh` (misma carpeta `~/incovsa` del despliegue CE-06). `RCLONE_DEST` sale de `.env`. La contraseña no se imprime.
   - **CE-11:** el apartado de respaldo y restauración del Documento 5 puede partir de `evidencia/CE-07/README.md`. La prueba contra R2 queda para cuando CE-08 tenga la cuenta.
+
+## 2026-10-20 · CE-08 · Preparación del VPS, del dominio y de Cloudflare R2 — bloqueada
+- Hecho: guía y scripts en `evidencia/CE-08/` (`preparar-vps.sh`, `verificar-vps.sh`, `pasos-hugo.md`, `bloqueo.md`). Comentario `IMAGEN_APP` en `.env.produccion.example`. Tarea en `estado: bloqueada` con campo `bloqueo` (P-10, P-93, P-94). Comprobado: no hay environment GitHub `produccion` ni secretos `VPS_*`; el agente recibe 403 al intentar crearlos.
+- Decisiones: no se marca hecha sin evidencia real de SSH/UFW/HTTPS/R2/despliegue. Los scripts viven en `evidencia/CE-08/` (no en `scripts/`, zona de Jordin salvo respaldo/restaurar). Secretos solo los escribe Carlos en el gestor, el VPS y GitHub (decisión 70).
+- Pendiente o aviso para otros:
+  - **Jordin:** CE-08 bloqueada por P-10 / P-93 / P-94. Pedir al Ing. William IP del VPS, DNS de `incovsa.com` y correo INCOVSA para Cloudflare a más tardar 28/10 (decisión 73). Si el DNS no pasa a Cloudflare, avisar también a Daniela (decisión 32).
+  - **Daniela:** si INCOVSA no mueve el DNS a Cloudflare, las imágenes no irán por `imagenes.incovsa.com` y hace falta la ruta propia (decisión 32).
+  - **Carlos:** en la Mac, con `gh` como `carloshugoeg`, crear `environment: produccion` y los secretos `VPS_*` cuando exista el VPS; seguir `evidencia/CE-08/pasos-hugo.md`.

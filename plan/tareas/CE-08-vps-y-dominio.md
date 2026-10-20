@@ -5,7 +5,8 @@ persona: carlos
 responsable: Carlos Hugo Escobar
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: bloqueada
+bloqueo: Faltan accesos de INCOVSA — VPS (P-10), DNS de incovsa.com en Cloudflare (P-93) y cuentas Cloudflare/R2 (P-94). El environment GitHub "produccion" y los secretos VPS_* aún no existen; el agente no puede crearlos (403). Carlos los carga en la Mac cuando INCOVSA entregue IP, DNS y R2. Guía en evidencia/CE-08/.
 depende_de: [CE-06, CE-07]
 programada: 2026-10-28
 requisitos: [RNF-09, RNF-10, RNF-12]
@@ -48,3 +49,20 @@ Dejar el VPS de INCOVSA, el DNS de `incovsa.com` en Cloudflare y los buckets de 
 
 ## Notas
 - Las credenciales de producción nunca se guardan en el equipo de Carlos fuera del gestor de contraseñas, ni en ningún archivo del repositorio (decisión 70). El inventario de servicios y accesos va en el Anexo J (CE-12), sin las credenciales.
+
+## Resultado
+
+**Estado: bloqueada** (protocolo §C). No se cumplió ningún criterio de aceptación: no hay VPS, DNS ni R2 reales.
+
+**Qué quedó en el repo para cuando INCOVSA entregue el acceso:**
+
+- `evidencia/CE-08/README.md` — mapa de pendientes y orden de trabajo.
+- `evidencia/CE-08/pasos-hugo.md` — checklist de Carlos (VPS, R2, DNS, secretos GitHub, cron CE-07, prueba de despliegue).
+- `evidencia/CE-08/preparar-vps.sh` — endurecimiento idempotente (Ubuntu 24.04, unattended-upgrades, SSH solo llave, sin root login, usuario de despliegue, UFW 22/80/443, Docker + Compose, `~/incovsa`).
+- `evidencia/CE-08/verificar-vps.sh` — comprueba el criterio 1 y la carpeta de la app en el VPS.
+- `evidencia/CE-08/bloqueo.md` — evidencia del bloqueo (environment `produccion` ausente; `403` al crearlo con el token del agente).
+- `.env.produccion.example` — comentario `IMAGEN_APP` alineado con CE-06 (prod no usa `:latest`).
+
+**Cómo desbloquear.** Con P-10, P-93 y P-94 resueltos, Carlos sigue `pasos-hugo.md` en la Mac (`carloshugoeg`), guarda evidencia real en `evidencia/CE-08/` y reabre la tarea en una conversación nueva hasta `estado: hecha`. Si el DNS no puede pasar a Cloudflare, avisar a Jordin y Daniela (decisión 32).
+
+**Fuera de este cierre:** JG-19 (primer despliegue oficial 02/11).

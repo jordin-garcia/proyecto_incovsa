@@ -1,0 +1,9 @@
+=== bash -n ===
+preparar-vps.sh OK
+verificar-vps.sh OK
+
+=== node scripts/tareas.mjs --validar ===
+Plan válido: 63 tareas.
+
+=== environment produccion (agente) ===
+{"total_count":0,"environments":[]}
