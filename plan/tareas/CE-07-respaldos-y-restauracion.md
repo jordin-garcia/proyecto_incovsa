@@ -5,7 +5,7 @@ persona: carlos
 responsable: Carlos Hugo Escobar
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [CE-05]
 programada: 2026-10-24
 requisitos: [RNF-09]
@@ -49,3 +49,15 @@ gh run watch
 
 ## Fuera de alcance
 - Las imágenes: ya están en R2 (specs/16). Los documentos técnicos están en el Drive de INCOVSA.
+
+## Resultado
+
+`scripts/respaldo.sh` hace `pg_dump -Fc` dentro de PostgreSQL 18 y sube `diarios/YYYYMMDD.dump` con `rclone copyto`. Si la fecha UTC es domingo, o si `FORZAR_SEMANAL=1`, también sube `semanales/YYYYMMDD.dump`. Después conserva 7 diarios y 4 semanales. La regla vive en `scripts/lib-respaldo.mjs`. El cron del VPS está en el comentario del script y en `evidencia/CE-07/README.md`.
+
+`scripts/restaurar.sh` descarga el objeto y restaura en `POSTGRES_DB_DEST`. Antes de tocar SQL, si el destino es la misma base que `POSTGRES_DB`, exige `CONFIRMAR_SOBRESCRITURA` exactamente igual a `SOBRESCRIBIR PRODUCCION`. Sin esa frase termina con código 1.
+
+En el VPS el modo por defecto es `docker compose exec` del servicio `postgres`. En GitHub Actions el flujo `produccion-respaldo` usa `USAR_DOCKER_RUN=1` contra el alias `postgres`. El destino de rclone en la CI es local, porque la cuenta de R2 sigue en P-94. El flujo compara la cantidad de filas de cada tabla (RNF-09) y comprueba la retención.
+
+La contraseña solo viaja en `PGPASSWORD`. Los registros dicen la fecha, la carpeta y el nombre del archivo.
+
+**Cómo usarlo.** En el VPS, con Node 24 y rclone en el `PATH`, la línea de cron es `15 2 * * * cd /opt/incovsa && set -a && . ./.env && set +a && ./scripts/respaldo.sh`. Para restaurar en una base nueva, `RCLONE_ORIGEN=diarios/YYYYMMDD.dump POSTGRES_DB_DEST=incovsa_restaurada ./scripts/restaurar.sh`. CE-08 instala el cron y, cuando exista R2, apunta `RCLONE_DEST` al bucket privado.

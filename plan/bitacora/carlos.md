@@ -76,3 +76,10 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Pendiente o aviso para otros:
   - **CE-08:** secretos `VPS_HOST`, `VPS_USUARIO`, `VPS_LLAVE_SSH`, `VPS_KNOWN_HOSTS` en environment `produccion`; carpeta `~/incovsa`; fijar `IMAGEN_APP` en el `.env` (este flujo no publica `:latest`).
   - **JG-19:** primer despliegue real al integrar en `main`; `gh run watch` sobre este flujo.
+
+## 2026-10-20 · CE-07 · Respaldos automáticos y prueba de restauración
+- Hecho: `scripts/respaldo.sh` genera el volcado con `pg_dump -Fc` y lo sube con rclone. Conserva 7 diarios y 4 semanales. `scripts/restaurar.sh` restaura en una base nueva y solo reemplaza la de producción si `CONFIRMAR_SOBRESCRITURA` es exactamente `SOBRESCRIBIR PRODUCCION`. El flujo `produccion-respaldo` compara las filas de cada tabla. La nota para el Documento 5 está en `evidencia/CE-07/README.md`.
+- Decisiones: la retención y la confirmación viven en `scripts/lib-respaldo.mjs`, y los shell lo llaman. En el VPS se usa `docker compose exec`. En la CI, `USAR_DOCKER_RUN=1` contra el alias `postgres`. El remoto de la CI es local hasta que exista R2 (P-94). No hay cifrado propio (decisión 34).
+- Pendiente o aviso para otros:
+  - **CE-08:** instalar en el VPS Node 24 y rclone en el `PATH` del usuario de Docker, configurar el remoto del bucket privado y el cron `15 2 * * * cd /opt/incovsa && set -a && . ./.env && set +a && ./scripts/respaldo.sh`. `RCLONE_DEST` sale de `.env`. La contraseña no se imprime.
+  - **CE-11:** el apartado de respaldo y restauración del Documento 5 puede partir de `evidencia/CE-07/README.md`. La prueba contra R2 queda para cuando CE-08 tenga la cuenta.
