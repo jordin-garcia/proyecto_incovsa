@@ -1,5 +1,5 @@
 import { execSync } from "node:child_process";
-import { expect, test, type BrowserContext } from "@playwright/test";
+import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 try {
@@ -17,6 +17,33 @@ async function entrar(context: BrowserContext, usuario = "ejemplo.05") {
   expect(r.ok()).toBe(true);
 }
 
+/** Entra con Gerencia, que trabaja en todas las sedes, y fija la sede de trabajo con su cookie. */
+async function entrarEnSede(context: BrowserContext, baseURL: string | undefined, sedeId: number) {
+  await entrar(context, "ejemplo.01");
+  await context.addCookies([{ name: "incovsa-sede", value: String(sedeId), url: baseURL ?? "" }]);
+}
+
+/** Violaciones serias o críticas de axe con todas sus reglas, incluido el contraste (RNF-08, JM-08). */
+async function violacionesGraves(page: Page) {
+  // Las animaciones de entrada (tarjetas, ventanas) cambian la opacidad: se mide al terminar. Las infinitas
+  // (indicadores que pulsan) no terminan nunca y no se esperan; una animación cancelada rechaza `finished`.
+  await page.evaluate(async () => {
+    const enCurso = document
+      .getAnimations()
+      .filter(
+        (animacion) =>
+          animacion.playState === "running" && animacion.effect?.getComputedTiming().iterations !== Infinity,
+      );
+    await Promise.allSettled(enCurso.map((animacion) => animacion.finished));
+  });
+  // Única exclusión: la etiqueta del cuadro lima conserva los colores del prototipo por decisión del coordinador,
+  // excepción documentada a RNF-08 (specs/18, 19/10). El resto de la tarjeta del pedido sí se analiza.
+  const resultado = await new AxeBuilder({ page }).exclude(".ped-num.recoge small").analyze();
+  return resultado.violations
+    .filter((v) => v.impact === "serious" || v.impact === "critical")
+    .map((v) => ({ regla: v.id, nodos: v.nodes.map((n) => `${n.target.join(" ")} · ${n.failureSummary ?? ""}`) }));
+}
+
 const NUMEROS_POR_PROYECTO: Record<string, number> = {
   telefono: 1,
   tableta: 2,
@@ -27,37 +54,103 @@ test.describe("Módulo de Bodega E2E", () => {
   test.describe.configure({ mode: "serial" });
 
   let datosEnvio: { envioId: number; numero: number };
+  let datosPedido: { envioId: number; numero: number };
 
   test.beforeAll(async ({}, testInfo) => {
     const numero = NUMEROS_POR_PROYECTO[testInfo.project.name] ?? 1;
-    const salida = execSync(`npx tsx pruebas-e2e/picking/preparar-envio.ts crear ${numero}`, {
-      encoding: "utf-8",
-    });
-    datosEnvio = JSON.parse(salida.trim());
+    const crear = (tipo: "ruta" | "pedido", sedeId: number) =>
+      JSON.parse(
+        execSync(`npx tsx pruebas-e2e/picking/preparar-envio.ts crear ${numero} ${tipo} ${sedeId}`, {
+          encoding: "utf-8",
+        }).trim(),
+      );
+    datosEnvio = crear("ruta", 1);
+    // El pedido va a Guatemala: la Bodega de Quetzaltenango la analiza sin exclusiones RN-38 (permisos.spec.ts), y el
+    // cuadro lima conserva los colores del prototipo por decisión del coordinador (specs/18, 19/10).
+    datosPedido = crear("pedido", 2);
   });
 
   test.afterAll(async () => {
-    if (datosEnvio?.envioId) {
-      execSync(`npx tsx pruebas-e2e/picking/preparar-envio.ts limpiar ${datosEnvio.envioId}`, {
-        stdio: "inherit",
-      });
+    for (const datos of [datosEnvio, datosPedido]) {
+      if (datos?.envioId) {
+        execSync(`npx tsx pruebas-e2e/picking/preparar-envio.ts limpiar ${datos.envioId}`, { stdio: "inherit" });
+      }
     }
   });
 
-  test("Criterio 8: sin violaciones serias de accesibilidad (axe)", async ({ page, context }) => {
+  test("Criterio 8 / RNF-08: Bodega con datos sin violaciones serias de axe, contraste incluido", async ({
+    page,
+    context,
+  }) => {
+    await entrar(context);
+    await page.goto("/picking/bodega");
+    await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
+
+    await expect(page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`)).toBeVisible();
+
+    expect(await violacionesGraves(page)).toEqual([]);
+  });
+
+  test("RNF-08: pedido que recoge el cliente, con «Sin lote», y su Detalle sin violaciones serias de axe", async ({
+    page,
+    context,
+    baseURL,
+  }) => {
+    await entrarEnSede(context, baseURL, 2);
+    await page.goto("/picking/bodega");
+    await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
+
+    const tarjeta = page.locator(`article.ped[data-id="${datosPedido.envioId}"]`);
+    await expect(tarjeta.locator(".ped-num.recoge")).toBeVisible();
+    await expect(tarjeta.locator(".lote.sin")).toHaveText("Sin lote");
+    expect(await violacionesGraves(page)).toEqual([]);
+
+    await tarjeta.getByRole("button", { name: "Detalle de Pedido" }).click();
+    const detalle = page.locator("[role=dialog]");
+    await expect(detalle).toBeVisible();
+    await expect(detalle.locator(".lote.sin")).toHaveText("Sin lote");
+    expect(await violacionesGraves(page)).toEqual([]);
+  });
+
+  test("RNF-08: líneas marcadas sin violaciones serias de axe, contraste incluido", async ({ page, context }) => {
     await entrar(context);
     await page.goto("/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     const tarjeta = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
-    await expect(tarjeta).toBeVisible();
+    // Marcar todo pasa por una acción del servidor y un refresco: se espera más que el valor por omisión.
+    await tarjeta.getByRole("button", { name: "Marcar todo" }).click();
+    await expect(tarjeta.locator("tr.lista")).toHaveCount(2, { timeout: 15_000 });
 
-    const resultadosAxe = await new AxeBuilder({ page })
-      .disableRules(["color-contrast"]) // los contrastes los controla el design system
-      .analyze();
+    expect(await violacionesGraves(page)).toEqual([]);
 
-    const fallosGraves = resultadosAxe.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
-    expect(fallosGraves).toEqual([]);
+    // Deja el envío sin marcar para las pruebas siguientes.
+    await tarjeta.getByRole("button", { name: "Desmarcar todo" }).click();
+    await expect(tarjeta.locator("tr.lista")).toHaveCount(0, { timeout: 15_000 });
+  });
+
+  test("RNF-08: Detalle de Ruta sin violaciones serias de axe, contraste incluido", async ({ page, context }) => {
+    await entrar(context);
+    await page.goto("/picking/bodega");
+    await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
+
+    await page
+      .locator(`article.ped[data-id="${datosEnvio.envioId}"]`)
+      .getByRole("button", { name: "Detalle de Ruta" })
+      .click();
+    await expect(page.locator("[role=dialog]")).toBeVisible();
+
+    expect(await violacionesGraves(page)).toEqual([]);
+  });
+
+  test("RNF-08: Bodega vacía sin violaciones serias de axe, contraste incluido", async ({ page, context, baseURL }) => {
+    // Gerencia trabaja en todas las sedes; en Escuintla las pruebas no crean envíos.
+    await entrarEnSede(context, baseURL, 3);
+    await page.goto("/picking/bodega");
+    await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
+    await expect(page.locator(".tarjeta.vacio")).toBeVisible();
+
+    expect(await violacionesGraves(page)).toEqual([]);
   });
 
   test("RF-SL-21 / RN-51 (CP-19): el envío muestra dos filas con lote resaltado y unidades correctas", async ({

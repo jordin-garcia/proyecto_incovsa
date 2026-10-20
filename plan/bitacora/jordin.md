@@ -94,3 +94,23 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 **Josué:** se conectaron `src/app/picking/layout.tsx` y `src/app/picking/page.tsx`, y se creó `src/app/picking/[...seccion]/page.tsx`; actualiza tu rama desde `develop`. Bodega y Tablero exigen `pk.bodega`; Ruta admite cualquiera de sus dos permisos. Conserva el control de sede en todas las operaciones de cada módulo.
 **Carlos:** las rutas de conexión `src/app/panel/[...seccion]/page.tsx` y `src/app/picking/[...seccion]/page.tsx` ya aplican las reglas de navegación; actualiza tu rama desde `develop`. Usuarios del sitio solo se muestra a Gerencia y Soporte; Configuración admite acceso total o `pk.cfg.camiones`. Tus páginas concretas deben conservar los controles del servidor.
 **JG-10:** implementa el interior de `avisarCambio(sedeId)` y `useCambiosDeSede(sedeId | null)` sin cambiar sus interfaces; `null` pausa la suscripción durante el cambio de sede. No agregues otro intervalo al armazón.
+
+## 2026-10-19 · JM-08 · Bodega: contraste accesible de textos y tarjetas
+- Hecho: la prueba de Bodega analiza con axe completo (contraste incluido) Bodega con datos, el pedido que recoge el cliente con «Sin lote» y su Detalle, líneas marcadas, Detalle de Ruta y Bodega vacía. Los textos secundarios de Bodega pasan a `--g600` y la etiqueta «RUTA» pierde la opacidad 0.75. Tarea creada por Daniela en DM-02 (#80) y terminada por el coordinador.
+- Decisiones: el cuadro lima del pedido que recoge el cliente conserva los colores del prototipo como excepción documentada a RNF-08 (`specs/18`); es el único nodo excluido de axe. Las pruebas locales usaron un PostgreSQL desechable en Docker, sin `.env`.
+- Pendiente o aviso para otros:
+**Josué:** cambiaron `src/app/picking/bodega/bodega.css`, `src/componentes/picking/bodega/ModalDetalle.tsx` (zonas con desplazamiento enfocables: `tabIndex={0}`, `role="region"` y nombre accesible; no las quites), `pruebas-e2e/picking/bodega.spec.ts` y `pruebas-e2e/picking/preparar-envio.ts` (argumentos opcionales de tipo y sede); actualiza tu rama desde `develop` antes de JM-04. No vuelvas a desactivar `color-contrast`: usa `violacionesGraves(page)`.
+**JM-04:** la comparación de JM-08 con el prototipo encontró dos diferencias de JM-03 que JM-08 no toca. (1) El encabezado del módulo de Bodega no usa el formato del prototipo: eyebrow «MÓDULO DE BODEGA · TABLERO DE PREPARACIÓN», título grande y descripción y botón a la derecha. (2) «Programada …» va en verde y negrita en el prototipo, y en gris en la aplicación. Capturas en `pruebas-e2e/picking/evidencias/jm-08/`.
+**Daniela:** JM-08 ya está en `develop`; el coordinador termina DM-02 a partir de tu rama (protocolo §E4), así que no sigas trabajando en #80.
+
+## 2026-10-19 · DM-02 · Sitio público: cabecera, pie, presentación dinámica e Inicio
+- Hecho: se terminó DM-02 a partir de la rama de Daniela (protocolo §E4), después de integrar JM-08. Se corrigieron el logotipo del pie, la proporción de los mapas y la letra del teléfono y el correo de las sedes, y se dejó de enviar el prefijo de Odoo al sitio público. Se repitieron las capturas de la aplicación.
+- Decisiones: ninguna nueva; las correcciones siguen el prototipo (`sitio.js` › `logoOscuro()` y `sedes()`, `estilos.css` › `.mapa`).
+- Pendiente o aviso para otros:
+**Daniela:** DM-02 quedó integrada por el coordinador a partir de tu rama; #80 se cerró. Cambiaron `src/componentes/sitio/Pie.tsx`, `Sedes.tsx`, `sitio.css`, `src/modulos/contenido/servicio.ts` (nuevo `logotipoOscuro`; los contactos ya no traen `prefijo`), `pruebas-e2e/sitio/inicio.spec.ts`, `src/modulos/contenido/servicio.test.ts` y las capturas. Actualiza tu rama desde `develop` antes de DM-03 y DM-04. Ojo: `permisos.spec.ts` y `acceso-personal.spec.ts` no cargan `.env` por sí mismos; para correrlos aislados usa `node --env-file=.env node_modules/@playwright/test/cli.js test …`.
+
+## 2026-10-19 · JG-08 · Correcciones de la auditoría: revisión con Claude para el agente en la nube de Cursor
+- Hecho: `revision-claude.yml` admite al agente en la nube de Cursor (`allowed_bots: "cursor"`), para que sus push y PR se revisen en lugar de fallar sin revisión.
+- Decisiones: se admite solo ese bot, nunca `"*"`; se actualizaron la decisión 62 (`specs/16`) y `specs/18`.
+- Pendiente o aviso para otros:
+**Carlos:** ya puedes usar el agente en la nube de Cursor: `revision-claude` revisará sus push. Para #85 y #86, actualiza la rama desde `develop` y haz push: la revisión usa el flujo nuevo (relanzar una ejecución anterior no sirve, porque conserva el flujo viejo). Corrige los hallazgos que ya dejó el bot. Abre los PR desde tu cuenta (`carloshugoeg`), no con el agente: si el autor es el bot, las menciones de la revisión no te llegan.
