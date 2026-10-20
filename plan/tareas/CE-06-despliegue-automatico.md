@@ -56,14 +56,13 @@ gh run watch
 
 El flujo `.github/workflows/despliegue.yml` (`name: Despliegue`) hace esto:
 
-1. **Push a `main`:** compila la imagen, la sube a GHCR privada con la etiqueta del *commit* (SHA completo) y `produccion`, y poda el paquete a las **últimas 5** versiones (`gh api` sobre el paquete container del dueño).
-2. **SSH al VPS** (`environment: produccion`, secretos `VPS_HOST`, `VPS_USUARIO`, `VPS_LLAVE_SSH`, `VPS_KNOWN_HOSTS`): en `~/incovsa` hace `docker login` a GHCR, `docker compose pull app`, `prisma migrate deploy` en un contenedor de un solo uso (`--entrypoint` de prisma) y `docker compose up -d app`. Luego comprueba `https://incovsa.com`. Si faltan los secretos (antes de CE-08), omite el SSH y el trabajo termina bien tras publicar en GHCR.
-3. **`workflow_dispatch`:**
-   - `modo_prueba=true`: solo publica en GHCR (rama de prueba / verificación sin VPS).
-   - `etiqueta=<tag>`: vuelve a esa imagen **sin migraciones** (anula el ENTRYPOINT de CE-05 con un override Compose que corre solo `node server.js`).
+1. **Push a `main`:** compila la imagen (`provenance: false`, `sbom: false` → una versión etiquetada por imagen), la sube a GHCR con la etiqueta del *commit* (SHA) y `produccion`, y poda dejando solo las **últimas 5 versiones etiquetadas**.
+2. **Push a `ce-06-prueba` o `workflow_dispatch` con `modo_prueba=true`:** solo GHCR con la etiqueta del SHA (nunca `produccion`); no despliega.
+3. **SSH al VPS** (solo desde `main`, `environment: produccion`, secretos `VPS_HOST`, `VPS_USUARIO`, `VPS_LLAVE_SSH`, `VPS_KNOWN_HOSTS`): en `~/incovsa` hace `docker login` a GHCR, levanta `postgres` si hace falta, `docker compose pull app`, `prisma migrate deploy` en un contenedor de un solo uso y `docker compose up -d app`. Comprueba `https://incovsa.com`. Sin secretos (antes de CE-08), omite el SSH.
+4. **`workflow_dispatch` con `etiqueta`:** desde `main`, vuelve a esa imagen **sin migraciones** (override Compose → solo `node server.js`).
 
-Permisos mínimos en el flujo (`contents: read`); `packages: write` solo en el trabajo `publicar-ghcr`. Acciones fijadas por SHA. La imagen es `ghcr.io/<owner>/<repo>` en minúsculas (alineada con CE-05).
+Permisos mínimos en el flujo (`contents: read`); `packages: write` solo en `publicar-ghcr`. Acciones fijadas por SHA. Imagen `ghcr.io/<owner>/<repo>` en minúsculas.
 
-**Cómo usarlo:** tras integrar en `develop` (y cuando el archivo exista en la rama por defecto), `gh workflow run despliegue.yml -f modo_prueba=true` y `gh run watch`. El despliegue real corre al integrar en `main` (JG-19). CE-08 configura los secretos del environment `produccion` y la carpeta `~/incovsa`.
+**Cómo usarlo:** `gh workflow run despliegue.yml -f modo_prueba=true` (desde una ref que ya tenga el archivo) o push a `ce-06-prueba`. Despliegue real al integrar en `main` (JG-19). CE-08: secretos del environment y `IMAGEN_APP` en el `.env` del VPS (este flujo no publica `:latest`).
 
-**Evidencia:** `evidencia/CE-06/`.
+**Evidencia:** `evidencia/CE-06/` (incl. `workflow-run.txt` cuando el push de prueba a GHCR termina).
