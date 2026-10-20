@@ -60,14 +60,18 @@ La imagen de producción es Node 24 en varias etapas. `npm ci` corre con `HUSKY=
 
 `docker-compose.yml` publica solo 80 y 443 de Caddy. PostgreSQL 18 no tiene puerto hacia afuera y el volumen es `/var/lib/postgresql`. La aplicación usa la imagen `ghcr.io/jordin-garcia/proyecto_incovsa:latest`, salvo que `IMAGEN_APP` diga otra. Los tres servicios reinician con `unless-stopped` y rotan registros json-file a 10 MB por 5 archivos.
 
-`Caddyfile` sirve `{$DOMINIO:incovsa.com}`, agrega HSTS, reenvía `X-Real-IP` y no bufferiza SSE (`flush_interval -1`). El cuerpo máximo del proxy es **6 MB**: margen sobre imágenes de 5 MB (decisión 44) más multipart; Caddy mide `MB` en base 10. Las acciones del servidor siguen en 3 MB dentro de Next (decisión 58).
+`Caddyfile` sirve `{$DOMINIO:incovsa.com}`, agrega HSTS, reenvía `X-Real-IP` y no bufferiza SSE (`flush_interval -1`). El cuerpo máximo del proxy es **27 MB**: tope de `/api/imagenes/publicar` (hasta 5 imágenes de 5 MB + multipart, decisión 44 y RF-SW-28). Caddy mide `MB` en base 10. Las acciones del servidor siguen en 3 MB dentro de Next (decisión 58).
 
 `.env.produccion.example` trae `ALMACENAMIENTO=r2` y valores de ejemplo. `.gitignore` lo deja subir con `!.env.produccion.example`. `.dockerignore` deja fuera `.env*`, así que ni el ejemplo ni un `.env` real entran en la imagen. Las claves de la etapa de compilación no pasan a la imagen final.
 
 Las cabeceras `Content-Security-Policy`, `nosniff`, `Referrer-Policy` y `frame-ancestors` son de JG-11 (`next.config.ts`). Esta tarea no las agrega: specs/16 dice que Caddy solo agrega HSTS.
 
-**Qué verifica el flujo `produccion-imagen`:** construye la imagen; confirma que no lleva `.env*`; valida el `Caddyfile` real (`caddy validate` + presencia de `X-Real-IP`, `flush_interval -1` y `max_size 6MB`); levanta Compose con ese mismo archivo y `DOMINIO=localhost` (Caddy usa certificado interno para localhost); comprueba HTTPS + HSTS; confirma que PostgreSQL no publica puerto y no responde en el host; vuelve a correr `prisma migrate deploy` y `crear-admin` dentro del contenedor.
+**Qué verifica el flujo `produccion-imagen`:** construye la imagen; confirma que no lleva `.env*`; valida el `Caddyfile` real (`caddy validate` + presencia de `X-Real-IP`, `flush_interval -1` y `max_size 27MB`); levanta Compose con ese mismo archivo y `DOMINIO=localhost`; comprueba HTTPS + HSTS; confirma que un cuerpo de 7 MB no recibe 413 y uno de 28 MB sí; confirma que PostgreSQL no publica puerto y no responde en el host; corre `prisma migrate deploy` y `crear-admin`; con un intento de acceso fallido a través de Caddy comprueba que una `X-Real-IP` falsificada no queda en la bitácora (criterio 3 / RNF-15).
 
 **Pendiente de punta a punta (fuera de CE-05):** cabeceras de JG-11 a través de Caddy (criterio 1 parcial) y SSE real de JG-10 (criterio 4). Hoy solo se garantiza la configuración de Caddy que esas tareas necesitan.
 
 No se desplegó nada. La verificación de la tarea es `gh pr checks --watch` sobre el pull request.
+
+### Correcciones post-integración (2026-10-20)
+
+Tras el merge de #86, la revisión B8 local pidió CORREGIR: (1) `max_size 6MB` no cubría la galería de hasta 5×5 MB en una sola petición; (2) el criterio 3 solo se comprobaba con `grep`. Quedó en `max_size 27MB` y en la prueba de inicio de sesión fallido a través de Caddy.

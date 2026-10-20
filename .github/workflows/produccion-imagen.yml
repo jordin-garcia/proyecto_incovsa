@@ -39,7 +39,7 @@ jobs:
         run: |
           grep -q 'header_up X-Real-IP {remote_host}' Caddyfile
           grep -q 'flush_interval -1' Caddyfile
-          grep -q 'max_size 6MB' Caddyfile
+          grep -q 'max_size 27MB' Caddyfile
           docker run --rm \
             -e DOMINIO=localhost \
             -v "$PWD/Caddyfile:/etc/caddy/Caddyfile:ro" \
@@ -74,7 +74,51 @@ jobs:
           curl -kfsSI --resolve localhost:443:127.0.0.1 https://localhost/ | grep -i '^strict-transport-security:'
           docker compose exec -T caddy grep -q 'header_up X-Real-IP {remote_host}' /etc/caddy/Caddyfile
           docker compose exec -T caddy grep -q 'flush_interval -1' /etc/caddy/Caddyfile
-          docker compose exec -T caddy grep -q 'max_size 6MB' /etc/caddy/Caddyfile
+          docker compose exec -T caddy grep -q 'max_size 27MB' /etc/caddy/Caddyfile
+
+      - name: El cuerpo grande pasa Caddy y el exceso recibe 413
+        run: |
+          # 7 MB supera el antiguo tope de 6 MB y cabe en el de 27 MB (galería de 5×5 MB).
+          python3 - <<'PY'
+          import subprocess, sys
+          cuerpo = b"0" * (7 * 1000 * 1000)
+          r = subprocess.run(
+              [
+                  "curl", "-ksS", "-o", "/dev/null", "-w", "%{http_code}",
+                  "--resolve", "localhost:443:127.0.0.1",
+                  "-X", "POST", "https://localhost/api/imagenes/publicar",
+                  "-H", "Content-Type: multipart/form-data; boundary=x",
+                  "--data-binary", "@-",
+              ],
+              input=cuerpo,
+              capture_output=True,
+              check=False,
+          )
+          codigo = r.stdout.decode().strip()
+          if codigo == "413":
+              print("Caddy rechazó 7 MB; el límite debe ser 27 MB", file=sys.stderr)
+              sys.exit(1)
+          if codigo not in {"400", "403"}:
+              print(f"código inesperado para 7 MB: {codigo}", file=sys.stderr)
+              sys.exit(1)
+          cuerpo28 = b"0" * (28 * 1000 * 1000)
+          r2 = subprocess.run(
+              [
+                  "curl", "-ksS", "-o", "/dev/null", "-w", "%{http_code}",
+                  "--resolve", "localhost:443:127.0.0.1",
+                  "-X", "POST", "https://localhost/api/imagenes/publicar",
+                  "-H", "Content-Type: multipart/form-data; boundary=x",
+                  "--data-binary", "@-",
+              ],
+              input=cuerpo28,
+              capture_output=True,
+              check=False,
+          )
+          codigo2 = r2.stdout.decode().strip()
+          if codigo2 != "413":
+              print(f"28 MB debía recibir 413, recibió {codigo2}", file=sys.stderr)
+              sys.exit(1)
+          PY
 
       - name: PostgreSQL no se publica y las migraciones corren en el contenedor
         run: |
@@ -126,6 +170,28 @@ jobs:
           codigo = os.waitstatus_to_exitcode(estado)
           if codigo != 0:
               raise SystemExit(codigo)
+          PY
+
+      - name: Caddy reemplaza una X-Real-IP falsificada
+        run: |
+          codigo="$(curl -ksS -o /dev/null -w '%{http_code}' \
+            --resolve localhost:443:127.0.0.1 \
+            -X POST 'https://localhost/api/auth/picking/sign-in/username' \
+            -H 'Origin: https://localhost' \
+            -H 'Content-Type: application/json' \
+            -H 'X-Real-IP: 203.0.113.9' \
+            -H 'X-Forwarded-For: 203.0.113.9' \
+            --data '{"usuario":"admin.ci","clave":"incorrecta"}')"
+          test "$codigo" = "401"
+          ip="$(docker compose exec -T postgres sh -c \
+            'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -tAc "SELECT ip FROM bitacora ORDER BY id DESC LIMIT 1;"' \
+            | tr -d '[:space:]')"
+          echo "IP registrada: $ip"
+          test -n "$ip"
+          test "$ip" != "203.0.113.9"
+          python3 - <<PY
+          import ipaddress, sys
+          ipaddress.ip_address("$ip")
           PY
 
       - name: Bajar el entorno
