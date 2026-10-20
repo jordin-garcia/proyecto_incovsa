@@ -2,7 +2,7 @@ import { beforeEach, expect, it, vi } from "vitest";
 import { prisma } from "@/lib/prisma";
 import type { SesionActual } from "@/lib/sesion";
 import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
-import { consultarDespacho, consultarRutas, consultarOperaciones } from "./servicio";
+import { consultarDespacho, consultarRutas, consultarOperaciones, consultarAnios } from "./servicio";
 import { resolverPeriodo } from "./periodo";
 
 let sesion: SesionActual | null;
@@ -165,7 +165,7 @@ it("RNF-04 / RN-17: aísla la sede y rechaza sin sesión, sin permiso y otra sed
   await envio({ sedeId: 2 });
   expect((await consultarDespacho(sesion, 1, dia)).totalKg).toBe("0.000");
   expect(await consultarRutas(sesion, 1, dia)).toEqual([]);
-  for (const consulta of [consultarDespacho, consultarRutas, consultarOperaciones]) {
+  for (const consulta of [consultarDespacho, consultarRutas, consultarOperaciones, consultarAnios]) {
     await expect(consulta(null, 1, dia)).rejects.toThrow("No tiene permisos");
     await expect(consulta({ ...sesion!, permisos: [] }, 1, dia)).rejects.toThrow("No tiene permisos");
     await expect(consulta(sesion, 2, dia)).rejects.toThrow("No tiene permisos");

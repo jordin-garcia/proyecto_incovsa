@@ -9,7 +9,7 @@ import { esquemaFiltro, resolverPeriodo } from "@/modulos/reportes/periodo";
 import "./reportes.css";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Reportes · INCOVSA" };
+export const metadata = { title: "Reportes" };
 export default async function ReportesPage({
   searchParams,
 }: {
