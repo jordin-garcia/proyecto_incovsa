@@ -73,13 +73,13 @@ jobs:
             ${{ steps.meta.outputs.tag_sha }}
             ${{ steps.meta.outputs.tag_produccion }}
 
-      - name: RNF-12: la imagen quedó en GHCR
+      - name: "RNF-12: la imagen quedó en GHCR"
         run: |
           set -euo pipefail
           docker buildx imagetools inspect "${{ steps.meta.outputs.tag_sha }}"
           docker buildx imagetools inspect "${{ steps.meta.outputs.tag_produccion }}"
 
-      - name: RNF-12: conservar solo las últimas 5 versiones en GHCR
+      - name: "RNF-12: conservar solo las últimas 5 versiones en GHCR"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -97,7 +97,7 @@ jobs:
             cat /tmp/ghcr-err.txt >&2
             exit 1
           fi
-          mapfile -t ids < <(gh api --paginate "$api" --jq 'sort_by(.updated_at) | reverse | .[].id')
+          mapfile -t ids < <(gh api --paginate "$api" --jq '.[]' | jq -s 'sort_by(.updated_at) | reverse | .[].id')
           total="${#ids[@]}"
           echo "Versiones en GHCR: ${total}"
           if [ "$total" -le 5 ]; then
@@ -184,24 +184,32 @@ jobs:
           printf '%s\n' "$VPS_KNOWN_HOSTS" > "$hosts"
           chmod 600 "$llave" "$hosts"
           ssh_opts=(-i "$llave" -o IdentitiesOnly=yes -o UserKnownHostsFile="$hosts" -o StrictHostKeyChecking=yes)
-          # La carpeta de Compose la deja CE-08 en ~/incovsa.
-          # shellcheck disable=SC2029
-          ssh "${ssh_opts[@]}" "${VPS_USUARIO}@${VPS_HOST}" \
-            "IMAGEN=$(printf %q "$IMAGEN") MIGRAR=$(printf %q "$MIGRAR") GHCR_USER=$(printf %q "$GHCR_USER") GHCR_TOKEN=$(printf %q "$GHCR_TOKEN") bash -s" <<'REMOTO'
+          # Variables van en el script por stdin (no en el argv de ssh). Carpeta: ~/incovsa (CE-08).
+          # shellcheck disable=SC2087
+          ssh "${ssh_opts[@]}" "${VPS_USUARIO}@${VPS_HOST}" bash -s <<EOF
           set -euo pipefail
-          cd "$HOME/incovsa"
-          echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
-          export IMAGEN_APP="$IMAGEN"
+          IMAGEN=$(printf %q "$IMAGEN")
+          MIGRAR=$(printf %q "$MIGRAR")
+          GHCR_USER=$(printf %q "$GHCR_USER")
+          GHCR_TOKEN=$(printf %q "$GHCR_TOKEN")
+          cd "\$HOME/incovsa"
+          echo "\$GHCR_TOKEN" | docker login ghcr.io -u "\$GHCR_USER" --password-stdin
+          export IMAGEN_APP="\$IMAGEN"
           docker compose pull app
-          if [ "$MIGRAR" = "true" ]; then
-            # El ENTRYPOINT de la imagen siempre migra y arranca el servidor; aquí solo migrate.
+          if [ "\$MIGRAR" = "true" ]; then
+            # Contenedor de un solo uso: solo migrate (el ENTRYPOINT de la imagen arranca el servidor).
             docker compose run --rm --no-deps --entrypoint ./node_modules/.bin/prisma app migrate deploy
+            docker compose up -d app
+          else
+            # Volver atrás sin migraciones: anula el ENTRYPOINT que siempre corre migrate deploy.
+            printf '%s\n' 'services:' '  app:' '    entrypoint: ["node", "server.js"]' > /tmp/incovsa-sin-migrate.yml
+            docker compose -f docker-compose.yml -f /tmp/incovsa-sin-migrate.yml up -d app
+            rm -f /tmp/incovsa-sin-migrate.yml
           fi
-          docker compose up -d app
           docker logout ghcr.io >/dev/null 2>&1 || true
-          REMOTO
+          EOF
 
-      - name: Comprobar https://incovsa.com
+      - name: "Comprobar https://incovsa.com"
         if: ${{ steps.vps.outputs.listo == 'true' }}
         run: |
           set -euo pipefail
@@ -215,6 +223,6 @@ jobs:
           done
           test "$listo" = 1
 
-      - name: RNF-12: sin VPS aún, el flujo termina bien tras GHCR
+      - name: "RNF-12: sin VPS aún, el flujo termina bien tras GHCR"
         if: ${{ steps.vps.outputs.listo != 'true' }}
         run: echo "SSH aplazado a CE-08; publicación en GHCR verificada en el trabajo publicar-ghcr."

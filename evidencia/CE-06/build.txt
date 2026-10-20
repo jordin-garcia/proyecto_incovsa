@@ -1,0 +1,53 @@
+
+> incovsa@0.1.0 build
+> next build
+
+▲ Next.js 16.4.2 (Turbopack)
+- Environments: .env
+✓ Running next.config.ts took 21ms
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+- Experiments (use with caution):
+  · serverActions
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 8.1s
+  Running TypeScript ...
+  Finished TypeScript in 6.8s ...
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/5) ...
+  Generating static pages using 3 workers (1/5) 
+  Generating static pages using 3 workers (2/5) 
+  Generating static pages using 3 workers (3/5) 
+✓ Generating static pages using 3 workers (5/5) in 299ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ƒ /acceso
+├ ƒ /acceso/[sistema]
+├ ƒ /api/auth/[sistema]/[...ruta]
+├ ƒ /api/imagenes/[...clave]
+├ ƒ /api/imagenes/publicar
+├ ƒ /muestras/[sistema]
+├ ƒ /panel
+├ ƒ /panel/[...seccion]
+├ ƒ /panel/contenido
+├ ƒ /panel/resumen
+├ ƒ /panel/usuarios
+├ ƒ /picking
+├ ƒ /picking/[...seccion]
+├ ƒ /picking/bodega
+├ ƒ /picking/configuracion
+└ ƒ /picking/facturacion
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
