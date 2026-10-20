@@ -19,7 +19,7 @@
 # 15 2 * * * cd /opt/incovsa && set -a && . ./.env && set +a && ./scripts/respaldo.sh
 #
 # Las llaves de R2 viven en la configuración de rclone del servidor, no en este archivo.
-set -euo pipefail
+set -Eeuo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 LIB="$(pwd)/scripts/lib-respaldo.mjs"

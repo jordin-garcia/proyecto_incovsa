@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { chmodSync, mkdtempSync, mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { chmodSync, mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -134,6 +134,67 @@ esac
       "20261004.dump",
       "20261011.dump",
     ]);
+  } finally {
+    rmSync(directorio, { recursive: true, force: true });
+  }
+});
+
+test("RNF-09: un fallo de retención queda en el registro del sistema", () => {
+  const directorio = mkdtempSync(path.join(tmpdir(), "incovsa-retencion-falla-"));
+  try {
+    const bin = path.join(directorio, "bin");
+    const remoto = path.join(directorio, "remoto");
+    const registro = path.join(directorio, "logger.log");
+    mkdirSync(bin);
+    mkdirSync(path.join(remoto, "diarios"), { recursive: true });
+    mkdirSync(path.join(remoto, "semanales"), { recursive: true });
+    for (const nombre of diarios) writeFileSync(path.join(remoto, "diarios", nombre), "x");
+    for (const nombre of semanales) writeFileSync(path.join(remoto, "semanales", nombre), "x");
+    writeFileSync(
+      path.join(bin, "rclone"),
+      `#!/usr/bin/env bash
+set -euo pipefail
+cmd="$1"
+shift
+case "$cmd" in
+  lsf)
+    ls -1 "\${1#local:}"
+    ;;
+  deletefile)
+    echo "AccessDenied" >&2
+    exit 1
+    ;;
+  *)
+    echo "rclone no usado: $cmd" >&2
+    exit 1
+    ;;
+esac
+`,
+    );
+    chmodSync(path.join(bin, "rclone"), 0o755);
+    writeFileSync(
+      path.join(bin, "logger"),
+      `#!/usr/bin/env bash
+printf '%s\\n' "$*" >> "${registro}"
+`,
+    );
+    chmodSync(path.join(bin, "logger"), 0o755);
+    const corrida = spawnSync("bash", ["scripts/respaldo.sh"], {
+      encoding: "utf8",
+      env: {
+        PATH: `${bin}:${path.dirname(process.execPath)}:/usr/bin:/bin`,
+        HOME: directorio,
+        POSTGRES_USER: "incovsa",
+        POSTGRES_PASSWORD: CLAVE,
+        POSTGRES_DB: "incovsa",
+        RCLONE_DEST: `local:${remoto}`,
+        SOLO_RETENCION: "1",
+      },
+    });
+    assert.equal(corrida.status, 1, `${corrida.stdout}\n${corrida.stderr}`);
+    assert.match(`${corrida.stdout}${corrida.stderr}`, /el respaldo falló/);
+    assert.match(readFileSync(registro, "utf8"), /el respaldo falló/);
+    assert.equal(`${corrida.stdout}${corrida.stderr}`.includes(CLAVE), false);
   } finally {
     rmSync(directorio, { recursive: true, force: true });
   }
