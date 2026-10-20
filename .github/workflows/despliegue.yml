@@ -70,11 +70,13 @@ jobs:
             echo "tag_produccion=${tag_produccion}"
             echo "publico_produccion=${publico_produccion}"
             echo "modo_prueba=${modo_prueba}"
+            echo "tags<<EOF"
+            echo "$tag_sha"
+            if [ "$publico_produccion" = 'true' ]; then
+              echo "$tag_produccion"
+            fi
+            echo "EOF"
           } >> "$GITHUB_OUTPUT"
-          printf '%s\n' "$tag_sha" > tags-imagen.txt
-          if [ "$publico_produccion" = 'true' ]; then
-            printf '%s\n' "$tag_produccion" >> tags-imagen.txt
-          fi
 
       - name: Entrar a GHCR
         uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
@@ -94,7 +96,7 @@ jobs:
           # Una versión etiquetada por imagen: sin atestación ni SBOM extra en GHCR.
           provenance: false
           sbom: false
-          tags-file: tags-imagen.txt
+          tags: ${{ steps.meta.outputs.tags }}
 
       - name: "RNF-12: la imagen quedó en GHCR"
         run: |
