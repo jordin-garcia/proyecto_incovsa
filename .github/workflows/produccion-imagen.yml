@@ -1,4 +1,4 @@
-# CE-05. Construye la imagen y la levanta con Caddy y un certificado local.
+# CE-05. Construye la imagen y la levanta con Caddy y el Caddyfile de producción.
 # No despliega. Solo corre cuando el PR toca estos archivos.
 
 name: Imagen de producción
@@ -35,25 +35,18 @@ jobs:
       - name: Confirmar que la imagen no lleva secretos
         run: docker run --rm --entrypoint sh incovsa-app:ci -c 'test ! -e .env && test ! -e .env.produccion.example'
 
-      - name: Preparar el certificado local y las variables de prueba
+      - name: Validar el Caddyfile de producción
         run: |
-          cat > Caddyfile.ci <<'EOF'
-          {
-            admin off
-            local_certs
-          }
-          localhost {
-            tls internal
-            header Strict-Transport-Security "max-age=31536000; includeSubDomains"
-            request_body {
-              max_size 5MB
-            }
-            reverse_proxy app:3000 {
-              header_up X-Real-IP {remote_host}
-              flush_interval -1
-            }
-          }
-          EOF
+          grep -q 'header_up X-Real-IP {remote_host}' Caddyfile
+          grep -q 'flush_interval -1' Caddyfile
+          grep -q 'max_size 6MB' Caddyfile
+          docker run --rm \
+            -e DOMINIO=localhost \
+            -v "$PWD/Caddyfile:/etc/caddy/Caddyfile:ro" \
+            caddy:2 caddy validate --config /etc/caddy/Caddyfile
+
+      - name: Preparar las variables de prueba
+        run: |
           cat > .env <<'EOF'
           POSTGRES_USER=incovsa
           POSTGRES_PASSWORD=incovsa_ci_local
@@ -67,8 +60,8 @@ jobs:
           DOMINIO=localhost
           EOF
 
-      - name: Levantar Compose
-        run: IMAGEN_APP=incovsa-app:ci CADDYFILE=./Caddyfile.ci docker compose up -d
+      - name: Levantar Compose con el Caddyfile real
+        run: IMAGEN_APP=incovsa-app:ci docker compose up -d
 
       - name: La aplicación responde por HTTPS a través de Caddy
         run: |
@@ -79,8 +72,9 @@ jobs:
           done
           test "$listo" = 1
           curl -kfsSI --resolve localhost:443:127.0.0.1 https://localhost/ | grep -i '^strict-transport-security:'
-          docker compose exec -T caddy grep -q 'X-Real-IP' /etc/caddy/Caddyfile
+          docker compose exec -T caddy grep -q 'header_up X-Real-IP {remote_host}' /etc/caddy/Caddyfile
           docker compose exec -T caddy grep -q 'flush_interval -1' /etc/caddy/Caddyfile
+          docker compose exec -T caddy grep -q 'max_size 6MB' /etc/caddy/Caddyfile
 
       - name: PostgreSQL no se publica y las migraciones corren en el contenedor
         run: |
@@ -93,6 +87,10 @@ jobs:
               exit 1
               ;;
           esac
+          if nc -z 127.0.0.1 5432 2>/dev/null; then
+            echo "PostgreSQL responde en el host: no debe ser alcanzable desde fuera"
+            exit 1
+          fi
           docker compose exec -T app ./node_modules/.bin/prisma migrate deploy
           docker compose exec -T postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 1 FROM usuario LIMIT 1;"'
 
@@ -134,5 +132,5 @@ jobs:
         if: always()
         run: |
           if [ -f .env ]; then
-            IMAGEN_APP=incovsa-app:ci CADDYFILE=./Caddyfile.ci docker compose down -v
+            IMAGEN_APP=incovsa-app:ci docker compose down -v
           fi
