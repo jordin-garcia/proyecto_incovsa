@@ -106,7 +106,32 @@ jobs:
             docker buildx imagetools inspect "${{ steps.meta.outputs.tag_produccion }}"
           fi
 
+      - name: "RNF-12: variantes ligeras para ejercer la poda (modo prueba)"
+        if: ${{ steps.meta.outputs.modo_prueba == 'true' }}
+        env:
+          IMAGEN: ${{ steps.meta.outputs.imagen }}
+          BASE: ${{ steps.meta.outputs.tag_sha }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          cat > /tmp/Dockerfile.evidencia <<'EOF'
+          ARG BASE
+          FROM ${BASE}
+          ARG N
+          RUN printf '%s\n' "$N" > /tmp/evidencia-poda
+          EOF
+          # Cinco capas mínimas sobre la imagen real → 6 versiones etiquetadas en total.
+          for i in 1 2 3 4 5; do
+            tag="${IMAGEN}:evidencia-poda-${i}"
+            docker buildx build --push --provenance=false --sbom=false \
+              --build-arg "BASE=${BASE}" \
+              --build-arg "N=${i}-${RUN_ID}" \
+              -t "$tag" \
+              -f /tmp/Dockerfile.evidencia .
+          done
+
       - name: "RNF-12: conservar solo las últimas 5 imágenes etiquetadas"
+        id: poda
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -117,17 +142,23 @@ jobs:
           if ! gh api "$api" --jq 'length' >/tmp/ghcr-count.txt 2>/tmp/ghcr-err.txt; then
             if grep -qi '404\|Not Found' /tmp/ghcr-err.txt; then
               echo "Paquete sin versiones listables todavía; se omite la poda."
+              echo "quedan=0" >> "$GITHUB_OUTPUT"
               exit 0
+            fi
+            if grep -qi '403\|Forbidden' /tmp/ghcr-err.txt; then
+              echo "GHCR: sin permiso para listar/borrar paquetes (403)." >&2
+              cat /tmp/ghcr-err.txt >&2
+              exit 1
             fi
             cat /tmp/ghcr-err.txt >&2
             exit 1
           fi
-          # Solo versiones con etiqueta (una imagen = un manifiesto etiquetado).
+          # Solo versiones con etiqueta; orden por created_at (más recientes primero).
           mapfile -t ids < <(
             gh api --paginate "$api" --jq '.[]' \
               | jq -s '
                   map(select((.metadata.container.tags // []) | length > 0))
-                  | sort_by(.updated_at)
+                  | sort_by(.created_at)
                   | reverse
                   | .[].id
                 '
@@ -136,11 +167,20 @@ jobs:
           echo "Imágenes etiquetadas en GHCR: ${total}"
           if [ "$total" -le 5 ]; then
             echo "Nada que borrar (máximo 5)."
+            echo "quedan=${total}" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           for id in "${ids[@]:5}"; do
             echo "Borrando versión etiquetada ${id}"
-            gh api --method DELETE "/users/${owner}/packages/container/${pkg}/versions/${id}"
+            if ! gh api --method DELETE "/users/${owner}/packages/container/${pkg}/versions/${id}" 2>/tmp/ghcr-del-err.txt; then
+              if grep -qi '403\|Forbidden' /tmp/ghcr-del-err.txt; then
+                echo "GHCR: sin permiso para borrar versiones (403)." >&2
+                cat /tmp/ghcr-del-err.txt >&2
+                exit 1
+              fi
+              cat /tmp/ghcr-del-err.txt >&2
+              exit 1
+            fi
           done
           quedan="$(
             gh api --paginate "$api" --jq '.[]' \
@@ -148,6 +188,33 @@ jobs:
           )"
           test "$quedan" -le 5
           echo "Quedan ${quedan} imágenes etiquetadas."
+          echo "quedan=${quedan}" >> "$GITHUB_OUTPUT"
+
+      - name: "RNF-12: listar y comprobar las imágenes etiquetadas que quedan"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IMAGEN: ${{ steps.meta.outputs.imagen }}
+        run: |
+          set -euo pipefail
+          owner="$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
+          pkg="$(echo '${{ github.event.repository.name }}' | tr '[:upper:]' '[:lower:]')"
+          api="/users/${owner}/packages/container/${pkg}/versions?per_page=100"
+          gh api --paginate "$api" --jq '.[]' \
+            | jq -s '
+                map(select((.metadata.container.tags // []) | length > 0))
+                | sort_by(.created_at)
+                | reverse
+                | .[:5]
+                | map({id, created_at, tags: .metadata.container.tags})
+              ' | tee /tmp/ghcr-quedan.json
+          count="$(jq 'length' /tmp/ghcr-quedan.json)"
+          echo "Quedan ${count} imágenes etiquetadas (máx. 5)."
+          test "$count" -le 5
+          while IFS= read -r tag; do
+            [ -n "$tag" ] || continue
+            echo "Inspect ${IMAGEN}:${tag}"
+            docker buildx imagetools inspect "${IMAGEN}:${tag}"
+          done < <(jq -r '.[].tags[]' /tmp/ghcr-quedan.json)
 
   desplegar:
     name: desplegar-vps
@@ -163,19 +230,24 @@ jobs:
     steps:
       - name: Resolver etiqueta a desplegar
         id: dest
+        env:
+          ETIQUETA_ENTRADA: ${{ inputs.etiqueta }}
+          PUBLICAR_RESULTADO: ${{ needs.publicar.result }}
+          ETIQUETA_SHA: ${{ needs.publicar.outputs.etiqueta_sha }}
+          REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
-          repo_lc="$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')"
+          repo_lc="$(printf '%s' "$REPOSITORY" | tr '[:upper:]' '[:lower:]')"
           imagen="ghcr.io/${repo_lc}"
-          entrada='${{ inputs.etiqueta }}'
-          if [ -n "$entrada" ]; then
-            case "$entrada" in
-              *:*) tag="$entrada" ;;
-              *) tag="${imagen}:${entrada}" ;;
-            esac
+          if [ -n "${ETIQUETA_ENTRADA}" ]; then
+            if ! [[ "$ETIQUETA_ENTRADA" =~ ^[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}$ ]]; then
+              echo "Etiqueta inválida (solo [A-Za-z0-9_][A-Za-z0-9_.-]{0,127})." >&2
+              exit 1
+            fi
+            tag="${imagen}:${ETIQUETA_ENTRADA}"
             migrar=false
-          elif [ '${{ needs.publicar.result }}' = 'success' ]; then
-            tag="${imagen}:${{ needs.publicar.outputs.etiqueta_sha }}"
+          elif [ "$PUBLICAR_RESULTADO" = 'success' ]; then
+            tag="${imagen}:${ETIQUETA_SHA}"
             migrar=true
           else
             echo "No hay imagen nueva ni etiqueta de rollback." >&2
@@ -233,7 +305,7 @@ jobs:
           cd "\$HOME/incovsa"
           echo "\$GHCR_TOKEN" | docker login ghcr.io -u "\$GHCR_USER" --password-stdin
           export IMAGEN_APP="\$IMAGEN"
-          docker compose up -d postgres
+          docker compose up -d postgres --wait
           docker compose pull app
           if [ "\$MIGRAR" = "true" ]; then
             # Contenedor de un solo uso: solo migrate (el ENTRYPOINT de la imagen arranca el servidor).
