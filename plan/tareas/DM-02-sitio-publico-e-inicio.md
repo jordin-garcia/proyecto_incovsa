@@ -5,7 +5,7 @@ persona: daniela
 responsable: Daniela Marín
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [DM-01, JG-03, JG-05]
 programada: 2026-10-18
 requisitos: [RF-SW-01, RF-SW-08, RF-SW-15, RF-SW-16, RF-SW-22, RF-SW-24, RF-SW-27, RF-SW-28, RN-56, RNF-01, RNF-08, RNF-17, CU-08]
@@ -73,12 +73,32 @@ npm run e2e -- pruebas-e2e/sitio/inicio.spec.ts
 ## Notas
 - Con la semilla de demostración, la portada, misión y visión no tienen imágenes: súbelas desde el panel cuando exista DM-04 para probar la rotación, o crea los registros de imagen en la prueba.
 
-## Avance pendiente de integración (19/10/2026)
+## Resultado
 
-La implementación, sus pruebas y la comparación visual están en la rama `daniela/DM-02-sitio-publico-inicio`. Se conservan `estado: pendiente` y la ausencia de cierre hasta que pase toda la verificación del protocolo.
+La implementó Daniela y la terminó el coordinador (protocolo §E4), a partir de su rama `daniela/DM-02-sitio-publico-inicio` (#80), después de integrar JM-08 (#87), que corregía el contraste de Bodega que impedía completar la suite.
 
-- Inicio y los componentes públicos compartidos están implementados, leyendo textos, galerías, industrias y oficinas desde la base.
-- Las 15 pruebas E2E propias pasan en teléfono, tableta y escritorio; las 3 pruebas nuevas de lecturas públicas también pasan. La verificación general aprobó formato, lint, tipos y 209 pruebas.
-- El build de producción pasó. Las ocho capturas comparativas y la revisión independiente LISTO están en `pruebas-e2e/sitio/evidencias/`.
-- La suite completa con un trabajador terminó con 126 pruebas aprobadas, 2 omisiones preexistentes de Facturación y 1 fallo de contraste en Bodega (RNF-08). Se registró `JM-08-contraste-accesible-de-bodega.md` para su dueño, según protocolo §C. Daniela eligió esperar esa corrección; no se modificó código ajeno ni se debilitó ninguna prueba.
-- Para retomar: integrar JM-08, actualizar esta rama, ejecutar de nuevo B6 y B7, completar `## Resultado` y la bitácora de cierre y convertir el PR borrador en listo para revisión antes de B10.
+- **Qué se hizo:** `src/app/(sitio)/layout.tsx` arma la cabecera (logotipo del sitio, navegación en el orden de la tarea, «Acceso personal» y menú de teléfono) y el pie, que solo aparece en Inicio, Quiénes somos, Noticias y Contacto. `src/app/(sitio)/page.tsx` es Inicio, en el orden del prototipo: portada con galería y cifras, industrias, misión y visión, «Visítenos» y el llamado a enviar una solicitud. Reemplaza la página mínima de JG-02, que se borró: `src/app/page.tsx` ocupaba la misma ruta `/`.
+- **Componentes reutilizables** en `src/componentes/sitio/`:
+  - `Cabecera` y `Pie`;
+  - `EncabezadoPagina` (`cabPag()`, con la galería de portada de fondo), para DM-03 y DM-06;
+  - `Galeria` (hasta 5 imágenes, rota cada 5 s, solo la primera con prioridad y las demás después de `load`, respeta la preferencia de reducir el movimiento);
+  - `PresentacionDinamica` (`IntersectionObserver`), montada una sola vez en el layout;
+  - `MisionVision` (para DM-06);
+  - `Sedes`, con los mapas `iframe` responsivos en proporción 4:3;
+  - `navegacion.ts` y los estilos en `sitio.css`, solo con tokens.
+- **Lecturas públicas** en `src/modulos/contenido/servicio.ts`, sin permisos y con `select` explícitos:
+  - `leerEstructuraSitio()` devuelve el logotipo, `logotipoOscuro`, los contactos de Quetzaltenango y Guatemala (nunca Escuintla ni el prefijo de Odoo) y las industrias con su número de productos;
+  - `leerInicioSitio()` agrega los textos y las galerías de portada, misión y visión.
+- **Correcciones del coordinador** tras la revisión en contexto limpio:
+  - el pie usa el logotipo blanco sobre el verde mientras no se suba otro, y con uno subido, ese sobre la placa clara del prototipo;
+  - los mapas pasan de 260 px fijos a la proporción 4:3 del prototipo;
+  - el teléfono y el correo de las sedes van en letra monoespaciada de 14 px;
+  - el prefijo de Odoo ya no viaja al navegador.
+- **Cómo usarlo:**
+  - las páginas públicas nuevas van dentro de `src/app/(sitio)/`, para heredar la cabecera y el pie; si deben llevar pie, se agregan a la lista de rutas de `Pie.tsx`;
+  - el encabezado de cada página es `<EncabezadoPagina>`, con `leerInicioSitio().portada` o la galería que corresponda;
+  - la aparición no se envuelve: `PresentacionDinamica` ya está en el layout y observa por selector, dentro de `<main>`, `.hero-foto`, las imágenes que no están dentro de una galería, las galerías salvo las de fondo (`.gal-fondo`), `.tarjeta`, `.ind-t`, `.prod-t`, `.det-foto`, `.banner-logos` y `.valor-t`. Basta con usar esas clases. Solo vuelve a buscar elementos al cambiar de ruta: los que aparecen después en el cliente sin cambiar de ruta (por ejemplo, al filtrar el catálogo en DM-03) no quedan observados, y esa tarea debe resolverlo;
+  - Quiénes somos (DM-06) reutiliza `MisionVision`. Contacto (DM-08) reutiliza `Sedes`, al que hay que agregarle la opción de no mostrar el mapa, como `sedes(c, false)` en el prototipo; hoy siempre lo dibuja cuando hay `mapaUrl`;
+  - las pruebas que necesiten imágenes de galería usan `pruebas-e2e/sitio/galerias.ts`.
+- **Evidencia:** `pruebas-e2e/sitio/evidencias/`.
+
