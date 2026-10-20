@@ -66,7 +66,7 @@ La imagen de producción es Node 24 en varias etapas. `npm ci` corre con `HUSKY=
 
 Las cabeceras `Content-Security-Policy`, `nosniff`, `Referrer-Policy` y `frame-ancestors` son de JG-11 (`next.config.ts`). Esta tarea no las agrega: specs/16 dice que Caddy solo agrega HSTS.
 
-**Qué verifica el flujo `produccion-imagen`:** construye la imagen; confirma que no lleva `.env*`; valida el `Caddyfile` real (`caddy validate` + presencia de `X-Real-IP`, `flush_interval -1` y `max_size 27MB`); levanta Compose con ese mismo archivo y `DOMINIO=localhost`; comprueba HTTPS + HSTS; confirma que un cuerpo de 7 MB no recibe 413 y uno de 28 MB sí; confirma que PostgreSQL no publica puerto y no responde en el host; corre `prisma migrate deploy` y `crear-admin`; con un intento de acceso fallido a través de Caddy comprueba que una `X-Real-IP` falsificada no queda en la bitácora (criterio 3 / RNF-15).
+**Qué verifica el flujo `produccion-imagen`:** construye la imagen; confirma que no lleva `.env*`; valida el `Caddyfile` real (`caddy validate` + presencia de `X-Real-IP`, `flush_interval -1` y `max_size 27MB`); levanta Compose con ese mismo archivo y `DOMINIO=localhost`; comprueba HTTPS + HSTS; confirma que un cuerpo de 7 MB (mayor que el antiguo tope de 6 MB) no recibe 413; confirma que PostgreSQL no publica puerto y no responde en el host; corre `prisma migrate deploy` y `crear-admin`; con un intento de acceso fallido a través de Caddy comprueba que una `X-Real-IP` falsificada no queda en la bitácora (criterio 3 / RNF-15).
 
 **Pendiente de punta a punta (fuera de CE-05):** cabeceras de JG-11 a través de Caddy (criterio 1 parcial) y SSE real de JG-10 (criterio 4). Hoy solo se garantiza la configuración de Caddy que esas tareas necesitan.
 

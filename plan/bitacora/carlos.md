@@ -59,7 +59,7 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
   - **CE-06:** el despliegue automático no está en este PR. La imagen de referencia es `ghcr.io/jordin-garcia/proyecto_incovsa:latest`.
 
 ## 2026-10-20 · CE-05 · Correcciones: límite Caddy y prueba de X-Real-IP
-- Hecho: `max_size 27MB` en el Caddyfile (tope de galería 5×5 MB + multipart). El flujo `produccion-imagen` comprueba que 7 MB no recibe 413, que 28 MB sí, y que un intento de acceso fallido a través de Caddy no registra una `X-Real-IP` falsificada en la bitácora.
+- Hecho: `max_size 27MB` en el Caddyfile (tope de galería 5×5 MB + multipart). El flujo `produccion-imagen` comprueba que 7 MB no recibe 413 y que un intento de acceso fallido a través de Caddy no registra una `X-Real-IP` falsificada en la bitácora.
 - Decisiones: el control exacto del tamaño de cada imagen sigue en la aplicación; Caddy solo deja pasar el cuerpo completo de la ruta.
 - Pendiente o aviso para otros:
   - **CE-06:** el arranque sigue corriendo `prisma migrate deploy` en cada start; conviene moverlo al despliegue si un fallo de migración deja el contenedor reiniciando.

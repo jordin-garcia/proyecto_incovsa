@@ -76,9 +76,11 @@ jobs:
           docker compose exec -T caddy grep -q 'flush_interval -1' /etc/caddy/Caddyfile
           docker compose exec -T caddy grep -q 'max_size 27MB' /etc/caddy/Caddyfile
 
-      - name: El cuerpo grande pasa Caddy y el exceso recibe 413
+      - name: Un cuerpo de galería no recibe 413 de Caddy
         run: |
           # 7 MB supera el antiguo tope de 6 MB y cabe en el de 27 MB (galería de 5×5 MB).
+          # Sin sesión la ruta responde 403 sin leer el cuerpo; por eso no se exige 413 en un exceso:
+          # Caddy solo aplica max_size al leer, y reverse_proxy puede devolver el 403 antes.
           python3 - <<'PY'
           import subprocess, sys
           cuerpo = b"0" * (7 * 1000 * 1000)
@@ -100,23 +102,6 @@ jobs:
               sys.exit(1)
           if codigo not in {"400", "403"}:
               print(f"código inesperado para 7 MB: {codigo}", file=sys.stderr)
-              sys.exit(1)
-          cuerpo28 = b"0" * (28 * 1000 * 1000)
-          r2 = subprocess.run(
-              [
-                  "curl", "-ksS", "-o", "/dev/null", "-w", "%{http_code}",
-                  "--resolve", "localhost:443:127.0.0.1",
-                  "-X", "POST", "https://localhost/api/imagenes/publicar",
-                  "-H", "Content-Type: multipart/form-data; boundary=x",
-                  "--data-binary", "@-",
-              ],
-              input=cuerpo28,
-              capture_output=True,
-              check=False,
-          )
-          codigo2 = r2.stdout.decode().strip()
-          if codigo2 != "413":
-              print(f"28 MB debía recibir 413, recibió {codigo2}", file=sys.stderr)
               sys.exit(1)
           PY
 
@@ -189,10 +174,7 @@ jobs:
           echo "IP registrada: $ip"
           test -n "$ip"
           test "$ip" != "203.0.113.9"
-          python3 - <<PY
-          import ipaddress, sys
-          ipaddress.ip_address("$ip")
-          PY
+          python3 -c 'import ipaddress, sys; ipaddress.ip_address(sys.argv[1])' "$ip"
 
       - name: Bajar el entorno
         if: always()
