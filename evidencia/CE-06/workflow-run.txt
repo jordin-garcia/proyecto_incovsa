@@ -1,0 +1,150 @@
+=== gh run watch 39480353926 (ce-06-prueba) ===
+URL: https://github.com/jordin-garcia/proyecto_incovsa/actions/runs/39480353926
+Commit: f21dadc65be38e2d1d36c0d376fdcc99d9d98623
+Paquete: ghcr.io/jordin-garcia/proyecto_incovsa-prueba
+Regla: paquete de producción solo en refs/heads/main sin modo_prueba.
+
+{
+  "conclusion": "success",
+  "status": "completed",
+  "displayTitle": "fix(despliegue): paquete prod solo en main sin modo_prueba (CE-06)",
+  "headSha": "f21dadc65be38e2d1d36c0d376fdcc99d9d98623",
+  "event": "push",
+  "url": "https://github.com/jordin-garcia/proyecto_incovsa/actions/runs/39480353926"
+}
+
+=== Jobs ===
+[
+  {
+    "name": "publicar-ghcr",
+    "conclusion": "success",
+    "steps": [
+      {
+        "name": "Set up job",
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "conclusion": "success"
+      },
+      {
+        "name": "Etiquetas de la imagen",
+        "conclusion": "success"
+      },
+      {
+        "name": "Entrar a GHCR",
+        "conclusion": "success"
+      },
+      {
+        "name": "Preparar Buildx",
+        "conclusion": "success"
+      },
+      {
+        "name": "Compilar y subir la imagen",
+        "conclusion": "success"
+      },
+      {
+        "name": "RNF-12: la imagen qued\u00f3 en GHCR",
+        "conclusion": "success"
+      },
+      {
+        "name": "RNF-12: variantes ligeras para ejercer la poda (modo prueba)",
+        "conclusion": "success"
+      },
+      {
+        "name": "RNF-12: conservar solo las \u00faltimas 5 im\u00e1genes etiquetadas",
+        "conclusion": "success"
+      },
+      {
+        "name": "RNF-12: listar y comprobar las im\u00e1genes etiquetadas que quedan",
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Compilar y subir la imagen",
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Preparar Buildx",
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Entrar a GHCR",
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "conclusion": "success"
+      }
+    ]
+  },
+  {
+    "name": "desplegar-vps",
+    "conclusion": "skipped",
+    "steps": []
+  }
+]
+
+=== Log: publicación y poda (paquete -prueba) ===
+publicar-ghcr	Compilar y subir la imagen	2026-10-20T19:05:12.9362536Z   tags: ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623
+publicar-ghcr	Compilar y subir la imagen	2026-10-20T19:05:13.4468700Z [command]/usr/bin/docker buildx build --iidfile /home/runner/work/_temp/docker-actions-toolkit-tN3qrD/build-iidfile-a5278259ba.txt --attest type=provenance,disabled=true --attest type=sbom,disabled=true --tag ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623 --metadata-file /home/runner/work/_temp/docker-actions-toolkit-tN3qrD/build-metadata-085124d25a.json --push .
+publicar-ghcr	Compilar y subir la imagen	2026-10-20T19:07:07.0897634Z #27 pushing manifest for ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623@sha256:503fe90353533dfd50532f3f03778c83b3910cef23931586f78936c7b04248d4
+publicar-ghcr	Compilar y subir la imagen	2026-10-20T19:07:07.6288467Z #27 pushing manifest for ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623@sha256:503fe90353533dfd50532f3f03778c83b3910cef23931586f78936c7b04248d4 0.5s done
+publicar-ghcr	Compilar y subir la imagen	2026-10-20T19:07:07.6979559Z   "image.name": "ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623"
+publicar-ghcr	RNF-12: la imagen quedó en GHCR	2026-10-20T19:07:07.7042435Z docker buildx imagetools inspect "ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623"
+publicar-ghcr	RNF-12: la imagen quedó en GHCR	2026-10-20T19:07:08.4144034Z Name:      ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:08.4215536Z   tag="${IMAGEN}:evidencia-poda-${i}"
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:08.4267705Z   BASE: ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:08.7085691Z #3 [internal] load metadata for ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:09.1578245Z #5 [1/2] FROM ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623@sha256:503fe90353533dfd50532f3f03778c83b3910cef23931586f78936c7b04248d4
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:09.1579401Z #5 resolve ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623@sha256:503fe90353533dfd50532f3f03778c83b3910cef23931586f78936c7b04248d4 done
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:10.8425965Z #7 pushing manifest for ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-1@sha256:de53bc9535ebb7819a613e77c72c52ad9137c47910060e6e3490e175901c2220
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:11.4858885Z #7 pushing manifest for ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-1@sha256:de53bc9535ebb7819a613e77c72c52ad9137c47910060e6e3490e175901c2220 0.6s done
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:11.7350085Z #2 [internal] load metadata for ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:12.0949146Z #4 [1/2] FROM ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623@sha256:503fe90353533dfd50532f3f03778c83b3910cef23931586f78936c7b04248d4
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:12.0949955Z #4 resolve ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623@sha256:503fe90353533dfd50532f3f03778c83b3910cef23931586f78936c7b04248d4 done
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:13.4580172Z #7 pushing manifest for ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-2@sha256:e39bc3b96d500123a458ffb8a28ed099307093e4fc8c250c15876cacd4accc02
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:14.0716942Z #7 pushing manifest for ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-2@sha256:e39bc3b96d500123a458ffb8a28ed099307093e4fc8c250c15876cacd4accc02 0.6s done
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:14.3261510Z #2 [internal] load metadata for ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:14.5541541Z #4 [1/2] FROM ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623@sha256:503fe90353533dfd50532f3f03778c83b3910cef23931586f78936c7b04248d4
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:14.5542290Z #4 resolve ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623@sha256:503fe90353533dfd50532f3f03778c83b3910cef23931586f78936c7b04248d4 done
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:16.0001290Z #7 pushing manifest for ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-3@sha256:6d730c70ea2342a84c854543254ec530015a7f52323a570fe065b94ec89ed885
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:16.5750811Z #7 pushing manifest for ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-3@sha256:6d730c70ea2342a84c854543254ec530015a7f52323a570fe065b94ec89ed885 0.6s done
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:16.8245324Z #2 [internal] load metadata for ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:17.0361400Z #4 [1/2] FROM ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623@sha256:503fe90353533dfd50532f3f03778c83b3910cef23931586f78936c7b04248d4
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:17.0362418Z #4 resolve ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623@sha256:503fe90353533dfd50532f3f03778c83b3910cef23931586f78936c7b04248d4 done
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:18.6576778Z #7 pushing manifest for ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-4@sha256:fe55d4116b92aeeee06ed84ab5b1dda59f4e4c225ed81d96b5c7503877aeb63f
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:19.2235566Z #7 pushing manifest for ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-4@sha256:fe55d4116b92aeeee06ed84ab5b1dda59f4e4c225ed81d96b5c7503877aeb63f 0.6s done
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:19.4708396Z #2 [internal] load metadata for ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:19.7161564Z #4 [1/2] FROM ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623@sha256:503fe90353533dfd50532f3f03778c83b3910cef23931586f78936c7b04248d4
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:19.7162539Z #4 resolve ghcr.io/jordin-garcia/proyecto_incovsa-prueba:f21dadc65be38e2d1d36c0d376fdcc99d9d98623@sha256:503fe90353533dfd50532f3f03778c83b3910cef23931586f78936c7b04248d4 done
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:21.0991893Z #7 pushing manifest for ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-5@sha256:d55f18253dddd7827a5fb7eb17fd071d2d1a90ef49eac2c50ab59e0cc8680d8e
+publicar-ghcr	RNF-12: variantes ligeras para ejercer la poda (modo prueba)	2026-10-20T19:07:21.6585734Z #7 pushing manifest for ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-5@sha256:d55f18253dddd7827a5fb7eb17fd071d2d1a90ef49eac2c50ab59e0cc8680d8e 0.6s done
+publicar-ghcr	RNF-12: conservar solo las últimas 5 imágenes etiquetadas	2026-10-20T19:07:21.6788976Z echo "Podando paquete container/${PKG} (modo_prueba=${MODO_PRUEBA})"
+publicar-ghcr	RNF-12: conservar solo las últimas 5 imágenes etiquetadas	2026-10-20T19:07:21.6796944Z echo "Imágenes etiquetadas en ${PKG}: ${total}"
+publicar-ghcr	RNF-12: conservar solo las últimas 5 imágenes etiquetadas	2026-10-20T19:07:21.6798602Z   echo "Borrando versión etiquetada ${id}"
+publicar-ghcr	RNF-12: conservar solo las últimas 5 imágenes etiquetadas	2026-10-20T19:07:21.6803829Z echo "Quedan ${quedan} imágenes etiquetadas en ${PKG}."
+publicar-ghcr	RNF-12: conservar solo las últimas 5 imágenes etiquetadas	2026-10-20T19:07:21.6861863Z   PKG: proyecto_incovsa-prueba
+publicar-ghcr	RNF-12: conservar solo las últimas 5 imágenes etiquetadas	2026-10-20T19:07:21.6927517Z Podando paquete container/proyecto_incovsa-prueba (modo_prueba=true)
+publicar-ghcr	RNF-12: conservar solo las últimas 5 imágenes etiquetadas	2026-10-20T19:07:22.7303530Z Imágenes etiquetadas en proyecto_incovsa-prueba: 6
+publicar-ghcr	RNF-12: conservar solo las últimas 5 imágenes etiquetadas	2026-10-20T19:07:22.7304271Z Borrando versión etiquetada 1417457442
+publicar-ghcr	RNF-12: conservar solo las últimas 5 imágenes etiquetadas	2026-10-20T19:07:23.7868980Z Quedan 5 imágenes etiquetadas en proyecto_incovsa-prueba.
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:23.7964801Z   PKG: proyecto_incovsa-prueba
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:24.3055375Z       "evidencia-poda-5"
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:24.3057505Z       "evidencia-poda-4"
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:24.3059823Z       "evidencia-poda-3"
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:24.3076112Z       "evidencia-poda-2"
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:24.3078276Z       "evidencia-poda-1"
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:24.3111573Z Inspect ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-5
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:25.0141131Z Name:      ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-5
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:25.0174646Z Inspect ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-4
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:25.6538188Z Name:      ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-4
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:25.6566511Z Inspect ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-3
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:26.3695898Z Name:      ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-3
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:26.3728320Z Inspect ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-2
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:27.0511460Z Name:      ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-2
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:27.0539359Z Inspect ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-1
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:27.8136999Z Name:      ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-1

@@ -5,7 +5,7 @@ persona: carlos
 responsable: Carlos Hugo Escobar
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [CE-05]
 programada: 2026-10-23
 requisitos: [RNF-12]
