@@ -1,0 +1,155 @@
+# CE-07. Prueba el respaldo y la restauración (RNF-09). No despliega.
+# Mientras no exista la cuenta de R2 (P-94) el destino de rclone es local.
+
+name: Respaldo y restauración
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1"
+  pull_request:
+    branches: [develop, main]
+    types: [opened, synchronize, reopened]
+    paths:
+      - scripts/respaldo.sh
+      - scripts/restaurar.sh
+      - scripts/lib-respaldo.mjs
+      - scripts/respaldo.test.mjs
+      - .github/workflows/produccion-respaldo.yml
+
+permissions:
+  contents: read
+
+jobs:
+  respaldo:
+    name: produccion-respaldo
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      POSTGRES_USER: incovsa
+      POSTGRES_PASSWORD: incovsa_ci_respaldo
+      POSTGRES_DB: incovsa
+      POSTGRES_DB_DEST: incovsa_restaurada
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      USAR_DOCKER_RUN: "1"
+      DOCKER_RED: incovsa-respaldo
+      POSTGRES_IMAGEN: postgres:18
+      DATABASE_URL: postgresql://incovsa:incovsa_ci_respaldo@127.0.0.1:5432/incovsa
+      CLAVE_DEMO: clave-demo-ci-123
+      NODE_ENV: development
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Levantar PostgreSQL 18
+        run: |
+          docker network create incovsa-respaldo
+          docker run -d --name incovsa-pg \
+            --network incovsa-respaldo \
+            --network-alias postgres \
+            -p 127.0.0.1:5432:5432 \
+            -e POSTGRES_USER \
+            -e POSTGRES_PASSWORD \
+            -e POSTGRES_DB \
+            postgres:18
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Esperar PostgreSQL, aplicar migraciones y cargar semillas
+        run: |
+          listo=0
+          for _ in $(seq 1 30); do
+            if docker exec incovsa-pg pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB"; then
+              listo=1
+              break
+            fi
+            sleep 2
+          done
+          test "$listo" = 1
+          npm run db:aplicar
+          npm run db:semilla
+          npm run semilla:demo
+
+      - name: Instalar rclone
+        run: sudo apt-get update && sudo apt-get install -y rclone
+
+      - name: Configurar el remoto local de rclone
+        run: |
+          destino="$(mktemp -d)"
+          rclone config create incovsa-local local
+          echo "RCLONE_DEST=incovsa-local:${destino}" >> "$GITHUB_ENV"
+
+      - name: Respaldar la base de demostración
+        run: |
+          FECHA="$(date -u +%Y%m%d)"
+          echo "FECHA=${FECHA}" >> "$GITHUB_ENV"
+          export FECHA
+          ./scripts/respaldo.sh
+          rclone lsf "${RCLONE_DEST}/diarios" --files-only | grep -qx "${FECHA}.dump"
+
+      - name: Crear la base vacía y restaurar
+        run: |
+          docker exec incovsa-pg \
+            psql -v ON_ERROR_STOP=1 --no-password -U "$POSTGRES_USER" -d postgres \
+            -c "CREATE DATABASE \"${POSTGRES_DB_DEST}\""
+          export RCLONE_ORIGEN="diarios/${FECHA}.dump"
+          ./scripts/restaurar.sh
+
+      - name: Comparar las filas de cada tabla (RNF-09)
+        run: |
+          contar() {
+            local db="$1"
+            local consulta
+            consulta="$(docker exec incovsa-pg \
+              psql -v ON_ERROR_STOP=1 --no-password -U "$POSTGRES_USER" -d "$db" -At -c \
+              "SELECT string_agg(format('SELECT %L::text, count(*)::text FROM %I.%I', table_schema || '.' || table_name, table_schema, table_name), ' UNION ALL ' ORDER BY table_schema, table_name) FROM information_schema.tables WHERE table_type = 'BASE TABLE' AND table_schema NOT IN ('pg_catalog', 'information_schema')")"
+            if [ -z "$consulta" ]; then
+              echo "RNF-09: ${db} no tiene tablas"
+              exit 1
+            fi
+            docker exec incovsa-pg \
+              psql -v ON_ERROR_STOP=1 --no-password -U "$POSTGRES_USER" -d "$db" -At -F "$(printf '\t')" -c "$consulta"
+          }
+          origen="$(mktemp)"
+          destino="$(mktemp)"
+          contar "$POSTGRES_DB" >"$origen"
+          contar "$POSTGRES_DB_DEST" >"$destino"
+          test -s "$origen"
+          if ! diff -u "$origen" "$destino"; then
+            echo "RNF-09: la cantidad de filas no coincide"
+            exit 1
+          fi
+
+      - name: Comprobar la retención de 7 diarios y 4 semanales
+        run: |
+          trabajo="$(mktemp -d)"
+          for fecha in 20200101 20200102 20200103 20200104 20200105 20200106 20200107 20200108; do
+            printf 'x' >"${trabajo}/${fecha}.dump"
+            rclone copyto "${trabajo}/${fecha}.dump" "${RCLONE_DEST}/diarios/${fecha}.dump"
+          done
+          for fecha in 20200105 20200112 20200119 20200126 20200202 20200209; do
+            printf 'x' >"${trabajo}/${fecha}.dump"
+            rclone copyto "${trabajo}/${fecha}.dump" "${RCLONE_DEST}/semanales/${fecha}.dump"
+          done
+          diarios_antes="$(rclone lsf "${RCLONE_DEST}/diarios" --files-only | wc -l)"
+          semanales_antes="$(rclone lsf "${RCLONE_DEST}/semanales" --files-only | wc -l)"
+          test "$diarios_antes" -gt 7
+          test "$semanales_antes" -gt 4
+          SOLO_RETENCION=1 ./scripts/respaldo.sh
+          diarios="$(rclone lsf "${RCLONE_DEST}/diarios" --files-only | wc -l)"
+          semanales="$(rclone lsf "${RCLONE_DEST}/semanales" --files-only | wc -l)"
+          test "$diarios" -eq 7
+          test "$semanales" -eq 4
+          rclone lsf "${RCLONE_DEST}/diarios" --files-only | grep -qx "${FECHA}.dump"
+
+      - name: Bajar PostgreSQL
+        if: always()
+        run: |
+          docker rm -f incovsa-pg || true
+          docker network rm incovsa-respaldo || true
