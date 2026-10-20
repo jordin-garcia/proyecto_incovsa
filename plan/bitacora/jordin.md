@@ -108,3 +108,9 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Decisiones: ninguna nueva; las correcciones siguen el prototipo (`sitio.js` › `logoOscuro()` y `sedes()`, `estilos.css` › `.mapa`).
 - Pendiente o aviso para otros:
 **Daniela:** DM-02 quedó integrada por el coordinador a partir de tu rama; #80 se cerró. Cambiaron `src/componentes/sitio/Pie.tsx`, `Sedes.tsx`, `sitio.css`, `src/modulos/contenido/servicio.ts` (nuevo `logotipoOscuro`; los contactos ya no traen `prefijo`), `pruebas-e2e/sitio/inicio.spec.ts`, `src/modulos/contenido/servicio.test.ts` y las capturas. Actualiza tu rama desde `develop` antes de DM-03 y DM-04. Ojo: `permisos.spec.ts` y `acceso-personal.spec.ts` no cargan `.env` por sí mismos; para correrlos aislados usa `node --env-file=.env node_modules/@playwright/test/cli.js test …`.
+
+## 2026-10-19 · JG-08 · Correcciones de la auditoría: revisión con Claude para el agente en la nube de Cursor
+- Hecho: `revision-claude.yml` admite al agente en la nube de Cursor (`allowed_bots: "cursor"`), para que sus push y PR se revisen en lugar de fallar sin revisión.
+- Decisiones: se admite solo ese bot, nunca `"*"`; se actualizaron la decisión 62 (`specs/16`) y `specs/18`.
+- Pendiente o aviso para otros:
+**Carlos:** ya puedes usar el agente en la nube de Cursor: `revision-claude` revisará sus push. Para #85 y #86, actualiza la rama desde `develop` y haz push: la revisión usa el flujo nuevo (relanzar una ejecución anterior no sirve, porque conserva el flujo viejo). Corrige los hallazgos que ya dejó el bot. Abre los PR desde tu cuenta (`carloshugoeg`), no con el agente: si el autor es el bot, las menciones de la revisión no te llegan.
