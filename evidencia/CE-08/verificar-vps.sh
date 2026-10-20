@@ -31,10 +31,10 @@ if printf '%s\n' "$sshd_cfg" | grep -qiE '^passwordauthentication no$'; then
 else
   ko "PasswordAuthentication debe ser no"
 fi
-if printf '%s\n' "$sshd_cfg" | grep -qiE '^permitrootlogin (no|prohibit-password|without-password)$'; then
-  ok "PermitRootLogin restringido"
+if printf '%s\n' "$sshd_cfg" | grep -qiE '^permitrootlogin no$'; then
+  ok "PermitRootLogin no"
 else
-  ko "PermitRootLogin debe ser no (o prohibit-password)"
+  ko "PermitRootLogin debe ser no (como preparar-vps.sh)"
 fi
 
 echo "==> UFW"

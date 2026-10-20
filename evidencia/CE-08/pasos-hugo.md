@@ -26,12 +26,22 @@ ssh-keyscan -t ed25519,rsa IP_DEL_VPS
 
 ## 2. Carpeta de la aplicación
 
-Con el usuario de despliegue:
+Con el usuario de despliegue. Primero llena `~/incovsa` (el script de preparación solo crea la carpeta vacía):
 
 ```bash
-cd ~/incovsa
 # Opción A: clonar (si el usuario tiene acceso de lectura al repo)
-# Opción B: copiar docker-compose.yml, Caddyfile y .env.produccion.example desde tu Mac
+git clone https://github.com/jordin-garcia/proyecto_incovsa.git ~/incovsa
+cd ~/incovsa
+git checkout develop
+
+# Opción B: desde tu Mac, sin clonar en el VPS
+# scp docker-compose.yml Caddyfile .env.produccion.example despliegue@IP:~/incovsa/
+cd ~/incovsa
+```
+
+Luego el `.env` (solo cuando ya existen esos archivos en `~/incovsa`):
+
+```bash
 cp .env.produccion.example .env
 chmod 600 .env
 ```
