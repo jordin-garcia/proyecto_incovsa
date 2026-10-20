@@ -578,6 +578,10 @@ Al trasladar el prototipo se comprobó con axe que `--g500` sobre `--g50` da un 
 - En las tarjetas del tablero de Facturación, **Enter** selecciona y **Espacio** levanta y suelta la tarjeta para moverla con las flechas, porque así el arrastre funciona con teclado (RF-SL-63). En el prototipo, las dos teclas seleccionan.
 - RN-49 agrupa las filas de entrega de una ruta solo si el nombre del cliente y el sector son exactamente iguales a los del archivo (`specs/12`). Falta que el coordinador confirme si deben compararse sin mayúsculas, tildes ni espacios sobrantes, como hace `claveRuta()` en el prototipo.
 
+## Agente en la nube de Cursor en la revisión con Claude (19/10/2026, JG-08)
+
+- Por decisión del coordinador, Carlos puede trabajar con el agente en la nube de Cursor (decisión 62). Ese agente sube los cambios como `cursor[bot]`, y la acción de Claude rechaza los eventos de bots: el check `revision-claude` fallaba sin revisar (#83, #85 y #86). `revision-claude.yml` agrega `allowed_bots: "cursor"`. Se admite solo ese bot, nunca `"*"`. El prompt y las herramientas permitidas al revisor no cambian, y el contenido del PR sigue tratándose como material a revisar, no como instrucciones.
+
 ## Contraste accesible de Bodega (19/10/2026, JM-08)
 
 - Se extiende la precisión de JG-05 a Bodega: el pie de las tarjetas, las líneas marcadas, la etiqueta «Sin lote» y el Detalle de Ruta usan `--g600` en sus textos secundarios, porque `--g500` sobre `--g50`, `--v50` y `--g100` queda debajo de 4.5:1 (RNF-08). La etiqueta «RUTA» del cuadro verde ya no lleva la opacidad 0.75 del prototipo (4.44:1 con ella, 6.55:1 sin ella).
