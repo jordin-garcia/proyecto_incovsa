@@ -64,3 +64,8 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Pendiente o aviso para otros:
   - **CE-06:** el arranque sigue corriendo `prisma migrate deploy` en cada start; conviene moverlo al despliegue si un fallo de migración deja el contenedor reiniciando.
   - **CE-08:** confirmar `includeSubDomains` en HSTS con INCOVSA y el IPv6 de la red de Compose.
+
+## 2026-10-20 · CE-05 · Correcciones: prueba de cuerpo de galería en CI
+- Hecho: se retiró la aserción de 28 MB → 413 en `produccion-imagen`. Sin sesión la ruta responde 403 sin leer el cuerpo y Caddy puede devolver ese 403 antes de aplicar `max_size`. Queda la prueba de 7 MB sin 413.
+- Decisiones: ninguna nueva sobre el límite 27 MB.
+- Pendiente o aviso para otros: ninguno.
