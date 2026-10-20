@@ -11,6 +11,8 @@ export const prisma = crearClientePrisma(process.env.DATABASE_URL);
 export interface OpcionesEnvioPrueba {
   numero?: number;
   sedeId?: number;
+  /** "pedido" es el envío que el cliente recoge en bodega: sin camión ni piloto. */
+  tipo?: "ruta" | "pedido";
 }
 
 export async function limpiarEnvioPrueba(envioId: number): Promise<void> {
@@ -39,6 +41,7 @@ export async function crearEnvioPrueba(
 ): Promise<{ envioId: number; numero: number }> {
   const numero = opciones.numero ?? 1;
   const sedeId = opciones.sedeId ?? 1;
+  const tipo = opciones.tipo ?? "ruta";
   const fechaEnvio = new Date("2026-10-18T00:00:00Z");
 
   // Si ya existía un envío con esta clave única (sede, tipo, fecha, numero), limpiar SOLO ese envío
@@ -46,7 +49,7 @@ export async function crearEnvioPrueba(
     where: {
       sedeId_tipo_fechaEnvio_numero: {
         sedeId,
-        tipo: "ruta",
+        tipo,
         fechaEnvio,
         numero,
       },
@@ -62,20 +65,23 @@ export async function crearEnvioPrueba(
   const estadoPrep = await prisma.estadoEnvio.findUniqueOrThrow({ where: { nombre: "En Preparación" } });
   const usuarioBodega = await prisma.usuario.findFirstOrThrow({ where: { displayUsername: "ejemplo.05" } });
   const usuarioPiloto = await prisma.usuario.findFirstOrThrow({ where: { displayUsername: "ejemplo.06" } });
-  const camion = await prisma.camion.findFirstOrThrow({ where: { sedeId } });
+  // Los camiones de demostración son de Quetzaltenango: solo la ruta los necesita.
+  const camion = tipo === "ruta" ? await prisma.camion.findFirstOrThrow({ where: { sedeId } }) : null;
+  // El pedido lleva además una línea y un detalle sin lote, que se muestran como «Sin lote» (decisión 42).
+  const sinLote = tipo === "pedido";
 
   // Crear el envío del ejemplo de los tres clientes (specs/07, CP-19, CP-36, CP-38)
   const envio = await prisma.envio.create({
     data: {
       sedeId,
-      tipo: "ruta",
+      tipo,
       numero,
       fechaEnvio,
       programadoPara: new Date("2026-10-18T13:30:00-06:00"),
       estadoId: estadoPrep.id,
       enviadoPorId: usuarioBodega.id,
-      camionId: camion.id,
-      pilotoId: usuarioPiloto.id,
+      camionId: camion?.id ?? null,
+      pilotoId: tipo === "ruta" ? usuarioPiloto.id : null,
       posicionCola: numero,
       lineas: {
         create: [
@@ -95,6 +101,18 @@ export async function crearEnvioPrueba(
             marcado: false,
             posicion: 2,
           },
+          ...(sinLote
+            ? [
+                {
+                  producto: "SULFATO DE SODIO",
+                  lote: "",
+                  pesoConversionKg: 25,
+                  cantidadKg: 5,
+                  marcado: false,
+                  posicion: 3,
+                },
+              ]
+            : []),
         ],
       },
       pedidosFacturados: {
@@ -132,7 +150,12 @@ export async function crearEnvioPrueba(
             posicion: 3,
             cargadoPorId: usuarioBodega.id,
             detalles: {
-              create: [{ producto: "SULFATO DE SODIO", lote: "9221", pesoConversionKg: 25, cantidadKg: 10, orden: 1 }],
+              create: [
+                { producto: "SULFATO DE SODIO", lote: "9221", pesoConversionKg: 25, cantidadKg: 10, orden: 1 },
+                ...(sinLote
+                  ? [{ producto: "SULFATO DE SODIO", lote: "", pesoConversionKg: 25, cantidadKg: 5, orden: 2 }]
+                  : []),
+              ],
             },
           },
         ],
@@ -169,7 +192,9 @@ async function principal() {
   }
 
   const numero = process.argv[3] ? Number(process.argv[3]) : 1;
-  const res = await crearEnvioPrueba({ numero });
+  const tipo = process.argv[4] === "pedido" ? "pedido" : "ruta";
+  const sedeId = process.argv[5] ? Number(process.argv[5]) : undefined;
+  const res = await crearEnvioPrueba({ numero, tipo, sedeId });
   console.log(JSON.stringify(res));
 }
 
