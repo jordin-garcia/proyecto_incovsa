@@ -98,7 +98,8 @@ export function ModalDetalle({ abierto, alCerrar, datos }: ModalDetalleProps) {
             tal como vinieron en el archivo de Odoo.
           </p>
 
-          <div className="det-grupos">
+          {/* En teléfono las zonas con desplazamiento deben poder enfocarse para recorrerlas con teclado (RNF-08). */}
+          <div className="det-grupos" tabIndex={0} role="region" aria-label="Pedidos facturados">
             {datos.pedidosFacturados.map((g, i) => (
               <section key={g.id} className="det-g">
                 <div className="det-g-cab">
@@ -111,7 +112,12 @@ export function ModalDetalle({ abierto, alCerrar, datos }: ModalDetalleProps) {
                   </div>
                   <span className="mono kg">{fmt(g.totalKg)} kg</span>
                 </div>
-                <div className="tabla-caja">
+                <div
+                  className="tabla-caja"
+                  tabIndex={0}
+                  role="region"
+                  aria-label={`Productos del pedido ${g.numeroOdoo}`}
+                >
                   <table className="tabla">
                     <thead>
                       <tr>

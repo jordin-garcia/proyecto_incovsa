@@ -40,8 +40,14 @@
   display: block;
   font: 600 9px / 1 var(--f-ui);
   letter-spacing: 0.12em;
-  opacity: 0.75;
+  /* Sin la opacidad 0.75 del prototipo: el texto de 9 px no llegaba a 4.5:1 (RNF-08, JM-08). */
   margin-bottom: -10px;
+}
+
+/* El pedido que recoge el cliente conserva los colores del prototipo por decisión del coordinador (specs/18, 19/10):
+   excepción documentada a RNF-08. */
+.ped-num.recoge small {
+  opacity: 0.75;
 }
 
 .ped-cab h3 {
@@ -96,6 +102,13 @@
   flex-wrap: wrap;
 }
 
+/* --g500 sobre los fondos claros de Bodega queda debajo de 4.5:1; --g600 es el gris accesible (JG-05, JM-08). */
+.ped-pie .muted,
+tr.lista .muted,
+.det-g-cab .muted {
+  color: var(--g600);
+}
+
 .marca {
   width: 30px;
   height: 30px;
@@ -131,7 +144,7 @@ tr.lista td {
 
 tr.lista .cod,
 tr.lista .kg {
-  color: var(--g500);
+  color: var(--g600);
 }
 
 .lote {
@@ -147,7 +160,7 @@ tr.lista .kg {
 
 .lote.sin {
   background: var(--g100);
-  color: var(--g500);
+  color: var(--g600);
   border-color: var(--g200);
   font-weight: 600;
 }
@@ -165,7 +178,7 @@ tr.lista .kg {
 
 .det-env small {
   display: block;
-  color: var(--g500);
+  color: var(--g600);
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
