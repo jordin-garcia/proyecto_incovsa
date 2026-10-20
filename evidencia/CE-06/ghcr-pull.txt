@@ -1,0 +1,65 @@
+=== ghcr-pull / imagetools: proyecto_incovsa-prueba ===
+Run: https://github.com/jordin-garcia/proyecto_incovsa/actions/runs/39480353926
+Commit: f21dadc65be38e2d1d36c0d376fdcc99d9d98623
+
+=== Salida del paso listar/comprobar ===
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:24.3085765Z Paquete proyecto_incovsa-prueba: quedan 5 imágenes etiquetadas (máx. 5).
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:24.3111573Z Inspect ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-5
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:25.0141131Z Name:      ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-5
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:25.0141854Z MediaType: application/vnd.oci.image.manifest.v1+json
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:25.0142411Z Digest:    sha256:d55f18253dddd7827a5fb7eb17fd071d2d1a90ef49eac2c50ab59e0cc8680d8e
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:25.0174646Z Inspect ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-4
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:25.6538188Z Name:      ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-4
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:25.6538811Z MediaType: application/vnd.oci.image.manifest.v1+json
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:25.6539543Z Digest:    sha256:fe55d4116b92aeeee06ed84ab5b1dda59f4e4c225ed81d96b5c7503877aeb63f
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:25.6566511Z Inspect ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-3
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:26.3695898Z Name:      ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-3
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:26.3696436Z MediaType: application/vnd.oci.image.manifest.v1+json
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:26.3699771Z Digest:    sha256:6d730c70ea2342a84c854543254ec530015a7f52323a570fe065b94ec89ed885
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:26.3728320Z Inspect ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-2
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:27.0511460Z Name:      ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-2
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:27.0512043Z MediaType: application/vnd.oci.image.manifest.v1+json
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:27.0512688Z Digest:    sha256:e39bc3b96d500123a458ffb8a28ed099307093e4fc8c250c15876cacd4accc02
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:27.0539359Z Inspect ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-1
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:27.8136999Z Name:      ghcr.io/jordin-garcia/proyecto_incovsa-prueba:evidencia-poda-1
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:27.8137658Z MediaType: application/vnd.oci.image.manifest.v1+json
+publicar-ghcr	RNF-12: listar y comprobar las imágenes etiquetadas que quedan	2026-10-20T19:07:27.8138151Z Digest:    sha256:de53bc9535ebb7819a613e77c72c52ad9137c47910060e6e3490e175901c2220
+
+=== Versiones etiquetadas (JSON del workflow) ===
+[
+  {
+    "id": 1417458635,
+    "created_at": "2026-10-20T19:07:21Z",
+    "tags": [
+      "evidencia-poda-5"
+    ]
+  },
+  {
+    "id": 1417458409,
+    "created_at": "2026-10-20T19:07:19Z",
+    "tags": [
+      "evidencia-poda-4"
+    ]
+  },
+  {
+    "id": 1417458144,
+    "created_at": "2026-10-20T19:07:16Z",
+    "tags": [
+      "evidencia-poda-3"
+    ]
+  },
+  {
+    "id": 1417457931,
+    "created_at": "2026-10-20T19:07:14Z",
+    "tags": [
+      "evidencia-poda-2"
+    ]
+  },
+  {
+    "id": 1417457740,
+    "created_at": "2026-10-20T19:07:11Z",
+    "tags": [
+      "evidencia-poda-1"
+    ]
+  }
+]

@@ -69,3 +69,10 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Hecho: se retiró la aserción de 28 MB → 413 en `produccion-imagen`. Sin sesión la ruta responde 403 sin leer el cuerpo y Caddy puede devolver ese 403 antes de aplicar `max_size`. Queda la prueba de 7 MB sin 413.
 - Decisiones: ninguna nueva sobre el límite 27 MB.
 - Pendiente o aviso para otros: ninguno.
+
+## 2026-10-20 · CE-06 · Despliegue automático desde main con GitHub Actions y GHCR
+- Hecho: `.github/workflows/despliegue.yml` — paquete prod `ghcr.io/<repo>` solo en `main` sin `modo_prueba`; cualquier otra ref usa `<repo>-prueba`. `provenance`/`sbom` off; poda ≤ 5 etiquetadas; SSH solo desde `main`; rollback con `etiqueta` vía `env`. Evidencia en `evidencia/CE-06/` (run 39480353926: 6→5 en `-prueba`).
+- Decisiones: carpeta remota `~/incovsa` (CE-08); rollback anula ENTRYPOINT; sin secretos VPS el flujo termina tras GHCR.
+- Pendiente o aviso para otros:
+  - **CE-08:** secretos `VPS_HOST`, `VPS_USUARIO`, `VPS_LLAVE_SSH`, `VPS_KNOWN_HOSTS` en environment `produccion`; carpeta `~/incovsa`; fijar `IMAGEN_APP` en el `.env` (este flujo no publica `:latest`).
+  - **JG-19:** primer despliegue real al integrar en `main`; `gh run watch` sobre este flujo.

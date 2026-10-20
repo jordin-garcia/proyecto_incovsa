@@ -5,7 +5,7 @@ persona: carlos
 responsable: Carlos Hugo Escobar
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [CE-05]
 programada: 2026-10-23
 requisitos: [RNF-12]
@@ -51,3 +51,14 @@ gh run watch
 
 ## Fuera de alcance
 - Preparar el VPS (CE-08) y el primer despliegue real del 02/11 (JG-19).
+
+## Resultado
+
+El flujo `.github/workflows/despliegue.yml` (`name: Despliegue`) hace esto:
+
+1. **Solo `refs/heads/main` sin `modo_prueba`:** publica en `ghcr.io/<owner>/<repo>` (`<sha>` + `produccion`) y poda ese paquete a ≤ 5 etiquetadas (`provenance`/`sbom` off).
+2. **Cualquier otra ref** (incl. `ce-06-prueba`, `workflow_dispatch` en `develop`, o `modo_prueba` en `main`): publica y poda solo en `ghcr.io/<owner>/<repo>-prueba`; nunca toca el paquete de producción. Variantes ligeras para ejercer la poda (>5).
+3. **SSH al VPS** (solo desde `main`, `environment: produccion`): `~/incovsa`, `postgres --wait`, migrate en un solo uso, reinicio de `app`, `https://incovsa.com`. Sin secretos (CE-08), omite el SSH.
+4. **`workflow_dispatch` con `etiqueta`:** desde `main`, vuelve a `ghcr.io/<repo>:<etiqueta>` sin migraciones (`env` + validación).
+
+**Evidencia:** `evidencia/CE-06/workflow-run.txt` y `ghcr-pull.txt` (run en `ce-06-prueba` → paquete `-prueba`).

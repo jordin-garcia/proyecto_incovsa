@@ -1,0 +1,94 @@
+TAP version 13
+# Subtest: RNF-16: existen las ocho verificaciones obligatorias y ninguna tiene `if` a nivel de trabajo
+ok 1 - RNF-16: existen las ocho verificaciones obligatorias y ninguna tiene `if` a nivel de trabajo
+  ---
+  duration_ms: 4.854599
+  type: 'test'
+  ...
+# Subtest: RNF-16: las verificaciones obligatorias corren en los PR a develop y main
+ok 2 - RNF-16: las verificaciones obligatorias corren en los PR a develop y main
+  ---
+  duration_ms: 1.532252
+  type: 'test'
+  ...
+# Subtest: decisión 66: todas las acciones van fijadas por un SHA de 40 caracteres
+ok 3 - decisión 66: todas las acciones van fijadas por un SHA de 40 caracteres
+  ---
+  duration_ms: 2.407073
+  type: 'test'
+  ...
+# Subtest: decisión 66: ningún flujo usa pull_request_target y todos declaran permisos mínimos
+ok 4 - decisión 66: ningún flujo usa pull_request_target y todos declaran permisos mínimos
+  ---
+  duration_ms: 0.899108
+  type: 'test'
+  ...
+# Subtest: JG-08, criterio 9: el título, el cuerpo y la rama de un PR nunca se interpolan en un comando
+ok 5 - JG-08, criterio 9: el título, el cuerpo y la rama de un PR nunca se interpolan en un comando
+  ---
+  duration_ms: 1.135978
+  type: 'test'
+  ...
+# Subtest: RNF-16: todos los trabajos tienen timeout-minutes
+ok 6 - RNF-16: todos los trabajos tienen timeout-minutes
+  ---
+  duration_ms: 0.901113
+  type: 'test'
+  ...
+# Subtest: JG-08, criterio 8: antes de JG-02, los trabajos que necesitan la aplicación terminan bien sin ejecutar nada
+ok 7 - JG-08, criterio 8: antes de JG-02, los trabajos que necesitan la aplicación terminan bien sin ejecutar nada
+  ---
+  duration_ms: 1.729267
+  type: 'test'
+  ...
+# Subtest: decisión 47: la CI ejecuta formato, lint, tipos, pruebas sobre PostgreSQL 18 con migraciones desde cero, compilación y npm audit
+ok 8 - decisión 47: la CI ejecuta formato, lint, tipos, pruebas sobre PostgreSQL 18 con migraciones desde cero, compilación y npm audit
+  ---
+  duration_ms: 0.488131
+  type: 'test'
+  ...
+# Subtest: JG-08, criterio 3: titulo valida el formato y el cierre de la tarea, con el título en una variable
+ok 9 - JG-08, criterio 3: titulo valida el formato y el cierre de la tarea, con el título en una variable
+  ---
+  duration_ms: 0.597062
+  type: 'test'
+  ...
+# Subtest: decisión 80: archivos-protegidos ejecuta la versión de develop del script, con el autor en una variable
+ok 10 - decisión 80: archivos-protegidos ejecuta la versión de develop del script, con el autor en una variable
+  ---
+  duration_ms: 0.576126
+  type: 'test'
+  ...
+# Subtest: decisión 60: revision-claude siempre decide el veredicto y deja la revisión formal
+ok 11 - decisión 60: revision-claude siempre decide el veredicto y deja la revisión formal
+  ---
+  duration_ms: 0.575409
+  type: 'test'
+  ...
+# Subtest: decisión 60: claude-interactivo responde a @claude y no genera un check revision-claude
+ok 12 - decisión 60: claude-interactivo responde a @claude y no genera un check revision-claude
+  ---
+  duration_ms: 0.171505
+  type: 'test'
+  ...
+# Subtest: decisión 87: el tablero corre en cada integración a develop, cada día a las 07:00 de Guatemala y a mano
+ok 13 - decisión 87: el tablero corre en cada integración a develop, cada día a las 07:00 de Guatemala y a mano
+  ---
+  duration_ms: 0.155817
+  type: 'test'
+  ...
+# Subtest: JG-08: Dependabot propone actualizaciones semanales de npm y de GitHub Actions a develop
+ok 14 - JG-08: Dependabot propone actualizaciones semanales de npm y de GitHub Actions a develop
+  ---
+  duration_ms: 0.522774
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 111.694329
