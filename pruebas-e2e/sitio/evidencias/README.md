@@ -13,7 +13,7 @@ Se contrastaron navegación, textos, orden de las secciones, las nueve industria
 
 ## Diferencias previstas por las especificaciones
 
-- El pie usa el mismo logotipo de la cabecera sobre placa clara, según DM-02. No incluye la leyenda académica ni el botón de demostración del prototipo.
+- El pie usa, como el prototipo (`sitio.js` › `logoOscuro()`), el logotipo blanco sobre el verde mientras no se suba otro desde el panel; con uno subido, ese mismo sobre una placa clara. Las capturas de la aplicación se repitieron el 19/10 tras corregirlo, junto con los mapas en proporción 4:3 y el teléfono y el correo en letra monoespaciada. No incluye la leyenda académica ni el botón de demostración del prototipo.
 - Los recuentos de productos por industria salen de la relación del catálogo en la base, no de la lista fija del prototipo.
 - Los textos pequeños usan `--g600` donde el gris del prototipo no alcanza el contraste de RNF-08, siguiendo el criterio de JG-05. Los estilos están limitados a `.sitio` y usan los tokens existentes.
 - La cifra de tres sedes se conserva por la excepción explícita de `specs/05`; las tarjetas y el pie solo muestran las oficinas de Quetzaltenango y Guatemala.
