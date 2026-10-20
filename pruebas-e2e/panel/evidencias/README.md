@@ -9,10 +9,11 @@ Se incorporó `develop` con DM-02 y se completaron las comprobaciones de publica
 - `node scripts/tareas.mjs --validar`: plan válido, 63 tareas.
 - `npm run verificar`: formato, lint y tipos correctos; 30 archivos y **279 pruebas aprobadas**.
 - `npm run build`: compilación de producción correcta, incluidas `/panel/contenido`, `/panel/resumen` y las rutas de imágenes.
-- `npm run e2e -- pruebas-e2e/panel/contenido.spec.ts --workers=1`: **18 pruebas propias** en 390, 768 y 1440 px. Cubren axe sin infracciones serias/críticas, permisos, borradores, arrastre vacío, carga real de 5 MB, publicación y eliminación física, misión con texto e imagen ordenados en Inicio para un visitante sin sesión y el logotipo subido en cabecera y pie. El archivo carga la configuración local sin mostrar sus valores.
-- `npm run e2e -- --workers=1`: **178 aprobadas y 2 omitidas por condiciones preexistentes de Facturación**, sin fallos. DM-04 no agrega omisiones. Las 18 pruebas propias pasan también dentro de esta ejecución completa.
+- `npm run e2e -- pruebas-e2e/panel/contenido.spec.ts --workers=1`: **21 pruebas propias** en 390, 768 y 1440 px. Cubren axe sin infracciones serias/críticas, permisos, borradores, arrastre vacío, carga real de 5 MB, publicación y eliminación física, misión con texto e imagen ordenados en Inicio para un visitante sin sesión y el logotipo subido en cabecera y pie. El archivo carga la configuración local sin mostrar sus valores.
+- `npm run e2e -- --workers=1 --retries=2`: **179 aprobadas directamente, 2 intermitentes aprobadas al reintentar y 2 omitidas por condiciones preexistentes de Facturación**, sin fallos definitivos. DM-04 no agrega omisiones. Las 21 pruebas propias pasan también dentro de esta ejecución completa.
 - `node scripts/archivos-protegidos.mjs InAlexa`: sin archivos protegidos no permitidos. El cambio local preexistente de `.codex/config.toml` permanece fuera de los commits.
 - En el avance del 19/10 se detectó un contraste insuficiente de Bodega. Ya quedó corregido por el coordinador en `develop`; la captura `incidencia-contraste-bodega.png` se conserva únicamente como evidencia histórica. DM-04 no cambia código ni pruebas de Bodega.
+- La repetición sin reintentos dio 178 aprobadas, 2 omisiones y 3 fallos en `picking/usuarios.spec.ts:116`, al medir contraste durante la aparición del modal. La comprobación aislada pasó sin modificarla. Se repitió la batería con los dos reintentos que ya contempla la configuración de CI, sin modificar código, pruebas ni estilos del picking.
 - Context7 consultado para sharp, file-type, S3, Zod, Next.js, Prisma, React, React Hook Form y Playwright. shadcn confirmó el registro `@shadcn`; next-devtools reconoció el servidor en el puerto 3000 y confirmó ausencia de errores en las consultas realizadas.
 
 ## Pruebas primero y revisión independiente
@@ -32,7 +33,9 @@ La revisión independiente siguió `plan/prompts/revision.md`. Encontró que un 
 | Misión publicada en Inicio | [Captura](publicacion-inicio-390.png) | [Captura](publicacion-inicio-768.png) | [Captura](publicacion-inicio-1440.png) |
 | Logotipo publicado en el sitio | [Captura](logotipo-publico-390.png) | [Captura](logotipo-publico-768.png) | [Captura](logotipo-publico-1440.png) |
 
-Se conservan bloques, orden, textos funcionales, estados, galerías y colores del sistema de diseño. Las imágenes y textos de prueba pueden diferir. Se excluyen las notas P-xx y el botón Demostración conforme a `specs/20`. El resumen usa `/panel/resumen` y se conserva la redirección de `/panel`, según la precisión de JG-07 en `specs/05`.
+Se conservan bloques, orden, textos funcionales, estados, galerías y colores del sistema de diseño. Las capturas del panel usan misión y visión aprobadas, historia y galerías vacías y logotipos originales. La preparación de `datos.ts` guarda y restaura las filas anteriores incluso al fallar una prueba, usa el mismo candado que DM-02 y elimina únicamente los archivos nuevos locales. No reinicia la base. Se excluyen las notas P-xx y el botón Demostración conforme a `specs/20`. El resumen usa `/panel/resumen` y se conserva la redirección de `/panel`, según la precisión de JG-07 en `specs/05`.
+
+La revisión del PR detectó etiquetas que cambiaban al elegir un borrador, capturas con datos de pruebas anteriores y la falta del recuadro de los iconos del resumen. Se separó el estado publicado del borrador, se aislaron los datos y se reprodujeron los recuadros de 44 × 44 px del prototipo. Las nuevas comprobaciones fallaron primero por la etiqueta y el ancho del icono y pasaron después de corregirlos. Se repitió la revisión independiente sin hallazgos pendientes.
 
 ## Uso y límites
 

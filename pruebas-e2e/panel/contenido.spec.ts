@@ -1,4 +1,5 @@
-import { expect, test } from "@playwright/test";
+import { expect } from "@playwright/test";
+import { test, MISION } from "./datos";
 import AxeBuilder from "@axe-core/playwright";
 import sharp from "sharp";
 
@@ -33,6 +34,7 @@ test("RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y 
   await expect(page.getByRole("heading", { name: "Imágenes del sitio", exact: true })).toHaveCount(0);
   const mision = page.getByRole("region", { name: "Misión", exact: true });
   const original = await mision.getByLabel("Texto", { exact: true }).inputValue();
+  expect(original).toBe(MISION);
   await mision.getByLabel("Texto", { exact: true }).fill("Borrador sin publicar");
   await page.waitForTimeout(5500);
   await expect(mision.getByLabel("Texto", { exact: true })).toHaveValue("Borrador sin publicar");
@@ -53,6 +55,11 @@ test("RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y 
       ["serious", "critical"].includes(v.impact ?? ""),
     ),
   ).toEqual([]);
+  await mision.getByLabel("Texto", { exact: true }).evaluate((elemento) => {
+    elemento.scrollTop = 0;
+    elemento.blur();
+  });
+  await page.evaluate(() => window.scrollTo(0, 0));
   await info.attach("contenido-institucional", {
     body: await page.screenshot({ fullPage: true }),
     contentType: "image/png",
@@ -126,6 +133,8 @@ test("RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas
   const tarjetas = page.locator("main .mod-t");
   await expect(tarjetas).toHaveCount(6);
   await expect(tarjetas.first()).toContainText("Contenido institucional");
+  await expect(tarjetas.first().locator(".ic")).toHaveCSS("width", "44px");
+  await expect(tarjetas.first().locator(".ic")).toHaveCSS("border-radius", "12px");
   expect(
     (await new AxeBuilder({ page }).analyze()).violations.filter((v) =>
       ["serious", "critical"].includes(v.impact ?? ""),
@@ -136,6 +145,22 @@ test("RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas
     fullPage: true,
     path: `pruebas-e2e/panel/evidencias/aplicacion-resumen-${page.viewportSize()!.width}.png`,
   });
+});
+
+test("RF-SW-23: un borrador de portada o historia no cambia la etiqueta publicada", async ({ page }) => {
+  await page.goto("/panel/contenido");
+  for (const [nombre, inicial] of [
+    ["Portada", "Fotografía de la empresa"],
+    ["Historia", "Sin contenido"],
+  ]) {
+    const bloque = page.getByRole("region", { name: nombre, exact: true });
+    await expect(bloque.locator(".chip")).toHaveText(inicial!);
+    const color = await bloque.locator(".chip").getAttribute("class");
+    await bloque.getByLabel(`${nombre}: elegir imágenes`).setInputFiles("public/marca/foto-reunion.webp");
+    await expect(bloque.getByRole("img")).toHaveCount(1);
+    await expect(bloque.locator(".chip")).toHaveText(inicial!);
+    await expect(bloque.locator(".chip")).toHaveAttribute("class", color!);
+  }
 });
 
 test("RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visita sin sesión", async ({

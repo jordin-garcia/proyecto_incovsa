@@ -14,3 +14,7 @@ VEREDICTO: LISTO
 ```
 
 La revisión anterior del avance encontró que un arrastre vacío podía eliminar un logotipo; se corrigió y se conserva su prueba automatizada. Las notas amarillas P-xx no se trasladan a la aplicación, conforme a specs/20.
+
+## Correcciones de la revisión del PR
+
+Un segundo revisor en contexto limpio comprobó la separación entre borrador y estado publicado, los recuadros de los iconos del resumen y el aislamiento reversible de las pruebas. Verificó que se conserva el mismo candado de DM-02, que se restauran las filas originales y que solo se eliminan las imágenes locales nuevas. No encontró hallazgos obligatorios ni opcionales: **LISTO**.

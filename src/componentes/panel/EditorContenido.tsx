@@ -26,6 +26,7 @@ function BloqueEditor({
   descripcion: string;
 }) {
   const [imagenes, ponerImagenes] = useState<Imagen[]>(iniciales);
+  const [publicado, ponerPublicado] = useState({ imagenes: iniciales, texto: textoInicial });
   const [ocupado, ponerOcupado] = useState(false);
   const bloqueo = useRef(false);
   const router = useRouter();
@@ -57,6 +58,7 @@ function BloqueEditor({
         return;
       }
       ponerImagenes(resultado.datos.imagenes);
+      ponerPublicado({ imagenes: resultado.datos.imagenes, texto: datos.texto });
       mensaje(`${nombresBloques[bloque]} publicado en el sitio.`);
       router.refresh();
     } catch {
@@ -66,7 +68,7 @@ function BloqueEditor({
       ponerOcupado(false);
     }
   }
-  const cargadas = imagenes.filter(Boolean).length;
+  const cargadas = publicado.imagenes.filter(Boolean).length;
   const estado =
     bloque === "valores"
       ? cargadas === 5
@@ -78,7 +80,7 @@ function BloqueEditor({
           : "El recibido"
         : bloque === "inquiserca"
           ? cargadas
-            ? imagenes[0] === "/marca/inquiserca.webp"
+            ? publicado.imagenes[0] === "/marca/inquiserca.webp"
               ? "El recibido"
               : "Cambiado"
             : "Sin logotipo"
@@ -86,7 +88,7 @@ function BloqueEditor({
             ? cargadas
               ? "Publicada"
               : "Fotografía de la empresa"
-            : textoInicial || cargadas
+            : publicado.texto || cargadas
               ? "Publicado"
               : "Sin contenido";
   return (
@@ -96,7 +98,11 @@ function BloqueEditor({
           <h3>{nombresBloques[bloque]}</h3>
           <p>{descripcion}</p>
         </div>
-        <span className={`chip ${cargadas || textoInicial ? "chip-v" : "chip-a"}`}>{estado}</span>
+        <span
+          className={`chip ${(bloque === "valores" ? cargadas === 5 : cargadas || publicado.texto) ? "chip-v" : "chip-a"}`}
+        >
+          {estado}
+        </span>
       </div>
       <form
         className={`${estilos.cuerpo} ${individual ? estilos.cuerpoIndividual : ""}`}

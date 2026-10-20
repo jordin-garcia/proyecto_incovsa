@@ -128,8 +128,26 @@
 .resumen a {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 22px;
+  gap: 10px;
+  padding: 20px;
+}
+.resumen {
+  gap: 16px;
+}
+.resumen :global(.ic) {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r);
+  background: var(--v50);
+  color: var(--v600);
+  display: grid;
+  place-items: center;
+}
+.resumen a:hover {
+  border-color: var(--v300);
+  transform: translateY(-2px);
+  box-shadow: var(--s2);
+  color: var(--g800);
 }
 .resumen h3 {
   font-size: 17px;
