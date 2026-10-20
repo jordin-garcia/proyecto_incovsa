@@ -47,7 +47,8 @@ jobs:
         run: |
           set -euo pipefail
           repo_lc="$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')"
-          imagen="ghcr.io/${repo_lc}"
+          owner_lc="$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
+          pkg_prod="$(echo '${{ github.event.repository.name }}' | tr '[:upper:]' '[:lower:]')"
           sha="$(echo '${{ github.sha }}' | cut -c1-40)"
           # produccion solo en main y fuera de modo_prueba (decisiones 31 y 75).
           modo_prueba=false
@@ -61,10 +62,20 @@ jobs:
           if [ '${{ github.ref }}' = 'refs/heads/main' ] && [ "$modo_prueba" = 'false' ]; then
             publico_produccion=true
           fi
+          # Modo prueba usa paquete aparte: nunca toca ghcr.io/<repo> ni su poda.
+          if [ "$modo_prueba" = 'true' ]; then
+            pkg="${pkg_prod}-prueba"
+            imagen="ghcr.io/${owner_lc}/${pkg}"
+          else
+            pkg="${pkg_prod}"
+            imagen="ghcr.io/${repo_lc}"
+          fi
           tag_sha="${imagen}:${sha}"
-          tag_produccion="${imagen}:produccion"
+          tag_produccion="ghcr.io/${repo_lc}:produccion"
           {
             echo "imagen=${imagen}"
+            echo "paquete=${pkg}"
+            echo "owner=${owner_lc}"
             echo "etiqueta_sha=${sha}"
             echo "tag_sha=${tag_sha}"
             echo "tag_produccion=${tag_produccion}"
@@ -134,11 +145,14 @@ jobs:
         id: poda
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ steps.meta.outputs.owner }}
+          PKG: ${{ steps.meta.outputs.paquete }}
+          MODO_PRUEBA: ${{ steps.meta.outputs.modo_prueba }}
         run: |
           set -euo pipefail
-          owner="$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
-          pkg="$(echo '${{ github.event.repository.name }}' | tr '[:upper:]' '[:lower:]')"
-          api="/users/${owner}/packages/container/${pkg}/versions?per_page=100"
+          # Cada modo poda solo su propio paquete (prod vs <repo>-prueba).
+          echo "Podando paquete container/${PKG} (modo_prueba=${MODO_PRUEBA})"
+          api="/users/${OWNER}/packages/container/${PKG}/versions?per_page=100"
           if ! gh api "$api" --jq 'length' >/tmp/ghcr-count.txt 2>/tmp/ghcr-err.txt; then
             if grep -qi '404\|Not Found' /tmp/ghcr-err.txt; then
               echo "Paquete sin versiones listables todavía; se omite la poda."
@@ -164,7 +178,7 @@ jobs:
                 '
           )
           total="${#ids[@]}"
-          echo "Imágenes etiquetadas en GHCR: ${total}"
+          echo "Imágenes etiquetadas en ${PKG}: ${total}"
           if [ "$total" -le 5 ]; then
             echo "Nada que borrar (máximo 5)."
             echo "quedan=${total}" >> "$GITHUB_OUTPUT"
@@ -172,7 +186,7 @@ jobs:
           fi
           for id in "${ids[@]:5}"; do
             echo "Borrando versión etiquetada ${id}"
-            if ! gh api --method DELETE "/users/${owner}/packages/container/${pkg}/versions/${id}" 2>/tmp/ghcr-del-err.txt; then
+            if ! gh api --method DELETE "/users/${OWNER}/packages/container/${PKG}/versions/${id}" 2>/tmp/ghcr-del-err.txt; then
               if grep -qi '403\|Forbidden' /tmp/ghcr-del-err.txt; then
                 echo "GHCR: sin permiso para borrar versiones (403)." >&2
                 cat /tmp/ghcr-del-err.txt >&2
@@ -187,18 +201,18 @@ jobs:
               | jq -s 'map(select((.metadata.container.tags // []) | length > 0)) | length'
           )"
           test "$quedan" -le 5
-          echo "Quedan ${quedan} imágenes etiquetadas."
+          echo "Quedan ${quedan} imágenes etiquetadas en ${PKG}."
           echo "quedan=${quedan}" >> "$GITHUB_OUTPUT"
 
       - name: "RNF-12: listar y comprobar las imágenes etiquetadas que quedan"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IMAGEN: ${{ steps.meta.outputs.imagen }}
+          OWNER: ${{ steps.meta.outputs.owner }}
+          PKG: ${{ steps.meta.outputs.paquete }}
         run: |
           set -euo pipefail
-          owner="$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
-          pkg="$(echo '${{ github.event.repository.name }}' | tr '[:upper:]' '[:lower:]')"
-          api="/users/${owner}/packages/container/${pkg}/versions?per_page=100"
+          api="/users/${OWNER}/packages/container/${PKG}/versions?per_page=100"
           gh api --paginate "$api" --jq '.[]' \
             | jq -s '
                 map(select((.metadata.container.tags // []) | length > 0))
@@ -208,7 +222,7 @@ jobs:
                 | map({id, created_at, tags: .metadata.container.tags})
               ' | tee /tmp/ghcr-quedan.json
           count="$(jq 'length' /tmp/ghcr-quedan.json)"
-          echo "Quedan ${count} imágenes etiquetadas (máx. 5)."
+          echo "Paquete ${PKG}: quedan ${count} imágenes etiquetadas (máx. 5)."
           test "$count" -le 5
           while IFS= read -r tag; do
             [ -n "$tag" ] || continue

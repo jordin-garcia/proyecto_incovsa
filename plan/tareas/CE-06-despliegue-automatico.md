@@ -5,7 +5,7 @@ persona: carlos
 responsable: Carlos Hugo Escobar
 hito: E3
 prioridad: P1
-estado: hecha
+estado: pendiente
 depende_de: [CE-05]
 programada: 2026-10-23
 requisitos: [RNF-12]
@@ -56,13 +56,9 @@ gh run watch
 
 El flujo `.github/workflows/despliegue.yml` (`name: Despliegue`) hace esto:
 
-1. **Push a `main`:** compila la imagen (`provenance: false`, `sbom: false` → una versión etiquetada por imagen), la sube a GHCR con la etiqueta del *commit* (SHA) y `produccion`, y poda dejando solo las **últimas 5 versiones etiquetadas**.
-2. **Push a `ce-06-prueba` o `workflow_dispatch` con `modo_prueba=true`:** solo GHCR con la etiqueta del SHA (nunca `produccion`); no despliega.
-3. **SSH al VPS** (solo desde `main`, `environment: produccion`, secretos `VPS_HOST`, `VPS_USUARIO`, `VPS_LLAVE_SSH`, `VPS_KNOWN_HOSTS`): en `~/incovsa` hace `docker login` a GHCR, levanta `postgres` si hace falta, `docker compose pull app`, `prisma migrate deploy` en un contenedor de un solo uso y `docker compose up -d app`. Comprueba `https://incovsa.com`. Sin secretos (antes de CE-08), omite el SSH.
-4. **`workflow_dispatch` con `etiqueta`:** desde `main`, vuelve a esa imagen **sin migraciones** (override Compose → solo `node server.js`).
+1. **Push a `main`:** compila la imagen (`provenance: false`, `sbom: false`), la sube a `ghcr.io/<owner>/<repo>` (`<sha>` + `produccion`) y poda solo ese paquete a las **últimas 5 versiones etiquetadas**.
+2. **Push a `ce-06-prueba` o `modo_prueba=true`:** publica y poda solo en `ghcr.io/<owner>/<repo>-prueba` (nunca toca el paquete de producción ni la etiqueta `produccion`); no despliega. En modo prueba se crean variantes ligeras para ejercer la poda (>5).
+3. **SSH al VPS** (solo desde `main`, `environment: produccion`): `~/incovsa`, `postgres --wait`, migrate en contenedor de un solo uso, reinicio de `app`, comprobación de `https://incovsa.com`. Sin secretos (CE-08), omite el SSH.
+4. **`workflow_dispatch` con `etiqueta`:** desde `main`, vuelve a `ghcr.io/<repo>:<etiqueta>` **sin migraciones** (override Compose → `node server.js`). La entrada va por `env` y se valida.
 
-Permisos mínimos en el flujo (`contents: read`); `packages: write` solo en `publicar-ghcr`. Acciones fijadas por SHA. Imagen `ghcr.io/<owner>/<repo>` en minúsculas.
-
-**Cómo usarlo:** `gh workflow run despliegue.yml -f modo_prueba=true` (desde una ref que ya tenga el archivo) o push a `ce-06-prueba`. Despliegue real al integrar en `main` (JG-19). CE-08: secretos del environment y `IMAGEN_APP` en el `.env` del VPS (este flujo no publica `:latest`).
-
-**Evidencia:** `evidencia/CE-06/` (incl. `workflow-run.txt` cuando el push de prueba a GHCR termina).
+**Evidencia:** `evidencia/CE-06/workflow-run.txt` y `ghcr-pull.txt` (run de `ce-06-prueba` contra el paquete `-prueba`).
