@@ -48,3 +48,12 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Decisiones: esquemas de sitio sin sede; al degradar `ambos` desde el sitio se vacían sedes; textos en `textos.ts`.
 - Pendiente o aviso para otros:
   - **Todos:** no hay permiso `sit.usuarios`; la sección del panel sigue abierta solo con `esAccesoTotal`.
+
+## 2026-10-19 · CE-05 · Producción con Docker Compose y Caddy
+- Hecho: Dockerfile de Node 24 (standalone, usuario sin privilegios, `prisma migrate deploy` y luego un solo `node server.js`), Compose con Caddy, la aplicación y PostgreSQL 18 sin puerto publicado, Caddyfile con HSTS, `X-Real-IP` y SSE sin búfer, `.env.produccion.example` y el flujo `produccion-imagen`.
+- Decisiones: el límite del cuerpo en Caddy es 6 MB (margen sobre imágenes de 5 MB y multipart); Next sigue en 3 MB. El volumen de Postgres 18 es `/var/lib/postgresql`. La imagen final conserva `node_modules` de `npm ci` porque `prisma` y `tsx` son devDependencies. Las demás cabeceras de RNF-16 quedan en JG-11.
+- Pendiente o aviso para otros:
+  - **Jordin (JG-11):** las cabeceras CSP, nosniff, Referrer-Policy y frame-ancestors siguen en `next.config.ts`. Caddy ya manda HSTS. Conviene comprobarlas a través de Caddy cuando JG-11 cierre.
+  - **Jordin (JG-10):** el flush SSE está en el Caddyfile; la prueba de punta a punta queda para cuando exista SSE.
+  - **Jordin:** `.gitignore` admite `!.env.produccion.example` (mínimo, fuera de la lista de archivos de la tarea).
+  - **CE-06:** el despliegue automático no está en este PR. La imagen de referencia es `ghcr.io/jordin-garcia/proyecto_incovsa:latest`.
