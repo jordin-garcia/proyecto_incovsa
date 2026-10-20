@@ -50,3 +50,11 @@ Con cualquier otra frase el script termina con código 1. No descarga el archivo
 ## Prueba automática
 
 El flujo "Respaldo y restauración" (`.github/workflows/produccion-respaldo.yml`) corre en los pull requests que tocan estos scripts, cada lunes a las 06:00 UTC y a mano. Levanta PostgreSQL 18, aplica las migraciones, carga la semilla base y la de demostración, respalda, restaura en `incovsa_restaurada` y compara la cantidad de filas de cada tabla.
+
+### Corrida en el tip del PR #94 (`5c505b7`)
+
+- Resultado: **success** (1m18s).
+- Run: https://github.com/jordin-garcia/proyecto_incovsa/actions/runs/39480510922
+- Job: https://github.com/jordin-garcia/proyecto_incovsa/actions/runs/39480510922/job/118827517023
+- **Comparar las filas de cada tabla (RNF-09):** success. Contó filas en `incovsa` y `incovsa_restaurada`; `diff -u` sin diferencias. Antes: `restauración de diarios/20261020.dump en incovsa_restaurada lista`.
+- **Comprobar la retención de 7 diarios y 4 semanales:** success. Con `SOLO_RETENCION=1` borró el excedente (`diarios/20200101.dump`, `diarios/20200102.dump`, `semanales/20200105.dump`, `semanales/20200112.dump`) y dejó 7 diarios y 4 semanales, con `20261020.dump` conservado.
