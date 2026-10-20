@@ -13,6 +13,8 @@
 # publicado. Un commit con una revisión completa no se revisa otra vez con rerun, reabriendo el PR ni editándolo,
 # salvo que cambie la tarea del título. Un commit nuevo sí produce otra revisión.
 # No usa --max-turns: una revisión grande necesita más turnos. El tope lo ponen los timeout-minutes.
+# allowed_bots admite solo al agente en la nube de Cursor (actor cursor[bot]), que usa Carlos (decisión 62, 19/10).
+# Sin esa lista, la acción rechaza los eventos que dispara un bot y el check falla aunque el código esté bien.
 name: Revisión con Claude
 
 on:
@@ -77,6 +79,8 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ github.token }}
+          # Solo ese bot, nunca "*": cualquier otra aplicación sigue sin poder disparar la revisión con este token.
+          allowed_bots: "cursor"
           prompt: |
             Eres el revisor automático del proyecto INCOVSA. Revisa el pull request #${{ github.event.pull_request.number }}
             del repositorio ${{ github.repository }} (commit ${{ github.event.pull_request.head.sha }}).

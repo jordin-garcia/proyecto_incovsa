@@ -188,6 +188,7 @@
   width: 40px;
   height: 40px;
   color: var(--g300);
+  margin-inline: auto;
 }
 
 .vacio h3 {
@@ -266,6 +267,7 @@
 }
 
 .ayuda {
+  font-size: 13px;
   margin-top: 18px;
   color: var(--g600);
 }
@@ -320,4 +322,134 @@
   .cabeceraOpcion > span:last-child {
     margin-left: 54px;
   }
+}
+
+.campos {
+  gap: 10px;
+}
+.zonaOpcion {
+  min-height: 72px;
+  padding: 6px;
+  border: 1.5px dashed var(--g200);
+  background: var(--g50);
+  border-radius: var(--radius-r);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.zonaSobre {
+  background: var(--v50);
+  outline: 2px solid var(--v400);
+  outline-offset: -2px;
+}
+.vacioOpcion {
+  margin: auto;
+  color: var(--g600);
+  font-size: 13.5px;
+  padding: 12px;
+  text-align: center;
+}
+.filaOpcion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: var(--color-blanco);
+  border: 1px solid var(--g150);
+  border-radius: var(--radius-prototipo-1);
+  cursor: grab;
+  font-size: 13px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.filaOpcion:focus-visible {
+  outline: 3px solid var(--v400);
+  outline-offset: 2px;
+}
+.orden {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  border-radius: var(--radius-prototipo-6);
+  display: grid;
+  place-items: center;
+  background: var(--v100);
+  color: var(--v700);
+  font: 700 11.5px/1 var(--f-mono);
+}
+.nombreCliente {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.kgOpcion {
+  white-space: nowrap;
+  font-size: 12.5px;
+}
+.arrastrando {
+  opacity: 0.35;
+}
+.pesoOpcion {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.accionesOpcion {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+.exceso {
+  border-color: var(--color-prototipo-33);
+}
+.exito {
+  display: grid;
+  gap: 8px;
+  text-align: center;
+}
+.marcaExito {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-prototipo-6);
+  background: var(--v100);
+  color: var(--v600);
+  display: grid;
+  place-items: center;
+  margin: 0 auto 16px;
+}
+.marcaExito > svg {
+  width: 32px;
+  height: 32px;
+}
+
+.filaOpcion > b {
+  color: var(--v700);
+  font-size: 13.5px;
+}
+
+/* Copia que sigue al puntero durante el arrastre (prototipo: .fantasma y .fantasma-n). */
+.fantasma {
+  position: relative;
+  opacity: 0.95;
+  transform: rotate(-1.5deg);
+  box-shadow: var(--s3);
+  cursor: grabbing;
+}
+.fantasmaN {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  display: grid;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 7px;
+  place-items: center;
+  border-radius: var(--radius-prototipo-5);
+  background: var(--v700);
+  color: var(--color-blanco);
+  font: 700 13px/1 var(--f-mono);
 }

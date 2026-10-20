@@ -138,3 +138,8 @@ Quedaron funcionando en GitHub la integración continua, las verificaciones de t
 - Pedirle algo a Claude en un issue o PR: comentar con `@claude` (solo usuarios con permiso de escritura).
 - Recordatorio manual: `gh workflow run tablero-plan.yml -f forzar_recordatorio=true`.
 - Desde JG-02, `calidad`, `pruebas`, `compilacion` y `dependencias` corren completos sin tocar los flujos. En el trabajo `pruebas`, `DATABASE_URL` y `DATABASE_URL_PRUEBAS` apuntan a la base temporal `incovsa_pruebas`. Si JG-02 o JG-03 necesitan más variables en la CI, las agrega el coordinador en `ci.yml`.
+
+### Correcciones de la auditoría (2026-10-19)
+
+- `revision-claude` no revisaba los PR cuyos cambios sube el agente en la nube de Cursor (actor `cursor[bot]`): la acción rechaza los eventos de bots, y `gh run rerun` no lo resolvía porque conserva el actor. Ocurrió en #83, #85 y #86. Por decisión del coordinador, el paso «Revisar con Claude» agrega `allowed_bots: "cursor"`, solo ese bot (decisión 62 y `specs/18`).
+- Mientras tanto, para revisar como humano un PR que disparó un bot no admitido: pasarlo a borrador y volver a marcarlo listo (`gh pr ready <n> --undo` y `gh pr ready <n>`). Eso desactiva la integración automática, que hay que volver a activar.

@@ -2,6 +2,12 @@ import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import sharp from "sharp";
 
+try {
+  process.loadEnvFile();
+} catch {
+  /* La CI proporciona las variables. */
+}
+
 test.beforeEach(async ({ context }) => {
   const respuesta = await context.request.post("/api/auth/sitio/sign-in/username", {
     headers: { origin: "http://localhost:3000" },
@@ -130,4 +136,96 @@ test("RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas
     fullPage: true,
     path: `pruebas-e2e/panel/evidencias/aplicacion-resumen-${page.viewportSize()!.width}.png`,
   });
+});
+
+test("RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visita sin sesión", async ({
+  page,
+  browser,
+}, info) => {
+  await page.goto("/panel/contenido");
+  const bloque = page.getByRole("region", { name: "Misión", exact: true });
+  const textoAnterior = await bloque.getByLabel("Texto", { exact: true }).inputValue();
+  const imagenesAnteriores = await bloque
+    .getByRole("img")
+    .evaluateAll((imgs) => imgs.map((img) => img.getAttribute("src")!));
+  const contextoPublico = await browser.newContext({ viewport: page.viewportSize()! });
+  try {
+    await bloque.getByLabel("Texto", { exact: true }).fill("Misión publicada desde el panel · DM-04");
+    await bloque.getByLabel("Misión: elegir imágenes").setInputFiles("public/marca/foto-reunion.webp");
+    const respuesta = page.waitForResponse(
+      (r) => r.url().endsWith("/api/imagenes/publicar") && r.request().method() === "POST",
+    );
+    await bloque.getByRole("button", { name: "Guardar y publicar", exact: true }).click();
+    expect((await respuesta).ok()).toBe(true);
+    await expect(bloque).toHaveAttribute("aria-busy", "false");
+    const imagen = await bloque.getByRole("img").last().getAttribute("src");
+    const publico = await contextoPublico.newPage();
+    const errores: string[] = [];
+    publico.on("pageerror", (error) => errores.push(error.message));
+    await publico.goto("/");
+    const mision = publico.locator(".mv-fila").first();
+    await expect(mision.locator(".mv-txt")).toContainText("Misión publicada desde el panel · DM-04");
+    await expect(mision.locator(`img[src="${imagen}"]`)).toBeAttached();
+    await mision.scrollIntoViewIfNeeded();
+    const texto = (await mision.locator(".mv-txt").boundingBox())!;
+    const galeria = (await mision.locator(".mv-gal").boundingBox())!;
+    if (page.viewportSize()!.width > 900) expect(texto.x + texto.width).toBeLessThanOrEqual(galeria.x);
+    else expect(texto.y + texto.height).toBeLessThanOrEqual(galeria.y);
+    expect(errores).toEqual([]);
+    await publico.screenshot({
+      fullPage: true,
+      path: `pruebas-e2e/panel/evidencias/publicacion-inicio-${page.viewportSize()!.width}.png`,
+    });
+    await info.attach("publicacion-en-inicio", { body: await publico.screenshot(), contentType: "image/png" });
+  } finally {
+    await contextoPublico.close();
+    const restauracion = await page.request.post("/api/imagenes/publicar", {
+      headers: { origin: "http://localhost:3000" },
+      multipart: { datos: JSON.stringify({ bloque: "mision", texto: textoAnterior, imagenes: imagenesAnteriores }) },
+    });
+    expect(restauracion.ok()).toBe(true);
+  }
+});
+
+test("RF-SW-23 / RF-SW-24: reemplazar INCOVSA actualiza cabecera y pie públicos", async ({ page, browser }, info) => {
+  await page.goto("/panel/contenido");
+  const bloque = page.getByRole("region", { name: "Logotipo de INCOVSA", exact: true });
+  const original = (await bloque.getByRole("img").getAttribute("src"))!;
+  const copiaAnterior = original.startsWith("/marca/") ? null : await (await page.request.get(original)).body();
+  const contextoPublico = await browser.newContext({ viewport: page.viewportSize()! });
+  try {
+    const respuesta = page.waitForResponse(
+      (r) => r.url().endsWith("/api/imagenes/publicar") && r.request().method() === "POST",
+    );
+    await bloque.getByLabel("Logotipo de INCOVSA: elegir imágenes").setInputFiles("public/marca/incovsa-quimicos.webp");
+    expect((await respuesta).ok()).toBe(true);
+    await expect(bloque).toHaveAttribute("aria-busy", "false");
+    const imagen = await bloque.getByRole("img").getAttribute("src");
+    expect(imagen).toMatch(/^\/api\/imagenes\/[a-f0-9-]+\.webp$/);
+    const publico = await contextoPublico.newPage();
+    await publico.goto("/");
+    await expect(publico.locator("header img")).toHaveAttribute("src", imagen!);
+    await expect(publico.locator("footer img")).toHaveAttribute("src", imagen!);
+    await expect(publico.locator("footer .logo-placa")).toHaveCount(1);
+    expect((await publico.request.get(imagen!)).ok()).toBe(true);
+    await publico.screenshot({
+      fullPage: true,
+      path: `pruebas-e2e/panel/evidencias/logotipo-publico-${page.viewportSize()!.width}.png`,
+    });
+    await info.attach("logotipo-publico", { body: await publico.screenshot(), contentType: "image/png" });
+  } finally {
+    await contextoPublico.close();
+    const formulario = new FormData();
+    formulario.set("datos", JSON.stringify({ bloque: "logo", texto: "", imagenes: copiaAnterior ? [0] : [] }));
+    if (copiaAnterior)
+      formulario.append("imagenes", new File([new Uint8Array(copiaAnterior)], "logo.webp", { type: "image/webp" }));
+    expect(
+      (
+        await page.request.post("/api/imagenes/publicar", {
+          headers: { origin: "http://localhost:3000" },
+          multipart: formulario,
+        })
+      ).ok(),
+    ).toBe(true);
+  }
 });

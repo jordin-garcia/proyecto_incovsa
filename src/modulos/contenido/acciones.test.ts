@@ -5,6 +5,7 @@ import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import sharp from "sharp";
 import { leerImagenLocal, borrarImagen } from "@/modulos/almacenamiento/servicio";
 import { leerResumen } from "./resumen";
+import { leerEstructuraSitio } from "./servicio";
 const estado = vi.hoisted(() => ({ sesion: null as SesionActual | null }));
 vi.mock("@/lib/sesion", () => ({ obtenerSesion: async () => estado.sesion }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
@@ -105,9 +106,12 @@ it("RN-56: conserva el orden al intercambiar las cinco posiciones de una galerí
 });
 
 it("RF-SW-23: quitar Inquiserca guarda null y permite recuperar el logotipo recibido", async () => {
+  expect((await leerEstructuraSitio()).logotipoInquiserca).toBe("/marca/inquiserca.webp");
   expect((await publicarContenido(formulario("inquiserca", []))).ok).toBe(true);
   expect((await prisma.configuracionSitio.findUniqueOrThrow({ where: { id: 1 } })).logotipoInquisercaUrl).toBeNull();
+  expect((await leerEstructuraSitio()).logotipoInquiserca).toBeNull();
   expect((await publicarContenido(formulario("inquiserca", ["/marca/inquiserca.webp"]))).ok).toBe(true);
+  expect((await leerEstructuraSitio()).logotipoInquiserca).toBe("/marca/inquiserca.webp");
 });
 
 it("RF-SW-07 / RF-SW-25: el resumen consulta solo las tarjetas permitidas", async () => {
