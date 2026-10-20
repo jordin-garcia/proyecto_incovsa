@@ -1,0 +1,220 @@
+# CE-06. Despliegue automático desde main: imagen en GHCR y, si hay VPS, SSH.
+# Antes de CE-08 el paso SSH se omite cuando faltan los secretos del environment.
+
+name: Despliegue
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      etiqueta:
+        description: Etiqueta en GHCR a la que volver (sin migraciones). Vacío = imagen nueva.
+        required: false
+        type: string
+        default: ""
+      modo_prueba:
+        description: Solo compilar y subir a GHCR (sin SSH). Para rama de prueba antes del VPS.
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+env:
+  REGISTRY: ghcr.io
+  # GHCR exige el nombre en minúsculas.
+  IMAGE_NAME: ghcr.io/${{ github.repository }}
+
+jobs:
+  publicar:
+    name: publicar-ghcr
+    if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.etiqueta == '') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      etiqueta_sha: ${{ steps.meta.outputs.etiqueta_sha }}
+      imagen: ${{ steps.meta.outputs.imagen }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Etiquetas de la imagen
+        id: meta
+        run: |
+          set -euo pipefail
+          repo_lc="$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')"
+          imagen="ghcr.io/${repo_lc}"
+          sha="$(echo '${{ github.sha }}' | cut -c1-40)"
+          echo "imagen=${imagen}" >> "$GITHUB_OUTPUT"
+          echo "etiqueta_sha=${sha}" >> "$GITHUB_OUTPUT"
+          echo "tag_sha=${imagen}:${sha}" >> "$GITHUB_OUTPUT"
+          echo "tag_produccion=${imagen}:produccion" >> "$GITHUB_OUTPUT"
+
+      - name: Entrar a GHCR
+        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Preparar Buildx
+        uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
+
+      - name: Compilar y subir la imagen
+        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ steps.meta.outputs.tag_sha }}
+            ${{ steps.meta.outputs.tag_produccion }}
+
+      - name: RNF-12: la imagen quedó en GHCR
+        run: |
+          set -euo pipefail
+          docker buildx imagetools inspect "${{ steps.meta.outputs.tag_sha }}"
+          docker buildx imagetools inspect "${{ steps.meta.outputs.tag_produccion }}"
+
+      - name: RNF-12: conservar solo las últimas 5 versiones en GHCR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          owner="$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
+          pkg="$(echo '${{ github.event.repository.name }}' | tr '[:upper:]' '[:lower:]')"
+          # Paquete de contenedor ligado al usuario dueño del repositorio.
+          api="/users/${owner}/packages/container/${pkg}/versions?per_page=100"
+          if ! gh api "$api" --jq 'length' >/tmp/ghcr-count.txt 2>/tmp/ghcr-err.txt; then
+            # Si el paquete aún no existe como recurso de usuario, no hay nada que podar.
+            if grep -qi '404\|Not Found' /tmp/ghcr-err.txt; then
+              echo "Paquete sin versiones listables todavía; se omite la poda."
+              exit 0
+            fi
+            cat /tmp/ghcr-err.txt >&2
+            exit 1
+          fi
+          mapfile -t ids < <(gh api --paginate "$api" --jq 'sort_by(.updated_at) | reverse | .[].id')
+          total="${#ids[@]}"
+          echo "Versiones en GHCR: ${total}"
+          if [ "$total" -le 5 ]; then
+            echo "Nada que borrar (máximo 5)."
+            exit 0
+          fi
+          for id in "${ids[@]:5}"; do
+            echo "Borrando versión ${id}"
+            gh api --method DELETE "/users/${owner}/packages/container/${pkg}/versions/${id}"
+          done
+          quedan="$(gh api "$api" --jq 'length')"
+          test "$quedan" -le 5
+          echo "Quedan ${quedan} versiones."
+
+  desplegar:
+    name: desplegar-vps
+    needs: [publicar]
+    if: ${{ always() && !cancelled() && (needs.publicar.result == 'success' || needs.publicar.result == 'skipped') && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.modo_prueba == false)) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: produccion
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Resolver etiqueta a desplegar
+        id: dest
+        run: |
+          set -euo pipefail
+          repo_lc="$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')"
+          imagen="ghcr.io/${repo_lc}"
+          entrada='${{ inputs.etiqueta }}'
+          if [ -n "$entrada" ]; then
+            case "$entrada" in
+              *:*) tag="$entrada" ;;
+              *) tag="${imagen}:${entrada}" ;;
+            esac
+            migrar=false
+          elif [ '${{ needs.publicar.result }}' = 'success' ]; then
+            tag="${imagen}:${{ needs.publicar.outputs.etiqueta_sha }}"
+            migrar=true
+          else
+            tag="${imagen}:produccion"
+            migrar=true
+          fi
+          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
+          echo "migrar=${migrar}" >> "$GITHUB_OUTPUT"
+
+      - name: Comprobar secretos del VPS
+        id: vps
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USUARIO: ${{ secrets.VPS_USUARIO }}
+          VPS_LLAVE_SSH: ${{ secrets.VPS_LLAVE_SSH }}
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+          if [ -z "${VPS_HOST}" ] || [ -z "${VPS_USUARIO}" ] || [ -z "${VPS_LLAVE_SSH}" ] || [ -z "${VPS_KNOWN_HOSTS}" ]; then
+            echo "listo=false" >> "$GITHUB_OUTPUT"
+            echo "Faltan secretos del VPS (CE-08). Se omite el SSH; GHCR ya publicó la imagen."
+          else
+            echo "listo=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Entrar al VPS, migrar y reiniciar app
+        if: ${{ steps.vps.outputs.listo == 'true' }}
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USUARIO: ${{ secrets.VPS_USUARIO }}
+          VPS_LLAVE_SSH: ${{ secrets.VPS_LLAVE_SSH }}
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+          IMAGEN: ${{ steps.dest.outputs.tag }}
+          MIGRAR: ${{ steps.dest.outputs.migrar }}
+          GHCR_USER: ${{ github.actor }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          umask 077
+          llave="$(mktemp)"
+          hosts="$(mktemp)"
+          cleanup() { rm -f "$llave" "$hosts"; }
+          trap cleanup EXIT
+          printf '%s\n' "$VPS_LLAVE_SSH" > "$llave"
+          printf '%s\n' "$VPS_KNOWN_HOSTS" > "$hosts"
+          chmod 600 "$llave" "$hosts"
+          ssh_opts=(-i "$llave" -o IdentitiesOnly=yes -o UserKnownHostsFile="$hosts" -o StrictHostKeyChecking=yes)
+          # La carpeta de Compose la deja CE-08 en ~/incovsa.
+          # shellcheck disable=SC2029
+          ssh "${ssh_opts[@]}" "${VPS_USUARIO}@${VPS_HOST}" \
+            "IMAGEN=$(printf %q "$IMAGEN") MIGRAR=$(printf %q "$MIGRAR") GHCR_USER=$(printf %q "$GHCR_USER") GHCR_TOKEN=$(printf %q "$GHCR_TOKEN") bash -s" <<'REMOTO'
+          set -euo pipefail
+          cd "$HOME/incovsa"
+          echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
+          export IMAGEN_APP="$IMAGEN"
+          docker compose pull app
+          if [ "$MIGRAR" = "true" ]; then
+            # El ENTRYPOINT de la imagen siempre migra y arranca el servidor; aquí solo migrate.
+            docker compose run --rm --no-deps --entrypoint ./node_modules/.bin/prisma app migrate deploy
+          fi
+          docker compose up -d app
+          docker logout ghcr.io >/dev/null 2>&1 || true
+          REMOTO
+
+      - name: Comprobar https://incovsa.com
+        if: ${{ steps.vps.outputs.listo == 'true' }}
+        run: |
+          set -euo pipefail
+          listo=0
+          for _ in $(seq 1 24); do
+            if curl -fsS --max-time 15 https://incovsa.com/ -o /dev/null; then
+              listo=1
+              break
+            fi
+            sleep 5
+          done
+          test "$listo" = 1
+
+      - name: RNF-12: sin VPS aún, el flujo termina bien tras GHCR
+        if: ${{ steps.vps.outputs.listo != 'true' }}
+        run: echo "SSH aplazado a CE-08; publicación en GHCR verificada en el trabajo publicar-ghcr."
