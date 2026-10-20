@@ -143,4 +143,3 @@ Quedaron funcionando en GitHub la integración continua, las verificaciones de t
 
 - `revision-claude` no revisaba los PR cuyos cambios sube el agente en la nube de Cursor (actor `cursor[bot]`): la acción rechaza los eventos de bots, y `gh run rerun` no lo resolvía porque conserva el actor. Ocurrió en #83, #85 y #86. Por decisión del coordinador, el paso «Revisar con Claude» agrega `allowed_bots: "cursor"`, solo ese bot (decisión 62 y `specs/18`).
 - Mientras tanto, para revisar como humano un PR que disparó un bot no admitido: pasarlo a borrador y volver a marcarlo listo (`gh pr ready <n> --undo` y `gh pr ready <n>`). Eso desactiva la integración automática, que hay que volver a activar.
-

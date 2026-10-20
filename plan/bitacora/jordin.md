@@ -113,4 +113,4 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Hecho: `revision-claude.yml` admite al agente en la nube de Cursor (`allowed_bots: "cursor"`), para que sus push y PR se revisen en lugar de fallar sin revisión.
 - Decisiones: se admite solo ese bot, nunca `"*"`; se actualizaron la decisión 62 (`specs/16`) y `specs/18`.
 - Pendiente o aviso para otros:
-**Carlos:** ya puedes usar el agente en la nube de Cursor: `revision-claude` revisará sus push. Para #85 y #86, actualiza la rama desde `develop` y haz push: la revisión usa el flujo nuevo (relanzar una ejecución anterior no sirve, porque conserva el flujo viejo). Corrige los hallazgos que ya dejó el bot.
+**Carlos:** ya puedes usar el agente en la nube de Cursor: `revision-claude` revisará sus push. Para #85 y #86, actualiza la rama desde `develop` y haz push: la revisión usa el flujo nuevo (relanzar una ejecución anterior no sirve, porque conserva el flujo viejo). Corrige los hallazgos que ya dejó el bot. Abre los PR desde tu cuenta (`carloshugoeg`), no con el agente: si el autor es el bot, las menciones de la revisión no te llegan.
