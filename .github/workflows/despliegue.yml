@@ -20,6 +20,10 @@ on:
         type: boolean
         default: false
 
+concurrency:
+  group: despliegue-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -50,25 +54,26 @@ jobs:
           owner_lc="$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
           pkg_prod="$(echo '${{ github.event.repository.name }}' | tr '[:upper:]' '[:lower:]')"
           sha="$(echo '${{ github.sha }}' | cut -c1-40)"
-          # produccion solo en main y fuera de modo_prueba (decisiones 31 y 75).
-          modo_prueba=false
+          # Paquete de producción SOLO en main y sin modo_prueba (decisiones 31 y 75).
+          # Cualquier otra ref (p. ej. workflow_dispatch en develop) usa <repo>-prueba.
+          modo_prueba_input=false
           if [ '${{ github.event_name }}' = 'workflow_dispatch' ] && [ '${{ inputs.modo_prueba }}' = 'true' ]; then
-            modo_prueba=true
+            modo_prueba_input=true
           fi
-          if [ '${{ github.ref }}' = 'refs/heads/ce-06-prueba' ]; then
-            modo_prueba=true
+          usa_paquete_prod=false
+          if [ '${{ github.ref }}' = 'refs/heads/main' ] && [ "$modo_prueba_input" = 'false' ]; then
+            usa_paquete_prod=true
           fi
-          publico_produccion=false
-          if [ '${{ github.ref }}' = 'refs/heads/main' ] && [ "$modo_prueba" = 'false' ]; then
-            publico_produccion=true
-          fi
-          # Modo prueba usa paquete aparte: nunca toca ghcr.io/<repo> ni su poda.
-          if [ "$modo_prueba" = 'true' ]; then
-            pkg="${pkg_prod}-prueba"
-            imagen="ghcr.io/${owner_lc}/${pkg}"
-          else
+          if [ "$usa_paquete_prod" = 'true' ]; then
             pkg="${pkg_prod}"
             imagen="ghcr.io/${repo_lc}"
+            publico_produccion=true
+            modo_prueba=false
+          else
+            pkg="${pkg_prod}-prueba"
+            imagen="ghcr.io/${owner_lc}/${pkg}"
+            publico_produccion=false
+            modo_prueba=true
           fi
           tag_sha="${imagen}:${sha}"
           tag_produccion="ghcr.io/${repo_lc}:produccion"

@@ -56,9 +56,9 @@ gh run watch
 
 El flujo `.github/workflows/despliegue.yml` (`name: Despliegue`) hace esto:
 
-1. **Push a `main`:** compila la imagen (`provenance: false`, `sbom: false`), la sube a `ghcr.io/<owner>/<repo>` (`<sha>` + `produccion`) y poda solo ese paquete a las **últimas 5 versiones etiquetadas**.
-2. **Push a `ce-06-prueba` o `modo_prueba=true`:** publica y poda solo en `ghcr.io/<owner>/<repo>-prueba` (nunca toca el paquete de producción ni la etiqueta `produccion`); no despliega. En modo prueba se crean variantes ligeras para ejercer la poda (>5).
-3. **SSH al VPS** (solo desde `main`, `environment: produccion`): `~/incovsa`, `postgres --wait`, migrate en contenedor de un solo uso, reinicio de `app`, comprobación de `https://incovsa.com`. Sin secretos (CE-08), omite el SSH.
-4. **`workflow_dispatch` con `etiqueta`:** desde `main`, vuelve a `ghcr.io/<repo>:<etiqueta>` **sin migraciones** (override Compose → `node server.js`). La entrada va por `env` y se valida.
+1. **Solo `refs/heads/main` sin `modo_prueba`:** publica en `ghcr.io/<owner>/<repo>` (`<sha>` + `produccion`) y poda ese paquete a ≤ 5 etiquetadas (`provenance`/`sbom` off).
+2. **Cualquier otra ref** (incl. `ce-06-prueba`, `workflow_dispatch` en `develop`, o `modo_prueba` en `main`): publica y poda solo en `ghcr.io/<owner>/<repo>-prueba`; nunca toca el paquete de producción. Variantes ligeras para ejercer la poda (>5).
+3. **SSH al VPS** (solo desde `main`, `environment: produccion`): `~/incovsa`, `postgres --wait`, migrate en un solo uso, reinicio de `app`, `https://incovsa.com`. Sin secretos (CE-08), omite el SSH.
+4. **`workflow_dispatch` con `etiqueta`:** desde `main`, vuelve a `ghcr.io/<repo>:<etiqueta>` sin migraciones (`env` + validación).
 
-**Evidencia:** `evidencia/CE-06/workflow-run.txt` y `ghcr-pull.txt` (run de `ce-06-prueba` contra el paquete `-prueba`).
+**Evidencia:** `evidencia/CE-06/workflow-run.txt` y `ghcr-pull.txt` (run en `ce-06-prueba` → paquete `-prueba`).
