@@ -4,10 +4,10 @@
 
 {$DOMINIO:incovsa.com} {
 	header Strict-Transport-Security "max-age=31536000; includeSubDomains"
-	# 6 MB: margen sobre imágenes de 5 MB (decisión 44) más multipart y campos del formulario.
-	# Caddy mide MB en base 10 (5×10⁶). Las acciones del servidor siguen en 3 MB (decisión 58).
+	# 27 MB: tope de /api/imagenes/publicar (5 imágenes × 5 MB + multipart, decisión 44).
+	# Caddy mide MB en base 10. Las acciones del servidor siguen en 3 MB (decisión 58).
 	request_body {
-		max_size 6MB
+		max_size 27MB
 	}
 	reverse_proxy app:3000 {
 		header_up X-Real-IP {remote_host}
