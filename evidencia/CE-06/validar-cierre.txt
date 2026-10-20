@@ -1,3 +1,1 @@
-El PR no cierra su tarea:
-- El PR no agrega ninguna entrada en plan/bitacora/<persona>.md (protocolo B10).
-Corríjalo y haga push: la verificación «titulo» se vuelve a ejecutar sola.
+Cierre válido: CE-06 (hecha).
