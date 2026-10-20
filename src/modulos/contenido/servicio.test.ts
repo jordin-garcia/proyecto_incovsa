@@ -19,10 +19,17 @@ it("RF-SW-22 / RF-SW-24: expone solo oficinas y usa el logotipo público configu
   });
   const inicial = await leerEstructuraSitio();
   expect(inicial.logotipo).toBe("/marca/incovsa-quimicos.webp");
+  // Sobre el verde del pie va el logotipo blanco mientras no se suba otro (sitio.js › logoOscuro()).
+  expect(inicial.logotipoOscuro).toBe("/marca/incovsa-quimicos-blanco.webp");
+  // El prefijo de Odoo es un dato interno del picking: no viaja al sitio público.
+  expect(JSON.stringify(inicial)).not.toMatch(/prefijo|"XE"|"GT"/);
   expect(inicial.contactos.map((sede) => sede.nombre)).toEqual(["Quetzaltenango", "Guatemala"]);
   expect(JSON.stringify(inicial)).not.toContain("Bodega interna");
   await prisma.configuracionSitio.update({ where: { id: 1 }, data: { logotipoIncovsaUrl: "/marca/inquiserca.webp" } });
-  expect((await leerEstructuraSitio()).logotipo).toBe("/marca/inquiserca.webp");
+  const conLogotipo = await leerEstructuraSitio();
+  expect(conLogotipo.logotipo).toBe("/marca/inquiserca.webp");
+  // Con un logotipo subido, el pie usa ese mismo sobre una placa clara.
+  expect(conLogotipo.logotipoOscuro).toBe("");
 });
 
 it("RF-SW-01 / RN-56: lee textos editados, galerías ordenadas y las nueve industrias desde la base", async () => {

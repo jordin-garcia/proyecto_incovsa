@@ -26,9 +26,11 @@ test("RF-SW-01 / RF-SW-27: Inicio informativo conserva secciones, cifras y texto
 test("RF-SW-15 / RF-SW-22 / RF-SW-24: pie público y mapas solo de las dos oficinas", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("contentinfo")).toBeAttached();
-  const logos = page.locator("header img, footer img");
-  await expect(logos).toHaveCount(2);
-  expect(await logos.first().getAttribute("src")).toBe(await logos.last().getAttribute("src"));
+  // Sin logotipo subido: a color en la cabecera y blanco, sin placa, sobre el verde del pie (sitio.js › logoOscuro()).
+  await expect(page.locator("header img")).toHaveAttribute("src", "/marca/incovsa-quimicos.webp");
+  await expect(page.locator("footer img")).toHaveCount(1);
+  await expect(page.locator("footer img")).toHaveAttribute("src", "/marca/incovsa-quimicos-blanco.webp");
+  await expect(page.locator("footer .logo-placa")).toHaveCount(0);
   const enlacesContacto = page.locator("footer .pie-rej > div").last().locator("a");
   await expect(enlacesContacto).toHaveCount(4);
   await expect(enlacesContacto.nth(0)).toContainText("@");
@@ -36,6 +38,15 @@ test("RF-SW-15 / RF-SW-22 / RF-SW-24: pie público y mapas solo de las dos ofici
   await expect(enlacesContacto.nth(2)).toContainText("WhatsApp Quetzaltenango");
   await expect(enlacesContacto.nth(3)).toContainText("WhatsApp Guatemala");
   await expect(page.locator("iframe")).toHaveCount(2);
+  // Mapas responsivos con la proporción 4:3 del prototipo (estilos.css › .mapa).
+  for (const caja of await page
+    .locator("iframe.mapa")
+    .evaluateAll((mapas) => mapas.map((mapa) => mapa.getBoundingClientRect())))
+    expect(Math.abs(caja.height - (caja.width * 3) / 4)).toBeLessThan(2);
+  // Teléfono y correo de cada sede en letra monoespaciada, como el prototipo (sitio.js › sedes()).
+  for (const tarjeta of await page.locator(".sede-t").all()) {
+    await expect(tarjeta.locator(".dato .mono")).toHaveCount(2);
+  }
   for (const nombre of ["Quetzaltenango", "Guatemala"]) {
     const mapa = page.getByTitle(`Mapa de la sede de ${nombre}`, { exact: true });
     await expect(mapa).toHaveAttribute("src", /^https:\/\/www.google.com\/maps\/embed\?pb=/);

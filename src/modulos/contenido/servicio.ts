@@ -14,7 +14,7 @@ export const leerEstructuraSitio = cache(async () => {
         whatsapp: true,
         horario: true,
         mapaUrl: true,
-        sede: { select: { nombre: true, prefijoOdoo: true } },
+        sede: { select: { nombre: true } },
       },
     }),
     prisma.industria.findMany({
@@ -24,9 +24,13 @@ export const leerEstructuraSitio = cache(async () => {
   ]);
   return {
     logotipo: configuracion?.logotipoIncovsaUrl || "/marca/incovsa-quimicos.webp",
+    // Sobre fondo oscuro (pie): el logotipo blanco o, si se subió otro, vacío para mostrar el subido sobre una placa
+    // clara (sitio.js › logoOscuro()).
+    logotipoOscuro: configuracion?.logotipoIncovsaUrl ? "" : "/marca/incovsa-quimicos-blanco.webp",
+    // Quetzaltenango, la oficina central, va primero. El prefijo de Odoo no se expone al sitio público.
     contactos: contactos
-      .map(({ sede, ...contacto }) => ({ ...contacto, nombre: sede.nombre, prefijo: sede.prefijoOdoo }))
-      .sort((a, b) => (a.prefijo === "XE" ? -1 : 1) - (b.prefijo === "XE" ? -1 : 1)),
+      .map(({ sede, ...contacto }) => ({ ...contacto, nombre: sede.nombre }))
+      .sort((a, b) => Number(b.nombre === "Quetzaltenango") - Number(a.nombre === "Quetzaltenango")),
     industrias: industrias.map(({ _count, ...industria }) => ({ ...industria, productos: _count.productos })),
   };
 });

@@ -297,11 +297,16 @@
     margin-top: 2px;
   }
   .mapa {
+    display: block;
     width: 100%;
-    height: 260px;
-    border: 1px solid var(--g150);
+    aspect-ratio: 4 / 3;
+    border: 0;
     border-radius: var(--r);
-    margin-top: 12px;
+    margin-top: 6px;
+    background: var(--g100);
+  }
+  .sede-t .dato .mono {
+    font-size: 14px;
   }
   .sec-llamado {
     padding-top: 0;
@@ -385,9 +390,14 @@
   }
   .logo-placa {
     display: inline-flex;
-    padding: 7px;
+    align-items: center;
+    padding: 7px 12px;
     background: var(--color-blanco);
-    border-radius: var(--r-s);
+    border-radius: var(--r);
+  }
+  .pie-logo {
+    height: 54px;
+    width: auto;
   }
   .logo-placa img {
     height: 40px;

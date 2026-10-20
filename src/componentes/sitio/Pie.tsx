@@ -19,9 +19,20 @@ export function Pie({ datos, anio }: { datos: EstructuraSitio; anio: string }) {
       <div className="wrap">
         <div className="pie-rej">
           <div>
-            <span className="logo-placa">
-              <Image src={datos.logotipo} alt="INCOVSA Químicos" width={180} height={60} unoptimized />
-            </span>
+            {datos.logotipoOscuro ? (
+              <Image
+                src={datos.logotipoOscuro}
+                alt="INCOVSA Químicos"
+                width={180}
+                height={54}
+                className="pie-logo"
+                unoptimized
+              />
+            ) : (
+              <span className="logo-placa">
+                <Image src={datos.logotipo} alt="INCOVSA Químicos" width={180} height={40} unoptimized />
+              </span>
+            )}
             <p className="pie-descripcion">
               Industria del Cuero Covadonga S. A. Compra y venta de productos químicos en Guatemala. INCOVSA e
               Inquiserca, una sola identidad.
@@ -49,14 +60,14 @@ export function Pie({ datos, anio }: { datos: EstructuraSitio; anio: string }) {
             {datos.contactos
               .filter((sede) => sede.correo)
               .map((sede) => (
-                <Link key={sede.prefijo} href="/contacto" className="mono">
+                <Link key={sede.nombre} href="/contacto" className="mono">
                   {sede.correo}
                 </Link>
               ))}
             {datos.contactos
               .filter((sede) => sede.whatsapp)
               .map((sede) => (
-                <Link key={sede.prefijo} href="/contacto">
+                <Link key={sede.nombre} href="/contacto">
                   WhatsApp {sede.nombre} · {sede.whatsapp}
                 </Link>
               ))}
