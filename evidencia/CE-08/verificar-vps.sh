@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
 # CE-08. Comprueba el endurecimiento del VPS (criterio 1 y carpeta CE-06).
-# Ejecutar en el VPS como el usuario de despliegue o como root.
+# Ejecutar en el VPS como root (sshd -T y ufw status lo requieren).
 # Uso: bash verificar-vps.sh
-#      USUARIO_DESPLIEGUE=despliegue DIR_APP=$HOME/incovsa bash verificar-vps.sh
+#      USUARIO_DESPLIEGUE=despliegue DIR_APP=/home/despliegue/incovsa bash verificar-vps.sh
 
 set -euo pipefail
 
-USUARIO_DESPLIEGUE="${USUARIO_DESPLIEGUE:-despliegue}"
-if [ "$(id -u)" -eq 0 ]; then
-  DIR_APP="${DIR_APP:-/home/${USUARIO_DESPLIEGUE}/incovsa}"
-else
-  DIR_APP="${DIR_APP:-$HOME/incovsa}"
+if [ "$(id -u)" -ne 0 ]; then
+  echo "Ejecuta este script como root (hace falta para sshd -T y ufw status)." >&2
+  exit 1
 fi
+
+USUARIO_DESPLIEGUE="${USUARIO_DESPLIEGUE:-despliegue}"
+DIR_APP="${DIR_APP:-/home/${USUARIO_DESPLIEGUE}/incovsa}"
 
 fallos=0
 ok() { printf 'OK  %s\n' "$1"; }
@@ -26,31 +27,54 @@ fi
 
 echo "==> SSH"
 sshd_cfg="$(sshd -T 2>/dev/null || true)"
-if printf '%s\n' "$sshd_cfg" | grep -qiE '^passwordauthentication no$'; then
-  ok "PasswordAuthentication no"
+if [ -z "$sshd_cfg" ]; then
+  ko "sshd -T no devolvió configuración"
 else
-  ko "PasswordAuthentication debe ser no"
-fi
-if printf '%s\n' "$sshd_cfg" | grep -qiE '^permitrootlogin no$'; then
-  ok "PermitRootLogin no"
-else
-  ko "PermitRootLogin debe ser no (como preparar-vps.sh)"
+  if printf '%s\n' "$sshd_cfg" | grep -qiE '^passwordauthentication no$'; then
+    ok "PasswordAuthentication no"
+  else
+    ko "PasswordAuthentication debe ser no"
+  fi
+  if printf '%s\n' "$sshd_cfg" | grep -qiE '^permitrootlogin no$'; then
+    ok "PermitRootLogin no"
+  else
+    ko "PermitRootLogin debe ser no"
+  fi
 fi
 
-echo "==> UFW"
+echo "==> UFW (solo 22, 80, 443)"
 if ufw status 2>/dev/null | grep -q 'Status: active'; then
   ok "UFW activo"
 else
   ko "UFW no está activo"
 fi
-estado_ufw="$(ufw status numbered 2>/dev/null || true)"
+# Líneas de reglas: "22/tcp", "80/tcp", "443/tcp" (preparar-vps usa números, no OpenSSH).
+estado_ufw="$(ufw status 2>/dev/null || true)"
 for puerto in 22 80 443; do
-  if printf '%s\n' "$estado_ufw" | grep -qE "\\b${puerto}\\b"; then
+  if printf '%s\n' "$estado_ufw" | grep -qE "^${puerto}(/tcp)?[[:space:]]+ALLOW"; then
     ok "Puerto ${puerto} permitido"
+  elif printf '%s\n' "$estado_ufw" | grep -qE "^OpenSSH[[:space:]]+ALLOW" && [ "$puerto" = "22" ]; then
+    ok "Puerto 22 vía perfil OpenSSH"
   else
     ko "Falta permitir el puerto ${puerto}"
   fi
 done
+# Criterio 1: solo esos puertos. Ignora cabeceras y "Default:".
+extras="$(
+  printf '%s\n' "$estado_ufw" | awk '
+    /^Status:/ || /^--/ || /^To[[:space:]]/ || /^$/ || /^Default:/ { next }
+    /ALLOW/ {
+      to=$1
+      if (to == "OpenSSH" || to ~ /^(22|80|443)(\/tcp)?$/) next
+      print to
+    }
+  '
+)"
+if [ -z "$extras" ]; then
+  ok "Sin reglas ALLOW fuera de 22/80/443"
+else
+  ko "Reglas ALLOW de más: $(printf '%s' "$extras" | tr '\n' ' ')"
+fi
 
 echo "==> Docker"
 if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
@@ -79,11 +103,11 @@ for f in docker-compose.yml Caddyfile; do
 done
 if [ -f "${DIR_APP}/.env" ]; then
   ok ".env presente (no se lee el contenido)"
-  if [ "$(stat -c '%a' "${DIR_APP}/.env" 2>/dev/null || echo '?')" = "600" ] \
-    || [ "$(stat -f '%Lp' "${DIR_APP}/.env" 2>/dev/null || echo '?')" = "600" ]; then
+  modo="$(stat -c '%a' "${DIR_APP}/.env" 2>/dev/null || echo '?')"
+  if [ "$modo" = "600" ]; then
     ok ".env modo 600"
   else
-    ko ".env debería ser modo 600"
+    ko ".env debería ser modo 600 (ahora ${modo})"
   fi
 else
   ko "Falta ${DIR_APP}/.env (cópialo desde .env.produccion.example y rellénalo a mano)"
@@ -91,7 +115,7 @@ fi
 
 echo
 if [ "$fallos" -eq 0 ]; then
-  echo "Verificación local del VPS: OK (${fallos} fallos)."
+  echo "Verificación local del VPS: OK (0 fallos)."
   exit 0
 fi
 echo "Verificación local del VPS: ${fallos} fallo(s)." >&2

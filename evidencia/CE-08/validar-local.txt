@@ -7,3 +7,7 @@ Plan válido: 63 tareas.
 
 === environment produccion (agente) ===
 {"total_count":0,"environments":[]}
+=== Claude CORRECCIÓN (2026-10-20) ===
+1. Excepción de alcance: asignación del coordinador del proyecto pidió evidencia/CE-08/ in-repo.
+2. preparar-vps: 00-incovsa.conf, neutraliza 50-cloud-init, aborta si AUTH_KEYS vacío, ufw 22/tcp.
+3. verificar-vps: root obligatorio, PermitRootLogin no, OpenSSH|22, solo 22/80/443.

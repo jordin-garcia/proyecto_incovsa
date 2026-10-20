@@ -15,7 +15,7 @@ El token de Cursor Cloud Agent no puede crear el environment (`403` al `PUT …/
 
 ## Orden de trabajo cuando haya acceso
 
-1. **VPS.** Con la llave de root o del panel del proveedor, copia `preparar-vps.sh` al servidor y ejecútalo como root. Revisa la salida. Guarda la huella SSH.
+1. **VPS.** Con la llave de root o del panel del proveedor, copia `preparar-vps.sh` al servidor y ejecútalo como root (`PUBKEY_DESPLIEGUE` si root no tiene `authorized_keys`). Si las llaves del usuario de despliegue quedan vacías, el script aborta **antes** de tocar SSH. Luego `verificar-vps.sh` también como root. Guarda la huella SSH.
 2. **Carpeta de la app.** En la cuenta de despliegue: clona o copia el repo en `~/incovsa`, deja `docker-compose.yml`, `Caddyfile` y `.env` (desde `.env.produccion.example`; secretos solo en el gestor de contraseñas, decisión 70). Fija `IMAGEN_APP` a una etiqueta de GHCR (CE-06 no publica `:latest` en producción).
 3. **Cloudflare R2.** Bucket público de imágenes (`incovsa-imagenes`) y bucket privado de respaldos (`incovsa-respaldos`). Credencial de API limitada a cada uno. Conecta `imagenes.incovsa.com` al bucket de imágenes (Custom Domain de R2).
 4. **DNS.** `incovsa.com` y `www` (si aplica) → A/AAAA al VPS (proxied o DNS only según Caddy; Caddy necesita el 80/443 reales para el certificado). Si INCOVSA no puede pasar el DNS a Cloudflare, avisa a Jordin y a Daniela: la app servirá imágenes por ruta propia (decisión 32).

@@ -92,3 +92,8 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
   - **Jordin:** CE-08 bloqueada por P-10 / P-93 / P-94. Pedir al Ing. William IP del VPS, DNS de `incovsa.com` y correo INCOVSA para Cloudflare a más tardar 28/10 (decisión 73). Si el DNS no pasa a Cloudflare, avisar también a Daniela (decisión 32).
   - **Daniela:** si INCOVSA no mueve el DNS a Cloudflare, las imágenes no irán por `imagenes.incovsa.com` y hace falta la ruta propia (decisión 32).
   - **Carlos:** en la Mac, con `gh` como `carloshugoeg`, crear `environment: produccion` y los secretos `VPS_*` cuando exista el VPS; seguir `evidencia/CE-08/pasos-hugo.md`.
+
+## 2026-10-20 · CE-08 · Correcciones revision-claude
+- Hecho: CORRECCIÓN 2 y 3 en `preparar-vps.sh` / `verificar-vps.sh` (SSH `00-incovsa.conf`, aborto sin llave, UFW 22/tcp, verificador solo root, solo puertos 22/80/443, `PermitRootLogin no`). CORRECCIÓN 1: se mantiene `evidencia/CE-08/` por la asignación del coordinador del proyecto («Prefer evidence under evidencia/CE-08/»); queda anotada en `## Resultado` y en el PR.
+- Decisiones: sin grupo sudo en el usuario de despliegue (opcional del bot); docker basta.
+- Pendiente o aviso para otros: ninguno nuevo; siguen P-10 / P-93 / P-94.

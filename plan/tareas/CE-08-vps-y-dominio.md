@@ -65,4 +65,6 @@ Dejar el VPS de INCOVSA, el DNS de `incovsa.com` en Cloudflare y los buckets de 
 
 **Cómo desbloquear.** Con P-10, P-93 y P-94 resueltos, Carlos sigue `pasos-hugo.md` en la Mac (`carloshugoeg`), guarda evidencia real en `evidencia/CE-08/` y reabre la tarea en una conversación nueva hasta `estado: hecha`. Si el DNS no puede pasar a Cloudflare, avisar a Jordin y Daniela (decisión 32).
 
+**Excepción de alcance (§C).** El protocolo pide un PR de bloqueo solo con la tarea y la bitácora. La asignación del coordinador del proyecto pidió dejar guía y scripts en `evidencia/CE-08/` y el comentario `IMAGEN_APP` en este mismo PR. Tras la CORRECCIÓN de `revision-claude` (2026-10-20): drop-in SSH `00-incovsa.conf` (gana a cloud-init), aborto si no hay llave antes de tocar SSH, UFW solo `22/80/443`, `verificar-vps.sh` como root y sin aceptar login root.
+
 **Fuera de este cierre:** JG-19 (primer despliegue oficial 02/11).

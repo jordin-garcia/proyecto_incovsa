@@ -2,7 +2,7 @@
 # CE-08. Endurece un Ubuntu Server 24.04 LTS para INCOVSA.
 # Ejecutar una vez como root. Idempotente. No imprime secretos.
 # Uso: USUARIO_DESPLIEGUE=despliegue bash preparar-vps.sh
-#      (opcional) PUBKEY_DESPLIEGUE='ssh-ed25519 AAAA… comentario'
+#      PUBKEY_DESPLIEGUE='ssh-ed25519 AAAA… comentario'  (obligatorio si no hay llaves en root)
 
 set -euo pipefail
 
@@ -32,7 +32,8 @@ echo "==> Usuario de despliegue: ${USUARIO_DESPLIEGUE}"
 if ! id -u "${USUARIO_DESPLIEGUE}" >/dev/null 2>&1; then
   adduser --disabled-password --gecos "INCOVSA despliegue" "${USUARIO_DESPLIEGUE}"
 fi
-usermod -aG sudo "${USUARIO_DESPLIEGUE}"
+# Sin grupo sudo: --disabled-password no da contraseña para sudo.
+# El grupo docker basta para compose (privilegio equivalente a root vía el socket).
 
 install -d -m 700 -o "${USUARIO_DESPLIEGUE}" -g "${USUARIO_DESPLIEGUE}" \
   "/home/${USUARIO_DESPLIEGUE}/.ssh"
@@ -45,8 +46,7 @@ if [ -n "${PUBKEY_DESPLIEGUE:-}" ]; then
   if ! grep -qxF "${PUBKEY_DESPLIEGUE}" "${AUTH_KEYS}"; then
     printf '%s\n' "${PUBKEY_DESPLIEGUE}" >>"${AUTH_KEYS}"
   fi
-elif [ ! -s "${AUTH_KEYS}" ] && [ -f /root/.ssh/authorized_keys ]; then
-  # Copia la(s) llave(s) con las que entraste como root, si el usuario aún no tiene ninguna.
+elif [ ! -s "${AUTH_KEYS}" ] && [ -f /root/.ssh/authorized_keys ] && [ -s /root/.ssh/authorized_keys ]; then
   cat /root/.ssh/authorized_keys >>"${AUTH_KEYS}"
   chown "${USUARIO_DESPLIEGUE}:${USUARIO_DESPLIEGUE}" "${AUTH_KEYS}"
   chmod 600 "${AUTH_KEYS}"
@@ -54,11 +54,20 @@ elif [ ! -s "${AUTH_KEYS}" ] && [ -f /root/.ssh/authorized_keys ]; then
 fi
 
 if [ ! -s "${AUTH_KEYS}" ]; then
-  echo "AVISO: ${AUTH_KEYS} está vacío. Añade una llave pública antes de cerrar la sesión root." >&2
+  echo "Aborto: ${AUTH_KEYS} está vacío. Pasa PUBKEY_DESPLIEGUE=… o entra como root con llave antes de endurecer SSH." >&2
+  exit 1
 fi
 
-echo "==> SSH: solo llave, sin root por contraseña"
-SSHD_DROPIN=/etc/ssh/sshd_config.d/60-incovsa.conf
+echo "==> SSH: solo llave, sin root"
+# Prefijo 00- para que gane a 50-cloud-init.conf (sshd usa el primer valor).
+# Neutraliza PasswordAuthentication de cloud-init si existe.
+if [ -f /etc/ssh/sshd_config.d/50-cloud-init.conf ]; then
+  sed -i -E 's/^[#[:space:]]*PasswordAuthentication[[:space:]].*/PasswordAuthentication no/' \
+    /etc/ssh/sshd_config.d/50-cloud-init.conf || true
+fi
+# Quita drop-in antiguo con nombre que perdía ante cloud-init.
+rm -f /etc/ssh/sshd_config.d/60-incovsa.conf
+SSHD_DROPIN=/etc/ssh/sshd_config.d/00-incovsa.conf
 cat >"${SSHD_DROPIN}" <<'EOF'
 PasswordAuthentication no
 KbdInteractiveAuthentication no
@@ -74,11 +83,11 @@ else
   echo "AVISO: no se pudo recargar ssh/sshd; reinicia el servicio a mano." >&2
 fi
 
-echo "==> Cortafuegos UFW (22, 80, 443)"
+echo "==> Cortafuegos UFW (solo 22, 80, 443)"
 ufw --force reset
 ufw default deny incoming
 ufw default allow outgoing
-ufw allow OpenSSH
+ufw allow 22/tcp
 ufw allow 80/tcp
 ufw allow 443/tcp
 ufw --force enable

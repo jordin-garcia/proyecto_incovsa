@@ -14,11 +14,15 @@ Escribe las contraseñas y llaves solo en el gestor de contraseñas y en el VPS 
 Desde tu Mac, con la llave que te dieron:
 
 ```bash
-scp evidencia/CE-08/preparar-vps.sh root@IP_DEL_VPS:/tmp/
-ssh root@IP_DEL_VPS 'bash /tmp/preparar-vps.sh'
+scp evidencia/CE-08/preparar-vps.sh evidencia/CE-08/verificar-vps.sh root@IP_DEL_VPS:/tmp/
+# Si entraste a root con contraseña (sin llave), pasa la pública del Mac:
+ssh root@IP_DEL_VPS "PUBKEY_DESPLIEGUE='$(cat ~/.ssh/id_ed25519.pub)' bash /tmp/preparar-vps.sh"
+# Si root ya tiene authorized_keys, basta:
+# ssh root@IP_DEL_VPS 'bash /tmp/preparar-vps.sh'
+ssh root@IP_DEL_VPS 'bash /tmp/verificar-vps.sh'
 ```
 
-El script crea el usuario `despliegue` (o el nombre que pases), desactiva login root por contraseña, deja SSH solo con llave, UFW 22/80/443, Docker Engine + Compose plugin, y `~/incovsa` vacío. Anota la huella:
+El script crea el usuario `despliegue` (sin sudo; solo grupo docker), deja SSH solo con llave y `PermitRootLogin no`, UFW **solo** 22/80/443, Docker Engine + Compose plugin, y `~/incovsa` vacío. Si no hay llave para ese usuario, aborta antes de endurecer SSH. Anota la huella:
 
 ```bash
 ssh-keyscan -t ed25519,rsa IP_DEL_VPS
