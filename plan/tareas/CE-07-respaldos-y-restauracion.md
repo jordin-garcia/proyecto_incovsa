@@ -60,4 +60,4 @@ En el VPS el modo por defecto es `docker compose exec` del servicio `postgres`. 
 
 La contraseña solo viaja en `PGPASSWORD`. Los registros dicen la fecha, la carpeta y el nombre del archivo.
 
-**Cómo usarlo.** En el VPS, con Node 24 y rclone en el `PATH`, la línea de cron es `15 2 * * * cd /opt/incovsa && set -a && . ./.env && set +a && ./scripts/respaldo.sh`. Para restaurar en una base nueva, `RCLONE_ORIGEN=diarios/YYYYMMDD.dump POSTGRES_DB_DEST=incovsa_restaurada ./scripts/restaurar.sh`. CE-08 instala el cron y, cuando exista R2, apunta `RCLONE_DEST` al bucket privado.
+**Cómo usarlo.** En el VPS, con Node 24 y rclone en el `PATH` del usuario de despliegue, la línea de cron es `15 2 * * * cd "$HOME/incovsa" && set -a && . ./.env && set +a && ./scripts/respaldo.sh` (carpeta `~/incovsa` de CE-06). Para restaurar en una base nueva, `RCLONE_ORIGEN=diarios/YYYYMMDD.dump POSTGRES_DB_DEST=incovsa_restaurada ./scripts/restaurar.sh`. CE-08 instala el cron y, cuando exista R2, apunta `RCLONE_DEST` al bucket privado.

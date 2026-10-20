@@ -4,7 +4,7 @@ Nota para el Documento 5, apartados 14 y 15. El flujo de GitHub Actions prueba e
 
 ## Instalar el cron
 
-El repositorio en el VPS está en `/opt/incovsa`. El usuario que ejecuta Docker Compose necesita Node 24, `rclone` y `docker` en el `PATH`. La configuración de rclone queda en la cuenta de ese usuario, con una credencial limitada al bucket privado. `.env` define `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` y `RCLONE_DEST`. Un destino de producción es `r2:incovsa-respaldos`.
+El repositorio en el VPS está en `~/incovsa` (usuario de despliegue, CE-06). Ese usuario necesita Node 24, `rclone` y `docker` en el `PATH`. La configuración de rclone queda en su cuenta, con una credencial limitada al bucket privado. `.env` define `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` y `RCLONE_DEST`. Un destino de producción es `r2:incovsa-respaldos`.
 
 Con ese usuario, abra el crontab.
 
@@ -15,7 +15,7 @@ crontab -e
 Agregue esta línea. Corre cada noche a las 02:15, hora del servidor.
 
 ```
-15 2 * * * cd /opt/incovsa && set -a && . ./.env && set +a && ./scripts/respaldo.sh
+15 2 * * * cd "$HOME/incovsa" && set -a && . ./.env && set +a && ./scripts/respaldo.sh
 ```
 
 Cada ejecución escribe `diarios/YYYYMMDD.dump` con `pg_dump -Fc` dentro del contenedor `postgres`. Si la fecha UTC es domingo, también copia `semanales/YYYYMMDD.dump`. `FORZAR_SEMANAL=1` sube el semanal en cualquier fecha. Después quedan los 7 diarios más recientes y los 4 semanales más recientes. El resultado entra en el registro del sistema con la etiqueta `incovsa-respaldo` y también en la salida estándar. La contraseña no sale en esos textos.
@@ -25,7 +25,7 @@ Cada ejecución escribe `diarios/YYYYMMDD.dump` con `pg_dump -Fc` dentro del con
 Elija el objeto y una base distinta de la de producción.
 
 ```
-cd /opt/incovsa
+cd "$HOME/incovsa"
 set -a && . ./.env && set +a
 export RCLONE_ORIGEN=diarios/20261020.dump
 export POSTGRES_DB_DEST=incovsa_restaurada

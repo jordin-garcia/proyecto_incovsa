@@ -16,7 +16,7 @@
 #   SOLO_RETENCION=1             solo aplica la retención. Lo usa la prueba de GitHub Actions.
 #
 # El cron del VPS (Documento 5) corre cada noche. Hace falta Node en el PATH, rclone y Docker.
-# 15 2 * * * cd /opt/incovsa && set -a && . ./.env && set +a && ./scripts/respaldo.sh
+# 15 2 * * * cd "$HOME/incovsa" && set -a && . ./.env && set +a && ./scripts/respaldo.sh
 #
 # Las llaves de R2 viven en la configuración de rclone del servidor, no en este archivo.
 set -Eeuo pipefail

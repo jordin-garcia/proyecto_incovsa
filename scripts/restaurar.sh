@@ -99,10 +99,7 @@ fi
 
 export PGPASSWORD="$POSTGRES_PASSWORD"
 cat >"$trabajo/preparar.sql" <<EOF
-SELECT pg_terminate_backend(pid)
-FROM pg_stat_activity
-WHERE datname = '${POSTGRES_DB_DEST}' AND pid <> pg_backend_pid();
-DROP DATABASE IF EXISTS "${POSTGRES_DB_DEST}";
+DROP DATABASE IF EXISTS "${POSTGRES_DB_DEST}" WITH (FORCE);
 CREATE DATABASE "${POSTGRES_DB_DEST}";
 EOF
 
