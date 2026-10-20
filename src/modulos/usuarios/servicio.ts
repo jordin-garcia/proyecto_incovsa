@@ -280,6 +280,9 @@ export async function editarUsuario(entrada: EntradaEditarUsuario, contexto: Con
         if (sedes.length) {
           await tx.usuarioSede.createMany({ data: sedes.map((sede) => ({ usuarioId: actual.id, sedeId: sede.id })) });
         }
+      } else {
+        // El sitio no guarda sedes. Al degradar una cuenta `ambos` desde esta pestaña, se vacían.
+        await tx.usuarioSede.deleteMany({ where: { usuarioId: actual.id } });
       }
       if (actual.activo && !entrada.activo) await revocarSesiones(actual.id, tx);
       const permisosAntes = ordenar(

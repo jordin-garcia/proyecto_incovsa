@@ -9,7 +9,13 @@ import { iniciarSesion } from "@/app/acceso/servicio";
 import { consultarOpciones } from "@/modulos/envios/opciones";
 import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import type { SesionActual } from "@/lib/sesion";
-import { esquemaCrearUsuarioPicking, esquemaEditarUsuarioPicking, type EntradaCrearUsuario } from "./esquemas";
+import {
+  esquemaCrearUsuarioPicking,
+  esquemaCrearUsuarioSitio,
+  esquemaEditarUsuarioPicking,
+  esquemaEditarUsuarioSitio,
+  type EntradaCrearUsuario,
+} from "./esquemas";
 import {
   MENSAJE_CUENTA_TOTAL,
   MENSAJE_NOMBRE_COMPARTIDO,
@@ -17,6 +23,7 @@ import {
   crearUsuario,
   editarUsuario,
   eliminarUsuario,
+  listarUsuarios,
   listarUsuariosDelPicking,
   mensajeYaExiste,
   restablecerClave,
@@ -393,5 +400,114 @@ describe("usuarios del picking", () => {
     const creado = await crearUsuario(entrada({ correo: "ana@correo.com", permisosCodigos: ["no.existe"] }), contexto);
     expect(creado.correo).toBe("ana@correo.com");
     expect(creado.permisosCodigos).toEqual([]);
+  });
+
+  function entradaSitio(parcial: Record<string, unknown> = {}) {
+    return esquemaCrearUsuarioSitio.parse({
+      nombre: "Lector Docs",
+      usuario: "lector.docs",
+      clave: CLAVE,
+      confirmarClave: CLAVE,
+      rol: "Operativo",
+      correo: "",
+      sedesIds: [],
+      permisosCodigos: ["sit.doc.ver"],
+      ...parcial,
+    });
+  }
+
+  it("RF-SW-13: crea un usuario del sitio con solo sit.doc.ver, sin sedes ni descarga", async () => {
+    const sitio = { ...contexto, sistema: "sitio" as const };
+    const creado = await crearUsuario(
+      entradaSitio({ permisosCodigos: ["sit.doc.ver", "sit.doc.descargar", "pk.bodega"] }),
+      sitio,
+    );
+    expect(creado).toMatchObject({
+      usuario: "lector.docs",
+      sistema: "sitio",
+      sedesIds: [],
+      sedesNombres: [],
+      permisosCodigos: ["sit.doc.descargar", "sit.doc.ver"],
+    });
+    expect(creado.permisosCodigos).not.toContain("pk.bodega");
+    const soloVer = await crearUsuario(
+      entradaSitio({ usuario: "solo.ver", nombre: "Solo ver", permisosCodigos: ["sit.doc.ver"] }),
+      sitio,
+    );
+    expect(soloVer.permisosCodigos).toEqual(["sit.doc.ver"]);
+    expect((await listarUsuarios("sitio")).map((usuario) => usuario.usuario)).toEqual(
+      expect.arrayContaining(["lector.docs", "solo.ver"]),
+    );
+    expect((await listarUsuarios("picking")).map((usuario) => usuario.usuario)).not.toContain("solo.ver");
+    const ingreso = await iniciarSesion({ sistema: "sitio", usuario: "solo.ver", clave: CLAVE }, cabeceras());
+    expect(ingreso.ok).toBe(true);
+    if (ingreso.ok) expect(ingreso.destino).toBe("/panel/documentos");
+    expect(JSON.stringify((await bitacora("Creación de usuario")).detalle)).not.toContain(CLAVE);
+    expect((await bitacora("Creación de usuario")).detalle).toMatchObject({
+      resumen: expect.stringContaining("Sitio web · solo.ver"),
+    });
+  });
+
+  it("RN-54: el sitio repite un nombre del picking y rechaza el de Gerencia", async () => {
+    await crearUsuario(entrada({ usuario: "ana.bodega" }), contexto);
+    const sitio = { ...contexto, sistema: "sitio" as const };
+    const repetido = await crearUsuario(entradaSitio({ usuario: "ana.bodega", nombre: "Ana Sitio" }), sitio);
+    expect(repetido).toMatchObject({ usuario: "ana.bodega", sistema: "sitio" });
+    expect((await prisma.usuario.findUniqueOrThrow({ where: { id: repetido.id } })).username).toBe("sitio.ana.bodega");
+    await expect(crearUsuario(entradaSitio({ usuario: "actor.prueba" }), sitio)).rejects.toThrow(
+      mensajeYaExiste("sitio"),
+    );
+    await crearUsuario(entrada({ usuario: "pedro.ruta", nombre: "Pedro Ruta" }), contexto);
+    await expect(crearUsuario(entradaSitio({ usuario: "pedro.ruta", rol: "Gerencia" }), sitio)).rejects.toThrow(
+      MENSAJE_CUENTA_TOTAL,
+    );
+  });
+
+  it("RF-SW-11 / RN-47: restablecer en el sitio cambia la clave, cierra la sesión y no guarda la contraseña", async () => {
+    const sitio = { ...contexto, sistema: "sitio" as const };
+    const creado = await crearUsuario(entradaSitio(), sitio);
+    await prisma.sesion.create({
+      data: { id: randomUUID(), userId: creado.id, token: "token-sitio", expiresAt: new Date(Date.now() + 60_000) },
+    });
+    await restablecerClave({ id: creado.id, clave: CLAVE_NUEVA, confirmarClave: CLAVE_NUEVA }, sitio);
+    const fila = await prisma.usuario.findUniqueOrThrow({ where: { id: creado.id }, include: { cuentas: true } });
+    expect(await verifyPassword({ hash: fila.cuentas[0]!.password!, password: CLAVE_NUEVA })).toBe(true);
+    expect(await prisma.sesion.count({ where: { userId: creado.id } })).toBe(0);
+    const detalle = JSON.stringify((await bitacora("Restablecimiento de contraseña")).detalle);
+    expect(detalle).not.toContain(CLAVE_NUEVA);
+    expect(detalle).toContain("Sitio web");
+    const editado = await editarUsuario(
+      esquemaEditarUsuarioSitio.parse({
+        id: creado.id,
+        nombre: "Lector Docs",
+        rol: "Operativo",
+        correo: "lector@correo.com",
+        sedesIds: [quetzaltenango],
+        permisosCodigos: ["sit.doc.ver"],
+        activo: false,
+      }),
+      sitio,
+    );
+    expect(editado.sedesIds).toEqual([]);
+    expect(editado.correo).toBe("lector@correo.com");
+    expect(editado.activo).toBe(false);
+
+    const jefe = await crearUsuario(entradaSitio({ usuario: "jefe.sitio", nombre: "Jefe", rol: "Gerencia" }), sitio);
+    expect(jefe).toMatchObject({ sistema: "ambos", accesoTotal: true });
+    await prisma.usuarioSede.create({ data: { usuarioId: jefe.id, sedeId: quetzaltenango } });
+    const degradado = await editarUsuario(
+      esquemaEditarUsuarioSitio.parse({
+        id: jefe.id,
+        nombre: "Jefe",
+        rol: "Operativo",
+        correo: "",
+        sedesIds: [],
+        permisosCodigos: ["sit.doc.ver"],
+        activo: true,
+      }),
+      sitio,
+    );
+    expect(degradado).toMatchObject({ sistema: "sitio", accesoTotal: false, sedesIds: [] });
+    expect(await prisma.usuarioSede.count({ where: { usuarioId: jefe.id } })).toBe(0);
   });
 });

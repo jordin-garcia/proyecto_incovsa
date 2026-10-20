@@ -6,7 +6,9 @@ import {
   MENSAJE_ROL,
   MENSAJE_SEDE,
   esquemaCrearUsuarioPicking,
+  esquemaCrearUsuarioSitio,
   esquemaEditarUsuarioPicking,
+  esquemaEditarUsuarioSitio,
   esquemaRestablecerClave,
 } from "./esquemas";
 
@@ -107,5 +109,44 @@ describe("esquema de usuario del picking", () => {
       activo: true,
     });
     expect(esquemaEditarUsuarioPicking.parse(editada)).toEqual(editada);
+  });
+});
+
+describe("esquema de usuario del sitio", () => {
+  const sitio = {
+    nombre: "Lector Docs",
+    usuario: "Lector.Docs",
+    rol: "Operativo",
+    correo: "",
+    sedesIds: [],
+    permisosCodigos: ["sit.doc.ver"],
+    clave: "12345678",
+    confirmarClave: "12345678",
+  };
+
+  it("RF-SW-13: el sitio no exige sede y acepta solo sit.doc.ver", () => {
+    expect(esquemaCrearUsuarioSitio.parse(sitio)).toMatchObject({
+      usuario: "lector.docs",
+      sedesIds: [],
+      permisosCodigos: ["sit.doc.ver"],
+      correo: null,
+    });
+    expect(
+      esquemaEditarUsuarioSitio.parse({
+        id: "u1",
+        nombre: "Lector Docs",
+        rol: "Operativo",
+        correo: "",
+        sedesIds: [],
+        permisosCodigos: ["sit.doc.ver"],
+        activo: true,
+      }).sedesIds,
+    ).toEqual([]);
+  });
+
+  it("RF-SW-11: el sitio rechaza la contraseña corta igual que el picking", () => {
+    const corta = esquemaCrearUsuarioSitio.safeParse({ ...sitio, clave: "abc", confirmarClave: "abc" });
+    expect(corta.success).toBe(false);
+    if (!corta.success) expect(corta.error.issues.map((issue) => issue.message)).toContain(MENSAJE_CLAVE_CORTA);
   });
 });

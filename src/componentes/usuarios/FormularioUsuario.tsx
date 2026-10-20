@@ -11,16 +11,24 @@ import { Button } from "@/componentes/ui/button";
 import { DialogClose, DialogTitle } from "@/componentes/ui/dialog";
 import { Input } from "@/componentes/ui/input";
 import { esAccesoTotal } from "@/lib/roles";
-import { crearUsuarioAccion, editarUsuarioAccion } from "@/modulos/usuarios/acciones";
+import {
+  crearUsuarioAccion,
+  crearUsuarioSitioAccion,
+  editarUsuarioAccion,
+  editarUsuarioSitioAccion,
+} from "@/modulos/usuarios/acciones";
 import {
   esquemaCrearUsuarioPicking,
+  esquemaCrearUsuarioSitio,
   esquemaEditarUsuarioPicking,
+  esquemaEditarUsuarioSitio,
   type EntradaCrearUsuario,
   type EntradaEditarUsuario,
 } from "@/modulos/usuarios/esquemas";
-import type { PermisoCatalogo, SedeCatalogo, UsuarioVisible } from "@/modulos/usuarios/tipos";
+import type { PermisoCatalogo, SedeCatalogo, SistemaPestana, UsuarioVisible } from "@/modulos/usuarios/tipos";
 import { CasillasPermisos } from "./CasillasPermisos";
 import { CasillasSedes } from "./CasillasSedes";
+import { TEXTOS_USUARIO } from "./textos";
 
 type Errores = {
   nombre?: string;
@@ -64,6 +72,7 @@ function Campos({
   mostrarClave,
   mostrarActivo,
   activo,
+  sistema,
   sedes,
   permisos,
   sedesMarcadas,
@@ -86,6 +95,7 @@ function Campos({
   mostrarClave: boolean;
   mostrarActivo: boolean;
   activo?: boolean;
+  sistema: SistemaPestana;
   sedes: readonly SedeCatalogo[];
   permisos: readonly PermisoCatalogo[];
   sedesMarcadas: readonly (string | number)[];
@@ -95,6 +105,7 @@ function Campos({
   alCambiarActivo?: (activo: boolean) => void;
 }) {
   const total = esAccesoTotal(rol);
+  const textos = TEXTOS_USUARIO[sistema];
   return (
     <div className="rejilla">
       <div className="rejilla r2">
@@ -169,18 +180,20 @@ function Campos({
           sedes, y sirve en los dos inicios de sesión.
         </Aviso>
       )}
+      {textos.muestraSedes && (
+        <div className={total ? "campo apagado" : "campo"}>
+          <span>Sedes a las que tiene acceso</span>
+          <CasillasSedes
+            sedes={sedes}
+            marcadas={comoNumeros(sedesMarcadas)}
+            deshabilitadas={total}
+            alAlternar={alAlternarSede}
+          />
+          {errores.sedesIds && <small className="msg-error">{errores.sedesIds}</small>}
+        </div>
+      )}
       <div className={total ? "campo apagado" : "campo"}>
-        <span>Sedes a las que tiene acceso</span>
-        <CasillasSedes
-          sedes={sedes}
-          marcadas={comoNumeros(sedesMarcadas)}
-          deshabilitadas={total}
-          alAlternar={alAlternarSede}
-        />
-        {errores.sedesIds && <small className="msg-error">{errores.sedesIds}</small>}
-      </div>
-      <div className={total ? "campo apagado" : "campo"}>
-        <span>Permisos del sistema de picking</span>
+        <span>{textos.permisos}</span>
         <CasillasPermisos
           permisos={permisos}
           marcados={permisosMarcados}
@@ -188,9 +201,11 @@ function Campos({
           alAlternar={alAlternarPermiso}
         />
       </div>
-      <p className="muted" style={{ fontSize: "13.5px" }}>
-        Los usuarios con rol <b>Piloto</b> se eligen en «Envío por camión» de Facturación y ven solo sus rutas.
-      </p>
+      {textos.notaPiloto && (
+        <p className="muted" style={{ fontSize: "13.5px" }}>
+          Los usuarios con rol <b>Piloto</b> se eligen en «Envío por camión» de Facturación y ven solo sus rutas.
+        </p>
+      )}
       {mostrarActivo && (
         <>
           <label className="chk">
@@ -223,32 +238,41 @@ function Pie({ ocupado }: { ocupado: boolean }) {
 
 export function FormularioUsuario({
   usuario,
-  sedes,
+  sedes = [],
   permisos,
+  sistema = "picking",
   alCerrar,
 }: {
   usuario: UsuarioVisible | null;
-  sedes: readonly SedeCatalogo[];
+  sedes?: readonly SedeCatalogo[];
   permisos: readonly PermisoCatalogo[];
+  sistema?: SistemaPestana;
   alCerrar: () => void;
 }) {
-  if (usuario) return <FormularioEditar usuario={usuario} sedes={sedes} permisos={permisos} alCerrar={alCerrar} />;
-  return <FormularioCrear sedes={sedes} permisos={permisos} alCerrar={alCerrar} />;
+  if (usuario)
+    return (
+      <FormularioEditar usuario={usuario} sedes={sedes} permisos={permisos} sistema={sistema} alCerrar={alCerrar} />
+    );
+  return <FormularioCrear sedes={sedes} permisos={permisos} sistema={sistema} alCerrar={alCerrar} />;
 }
 
 function FormularioCrear({
   sedes,
   permisos,
+  sistema,
   alCerrar,
 }: {
   sedes: readonly SedeCatalogo[];
   permisos: readonly PermisoCatalogo[];
+  sistema: SistemaPestana;
   alCerrar: () => void;
 }) {
   const router = useRouter();
   const mensaje = useMensajes();
+  const esquema = sistema === "sitio" ? esquemaCrearUsuarioSitio : esquemaCrearUsuarioPicking;
+  const crear = sistema === "sitio" ? crearUsuarioSitioAccion : crearUsuarioAccion;
   const formulario = useForm<z.input<typeof esquemaCrearUsuarioPicking>, unknown, EntradaCrearUsuario>({
-    resolver: zodResolver(esquemaCrearUsuarioPicking),
+    resolver: zodResolver(esquema),
     mode: "onBlur",
     defaultValues: {
       nombre: "",
@@ -269,7 +293,7 @@ function FormularioCrear({
   return (
     <form
       onSubmit={formulario.handleSubmit(async (valores) => {
-        const resultado = await crearUsuarioAccion(valores);
+        const resultado = await crear(valores);
         if (!resultado.ok) {
           mensaje(resultado.error, "error");
           return;
@@ -280,7 +304,7 @@ function FormularioCrear({
       })}
     >
       <div className="modal-cab">
-        <DialogTitle>Nuevo usuario del picking</DialogTitle>
+        <DialogTitle>{TEXTOS_USUARIO[sistema].nuevo}</DialogTitle>
       </div>
       <div className="modal-cuerpo">
         <Campos
@@ -304,6 +328,7 @@ function FormularioCrear({
           rol={rol}
           mostrarClave
           mostrarActivo={false}
+          sistema={sistema}
           sedes={sedes}
           permisos={permisos}
           sedesMarcadas={sedesMarcadas}
@@ -329,17 +354,21 @@ function FormularioEditar({
   usuario,
   sedes,
   permisos,
+  sistema,
   alCerrar,
 }: {
   usuario: UsuarioVisible;
   sedes: readonly SedeCatalogo[];
   permisos: readonly PermisoCatalogo[];
+  sistema: SistemaPestana;
   alCerrar: () => void;
 }) {
   const router = useRouter();
   const mensaje = useMensajes();
+  const esquema = sistema === "sitio" ? esquemaEditarUsuarioSitio : esquemaEditarUsuarioPicking;
+  const editar = sistema === "sitio" ? editarUsuarioSitioAccion : editarUsuarioAccion;
   const formulario = useForm<z.input<typeof esquemaEditarUsuarioPicking>, unknown, EntradaEditarUsuario>({
-    resolver: zodResolver(esquemaEditarUsuarioPicking),
+    resolver: zodResolver(esquema),
     mode: "onBlur",
     defaultValues: {
       id: usuario.id,
@@ -360,7 +389,7 @@ function FormularioEditar({
   return (
     <form
       onSubmit={formulario.handleSubmit(async (valores) => {
-        const resultado = await editarUsuarioAccion(valores);
+        const resultado = await editar(valores);
         if (!resultado.ok) {
           mensaje(resultado.error, "error");
           return;
@@ -371,7 +400,7 @@ function FormularioEditar({
       })}
     >
       <div className="modal-cab">
-        <DialogTitle>Editar usuario del picking</DialogTitle>
+        <DialogTitle>{TEXTOS_USUARIO[sistema].editar}</DialogTitle>
       </div>
       <div className="modal-cuerpo">
         <Campos
@@ -391,6 +420,7 @@ function FormularioEditar({
           mostrarClave={false}
           mostrarActivo
           activo={activo}
+          sistema={sistema}
           sedes={sedes}
           permisos={permisos}
           sedesMarcadas={sedesMarcadas}

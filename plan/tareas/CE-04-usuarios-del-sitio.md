@@ -5,7 +5,7 @@ persona: carlos
 responsable: Carlos Hugo Escobar
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [CE-03]
 programada: 2026-10-19
 requisitos: [RF-SW-11, RF-SW-13, RF-SW-25, RN-18, RN-19, RN-38, RN-47, RN-54, CU-12]
@@ -51,3 +51,25 @@ npm run verificar
 npm run build
 npm run e2e -- pruebas-e2e/panel/usuarios.spec.ts
 ```
+
+## Resultado
+
+`/panel/usuarios` para Gerencia y Soporte: alta con contraseña, edición, restablecimiento y eliminación lógica, reutilizando el módulo y los componentes de CE-03 con `sistema: "sitio"`.
+
+### Cómo usarlo
+
+- **Ruta:** `src/app/panel/usuarios/page.tsx` → `UsuariosSitioCliente`.
+- **Listar:** `listarUsuarios("sitio")` y `listarPermisos("sitio")`.
+- **Acciones del sitio** (`acciones.ts`): `crearUsuarioSitioAccion`, `editarUsuarioSitioAccion`, `eliminarUsuarioSitioAccion`, `restablecerClaveSitioAccion`. Exigen sesión `sitio` y `esAccesoTotal`.
+- **Componentes:** `FormularioUsuario`, `TablaUsuarios` y `DialogoClave` reciben `sistema="sitio"` (sin sedes, con correo, textos del prototipo).
+- **Textos compartidos:** `src/componentes/usuarios/textos.ts`.
+
+### Decisiones
+
+- Un solo formulario parametrizado por `SistemaPestana`. Esquemas `esquemaCrearUsuarioSitio` / `esquemaEditarUsuarioSitio` (sin exigir sede).
+- Al degradar Gerencia/Soporte desde el sitio, se vacían las sedes residuales de la cuenta `ambos`.
+- «¿Olvidó su contraseña?» del acceso del sitio ya dice «Pídale a Gerencia o a Soporte que la restablezcan.» (JG-06); e2e lo comprueba.
+
+### Evidencia
+
+`npm run verificar` (270 pruebas), `npm run build`, `npm run e2e -- pruebas-e2e/panel/usuarios.spec.ts` (12/12). Capturas en `evidencia/CE-04/`.
