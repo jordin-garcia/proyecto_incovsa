@@ -20,6 +20,7 @@ test("RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y 
   page,
 }, info) => {
   await page.goto("/panel/contenido");
+  await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   await expect(page.getByRole("heading", { name: "Inicio y Quiénes somos" })).toBeVisible();
   for (const bloque of [
     "Portada",
