@@ -114,3 +114,13 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Decisiones: se admite solo ese bot, nunca `"*"`; se actualizaron la decisión 62 (`specs/16`) y `specs/18`.
 - Pendiente o aviso para otros:
 **Carlos:** ya puedes usar el agente en la nube de Cursor: `revision-claude` revisará sus push. Para #85 y #86, actualiza la rama desde `develop` y haz push: la revisión usa el flujo nuevo (relanzar una ejecución anterior no sirve, porque conserva el flujo viejo). Corrige los hallazgos que ya dejó el bot. Abre los PR desde tu cuenta (`carloshugoeg`), no con el agente: si el autor es el bot, las menciones de la revisión no te llegan.
+
+## 2026-10-20 · JG-10 · Avance de tiempo real con SSE; verificación pendiente
+
+- Hecho: implementación del canal por sede, ruta SSE protegida con `exigirPermiso` y Zod, revalidación de la autorización antes de avisos/latidos, limpieza de conexiones, cliente compartido y recuperación cada 5 segundos e indicador «En vivo». Las 16 pruebas del módulo pasaron; revisión independiente de código sin hallazgos. Evidencia en `plan/evidencias/JG-10/`.
+- Decisiones: ningún cambio de dependencias ni esquema. El canal compartido vive en `globalThis` para unir los bundles de Next.js en un único proceso. Se retiró la suscripción redundante de Bodega para que el armazón pueda pausar la conexión al cambiar de sede. La tarea **permanece pendiente**: la batería general y las pruebas de navegador no están aprobadas por vencimientos de tiempo bajo presión de memoria; faltan compilación, recorrido visual y cierre. Rama `jordin/JG-10-tiempo-real-sse`.
+- Pendiente o aviso para otros:
+**Josué:** se retiraron el import y la llamada redundante a `useCambiosDeSede` de `src/componentes/picking/bodega/BodegaCliente.tsx`; el armazón conserva la suscripción. Este avance aún no está integrado: después de integrar JG-10, actualiza tu rama desde `develop` antes de JM-04. No agregues otro intervalo ni otra suscripción en Bodega.
+**José Daniel:** JG-10 sigue pendiente; no se considera desbloqueada JC-05 hasta verificar e integrar. Las interfaces `avisarCambio(sedeId)` y `useCambiosDeSede(sedeId | null)` se conservan.
+**CE-05:** el `Caddyfile` ya incluye `flush_interval -1`, suficiente para este transporte SSE; no se modificó. La ruta agrega `no-store`, `no-transform` y `X-Accel-Buffering: no`.
+**JG-10:** retomar en la rama del avance con memoria disponible; seguir `plan/evidencias/JG-10/verificacion.md`. No marcar hecha ni abrir el PR de cierre hasta aprobar todas las verificaciones y completar la revisión del cierre.

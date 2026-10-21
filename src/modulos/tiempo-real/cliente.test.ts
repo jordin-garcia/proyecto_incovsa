@@ -6,7 +6,7 @@ vi.mock("react", () => ({
     limpiar = efecto();
   },
 }));
-vi.mock("next/navigation", () => ({ useRouter: () => ({ refresh: refrescar }) }));
+vi.mock("next/navigation", () => ({ useRouter: () => ({ refresh: refrescar }), usePathname: () => "/picking/bodega" }));
 import { useCambiosDeSede } from "./cliente";
 afterEach(() => {
   limpiar?.();

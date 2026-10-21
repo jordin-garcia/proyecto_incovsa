@@ -59,3 +59,11 @@ npm run e2e -- pruebas-e2e/flujo/tiempo-real.spec.ts
 
 ## Notas
 - Caddy no debe almacenar en búfer la respuesta SSE (decisión 29): avisa a Carlos en tu bitácora (**CE-05:**) si hace falta alguna directiva en el `Caddyfile`.
+
+## Avance del 20/10/2026 · verificación pendiente
+
+Implementación en la rama `jordin/JG-10-tiempo-real-sse`: publicación por sede, ruta SSE autenticada y validada con Zod, latidos de 25 segundos, revalidación de sesión/permiso/sede, recuperación por consulta cada 5 segundos e indicador de conexión. Se conservan las interfaces de JG-07. Bodega usa la suscripción del armazón para poder pausarla al cambiar de sede.
+
+Las 16 pruebas del módulo pasaron y la revisión independiente de código no encontró hallazgos. La batería general y los navegadores no han pasado: el equipo está bajo presión de memoria y varias pruebas existentes agotan sus tiempos. **El estado permanece pendiente; no hay PR integrado ni `## Resultado` de cierre.**
+
+La evidencia, los comandos pendientes y los pasos para retomar están en [plan/evidencias/JG-10/verificacion.md](../evidencias/JG-10/verificacion.md).

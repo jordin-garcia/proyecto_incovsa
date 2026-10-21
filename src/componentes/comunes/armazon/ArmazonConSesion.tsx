@@ -4,7 +4,7 @@ import { useTransition, type ReactNode } from "react";
 import { Armazon, type OpcionNavegacion, type SedeArmazon } from "./Armazon";
 import { salir } from "@/app/acceso/acciones";
 import { cambiarSede } from "@/modulos/permisos/acciones";
-import { useCambiosDeSede } from "@/modulos/tiempo-real/cliente";
+import { useCambiosDeSede, useConexionEnVivo } from "@/modulos/tiempo-real/cliente";
 import { useMensajes } from "../Mensajes";
 
 export function ArmazonConSesion({
@@ -30,7 +30,9 @@ export function ArmazonConSesion({
   const mensaje = useMensajes();
   const modulo = ruta.split("/")[2] ?? "";
   const actual = catalogo.find((o) => o.href === `/${sistema === "sitio" ? "panel" : "picking"}/${modulo}`);
-  useCambiosDeSede(sistema === "picking" && !cambiandoSede ? sede : null);
+  const sedeSuscrita = sistema === "picking" && !cambiandoSede ? sede : null;
+  useCambiosDeSede(sedeSuscrita);
+  const enVivo = useConexionEnVivo(sedeSuscrita);
   return (
     <Armazon
       sistema={sistema}
@@ -40,6 +42,7 @@ export function ArmazonConSesion({
       sedes={sedes}
       sede={sede === null ? undefined : String(sede)}
       cambiandoSede={cambiandoSede}
+      enVivo={enVivo}
       opciones={opciones.map((o) => ({ ...o, activa: o.href === actual?.href }))}
       alSalir={async () => {
         await salir(sistema);
