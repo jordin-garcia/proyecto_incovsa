@@ -1,0 +1,33 @@
+{
+  "titulo_documento": "DOCUMENTO 5: MANUAL TÉCNICO DE INSTALACIÓN, DESPLIEGUE Y MANTENIMIENTO",
+  "archivo_salida": "Documento 5 - Instalacion despliegue y mantenimiento v0.1.docx",
+  "lugar_fecha": "Quetzaltenango, 2 de noviembre de 2026",
+  "portada": true,
+  "control_versiones": true,
+  "indices": true,
+  "numerar": true,
+  "versiones": [
+    ["0.1", "21/10/2026", "Carlos Hugo Escobar", "borrador a partir de CE-05, CE-06 y CE-07, sin el VPS real"]
+  ],
+  "secciones": [
+    "00-introduccion.md",
+    "01-requisitos.md",
+    "02-obtencion-del-codigo.md",
+    "03-dependencias.md",
+    "04-variables-de-entorno.md",
+    "05-base-de-datos.md",
+    "06-migraciones.md",
+    "07-ejecucion-en-desarrollo.md",
+    "08-compilacion.md",
+    "09-despliegue.md",
+    "10-dominio-y-https.md",
+    "11-almacenamiento.md",
+    "12-servicios-externos.md",
+    "13-primer-administrador.md",
+    "14-respaldo.md",
+    "15-restauracion.md",
+    "16-actualizacion.md",
+    "17-mantenimiento.md",
+    "18-diagnostico.md"
+  ]
+}
