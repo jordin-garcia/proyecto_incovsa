@@ -5,7 +5,7 @@ persona: carlos
 responsable: Carlos Hugo Escobar
 hito: entrega
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [CE-10]
 programada: 2026-11-02
 requisitos: [RNF-07, RNF-09]
@@ -45,3 +45,11 @@ python entregable-2/herramientas/armar_documento.py entregable-3/documento-5
 ## Notas
 - La portada del documento lee los nombres y carnés de `entregable-3/equipo.local.json`, que no se sube al repositorio (tiene datos personales). Si no existe en tu equipo, pídele a Jordin una copia de `entregable-2/equipo.local.json` y guárdala con ese nombre en `entregable-3/`.
 - Los `.docx` y `.pdf` no se suben al repositorio (`.gitignore`): se guardan en la carpeta local y en el Drive del equipo.
+
+## Resultado
+
+Borrador del 21/10/2026. Hay 19 apartados en `entregable-3/documento-5/` y el README ya no dice «pendiente» en las secciones 7 a 13. Los comandos salen de `package.json`, de los scripts de respaldo y de los flujos de CE-05, CE-06 y CE-07.
+
+`python entregable-2/herramientas/armar_documento.py entregable-3/documento-5` armó el `.docx` (0 figuras, 2 tablas). El archivo no se sube. `entregable-3/equipo.local.json` tampoco: la portada lo necesita en la máquina de quien arme el documento.
+
+Siguen abiertos, marcados `TODO(CE-11)`, el VPS (P-10), el DNS (P-93), la cuenta R2 (P-94) y la restauración de producción de CE-10. El primer despliegue real queda en JG-19.
