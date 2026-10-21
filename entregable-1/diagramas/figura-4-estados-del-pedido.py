@@ -1,69 +1,75 @@
 # -*- coding: utf-8 -*-
-"""Figura 4. Diagrama de estados del pedido."""
+"""Figura 4. Estados de la ruta y del pedido (RN-11).
+
+Pedido: Pendiente, En Preparación, Despachado.
+Ruta: Pendiente, En Preparación, En Ruta, Entregado.
+Sin Cancelado y sin Editado. Cancelar devuelve las líneas al tablero.
+"""
 import os
 import sys
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from uml import Canvas, note
 
-W, H = 1540, 1180
-TS, LS = 33, 29
+W, H = 1880, 1280
+TS, LS = 30, 26
 cv = Canvas(W, H)
 
 
 def estado(cx, cy, w, h, text):
     cv.rect(cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2, w=2.4, radius=24)
     cv.text(cx, cy, text, size=TS, anchor="mm")
-    return {"c": (cx, cy), "t": (cx, cy - h / 2), "b": (cx, cy + h / 2),
-            "l": (cx - w / 2, cy), "r": (cx + w / 2, cy),
-            "w": w, "h": h}
+    return {"t": (cx, cy - h / 2), "b": (cx, cy + h / 2),
+            "l": (cx - w / 2, cy), "r": (cx + w / 2, cy)}
 
 
 def final(cx, cy):
-    cv.disc(cx, cy, 30, fill=(255, 255, 255), outline=(0, 0, 0), w=2.6)
-    cv.disc(cx, cy, 20)
+    cv.disc(cx, cy, 26, fill=(255, 255, 255), outline=(0, 0, 0), w=2.6)
+    cv.disc(cx, cy, 16)
 
 
-# --- estados ---
-cv.disc(250, 78, 27)
-P = estado(250, 195, 320, 95, "Pendiente")
-EP = estado(1000, 195, 400, 95, "En Preparación")
-C = estado(250, 560, 300, 95, "Cancelado")
-D = estado(620, 560, 340, 95, "Despachado")
-R = estado(1000, 560, 300, 95, "En Ruta")
-E = estado(1000, 830, 340, 95, "Entregado")
+cv.text(460, 40, "Pedido (cliente recoge en bodega)", size=32, bold=True, anchor="mm")
+cv.text(1360, 40, "Ruta (envío por camión)", size=32, bold=True, anchor="mm")
 
-# --- transiciones ---
-cv.arrow((250, 105), P["t"])
-cv.text(292, 78, "El facturador abre el módulo de Facturación", size=LS, anchor="lm")
+cv.disc(460, 100, 22)
+P = estado(460, 230, 340, 90, "Pendiente")
+EP = estado(460, 460, 380, 90, "En Preparación")
+D = estado(460, 700, 340, 90, "Despachado")
 
-cv.arrow(P["r"], EP["l"])
-cv.text(605, 152, "Pulsa Enviar\nPedido a Bodega", size=LS, anchor="mm")
+cv.disc(1360, 100, 22)
+PR = estado(1360, 230, 340, 90, "Pendiente")
+EPR = estado(1360, 460, 380, 90, "En Preparación")
+R = estado(1360, 700, 300, 90, "En Ruta")
+EN = estado(1360, 940, 320, 90, "Entregado")
 
-cv.arrow(P["b"], C["t"])
-cv.text(282, 330, "Pulsa Cancelar", size=LS, anchor="lm")
+cv.arrow((460, 122), P["t"])
+cv.arrow(P["b"], EP["t"])
+cv.text(700, 345, "Enviar a Bodega", size=LS, anchor="lm")
+cv.arrow(EP["b"], D["t"])
+cv.text(700, 580, "Pedido Despachado", size=LS, anchor="lm")
+final(460, 860)
+cv.arrow(D["b"], (460, 834))
 
-cv.arrow((900, 243), (665, 512))
-cv.text(660, 428, "Pulsa Pedido Despachado y\nel cliente recoge en bodega", size=LS, anchor="rm")
+cv.arrow((1360, 122), PR["t"])
+cv.arrow(PR["b"], EPR["t"])
+cv.text(1600, 345, "Enviar a Bodega", size=LS, anchor="lm")
+cv.arrow(EPR["b"], R["t"])
+cv.text(1600, 580, "Ruta Despachada", size=LS, anchor="lm")
+cv.arrow(R["b"], EN["t"])
+cv.text(1600, 820, "Ruta Entregada", size=LS, anchor="lm")
+final(1360, 1100)
+cv.arrow(EN["b"], (1360, 1074))
 
-cv.arrow(EP["b"], R["t"])
-cv.text(1035, 350, "Pulsa Pedido Despachado y\nel pedido se envía en camión", size=LS, anchor="lm")
-
-cv.arrow(R["b"], E["t"])
-cv.text(1035, 695, "Pulsa Pedido Entregado", size=LS, anchor="lm")
-
-cv.arrow(C["b"], (250, 705))
-final(250, 735)
-cv.arrow(D["b"], (620, 705))
-final(620, 735)
-cv.arrow(E["b"], (1000, 975))
-final(1000, 1005)
-
-# --- nota ---
-note(cv, 60, 890, 800, 1150,
-     "Pendiente y Cancelado solo se ven en pantalla:\n"
-     "el pedido se guarda al pulsar Enviar Pedido a Bodega.\n"
-     "«Con devolución» no es un estado: es una marca\n"
-     "que se agrega al pedido Despachado o Entregado\n"
-     "al registrar una devolución en Inventario", size=26)
+note(
+    cv, 80, 960, 900, 1220,
+    "Cancelar una opción de envío devuelve\n"
+    "sus pedidos facturados al tablero.\n"
+    "No hay estado Cancelado.\n"
+    "No hay estado Editado.\n"
+    "Pendiente aún no es una ruta ni un pedido:\n"
+    "son pedidos facturados en el tablero\n"
+    "o en la opción de envío.",
+    size=26,
+)
 
 print(cv.save(sys.argv[1] if len(sys.argv) > 1 else "fig4.png"))

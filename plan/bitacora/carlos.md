@@ -97,3 +97,10 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Hecho: CORRECCIÓN 2 y 3 en `preparar-vps.sh` / `verificar-vps.sh` (SSH `00-incovsa.conf`, aborto sin llave, UFW 22/tcp, verificador solo root, solo puertos 22/80/443, `PermitRootLogin no`). CORRECCIÓN 1: se mantiene `evidencia/CE-08/` por la asignación del coordinador del proyecto («Prefer evidence under evidencia/CE-08/»); queda anotada en `## Resultado` y en el PR.
 - Decisiones: sin grupo sudo en el usuario de despliegue (opcional del bot); docker basta.
 - Pendiente o aviso para otros: ninguno nuevo; siguen P-10 / P-93 / P-94.
+
+## 2026-10-21 · CE-09 · Documento 1 final (fuente v0.3)
+- Hecho: ocho capítulos y anexos A a E en `entregable-3/documento-1/`. Figuras 1 a 5 regeneradas. Diagramas de `entregable-1/diagramas/` alineados con `specs/` 1.7. `armar_documento.py` produjo el `.docx` local (5 figuras, 33 tablas). No se sube.
+- Decisiones: la v0.2 no está en el repositorio, así que el texto sale de `specs/`. Las actas no se inventan. Las figuras 6 a 8 quedan en Mermaid hasta tener `mermaid-cli`.
+- Pendiente o aviso para otros:
+  - **Carlos:** aportar el `.docx` v0.2, las notas de las reuniones 4 y 5 (la 5 es del 13/10/2026) y subir el `.docx` v0.3 al Drive.
+  - **Jordin:** `entregable-3/equipo.local.json`. No se commitea. JG-17 sigue pendiente para cerrar la columna de implementación del anexo D.

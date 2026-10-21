@@ -1,0 +1,29 @@
+{
+  "titulo_documento": "DOCUMENTO 1: MEMORIA GENERAL Y ESPECIFICACIÓN DEL SISTEMA",
+  "archivo_salida": "Documento 1 - Memoria general y especificacion del sistema v0.3.docx",
+  "lugar_fecha": "Quetzaltenango, 30 de octubre de 2026",
+  "portada": true,
+  "control_versiones": true,
+  "indices": true,
+  "numerar": true,
+  "versiones": [
+    ["0.1", "21/09/2026", "Equipo del proyecto", "Versión entregada del Entregable 1, de 79 páginas, según entregable-1/LEEME.md. El repositorio no nombra a quien la redactó."],
+    ["0.2", "24/09/2026", "Equipo del proyecto", "Versión del 24/09/2026, de 86 páginas, según entregable-1/LEEME.md. Incorpora las decisiones del 23/09/2026 y del 24/09/2026. El repositorio no nombra a quien la redactó y no contiene el texto de esa versión."],
+    ["0.3", "30/10/2026", "Carlos Hugo Escobar", "Alineación con la especificación 1.7, corte del 16/10/2026. Incorpora lo registrado de las reuniones 4 y 5, la salida del inventario del alcance con la aprobación del docente, los permisos por usuario y los diagramas del sistema vigente."]
+  ],
+  "secciones": [
+    "01-introduccion.md",
+    "02-actores-y-permisos.md",
+    "03-requerimientos.md",
+    "04-reglas-de-negocio.md",
+    "05-casos-de-uso.md",
+    "06-modelado-diseno-arquitectura.md",
+    "07-datos-seguridad-interfaz.md",
+    "08-conclusiones.md",
+    "90-anexo-a-actas.md",
+    "91-anexo-b-evidencias.md",
+    "92-anexo-c-prototipos.md",
+    "93-anexo-d-matriz.md",
+    "94-anexo-e-conversion.md"
+  ]
+}

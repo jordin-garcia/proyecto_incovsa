@@ -5,7 +5,7 @@ persona: carlos
 responsable: Carlos Hugo Escobar
 hito: entrega
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [CE-01, JG-17]
 programada: 2026-10-30
 requisitos: []
@@ -49,3 +49,13 @@ python entregable-2/herramientas/armar_documento.py entregable-3/documento-1
 ## Notas
 - La portada del documento lee los nombres y carnés de `entregable-3/equipo.local.json`, que no se sube al repositorio (tiene datos personales). Si no existe en tu equipo, pídele a Jordin una copia de `entregable-2/equipo.local.json` y guárdala con ese nombre en `entregable-3/`.
 - Los `.docx` y `.pdf` no se suben al repositorio (`.gitignore`): se guardan en la carpeta local y en el Drive del equipo.
+
+## Resultado
+
+Fuente v0.3 en `entregable-3/documento-1/`: ocho capítulos y anexos A a E, alineados con `specs/` 1.7. El inventario queda fuera del alcance. Los roles vigentes son Gerencia y Soporte. Los códigos eliminados conservan el estado Eliminado.
+
+Las figuras 1 a 5 se regeneraron en `entregable-3/documento-1/figuras/`. Los scripts de `entregable-1/diagramas/` ya no dibujan el inventario, el estado Cancelado ni los roles Administrativo, Operativo y Vista general. Las figuras 6 a 8 tienen el Mermaid nuevo y no el PNG, porque `mermaid-cli` no está instalado.
+
+`python entregable-2/herramientas/armar_documento.py entregable-3/documento-1` armó el `.docx` local: 5 figuras y 33 tablas. No se sube. `equipo.local.json` tampoco.
+
+Siguen como `TODO(CE-09)` el texto de la v0.2, las actas de las reuniones 1 a 5 (la 5 es del 13/10/2026, P-77), las evidencias fotográficas y la convergencia de JG-17 en el anexo D.
