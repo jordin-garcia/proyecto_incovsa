@@ -1,3 +1,7 @@
+import { channel } from "node:diagnostics_channel";
+
+const diagnostico = channel("incovsa.tiempo-real.cambio");
+
 // Un único proceso Node.js (decisión 10). globalThis comparte el canal entre los bundles de las acciones y
 // de la ruta SSE, también tras una recarga de desarrollo. Con varios procesos, usar LISTEN/NOTIFY de PostgreSQL.
 const globalCanal = globalThis as typeof globalThis & { cambiosIncovsa?: Map<number, Set<() => void>> };
@@ -5,6 +9,8 @@ const canales = (globalCanal.cambiosIncovsa ??= new Map());
 
 /** Solo después de confirmar la transacción. Un navegador desconectado no puede hacer fallar la mutación. */
 export function avisarCambio(sede: number): void {
+  // Instrumentación local opcional: mide RNF-13 desde la publicación, sin rutas ni datos SSE adicionales.
+  if (diagnostico.hasSubscribers) diagnostico.publish({ sede, instante: Date.now() });
   for (const avisar of canales.get(sede) ?? []) {
     try {
       avisar();

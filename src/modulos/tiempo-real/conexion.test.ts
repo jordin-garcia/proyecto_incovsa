@@ -26,6 +26,7 @@ class FuentePrueba {
 beforeEach(() => {
   vi.useFakeTimers();
   vi.stubGlobal("EventSource", FuentePrueba);
+  vi.stubGlobal("window", new EventTarget());
   vi.stubGlobal("document", { visibilityState: "visible", addEventListener: vi.fn(), removeEventListener: vi.fn() });
   estado.ruta = "/picking/bodega";
 });
@@ -90,4 +91,24 @@ it("RN-17 / RNF-13: cambiar de sede o módulo libera la conexión anterior e ign
   expect(FuentePrueba.fuentes[1]!.url).toBe("/api/tiempo-real?sede=2&modulo=facturacion");
   mensajeTardio({ data: '{"sede":1}' });
   expect(estado.refrescar).not.toHaveBeenCalled();
+});
+
+it("RNF-13: perder la red apaga el indicador aun si el navegador conserva el flujo abierto y al volver reconecta", () => {
+  useCambiosDeSede(1);
+  const fuente = FuentePrueba.fuentes[0]!;
+  fuente.onopen!();
+  estado.refrescar.mockClear();
+  window.dispatchEvent(new Event("offline"));
+  expect(useConexionEnVivo(1)).toBe(false);
+  expect(fuente.close).toHaveBeenCalledTimes(1);
+  vi.advanceTimersByTime(5000);
+  expect(estado.refrescar).toHaveBeenCalledTimes(1);
+  const siguiente = FuentePrueba.fuentes[1]!;
+  siguiente.onopen!();
+  expect(useConexionEnVivo(1)).toBe(true);
+  estado.limpiezas.shift()!();
+  window.dispatchEvent(new Event("offline"));
+  window.dispatchEvent(new Event("online"));
+  expect(vi.getTimerCount()).toBe(0);
+  expect(FuentePrueba.fuentes).toHaveLength(2);
 });

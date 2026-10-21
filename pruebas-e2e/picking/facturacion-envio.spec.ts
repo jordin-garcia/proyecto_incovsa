@@ -50,6 +50,10 @@ test("RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bo
   page,
   context,
 }, info) => {
+  const erroresHidratacion: string[] = [];
+  page.on("console", (mensaje) => {
+    if (/hydrated|hydration/i.test(mensaje.text())) erroresHidratacion.push(mensaje.text());
+  });
   const respuesta = await context.request.post("/api/auth/picking/sign-in/username", {
     headers: { origin: "http://localhost:3000" },
     data: { usuario: "ejemplo.03", clave: process.env.CLAVE_DEMO },
@@ -147,6 +151,18 @@ test("RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bo
   await expect(filas.first()).toContainText("03546");
   await page.reload();
   await expect(filas.first()).toContainText("03546");
+  // RNF-08: las instrucciones de arrastre deben seguir enlazadas después de hidratar otra petición SSR.
+  await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
+  expect(
+    await page.locator("article[aria-describedby]").evaluateAll((tarjetas) =>
+      tarjetas.every((tarjeta) =>
+        tarjeta
+          .getAttribute("aria-describedby")!
+          .split(/\s+/)
+          .every((id) => !!document.getElementById(id)?.textContent?.trim()),
+      ),
+    ),
+  ).toBe(true);
   if (info.project.name !== "escritorio") {
     await filas.last().scrollIntoViewIfNeeded();
     const desde = await filas.last().boundingBox(),
@@ -209,4 +225,5 @@ test("RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bo
   await page.getByRole("button", { name: "Seguir en Facturación", exact: true }).click();
   await expect(camion.locator("article")).toHaveCount(0);
   await expect(recoge.getByRole("button", { name: "Enviar a Bodega", exact: true })).toBeDisabled();
+  expect(erroresHidratacion).toEqual([]);
 });

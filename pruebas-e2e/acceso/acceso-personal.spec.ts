@@ -90,6 +90,7 @@ test("RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio 
     await page
       .getByRole("link", { name: sistema === "sitio" ? /Administración del sitio/ : /Sistema de picking/ })
       .click();
+    await expect(page.locator(".acc-lay")).toHaveAttribute("data-hidratado", "true");
     await page.getByLabel("Contraseña", { exact: true }).fill(clave!);
     await page.getByRole("button", { name: "Ingresar" }).click();
     await expect(page).toHaveURL(sistema === "sitio" ? /\/panel\/documentos$/ : /\/picking\/facturacion$/);

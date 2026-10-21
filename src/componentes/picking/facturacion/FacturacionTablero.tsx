@@ -183,6 +183,7 @@ export function FacturacionTablero({
 
   return (
     <DndContext
+      id={`facturacion-sede-${sedeId}`}
       sensors={sensores}
       collisionDetection={(contexto) => {
         // Primero la zona visible: las tarjetas recortadas por el scroll del tablero

@@ -1,7 +1,31 @@
 import { afterEach, expect, it, vi } from "vitest";
+import { subscribe, unsubscribe } from "node:diagnostics_channel";
 import { avisarCambio, suscribirCambios, crearFlujoDeCambios } from "./servidor";
 
 afterEach(() => vi.useRealTimers());
+
+it("RNF-13: permite medir la publicación real antes de notificar, sin agregar datos al flujo SSE", () => {
+  let publicacion: unknown;
+  let observadoAlNotificar: unknown;
+  const observar = (datos: unknown) => {
+    publicacion = datos;
+  };
+  subscribe("incovsa.tiempo-real.cambio", observar);
+  const quitar = suscribirCambios(1, () => {
+    observadoAlNotificar = publicacion;
+  });
+  try {
+    const inicio = Date.now();
+    avisarCambio(1);
+    expect(publicacion).toEqual({ sede: 1, instante: expect.any(Number) });
+    expect(observadoAlNotificar).toBe(publicacion);
+    expect((publicacion as { instante: number }).instante).toBeGreaterThanOrEqual(inicio);
+    expect((publicacion as { instante: number }).instante).toBeLessThanOrEqual(Date.now());
+  } finally {
+    quitar();
+    unsubscribe("incovsa.tiempo-real.cambio", observar);
+  }
+});
 
 it("RNF-13 / RN-17: publica solo a la sede suscrita y permite liberar cada conexión", () => {
   const xela = vi.fn();

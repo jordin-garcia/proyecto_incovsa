@@ -44,6 +44,14 @@ function suscribir(clave: string, refrescar: () => void) {
     const alMostrar = () => {
       if (pendiente) actualizar();
     };
+    const desconectar = () => {
+      if (cerrada) return;
+      fuente?.close();
+      fuente = null;
+      nueva.vivo = false;
+      avisarEstado();
+      consultar();
+    };
     const conectar = () => {
       if (cerrada || fuente || typeof EventSource === "undefined") return;
       try {
@@ -63,11 +71,7 @@ function suscribir(clave: string, refrescar: () => void) {
         };
         actual.onerror = () => {
           if (cerrada || fuente !== actual) return;
-          actual.close();
-          fuente = null;
-          nueva.vivo = false;
-          avisarEstado();
-          consultar();
+          desconectar();
         };
       } catch {
         fuente = null;
@@ -85,10 +89,18 @@ function suscribir(clave: string, refrescar: () => void) {
       fuente?.close();
       clearInterval(intervalo);
       document.removeEventListener?.("visibilitychange", alMostrar);
+      if (typeof window !== "undefined") {
+        window.removeEventListener("offline", desconectar);
+        window.removeEventListener("online", conectar);
+      }
       conexiones.delete(clave);
       avisarEstado();
     };
     document.addEventListener?.("visibilitychange", alMostrar);
+    if (typeof window !== "undefined") {
+      window.addEventListener("offline", desconectar);
+      window.addEventListener("online", conectar);
+    }
     consultar();
     conectar();
     conexion = nueva;
