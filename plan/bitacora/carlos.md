@@ -97,3 +97,10 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Hecho: CORRECCIÓN 2 y 3 en `preparar-vps.sh` / `verificar-vps.sh` (SSH `00-incovsa.conf`, aborto sin llave, UFW 22/tcp, verificador solo root, solo puertos 22/80/443, `PermitRootLogin no`). CORRECCIÓN 1: se mantiene `evidencia/CE-08/` por la asignación del coordinador del proyecto («Prefer evidence under evidencia/CE-08/»); queda anotada en `## Resultado` y en el PR.
 - Decisiones: sin grupo sudo en el usuario de despliegue (opcional del bot); docker basta.
 - Pendiente o aviso para otros: ninguno nuevo; siguen P-10 / P-93 / P-94.
+
+## 2026-10-21 · CE-12 · Anexos I y J (borrador)
+- Hecho: inventario de servicios en `entregable-3/anexos/anexo-j-servicios-y-accesos.md` y formulario de firma en `anexo-i-evidencia-de-entrega.md`. Sin secretos. La transferencia del repositorio no se ejecutó.
+- Decisiones: el medio de las credenciales lo define Jordin. El anexo no elige gestor ni entrega en persona.
+- Pendiente o aviso para otros:
+  - **Jordin:** el medio de entrega de credenciales, el correo de INCOVSA (P-94), quién recibe (P-03), el administrador inicial (P-08) y el nombre de la cuenta u organización de GitHub de destino.
+  - **Carlos:** el 4 de noviembre, con el coordinador, ejecutar la transferencia. No antes.
