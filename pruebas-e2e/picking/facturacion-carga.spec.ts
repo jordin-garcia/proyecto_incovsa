@@ -1,15 +1,44 @@
-import { expect, test } from "@playwright/test";
+import { expect, test as base } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { writeFile } from "node:fs/promises";
+import { Client } from "pg";
+
+const test = base.extend<{ datosDeCarga: void }>({
+  datosDeCarga: [
+    async ({}, usar) => {
+      expect(process.env.DATABASE_URL, "Se requiere una base local de demostración").toBeTruthy();
+      const bloqueo = new Client({ connectionString: process.env.DATABASE_URL });
+      await bloqueo.connect();
+      try {
+        // Comparte exclusión con facturacion-envio; la espera no consume los 30 s del flujo.
+        await bloqueo.query("SELECT pg_advisory_lock(hashtext($1))", ["e2e:facturacion-envio"]);
+        const anterior = await bloqueo.query<{ ultimo: number }>(
+          "SELECT COALESCE(MAX(id), 0) AS ultimo FROM pedido_facturado",
+        );
+        try {
+          await usar();
+        } finally {
+          // Solo pedidos nuevos de este importador de demostración; los detalles tienen CASCADE.
+          await bloqueo.query(
+            `DELETE FROM pedido_facturado WHERE id > $1 AND envio_id IS NULL
+             AND cargado_por = (SELECT id FROM usuario WHERE username = $2)`,
+            [anterior.rows[0].ultimo, "picking.ejemplo.03"],
+          );
+        }
+      } finally {
+        // Cerrar la conexión libera también el bloqueo si falla la preparación o la limpieza.
+        await bloqueo.end();
+      }
+    },
+    { auto: true, timeout: 180_000 },
+  ],
+});
 
 test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos facturados", async ({
   page,
   context,
 }, info) => {
-  test.skip(
-    info.project.name !== "escritorio",
-    "Una ejecución controla los datos compartidos y recorre los tres tamaños.",
-  );
+  const width = page.viewportSize()!.width;
   expect(process.env.CLAVE_DEMO, "Se requiere la semilla de demostración").toBeTruthy();
   async function capturar(nombre: string) {
     const imagen = await page.screenshot();
@@ -25,10 +54,8 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   await expect(page.getByRole("heading", { name: "Pedidos facturados", exact: true })).toBeVisible();
 
-  for (const width of [390, 768, 1440]) {
-    await page.setViewportSize({ width, height: width === 390 ? 844 : width === 768 ? 1024 : 900 });
-    await capturar(`facturacion-vacio-${width}`);
-  }
+  await expect(page.getByTestId("tablero-pedidos").locator("article")).toHaveCount(0);
+  await capturar(`facturacion-vacio-${width}`);
 
   await page.getByLabel("Cargar archivo .xlsx").setInputFiles("pruebas/fixtures/odoo/odoo-ejemplo-anonimizado.xlsx");
   await expect(page.getByRole("dialog")).toContainText(
@@ -41,10 +68,7 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
   await expect(page.getByRole("dialog")).toContainText(
     "Los datos de esos pedidos facturados deben corregirse en Odoo y volver a exportarse (P-91).",
   );
-  for (const width of [390, 768, 1440]) {
-    await page.setViewportSize({ width, height: width === 390 ? 844 : width === 768 ? 1024 : 900 });
-    await capturar(`facturacion-resumen-${width}`);
-  }
+  await capturar(`facturacion-resumen-${width}`);
   await page.getByRole("button", { name: "Listo" }).click();
 
   const segundaSesion = await context.request.post("/api/auth/picking/sign-in/username", {
@@ -66,8 +90,7 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
   await expect(tarjetas.first().getByText("120 kg", { exact: true })).toBeVisible();
   await expect(page.getByText("Seleccionar todos")).toBeVisible();
 
-  for (const width of [390, 768, 1440]) {
-    await page.setViewportSize({ width, height: width === 390 ? 844 : width === 768 ? 1024 : 900 });
+  {
     expect(
       (await new AxeBuilder({ page }).analyze()).violations.filter((v) =>
         ["serious", "critical"].includes(v.impact ?? ""),
@@ -109,8 +132,7 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
     ),
   ).toEqual([]);
   expect(await lista.evaluate((element) => element.scrollTop)).toBe(scrollAntes);
-  for (const width of [390, 768, 1440]) {
-    await page.setViewportSize({ width, height: width === 390 ? 844 : width === 768 ? 1024 : 900 });
+  {
     expect(
       (await new AxeBuilder({ page }).analyze()).violations.filter((v) =>
         ["serious", "critical"].includes(v.impact ?? ""),
@@ -121,10 +143,7 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
   await page.getByRole("button", { name: "Eliminar", exact: true }).click();
   const confirmacionMultiple = page.getByRole("dialog");
   await expect(confirmacionMultiple).toContainText("33 pedidos facturados seleccionados (10,920 kg)");
-  for (const width of [390, 768, 1440]) {
-    await page.setViewportSize({ width, height: width === 390 ? 844 : width === 768 ? 1024 : 900 });
-    await capturar(`facturacion-confirmacion-eliminar-${width}`);
-  }
+  await capturar(`facturacion-confirmacion-eliminar-${width}`);
   await page.getByRole("dialog").getByRole("button", { name: "Eliminar", exact: true }).click();
   await expect(tarjetas).toHaveCount(0);
 });

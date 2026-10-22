@@ -21,6 +21,7 @@ export type PropsArmazon = {
   sede?: string;
   alCambiarSede?: (id: string) => void;
   cambiandoSede?: boolean;
+  enVivo?: boolean;
   alSalir: () => void;
   children: ReactNode;
 };
@@ -68,6 +69,7 @@ export function Armazon({
   sede,
   alCambiarSede,
   cambiandoSede = false,
+  enVivo = true,
   alSalir,
   children,
 }: PropsArmazon) {
@@ -232,8 +234,15 @@ export function Armazon({
                 </Button>
               ) : (
                 <>
-                  <span className="vivo">
-                    <i aria-hidden="true" />
+                  <span
+                    className="vivo"
+                    data-conectado={enVivo}
+                    style={enVivo ? undefined : { color: "var(--g600)", background: "var(--g100)" }}
+                  >
+                    <i
+                      aria-hidden="true"
+                      style={enVivo ? undefined : { background: "var(--g400)", animation: "none" }}
+                    />
                     En vivo
                   </span>
                   {sedes.length > 1 && usaSede ? (

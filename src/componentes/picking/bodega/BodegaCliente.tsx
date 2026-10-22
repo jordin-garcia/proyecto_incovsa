@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Icono } from "@/componentes/comunes/iconos";
 import { useMensajes } from "@/componentes/comunes/Mensajes";
-import { useCambiosDeSede } from "@/modulos/tiempo-real/cliente";
 import { TarjetaEnvio, type EnvioBodegaItem } from "./TarjetaEnvio";
 import { ModalDetalle, type DetalleEnvioData } from "./ModalDetalle";
 import { obtenerDetalleEnvioAccion } from "@/modulos/bodega/acciones";
@@ -20,9 +19,6 @@ export function BodegaCliente({ sede, enviosIniciales }: BodegaClienteProps) {
   const mostrarMensaje = useMensajes();
   const [detalleEnvio, setDetalleEnvio] = useState<DetalleEnvioData | null>(null);
   const [modalAbierto, setModalAbierto] = useState(false);
-
-  // Mantiene la vista sincronizada con los cambios de la sede
-  useCambiosDeSede(sede.id);
 
   const alVerDetalle = async (envioId: number) => {
     const res = await obtenerDetalleEnvioAccion({ envioId });
