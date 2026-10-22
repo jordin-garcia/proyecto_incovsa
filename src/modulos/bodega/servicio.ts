@@ -4,7 +4,14 @@ import { ErrorNegocio } from "@/lib/errores";
 import { ErrorAcceso } from "@/modulos/permisos/servicio";
 import { formatoFecha } from "@/lib/fechas";
 import { registrarBitacora } from "@/modulos/bitacora/servicio";
-import type { EntradaMarcarLinea, EntradaMarcarTodo, EntradaOrdenarPorPeso, EntradaDespachar } from "./esquemas";
+import type {
+  EntradaMarcarLinea,
+  EntradaMarcarTodo,
+  EntradaOrdenarPorPeso,
+  EntradaDespachar,
+  EntradaReordenarCola,
+  EntradaReordenarLineas,
+} from "./esquemas";
 
 export interface ContextoOperacion {
   usuarioId: string;
@@ -349,4 +356,86 @@ export async function despacharEnvio(entrada: EntradaDespachar, contexto: Contex
       nuevoEstado: estadoDestinoNombre,
     };
   });
+}
+
+export async function reordenarColaBodega(entrada: EntradaReordenarCola, contexto: ContextoOperacion) {
+  // Verificar que todos los envíos existen, pertenecen a la sede y están En Preparación
+  const envios = await prisma.envio.findMany({
+    where: {
+      id: { in: entrada.envioIds },
+      sedeId: contexto.sedeId,
+      estado: { nombre: "En Preparación" },
+    },
+    select: { id: true },
+  });
+
+  if (envios.length !== entrada.envioIds.length) {
+    throw new ErrorAcceso();
+  }
+
+  // Actualizar posiciones enteras (decisión 57)
+  // RN-28: no va al historial ni a la bitácora
+  await prisma.$transaction(
+    entrada.envioIds.map((id, index) =>
+      prisma.envio.updateMany({
+        where: {
+          id,
+          sedeId: contexto.sedeId,
+          estado: { nombre: "En Preparación" },
+        },
+        data: { posicionCola: index + 1 },
+      }),
+    ),
+  );
+
+  return {
+    envioIds: entrada.envioIds,
+  };
+}
+
+export async function reordenarLineasPreparacion(entrada: EntradaReordenarLineas, contexto: ContextoOperacion) {
+  const envio = await prisma.envio.findFirst({
+    where: {
+      id: entrada.envioId,
+      sedeId: contexto.sedeId,
+      estado: { nombre: "En Preparación" },
+    },
+    include: {
+      lineas: { select: { id: true } },
+    },
+  });
+
+  if (!envio) {
+    throw new ErrorAcceso();
+  }
+
+  const idsExistentes = new Set(envio.lineas.map((l) => l.id));
+  const todosPertenecen =
+    entrada.lineaIds.length === envio.lineas.length && entrada.lineaIds.every((id) => idsExistentes.has(id));
+  if (!todosPertenecen) {
+    throw new ErrorAcceso();
+  }
+
+  // Actualizar posiciones enteras (decisión 57)
+  // RN-28: no va al historial ni a la bitácora
+  await prisma.$transaction(
+    entrada.lineaIds.map((id, index) =>
+      prisma.lineaPreparacion.updateMany({
+        where: {
+          id,
+          envioId: entrada.envioId,
+          envio: {
+            sedeId: contexto.sedeId,
+            estado: { nombre: "En Preparación" },
+          },
+        },
+        data: { posicion: index + 1 },
+      }),
+    ),
+  );
+
+  return {
+    envioId: entrada.envioId,
+    lineaIds: entrada.lineaIds,
+  };
 }
