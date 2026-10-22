@@ -17,6 +17,10 @@ const casos = [
   ],
   ['"use server"; export async function segura() { exigirPermiso(sesion, "pk.bodega"); return 1; }', false],
   ['"use server"; export const segura = async () => { exigirPermiso(sesion, "pk.bodega"); return 1; };', false],
+  ['"use server"; export async function insegura() { return 1; }', true, "src/modulos/prueba/acciones-catalogo.ts"],
+  ['/* Módulo */\n"use server"; export async function insegura() { return 1; }', true, "src/modulos/prueba/otro.ts"],
+  ["export async function servicio() { return 1; }", false, "src/modulos/prueba/servicio.ts"],
+  ["export async function POST() { return Response.json({}); }", true, "src/app/panel/catalogo/publicar/route.ts"],
   ["export async function GET() { return Response.json({}); }", true, "src/app/api/prueba/route.ts"],
   [
     'export async function GET() { exigirPermiso(sesion, "pk.bodega"); return Response.json({}); }',

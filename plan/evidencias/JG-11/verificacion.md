@@ -9,9 +9,9 @@ Context7 se consultó para Next.js, TypeScript, Playwright, Semgrep, Stryker, Vi
 ## Resultados durante la implementación
 
 - Fase roja: faltaban el módulo de cabeceras, el comprobador de integridad, el de cadena de suministro y los workflows. Las regresiones de generadores de pruebas también fallaron antes de corregir el conteo.
-- Cabeceras: seis pruebas unitarias aprobadas. La batería general de Vitest aprobó 34 archivos y 308 pruebas.
+- Cabeceras: seis pruebas unitarias aprobadas. Tras actualizar con `develop` (`76076c3`), `npm run verificar` aprobó formato, lint, tipos y 337 pruebas en 39 archivos (525,24 s).
 - Compilación: Next.js 16.4.2 standalone aprobada; las páginas se renderizan por petición para aplicar el nonce. next-devtools devolvió `issues: []`, `configErrors: []` y `sessionErrors: []`.
-- Semgrep: 76 reglas sobre 162 archivos, sin hallazgos. Los casos sintéticos del escáner comprueban funciones, flechas, exportaciones indirectas y APIs prohibidas.
+- Semgrep: el escaneo previo a ampliar el alcance revisó 76 reglas sobre 195 archivos TypeScript, sin hallazgos. Los casos sintéticos del escáner comprueban funciones, flechas, exportaciones indirectas y APIs prohibidas. La revisión de integración detectó que las nuevas acciones de catálogo y los endpoints multipart del panel quedaban fuera del alcance inicial: se agregaron regresiones que fallaron con la regla anterior y se amplió la detección a módulos con la directiva `"use server"` y todos los `src/app/**/route.ts`.
 - gitleaks: historial completo aprobado. Los siete falsos positivos iniciales eran textos de reemplazo, valores ficticios exactos de CI y una referencia simbólica a variables; las excepciones combinan archivo y valor o línea exactos.
 - Cadena de suministro: lockfile-lint aprobado. OSV y npm audit sin vulnerabilidades después de fijar `qs` 6.16.1 bajo `typed-rest-client`.
 - Navegador: primera pasada completa, 213 aprobadas de 216. Fallaron tres casos de teléfono por esperas de navegación/captura mientras corría la mutación; repetidos sin esa carga, los tres pasaron. Las doce pruebas de cabeceras pasaron en la batería completa. Falta la repetición final de la batería completa.
@@ -24,6 +24,19 @@ El adaptador local usa el factory público del runner, conserva los ID y la cobe
 
 Los archivos temporales y el caché de mutación se aíslan del servidor de Next.js; no se ignoran mutantes, no se omiten pruebas y no se rebajan límites para conseguir un resultado.
 
+## Pruebas negativas en GitHub
+
+Los tres PR temporales están cerrados sin integrar y sus ramas fueron eliminadas:
+
+| PR | Control | Rechazo comprobado |
+| --- | --- | --- |
+| [#106](https://github.com/jordin-garcia/proyecto_incovsa/pull/106) | [semgrep](https://github.com/jordin-garcia/proyecto_incovsa/actions/runs/39736289684/job/119682630104) | Dos hallazgos bloqueantes: acción sin `exigirPermiso` y `dangerouslySetInnerHTML`. |
+| [#107](https://github.com/jordin-garcia/proyecto_incovsa/pull/107) | [secretos](https://github.com/jordin-garcia/proyecto_incovsa/actions/runs/39736593452/job/119683619327) | `leaks found: 1`, salida 1, con un valor sintético de alta entropía que nunca fue una credencial real. |
+| [#107](https://github.com/jordin-garcia/proyecto_incovsa/pull/107) | [cadena-suministro](https://github.com/jordin-garcia/proyecto_incovsa/actions/runs/39736593452/job/119683619425) | `node_modules/qs: origen de dependencia no permitido.`, salida 1 antes de `npm ci`. |
+| [#108](https://github.com/jordin-garcia/proyecto_incovsa/pull/108) | [integridad-pruebas](https://github.com/jordin-garcia/proyecto_incovsa/actions/runs/39736309328/job/119682696250) | Rechazó borrar `src/lib/roles.test.ts` y la prueba exclusiva de la línea 2, salida 1. |
+
+El primer valor sintético secuencial de #107 fue descartado por las reglas predeterminadas de gitleaks como ejemplo; se sustituyó por otro valor sintético de alta entropía y se comprobó el rechazo. No se amplió ninguna excepción. `workflows` detectó además SC2129 en el flujo existente de revisión: se agruparon las tres escrituras consecutivas a `GITHUB_OUTPUT`, conservando sus valores y controles.
+
 ## Cierre pendiente
 
-Este archivo es un registro de avance. Quedan pendientes la línea base completa válida de mutación, la repetición final de verificaciones, los PR negativos, la revisión final, la exigencia de los checks en ambas ramas y la integración.
+Este archivo es un registro de avance. Quedan pendientes la línea base completa válida de mutación, completar la repetición final de navegador, la revisión final, la exigencia de los checks en ambas ramas y la integración.

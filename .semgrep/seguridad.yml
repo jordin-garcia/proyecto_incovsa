@@ -5,14 +5,13 @@ rules:
     languages: [typescript]
     paths:
       include:
-        - /src/modulos/**/acciones.ts
-        - /src/app/api/**/route.ts
+        - /src/app/**/route.ts
       exclude:
         # Better Auth aplica su autenticación y límites (JG-06).
         - /src/app/api/auth/**
         # Decisión 78: imágenes PÚBLICAS de disco, solo fuera de producción.
         - /src/app/api/imagenes/\[...clave\]/route.ts
-    patterns:
+    patterns: &operaciones-protegidas
       - pattern-either:
           - pattern: |
               export async function $FUNC(...) { ... }
@@ -30,6 +29,18 @@ rules:
           export const $FUNC = (...) => { ... exigirPermiso(...); ... };
       - pattern-not: |
           export const $FUNC = async (...) => { ... exigirPermiso(...); ... };
+  - id: incovsa-accion-sin-permiso
+    message: "RNF-04: cada acción del servidor exportada debe llamar a exigirPermiso antes de acceder a datos."
+    severity: ERROR
+    languages: [typescript]
+    paths:
+      include: [/src/modulos/**/*.ts]
+    patterns:
+      # El span abarca el módulo completo y se intersecta con cada exportación AST.
+      # No confunde una cadena de prueba con la directiva inicial del módulo.
+      - pattern-regex: >-
+          (?s)\A(?:\s|//[^\n]*(?:\n|$)|/\*.*?\*/)*["']use server["']\s*;?.*
+      - patterns: *operaciones-protegidas
   - id: incovsa-api-insegura
     message: "RNF-05: no se permite SQL inseguro, eval ni HTML sin escapar."
     severity: ERROR
