@@ -59,19 +59,42 @@ function FechaPeriodo({
     </div>
   );
 }
-function Exportar() {
+function Exportar({ pestana, filtro }: { pestana: "despacho" | "rutas" | "bitacora"; filtro: FiltroPeriodo }) {
+  function descargar(formato: "xlsx" | "pdf") {
+    const parametros = new URLSearchParams({ pestana, formato });
+    for (const [nombre, valor] of Object.entries(filtro)) if (typeof valor === "string") parametros.set(nombre, valor);
+    const enlace = document.createElement("a");
+    enlace.href = `/api/reportes/exportar?${parametros}`;
+    enlace.download = "";
+    document.body.append(enlace);
+    enlace.click();
+    enlace.remove();
+  }
+
   return (
     <div className="reportes-exportar">
-      {["Excel", "PDF"].map((t) => (
-        <Button key={t} variant="secundario" size="pequeno" disabled>
+      {(["xlsx", "pdf"] as const).map((formato) => (
+        <Button key={formato} variant="secundario" size="pequeno" onClick={() => descargar(formato)}>
           <Icono nombre="descargar" className="ico-s" />
-          {t}
+          {formato === "xlsx" ? "Excel" : "PDF"}
         </Button>
       ))}
     </div>
   );
 }
-function Bloque({ titulo, descripcion, children }: { titulo: string; descripcion: string; children: ReactNode }) {
+function Bloque({
+  titulo,
+  descripcion,
+  pestana,
+  filtro,
+  children,
+}: {
+  titulo: string;
+  descripcion: string;
+  pestana: "despacho" | "rutas" | "bitacora";
+  filtro: FiltroPeriodo;
+  children: ReactNode;
+}) {
   return (
     <section className="tarjeta">
       <div className="bloque-cab">
@@ -79,7 +102,7 @@ function Bloque({ titulo, descripcion, children }: { titulo: string; descripcion
           <h3>{titulo}</h3>
           <p>{descripcion}</p>
         </div>
-        <Exportar />
+        <Exportar pestana={pestana} filtro={filtro} />
       </div>
       {children}
     </section>
@@ -213,7 +236,12 @@ export function Reportes({
           </div>
         ))}
       </div>
-      <Bloque titulo={`${periodo.nombre} por producto`} descripcion={`${sedeNombre} · ${periodo.texto}`}>
+      <Bloque
+        titulo={`${periodo.nombre} por producto`}
+        descripcion={`${sedeNombre} · ${periodo.texto}`}
+        pestana="despacho"
+        filtro={f}
+      >
         <Tabla tabIndex={0}>
           <thead>
             <tr>
@@ -263,6 +291,8 @@ export function Reportes({
     <Bloque
       titulo="Registro histórico de rutas"
       descripcion={`${sedeNombre} · ${periodo.texto} · desde el envío a bodega hasta el cierre de la entrega.`}
+      pestana="rutas"
+      filtro={f}
     >
       <Tabla tabIndex={0}>
         <thead>
@@ -308,6 +338,8 @@ export function Reportes({
     <Bloque
       titulo="Bitácora de operaciones"
       descripcion={`${periodo.texto} · Acciones de los dos sistemas, incluidos los inicios de sesión y los intentos fallidos. No se registran el marcado ni la prioridad de Bodega, ni el orden de Ruta antes de la entrega.`}
+      pestana="bitacora"
+      filtro={f}
     >
       <div className="reportes-bitacora">
         <Tabla tabIndex={0}>

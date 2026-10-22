@@ -131,8 +131,8 @@ for (const [tab, titulo] of [
     }
     await page.getByRole("tab", { name: tab, exact: true }).click();
     await expect(page.getByRole("heading", { name: titulo, exact: true })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Excel", exact: true })).toBeDisabled();
-    await expect(page.getByRole("button", { name: "PDF", exact: true })).toBeDisabled();
+    await expect(page.getByRole("button", { name: "Excel", exact: true })).toBeEnabled();
+    await expect(page.getByRole("button", { name: "PDF", exact: true })).toBeEnabled();
     await expect(page).toHaveTitle(/Reportes.*INCOVSA/);
     const analisis = await new AxeBuilder({ page }).analyze();
     expect(analisis.violations.filter((v) => v.impact === "serious" || v.impact === "critical")).toEqual([]);
