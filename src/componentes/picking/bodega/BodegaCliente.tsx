@@ -107,7 +107,15 @@ export function BodegaCliente({ sede, enviosIniciales }: BodegaClienteProps) {
   const router = useRouter();
   const mostrarMensaje = useMensajes();
   const [, startTransition] = useTransition();
-  const [enviosOptimistas, aplicarOptimista] = useOptimistic(enviosIniciales, reducirEnviosOptimistas);
+  const [prevEnviosIniciales, setPrevEnviosIniciales] = useState(enviosIniciales);
+  const [envios, setEnvios] = useState(enviosIniciales);
+
+  if (enviosIniciales !== prevEnviosIniciales) {
+    setPrevEnviosIniciales(enviosIniciales);
+    setEnvios(enviosIniciales);
+  }
+
+  const [enviosOptimistas, aplicarOptimista] = useOptimistic(envios, reducirEnviosOptimistas);
   const [detalleEnvio, setDetalleEnvio] = useState<DetalleEnvioData | null>(null);
   const [modalAbierto, setModalAbierto] = useState(false);
 
@@ -116,7 +124,6 @@ export function BodegaCliente({ sede, enviosIniciales }: BodegaClienteProps) {
     useSensor(TouchSensor, { activationConstraint: { delay: 380, tolerance: 8 } }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-      keyboardCodes: { start: ["Space"], end: ["Space"], cancel: ["Escape"] },
     }),
   );
 
@@ -140,6 +147,11 @@ export function BodegaCliente({ sede, enviosIniciales }: BodegaClienteProps) {
       const res = await marcarLineaAccion({ envioId, lineaId, marcado: nuevoMarcado });
       if (!res.ok) {
         mostrarMensaje(res.error, "error");
+        aplicarOptimista({ tipo: "marcar-linea", envioId, lineaId, marcado: !nuevoMarcado });
+      } else {
+        setEnvios((actuales) =>
+          reducirEnviosOptimistas(actuales, { tipo: "marcar-linea", envioId, lineaId, marcado: nuevoMarcado }),
+        );
       }
       router.refresh();
     });
@@ -147,9 +159,15 @@ export function BodegaCliente({ sede, enviosIniciales }: BodegaClienteProps) {
 
   const alMarcarTodo = (envioId: number, nuevoValor: boolean) => {
     startTransition(async () => {
+      aplicarOptimista({ tipo: "marcar-todo", envioId, marcado: nuevoValor });
       const res = await marcarTodoAccion({ envioId, marcado: nuevoValor });
       if (!res.ok) {
         mostrarMensaje(res.error, "error");
+        aplicarOptimista({ tipo: "marcar-todo", envioId, marcado: !nuevoValor });
+      } else {
+        setEnvios((actuales) =>
+          reducirEnviosOptimistas(actuales, { tipo: "marcar-todo", envioId, marcado: nuevoValor }),
+        );
       }
       router.refresh();
     });
@@ -163,6 +181,7 @@ export function BodegaCliente({ sede, enviosIniciales }: BodegaClienteProps) {
         mostrarMensaje(res.error, "error");
       } else {
         mostrarMensaje("Filas ordenadas de mayor a menor peso.", "exito");
+        setEnvios((actuales) => reducirEnviosOptimistas(actuales, { tipo: "ordenar-por-peso", envioId }));
       }
       router.refresh();
     });
@@ -174,6 +193,8 @@ export function BodegaCliente({ sede, enviosIniciales }: BodegaClienteProps) {
       const res = await reordenarLineasAccion({ envioId, lineaIds });
       if (!res.ok) {
         mostrarMensaje(res.error, "error");
+      } else {
+        setEnvios((actuales) => reducirEnviosOptimistas(actuales, { tipo: "reordenar-lineas", envioId, lineaIds }));
       }
       router.refresh();
     });
@@ -195,6 +216,8 @@ export function BodegaCliente({ sede, enviosIniciales }: BodegaClienteProps) {
       const res = await reordenarColaAccion({ envioIds: nuevosIds });
       if (!res.ok) {
         mostrarMensaje(res.error, "error");
+      } else {
+        setEnvios((actuales) => reducirEnviosOptimistas(actuales, { tipo: "reordenar-envios", envioIds: nuevosIds }));
       }
       router.refresh();
     });

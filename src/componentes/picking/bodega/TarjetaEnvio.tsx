@@ -71,7 +71,9 @@ function FilaPreparacion({
   pendiente: boolean;
   alMarcar: (lineaId: number, estadoActual: boolean) => void;
 }) {
-  const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({ id: linea.id });
+  const { setNodeRef, setActivatorNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
+    id: linea.id,
+  });
 
   const estiloFila = {
     transform: CSS.Transform.toString(transform),
@@ -92,6 +94,7 @@ function FilaPreparacion({
     >
       <td>
         <span
+          ref={setActivatorNodeRef}
           className="asa"
           aria-label={`Arrastre para cambiar orden de ${linea.producto}`}
           {...attributes}
@@ -142,6 +145,7 @@ export function TarjetaEnvio({
 
   const {
     setNodeRef: setTarjetaRef,
+    setActivatorNodeRef: setActivatorTarjetaRef,
     attributes: atributosTarjeta,
     listeners: escuchadoresTarjeta,
     transform: transformTarjeta,
@@ -205,6 +209,7 @@ export function TarjetaEnvio({
     >
       <div className="ped-cab">
         <span
+          ref={setActivatorTarjetaRef}
           className="asa asa-ped"
           title="Arrastre para cambiar la prioridad"
           aria-label={`Arrastre para cambiar la prioridad de ${etiqueta}`}
