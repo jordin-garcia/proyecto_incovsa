@@ -630,6 +630,15 @@
   .sec-industrias {
     padding-top: 44px;
   }
+  .pag-cab .eyebrow {
+    font-size: 18px;
+    margin-top: 0;
+  }
+  .pag-cab p:last-child {
+    max-width: 640px;
+    margin-top: 16px;
+    color: var(--color-prototipo-21);
+  }
   .sec-catalogo {
     padding-top: 48px;
   }
@@ -1028,7 +1037,7 @@
   .recomendados .cab-sec {
     margin-bottom: 26px;
   }
-  .recomendados h2 {
+  .recomendados .cab-sec h2 {
     font-size: 30px;
   }
   @media (max-width: 1100px) {
@@ -1075,6 +1084,9 @@
     .recomendados .prod-rejilla {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
+    }
+    .catalogo-rejilla {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
     .fichas {
       grid-template-columns: 1fr;

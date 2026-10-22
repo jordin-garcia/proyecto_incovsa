@@ -129,6 +129,9 @@ test("RF-SW-05 / RF-SW-17 / RF-SW-15: detalle público, galería, recomendados y
     await expect(page.locator(".fichas")).toContainText("Saco de prueba");
     await expect(page.locator(".fichas")).toContainText("Guatemala");
     await expect(page.locator(".det-foto img")).toHaveAttribute("src", "/marca/foto-equipo.webp");
+    await expect
+      .poll(() => page.locator(".det-foto img").evaluate((imagen) => (imagen as HTMLImageElement).naturalWidth))
+      .toBeGreaterThan(0);
     await expect(page.getByRole("heading", { name: "Productos Recomendados", exact: true })).toBeVisible();
     await expect(page.locator(".recomendados .prod-t")).toHaveCount(4);
     await expect(page.locator(`.recomendados a[href='/productos/${ids[0]}']`)).toHaveCount(0);
