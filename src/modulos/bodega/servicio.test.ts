@@ -9,6 +9,8 @@ import {
   marcarTodasLineas,
   ordenarLineasPorPeso,
   despacharEnvio,
+  reordenarColaBodega,
+  reordenarLineasPreparacion,
 } from "./servicio";
 
 describe("Módulo de Bodega - Servicio", () => {
@@ -464,5 +466,92 @@ describe("Módulo de Bodega - Servicio", () => {
     await expect(despacharEnvio({ envioId: envioSede2.id }, contextoSede1)).rejects.toThrow();
 
     await expect(obtenerDetalleEnvio(envioSede2.id, 1)).rejects.toThrow();
+
+    await expect(reordenarColaBodega({ envioIds: [envioSede2.id] }, contextoSede1)).rejects.toThrow();
+
+    await expect(
+      reordenarLineasPreparacion({ envioId: envioSede2.id, lineaIds: [envioSede2.lineas[0].id] }, contextoSede1),
+    ).rejects.toThrow();
+  });
+
+  it("RF-SL-20 / RN-28: reordenar la cola de rutas y pedidos guarda solo el orden actual sin historial ni bitácora", async () => {
+    const envio1 = await crearEnvioDePrueba({
+      sedeId: 1,
+      tipo: "ruta",
+      numero: 1,
+      posicionCola: 1,
+      lineas: [{ producto: "P1", lote: "L1", pesoConversionKg: 25, cantidadKg: 50, posicion: 1 }],
+    });
+    const envio2 = await crearEnvioDePrueba({
+      sedeId: 1,
+      tipo: "pedido",
+      numero: 2,
+      posicionCola: 2,
+      lineas: [{ producto: "P2", lote: "L2", pesoConversionKg: 25, cantidadKg: 30, posicion: 1 }],
+    });
+    const envio3 = await crearEnvioDePrueba({
+      sedeId: 1,
+      tipo: "ruta",
+      numero: 3,
+      posicionCola: 3,
+      lineas: [{ producto: "P3", lote: "L3", pesoConversionKg: 25, cantidadKg: 40, posicion: 1 }],
+    });
+
+    const contexto = { usuarioId: usuarioBodegaId, sedeId: 1 };
+
+    // Invertir orden: 3, 1, 2
+    const res = await reordenarColaBodega({ envioIds: [envio3.id, envio1.id, envio2.id] }, contexto);
+    expect(res.envioIds).toEqual([envio3.id, envio1.id, envio2.id]);
+
+    const lista = await listarEnviosEnPreparacion(1);
+    expect(lista.map((e) => e.id)).toEqual([envio3.id, envio1.id, envio2.id]);
+
+    // RN-28: No queda en historial ni en bitácora
+    const historiales = await prisma.historialEstado.findMany({
+      where: { envioId: { in: [envio1.id, envio2.id, envio3.id] } },
+    });
+    expect(historiales).toHaveLength(0);
+
+    const bitacoras = await prisma.bitacora.findMany({
+      where: { registroId: { in: [String(envio1.id), String(envio2.id), String(envio3.id)] } },
+    });
+    expect(bitacoras).toHaveLength(0);
+  });
+
+  it("RF-SL-20 / RN-28: reordenar las filas de un envío guarda solo el orden actual sin historial ni bitácora", async () => {
+    const envio = await crearEnvioDePrueba({
+      sedeId: 1,
+      tipo: "ruta",
+      numero: 1,
+      posicionCola: 1,
+      lineas: [
+        { producto: "A", lote: "L1", pesoConversionKg: 25, cantidadKg: 10, posicion: 1 },
+        { producto: "B", lote: "L2", pesoConversionKg: 25, cantidadKg: 20, posicion: 2 },
+        { producto: "C", lote: "L3", pesoConversionKg: 25, cantidadKg: 30, posicion: 3 },
+      ],
+    });
+
+    const l1 = envio.lineas[0].id;
+    const l2 = envio.lineas[1].id;
+    const l3 = envio.lineas[2].id;
+
+    const contexto = { usuarioId: usuarioBodegaId, sedeId: 1 };
+
+    // Reordenar a: l2, l3, l1
+    const res = await reordenarLineasPreparacion({ envioId: envio.id, lineaIds: [l2, l3, l1] }, contexto);
+    expect(res.lineaIds).toEqual([l2, l3, l1]);
+
+    const lineasActualizadas = await prisma.lineaPreparacion.findMany({
+      where: { envioId: envio.id },
+      orderBy: { posicion: "asc" },
+    });
+    expect(lineasActualizadas.map((l) => l.id)).toEqual([l2, l3, l1]);
+    expect(lineasActualizadas.map((l) => l.posicion)).toEqual([1, 2, 3]);
+
+    // RN-28: No genera bitácora ni historial
+    const bitacoras = await prisma.bitacora.findMany({
+      where: { registroId: String(envio.id) },
+    });
+    expect(bitacoras).toHaveLength(0);
   });
 });
