@@ -112,6 +112,9 @@ test.describe("Configuración: usuarios del picking", () => {
 
     await page.getByRole("button", { name: "Nuevo usuario" }).click();
     await expect(page.getByRole("heading", { name: "Nuevo usuario del picking" })).toBeVisible();
+    await page.getByRole("dialog").evaluate(async (elemento) => {
+      await Promise.all(elemento.getAnimations().map((animacion) => animacion.finished));
+    });
     const dialogo = await new AxeBuilder({ page }).include(".modal").analyze();
     expect(dialogo.violations.filter((v) => v.impact === "serious" || v.impact === "critical")).toEqual([]);
   });

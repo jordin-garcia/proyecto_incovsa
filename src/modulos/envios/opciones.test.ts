@@ -3,7 +3,42 @@ import { prisma } from "@/lib/prisma";
 import type { SesionActual } from "@/lib/sesion";
 import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import { sembrarDemo } from "../../../prisma/semillas/demo";
-import { consultarOpciones, guardarCampoOpcion, moverPedidos, cancelarOpcion, enviarOpcion } from "./opciones";
+import {
+  consultarOpciones,
+  guardarCampoOpcion,
+  moverPedidos as moverOriginal,
+  cancelarOpcion as cancelarOriginal,
+  enviarOpcion as enviarOriginal,
+} from "./opciones";
+
+// Los casos existentes mandan ahora el mismo estado que recibe el navegador.
+async function estado(sesion: SesionActual | null, sedeId: number, tipo: string | null) {
+  if (!sesion || !sesion.permisos.length || !sesion.sedes.some((s) => s.id === sedeId)) return [];
+  const opcion =
+    tipo === null ? null : await prisma.opcionEnvio.findUniqueOrThrow({ where: { sedeId_tipo: { sedeId, tipo } } });
+  return (
+    await prisma.pedidoFacturado.findMany({
+      where: { sedeId, opcionEnvioId: opcion?.id ?? null, envioId: null },
+      orderBy: [{ posicion: "asc" }, { id: "asc" }],
+    })
+  ).map((p) => ({ id: p.id, posicion: p.posicion, actualizadoEn: p.actualizadoEn.toISOString() }));
+}
+async function moverPedidos(
+  s: SesionActual | null,
+  e: { sedeId: number; origen: string | null; destino: string | null; [clave: string]: unknown },
+) {
+  return moverOriginal(s, {
+    ...e,
+    estadoOrigen: await estado(s, e.sedeId, e.origen),
+    estadoDestino: await estado(s, e.sedeId, e.destino),
+  });
+}
+async function cancelarOpcion(s: SesionActual | null, e: { sedeId: number; tipo: string }) {
+  return cancelarOriginal(s, { ...e, estadoEsperado: await estado(s, e.sedeId, e.tipo) });
+}
+async function enviarOpcion(s: SesionActual | null, e: { sedeId: number; tipo: string }) {
+  return enviarOriginal(s, { ...e, estadoEsperado: await estado(s, e.sedeId, e.tipo) });
+}
 
 let sesion: SesionActual;
 const opcion = { sedeId: 1, tipo: "camion" as const };

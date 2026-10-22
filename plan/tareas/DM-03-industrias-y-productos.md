@@ -5,7 +5,7 @@ persona: daniela
 responsable: Daniela Marín
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [DM-02]
 programada: 2026-10-18
 requisitos: [RF-SW-03, RF-SW-04, RF-SW-05, RF-SW-15, RF-SW-17, CU-08]
@@ -58,3 +58,19 @@ npm run e2e -- pruebas-e2e/sitio/industrias-y-productos.spec.ts
 
 ## Fuera de alcance
 - La edición de industrias y del catálogo en el panel (DM-05).
+
+## Resultado
+
+Implementado el 21/10/2026 por Daniela Marín (`InAlexa`):
+
+- **Industrias:** `/industrias` muestra Cuero; `/industrias/[id]` usa los identificadores estables del prototipo (`cuero`, `textil`, `cereria`, `hulera`, `medicamentos`, `limpieza`, `alimentacion`, `agua`, `lavanderia`). Barra de nueve íconos con nombre al pasar el cursor y al enfocar, navegación sin reiniciar el desplazamiento, descripción, galería y espacio con ícono cuando faltan imágenes. Los productos en texto salen de la relación real del catálogo, en orden alfabético español y con su recuento (P-97).
+- **Catálogo público:** `/productos`, con búsqueda por nombre sin distinción de mayúsculas o acentos, filtros de las nueve industrias, «Todas las industrias» e «Industria por confirmar», recuentos y estado sin coincidencias. Admite entrada directa con `?industria=cuero` y los demás identificadores. Conserva tres columnas del catálogo en teléfono, como el prototipo. Las tarjetas muestran galería, nombre, origen, presentación e industrias; ninguna lectura incluye lote.
+- **Detalle:** `/productos/[id]` usa el identificador numérico de `ProductoSitio`, validado con Zod antes de consultar datos. Incluye galería, descripción, presentación, origen, enlaces de industrias y las acciones del prototipo. «Productos Recomendados» siempre se dibuja, aun sin candidatos, y devuelve hasta cuatro: primero coincidencias de cualquier industria y luego relleno, ambos grupos alfabéticos y sin el producto actual. Todas las rutas nuevas van sin pie.
+- **Lectura pública reutilizable:** `leerCatalogoSitio()` en `src/modulos/contenido/catalogo.ts` devuelve `{ industrias, productos }`, con campos públicos explícitos, galerías ordenadas de hasta cinco direcciones e industrias de cada producto. Su caché es por renderizado de React, no persistente entre visitas. No requiere sesión porque no lee datos internos. `recomendarProductos(actual, catalogo)` contiene la regla probada por separado; tipos `CatalogoSitio` y `ProductoPublico` para las pantallas y DM-05.
+- **Componentes:** `Industrias`, `CatalogoCliente` y `TarjetaProducto`, junto con `EncabezadoPagina` y `Galeria` de DM-02. `PresentacionDinamica` observa también inserciones y eliminaciones de tarjetas al filtrar. El catálogo expone `data-hidratado` únicamente tras hidratar, para verificar las interacciones sin carreras.
+- **Decisiones:** se mantiene el orden del catálogo por ID del conjunto de demostración; las listas de industria y los recomendados sí se ordenan alfabéticamente. Los filtros desconocidos vuelven a «Todas las industrias» y los identificadores de ruta inválidos usan el 404 de Next.js. Las notas P-xx y el botón de demostración se excluyen según specs/20. El texto «Por confirmar» procede del prototipo. Para RNF-08, la cabecera de la industria puede acomodarse en varias líneas en teléfono y los textos secundarios usan tokens con contraste suficiente. Sin dependencias, migraciones ni cambios de especificaciones.
+- **Verificación:** fase roja documentada; `npm ci` (687 paquetes, cero vulnerabilidades), migraciones existentes sin pendientes, plan válido (63 tareas), `npm run verificar` (formato, lint, tipos y 307 pruebas en 34 archivos), `npm run build`, nueve E2E propias en los tres tamaños sin reintentos y suite E2E completa con código 0 (211 aprobadas directamente y dos intermitentes aprobadas al primer reintento, sin omisiones). Axe completo, sin violaciones serias o críticas en las pantallas de DM-03. Next-devtools final sin errores de configuración ni ejecución. No se redujeron pruebas ni umbrales.
+- **Evidencia:** 30 capturas comparativas de Industrias, catálogo, detalle, filtro y búsqueda vacía en `pruebas-e2e/sitio/evidencias/DM-03/README.md`. Se corrigieron los hallazgos de fidelidad de la revisión independiente: cascada del espacio superior, tamaño del título de recomendados, rótulo de encabezado y columnas del catálogo móvil.
+- **Uso para DM-05:** administrar `Industria`, `ProductoSitio`, `ProductoIndustria` e `Imagen` mediante las acciones protegidas del panel; las lecturas públicas reflejan las relaciones e imágenes guardadas en cada visita. Las industrias de los productos son `{ id, nombre }` y los arreglos `imagenes` contienen solo direcciones públicas. Las fotos mantienen su orden `posicion` y el límite de cinco.
+
+El cambio local autorizado de `.codex/config.toml` se conserva fuera de los commits. Las capturas ajenas regeneradas por la suite se restauraron tras comprobar que no existían cambios previos del usuario en ellas. La edición de industrias y productos en el panel continúa en DM-05, en otra conversación.
