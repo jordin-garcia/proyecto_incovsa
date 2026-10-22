@@ -74,6 +74,7 @@ async function autorizarOpcion(entradaSinValidar: unknown) {
 export async function guardarCampoDeOpcion(entrada: unknown) {
   try {
     const { sesion, sedeId } = await autorizarOpcion(entrada);
+    exigirPermiso(sesion, "pk.facturacion", sedeId);
     await guardarCampoOpcion(sesion, entrada);
     avisarCambio(sedeId);
     return { ok: true as const, datos: null };
@@ -85,6 +86,7 @@ export async function guardarCampoDeOpcion(entrada: unknown) {
 export async function moverPedidosFacturados(entrada: unknown) {
   try {
     const { sesion, sedeId } = await autorizarOpcion(entrada);
+    exigirPermiso(sesion, "pk.facturacion", sedeId);
     await moverPedidos(sesion, entrada);
     avisarCambio(sedeId);
     return { ok: true as const, datos: null };
@@ -96,6 +98,7 @@ export async function moverPedidosFacturados(entrada: unknown) {
 export async function cancelarOpcionDeEnvio(entrada: unknown) {
   try {
     const { sesion, sedeId } = await autorizarOpcion(entrada);
+    exigirPermiso(sesion, "pk.facturacion", sedeId);
     const cantidad = await cancelarOpcion(sesion, entrada);
     avisarCambio(sedeId);
     return { ok: true as const, datos: cantidad };
@@ -107,6 +110,7 @@ export async function cancelarOpcionDeEnvio(entrada: unknown) {
 export async function enviarOpcionABodega(entrada: unknown) {
   try {
     const { sesion, sedeId } = await autorizarOpcion(entrada);
+    exigirPermiso(sesion, "pk.facturacion", sedeId);
     const envio = await enviarOpcion(sesion, entrada);
     if (envio) avisarCambio(sedeId);
     return { ok: true as const, datos: envio };

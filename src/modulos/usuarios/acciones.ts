@@ -3,7 +3,7 @@
 import { obtenerSesion, type SesionActual } from "@/lib/sesion";
 import { esAccesoTotal } from "@/lib/roles";
 import { ErrorNegocio, MENSAJE_ERROR_GENERAL, aResultadoDeError } from "@/lib/errores";
-import { ErrorAcceso } from "@/modulos/permisos/servicio";
+import { ErrorAcceso, exigirPermiso } from "@/modulos/permisos/servicio";
 import {
   esquemaCrearUsuarioPicking,
   esquemaCrearUsuarioSitio,
@@ -48,47 +48,57 @@ async function guardar<T>(sistema: SistemaPestana, trabajo: (sesion: SesionActua
 }
 
 export async function crearUsuarioAccion(entrada: unknown) {
-  return guardar("picking", (sesion) =>
-    crearUsuario(leer(esquemaCrearUsuarioPicking, entrada), contexto(sesion, "picking")),
-  );
+  return guardar("picking", (sesion) => {
+    exigirPermiso(sesion, "pk.cfg.camiones");
+    return crearUsuario(leer(esquemaCrearUsuarioPicking, entrada), contexto(sesion, "picking"));
+  });
 }
 
 export async function editarUsuarioAccion(entrada: unknown) {
-  return guardar("picking", (sesion) =>
-    editarUsuario(leer(esquemaEditarUsuarioPicking, entrada), contexto(sesion, "picking")),
-  );
+  return guardar("picking", (sesion) => {
+    exigirPermiso(sesion, "pk.cfg.camiones");
+    return editarUsuario(leer(esquemaEditarUsuarioPicking, entrada), contexto(sesion, "picking"));
+  });
 }
 
 export async function eliminarUsuarioAccion(entrada: unknown) {
-  return guardar("picking", (sesion) =>
-    eliminarUsuario(leer(esquemaEliminarUsuario, entrada), contexto(sesion, "picking")),
-  );
+  return guardar("picking", (sesion) => {
+    exigirPermiso(sesion, "pk.cfg.camiones");
+    return eliminarUsuario(leer(esquemaEliminarUsuario, entrada), contexto(sesion, "picking"));
+  });
 }
 
 export async function restablecerClaveAccion(entrada: unknown) {
-  return guardar("picking", (sesion) =>
-    restablecerClave(leer(esquemaRestablecerClave, entrada), contexto(sesion, "picking")),
-  );
+  return guardar("picking", (sesion) => {
+    exigirPermiso(sesion, "pk.cfg.camiones");
+    return restablecerClave(leer(esquemaRestablecerClave, entrada), contexto(sesion, "picking"));
+  });
 }
 
 export async function crearUsuarioSitioAccion(entrada: unknown) {
-  return guardar("sitio", (sesion) => crearUsuario(leer(esquemaCrearUsuarioSitio, entrada), contexto(sesion, "sitio")));
+  return guardar("sitio", (sesion) => {
+    exigirPermiso(sesion, "sit.contenido");
+    return crearUsuario(leer(esquemaCrearUsuarioSitio, entrada), contexto(sesion, "sitio"));
+  });
 }
 
 export async function editarUsuarioSitioAccion(entrada: unknown) {
-  return guardar("sitio", (sesion) =>
-    editarUsuario(leer(esquemaEditarUsuarioSitio, entrada), contexto(sesion, "sitio")),
-  );
+  return guardar("sitio", (sesion) => {
+    exigirPermiso(sesion, "sit.contenido");
+    return editarUsuario(leer(esquemaEditarUsuarioSitio, entrada), contexto(sesion, "sitio"));
+  });
 }
 
 export async function eliminarUsuarioSitioAccion(entrada: unknown) {
-  return guardar("sitio", (sesion) =>
-    eliminarUsuario(leer(esquemaEliminarUsuario, entrada), contexto(sesion, "sitio")),
-  );
+  return guardar("sitio", (sesion) => {
+    exigirPermiso(sesion, "sit.contenido");
+    return eliminarUsuario(leer(esquemaEliminarUsuario, entrada), contexto(sesion, "sitio"));
+  });
 }
 
 export async function restablecerClaveSitioAccion(entrada: unknown) {
-  return guardar("sitio", (sesion) =>
-    restablecerClave(leer(esquemaRestablecerClave, entrada), contexto(sesion, "sitio")),
-  );
+  return guardar("sitio", (sesion) => {
+    exigirPermiso(sesion, "sit.contenido");
+    return restablecerClave(leer(esquemaRestablecerClave, entrada), contexto(sesion, "sitio"));
+  });
 }

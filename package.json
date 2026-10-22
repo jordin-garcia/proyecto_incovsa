@@ -24,7 +24,8 @@
     "db:semilla": "tsx prisma/seed.ts",
     "semilla:demo": "tsx prisma/semilla-demo.ts",
     "postinstall": "prisma generate",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test:mutacion": "node scripts/ejecutar-mutacion.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1152.0",
@@ -56,6 +57,8 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
     "@playwright/test": "^1.64.1",
+    "@stryker-mutator/core": "10.0.0",
+    "@stryker-mutator/vitest-runner": "10.0.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^24.19.2",
     "@types/pg": "^8.23.1",
@@ -66,6 +69,7 @@
     "eslint-config-prettier": "^10.1.8",
     "fast-check": "^4.10.2",
     "husky": "^9.1.7",
+    "lockfile-lint": "5.1.0",
     "postcss": "^8.5.30",
     "prettier": "^3.9.10",
     "prisma": "^7.10.1",
@@ -77,6 +81,9 @@
   "overrides": {
     "@next/eslint-plugin-next": {
       "fast-glob": "npm:tinyglobby@^0.2.17"
+    },
+    "typed-rest-client": {
+      "qs": "6.16.1"
     }
   }
 }

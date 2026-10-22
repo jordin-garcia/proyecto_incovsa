@@ -1,0 +1,63 @@
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync, readFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
+import { spawnSync } from "node:child_process";
+
+// Reglas con paths reales: se ejecutan desde un repositorio desechable con esa misma estructura.
+const carpeta = mkdtempSync(join(tmpdir(), "incovsa-semgrep-"));
+const regla = readFileSync(".semgrep/seguridad.yml", "utf8");
+const casos = [
+  ['"use server"; export async function insegura() { return 1; }', true],
+  ['"use server"; export const insegura = async () => { return 1; };', true],
+  ['"use server"; export const insegura = async function() { return 1; };', true],
+  ['"use server"; const insegura = async () => 1; export { insegura };', true],
+  [
+    '"use server"; export async function segura() { exigirPermiso(sesion, "pk.bodega"); } export async function insegura() { return 1; }',
+    true,
+  ],
+  ['"use server"; export async function segura() { exigirPermiso(sesion, "pk.bodega"); return 1; }', false],
+  ['"use server"; export const segura = async () => { exigirPermiso(sesion, "pk.bodega"); return 1; };', false],
+  ["export async function GET() { return Response.json({}); }", true, "src/app/api/prueba/route.ts"],
+  [
+    'export async function GET() { exigirPermiso(sesion, "pk.bodega"); return Response.json({}); }',
+    false,
+    "src/app/api/prueba/route.ts",
+  ],
+  ["const contenido = <div dangerouslySetInnerHTML={{ __html: entrada }} />;", true, "src/componentes/prueba.tsx"],
+  ["prisma.$queryRawUnsafe(entrada);", true, "src/lib/prueba.ts"],
+  ["prisma.$executeRawUnsafe(entrada);", true, "src/lib/prueba.ts"],
+  ["eval(entrada);", true, "src/lib/prueba.ts"],
+  ["const contenido = <div>{entrada}</div>;", false, "src/componentes/prueba.tsx"],
+];
+try {
+  writeFileSync(join(carpeta, "reglas.yml"), regla);
+  for (const [indice, [codigo, debeFallar, ruta = "src/modulos/prueba/acciones.ts"]] of casos.entries()) {
+    const destino = join(carpeta, ruta);
+    mkdirSync(resolve(destino, ".."), { recursive: true });
+    writeFileSync(destino, codigo);
+    const resultado = spawnSync(
+      "semgrep",
+      [
+        "scan",
+        "--error",
+        "--strict",
+        "--json",
+        "--metrics=off",
+        "--disable-version-check",
+        "--config",
+        "reglas.yml",
+        ruta,
+      ],
+      { cwd: carpeta, encoding: "utf8" },
+    );
+    const informe = JSON.parse(resultado.stdout || "{}");
+    if (informe.errors?.length || resultado.status !== (debeFallar ? 1 : 0) || (debeFallar && !informe.results?.length))
+      throw new Error(
+        `RNF-04/RNF-05: caso ${indice + 1}: ${resultado.error ?? ""}\n${resultado.stdout}\n${resultado.stderr}`,
+      );
+    rmSync(destino);
+  }
+  console.log(`RNF-04/RNF-05: ${casos.length} casos de Semgrep aprobados.`);
+} finally {
+  rmSync(carpeta, { recursive: true, force: true });
+}
