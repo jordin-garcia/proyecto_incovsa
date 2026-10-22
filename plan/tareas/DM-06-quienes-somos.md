@@ -5,7 +5,7 @@ persona: daniela
 responsable: Daniela Marín
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [DM-04]
 programada: 2026-10-19
 requisitos: [RF-SW-02, RF-SW-15, RF-SW-16, RF-SW-29, CU-08]
@@ -55,3 +55,15 @@ npm run verificar
 npm run build
 npm run e2e -- pruebas-e2e/sitio/nosotros.spec.ts
 ```
+
+## Resultado
+
+Implementada `/nosotros` en el orden del prototipo aprobado: banner con logotipos alternados, historia y galería opcional, misión y visión reutilizadas de DM-02, cinco valores, los mercados industrial y artesanal y el bloque del grupo empresarial. Propósito y mercados usan `--v950`; las demás secciones mantienen el fondo claro. Se heredan cabecera, pie y presentación dinámica. No se muestran las notas amarillas de pendientes.
+
+- **Logotipos:** `LogotiposAlternados` muestra INCOVSA e Inquiserca en el mismo lugar con el ciclo de ocho segundos del prototipo. Si el panel quita Inquiserca, los dos bloques muestran solo INCOVSA y no se animan. Con movimiento reducido se muestra INCOVSA fijo.
+- **Contenido:** `leerNosotrosSitio()` en `src/modulos/contenido/nosotros.ts` devuelve `{ historia: { texto, imagenes }, valores }`, con campos públicos explícitos, hasta cinco imágenes ordenadas y un arreglo de cinco posiciones, incluyendo `null` donde no hay valor. Daniela autorizó expresamente esta ampliación del alcance para respetar la separación de capas. No se modificaron dependencias, esquema ni decisiones de specs.
+- **Valores:** imágenes fijas sin texto visible cuando están cargadas; tarjeta numerada de pendiente en cada espacio vacío. La fila se desplaza horizontalmente dentro de su contenedor en teléfono y tableta, como el prototipo, y admite foco de teclado. Se usan tokens existentes, incluido `--g600` para cumplir contraste en los textos secundarios.
+- **Cómo usarlo:** publicar Historia, Valores o cualquiera de los logotipos desde `/panel/contenido` actualiza la página en la siguiente visita. La galería de portada y misión/visión se obtienen con `leerInicioSitio()`; los nuevos módulos no requieren configuración adicional.
+- **Verificación:** fase roja de integración por módulo inexistente y E2E por `/nosotros` con 404. Después, `npm run verificar` aprobó formato, lint, tipos y 324 pruebas en 37 archivos; `npm run build` compiló `/nosotros`; doce E2E propios en tres tamaños con axe completo; suite general con código 0, 239 aprobados directamente y uno intermitente aprobado al primer reintento (arranque del servidor de producción de JG-10). Plan válido: 63 tareas. Next-devtools sin errores de configuración o sesión.
+- **Revisión independiente:** LISTO, sin hallazgos de corrección. Se aplicó la sugerencia de volver al inicio antes de capturar. Evidencia y comparación de los tres estados en [DM-06](../../pruebas-e2e/sitio/evidencias/DM-06/README.md).
+- **Configuración local:** `.codex/config.toml` se conserva fuera de los commits. Las capturas ajenas regeneradas por la suite tampoco forman parte del PR.
