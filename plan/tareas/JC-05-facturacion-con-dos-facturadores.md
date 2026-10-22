@@ -32,6 +32,8 @@ Que dos facturadores de la misma sede puedan trabajar al mismo tiempo sin pisars
 ## Archivos que creas o modificas
 - `src/modulos/envios/**`, `src/app/picking/facturacion/**`, `src/componentes/picking/facturacion/**` (modificar)
 - `pruebas-e2e/picking/facturacion-dos-facturadores.spec.ts` (crear)
+- `pruebas-e2e/panel/usuarios.spec.ts` y `pruebas-e2e/picking/usuarios.spec.ts` (solo esperar el final de la animación antes de axe; autorización explícita de José Daniel en esta conversación, 21/10/2026)
+- `pruebas-e2e/picking/evidencias/jc-05/**` (capturas y evidencia)
 
 ## Criterios de aceptación
 1. **Decisión 39:** si `ejemplo.03` y `ejemplo.04` intentan mover el mismo pedido facturado, solo vale el primero; el segundo recibe el aviso y su pantalla se actualiza.
@@ -56,4 +58,4 @@ npm run e2e -- pruebas-e2e/picking/facturacion-dos-facturadores.spec.ts
 
 Implementación en la rama `jose-daniel/JC-05-facturacion-simultanea`: comprobación transaccional del estado visible, aviso confirmado con Jordin, actualización compartida por SSE y conservación de arrastre/edición. `npm run verificar`: 310 pruebas aprobadas; compilación aprobada; los tres E2E de JC-05 pasan, con latencias de 51, 63 y 58 ms.
 
-La batería completa en secuencia dio 201 aprobados y seis fallos en los dos casos de accesibilidad de altas de usuarios, repetidos en los tres tamaños. Se pidió autorización para esperar el fin de la animación antes de axe en `pruebas-e2e/panel/usuarios.spec.ts` y `pruebas-e2e/picking/usuarios.spec.ts`, archivos de Carlos (protocolo §C). Aún no se modificaron. La tarea no está cerrada ni integrada. Evidencia y pasos para continuar: `pruebas-e2e/picking/evidencias/jc-05/README.md`.
+La batería completa en secuencia dio 201 aprobados y seis fallos en los dos casos de accesibilidad de altas de usuarios, repetidos en los tres tamaños. Se pidió autorización para esperar el fin de la animación antes de axe en `pruebas-e2e/panel/usuarios.spec.ts` y `pruebas-e2e/picking/usuarios.spec.ts`, archivos de Carlos (protocolo §C). José Daniel autorizó explícitamente ambos ajustes en esta conversación el 21/10/2026; se aplicaron sin cambiar las aserciones. La verificación final está en curso y la tarea todavía no está cerrada ni integrada. Evidencia y pasos para continuar: `pruebas-e2e/picking/evidencias/jc-05/README.md`.
