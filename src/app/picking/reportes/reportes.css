@@ -1,0 +1,89 @@
+.reportes .periodo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.reportes .periodo-ctl {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.reportes .periodo-ctl .campo {
+  margin: 0;
+}
+.reportes .periodo-ctl .etq {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.reportes .periodo-ctl .campo-caja {
+  width: 172px;
+}
+.reportes-exportar {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+.reportes .bloque-cab > div:first-child {
+  flex: 1 1 0;
+  min-width: 240px;
+}
+.reportes-barra {
+  width: 22%;
+}
+.reportes .medidor {
+  height: 8px;
+}
+.reportes-peso {
+  font-size: 11.5px;
+  margin-left: 4px;
+}
+.reportes-recorrido {
+  font-size: 13px;
+}
+.reportes-fecha {
+  font-size: 13px;
+  white-space: nowrap;
+}
+.reportes-detalle {
+  font-size: 13.5px;
+  overflow-wrap: anywhere;
+}
+.reportes-bitacora .tabla-caja {
+  max-height: 560px;
+}
+.reportes .kpi small,
+.reportes .kpi .etq {
+  color: var(--g600);
+}
+@media (max-width: 1180px) {
+  .reportes .kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .reportes .seg {
+    flex-wrap: wrap;
+  }
+  .reportes .pestanas {
+    overflow: auto;
+  }
+}
+.reportes .pestanas button:not([data-state="active"]),
+.reportes .muted {
+  color: var(--g600);
+}
+
+.reportes .medidor.lleno > i {
+  background: linear-gradient(90deg, var(--v500), var(--lima-v));
+}

@@ -46,6 +46,6 @@ comprobarRechazosDeAccion({
   },
   sesion,
   permiso: "pk.facturacion",
-  entrada: { sedeId: 1, ids: [1] },
-  entradaOtraSede: { sedeId: 2, ids: [1] },
+  entrada: { sedeId: 1, ids: [1], estadoEsperado: [] },
+  entradaOtraSede: { sedeId: 2, ids: [1], estadoEsperado: [] },
 });

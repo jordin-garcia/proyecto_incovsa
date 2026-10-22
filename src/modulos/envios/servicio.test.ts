@@ -115,7 +115,7 @@ it("RF-SL-68 / decisión 3: elimina pedidos del tablero y registra número, clie
 
   const resultado = await eliminarDelTablero(
     seleccionados.map((pedido) => pedido.id),
-    { sedeId: 1, usuarioId },
+    { sedeId: 1, usuarioId, estadoEsperado: seleccionados },
   );
   const eliminacion = await prisma.bitacora.findFirstOrThrow({
     where: { operacion: "Eliminación de pedidos facturados" },
@@ -144,8 +144,10 @@ it("RN-48 / RN-17: rechaza la eliminación completa si algún pedido ya no perte
   await guardarCargaDeOdoo({ ...entrada, lectura });
   const tablero = await consultarTableroFacturacion(sesionFacturador, 1);
 
-  await expect(eliminarDelTablero([tablero[0]!.id, 999_999], { sedeId: 1, usuarioId })).rejects.toThrow(
-    "Esos pedidos facturados ya no están disponibles.",
+  await expect(
+    eliminarDelTablero([tablero[0]!.id, 999_999], { sedeId: 1, usuarioId, estadoEsperado: [tablero[0]!] }),
+  ).rejects.toThrow(
+    "Otro facturador modificó estos pedidos. La pantalla se actualizará; revisa los cambios e inténtalo de nuevo",
   );
   expect(await consultarTableroFacturacion(sesionFacturador, 1)).toHaveLength(33);
   expect(await prisma.bitacora.count({ where: { operacion: "Eliminación de pedidos facturados" } })).toBe(0);

@@ -1,6 +1,8 @@
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { ErrorNegocio } from "@/lib/errores";
+import { bloquearSede, exigirEstadoPedidos, AVISO_CONFLICTO } from "./concurrencia";
+import type { EstadoPedidos } from "./esquemas";
 import type { SesionActual } from "@/lib/sesion";
 import { registrarBitacora } from "@/modulos/bitacora/servicio";
 import { exigirPermiso } from "@/modulos/permisos/servicio";
@@ -8,6 +10,8 @@ import { esquemaEntradaCargaDeOdoo, esquemaEntradaEliminarDelTablero, esquemaEnt
 
 export type PedidoEnTablero = {
   id: number;
+  posicion: number;
+  actualizadoEn: string;
   numero: string;
   cliente: string;
   sector: string;
@@ -29,6 +33,8 @@ export async function consultarTableroFacturacion(
 
   return pedidos.map((pedido) => ({
     id: pedido.id,
+    posicion: pedido.posicion,
+    actualizadoEn: pedido.actualizadoEn.toISOString(),
     numero: pedido.numeroOdoo,
     cliente: pedido.cliente || "Sin nombre",
     sector: pedido.sector || "Sin sector",
@@ -70,7 +76,7 @@ export async function guardarCargaDeOdoo(
   ].filter(Boolean);
 
   await prisma.$transaction(async (tx) => {
-    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${`facturacion:sede:${sedeId}`}, 0))`;
+    await bloquearSede(tx, sedeId);
     const sede = await tx.sede.findUniqueOrThrow({ where: { id: sedeId }, select: { nombre: true } });
     const ultimaPosicion = await tx.pedidoFacturado.aggregate({
       where: { sedeId, opcionEnvioId: null, envioId: null },
@@ -130,16 +136,21 @@ export async function guardarCargaDeOdoo(
 
 export async function eliminarDelTablero(
   idsSinValidar: unknown,
-  datos: { sedeId: number; usuarioId: string },
+  datos: { sedeId: number; usuarioId: string; estadoEsperado?: EstadoPedidos },
 ): Promise<number> {
-  const { ids, sedeId, usuarioId } = esquemaEntradaEliminarDelTablero.parse({ ...datos, ids: idsSinValidar });
+  const { ids, sedeId, usuarioId, estadoEsperado } = esquemaEntradaEliminarDelTablero.parse({
+    ...datos,
+    ids: idsSinValidar,
+  });
   return prisma.$transaction(async (tx) => {
+    await bloquearSede(tx, sedeId);
     const pedidos = await tx.pedidoFacturado.findMany({
       where: { id: { in: ids }, sedeId, opcionEnvioId: null, envioId: null },
       include: { detalles: true },
       orderBy: [{ posicion: "asc" }, { id: "asc" }],
     });
-    if (pedidos.length !== ids.length) throw new ErrorNegocio("Esos pedidos facturados ya no están disponibles.");
+    exigirEstadoPedidos(pedidos, estadoEsperado);
+    if (pedidos.length !== ids.length) throw new ErrorNegocio(AVISO_CONFLICTO);
 
     const bitacoraPedidos = pedidos.map((pedido) => ({
       numero: pedido.numeroOdoo,
@@ -161,7 +172,7 @@ export async function eliminarDelTablero(
     const eliminacion = await tx.pedidoFacturado.deleteMany({
       where: { id: { in: ids }, sedeId, opcionEnvioId: null, envioId: null },
     });
-    if (eliminacion.count !== ids.length) throw new ErrorNegocio("Esos pedidos facturados ya no están disponibles.");
+    if (eliminacion.count !== ids.length) throw new ErrorNegocio(AVISO_CONFLICTO);
     return pedidos.length;
   });
 }
