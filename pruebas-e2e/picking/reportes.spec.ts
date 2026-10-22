@@ -28,6 +28,7 @@ test("RF-SL-59 / CP-64: periodos y fechas inválidas en Reportes", async ({ page
   expect(respuesta.ok()).toBe(true);
   await page.goto("/picking/reportes");
   await expect(page.getByRole("heading", { name: "Reportes y bitácora" })).toBeVisible();
+  await expect(page.locator(".reportes")).toHaveAttribute("data-hidratado", "true");
   const hoy = fechaGuatemala(new Date());
   const campo = page.getByRole("textbox", { name: "Fecha del periodo", exact: true });
   const controlPeriodo = page.locator(".periodo");
@@ -107,25 +108,32 @@ test("RF-SL-59 / CP-64: periodos y fechas inválidas en Reportes", async ({ page
   await expect(page).toHaveURL(/desde=2026-10-19.*hasta=2026-10-25/);
 });
 
-test("RF-SL-59 / RNF-08: las tres pestañas conservan el rango y son accesibles", async ({ page, context }, info) => {
-  const respuesta = await context.request.post("/api/auth/picking/sign-in/username", {
-    headers: { origin: "http://localhost:3000", "x-real-ip": ipFixture(info.project.name) },
-    data: { usuario: "ejemplo.02", clave: process.env.CLAVE_DEMO },
-  });
-  expect(respuesta.ok()).toBe(true);
-  await page.goto("/picking/reportes?tipo=rango&desde=2026-10-19&hasta=2026-10-25");
-  await expect(page.getByRole("heading", { name: "Reportes y bitácora" })).toBeVisible();
-  await expect(page.getByText("Quetzaltenango · Del 19/10/2026 al 25/10/2026", { exact: true })).toBeVisible();
-  await expect(page.locator(".periodo")).toHaveAttribute("aria-busy", "false");
-  for (const [tab, titulo] of [
-    ["Despacho del periodo", "Despacho del periodo por producto"],
-    ["Rutas realizadas", "Registro histórico de rutas"],
-    ["Bitácora", "Bitácora de operaciones"],
-  ]) {
+for (const [tab, titulo] of [
+  ["Despacho del periodo", "Despacho del periodo por producto"],
+  ["Rutas realizadas", "Registro histórico de rutas"],
+  ["Bitácora", "Bitácora de operaciones"],
+]) {
+  test(`RF-SL-59 / RNF-08: ${tab} conserva el rango y es accesible`, async ({ page, context }, info) => {
+    const respuesta = await context.request.post("/api/auth/picking/sign-in/username", {
+      headers: { origin: "http://localhost:3000", "x-real-ip": ipFixture(info.project.name) },
+      data: { usuario: "ejemplo.02", clave: process.env.CLAVE_DEMO },
+    });
+    expect(respuesta.ok()).toBe(true);
+    await page.goto("/picking/reportes?tipo=rango&desde=2026-10-19&hasta=2026-10-25");
+    await expect(page.getByRole("heading", { name: "Reportes y bitácora" })).toBeVisible();
+    await expect(page.locator(".reportes")).toHaveAttribute("data-hidratado", "true");
+    await expect(page.getByText("Quetzaltenango · Del 19/10/2026 al 25/10/2026", { exact: true })).toBeVisible();
+    await expect(page.locator(".periodo")).toHaveAttribute("aria-busy", "false");
+    // Se conserva la transición Rutas → Bitácora dentro de su propio caso.
+    if (tab === "Bitácora") {
+      await page.getByRole("tab", { name: "Rutas realizadas", exact: true }).click();
+      await expect(page.getByRole("heading", { name: "Registro histórico de rutas", exact: true })).toBeVisible();
+    }
     await page.getByRole("tab", { name: tab, exact: true }).click();
     await expect(page.getByRole("heading", { name: titulo, exact: true })).toBeVisible();
     await expect(page.getByRole("button", { name: "Excel", exact: true })).toBeDisabled();
     await expect(page.getByRole("button", { name: "PDF", exact: true })).toBeDisabled();
+    await expect(page).toHaveTitle(/Reportes.*INCOVSA/);
     const analisis = await new AxeBuilder({ page }).analyze();
     expect(analisis.violations.filter((v) => v.impact === "serious" || v.impact === "critical")).toEqual([]);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -133,8 +141,8 @@ test("RF-SL-59 / RNF-08: las tres pestañas conservan el rango y son accesibles"
       path: `test-results/reportes-evidencias/app-${tab.startsWith("Despacho") ? "rango" : tab === "Bitácora" ? "bitacora" : "rutas"}-${info.project.name}.png`,
       fullPage: true,
     });
-  }
-});
+  });
+}
 
 test("RF-SL-38 / RF-SL-37 / RN-39: datos de demostración, conversiones y recorrido en las tres pestañas", async ({
   page,
@@ -158,6 +166,7 @@ test("RF-SL-38 / RF-SL-37 / RN-39: datos de demostración, conversiones y recorr
     const anio = referencia.slice(0, 4);
     await page.goto(`/picking/reportes?tipo=anio&anio=${anio}`);
     await expect(page.getByRole("heading", { name: "Reportes y bitácora" })).toBeVisible();
+    await expect(page.locator(".reportes")).toHaveAttribute("data-hidratado", "true");
     await expect(page.getByText(`Quetzaltenango · Año ${anio}`, { exact: true })).toBeVisible();
     const nombres = await page.locator("tbody tr td:first-child").allTextContents();
     expect(nombres).toEqual([

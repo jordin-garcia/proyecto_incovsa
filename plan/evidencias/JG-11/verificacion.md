@@ -9,12 +9,20 @@ Context7 se consultó para Next.js, TypeScript, Playwright, Semgrep, Stryker, Vi
 ## Resultados durante la implementación
 
 - Fase roja: faltaban el módulo de cabeceras, el comprobador de integridad, el de cadena de suministro y los workflows. Las regresiones de generadores de pruebas también fallaron antes de corregir el conteo.
-- Cabeceras: seis pruebas unitarias aprobadas. Tras actualizar con `develop` (`76076c3`), `npm run verificar` aprobó formato, lint, tipos y 337 pruebas en 39 archivos (525,24 s).
+- Cabeceras: seis pruebas unitarias aprobadas. Tras actualizar con `develop` (`76076c3`) y agregar la integración de acciones autorizadas, `npm run verificar` aprobó formato, lint, tipos y 338 pruebas en 40 archivos (500,66 s).
 - Compilación: Next.js 16.4.2 standalone aprobada; las páginas se renderizan por petición para aplicar el nonce. next-devtools devolvió `issues: []`, `configErrors: []` y `sessionErrors: []`.
-- Semgrep: el escaneo previo a ampliar el alcance revisó 76 reglas sobre 195 archivos TypeScript, sin hallazgos. Los casos sintéticos del escáner comprueban funciones, flechas, exportaciones indirectas y APIs prohibidas. La revisión de integración detectó que las nuevas acciones de catálogo y los endpoints multipart del panel quedaban fuera del alcance inicial: se agregaron regresiones que fallaron con la regla anterior y se amplió la detección a módulos con la directiva `"use server"` y todos los `src/app/**/route.ts`.
+- Semgrep: 77 reglas sobre 195 archivos TypeScript, sin hallazgos; 18 casos del escáner real aprobados. Comprueban funciones, flechas, exportaciones indirectas y APIs prohibidas. La revisión de integración detectó que las nuevas acciones de catálogo y los endpoints multipart del panel quedaban fuera del alcance inicial: se agregaron regresiones que fallaron con la regla anterior y se amplió la detección a módulos con la directiva `"use server"` y todos los `src/app/**/route.ts`.
 - gitleaks: historial completo aprobado. Los siete falsos positivos iniciales eran textos de reemplazo, valores ficticios exactos de CI y una referencia simbólica a variables; las excepciones combinan archivo y valor o línea exactos.
 - Cadena de suministro: lockfile-lint aprobado. OSV y npm audit sin vulnerabilidades después de fijar `qs` 6.16.1 bajo `typed-rest-client`.
 - Navegador: primera pasada completa, 213 aprobadas de 216. Fallaron tres casos de teléfono por esperas de navegación/captura mientras corría la mutación; repetidos sin esa carga, los tres pasaron. Las doce pruebas de cabeceras pasaron en la batería completa. Falta la repetición final de la batería completa.
+
+## Verificación después de integrar el avance del equipo
+
+La batería creció a 258 casos con las nuevas pantallas de `develop`. Se ejecutó completa: 252 aprobados en 39,1 minutos. Pasaron los doce casos de seguridad en los tres tamaños. Se observaron seis fallos: título transitorio durante una redirección, dos interacciones iniciales en teléfono y el caso extenso de Reportes agotando sus 30 segundos en los tres tamaños. Los tres primeros pasaron al repetirse; se agregó además una aserción del título antes de axe.
+
+Reportes reúne todos los periodos y tres auditorías de pestañas en un caso. Se separaron los periodos y cada pestaña, conservando cada aserción original, las tres auditorías axe, las capturas completas y los 30 segundos por caso. El caso de Bitácora conserva dentro de su propia ejecución la transición desde Rutas. Se comprobó una segunda causa: cambiar la fecha nativa antes de hidratar el componente pierde el evento. La marca `data-hidratado` sigue el patrón ya usado por `CatalogoCliente`; la prueba falló antes de incorporarla. Es un atributo de diagnóstico sin cambios visuales. Con ambos ajustes pasaron los 15 casos de Reportes en 3,6 minutos; Bitácora tardó 19,5, 18,2 y 19,2 segundos en teléfono, tableta y escritorio, respectivamente, conservando la captura de cientos de filas reales de prueba.
+
+La prueba adicional `acciones-integracion.test.ts` atraviesa las cuatro acciones modificadas contra PostgreSQL real: verifica sus resultados, persistencia, avisos exclusivos de la sede y ausencia de aviso al repetir el envío de una opción vacía. Solo sustituye la obtención del contexto de sesión y sede; no simula Prisma ni los servicios.
 
 ## Diagnóstico de mutación
 
