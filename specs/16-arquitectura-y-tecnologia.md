@@ -107,6 +107,7 @@ Medidas que el equipo adoptó el 12/10/2026 para que la aplicación sea segura y
 
 - HTTPS en todo el sitio (RNF-12), con HSTS.
 - Cabeceras de seguridad (RNF-16): `Content-Security-Policy` (que permita las imágenes de Cloudflare R2, los mapas insertados de Google Maps y la vista previa de Google Drive, specs/05), `X-Content-Type-Options: nosniff`, `Referrer-Policy` y protección contra que otro sitio inserte el nuestro en un marco (`frame-ancestors`).
+- **(22/10, JG-11)** La CSP usa un nonce nuevo por respuesta para los scripts de Next.js; el HTML se renderiza por petición para que el nonce de la cabecera coincida con el de la hidratación. No se permiten scripts en línea sin nonce ni `unsafe-eval` en producción. Los estilos escritos por los componentes posicionados y el arrastre usan `style-src 'self' 'unsafe-inline'`. Las imágenes externas se limitan al origen HTTPS de `URL_IMAGENES`; los marcos, a los mapas insertados de Google y la vista previa de Drive. `frame-ancestors 'none'` impide insertar la aplicación desde cualquier origen. HSTS se envía en producción y mantiene el valor de Caddy.
 - Los errores que ve el usuario no muestran detalles técnicos; el detalle queda solo en el registro del servidor. **(17/10)** Ante un error inesperado, el mensaje es "No se pudo completar la operación. Inténtelo de nuevo." (`src/lib/errores.ts`); los errores de las reglas de negocio muestran su propio mensaje.
 - **(16/10)** Caddy obtiene y renueva solo el certificado HTTPS y agrega la cabecera HSTS.
 
@@ -114,6 +115,7 @@ Medidas que el equipo adoptó el 12/10/2026 para que la aplicación sea segura y
 
 - Claves, contraseña de la base de datos y credenciales de R2 solo en variables de entorno, fuera del repositorio (RNF-10).
 - **Dependencias al día** (RNF-16): Dependabot de GitHub activado, `npm audit` en cada pull request y el archivo de bloqueo (`package-lock.json`) en el repositorio. Los parches de seguridad de Next.js, Better Auth y Prisma se aplican en cuanto salen.
+- **(22/10, JG-11)** Las reglas propias de Semgrep comprueban las operaciones exportadas y las API inseguras. La ruta exacta de imágenes públicas de disco de la decisión 78 conserva su acceso sin sesión (404 en producción); no es una operación de datos internos y no exige permisos. Better Auth conserva sus controles propios. `lockfile-lint` y la validación previa a la descarga admiten solo el registro HTTPS oficial de npm y el tarball de SheetJS de `vendor/` con su huella aprobada; los paquetes incluidos dentro de otro tarball se verifican mediante su contenedor íntegro.
 
 ### Respaldos
 

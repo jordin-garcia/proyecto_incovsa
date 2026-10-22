@@ -591,6 +591,12 @@ Al trasladar el prototipo se comprobó con axe que `--g500` sobre `--g50` da un 
 
 - José Daniel confirmó con Jordin el texto del aviso de conflicto registrado en `specs/06`: «Otro facturador modificó estos pedidos. La pantalla se actualizará; revisa los cambios e inténtalo de nuevo». La vista conserva el arrastre y la edición de fecha u hora hasta finalizar la interacción y los guardados pendientes.
 
+## Controles automáticos de seguridad (22/10/2026, JG-11)
+
+- RNF-16 usa CSP con nonce por respuesta y renderizado dinámico para hidratar Next.js; scripts externos y scripts en línea ajenos quedan bloqueados. Solo los estilos dinámicos de los componentes necesitan `unsafe-inline`. Se conservan Maps, Drive y el origen HTTPS de imágenes configurado.
+- La regla de permisos respeta la ruta exacta de imágenes públicas de disco de la decisión 78, que nunca sirve archivos en producción. La publicación de imágenes sigue protegida.
+- Jordin autorizó agregar `@stryker-mutator/core`, `@stryker-mutator/vitest-runner` y `lockfile-lint` como dependencias de desarrollo. Se fija `qs` 6.16.1 únicamente bajo `typed-rest-client`, dependencia de Stryker, porque la versión 6.15.1 fija de ese paquete tiene tres avisos moderados publicados y corregidos. No cambia el código de producción.
+
 ## Documentos no alineados con las reuniones 4 y 5
 
 Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los cambios del 29/09, del 11/10 ni del 13/10:

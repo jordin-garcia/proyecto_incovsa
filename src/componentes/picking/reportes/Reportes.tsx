@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition, type ReactNode, type ChangeEvent } from "react";
+import { useState, useTransition, useSyncExternalStore, type ReactNode, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { CampoFecha } from "@/componentes/comunes/CampoFecha";
 import { EncabezadoModulo } from "@/componentes/comunes/EncabezadoModulo";
@@ -17,6 +17,8 @@ import { fmt } from "@/modulos/conversion/servicio";
 import { formatoFecha, formatoHora, leerFecha } from "@/lib/fechas";
 import { MESES, type Periodo, type FiltroPeriodo } from "@/modulos/reportes/periodo";
 import type { Despacho, RutaReporte, OperacionReporte } from "@/modulos/reportes/servicio";
+
+const suscribirHidratacion = () => () => {};
 
 function FechaPeriodo({
   valor,
@@ -109,6 +111,11 @@ export function Reportes({
   sedeNombre: string;
 }) {
   const router = useRouter();
+  const hidratado = useSyncExternalStore(
+    suscribirHidratacion,
+    () => true,
+    () => false,
+  );
   const [pendiente, transicion] = useTransition();
   const [pestana, elegir] = useState("despacho");
   const [f, cambiarFiltro] = useState(periodo.filtro);
@@ -331,7 +338,7 @@ export function Reportes({
     </Bloque>
   );
   return (
-    <div className="reportes">
+    <div className="reportes" data-hidratado={hidratado}>
       <EncabezadoModulo
         eyebrow="Módulo de reportes"
         titulo="Reportes y bitácora"

@@ -60,6 +60,8 @@ for (const caso of [
     await abrirMenu(page);
     await expect(page.getByRole("navigation", { name: "Módulos" }).getByRole("link")).toHaveText([...caso.opciones]);
     await expect(page.locator(".lado-usuario")).toContainText(`Usuario de ejemplo ${caso.usuario.slice(-2)}`);
+    // La entrada redirige al primer módulo; axe debe auditar también su metadata ya aplicada.
+    await expect(page).toHaveTitle(/INCOVSA/);
     expect(
       (await new AxeBuilder({ page }).analyze()).violations.filter((v) =>
         ["serious", "critical"].includes(v.impact ?? ""),

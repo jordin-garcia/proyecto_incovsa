@@ -17,6 +17,7 @@ Tu agente sigue esta guía en tu primera tarea (`JG-01`, `CE-01`, `DM-01`, `JM-0
 | **Homebrew** (solo macOS) | — | Sigue https://brew.sh |
 | **Git** | `winget install --id Git.Git -e` | `brew install git` |
 | **GitHub CLI** | `winget install --id GitHub.cli -e` | `brew install gh` |
+| **gitleaks** (secretos antes de cada commit) | `winget install --id Gitleaks.Gitleaks -e` | `brew install gitleaks` |
 | **Node.js 24 LTS** (exactamente la 24, con **npm 11.19 o posterior**: la 24.21 o una más nueva ya lo trae; si no, `npm i -g npm@11.19.0`) | Descarga el instalador de la versión 24 en https://nodejs.org/en/download | `brew install node@24` y sigue el aviso de Homebrew para agregarlo al `PATH` |
 | **PostgreSQL 18** | Instalador oficial en https://www.postgresql.org/download/windows/ (versión 18). Anota la contraseña del usuario `postgres` y agrega `C:\Program Files\PostgreSQL\18\bin` al `PATH` | `brew install postgresql@18`, luego `brew services start postgresql@18` y agrega su carpeta `bin` al `PATH` como indica Homebrew |
 | **Editor (opcional)** | VS Code: `winget install --id Microsoft.VisualStudioCode -e` | `brew install --cask visual-studio-code` |
