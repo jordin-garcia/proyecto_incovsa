@@ -45,6 +45,10 @@ test("RF-SW-07 / RN-56: guardar descripción y galería publica la industria sin
       await expect(page.getByRole("status")).toContainText("Cuero publicada.");
       await page.goto("/industrias/cuero");
       await expect(page.getByText(texto, { exact: true })).toBeVisible();
+      await page.screenshot({
+        path: `pruebas-e2e/panel/evidencias/DM-05/industria-publicada-${page.viewportSize()!.width}.png`,
+        fullPage: true,
+      });
       const guardadas = await conexion.query("SELECT url FROM imagen WHERE industria_id = $1", [original.id]);
       expect(guardadas.rows).toHaveLength(1);
       expect(await page.locator(`img[src="${guardadas.rows[0].url}"]`).count()).toBeGreaterThan(0);
@@ -112,6 +116,7 @@ test("RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes 
 }, info) => {
   const nombre = `Prueba DM-05 ${info.project.name} ${Date.now()}`;
   await page.goto("/panel/catalogo");
+  await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   await page.getByRole("button", { name: "Nuevo producto", exact: true }).click();
   const ventana = page.getByRole("dialog");
   await ventana.getByLabel("Nombre", { exact: true }).fill(nombre);
@@ -123,6 +128,11 @@ test("RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes 
   await expect(fila).toBeVisible();
   await fila.getByRole("button", { name: "Editar", exact: true }).click();
   await ventana.getByLabel("Presentación", { exact: true }).fill("Saco de prueba");
+  await ventana.evaluate((e) => e.getAnimations().forEach((a) => a.finish()));
+  await page.screenshot({
+    path: `pruebas-e2e/panel/evidencias/DM-05/producto-editar-${page.viewportSize()!.width}.png`,
+    fullPage: true,
+  });
   await ventana.getByRole("button", { name: "Guardar", exact: true }).click();
   await expect(ventana).toHaveCount(0);
   for (const industria of ["cuero", "textil"]) {
@@ -134,6 +144,11 @@ test("RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes 
   await expect(fila).toContainText("Saco de prueba");
   await fila.getByRole("button", { name: "Eliminar", exact: true }).click();
   await expect(ventana).toContainText("Deja de mostrarse en el sitio.");
+  await ventana.evaluate((e) => e.getAnimations().forEach((a) => a.finish()));
+  await page.screenshot({
+    path: `pruebas-e2e/panel/evidencias/DM-05/eliminar-${page.viewportSize()!.width}.png`,
+    fullPage: true,
+  });
   await ventana.getByRole("button", { name: "Volver", exact: true }).click();
   await expect(fila).toBeVisible();
   await fila.getByRole("button", { name: "Eliminar", exact: true }).click();
@@ -143,6 +158,7 @@ test("RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes 
 
 test("RF-SW-23: impide cerrar el editor mientras se publica y conserva el borrador si falla", async ({ page }) => {
   await page.goto("/panel/catalogo");
+  await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   await page.getByRole("button", { name: "Nuevo producto", exact: true }).click();
   const ventana = page.getByRole("dialog");
   await ventana.getByLabel("Nombre", { exact: true }).fill("Borrador pendiente");
@@ -175,4 +191,8 @@ test("RF-SW-23: impide cerrar el editor mientras se publica y conserva el borrad
   }
   await expect(ventana.getByRole("button", { name: "Guardar", exact: true })).toBeEnabled();
   await expect(ventana.getByLabel("Nombre", { exact: true })).toHaveValue("Borrador pendiente");
+  await page.screenshot({
+    path: `pruebas-e2e/panel/evidencias/DM-05/producto-error-${page.viewportSize()!.width}.png`,
+    fullPage: true,
+  });
 });
