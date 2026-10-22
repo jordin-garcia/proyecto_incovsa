@@ -20,10 +20,7 @@ function ipFixture(proyecto: string) {
   return ips[proyecto] ?? "192.0.2.34";
 }
 
-test("RF-SL-59 / CP-64 / RNF-08: periodos, pestañas y fechas inválidas en Reportes", async ({
-  page,
-  context,
-}, info) => {
+test("RF-SL-59 / CP-64: periodos y fechas inválidas en Reportes", async ({ page, context }, info) => {
   const respuesta = await context.request.post("/api/auth/picking/sign-in/username", {
     headers: { origin: "http://localhost:3000", "x-real-ip": ipFixture(info.project.name) },
     data: { usuario: "ejemplo.02", clave: process.env.CLAVE_DEMO },
@@ -108,6 +105,18 @@ test("RF-SL-59 / CP-64 / RNF-08: periodos, pestañas y fechas inválidas en Repo
   await page.getByRole("textbox", { name: "Fecha final" }).press("Enter");
   await expect(page.getByText("Quetzaltenango · Del 19/10/2026 al 25/10/2026", { exact: true })).toBeVisible();
   await expect(page).toHaveURL(/desde=2026-10-19.*hasta=2026-10-25/);
+});
+
+test("RF-SL-59 / RNF-08: las tres pestañas conservan el rango y son accesibles", async ({ page, context }, info) => {
+  const respuesta = await context.request.post("/api/auth/picking/sign-in/username", {
+    headers: { origin: "http://localhost:3000", "x-real-ip": ipFixture(info.project.name) },
+    data: { usuario: "ejemplo.02", clave: process.env.CLAVE_DEMO },
+  });
+  expect(respuesta.ok()).toBe(true);
+  await page.goto("/picking/reportes?tipo=rango&desde=2026-10-19&hasta=2026-10-25");
+  await expect(page.getByRole("heading", { name: "Reportes y bitácora" })).toBeVisible();
+  await expect(page.getByText("Quetzaltenango · Del 19/10/2026 al 25/10/2026", { exact: true })).toBeVisible();
+  await expect(page.locator(".periodo")).toHaveAttribute("aria-busy", "false");
   for (const [tab, titulo] of [
     ["Despacho del periodo", "Despacho del periodo por producto"],
     ["Rutas realizadas", "Registro histórico de rutas"],
