@@ -2,6 +2,17 @@ import { z } from "zod";
 import { esquemaResultadoLecturaOdoo } from "@/modulos/odoo/esquemas";
 
 const esquemaSedeId = z.number().int().positive();
+export const esquemaEstadoPedidos = z
+  .array(
+    z.object({
+      id: z.number().int().positive(),
+      posicion: z.number().int().positive(),
+      actualizadoEn: z.iso.datetime(),
+    }),
+  )
+  .refine((pedidos) => new Set(pedidos.map((p) => p.id)).size === pedidos.length);
+export type EstadoPedidos = z.infer<typeof esquemaEstadoPedidos>;
+
 export const esquemaEntradaTablero = esquemaSedeId;
 
 export const esquemaEntradaCargaDeOdoo = z.object({
@@ -15,6 +26,7 @@ export type EntradaCargaDeOdoo = z.infer<typeof esquemaEntradaCargaDeOdoo>;
 export const esquemaEntradaEliminarDelTablero = z.object({
   sedeId: esquemaSedeId,
   usuarioId: z.string().min(1),
+  estadoEsperado: esquemaEstadoPedidos,
   ids: z
     .array(z.number().int().positive())
     .min(1)
@@ -28,6 +40,7 @@ export const esquemaFormularioCarga = z.object({
 });
 
 export const esquemaFormularioEliminar = z.object({
+  estadoEsperado: esquemaEstadoPedidos,
   sedeId: z.number().int().positive(),
   ids: z
     .array(z.number().int().positive())
@@ -38,6 +51,7 @@ export const esquemaFormularioEliminar = z.object({
 export const esquemaTipoOpcion = z.enum(["camion", "recoge"]);
 export type TipoOpcion = z.infer<typeof esquemaTipoOpcion>;
 export const esquemaOpcion = z.object({ sedeId: esquemaSedeId, tipo: esquemaTipoOpcion });
+export const esquemaConfirmacionOpcion = esquemaOpcion.extend({ estadoEsperado: esquemaEstadoPedidos });
 export const esquemaCampoOpcion = z.discriminatedUnion("campo", [
   esquemaOpcion.extend({ campo: z.literal("fecha"), valor: z.iso.date().nullable() }),
   esquemaOpcion.extend({ campo: z.literal("hora"), valor: z.iso.time({ precision: -1 }).nullable() }),
@@ -45,6 +59,8 @@ export const esquemaCampoOpcion = z.discriminatedUnion("campo", [
   esquemaOpcion.extend({ campo: z.literal("piloto"), valor: z.string().min(1).max(255).nullable() }),
 ]);
 export const esquemaMovimiento = z.object({
+  estadoOrigen: esquemaEstadoPedidos,
+  estadoDestino: esquemaEstadoPedidos,
   sedeId: esquemaSedeId,
   ids: z
     .array(z.number().int().positive())

@@ -587,6 +587,10 @@ Al trasladar el prototipo se comprobó con axe que `--g500` sobre `--g50` da un 
 - Se extiende la precisión de JG-05 a Bodega: el pie de las tarjetas, las líneas marcadas, la etiqueta «Sin lote» y el Detalle de Ruta usan `--g600` en sus textos secundarios, porque `--g500` sobre `--g50`, `--v50` y `--g100` queda debajo de 4.5:1 (RNF-08). La etiqueta «RUTA» del cuadro verde ya no lleva la opacidad 0.75 del prototipo (4.44:1 con ella, 6.55:1 sin ella).
 - **Excepción a RNF-08, por decisión del coordinador:** el cuadro del pedido que recoge el cliente conserva exactamente los colores del prototipo (fondo `--lima`, texto blanco y la etiqueta «PEDIDO» con opacidad 0.75), aunque esa etiqueta de 9 px queda en 2.76:1. Es el único nodo que la prueba de axe de Bodega excluye; el número del cuadro cumple como texto grande (3.65:1).
 
+## Facturación simultánea (21/10/2026, JC-05)
+
+- José Daniel confirmó con Jordin el texto del aviso de conflicto registrado en `specs/06`: «Otro facturador modificó estos pedidos. La pantalla se actualizará; revisa los cambios e inténtalo de nuevo». La vista conserva el arrastre y la edición de fecha u hora hasta finalizar la interacción y los guardados pendientes.
+
 ## Controles automáticos de seguridad (22/10/2026, JG-11)
 
 - RNF-16 usa CSP con nonce por respuesta y renderizado dinámico para hidratar Next.js; scripts externos y scripts en línea ajenos quedan bloqueados. Solo los estilos dinámicos de los componentes necesitan `unsafe-inline`. Se conservan Maps, Drive y el origen HTTPS de imágenes configurado.
