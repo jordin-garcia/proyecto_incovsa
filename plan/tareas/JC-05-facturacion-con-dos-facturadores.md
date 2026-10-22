@@ -51,3 +51,9 @@ npm run e2e -- pruebas-e2e/picking/facturacion-dos-facturadores.spec.ts
 
 ## Fuera de alcance
 - El servidor SSE (JG-10).
+
+## Avance verificado (21/10/2026; pendiente de cierre)
+
+Implementación en la rama `jose-daniel/JC-05-facturacion-simultanea`: comprobación transaccional del estado visible, aviso confirmado con Jordin, actualización compartida por SSE y conservación de arrastre/edición. `npm run verificar`: 310 pruebas aprobadas; compilación aprobada; los tres E2E de JC-05 pasan, con latencias de 51, 63 y 58 ms.
+
+La batería completa en secuencia dio 201 aprobados y seis fallos en los dos casos de accesibilidad de altas de usuarios, repetidos en los tres tamaños. Se pidió autorización para esperar el fin de la animación antes de axe en `pruebas-e2e/panel/usuarios.spec.ts` y `pruebas-e2e/picking/usuarios.spec.ts`, archivos de Carlos (protocolo §C). Aún no se modificaron. La tarea no está cerrada ni integrada. Evidencia y pasos para continuar: `pruebas-e2e/picking/evidencias/jc-05/README.md`.

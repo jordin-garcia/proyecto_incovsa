@@ -1,5 +1,6 @@
 import { expect, type BrowserContext, type Page } from "@playwright/test";
 import { Client } from "pg";
+import { writeFile } from "node:fs/promises";
 import AxeBuilder from "@axe-core/playwright";
 import { test } from "../flujo/servidor-produccion";
 
@@ -78,6 +79,8 @@ test("RN-48 / RNF-13 / decisiones 39 y 41: dos facturadores, edición, arrastre 
     await segunda.keyboard.press("Space", { delay: 50 });
     await expect(segunda.getByText(aviso, { exact: true })).toBeVisible();
     await expect(opcion(segunda, "Envío por camión").locator(`[data-pedido-id="${ids[0]}"]`)).toHaveCount(1);
+    // Espera la animación de caída de dnd-kit antes de capturar el estado final.
+    await segunda.waitForTimeout(350);
     await segunda.screenshot({
       path: `pruebas-e2e/picking/evidencias/jc-05/conflicto-${info.project.name}.png`,
       fullPage: true,
@@ -112,6 +115,10 @@ test("RN-48 / RNF-13 / decisiones 39 y 41: dos facturadores, edición, arrastre 
     await mover(page, ids[0]!, "ArrowLeft");
     await expect(opcion(segunda, "Envío por camión").locator(`[data-pedido-id="${ids[0]}"]`)).toHaveCount(1);
 
+    // Antes de cronometrar, el navegador que actúa también debe haber aplicado
+    // su último movimiento; ver el cambio remoto no garantiza ese refresco local.
+    await expect(opcion(page, "Envío por camión").locator(`[data-pedido-id="${ids[0]}"]`)).toHaveCount(1);
+
     // Mide desde avisarCambio hasta el DOM remoto, sin reiniciar el reloj tras el POST.
     const latencia = esperarPublicacion(1).then(async (inicio) => {
       await segunda.waitForFunction(
@@ -121,6 +128,10 @@ test("RN-48 / RNF-13 / decisiones 39 y 41: dos facturadores, edición, arrastre 
       );
       const ms = Date.now() - inicio;
       expect(ms).toBeLessThan(2000);
+      await writeFile(
+        `pruebas-e2e/picking/evidencias/jc-05/latencia-${info.project.name}.json`,
+        JSON.stringify({ ms, sede: 1 }, null, 2) + "\n",
+      );
       await info.attach("latencia-facturacion", {
         body: Buffer.from(JSON.stringify({ ms, sede: 1 })),
         contentType: "application/json",
