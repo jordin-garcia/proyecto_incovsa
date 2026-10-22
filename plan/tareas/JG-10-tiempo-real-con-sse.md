@@ -5,7 +5,7 @@ persona: jordin
 responsable: Jordin García
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JG-07]
 programada: 2026-10-20
 requisitos: [RNF-13, RF-SL-20, RF-SL-23]
@@ -60,10 +60,22 @@ npm run e2e -- pruebas-e2e/flujo/tiempo-real.spec.ts
 ## Notas
 - Caddy no debe almacenar en búfer la respuesta SSE (decisión 29): avisa a Carlos en tu bitácora (**CE-05:**) si hace falta alguna directiva en el `Caddyfile`.
 
-## Avance del 20/10/2026 · verificación pendiente
+## Resultado
 
-Implementación en la rama `jordin/JG-10-tiempo-real-sse`: publicación por sede, ruta SSE autenticada y validada con Zod, latidos de 25 segundos, revalidación de sesión/permiso/sede, recuperación por consulta cada 5 segundos e indicador de conexión. Se conservan las interfaces de JG-07. Bodega usa la suscripción del armazón para poder pausarla al cambiar de sede.
+Implementado y verificado el 21/10/2026. El servidor publica avisos mínimos por sede en un canal compartido entre los bundles de Next.js, dentro del único proceso previsto por las decisiones 10 y 27. La ruta `GET /api/tiempo-real?sede=1&modulo=bodega` valida con Zod y exige sesión del picking, permiso del módulo y sede autorizada. Revalida la autorización antes de cada aviso o latido de 25 segundos y libera los recursos al cerrar, abortar o detectar un consumidor lento. La respuesta desactiva caché y búfer; el Caddy existente ya incluye `flush_interval -1`.
 
-Las 16 pruebas del módulo pasaron y la revisión independiente de código no encontró hallazgos. La batería general y los navegadores no han pasado: el equipo está bajo presión de memoria y varias pruebas existentes agotan sus tiempos. **El estado permanece pendiente; no hay PR integrado ni `## Resultado` de cierre.**
+### Cómo usarlo
 
-La evidencia, los comandos pendientes y los pasos para retomar están en [plan/evidencias/JG-10/verificacion.md](../evidencias/JG-10/verificacion.md).
+- Las acciones conservan `avisarCambio(sedeId)` desde `@/modulos/tiempo-real/servidor`, después de confirmar la transacción. No se añadieron llamadas en acciones de otros módulos.
+- El cliente conserva `useCambiosDeSede(sedeId | null)` desde `@/modulos/tiempo-real/cliente`; `null` pausa la suscripción al cambiar de sede. El armazón del picking ya lo llama: los módulos contenidos en él no necesitan otra suscripción. Se retiró la llamada redundante de Bodega.
+- El transporte se comparte por sede y módulo y refresca al recibir avisos. Sin SSE consulta e intenta reconectar cada `TIEMPO_REAL_CONSULTA_MS` (5000); al reconectar recupera los cambios del corte. Las pestañas ocultas aplazan el refresco hasta mostrarse.
+- `useConexionEnVivo(sedeId | null)` observa esa conexión sin abrir otra. El indicador conserva «En vivo» y los colores del prototipo al conectar; sin conexión usa grises existentes y detiene el latido.
+- Para los E2E, ejecutar primero `npm run build` y luego `npm run e2e -- pruebas-e2e/flujo/tiempo-real.spec.ts`, con la base de demostración y `CLAVE_DEMO`. El fixture sirve el artefacto standalone en un puerto por trabajador y lo cierra al terminar. El README del módulo explica el transporte y la medición desde el instante real de publicación.
+
+Archivos principales: `src/app/api/tiempo-real/route.ts`, `src/modulos/tiempo-real/`, `src/componentes/comunes/armazon/` y `pruebas-e2e/flujo/`. La verificación general también corrigió las referencias ARIA de dnd-kit en Facturación, dos precondiciones de hidratación en pruebas existentes y la distribución de las comprobaciones de carga de Facturación entre los tres proyectos. Se conservaron todas las aserciones, capturas y límites; las auditorías de carga aumentaron de siete a nueve. No se añadieron dependencias ni cambios de esquema, migraciones o decisiones de producto.
+
+### Verificación
+
+`npm run verificar`: formato, lint, tipos y 302 pruebas aprobados (33 archivos). `npm run build`: compilación aprobada. Los nueve E2E de tiempo real pasaron de forma dirigida y dentro de la batería completa: **204 pruebas aprobadas**, sin fallos ni omisiones, con axe. Los nueve avisos SSE medidos tardaron entre 515 y 1831 ms desde `avisarCambio` al DOM remoto; el respaldo tardó entre 4782 y 4951 ms. El plan contiene 63 tareas válidas y `git diff --check` no tiene errores.
+
+El recorrido con Playwright y next-devtools no encontró errores de compilación ni ejecución en la navegación normal. Hay once capturas comparativas y de estados en los tres tamaños y revisión independiente sin hallazgos de corrección. Evidencia, mediciones, correcciones y revisión: [JG-10](../evidencias/JG-10/README.md).

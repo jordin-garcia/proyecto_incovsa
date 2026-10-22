@@ -6,11 +6,15 @@ La comprobación usa datos anónimos de demostración y bases PostgreSQL desecha
 
 | Ancho | Prototipo | Aplicación conectada | Aplicación sin SSE |
 |---|---|---|---|
-| 390 px | [Bodega](prototipo-bodega-390.png) | Pendiente | Pendiente |
-| 768 px | [Bodega](prototipo-bodega-768.png) | Pendiente | Pendiente |
-| 1440 px | [Bodega](prototipo-bodega-1440.png) | Pendiente | Pendiente |
+| 390 px | [Bodega](prototipo-bodega-390.png) | [Conectada](aplicacion-bodega-conectada-390.png) | [Desconectada](aplicacion-bodega-desconectada-390.png) |
+| 768 px | [Bodega](prototipo-bodega-768.png) | [Conectada](aplicacion-bodega-conectada-768.png) | [Desconectada](aplicacion-bodega-desconectada-768.png) |
+| 1440 px | [Bodega](prototipo-bodega-1440.png) | [Conectada](aplicacion-bodega-conectada-1440.png) | [Desconectada](aplicacion-bodega-desconectada-1440.png) |
 
-El estado conectado conserva los tokens del prototipo. Al perder SSE el indicador pasa a los grises existentes del design system, detiene el latido y mantiene el texto «En vivo», como pide JG-10. Las diferencias del contenido de las tarjetas se deben a los datos de prueba; no forman parte del cambio visual.
+El estado conectado conserva los tokens y el texto del prototipo. Al perder SSE el indicador pasa a los grises existentes del design system, detiene el latido y mantiene el texto «En vivo», como pide JG-10. Las capturas de aplicación usan Bodega vacía; el marcado con datos se verifica en los dos navegadores del E2E. La diferencia preexistente del encabezado de Bodega está registrada para JM-04 en la bitácora de Jordin del 19/10 y queda fuera de este cambio de transporte e indicador.
+
+También se recorrieron [Facturación](aplicacion-facturacion-1440.png) con la cuenta de ejemplo 03 y [Ruta](aplicacion-ruta-1440.png) con la 06. Ambas conectan SSE con su permiso. Ruta conserva la pantalla de conexión de JG-07 hasta que se implemente su módulo. Los flujos de Bodega y Facturación se ejercen además en la batería E2E completa.
+
+next-devtools devolvió `configErrors: []` y `sessionErrors: []` tras el recorrido. No hubo errores de consola de la aplicación en la navegación normal. Los cortes de red generan los errores de transporte esperados. Se retiró una cabecera de prueba global que hacía fallar por CORS las peticiones inyectadas por el antivirus; no se modificó ni desactivó el antivirus.
 
 ## Cobertura
 
@@ -22,4 +26,4 @@ El estado conectado conserva los tokens del prototipo. Al perder SSE el indicado
 - Indicador conectado y desconectado; pestaña oculta, cambio de sede y desmontaje.
 - Dos contextos reales de navegador: marcado remoto en menos de dos segundos y funcionamiento durante el corte de SSE.
 
-Estado de la verificación: [avance y pendientes](verificacion.md). Revisión independiente: [primera pasada](revision.md). **La tarea sigue pendiente y no está integrada.**
+Verificación local: **302 pruebas de aplicación y 204 E2E aprobados**, junto con formato, lint, tipos y compilación. [Comandos y resultados](verificacion.md), [mediciones desde la publicación](latencias.json) y [revisión independiente](revision.md). Las verificaciones de GitHub y la integración constan en el PR de JG-10.
