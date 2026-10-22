@@ -1,0 +1,156 @@
+{
+  "verificado": "2026-10-22T20:55:57.113Z",
+  "repositorio": "jordin-garcia/proyecto_incovsa",
+  "reglas": [
+    {
+      "id": 25295395,
+      "nombre": "develop",
+      "enforcement": "active",
+      "condiciones": {
+        "ref_name": {
+          "exclude": [],
+          "include": [
+            "refs/heads/develop"
+          ]
+        }
+      },
+      "checks": {
+        "strict_required_status_checks_policy": true,
+        "do_not_enforce_on_create": false,
+        "required_status_checks": [
+          {
+            "context": "plan",
+            "integration_id": 15368
+          },
+          {
+            "context": "calidad",
+            "integration_id": 15368
+          },
+          {
+            "context": "pruebas",
+            "integration_id": 15368
+          },
+          {
+            "context": "compilacion",
+            "integration_id": 15368
+          },
+          {
+            "context": "dependencias",
+            "integration_id": 15368
+          },
+          {
+            "context": "titulo",
+            "integration_id": 15368
+          },
+          {
+            "context": "archivos-protegidos",
+            "integration_id": 15368
+          },
+          {
+            "context": "revision-claude",
+            "integration_id": 15368
+          },
+          {
+            "context": "semgrep",
+            "integration_id": 15368
+          },
+          {
+            "context": "secretos",
+            "integration_id": 15368
+          },
+          {
+            "context": "cadena-suministro",
+            "integration_id": 15368
+          },
+          {
+            "context": "workflows",
+            "integration_id": 15368
+          },
+          {
+            "context": "integridad-pruebas",
+            "integration_id": 15368
+          },
+          {
+            "context": "mutacion",
+            "integration_id": 15368
+          }
+        ]
+      }
+    },
+    {
+      "id": 25295396,
+      "nombre": "main",
+      "enforcement": "active",
+      "condiciones": {
+        "ref_name": {
+          "exclude": [],
+          "include": [
+            "refs/heads/main"
+          ]
+        }
+      },
+      "checks": {
+        "strict_required_status_checks_policy": true,
+        "do_not_enforce_on_create": false,
+        "required_status_checks": [
+          {
+            "context": "plan",
+            "integration_id": 15368
+          },
+          {
+            "context": "calidad",
+            "integration_id": 15368
+          },
+          {
+            "context": "pruebas",
+            "integration_id": 15368
+          },
+          {
+            "context": "compilacion",
+            "integration_id": 15368
+          },
+          {
+            "context": "dependencias",
+            "integration_id": 15368
+          },
+          {
+            "context": "titulo",
+            "integration_id": 15368
+          },
+          {
+            "context": "archivos-protegidos",
+            "integration_id": 15368
+          },
+          {
+            "context": "revision-claude",
+            "integration_id": 15368
+          },
+          {
+            "context": "semgrep",
+            "integration_id": 15368
+          },
+          {
+            "context": "secretos",
+            "integration_id": 15368
+          },
+          {
+            "context": "cadena-suministro",
+            "integration_id": 15368
+          },
+          {
+            "context": "workflows",
+            "integration_id": 15368
+          },
+          {
+            "context": "integridad-pruebas",
+            "integration_id": 15368
+          },
+          {
+            "context": "mutacion",
+            "integration_id": 15368
+          }
+        ]
+      }
+    }
+  ]
+}

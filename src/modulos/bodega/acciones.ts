@@ -11,8 +11,18 @@ import {
   esquemaOrdenarPorPeso,
   esquemaDespachar,
   esquemaDetalleEnvio,
+  esquemaReordenarCola,
+  esquemaReordenarLineas,
 } from "./esquemas";
-import { marcarLinea, marcarTodasLineas, ordenarLineasPorPeso, despacharEnvio, obtenerDetalleEnvio } from "./servicio";
+import {
+  marcarLinea,
+  marcarTodasLineas,
+  ordenarLineasPorPeso,
+  despacharEnvio,
+  obtenerDetalleEnvio,
+  reordenarColaBodega,
+  reordenarLineasPreparacion,
+} from "./servicio";
 
 export async function marcarLineaAccion(entrada: unknown) {
   try {
@@ -87,6 +97,38 @@ export async function obtenerDetalleEnvioAccion(entrada: unknown) {
 
     const datos = esquemaDetalleEnvio.parse(entrada);
     const resultado = await obtenerDetalleEnvio(datos.envioId, sede.id);
+    return { ok: true as const, datos: resultado };
+  } catch (error) {
+    return aResultadoDeError(error);
+  }
+}
+
+export async function reordenarColaAccion(entrada: unknown) {
+  try {
+    const sesion = await obtenerSesion("picking");
+    const sede = await obtenerSedeDeTrabajo(sesion);
+    exigirPermiso(sesion, "pk.bodega", sede?.id);
+    if (!sede) throw new ErrorAcceso();
+
+    const datos = esquemaReordenarCola.parse(entrada);
+    const resultado = await reordenarColaBodega(datos, { usuarioId: sesion.usuario.id, sedeId: sede.id });
+    avisarCambio(sede.id);
+    return { ok: true as const, datos: resultado };
+  } catch (error) {
+    return aResultadoDeError(error);
+  }
+}
+
+export async function reordenarLineasAccion(entrada: unknown) {
+  try {
+    const sesion = await obtenerSesion("picking");
+    const sede = await obtenerSedeDeTrabajo(sesion);
+    exigirPermiso(sesion, "pk.bodega", sede?.id);
+    if (!sede) throw new ErrorAcceso();
+
+    const datos = esquemaReordenarLineas.parse(entrada);
+    const resultado = await reordenarLineasPreparacion(datos, { usuarioId: sesion.usuario.id, sedeId: sede.id });
+    avisarCambio(sede.id);
     return { ok: true as const, datos: resultado };
   } catch (error) {
     return aResultadoDeError(error);

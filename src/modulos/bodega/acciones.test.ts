@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { SesionActual } from "@/lib/sesion";
+import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import { comprobarRechazosDeAccion } from "../../../pruebas/permisos";
 
 const estado = vi.hoisted(() => ({
@@ -24,6 +25,8 @@ import {
   ordenarPorPesoAccion,
   despacharAccion,
   obtenerDetalleEnvioAccion,
+  reordenarColaAccion,
+  reordenarLineasAccion,
 } from "./acciones";
 
 describe("Módulo de Bodega - Acciones del servidor", () => {
@@ -34,7 +37,8 @@ describe("Módulo de Bodega - Acciones del servidor", () => {
     sedes: [{ id: 1, nombre: "Quetzaltenango", prefijoOdoo: "XE" }],
   };
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await limpiarTablasDeNegocio();
     estado.sesion = sesion;
     estado.cookieSede = "1";
   });
@@ -48,7 +52,7 @@ describe("Módulo de Bodega - Acciones del servidor", () => {
       sesion,
       permiso: "pk.bodega",
       entrada: { envioId: 1, lineaId: 10, marcado: true },
-      entradaOtraSede: { envioId: 1, lineaId: 10, marcado: true },
+      entradaOtraSede: { envioId: 999999, lineaId: 10, marcado: true },
     });
   });
 
@@ -61,7 +65,7 @@ describe("Módulo de Bodega - Acciones del servidor", () => {
       sesion,
       permiso: "pk.bodega",
       entrada: { envioId: 1, marcado: true },
-      entradaOtraSede: { envioId: 1, marcado: true },
+      entradaOtraSede: { envioId: 999999, marcado: true },
     });
   });
 
@@ -74,7 +78,7 @@ describe("Módulo de Bodega - Acciones del servidor", () => {
       sesion,
       permiso: "pk.bodega",
       entrada: { envioId: 1 },
-      entradaOtraSede: { envioId: 1 },
+      entradaOtraSede: { envioId: 999999 },
     });
   });
 
@@ -87,7 +91,7 @@ describe("Módulo de Bodega - Acciones del servidor", () => {
       sesion,
       permiso: "pk.bodega",
       entrada: { envioId: 1 },
-      entradaOtraSede: { envioId: 1 },
+      entradaOtraSede: { envioId: 999999 },
     });
   });
 
@@ -100,7 +104,33 @@ describe("Módulo de Bodega - Acciones del servidor", () => {
       sesion,
       permiso: "pk.bodega",
       entrada: { envioId: 1 },
-      entradaOtraSede: { envioId: 1 },
+      entradaOtraSede: { envioId: 999999 },
+    });
+  });
+
+  describe("reordenarColaAccion", () => {
+    comprobarRechazosDeAccion({
+      accion: reordenarColaAccion,
+      establecerSesion: (s) => {
+        estado.sesion = s;
+      },
+      sesion,
+      permiso: "pk.bodega",
+      entrada: { envioIds: [1, 2] },
+      entradaOtraSede: { envioIds: [999999] },
+    });
+  });
+
+  describe("reordenarLineasAccion", () => {
+    comprobarRechazosDeAccion({
+      accion: reordenarLineasAccion,
+      establecerSesion: (s) => {
+        estado.sesion = s;
+      },
+      sesion,
+      permiso: "pk.bodega",
+      entrada: { envioId: 1, lineaIds: [10, 20] },
+      entradaOtraSede: { envioId: 999999, lineaIds: [10, 20] },
     });
   });
 
@@ -119,5 +149,11 @@ describe("Módulo de Bodega - Acciones del servidor", () => {
 
     const res5 = await obtenerDetalleEnvioAccion({ envioId: "invalido" });
     expect(res5.ok).toBe(false);
+
+    const res6 = await reordenarColaAccion({ envioIds: [] });
+    expect(res6.ok).toBe(false);
+
+    const res7 = await reordenarLineasAccion({ envioId: 1, lineaIds: [] });
+    expect(res7.ok).toBe(false);
   });
 });

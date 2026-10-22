@@ -1,13 +1,31 @@
 "use client";
 
 import { useTransition } from "react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { Icono } from "@/componentes/comunes/iconos";
 import { VentanaConfirmacion } from "@/componentes/comunes/VentanaConfirmacion";
 import { useMensajes } from "@/componentes/comunes/Mensajes";
 import { formatoFecha, formatoHora } from "@/lib/fechas";
 import { fmt } from "@/modulos/conversion/servicio";
 import { Unidades } from "./Unidades";
-import { marcarLineaAccion, marcarTodoAccion, ordenarPorPesoAccion, despacharAccion } from "@/modulos/bodega/acciones";
+import { despacharAccion } from "@/modulos/bodega/acciones";
 
 export interface EnvioBodegaItem {
   id: number;
@@ -38,75 +56,166 @@ interface TarjetaEnvioProps {
   prioridad: number;
   alVerDetalle: (envioId: number) => void;
   alActualizar: () => void;
+  alMarcarLinea: (envioId: number, lineaId: number, marcado: boolean) => void;
+  alMarcarTodo: (envioId: number, marcado: boolean) => void;
+  alOrdenarPorPeso: (envioId: number) => void;
+  alReordenarLineas: (envioId: number, lineaIds: number[]) => void;
 }
 
-export function TarjetaEnvio({ envio, prioridad, alVerDetalle, alActualizar }: TarjetaEnvioProps) {
+function FilaPreparacion({
+  linea,
+  pendiente,
+  alMarcar,
+}: {
+  linea: EnvioBodegaItem["lineas"][number];
+  pendiente: boolean;
+  alMarcar: (lineaId: number, estadoActual: boolean) => void;
+}) {
+  const { setNodeRef, setActivatorNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
+    id: linea.id,
+  });
+
+  const estiloFila = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 3 : undefined,
+    position: isDragging ? ("relative" as const) : undefined,
+  };
+
+  const cantNum = Number(linea.cantidadKg);
+  const pesoNum = Number(linea.pesoConversionKg);
+
+  return (
+    <tr
+      ref={setNodeRef}
+      style={estiloFila}
+      data-id={linea.id}
+      className={`${linea.marcado ? "lista" : ""} ${isDragging ? "arrastrando" : ""}`}
+    >
+      <td>
+        <span
+          ref={setActivatorNodeRef}
+          className="asa"
+          aria-label={`Arrastre para cambiar orden de ${linea.producto}`}
+          {...attributes}
+          {...listeners}
+        >
+          <Icono nombre="asa" className="ico-s" />
+        </span>
+      </td>
+      <td className="cod">{linea.producto}</td>
+      <td>
+        <span className={`lote ${linea.lote ? "" : "sin"}`}>{linea.lote ? `Lote ${linea.lote}` : "Sin lote"}</span>
+      </td>
+      <td className="der kg">{fmt(cantNum)}</td>
+      <td>
+        <Unidades cantidadKg={linea.cantidadKg} pesoConversionKg={linea.pesoConversionKg} />
+        <span className="muted mono" style={{ fontSize: "11.5px", marginLeft: "4px" }}>
+          ÷ {fmt(pesoNum)}
+        </span>
+      </td>
+      <td className="cen">
+        <button
+          type="button"
+          className={`marca ${linea.marcado ? "on" : ""}`}
+          aria-pressed={linea.marcado}
+          aria-label="Marcar como listo"
+          onClick={() => alMarcar(linea.id, linea.marcado)}
+          disabled={pendiente}
+        >
+          <Icono nombre="check" />
+        </button>
+      </td>
+    </tr>
+  );
+}
+
+export function TarjetaEnvio({
+  envio,
+  prioridad,
+  alVerDetalle,
+  alActualizar,
+  alMarcarLinea,
+  alMarcarTodo,
+  alOrdenarPorPeso,
+  alReordenarLineas,
+}: TarjetaEnvioProps) {
   const mostrarMensaje = useMensajes();
   const [pendiente, startTransition] = useTransition();
+
+  const {
+    setNodeRef: setTarjetaRef,
+    setActivatorNodeRef: setActivatorTarjetaRef,
+    attributes: atributosTarjeta,
+    listeners: escuchadoresTarjeta,
+    transform: transformTarjeta,
+    transition: transitionTarjeta,
+    isDragging: estaArrastrandoTarjeta,
+  } = useSortable({ id: envio.id });
+
+  const sensoresLineas = useSensors(
+    useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 380, tolerance: 8 } }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+      keyboardCodes: { start: ["Space"], end: ["Space"], cancel: ["Escape"] },
+    }),
+  );
 
   const esRuta = envio.tipo === "ruta";
   const etiqueta = (esRuta ? "Ruta " : "Pedido ") + envio.numero;
   const destino = esRuta ? "En Ruta" : "Despachado";
   const todasMarcadas = envio.lineas.length > 0 && envio.lineas.every((l) => l.marcado);
 
-  const alternarMarcaLinea = (lineaId: number, estadoActual: boolean) => {
-    startTransition(async () => {
-      const res = await marcarLineaAccion({
-        envioId: envio.id,
-        lineaId,
-        marcado: !estadoActual,
-      });
-      if (!res.ok) {
-        mostrarMensaje(res.error, "error");
-      } else {
-        alActualizar();
-      }
-    });
-  };
-
-  const alternarMarcarTodo = () => {
-    const nuevoValor = !todasMarcadas;
-    startTransition(async () => {
-      const res = await marcarTodoAccion({
-        envioId: envio.id,
-        marcado: nuevoValor,
-      });
-      if (!res.ok) {
-        mostrarMensaje(res.error, "error");
-      } else {
-        alActualizar();
-      }
-    });
-  };
-
-  const ordenarPorPeso = () => {
-    startTransition(async () => {
-      const res = await ordenarPorPesoAccion({ envioId: envio.id });
-      if (!res.ok) {
-        mostrarMensaje(res.error, "error");
-      } else {
-        mostrarMensaje("Filas ordenadas de mayor a menor peso.", "exito");
-        alActualizar();
-      }
-    });
-  };
-
   const despachar = async () => {
-    const res = await despacharAccion({ envioId: envio.id });
-    if (!res.ok) {
-      mostrarMensaje(res.error, "error");
-    } else {
-      mostrarMensaje(`${etiqueta} → ${destino}.`, "exito");
-      alActualizar();
-    }
+    startTransition(async () => {
+      const res = await despacharAccion({ envioId: envio.id });
+      if (!res.ok) {
+        mostrarMensaje(res.error, "error");
+      } else {
+        mostrarMensaje(`${etiqueta} → ${destino}.`, "exito");
+        alActualizar();
+      }
+    });
+  };
+
+  const alTerminarArrastreLineas = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const viejosIds = envio.lineas.map((l) => l.id);
+    const viejoIndice = viejosIds.indexOf(Number(active.id));
+    const nuevoIndice = viejosIds.indexOf(Number(over.id));
+    if (viejoIndice === -1 || nuevoIndice === -1) return;
+
+    const nuevosIds = arrayMove(viejosIds, viejoIndice, nuevoIndice);
+    alReordenarLineas(envio.id, nuevosIds);
   };
 
   const porcentajeAvance = envio.lineasContador > 0 ? (envio.lineasListas / envio.lineasContador) * 100 : 0;
 
+  const estiloTarjeta = {
+    transform: CSS.Transform.toString(transformTarjeta),
+    transition: transitionTarjeta,
+    zIndex: estaArrastrandoTarjeta ? 2 : undefined,
+  };
+
   return (
-    <article className="tarjeta ped" data-id={envio.id}>
+    <article
+      ref={setTarjetaRef}
+      style={estiloTarjeta}
+      className={`tarjeta ped ${estaArrastrandoTarjeta ? "arrastrando" : ""}`}
+      data-id={envio.id}
+    >
       <div className="ped-cab">
-        <span className="asa asa-ped" title="Arrastre para cambiar la prioridad">
+        <span
+          ref={setActivatorTarjetaRef}
+          className="asa asa-ped"
+          title="Arrastre para cambiar la prioridad"
+          aria-label={`Arrastre para cambiar la prioridad de ${etiqueta}`}
+          {...atributosTarjeta}
+          {...escuchadoresTarjeta}
+        >
           <Icono nombre="asa" />
         </span>
 
@@ -176,74 +285,58 @@ export function TarjetaEnvio({ envio, prioridad, alVerDetalle, alActualizar }: T
         <button
           type="button"
           className="btn btn-s btn-sm"
-          onClick={ordenarPorPeso}
+          onClick={() => alOrdenarPorPeso(envio.id)}
           title="Ordenar las filas de mayor a menor peso"
           disabled={pendiente}
         >
           <Icono nombre="grafica" className="ico-s" /> Ordenar por peso
         </button>
 
-        <button type="button" className="btn btn-s btn-sm" onClick={alternarMarcarTodo} disabled={pendiente}>
+        <button
+          type="button"
+          className="btn btn-s btn-sm"
+          onClick={() => alMarcarTodo(envio.id, !todasMarcadas)}
+          disabled={pendiente}
+        >
           <Icono nombre={todasMarcadas ? "x" : "check"} className="ico-s" />
           {todasMarcadas ? "Desmarcar todo" : "Marcar todo"}
         </button>
       </div>
 
       <div className="tabla-caja">
-        <table className="tabla">
-          <thead>
-            <tr>
-              <th style={{ width: "34px" }} />
-              <th>Producto</th>
-              <th>Lote</th>
-              <th className="der">Cantidad (kg)</th>
-              <th>Unidades</th>
-              <th className="cen" style={{ width: "70px" }}>
-                Listo
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {envio.lineas.map((linea) => {
-              const cantNum = Number(linea.cantidadKg);
-              const pesoNum = Number(linea.pesoConversionKg);
-              return (
-                <tr key={linea.id} className={linea.marcado ? "lista" : ""}>
-                  <td>
-                    <span className="asa">
-                      <Icono nombre="asa" className="ico-s" />
-                    </span>
-                  </td>
-                  <td className="cod">{linea.producto}</td>
-                  <td>
-                    <span className={`lote ${linea.lote ? "" : "sin"}`}>
-                      {linea.lote ? `Lote ${linea.lote}` : "Sin lote"}
-                    </span>
-                  </td>
-                  <td className="der kg">{fmt(cantNum)}</td>
-                  <td>
-                    <Unidades cantidadKg={linea.cantidadKg} pesoConversionKg={linea.pesoConversionKg} />
-                    <span className="muted mono" style={{ fontSize: "11.5px", marginLeft: "4px" }}>
-                      ÷ {fmt(pesoNum)}
-                    </span>
-                  </td>
-                  <td className="cen">
-                    <button
-                      type="button"
-                      className={`marca ${linea.marcado ? "on" : ""}`}
-                      aria-pressed={linea.marcado}
-                      aria-label="Marcar como listo"
-                      onClick={() => alternarMarcaLinea(linea.id, linea.marcado)}
-                      disabled={pendiente}
-                    >
-                      <Icono nombre="check" />
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <DndContext
+          id={`dnd-lineas-${envio.id}`}
+          sensors={sensoresLineas}
+          collisionDetection={closestCenter}
+          onDragEnd={alTerminarArrastreLineas}
+        >
+          <table className="tabla">
+            <thead>
+              <tr>
+                <th style={{ width: "34px" }} />
+                <th>Producto</th>
+                <th>Lote</th>
+                <th className="der">Cantidad (kg)</th>
+                <th>Unidades</th>
+                <th className="cen" style={{ width: "70px" }}>
+                  Listo
+                </th>
+              </tr>
+            </thead>
+            <SortableContext items={envio.lineas.map((l) => l.id)} strategy={verticalListSortingStrategy}>
+              <tbody data-ped={envio.id}>
+                {envio.lineas.map((linea) => (
+                  <FilaPreparacion
+                    key={linea.id}
+                    linea={linea}
+                    pendiente={pendiente}
+                    alMarcar={(lineaId, estadoActual) => alMarcarLinea(envio.id, lineaId, !estadoActual)}
+                  />
+                ))}
+              </tbody>
+            </SortableContext>
+          </table>
+        </DndContext>
       </div>
 
       <div className="ped-pie">

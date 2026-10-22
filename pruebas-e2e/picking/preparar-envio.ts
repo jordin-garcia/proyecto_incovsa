@@ -191,6 +191,17 @@ async function principal() {
     return;
   }
 
+  if (accion === "cambiar-estado") {
+    const envioId = Number(process.argv[3]);
+    const estadoNombre = process.argv[4];
+    const estado = await prisma.estadoEnvio.findUniqueOrThrow({ where: { nombre: estadoNombre } });
+    await prisma.envio.update({
+      where: { id: envioId },
+      data: { estadoId: estado.id },
+    });
+    return;
+  }
+
   const numero = process.argv[3] ? Number(process.argv[3]) : 1;
   const tipo = process.argv[4] === "pedido" ? "pedido" : "ruta";
   const sedeId = process.argv[5] ? Number(process.argv[5]) : undefined;

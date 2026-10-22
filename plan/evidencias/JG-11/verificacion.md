@@ -24,6 +24,30 @@ Reportes reúne todos los periodos y tres auditorías de pestañas en un caso. S
 
 La prueba adicional `acciones-integracion.test.ts` atraviesa las cuatro acciones modificadas contra PostgreSQL real: verifica sus resultados, persistencia, avisos exclusivos de la sede y ausencia de aviso al repetir el envío de una opción vacía. Solo sustituye la obtención del contexto de sesión y sede; no simula Prisma ni los servicios.
 
+Se incorporó después `ed785f9` (JM-04) sin conflictos. Semgrep volvió a aprobar: **77 reglas sobre 196 archivos TypeScript, cero hallazgos**. Los comprobadores aprobaron sus **51 casos**, y actionlint terminó correctamente. Se amplió la integración real de Envíos con carga del archivo anonimizado (33 pedidos y 46 rechazos detallados), eliminación de dos pedidos, persistencia, bitácora y avisos por sede; extensión incorrecta y 2 MB + 1 byte rechazan sin datos ni avisos. Pasaron las dos pruebas del archivo, sin simular Prisma ni los servicios. La batería completa de navegador ahora consta de 276 casos.
+
+La batería completa de 276 casos terminó en 37,5 minutos: 265 aprobados, cinco fallidos y seis pendientes por dependencia de casos fallidos en grupos seriales. Los doce casos de seguridad aprobaron. [navegador-completo.json](navegador-completo.json) conserva las estadísticas y los nombres de los casos afectados. Hubo tres fallos de actualización de Bodega en menos de 2 segundos en desarrollo, uno de persistencia del desmarcado al cerrar inmediatamente el caso y la captura final de carga de Facturación en teléfono agotó sus 30 segundos. La carga de Facturación aprobó en tableta y escritorio en 18,5 y 22,3 segundos.
+
+La revisión independiente confirmó que la nueva respuesta optimista de Bodega permite ver el cambio antes del POST; las pruebas de persistencia ahora esperan ese POST y vuelven a comprobar el desmarcado o el despacho tras recarga. Las pruebas de tiempo real se trasladaron al artefacto de producción de JG-10, con ambas pantallas y el contexto táctil en el mismo proceso y origen; conservan todos los escenarios y los 2 segundos. No se presupone que desarrollo sea la única causa: la repetición en producción debe comprobarlo.
+
+La repetición final aprobó **54 de 54 casos, sin omisiones ni reintentos, en 7,6 minutos**: `bodega-tiempo-real.spec.ts`, `bodega.spec.ts`, `facturacion-carga.spec.ts` y `seguridad/cabeceras.spec.ts`, en teléfono, tableta y escritorio. El marcado remoto en producción tardó 943, 827 y 790 ms; pasaron también los cambios de orden, la reversión ante rechazo, teclado, mouse, touch, persistencia tras recarga, axe, las tres cargas completas y las doce comprobaciones de cabeceras y CSP. Se conservaron todos los límites.
+
+[navegador-final.json](navegador-final.json) registra ambas ejecuciones. Un comprobador combinó sus casos por archivo, título y proyecto y exigió que los 276 casos únicos tuvieran resultado aprobado; fallaría si faltara alguno, apareciera otro inesperado o la repetición tuviera fallos, omisiones o casos inestables. Esta evidencia distingue la batería inicial de sus correcciones; no afirma que los 276 pasaron en una sola ejecución. Las capturas ajenas regeneradas durante las pruebas se restauraron.
+
+La primera verificación general posterior a JM-04 aprobó 345 pruebas, pero las dos integraciones nuevas excedieron sus 5 segundos al sembrar toda la demostración. Su preparación ahora crea solo el usuario real, su permiso y su sede; conserva los servicios, Prisma, avisos, aserciones y límite. Pasaron las dos al repetirse con esa preparación. La revisión independiente confirmó que no se debilitaron las pruebas.
+
+Con la preparación mínima, `npm run verificar` aprobó formato, lint, tipos y **347 pruebas en 40 archivos**, en 257,76 segundos de Vitest, sin otras baterías simultáneas.
+
+La compilación final aprobó: Turbopack compiló en 14,2 segundos, TypeScript terminó en 18 segundos y se generó el artefacto standalone. La repetición de navegador usa ese artefacto actualizado. La primera preparación de las pruebas migradas omitió `x-real-ip` y fue rechazada antes del acceso; se corrigió copiando la misma cabecera de IP local de confianza que emplea el fixture de JG-10 al probar sin Caddy. No se cambió ningún control de autenticación.
+
+El probe final de `/acceso` con Playwright MCP conservó el título y la pantalla esperados. next-devtools devolvió `configErrors: []` y `sessionErrors: []`; la comprobación de compilación también devolvió `issues: []`. La consola mostró el 404 preexistente de la petición automática a `/favicon.ico`, ya documentado en los Resultados de JG-02 y JG-04 porque no se ha entregado ese recurso; no se creó un icono ni se modificó el diseño por esta tarea.
+
+## Protecciones de integración
+
+Se aplicaron y se leyeron de nuevo las reglas de `develop` y `main`: ambas exigen los ocho checks anteriores y los seis nuevos, **14 verificaciones obligatorias** en total, con comprobación estricta de la base y aplicación activa. [protecciones.json](protecciones.json) conserva el resultado. La regla independiente que reserva `main` al coordinador (`25295397`) se comparó antes y después y no cambió.
+
+El primer intento local de mutación acotada abortó durante las pruebas iniciales por el límite de 5 segundos de la integración bajo carga concurrente. No produjo puntaje ni cambia la línea base. Se conserva el límite y se vuelve a comprobar la modalidad acotada en un entorno sin esos procesos concurrentes.
+
 ## Diagnóstico de mutación
 
 La primera corrida de diagnóstico de conversión produjo 176 supervivientes, 29 sin cobertura y ningún mutante detectado: **es inválida y no se usa como línea base**. El informe decía que se habían ejecutado cero pruebas por mutante. La reproducción independiente confirmó que Stryker 10 construye el filtro del nombre con espacios, mientras Vitest 5 usa ` > ` entre suites. El filtro omitía todas las pruebas en suites anidadas.
@@ -53,6 +77,8 @@ Los tres PR temporales están cerrados sin integrar y sus ramas fueron eliminada
 
 El primer valor sintético secuencial de #107 fue descartado por las reglas predeterminadas de gitleaks como ejemplo; se sustituyó por otro valor sintético de alta entropía y se comprobó el rechazo. No se amplió ninguna excepción. `workflows` detectó además SC2129 en el flujo existente de revisión: se agruparon las tres escrituras consecutivas a `GITHUB_OUTPUT`, conservando sus valores y controles.
 
-## Cierre pendiente
+## Revisión y cierre local
 
-Quedan pendientes completar la repetición final de navegador, la revisión final, la exigencia de los checks en ambas ramas y la integración.
+La revisión en contexto limpio detectó y se corrigieron el conteo de pruebas generadas, el alcance de Semgrep para las nuevas acciones y rutas, la incompatibilidad del filtro de Stryker con los nombres anidados de Vitest y las precondiciones de persistencia de Bodega. Se revisaron también la espera de hidratación y la separación de auditorías de Reportes, conservando todas sus aserciones y límites. La revisión independiente verificó además GitHub en vivo y el SHA-256 del informe de mutación.
+
+Mejora opcional: conservar el error original de importación al diagnosticar un mutante inválido, en lugar del mensaje genérico del adaptador. No cambia la clasificación ni la métrica oficial. La integración queda sujeta a las 14 verificaciones obligatorias del PR; no se omiten ni se sustituyen.
