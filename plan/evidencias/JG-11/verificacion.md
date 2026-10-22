@@ -9,7 +9,7 @@ Context7 se consultó para Next.js, TypeScript, Playwright, Semgrep, Stryker, Vi
 ## Resultados durante la implementación
 
 - Fase roja: faltaban el módulo de cabeceras, el comprobador de integridad, el de cadena de suministro y los workflows. Las regresiones de generadores de pruebas también fallaron antes de corregir el conteo.
-- Cabeceras: seis pruebas unitarias aprobadas. Tras actualizar con `develop` (`76076c3`) y agregar la integración de acciones autorizadas, `npm run verificar` aprobó formato, lint, tipos y 338 pruebas en 40 archivos (500,66 s).
+- Cabeceras: seis pruebas unitarias aprobadas. Tras actualizar con `develop` (`76076c3`) y agregar la integración de acciones autorizadas y la espera de hidratación en Reportes, `npm run verificar` aprobó formato, lint, tipos y 338 pruebas en 40 archivos (255,87 s).
 - Compilación: Next.js 16.4.2 standalone aprobada; las páginas se renderizan por petición para aplicar el nonce. next-devtools devolvió `issues: []`, `configErrors: []` y `sessionErrors: []`.
 - Semgrep: 77 reglas sobre 195 archivos TypeScript, sin hallazgos; 18 casos del escáner real aprobados. Comprueban funciones, flechas, exportaciones indirectas y APIs prohibidas. La revisión de integración detectó que las nuevas acciones de catálogo y los endpoints multipart del panel quedaban fuera del alcance inicial: se agregaron regresiones que fallaron con la regla anterior y se amplió la detección a módulos con la directiva `"use server"` y todos los `src/app/**/route.ts`.
 - gitleaks: historial completo aprobado. Los siete falsos positivos iniciales eran textos de reemplazo, valores ficticios exactos de CI y una referencia simbólica a variables; las excepciones combinan archivo y valor o línea exactos.
@@ -32,6 +32,14 @@ El adaptador local usa el factory público del runner, conserva los ID y la cobe
 
 Los archivos temporales y el caché de mutación se aíslan del servidor de Next.js; no se ignoran mutantes, no se omiten pruebas y no se rebajan límites para conseguir un resultado.
 
+## Primera ejecución completa válida de mutación
+
+La [ejecución 39737245993](https://github.com/jordin-garcia/proyecto_incovsa/actions/runs/39737245993), sobre `35489875bfd092c01ffabd993fecb5003ffe8036`, terminó correctamente en 82 minutos y 9 segundos. Ejecutó `npm run test:mutacion` sobre los cuatro módulos completos: 15 archivos y 1519 mutantes. La métrica oficial de `mutation-testing-metrics` da **60,634081902245704 %**: 918 detectados, 467 supervivientes, 129 sin cobertura y cinco inválidos. Los 918 detectados tienen pruebas identificadas en `killedBy`; no hay mutantes pendientes, ignorados ni agotamientos de tiempo.
+
+El umbral de `stryker.config.mjs` queda en **60**, al redondear hacia abajo a múltiplo de cinco. Nunca se reduce. [mutacion-base.json](mutacion-base.json) conserva el resumen por archivo y el SHA-256 del informe JSON original (`d3bd928aeb9e5e3a6be6ffc418896c03f397d56bf9a06e9b0caa5ba0f88c0a28`). El informe completo JSON y HTML está en el artefacto `informe-mutacion` de esa ejecución.
+
+La revisión independiente reprodujo los cinco `RuntimeError` con sus reemplazos exactos: todos rompen la construcción de `z.discriminatedUnion` en `envios/esquemas.ts` y Zod lanza `Invalid discriminated union option` antes de registrar pruebas. El esquema original se construye correctamente. Se conserva la clasificación oficial de mutantes inválidos, sin exclusiones manuales. Como mejora opcional del diagnóstico, el adaptador podría conservar ese error de importación en lugar del mensaje genérico que rechaza una ejecución sin pruebas.
+
 ## Pruebas negativas en GitHub
 
 Los tres PR temporales están cerrados sin integrar y sus ramas fueron eliminadas:
@@ -47,4 +55,4 @@ El primer valor sintético secuencial de #107 fue descartado por las reglas pred
 
 ## Cierre pendiente
 
-Este archivo es un registro de avance. Quedan pendientes la línea base completa válida de mutación, completar la repetición final de navegador, la revisión final, la exigencia de los checks en ambas ramas y la integración.
+Quedan pendientes completar la repetición final de navegador, la revisión final, la exigencia de los checks en ambas ramas y la integración.

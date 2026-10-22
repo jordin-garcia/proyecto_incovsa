@@ -1,7 +1,7 @@
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-/** JG-11: el umbral definitivo se fija con la primera ejecución completa documentada. */
+/** JG-11: primera ejecución completa 60,63 %; piso a múltiplo de 5: 60. Nunca se reduce. */
 const configuracion = {
   tempDirName: join(tmpdir(), "incovsa-jg11-stryker"),
   testRunner: "vitest-incovsa",
@@ -10,7 +10,7 @@ const configuracion = {
   mutate: ["src/modulos/{conversion,permisos,envios,bodega}/**/*.ts", "!src/**/*.test.ts"],
   concurrency: 1, // Una sola base de pruebas real; los mutantes no deben competir entre sí.
   reporters: ["clear-text", "progress", "html", "json"],
-  thresholds: { high: 80, low: 60, break: null },
+  thresholds: { high: 80, low: 60, break: 60 },
   timeoutMS: 10000,
   timeoutFactor: 2,
   ignorePatterns: [
