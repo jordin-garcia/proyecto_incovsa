@@ -37,6 +37,7 @@ async function envio({
   cierre = "2026-10-25T23:30:00-06:00",
   cantidades = ["25.125", "25.125", "15.001"],
   pesos = ["25", "25", "10"],
+  productos = ["PRODUCTO", "PRODUCTO", "PRODUCTO"],
 } = {}) {
   const estadoActual = await prisma.estadoEnvio.findUniqueOrThrow({ where: { nombre: estado } });
   const e = await prisma.envio.create({
@@ -50,7 +51,7 @@ async function envio({
       estadoId: estadoActual.id,
       lineas: {
         create: cantidades.map((cantidadKg, i) => ({
-          producto: "PRODUCTO",
+          producto: productos[i]!,
           lote: String(i),
           pesoConversionKg: pesos[i]!,
           cantidadKg,
@@ -107,6 +108,12 @@ it("RF-SL-38 / RN-01: agrupa por producto y peso entre lotes; suma kg y conversi
     }),
   ]);
 });
+it("RF-SL-38: mantiene el orden de primera aparición cuando dos productos empatan", async () => {
+  await envio({ cantidades: ["100"], pesos: ["25"], productos: ["SULFURO DE SODIO"] });
+  await envio({ numero: 2, cantidades: ["100"], pesos: ["25"], productos: ["SODA CAUSTICA"] });
+  const r = await consultarDespacho(sesion, 1, dia);
+  expect(r.filas.map((fila) => fila.producto)).toEqual(["SULFURO DE SODIO", "SODA CAUSTICA"]);
+});
 it("RF-SL-59: domingo 23:30 pertenece a lunes-domingo y no a la siguiente semana; rango inclusivo", async () => {
   await envio();
   expect((await consultarDespacho(sesion, 1, { tipo: "semana", referencia: "2026-10-19" })).rutasCerradas).toBe(1);
@@ -135,17 +142,153 @@ it("RF-SL-37 / RN-29: solo En Ruta y Entregado, orden descendente y recorrido fi
   expect(r[1]!.recorrido).toEqual(["Primero", "Segundo"]);
   expect((await consultarDespacho(sesion, 1, dia)).rutasEntregadas).toBe(1);
 });
-it("RN-39: consulta las operaciones de ambos sistemas sin registrar el marcado de filas", async () => {
+it("RN-17 / RN-39: conserva operaciones globales de ambos sistemas, aísla sedes y no registra el marcado", async () => {
   for (const sistema of ["sitio", "picking"])
     await prisma.bitacora.create({
       data: {
         sistema,
         operacion: "Inicio de sesión",
         usuarioId: "reportes",
-        detalle: "Ejemplo",
+        detalle: {},
         creadoEn: new Date("2026-10-25T12:00:00-06:00"),
       },
     });
+  await prisma.bitacora.createMany({
+    data: [
+      {
+        sistema: "picking",
+        operacion: "Envío de ruta a bodega",
+        entidad: "envio",
+        detalle: { sede: "Guatemala" },
+        creadoEn: new Date("2026-10-25T12:00:00-06:00"),
+      },
+      {
+        sistema: "picking",
+        operacion: "Envío de ruta a bodega",
+        entidad: "envio",
+        detalle: { sede: "Quetzaltenango" },
+        creadoEn: new Date("2026-10-25T12:00:00-06:00"),
+      },
+      {
+        sistema: "picking",
+        operacion: "Cambio de estado",
+        entidad: "envio",
+        detalle: "Guatemala · Ruta 1 pasa a En Ruta",
+        creadoEn: new Date("2026-10-25T12:00:00-06:00"),
+      },
+      {
+        sistema: "picking",
+        operacion: "Cambio de estado",
+        entidad: "envio",
+        detalle: "Quetzaltenango · Ruta 1 pasa a En Ruta",
+        creadoEn: new Date("2026-10-25T12:00:00-06:00"),
+      },
+    ],
+  });
+  const usuariosConSedes = [
+    { id: "usuario-xela", sedeIds: [1] },
+    { id: "usuario-guatemala-a-xela", sedeIds: [1] },
+    { id: "usuario-guatemala-a-gerencia", sedeIds: [] },
+    { id: "usuario-multisede", sedeIds: [1, 2] },
+    { id: "usuario-restablecer-xela", sedeIds: [1] },
+    { id: "usuario-eliminar-guatemala", sedeIds: [2] },
+    { id: "usuario-xela-a-gerencia", sedeIds: [] },
+  ];
+  for (const { id, sedeIds } of usuariosConSedes)
+    await prisma.usuario.create({
+      data: {
+        id,
+        name: id,
+        username: id,
+        displayUsername: id,
+        email: `${id}@example.test`,
+        rol: "Consulta",
+        sistema: "picking",
+        sedes: { create: sedeIds.map((sedeId) => ({ sede: { connect: { id: sedeId } } })) },
+      },
+    });
+  await prisma.bitacora.createMany({
+    data: [
+      {
+        sistema: "picking",
+        operacion: "Creación de usuario",
+        entidad: "usuario",
+        registroId: "usuario-xela",
+        usuarioId: "reportes",
+        detalle: { resumen: "Picking · usuario-xela · Sedes asignados: Quetzaltenango", sedes: ["Quetzaltenango"] },
+        creadoEn: new Date("2026-10-25T12:00:00-06:00"),
+      },
+      {
+        sistema: "picking",
+        operacion: "Edición de usuario",
+        entidad: "usuario",
+        registroId: "usuario-guatemala-a-xela",
+        usuarioId: "reportes",
+        detalle: {
+          resumen: "Picking · usuario-guatemala-a-xela · Sedes asignados: Quetzaltenango · Sedes revocados: Guatemala",
+          sedes: ["Quetzaltenango"],
+        },
+        creadoEn: new Date("2026-10-25T12:00:00-06:00"),
+      },
+      {
+        sistema: "picking",
+        operacion: "Edición de usuario",
+        entidad: "usuario",
+        registroId: "usuario-guatemala-a-gerencia",
+        usuarioId: "reportes",
+        detalle: { resumen: "Picking · cuenta total · Sedes revocados: Guatemala", sedes: [] },
+        creadoEn: new Date("2026-10-25T12:00:00-06:00"),
+      },
+      {
+        sistema: "picking",
+        operacion: "Edición de usuario",
+        entidad: "usuario",
+        registroId: "usuario-multisede",
+        usuarioId: "reportes",
+        detalle: {
+          resumen: "Picking · usuario-multisede",
+          sedes: ["Quetzaltenango", "Guatemala"],
+        },
+        creadoEn: new Date("2026-10-25T12:00:00-06:00"),
+      },
+      {
+        sistema: "picking",
+        operacion: "Restablecimiento de contraseña",
+        entidad: "usuario",
+        registroId: "usuario-restablecer-xela",
+        usuarioId: "reportes",
+        detalle: { resumen: "Picking · usuario-restablecer-xela" },
+        creadoEn: new Date("2026-10-25T12:00:00-06:00"),
+      },
+      {
+        sistema: "picking",
+        operacion: "Eliminación de usuario",
+        entidad: "usuario",
+        registroId: "usuario-eliminar-guatemala",
+        usuarioId: "reportes",
+        detalle: { resumen: "Picking · usuario-eliminar-guatemala" },
+        creadoEn: new Date("2026-10-25T12:00:00-06:00"),
+      },
+      {
+        sistema: "picking",
+        operacion: "Edición de usuario",
+        entidad: "usuario",
+        registroId: "usuario-xela-a-gerencia",
+        usuarioId: "reportes",
+        detalle: { resumen: "Picking · cuenta total · Sedes revocados: Quetzaltenango", sedes: [] },
+        creadoEn: new Date("2026-10-25T12:00:00-06:00"),
+      },
+      {
+        sistema: "picking",
+        operacion: "Edición de usuario",
+        entidad: "usuario",
+        registroId: "usuario-sin-sede",
+        usuarioId: "reportes",
+        detalle: { resumen: "Picking · cuenta sin sede · rol Consulta", sedes: [] },
+        creadoEn: new Date("2026-10-25T12:00:00-06:00"),
+      },
+    ],
+  });
   await prisma.bitacora.create({
     data: {
       sistema: "sitio",
@@ -157,9 +300,28 @@ it("RN-39: consulta las operaciones de ambos sistemas sin registrar el marcado d
   const e = await envio();
   await prisma.lineaPreparacion.updateMany({ where: { envioId: e.id }, data: { marcado: true } });
   const r = await consultarOperaciones(sesion, 1, dia);
-  expect(r).toHaveLength(2);
-  expect(r.map((x) => x.sistema).sort()).toEqual(["picking", "sitio"]);
-  expect(r.every((x) => x.usuario === "Reportes")).toBe(true);
+  expect(r).toHaveLength(7);
+  expect(r.map((x) => x.sistema).sort()).toEqual([
+    "picking",
+    "picking",
+    "picking",
+    "picking",
+    "picking",
+    "picking",
+    "sitio",
+  ]);
+  expect(r.map((x) => x.detalle)).not.toContain('{"sede":"Guatemala"}');
+  expect(r.map((x) => x.detalle)).not.toContain("Guatemala · Ruta 1 pasa a En Ruta");
+  expect(r.every((x) => !x.detalle.includes("Guatemala"))).toBe(true);
+  expect(r.map((x) => x.detalle)).toContain('{"sede":"Quetzaltenango"}');
+  expect(r.map((x) => x.detalle)).toContain("Quetzaltenango · Ruta 1 pasa a En Ruta");
+  expect(r.some((x) => x.detalle.includes("usuario-xela"))).toBe(true);
+  expect(r.some((x) => x.detalle.includes("usuario-restablecer-xela"))).toBe(true);
+  expect(r.some((x) => x.detalle.includes("Sedes revocados: Quetzaltenango"))).toBe(true);
+  expect(r.filter((x) => x.operacion === "Inicio de sesión").every((x) => x.usuario === "Reportes")).toBe(true);
+  expect(r.find((x) => x.operacion === "Inicio de sesión")?.detalle).toBe("Sistema de picking · Reportes");
+  const gerencia = { ...sesion!, usuario: { ...sesion!.usuario, rol: "Gerencia" } };
+  expect(await consultarOperaciones(gerencia, 1, dia)).toHaveLength(14);
 });
 it("RNF-04 / RN-17: aísla la sede y rechaza sin sesión, sin permiso y otra sede", async () => {
   await envio({ sedeId: 2 });

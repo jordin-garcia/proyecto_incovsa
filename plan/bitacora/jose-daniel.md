@@ -45,3 +45,9 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Decisiones: José Daniel confirmó con Jordin el aviso registrado en specs/06 y specs/18. Sin dependencias, esquema ni migraciones nuevas. Bases y cuentas de prueba desechables. Contrato de estados y evidencia en `src/modulos/envios/README.md` y `pruebas-e2e/picking/evidencias/jc-05/README.md`.
 - Pendiente o aviso para otros:
   - **Carlos:** José Daniel autorizó explícitamente en esta conversación (21/10/2026) esperar el final de la animación antes de axe en `pruebas-e2e/panel/usuarios.spec.ts` y `pruebas-e2e/picking/usuarios.spec.ts`. Se añadieron solo esas esperas; se conservaron todas las aserciones. Los seis casos afectados y la batería completa pasan. Actualiza tu rama desde `develop` después de integrar JC-05.
+## 2026-10-21 · JC-06 · Reportes: Despacho, Rutas realizadas y Bitácora con filtros de periodo
+- Hecho: añadí las tres pestañas de Reportes con consultas y periodos calculados en Guatemala, conversión de cantidades, rutas realizadas y Bitácora de los dos sistemas. La Bitácora queda aislada por sede. Capturas comparativas para teléfono, tableta y escritorio en `src/modulos/reportes/evidencias/`.
+- Decisiones: oculto en las cuentas restringidas los registros de Picking cuyo usuario cambia de sede o tiene relaciones múltiples; los eventos globales del sitio y autenticación siguen visibles. Sin dependencias, esquema ni migraciones. La exportación permanece para JC-07.
+- Pendiente o aviso para otros:
+**JC-04:** en `npm run e2e` con cinco workers, `facturacion-carga` y `facturacion-envio` de escritorio importan a la vez la misma fixture de 33 pedidos; el tablero llega a 66. En el segundo intento sobre base nueva los dos siguen fallando por esa carrera concurrente.
+**Carlos:** `pruebas-e2e/picking/usuarios.spec.ts` falla en axe para escritorio por contraste serio del texto secundario (3.70:1) y del botón Guardar (4.21:1). Teléfono y tableta pasan.

@@ -13,12 +13,12 @@ Cada familia tiene imágenes para `telefono` (390 × 844), `tableta` (768 × 102
 | Semanal | `app-semanal-*.png` | `prototipo-semanal-*.png` |
 | Mensual | `app-mensual-*.png` | `prototipo-mensual-*.png` |
 | Anual | `app-anual-*.png` | `prototipo-anual-*.png` |
-| Rango | `app-despacho-*.png` | `prototipo-rango-*.png` |
+| Rango | `app-rango-*.png` | `prototipo-rango-*.png` |
 | Despacho con datos | `app-despacho-datos-*.png` | `prototipo-despacho-datos-*.png` |
 | Rutas y recorrido final | `app-rutas-datos-*.png` | `prototipo-rutas-datos-*.png` |
 | Bitácora | `app-bitacora-*.png` y `app-bitacora-datos-*.png` | `prototipo-bitacora-datos-*.png` |
 
-Los datos y periodos de las dos aplicaciones son de demostración independientes; se contrastaron textos, estructura, orden, estados y colores. Se conserva el medidor verde incluso en el producto de mayor cantidad. El recorrido se muestra únicamente en rutas entregadas. Según specs/10, se excluyen de Rutas realizadas los envíos aún En Preparación, aunque el prototipo también los enumera.
+Las capturas con datos usan los mismos productos, cantidades y pesos de conversión que el ejemplo aprobado del prototipo; Despacho y Bitácora muestran el año de referencia de cada ejecución (2024 en teléfono, 2025 en tableta y 2026 en escritorio), para que las pruebas en paralelo no sumen los mismos envíos. El fixture crea operaciones de Picking y del sitio para que la Bitácora muestre ambos sistemas; su captura usa el rango de la fecha ficticia para hacer visibles esos dos registros. Los clientes de la prueba son nombres ficticios, de acuerdo con la regla de no cargar clientes reales en datos de demostración. Se conserva el medidor verde incluso en el producto de mayor cantidad. El recorrido se muestra únicamente en rutas entregadas. Según specs/10, se excluyen de Rutas realizadas los envíos aún En Preparación, aunque el prototipo también los enumera.
 
 RNF-08 prevalece sobre los grises de contraste insuficiente del prototipo: textos secundarios e indicadores usan `--g600`, aprobado por JG-05. Las tablas se pueden enfocar para desplazarlas con teclado en teléfono. Excel y PDF permanecen deshabilitados hasta JC-07.
 
