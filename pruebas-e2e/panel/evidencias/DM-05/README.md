@@ -29,6 +29,9 @@ Se comparan textos, estructura, orden, estados y colores según `plan/convencion
 - Verificaciones locales: plan válido (63 tareas), `npm ci` (687 paquetes, cero vulnerabilidades), migraciones sin pendientes, `npm run verificar` (322 pruebas en 36 archivos), `npm run build` y 12 E2E propias aprobadas.
 - Suite completa: **228 E2E aprobadas en 8,3 minutos, sin fallos, omisiones ni reintentos**. Comando en Windows: `$env:NODE_OPTIONS='--dns-result-order=ipv4first'; npm.cmd run e2e -- --workers=1 --retries=1`. La opción temporal de DNS permitió acceder al servidor de producción de las pruebas de tiempo real que escucha en 127.0.0.1; no se cambió código ni se redujeron aserciones o umbrales.
 - Next-devtools sin errores de configuración ni ejecución. Recorrido adicional con Playwright de `/industrias/cuero`, `/productos` y `/productos/1`, sin errores de ejecución.
+- Corrección de CI: `plan` detectó radios literales en `catalogo.module.css`. Se sustituyeron 12, 10 y 999 px por sus tokens existentes equivalentes (`--radius-prototipo-3`, `--radius-prototipo-1` y `--radius-prototipo-5`), sin cambiar el aspecto ni modificar la prueba del design system. Se añadió a la comprobación local `node --test "scripts/*.test.mjs"`.
+- Scripts en Windows: 110 pruebas aprobadas y tres de respaldo fallidas porque crean un entorno Bash con rutas Unix; el design system ya pasa. Esas tres pruebas no se modifican y se verifican en Linux en la CI obligatoria. `node --test scripts/design-system.test.mjs` verifica específicamente los tres criterios del diseño.
+- Tras corregir los tokens: design system 3/3, `npm run verificar` 322/322, compilación y 12 E2E propias aprobadas de nuevo (44,9 s). La revisión independiente del delta también concluye LISTO.
 
 ## Interfaces para las siguientes tareas
 

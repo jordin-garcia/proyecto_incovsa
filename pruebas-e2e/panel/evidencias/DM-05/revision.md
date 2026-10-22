@@ -26,3 +26,5 @@ VEREDICTO: LISTO
 La revisión de galería confirmó que la actualización bloquea el registro antes de leer las referencias, las direcciones nuevas son únicas y el rollback limpia las imágenes subidas. El cierre documental y la suite completa se comprueban por el agente principal antes del PR.
 
 La evidencia ampliada (36 capturas, incluidos edición, confirmación y error) también recibió **LISTO**, sin contradicciones con el prototipo ni hallazgos pendientes.
+
+La corrección de CI de los cuatro radios a tokens existentes también recibió **LISTO**: valores idénticos, sin hallazgos de corrección ni opcionales. La documentación diferencia las pruebas locales de respaldo no portables a Windows de la verificación obligatoria en Linux.

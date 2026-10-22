@@ -70,3 +70,7 @@ Implementado el 21/10/2026 por Daniela Marín (`InAlexa`).
 - **Evidencia:** [36 capturas, cobertura e interfaces](../../pruebas-e2e/panel/evidencias/DM-05/README.md) y [revisión independiente](../../pruebas-e2e/panel/evidencias/DM-05/revision.md). Incluye industrias, catálogo, producto nuevo y editado, confirmación, publicación y error en 390, 768 y 1440 px. Las notas P-xx y la demostración se excluyen según specs/20. Sin dependencias, migraciones ni cambios de especificaciones.
 
 El cambio local autorizado de `.codex/config.toml` se conserva fuera de los commits. Se restauraron únicamente evidencias ajenas regeneradas por las pruebas, sin cambios previos del usuario.
+
+### Corrección durante la CI
+
+La comprobación `plan` detectó radios literales en el CSS nuevo. Se reemplazaron por los tokens existentes con los mismos valores de 12, 10 y 999 px, conservando el diseño aprobado. No se cambiaron las pruebas ni los tokens globales; se ejecutaron también las pruebas de `scripts/*.test.mjs` para comprobar esta regla localmente.
