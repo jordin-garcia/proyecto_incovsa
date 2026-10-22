@@ -53,6 +53,7 @@ export async function eliminarPedidosFacturados(entradaSinValidar: unknown) {
     const eliminados = await eliminarDelTablero(entrada.ids, {
       sedeId: sede.id,
       usuarioId: sesion.usuario.id,
+      estadoEsperado: entrada.estadoEsperado,
     });
     avisarCambio(sede.id);
     return { ok: true as const, datos: { eliminados } };
