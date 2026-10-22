@@ -1,0 +1,25 @@
+.campos {
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+.campos [data-galeria] > div:empty {
+  display: none;
+}
+.lista {
+  margin-top: 18px;
+}
+.miniatura {
+  width: 68px;
+  height: 46px;
+}
+.miniatura img {
+  border-radius: var(--radius-prototipo-1);
+}
+.descripcion {
+  font-size: 13.5px;
+  max-width: 420px;
+}
+.enlace {
+  color: var(--lima-b);
+}

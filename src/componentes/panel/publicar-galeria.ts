@@ -1,6 +1,10 @@
 import type { ImagenBorrador } from "./CampoGaleria";
 import type { Resultado } from "@/lib/errores";
-export async function publicarGaleria(tipo: "industrias" | "catalogo", datos: object, imagenes: ImagenBorrador[]) {
+export async function publicarGaleria(
+  tipo: "industrias" | "catalogo" | "noticias",
+  datos: object,
+  imagenes: ImagenBorrador[],
+) {
   const formulario = new FormData();
   let indice = 0;
   const referencias = imagenes.map((imagen) => {
