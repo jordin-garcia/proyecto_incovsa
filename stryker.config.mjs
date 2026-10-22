@@ -4,7 +4,8 @@ import { join } from "node:path";
 /** JG-11: el umbral definitivo se fija con la primera ejecución completa documentada. */
 const configuracion = {
   tempDirName: join(tmpdir(), "incovsa-jg11-stryker"),
-  testRunner: "vitest",
+  testRunner: "vitest-incovsa",
+  plugins: ["@stryker-mutator/vitest-runner", "./scripts/stryker-vitest.mjs"],
   vitest: { configFile: "vitest.mutacion.config.mts" },
   mutate: ["src/modulos/{conversion,permisos,envios,bodega}/**/*.ts", "!src/**/*.test.ts"],
   concurrency: 1, // Una sola base de pruebas real; los mutantes no deben competir entre sí.
