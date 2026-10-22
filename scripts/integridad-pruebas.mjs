@@ -115,7 +115,7 @@ export function analizarPruebas(texto, archivo) {
       if (raiz === "comprobarRechazosDeAccion") cantidad += 3 * multiplicador;
       const esTest = !!raiz || partes[1] === "test";
       if (esTest) {
-        if (partes.some((parte) => ["skip", "only", "todo", "skipIf", "runIf"].includes(parte))) {
+        if (partes.some((parte) => ["skip", "fixme", "only", "todo", "skipIf", "runIf"].includes(parte))) {
           prohibidas.push(
             `prueba omitida o exclusiva en línea ${fuente.getLineAndCharacterOfPosition(nodo.getStart()).line + 1}`,
           );

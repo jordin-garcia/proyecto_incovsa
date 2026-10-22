@@ -40,6 +40,8 @@ function contexto(sesion: SesionActual, sistema: SistemaPestana): ContextoUsuari
 
 async function guardar<T>(sistema: SistemaPestana, trabajo: (sesion: SesionActual) => Promise<T>) {
   try {
+    // Solo los roles de acceso total administran usuarios. Los permisos explícitos de cada
+    // acción se verifican después de este filtro y no habilitan por sí solos esta administración.
     const sesion = await sesionAdmin(sistema);
     return { ok: true as const, datos: await trabajo(sesion) };
   } catch (error) {

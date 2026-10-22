@@ -68,6 +68,11 @@ for (const codigo of [
   'it.skip.each([1, 2])("a", () => {});',
   'test("a", { skip: true }, () => {});',
   'test.skip(true, "motivo");',
+  'test.fixme("a", () => {});',
+  'test.describe.fixme("grupo", () => { test("a", () => {}); });',
+  'test("a", () => { test.fixme(); });',
+  'test("a", () => { test.fixme(true, "motivo"); });',
+  'import { test as caso } from "@playwright/test"; caso.fixme("a", () => {});',
   'import { test as caso } from "vitest"; caso.only("a", () => {});',
   'import { it as caso } from "vitest"; caso.skip("a", () => {});',
 ]) {

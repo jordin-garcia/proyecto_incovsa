@@ -82,3 +82,11 @@ El primer valor sintético secuencial de #107 fue descartado por las reglas pred
 La revisión en contexto limpio detectó y se corrigieron el conteo de pruebas generadas, el alcance de Semgrep para las nuevas acciones y rutas, la incompatibilidad del filtro de Stryker con los nombres anidados de Vitest y las precondiciones de persistencia de Bodega. Se revisaron también la espera de hidratación y la separación de auditorías de Reportes, conservando todas sus aserciones y límites. La revisión independiente verificó además GitHub en vivo y el SHA-256 del informe de mutación.
 
 Mejora opcional: conservar el error original de importación al diagnosticar un mutante inválido, en lugar del mensaje genérico del adaptador. No cambia la clasificación ni la métrica oficial. La integración queda sujeta a las 14 verificaciones obligatorias del PR; no se omiten ni se sustituyen.
+
+### Corrección de la revisión automática del PR #110
+
+Claude detectó que faltaba rechazar `fixme`. Cinco regresiones nuevas fallaron por la ausencia del rechazo antes de corregir el analizador: declaración, grupo, llamada dentro de una prueba, condición y alias importado. El control ahora trata `fixme` como omisión. Se documentó además que el piso 60 se exige a los archivos cambiados aunque su cobertura anterior sea menor, y se aclaró en Usuarios que la autorización administrativa procede de `sesionAdmin` antes de verificar los permisos explícitos.
+
+La [mutación del PR](https://github.com/jordin-garcia/proyecto_incovsa/actions/runs/39855081546) aprobó con **87,64 %** en `envios/acciones.ts`: 78 mutantes detectados y 11 supervivientes, sin mutantes sin cobertura, inválidos ni agotamientos de tiempo. La línea base completa y su piso 60 permanecen iguales. La declaración directa de `@stryker-mutator/api` queda como mejora opcional: es la dependencia transitiva fijada por Stryker 10 en el lockfile y no se añade una cuarta dependencia a las tres autorizadas.
+
+Después de la corrección pasaron los 56 casos conjuntos de los controles y se repitió `npm run verificar`: formato, lint, tipos y las 347 pruebas de 40 archivos aprobadas; Vitest tardó 286,67 segundos. La revisión independiente del delta dio **LISTO**, sin hallazgos de corrección.
