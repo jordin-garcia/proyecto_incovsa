@@ -36,25 +36,19 @@ Se conservaron textos, orden, estados y tokens del prototipo. Las diferencias de
 - `npm run verificar`: formato, lint, tipos y **310 pruebas en 34 archivos**, aprobados.
 - `npm run build`: compilación de producción aprobada.
 - E2E dirigido de JC-05: **3 aprobados**, en teléfono, tableta y escritorio.
-- Batería completa en secuencia (`npm run e2e -- --workers=1`): **201 aprobados y 6 fallidos**. Los seis fallos son los mismos dos casos de accesibilidad de altas de usuarios, repetidos en los tres tamaños; falta autorización para ajustar los archivos ajenos. JC-05 pasó en los tres tamaños, con fecha y hora.
+- Batería completa en secuencia (`npm run e2e -- --workers=1`): **207 aprobados**, sin fallos ni omisiones, incluyendo los tres casos de JC-05 y los seis de accesibilidad de altas de usuarios.
 - `node scripts/tareas.mjs --validar`: 63 tareas válidas.
 - Next.js, `get_errors`: `configErrors: []`, `sessionErrors: []`.
 - [Revisión independiente](revision.md): LISTO, sin hallazgos de corrección.
 
-La primera batería completa, con dos trabajadores, detectó comprobaciones transitorias ajenas a Facturación (título de Ruta y contraste durante la apertura de altas de usuarios). También detectó una precondición incompleta en el nuevo E2E: antes de cronometrar, el navegador que actúa debe haber aplicado su movimiento anterior. Se agregó esa espera explícita, sin cambiar el límite de latencia, las aserciones ni las verificaciones de accesibilidad. La repetición en secuencia confirmó los fallos de las altas de usuarios. No se modificaron esos archivos; se preparó un ajuste que espera la animación, pendiente de autorización según protocolo §C.
+Los casos de accesibilidad de altas de usuarios esperan el fin de la animación antes de medir el contraste. José Daniel autorizó explícitamente ese ajuste en los dos archivos de Carlos el 21/10/2026. Los seis casos afectados pasaron por separado y dentro de la batería completa. Se conservaron todas las aserciones y reglas de accesibilidad.
 
 ## Latencias de JC-05
 
 Desde la publicación hasta el DOM del otro facturador, con el artefacto de producción:
 
-- Teléfono: [51 ms](latencia-telefono.json).
-- Tableta: [63 ms](latencia-tableta.json).
-- Escritorio: [58 ms](latencia-escritorio.json).
+- Teléfono: [47 ms](latencia-telefono.json).
+- Tableta: [66 ms](latencia-tableta.json).
+- Escritorio: [185 ms](latencia-escritorio.json).
 
 Todos conservan el límite de menos de 2000 ms. El transporte es el del armazón; no hay una conexión adicional en Facturación.
-
-## Continuación pendiente
-
-La tarea conserva `estado: pendiente` y no se abrió un PR de cierre ni se integró. Espera autorización de José Daniel para añadir únicamente la espera de `elemento.getAnimations().map(animacion => animacion.finished)` antes de axe en `pruebas-e2e/panel/usuarios.spec.ts` y `pruebas-e2e/picking/usuarios.spec.ts` (propiedad de Carlos). El cambio propuesto está en `/tmp/jc05-esperas-usuarios.patch`; todas las aserciones se conservan.
-
-Tras obtener autorización: aplicar el ajuste, registrar la excepción en la tarea y bitácora, volver a verificar los casos afectados y la batería completa, completar la revisión del cierre, marcar hecha y abrir/integrar el PR por el procedimiento habitual.

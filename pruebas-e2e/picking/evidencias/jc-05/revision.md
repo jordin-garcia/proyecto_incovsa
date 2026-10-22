@@ -12,4 +12,4 @@ Ninguno.
 
 VEREDICTO: LISTO.
 
-Las capturas de otras áreas regeneradas por las pruebas se excluyen del PR. El cierre documental se revisa después de la batería completa.
+Las capturas de otras áreas regeneradas por las pruebas se excluyen del PR. Los dos ajustes de usuarios autorizados se revisaron por separado: esperan la animación sin alterar el alcance de axe ni las aserciones. La precondición del E2E y la evidencia JSON también se revisaron sin hallazgos.

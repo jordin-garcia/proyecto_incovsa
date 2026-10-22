@@ -5,7 +5,7 @@ persona: jose-daniel
 responsable: José Daniel Cifuentes
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JC-04, JG-10]
 programada: 2026-10-21
 requisitos: [RF-SL-67, RN-48, RNF-13]
@@ -54,8 +54,27 @@ npm run e2e -- pruebas-e2e/picking/facturacion-dos-facturadores.spec.ts
 ## Fuera de alcance
 - El servidor SSE (JG-10).
 
-## Avance verificado (21/10/2026; pendiente de cierre)
+## Resultado
 
-Implementación en la rama `jose-daniel/JC-05-facturacion-simultanea`: comprobación transaccional del estado visible, aviso confirmado con Jordin, actualización compartida por SSE y conservación de arrastre/edición. `npm run verificar`: 310 pruebas aprobadas; compilación aprobada; los tres E2E de JC-05 pasan, con latencias de 51, 63 y 58 ms.
+Implementado y verificado el 21/10/2026.
 
-La batería completa en secuencia dio 201 aprobados y seis fallos en los dos casos de accesibilidad de altas de usuarios, repetidos en los tres tamaños. Se pidió autorización para esperar el fin de la animación antes de axe en `pruebas-e2e/panel/usuarios.spec.ts` y `pruebas-e2e/picking/usuarios.spec.ts`, archivos de Carlos (protocolo §C). José Daniel autorizó explícitamente ambos ajustes en esta conversación el 21/10/2026; se aplicaron sin cambiar las aserciones. La verificación final está en curso y la tarea todavía no está cerrada ni integrada. Evidencia y pasos para continuar: `pruebas-e2e/picking/evidencias/jc-05/README.md`.
+- Las operaciones de mover, ordenar, eliminar, cancelar y enviar comparan el estado que vio el facturador (ubicación, posición y fecha de modificación) con el guardado, bajo el bloqueo transaccional compartido de la sede. Una operación obsoleta se rechaza antes de escribir o registrar bitácora. Se conserva el bloqueo `FOR UPDATE` al enviar y el resultado `null` para el doble clic sobre una opción vacía.
+- El aviso de conflicto fue confirmado por José Daniel con Jordin en esta conversación y quedó registrado en `specs/06` y `specs/18`.
+- Las acciones publican con `avisarCambio(sedeId)` después de confirmar. El armazón ya mantiene `useCambiosDeSede`; no se abre otra suscripción. Facturación conserva la vista durante el arrastre, la edición de fecha/hora y sus guardados pendientes, y aplica los datos recibidos al terminar.
+- Las confirmaciones conservan los pedidos que la persona vio al abrirlas. No pueden eliminar, cancelar ni enviar un conjunto incorporado posteriormente por otro facturador.
+
+### Cómo usar lo creado
+
+`consultarTableroFacturacion` y los pedidos de `consultarOpciones` devuelven `posicion` y `actualizadoEn` (texto ISO). `estadoDePedidos(pedidos)` desde `src/modulos/envios/estado-pedidos.ts` obtiene el estado mínimo para las acciones:
+
+- Movimiento: añadir `estadoOrigen` y `estadoDestino`, con todos los pedidos de ambas zonas en orden visible.
+- Cancelar o enviar: añadir `estadoEsperado`, con los pedidos de la opción al abrir la confirmación.
+- Eliminar: añadir `estadoEsperado`, con los pedidos seleccionados en el orden del tablero.
+
+Los estados son obligatorios y se validan con Zod. El contrato completo está en `src/modulos/envios/README.md`. Los envíos, sus líneas, entregas e historial conservan las interfaces de JC-04 para Bodega, Ruta y Reportes.
+
+### Verificación y alcance autorizado
+
+`npm run verificar`: formato, lint, tipos y **310 pruebas en 34 archivos**, aprobados. `npm run build`: aprobado. E2E de dos facturadores en los tres tamaños, incluyendo borradores de fecha/hora, aviso, arrastre y envío, aprobados dentro de la batería completa: **207 pruebas**, con axe y sin omisiones. Latencias, capturas comparativas y revisión independiente LISTO: `pruebas-e2e/picking/evidencias/jc-05/README.md`.
+
+José Daniel autorizó explícitamente en esta conversación (21/10/2026) añadir únicamente la espera del final de la animación antes de axe en `pruebas-e2e/panel/usuarios.spec.ts` y `pruebas-e2e/picking/usuarios.spec.ts`, archivos de Carlos. Se conservan todas las aserciones y reglas de accesibilidad. Los seis casos afectados pasaron tras el ajuste y en la batería completa. No se agregaron dependencias ni cambios de esquema o migraciones.
