@@ -1,0 +1,201 @@
+.sitio .nosotros {
+  .banner-nos {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 40px;
+    align-items: center;
+  }
+  .banner-logos {
+    position: relative;
+    width: 300px;
+    height: 150px;
+    border-radius: var(--radius-prototipo-7);
+    background: var(--color-blanco);
+    border: 1px solid var(--g150);
+    box-shadow: var(--s3);
+    flex: none;
+  }
+  .banner-logos img {
+    position: absolute;
+    inset: 24px;
+    width: calc(100% - 48px);
+    height: calc(100% - 48px);
+    object-fit: contain;
+  }
+  .banner-logos.alterna img {
+    opacity: 0;
+    animation: alternar-logotipos 8s infinite;
+  }
+  .banner-logos.alterna img:nth-child(2) {
+    animation-delay: 4s;
+  }
+  .banner-logos.en-claro {
+    box-shadow: var(--s2);
+  }
+  .historia {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 48px;
+    align-items: center;
+  }
+  .historia.una-col {
+    grid-template-columns: 1fr;
+  }
+  .historia h2 {
+    font-size: 38px;
+    margin-top: 14px;
+  }
+  .historia-texto {
+    margin-top: 18px;
+    font-size: 17px;
+    color: var(--g600);
+    line-height: 1.7;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .hist-gal {
+    aspect-ratio: 16 / 10;
+    border-radius: var(--r-xl);
+    box-shadow: var(--s2);
+  }
+  .valores-fila {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .valor-t {
+    margin: 0;
+    aspect-ratio: 3 / 4;
+    border-radius: var(--r-l);
+    overflow: hidden;
+    background: var(--color-blanco);
+    border: 1px solid var(--g150);
+    box-shadow: var(--s1);
+  }
+  .valor-t img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .valor-t.vacio-v {
+    border-style: dashed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 14px;
+    text-align: center;
+    box-shadow: none;
+  }
+  .valor-t.vacio-v .mono {
+    color: var(--g600);
+    font-size: 28px;
+    font-weight: 700;
+  }
+  .valor-t.vacio-v p {
+    font-size: 13.5px;
+  }
+  .mercados {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .mercado {
+    padding: 32px;
+    color: var(--g900);
+  }
+  .mercado-icono {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--r-l);
+    background: var(--v600);
+    color: var(--color-blanco);
+    display: grid;
+    place-items: center;
+  }
+  .mercado-icono.artesanal {
+    background: var(--lima-v);
+    color: var(--v950);
+  }
+  .mercado h3 {
+    font-size: 24px;
+    margin-top: 18px;
+  }
+  .mercado p {
+    margin-top: 10px;
+    font-size: 16px;
+  }
+  .grupo {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .grupo > div:last-child {
+    flex: 1;
+    min-width: 280px;
+  }
+  .grupo h2 {
+    font-size: 32px;
+    margin-top: 12px;
+  }
+  .grupo p:last-child {
+    margin-top: 12px;
+    font-size: 17px;
+    color: var(--g600);
+  }
+}
+@keyframes alternar-logotipos {
+  0% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  8%,
+  45% {
+    opacity: 1;
+    transform: none;
+  }
+  53%,
+  100% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+@media (max-width: 1024px) {
+  .sitio .nosotros .banner-nos {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+  .sitio .nosotros .banner-logos {
+    width: 240px;
+    height: 120px;
+  }
+}
+@media (max-width: 860px) {
+  .sitio .nosotros .valores-fila {
+    grid-template-columns: repeat(5, minmax(150px, 1fr));
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scroll-snap-type: x mandatory;
+  }
+  .sitio .nosotros .valor-t {
+    scroll-snap-align: start;
+  }
+}
+@media (max-width: 760px) {
+  .sitio .nosotros .historia,
+  .sitio .nosotros .mercados {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sitio .nosotros .banner-logos.alterna img {
+    animation: none;
+    opacity: 1;
+  }
+  .sitio .nosotros .banner-logos.alterna img + img {
+    display: none;
+  }
+}

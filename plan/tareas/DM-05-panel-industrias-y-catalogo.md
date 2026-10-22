@@ -5,7 +5,7 @@ persona: daniela
 responsable: Daniela Marín
 hito: E2
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [DM-04, DM-03]
 programada: 2026-10-18
 requisitos: [RF-SW-07, RF-SW-23, RF-SW-25, CU-07]
@@ -55,3 +55,22 @@ npm run e2e -- pruebas-e2e/panel/industrias-y-catalogo.spec.ts
 
 ## Fuera de alcance
 - Las demás secciones del panel.
+
+## Resultado
+
+Implementado el 21/10/2026 por Daniela Marín (`InAlexa`).
+
+- **Industrias:** `/panel/industrias`, protegida con `sit.industrias`, muestra las nueve tarjetas en el orden aprobado, con ícono, número, descripción, galería de hasta cinco imágenes y «Guardar». La publicación cambia la página pública y registra «Cambio de contenido del sitio» con la industria. Los productos siguen administrándose exclusivamente en Catálogo, según P-97.
+- **Catálogo:** `/panel/catalogo`, protegida con `sit.catalogo`, muestra imagen y recuento, nombre, descripción abreviada, presentación, países de origen, industrias y acciones. «Nuevo producto» y «Editar» abren el formulario aprobado; «Eliminar» pide confirmación, retira el producto público y limpia su galería del almacenamiento. Las tres operaciones se registran con sus nombres del prototipo. Se bloquean todos los cierres del formulario durante una publicación y un error conserva el borrador.
+- **Servidor:** acciones en `src/modulos/contenido/acciones-catalogo.ts`, esquemas Zod en `esquemas-catalogo.ts` y servicios en `servicio-catalogo.ts`. Cada entrada exige sesión y permiso antes de validar; las lecturas del panel también autorizan. Las escrituras bloquean el registro antes de leer imágenes y guardan contenido, relaciones y bitácora en la misma transacción. Solo se conservan fotos propias; se rechazan referencias ajenas, índices repetidos y la sexta imagen. Un fallo limpia las nuevas fotos y una publicación confirmada limpia las retiradas.
+- **Carga de imágenes:** rutas multipart `/panel/industrias/publicar` y `/panel/catalogo/publicar`, dentro de las carpetas autorizadas. Comprueban origen, sesión, permiso y tamaño total; las acciones validan cada archivo y reutilizan `guardarImagen` de DM-04. Admiten cinco imágenes de hasta 5 MB sin cambiar límites compartidos ni archivos protegidos. `publicarGaleria` construye el formulario: `datos` es JSON y `imagenes` contiene referencias actuales o índices de archivos nuevos, también enviados como `imagenes`.
+- **Uso para otras tareas:** `leerIndustriasPanel(sesion)` y `leerCatalogoPanel(sesion)` entregan los datos autorizados. `publicarIndustria(FormData)`, `publicarProducto(FormData)` y `eliminarProducto(id)` devuelven resultados mínimos tipados. Las lecturas públicas `leerCatalogoSitio()` de DM-03 reflejan las relaciones y galerías actualizadas; se revalida el layout raíz después de cambiar datos.
+- **Verificación:** fase roja de integración y E2E comprobada; plan válido (63 tareas), `npm ci` (687 paquetes, cero vulnerabilidades), migraciones sin pendientes, `npm run verificar` (formato, lint, tipos y 322 pruebas en 36 archivos), `npm run build`, 12 E2E propias en tres tamaños con axe y suite completa con **228 aprobadas, sin fallos, omisiones ni reintentos**. Para el servidor local de producción en Windows, la ejecución completa utilizó `NODE_OPTIONS=--dns-result-order=ipv4first`; no se modificaron las pruebas ni sus umbrales. Next-devtools sin errores y recorrido público con Playwright sin errores de ejecución.
+- **Revisión independiente:** LISTO, sin hallazgos pendientes. Se corrigieron el cierre durante publicación y el espaciado de las tarjetas. La prueba de respuesta retrasada falló antes de la corrección y pasa después.
+- **Evidencia:** [36 capturas, cobertura e interfaces](../../pruebas-e2e/panel/evidencias/DM-05/README.md) y [revisión independiente](../../pruebas-e2e/panel/evidencias/DM-05/revision.md). Incluye industrias, catálogo, producto nuevo y editado, confirmación, publicación y error en 390, 768 y 1440 px. Las notas P-xx y la demostración se excluyen según specs/20. Sin dependencias, migraciones ni cambios de especificaciones.
+
+El cambio local autorizado de `.codex/config.toml` se conserva fuera de los commits. Se restauraron únicamente evidencias ajenas regeneradas por las pruebas, sin cambios previos del usuario.
+
+### Corrección durante la CI
+
+La comprobación `plan` detectó radios literales en el CSS nuevo. Se reemplazaron por los tokens existentes con los mismos valores de 12, 10 y 999 px, conservando el diseño aprobado. No se cambiaron las pruebas ni los tokens globales; se ejecutaron también las pruebas de `scripts/*.test.mjs` para comprobar esta regla localmente.

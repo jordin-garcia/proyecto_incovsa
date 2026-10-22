@@ -90,6 +90,7 @@ No se valida si una referencia ya se cargó antes: no puede pasar, porque los da
 - Muestra los pedidos facturados que **todavía no están en ninguna opción de envío**.
 - **Se guarda en la base de datos**: si el facturador cierra la sesión, o entra otro facturador de la misma sede, el tablero sigue igual.
 - **Dos facturadores en la misma sede (16/10):** el servidor valida cada movimiento contra el estado guardado; si otro facturador ya movió, envió o eliminó un pedido facturado, el cambio se rechaza con un aviso y la pantalla se actualiza. Además, Facturación recibe el mismo aviso en tiempo real que Bodega, para que cada facturador vea al instante los cambios del otro ([16](16-arquitectura-y-tecnologia.md)).
+- **Aviso de conflicto (21/10/2026, JC-05; texto confirmado con Jordin):** «Otro facturador modificó estos pedidos. La pantalla se actualizará; revisa los cambios e inténtalo de nuevo». La comprobación incluye la ubicación, la posición y la fecha de modificación de los pedidos vistos por el facturador. Mientras arrastra o edita fecha u hora se conserva la vista; los cambios recibidos se aplican al soltar o salir del campo, después de terminar el guardado pendiente.
 - Una tarjeta por pedido facturado, que usa **todo el ancho** (sin el asa de arrastre ni la "x" de eliminar, 13/10), con:
 
 | Dato | Origen |
