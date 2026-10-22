@@ -150,7 +150,7 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 
 ## 2026-10-22 · JG-09 · Verificación del avance del Entregable 2 (19/10)
 
-- Hecho: verificación posterior a la presentación del 19/10, sobre `develop` en `e96cf3f`. Los 8 pasos del guion funcionan con datos persistidos en modo de producción local; hay 31 capturas e informe en `plan/convergencia/2026-10-22-avance-e2.md`. Etiqueta `v0.5-entregable2` creada sobre ese commit. Pasaron `npm run verificar` (347 pruebas) y `npm run build`; `npm run e2e` aprobó 275 de 276 casos, y el restante solo falla por tiempo en este equipo.
+- Hecho: verificación posterior a la presentación del 19/10, sobre `develop` en `e96cf3f`. Los 8 pasos del guion funcionan con datos persistidos en modo de producción local, enviando `X-Real-IP` como Caddy (H-01), salvo la subida de imágenes, que solo funciona en desarrollo mientras no exista R2 (H-02); hay 31 capturas e informe en `plan/convergencia/2026-10-22-avance-e2.md`. Etiqueta `v0.5-entregable2` creada sobre ese commit. Pasaron `npm run verificar` (347 pruebas) y `npm run build`; `npm run e2e` aprobó 275 de 276 casos, y el restante solo falla por tiempo en este equipo.
 - Decisiones: por indicación de Jordin, se verificó el `develop` del 22/10 y no el del 18/10, y el informe lleva esa fecha. No se cambió código: H-01 (`X-Real-IP`, decisión 29) y H-02 (R2 obligatorio en producción, decisión 78) son comportamientos intencionales. La demostración local se levanta con `npm run dev`.
 - Pendiente o aviso para otros:
 **Carlos:** sin R2 la aplicación en producción no publica imágenes y las de la semilla dan 404 (H-02 del informe). Al desbloquear CE-08, comprueba la publicación de una imagen en el panel y su visualización en Inicio.

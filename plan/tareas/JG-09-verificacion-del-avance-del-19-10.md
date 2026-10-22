@@ -90,4 +90,4 @@ El avance se presentó al Ing. Manuel Rojas el 19/10 y esta tarea se cerró desp
 
 - **Demostración local:** usar `npm run dev` con los comandos del informe; no `npm start` (H-01 y H-02).
 - **JG-12 (Convergencia 1):** partir de la sección «Lo que queda para el hito E3» y de la observación sobre el encabezado de Bodega del informe.
-- **JG-14:** el recorrido del guion del informe es la base del flujo completo. En modo de producción sin Caddy hay que enviar `X-Real-IP`, como ya hacen `pruebas-e2e/flujo/servidor-produccion.ts` y sus pruebas.
+- **JG-14:** el guion y la tabla de resultados del informe sirven de base para el flujo completo. El script de Playwright del recorrido fue temporal y no se conservó en el repositorio. En modo de producción sin Caddy hay que enviar `X-Real-IP`, como ya hacen `pruebas-e2e/flujo/tiempo-real.spec.ts` y `pruebas-e2e/picking/bodega-tiempo-real.spec.ts`.
