@@ -1,0 +1,90 @@
+.industria {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.camposIndustria {
+  gap: 12px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+.industria [data-galeria] > div:empty,
+.campos [data-galeria] > div:empty {
+  display: none;
+}
+.cabIndustria {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.cabIndustria h3 {
+  font-size: 18px;
+}
+.numeroIndustria {
+  font-size: 12px;
+}
+.iconoIndustria {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--v50);
+  color: var(--v600);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.campos {
+  align-items: start;
+}
+.casillas {
+  gap: 8px;
+}
+.acciones {
+  white-space: nowrap;
+}
+.descripcion {
+  color: var(--g600);
+  font-size: 13px;
+  max-width: 320px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.miniatura {
+  display: inline-block;
+  position: relative;
+  width: 52px;
+  height: 52px;
+}
+.miniatura img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid var(--g150);
+}
+.miniatura i {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--v600);
+  color: var(--color-blanco);
+  font: 700 10.5px/18px var(--f-mono);
+  text-align: center;
+  font-style: normal;
+}
+.sinImagen {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  background: var(--g50);
+  color: var(--g500);
+  border-radius: 10px;
+  border: 1px dashed var(--g200);
+}
