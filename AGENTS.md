@@ -3,8 +3,9 @@
 Este repositorio construye **una sola aplicación web** para INCOVSA (Industria del Cuero Covadonga S. A.): el **sitio web institucional autoadministrable** (sitio público, panel y documentación interna) y el **sistema de control logístico de bodega (picking)**. La usará una empresa real: se exige la máxima calidad y seguridad.
 
 Trabajamos con **desarrollo dirigido por especificaciones**:
-- **`specs/` es la fuente de verdad.** Si el código, una tarea o el prototipo la contradicen, vale `specs/`.
-- **El prototipo de simulación aprobado** (`entregable-1/prototipos/prototipo-simulacion-incovsa.html`, con su código fuente en `entregable-1/prototipos/simulacion/src/`) es la referencia de **diseño y comportamiento** en todo lo que `specs/` no detalla.
+- **`specs/` es la fuente de verdad** de los requisitos, las reglas, los textos, los datos y el comportamiento. Si el código o una tarea la contradicen, vale `specs/`.
+- **En diseño manda el prototipo** (`specs/16`, decisión 89): en cómo se ve la aplicación (disposición, estructura visual, tamaños, colores, tipografía, espaciado y estilos), si `specs/` y el prototipo no coinciden, vale el prototipo, y `specs/` se corrige.
+- **El prototipo de simulación aprobado** (`entregable-1/prototipos/prototipo-simulacion-incovsa.html`, con su código fuente en `entregable-1/prototipos/simulacion/src/`) es la referencia de **diseño** siempre y de **comportamiento** en todo lo que `specs/` no detalla.
 - **Las tareas de `plan/tareas/`** dicen qué construir, quién lo hace y cómo se verifica.
 
 ## Antes de hacer cualquier cosa

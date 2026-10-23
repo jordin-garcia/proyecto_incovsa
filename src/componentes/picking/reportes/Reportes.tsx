@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition, type ReactNode, type ChangeEvent } from "react";
+import { useState, useTransition, useSyncExternalStore, type ReactNode, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { CampoFecha } from "@/componentes/comunes/CampoFecha";
 import { EncabezadoModulo } from "@/componentes/comunes/EncabezadoModulo";
@@ -17,6 +17,8 @@ import { fmt } from "@/modulos/conversion/servicio";
 import { formatoFecha, formatoHora, leerFecha } from "@/lib/fechas";
 import { MESES, type Periodo, type FiltroPeriodo } from "@/modulos/reportes/periodo";
 import type { Despacho, RutaReporte, OperacionReporte } from "@/modulos/reportes/servicio";
+
+const suscribirHidratacion = () => () => {};
 
 function FechaPeriodo({
   valor,
@@ -57,19 +59,42 @@ function FechaPeriodo({
     </div>
   );
 }
-function Exportar() {
+function Exportar({ pestana, filtro }: { pestana: "despacho" | "rutas" | "bitacora"; filtro: FiltroPeriodo }) {
+  function descargar(formato: "xlsx" | "pdf") {
+    const parametros = new URLSearchParams({ pestana, formato });
+    for (const [nombre, valor] of Object.entries(filtro)) if (typeof valor === "string") parametros.set(nombre, valor);
+    const enlace = document.createElement("a");
+    enlace.href = `/api/reportes/exportar?${parametros}`;
+    enlace.download = "";
+    document.body.append(enlace);
+    enlace.click();
+    enlace.remove();
+  }
+
   return (
     <div className="reportes-exportar">
-      {["Excel", "PDF"].map((t) => (
-        <Button key={t} variant="secundario" size="pequeno" disabled>
+      {(["xlsx", "pdf"] as const).map((formato) => (
+        <Button key={formato} variant="secundario" size="pequeno" onClick={() => descargar(formato)}>
           <Icono nombre="descargar" className="ico-s" />
-          {t}
+          {formato === "xlsx" ? "Excel" : "PDF"}
         </Button>
       ))}
     </div>
   );
 }
-function Bloque({ titulo, descripcion, children }: { titulo: string; descripcion: string; children: ReactNode }) {
+function Bloque({
+  titulo,
+  descripcion,
+  pestana,
+  filtro,
+  children,
+}: {
+  titulo: string;
+  descripcion: string;
+  pestana: "despacho" | "rutas" | "bitacora";
+  filtro: FiltroPeriodo;
+  children: ReactNode;
+}) {
   return (
     <section className="tarjeta">
       <div className="bloque-cab">
@@ -77,7 +102,7 @@ function Bloque({ titulo, descripcion, children }: { titulo: string; descripcion
           <h3>{titulo}</h3>
           <p>{descripcion}</p>
         </div>
-        <Exportar />
+        <Exportar pestana={pestana} filtro={filtro} />
       </div>
       {children}
     </section>
@@ -109,6 +134,11 @@ export function Reportes({
   sedeNombre: string;
 }) {
   const router = useRouter();
+  const hidratado = useSyncExternalStore(
+    suscribirHidratacion,
+    () => true,
+    () => false,
+  );
   const [pendiente, transicion] = useTransition();
   const [pestana, elegir] = useState("despacho");
   const [f, cambiarFiltro] = useState(periodo.filtro);
@@ -206,7 +236,12 @@ export function Reportes({
           </div>
         ))}
       </div>
-      <Bloque titulo={`${periodo.nombre} por producto`} descripcion={`${sedeNombre} · ${periodo.texto}`}>
+      <Bloque
+        titulo={`${periodo.nombre} por producto`}
+        descripcion={`${sedeNombre} · ${periodo.texto}`}
+        pestana="despacho"
+        filtro={f}
+      >
         <Tabla tabIndex={0}>
           <thead>
             <tr>
@@ -256,6 +291,8 @@ export function Reportes({
     <Bloque
       titulo="Registro histórico de rutas"
       descripcion={`${sedeNombre} · ${periodo.texto} · desde el envío a bodega hasta el cierre de la entrega.`}
+      pestana="rutas"
+      filtro={f}
     >
       <Tabla tabIndex={0}>
         <thead>
@@ -301,6 +338,8 @@ export function Reportes({
     <Bloque
       titulo="Bitácora de operaciones"
       descripcion={`${periodo.texto} · Acciones de los dos sistemas, incluidos los inicios de sesión y los intentos fallidos. No se registran el marcado ni la prioridad de Bodega, ni el orden de Ruta antes de la entrega.`}
+      pestana="bitacora"
+      filtro={f}
     >
       <div className="reportes-bitacora">
         <Tabla tabIndex={0}>
@@ -331,7 +370,7 @@ export function Reportes({
     </Bloque>
   );
   return (
-    <div className="reportes">
+    <div className="reportes" data-hidratado={hidratado}>
       <EncabezadoModulo
         eyebrow="Módulo de reportes"
         titulo="Reportes y bitácora"

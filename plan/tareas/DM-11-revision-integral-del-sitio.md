@@ -7,14 +7,14 @@ hito: E3
 prioridad: P1
 estado: pendiente
 depende_de: [DM-05, DM-06, DM-07, DM-09, DM-10]
-programada: 2026-10-24
+programada: 2026-10-25
 requisitos: [RF-SW-08, RF-SW-16, RF-SW-26, RF-SW-28, RNF-01, RNF-08, RNF-17]
 pantallas: []
 ---
 
 # DM-11 · Rendimiento de las galerías y revisión integral del sitio y del panel
 
-**Responsable:** Daniela Marín · **Hito:** E3 · **Prioridad:** P1 · **Programada:** sáb 24/10 · **Depende de:** DM-05, DM-06, DM-07, DM-09, DM-10
+**Responsable:** Daniela Marín · **Hito:** E3 · **Prioridad:** P1 · **Programada:** dom 25/10 · **Depende de:** DM-05, DM-06, DM-07, DM-09, DM-10
 
 ## Objetivo
 Comprobar con una prueba de rendimiento que las galerías no hacen más lenta la carga (RNF-17) y recorrer **todo** el sitio público y el panel lado a lado con el prototipo, corrigiendo cada diferencia.

@@ -151,7 +151,7 @@ Para cada pantalla de la tarea:
 3. Implementa con los componentes de `src/componentes/` y **solo** los tokens del design system (JG-05). No se agregan colores, tamaños, sombras ni fuentes nuevos.
 4. Compara lado a lado la aplicación y el prototipo en 390 px, 768 px y 1440 px (y 1920 px en el tablero): textos, orden, datos mostrados, estados (vacío, cargando, error, con datos), mensajes, ventanas de confirmación, avisos e interacción.
 5. Pega las capturas de los dos en el PR.
-6. Donde `specs/` cambia el prototipo, manda `specs/`: anótalo en "Decisiones tomadas" del PR.
+6. **En diseño manda el prototipo** (`specs/16`, decisión 89): si `specs/` describe cómo se ve una pantalla de otra forma (disposición, estructura visual, tamaños, colores, tipografía, espaciado o estilos), sigue el prototipo y corrige `specs/`. Donde `specs/` cambia los textos, los datos o el comportamiento, manda `specs/`. Anótalo en "Decisiones tomadas" del PR.
 
 Lo que el prototipo tiene y la aplicación **no** (botón "Demostración", notas amarillas P-xx, leyenda "Prototipo para validación", `localStorage`) está en `specs/20-prototipo-aprobado.md`.
 

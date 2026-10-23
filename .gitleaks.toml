@@ -1,0 +1,28 @@
+title = "INCOVSA: reglas predeterminadas y falsos positivos documentados de JG-11"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "generic-api-key"
+
+  [[rules.allowlists]]
+  description = "Textos de reemplazo exactos, únicamente en los ejemplos de entorno"
+  condition = "AND"
+  paths = ['''^\.env(?:\.produccion)?\.example$''']
+  regexTarget = "secret"
+  regexes = ['''^cambie-esto-por-(?:una|otra)-clave-aleatoria-de-32-caracteres$''']
+
+  [[rules.allowlists]]
+  description = "Claves ficticias exactas del contenedor desechable de CI"
+  condition = "AND"
+  paths = ['''^\.github/workflows/produccion-imagen\.yml$''']
+  regexTarget = "secret"
+  regexes = ['''^ci-(?:sitio|picking)-clave-de-prueba-32-caracteres$''']
+
+  [[rules.allowlists]]
+  description = "Referencia simbólica a variables de entorno; no contiene una credencial"
+  condition = "AND"
+  paths = ['''^src/modulos/almacenamiento/servicio\.ts$''']
+  regexTarget = "line"
+  regexes = ['''^\s*credentials: \{ accessKeyId: datos\.R2_LLAVE, secretAccessKey: datos\.R2_SECRETO \},\s*$''']

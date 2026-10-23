@@ -1,6 +1,7 @@
 import { execSync } from "node:child_process";
-import { expect, test, type BrowserContext, type Page } from "@playwright/test";
+import { expect, type BrowserContext, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { test } from "../flujo/servidor-produccion";
 
 try {
   process.loadEnvFile();
@@ -8,10 +9,12 @@ try {
   // Ignorar si no existe
 }
 
-async function entrar(context: BrowserContext, usuario = "ejemplo.05") {
+async function entrar(context: BrowserContext, urlBase: string, usuario = "ejemplo.05") {
   expect(process.env.CLAVE_DEMO, "Se requiere la clave demo").toBeTruthy();
-  const r = await context.request.post("/api/auth/picking/sign-in/username", {
-    headers: { origin: "http://localhost:3000" },
+  // Sin Caddy, reproduce la IP de confianza igual que las pruebas de producción de JG-10.
+  await context.setExtraHTTPHeaders({ "x-real-ip": "127.0.0.1" });
+  const r = await context.request.post(`${urlBase}/api/auth/picking/sign-in/username`, {
+    headers: { origin: urlBase },
     data: { usuario, clave: process.env.CLAVE_DEMO },
   });
   expect(r.ok()).toBe(true);
@@ -80,11 +83,12 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
     browser,
     context,
     page: page1,
+    produccion,
   }, testInfo) => {
-    await entrar(context, "ejemplo.05");
+    await entrar(context, produccion.url);
 
-    const context2 = await browser.newContext();
-    await entrar(context2, "ejemplo.05");
+    const context2 = await browser.newContext({ baseURL: produccion.url });
+    await entrar(context2, produccion.url);
     const page2 = await context2.newPage();
 
     const rutaBodega = (url: URL) => url.pathname.includes("/picking/bodega");
@@ -103,7 +107,7 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
       const botonMarca1 = fila1.locator("button.marca");
       const fila2 = tarjeta2.locator("tbody tr").first();
 
-      // Escalonar inicio entre proyectos paralelos para evitar contención de renders en next dev
+      // Escalonar inicio entre proyectos paralelos para evitar contención de renders.
       const desfaseMs: Record<string, number> = {
         telefono: 0,
         tableta: 1500,
@@ -182,11 +186,12 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
     browser,
     context,
     page: page1,
+    produccion,
   }) => {
-    await entrar(context, "ejemplo.05");
+    await entrar(context, produccion.url);
 
-    const context2 = await browser.newContext();
-    await entrar(context2, "ejemplo.05");
+    const context2 = await browser.newContext({ baseURL: produccion.url });
+    await entrar(context2, produccion.url);
     const page2 = await context2.newPage();
 
     try {
@@ -293,9 +298,10 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
     browser,
     context,
     page,
+    produccion,
   }, testInfo) => {
     test.setTimeout(60_000);
-    await entrar(context, "ejemplo.05");
+    await entrar(context, produccion.url);
     await abrirBodega(page);
 
     // 1. Arrastre con TECLADO en tarjetas de envío (verificar nuevo orden en DOM y persistencia en recarga)
@@ -384,8 +390,12 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
     let cerrarCtxTouch = false;
 
     if (!testInfo.project.use.hasTouch) {
-      ctxTouch = await browser.newContext({ hasTouch: true, viewport: { width: 390, height: 844 } });
-      await entrar(ctxTouch, "ejemplo.05");
+      ctxTouch = await browser.newContext({
+        baseURL: produccion.url,
+        hasTouch: true,
+        viewport: { width: 390, height: 844 },
+      });
+      await entrar(ctxTouch, produccion.url);
       pageTouch = await ctxTouch.newPage();
       await abrirBodega(pageTouch);
       cerrarCtxTouch = true;

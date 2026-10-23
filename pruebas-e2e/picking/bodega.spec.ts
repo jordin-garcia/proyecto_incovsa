@@ -119,14 +119,25 @@ test.describe("Módulo de Bodega E2E", () => {
 
     const tarjeta = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
     // Marcar todo pasa por una acción del servidor y un refresco: se espera más que el valor por omisión.
+    const respuestaMarcarTodo = page.waitForResponse(
+      (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
+    );
     await tarjeta.getByRole("button", { name: "Marcar todo" }).click();
     await expect(tarjeta.locator("tr.lista")).toHaveCount(2, { timeout: 15_000 });
+    expect((await respuestaMarcarTodo).ok()).toBe(true);
 
     expect(await violacionesGraves(page)).toEqual([]);
 
     // Deja el envío sin marcar para las pruebas siguientes.
+    const respuestaDesmarcarTodo = page.waitForResponse(
+      (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
+    );
     await tarjeta.getByRole("button", { name: "Desmarcar todo" }).click();
     await expect(tarjeta.locator("tr.lista")).toHaveCount(0, { timeout: 15_000 });
+    expect((await respuestaDesmarcarTodo).ok()).toBe(true);
+    await page.reload();
+    await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
+    await expect(tarjeta.locator("tr.lista")).toHaveCount(0);
   });
 
   test("RNF-08: Detalle de Ruta sin violaciones serias de axe, contraste incluido", async ({ page, context }) => {
@@ -225,11 +236,15 @@ test.describe("Módulo de Bodega E2E", () => {
     const botonMarca = fila5287.locator("button.marca");
 
     // Marcar línea 1
+    const respuestaMarcado = page.waitForResponse(
+      (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
+    );
     await botonMarca.click();
     await expect(botonMarca).toHaveClass(/on/);
     await expect(fila5287).toHaveClass(/lista/);
 
     // Recargar y confirmar persistencia
+    expect((await respuestaMarcado).ok()).toBe(true);
     await page.reload();
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     const tarjetaRecargada = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
@@ -238,14 +253,25 @@ test.describe("Módulo de Bodega E2E", () => {
 
     // Botón Marcar todo
     const botonMarcarTodo = tarjetaRecargada.getByRole("button", { name: "Marcar todo" });
+    const respuestaMarcarTodo = page.waitForResponse(
+      (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
+    );
     await botonMarcarTodo.click();
 
     await expect(tarjetaRecargada.locator("tr.lista")).toHaveCount(2);
     await expect(tarjetaRecargada.locator(".ped-avance")).toContainText("2 de 2");
+    expect((await respuestaMarcarTodo).ok()).toBe(true);
 
     // Desmarcar todo
     const botonDesmarcarTodo = tarjetaRecargada.getByRole("button", { name: "Desmarcar todo" });
+    const respuestaDesmarcarTodo = page.waitForResponse(
+      (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
+    );
     await botonDesmarcarTodo.click();
+    await expect(tarjetaRecargada.locator("tr.lista")).toHaveCount(0);
+    expect((await respuestaDesmarcarTodo).ok()).toBe(true);
+    await page.reload();
+    await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     await expect(tarjetaRecargada.locator("tr.lista")).toHaveCount(0);
   });
 
@@ -264,8 +290,12 @@ test.describe("Módulo de Bodega E2E", () => {
     await expect(botonDespacho).toBeDisabled();
 
     // Marcar todo
+    const respuestaMarcarTodo = page.waitForResponse(
+      (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
+    );
     await tarjeta.getByRole("button", { name: "Marcar todo" }).click();
     await expect(botonDespacho).toBeEnabled();
+    expect((await respuestaMarcarTodo).ok()).toBe(true);
 
     // Pulsar botón de despacho
     await botonDespacho.click();
@@ -277,9 +307,16 @@ test.describe("Módulo de Bodega E2E", () => {
     await expect(modalConfirmacion).toContainText("La ruta pasa a En Ruta");
 
     // Confirmar
+    const respuestaDespacho = page.waitForResponse(
+      (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
+    );
     await modalConfirmacion.getByRole("button", { name: "Ruta Despachada" }).click();
+    expect((await respuestaDespacho).ok()).toBe(true);
 
     // Ya no aparece en Bodega
+    await expect(page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`)).toHaveCount(0);
+    await page.reload();
+    await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     await expect(page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`)).toHaveCount(0);
   });
 

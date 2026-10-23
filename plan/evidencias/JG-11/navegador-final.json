@@ -1,0 +1,26 @@
+{
+  "metodo": "Batería completa y repetición de los cuatro specs afectados, combinadas por archivo, título y proyecto; no representa una sola ejecución sin fallos.",
+  "bateriaCompleta": {
+    "startTime": "2026-10-22T20:10:53.933Z",
+    "duration": 2247134.6210000003,
+    "expected": 265,
+    "skipped": 6,
+    "unexpected": 5,
+    "flaky": 0
+  },
+  "repeticion": {
+    "startTime": "2026-10-22T20:57:54.848Z",
+    "duration": 458414.315,
+    "expected": 54,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "casosUnicosComprobados": 276,
+  "porProyecto": {
+    "telefono": 92,
+    "tableta": 92,
+    "escritorio": 92
+  },
+  "todosConResultadoAprobado": true
+}

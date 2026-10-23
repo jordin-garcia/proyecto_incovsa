@@ -1,4 +1,12 @@
 import { recibirGaleria } from "@/modulos/contenido/multipart-catalogo";
+import { obtenerSesion } from "@/lib/sesion";
+import { aResultadoDeError } from "@/lib/errores";
+import { exigirPermiso, ErrorAcceso } from "@/modulos/permisos/servicio";
 export async function POST(request: Request) {
-  return recibirGaleria(request, "producto");
+  try {
+    exigirPermiso(await obtenerSesion("sitio", request.headers), "sit.catalogo");
+    return await recibirGaleria(request, "producto");
+  } catch (error) {
+    return Response.json(aResultadoDeError(error), { status: error instanceof ErrorAcceso ? 403 : 400 });
+  }
 }

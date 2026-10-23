@@ -1,0 +1,82 @@
+{
+  "fase": "Batería completa antes de corregir las precondiciones de Bodega",
+  "estadisticas": {
+    "startTime": "2026-10-22T20:10:53.933Z",
+    "duration": 2247134.6210000003,
+    "expected": 265,
+    "skipped": 6,
+    "unexpected": 5,
+    "flaky": 0
+  },
+  "casos": 276,
+  "fallos": [
+    {
+      "archivo": "picking/bodega-tiempo-real.spec.ts",
+      "titulo": "RNF-13 / RF-SL-23 (CP-37): el marcado aparece de inmediato en quien marca (optimista), revierte ante fallo y sincroniza en < 2s",
+      "proyecto": "telefono",
+      "resultado": "unexpected"
+    },
+    {
+      "archivo": "picking/bodega-tiempo-real.spec.ts",
+      "titulo": "RF-SL-20 / RN-28 / RNF-13: reordenar filas y cola se refleja en tiempo real en otra pantalla en < 2s sin historial",
+      "proyecto": "tableta",
+      "resultado": "unexpected"
+    },
+    {
+      "archivo": "picking/bodega-tiempo-real.spec.ts",
+      "titulo": "RNF-13 / RF-SL-23 (CP-37): el marcado aparece de inmediato en quien marca (optimista), revierte ante fallo y sincroniza en < 2s",
+      "proyecto": "escritorio",
+      "resultado": "unexpected"
+    },
+    {
+      "archivo": "picking/bodega.spec.ts",
+      "titulo": "RF-SL-24 / RN-11 (CP-38): despacho solo habilitado con todo marcado y pasa a En Ruta",
+      "proyecto": "telefono",
+      "resultado": "unexpected"
+    },
+    {
+      "archivo": "picking/facturacion-carga.spec.ts",
+      "titulo": "RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos facturados",
+      "proyecto": "telefono",
+      "resultado": "unexpected"
+    }
+  ],
+  "pendientes": [
+    {
+      "archivo": "picking/bodega-tiempo-real.spec.ts",
+      "titulo": "RF-SL-20 / RN-28 / RNF-13: reordenar filas y cola se refleja en tiempo real en otra pantalla en < 2s sin historial",
+      "proyecto": "telefono",
+      "resultado": "skipped"
+    },
+    {
+      "archivo": "picking/bodega-tiempo-real.spec.ts",
+      "titulo": "RF-SL-20: el arrastre funciona con teclado, mouse y touch (dedo con pulsación de 380 ms)",
+      "proyecto": "telefono",
+      "resultado": "skipped"
+    },
+    {
+      "archivo": "picking/bodega-tiempo-real.spec.ts",
+      "titulo": "RF-SL-20: el arrastre funciona con teclado, mouse y touch (dedo con pulsación de 380 ms)",
+      "proyecto": "tableta",
+      "resultado": "skipped"
+    },
+    {
+      "archivo": "picking/bodega-tiempo-real.spec.ts",
+      "titulo": "RF-SL-20 / RN-28 / RNF-13: reordenar filas y cola se refleja en tiempo real en otra pantalla en < 2s sin historial",
+      "proyecto": "escritorio",
+      "resultado": "skipped"
+    },
+    {
+      "archivo": "picking/bodega-tiempo-real.spec.ts",
+      "titulo": "RF-SL-20: el arrastre funciona con teclado, mouse y touch (dedo con pulsación de 380 ms)",
+      "proyecto": "escritorio",
+      "resultado": "skipped"
+    },
+    {
+      "archivo": "picking/bodega.spec.ts",
+      "titulo": "Criterio 7: usuario sin pk.bodega ve pantalla sin acceso con textos del prototipo",
+      "proyecto": "telefono",
+      "resultado": "skipped"
+    }
+  ]
+}

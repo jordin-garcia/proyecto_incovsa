@@ -25,6 +25,9 @@ const eslintConfig = defineConfig([
     "playwright-report/**",
     "test-results/**",
     "coverage/**",
+    ".stryker-tmp/**",
+    ".cache-mutacion/**",
+    "reports/mutation/**",
     "src/generated/**",
   ]),
 ]);
