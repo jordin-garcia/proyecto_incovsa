@@ -61,7 +61,7 @@ node scripts/tareas.mjs --hoy
 
 ### Qué se hizo
 - **Informe de convergencia:** [`plan/convergencia/2026-10-22.md`](../convergencia/2026-10-22.md). Incluye:
-  - la tabla ✅/⚠️/❌ de los 120 requisitos que corresponden a lo integrado (107 ✅ y 13 ⚠️) y de los 25 de tareas pendientes (❌, todos con tarea y fecha);
+  - la tabla ✅/⚠️/❌ de los 120 requisitos que corresponden a lo integrado (101 ✅ y 19 ⚠️) y de los 25 de tareas pendientes (❌, todos con tarea y fecha);
   - las diferencias con el prototipo;
   - las tareas creadas y las fechas que cambiaron.
   - Las capturas de Bodega, la única pantalla con diferencias de diseño, están en `plan/convergencia/2026-10-22/`.
@@ -81,5 +81,5 @@ node scripts/tareas.mjs --hoy
 
 ### Cómo usarlo
 - **JG-23, JG-24 y JG-25:** cada hallazgo tiene su ID (H-xx), su archivo y línea, y su corrección en la auditoría. Antes del paso que la use, se pregunta su ❓ D-xx. En el `## Resultado` de la tarea auditada se agrega `### Correcciones de la auditoría (2026-10-22)`.
-- **JG-13 (Convergencia 2):** parte de este informe. Comprueba que se cerraron los ⚠️ de JG-23 y JG-24 y vuelve a clasificar lo que se integre entre el 22 y el 25/10 (DM-07 a DM-10, JM-05, JM-06 y JC-07). Los ⚠️ de JG-25 (RNF-09, RNF-12 y RNF-16) los comprueba JG-17, porque JG-25 es del 27/10.
+- **JG-13 (Convergencia 2):** parte de este informe. Comprueba que se cerraron los ⚠️ de JG-23 y JG-24 y vuelve a clasificar lo que se integre entre el 22 y el 25/10 (DM-07 a DM-10, JM-05, JM-06 y JC-07). Los ⚠️ de JG-25 (RF-SL-04, RF-SL-57, RNF-09, RNF-12 y RNF-16) los comprueba JG-17, porque JG-25 es del 27/10.
 - **JG-13 y JG-17:** muchas pruebas cumplen pero no llevan el código del requisito en su nombre (columna «Evidencia» del informe). Conviene renombrarlas cuando se toquen esos archivos, como pide `AGENTS.md`.

@@ -8,7 +8,7 @@ prioridad: P1
 estado: pendiente
 depende_de: [JG-12]
 programada: 2026-10-24
-requisitos: [RF-SL-36, RF-SL-68, RN-39, RF-SL-02, RF-SW-27, RF-SW-09, RF-SW-25, RF-SW-30]
+requisitos: [RF-SL-36, RF-SL-68, RN-39, RF-SL-02, RF-SW-03, RF-SW-27, RF-SW-09, RF-SW-25, RF-SW-30]
 pantallas: [picking.js › reportes (Bitácora), sitio.js › acceso, login; panel.js › sinAcceso, contenido, armazon; picking.js › facturacion, tarjetaFact]
 ---
 
@@ -36,7 +36,7 @@ Corregir los hallazgos de los pasos 1 y 2 de la auditoría del 22/10, y los del 
 7. En el `## Resultado` de cada tarea corregida, agregar `### Correcciones de la auditoría (2026-10-22)`. Su estado no cambia.
 
 ## Archivos que creas o modificas
-- `src/app/acceso/**`, `src/componentes/comunes/armazon/**`, `src/modulos/bitacora/**`
+- `src/app/acceso/**`, `src/componentes/comunes/**` (incluido el aviso «Sesión cerrada.» al llegar al inicio, H-34), `src/app/(sitio)/page.tsx` o su `layout.tsx` si el aviso se muestra ahí, `src/modulos/bitacora/**`
 - `src/modulos/envios/servicio.ts` y su prueba; `src/modulos/reportes/**`, `src/app/picking/reportes/**`, `src/componentes/picking/facturacion/FacturacionTablero.tsx`
 - `src/app/panel/catalogo/page.tsx`, `src/app/panel/industrias/page.tsx`, `src/modulos/contenido/**`, `src/componentes/panel/EditorContenido.tsx`, `src/app/api/imagenes/publicar/route.ts`
 - Las pruebas de cada área (`pruebas-e2e/acceso/**`, `pruebas-e2e/comunes/**`, `pruebas-e2e/sitio/**`, `pruebas-e2e/panel/**`, `pruebas-e2e/picking/reportes.spec.ts`, `pruebas-e2e/picking/facturacion-*.spec.ts`)

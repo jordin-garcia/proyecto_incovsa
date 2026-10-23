@@ -8,7 +8,7 @@ prioridad: P1
 estado: pendiente
 depende_de: [JG-12]
 programada: 2026-10-27
-requisitos: [RF-SL-04, RF-SL-57, RNF-09, RNF-12, RNF-13, RNF-16, RNF-18]
+requisitos: [RF-SL-04, RF-SL-57, RNF-09, RNF-12, RNF-13, RNF-16]
 pantallas: [panel.js › eliminarUsuario (limpieza del piloto)]
 ---
 
@@ -38,7 +38,7 @@ Corregir los hallazgos del paso 5 de la auditoría del 22/10 y los del paso 4 qu
 ## Archivos que creas o modificas
 - `.github/workflows/ci.yml`, `.github/workflows/produccion-imagen.yml`, `.github/workflows/despliegue.yml`, `.github/workflows/produccion-respaldo.yml`
 - `Dockerfile`, `docker-compose.yml`, `Caddyfile`, `.env.produccion.example`, `src/lib/auth-configuracion.ts`
-- `scripts/veredicto-revision.mjs`, `scripts/administrador.ts`, `scripts/crear-admin.ts`, `scripts/*.test.mjs`
+- `.semgrep/**` (H-44); `scripts/veredicto-revision.mjs`, `scripts/administrador.ts`, `scripts/crear-admin.ts`, `scripts/*.test.mjs`
 - `src/modulos/camiones/**`, `src/modulos/usuarios/**` y sus pruebas
 - `specs/16-arquitectura-y-tecnologia.md`, `specs/18-historial-de-decisiones.md` (H-50 y lo que decidan las ❓)
 - `plan/tareas/` de las tareas corregidas (solo la sección de correcciones); `plan/bitacora/jordin.md` (con el aviso para Carlos)
@@ -46,7 +46,7 @@ Corregir los hallazgos del paso 5 de la auditoría del 22/10 y los del paso 4 qu
 ## Criterios de aceptación
 1. **RNF-16 (H-46, H-48):** el flujo de la imagen de producción falla si a través de Caddy falta CSP, HSTS, `nosniff`, `Referrer-Policy` o `frame-ancestors`, o si HSTS sale dos veces.
 2. **RNF-13 (H-47):** el flujo falla si el primer evento de `/api/tiempo-real` no llega a través de Caddy en pocos segundos.
-3. **RNF-18 (H-28):** la CI falla si `schema.prisma` y las migraciones no coinciden (comprobado con un PR de prueba que se cierra sin integrar).
+3. **JG-03, criterio 1 (H-28):** la CI falla si `schema.prisma` y las migraciones no coinciden (comprobado con un PR de prueba que se cierra sin integrar).
 4. **RF-SL-04 (H-41):** una prueba con `consultarOpciones` comprueba que un camión eliminado ya no se ofrece en Facturación.
 5. **RF-SL-57 (H-43, H-45):** al eliminar o desactivar un piloto, su selección en «Envío por camión» se limpia, y sus registros siguen en Reportes con su nombre.
 6. **RNF-09 (H-55):** el modo `docker compose exec` del respaldo y la restauración se ejecuta en una verificación automática.

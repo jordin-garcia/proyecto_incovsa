@@ -159,7 +159,7 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 
 ## 2026-10-22 · JG-12 · Convergencia 1
 
-- Hecho: informe `plan/convergencia/2026-10-22.md` con 120 requisitos de lo integrado (107 ✅, 13 ⚠️, ningún ❌) y 25 ❌ de tareas pendientes, todas con fecha. También tiene las diferencias con el prototipo (solo Bodega se aparta en diseño; lo demás son textos y comportamientos puntuales). Primera auditoría §E2 en `plan/auditorias/2026-10-22.md`: 55 hallazgos (ninguno Alto, 16 Medios) y 6 ❓. Tareas nuevas: JG-23, JG-24 y JG-25. Se reprogramó el calendario.
+- Hecho: informe `plan/convergencia/2026-10-22.md` con 120 requisitos de lo integrado (101 ✅, 19 ⚠️, ningún ❌) y 25 ❌ de tareas pendientes, todas con fecha. También tiene las diferencias con el prototipo (solo Bodega se aparta en diseño; lo demás son textos y comportamientos puntuales). Primera auditoría §E2 en `plan/auditorias/2026-10-22.md`: 55 hallazgos (ninguno Alto, 16 Medios) y 6 ❓. Tareas nuevas: JG-23, JG-24 y JG-25. Se reprogramó el calendario.
 - Decisiones: todos los hallazgos se corrigen como §E3 del coordinador. DM-10 pasa de Daniela a Carlos. B7 sigue exigiendo la batería completa. No cambia código.
 - Pendiente o aviso para otros:
 **Daniela:** DM-07 queda para hoy (22/10), DM-08 para el 23/10, DM-09 para el 24/10 y DM-11 para el 25/10. **DM-10 (documentación interna) pasa a Carlos**: ya no te toca, pero DM-11 la revisa. Los hallazgos de tus tareas integradas (H-01 a H-08 de la auditoría) los corrige Jordin en JG-24; no los corrijas en tus ramas.
