@@ -611,7 +611,8 @@ Al trasladar el prototipo se comprobó con axe que `--g500` sobre `--g50` da un 
 
 ## Contraste del área de subida de las galerías (23/10/2026, DM-07)
 
-- **Excepción de contraste a la decisión 89, por decisión de Jordin:** el texto del área de subida de las galerías del panel («Arrastre aquí…», `CampoGaleria`) usa `--g600` y no el `--g500` del prototipo (`.subida`). Con `--g500` el contraste es 4,47:1 sobre `--g50` (en reposo) y 4,41:1 sobre `--v50` (al pasar el cursor), por debajo del 4,5:1 de RNF-08; con `--g600` es 7,02:1 y 6,94:1. Aplica a Noticias (DM-07) y a las galerías de DM-04 y DM-05, que ya lo usaban. El borde, el fondo, el tamaño y la disposición siguen el prototipo, y la prueba de axe no cambia ([20](20-prototipo-aprobado.md)). JG-24 no la revierte.
+- **Excepción de contraste a la decisión 89, por decisión de Jordin:** el texto del área de subida de `CampoGaleria` («Arrastre aquí…» en las galerías, y también en los campos de una sola imagen, como el logotipo y el de Inquiserca) usa `--g600` y no el `--g500` del prototipo (`.subida`). Con `--g500` el contraste es 4.46:1 sobre `--g50` (en reposo) y 4.41:1 sobre `--v50` (al pasar el cursor), por debajo del 4.5:1 de RNF-08; con `--g600` es 7.02:1 y 6.94:1. Aplica a Noticias (DM-07) y a los campos de DM-04 y DM-05, que ya lo usaban. La excepción es **solo el color del texto**, y la prueba de axe no cambia ([20](20-prototipo-aprobado.md)).
+- Lo demás del área sigue el prototipo, y JG-24 (paso 7) corrige estas dos diferencias de `develop`: al pasar el cursor, la regla `.btn-g:hover` del botón fantasma deja el texto en `--g900` sobre `--g100`, y no el fondo `--v50` del prototipo con el texto en `--g600`; y el relleno y el tamaño de letra son 22 px y 14 px, y no los 16 px y 13.5 px de `.gc-subir` en las galerías.
 
 ## Documentos no alineados con las reuniones 4 y 5
 
