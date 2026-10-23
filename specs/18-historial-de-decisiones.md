@@ -609,6 +609,10 @@ Al trasladar el prototipo se comprobó con axe que `--g500` sobre `--g50` da un 
 - Las precisiones de diseño anteriores que se apartan del prototipo, como el `--g600` de los textos secundarios (JG-05, JG-06 y JM-08) y la etiqueta «RUTA» sin opacidad, quedan sujetas a la decisión 89. JG-24 las revisa y le pregunta a Jordin antes de cualquier cambio que haga fallar axe (RNF-08). Mientras tanto, las tareas nuevas siguen el prototipo.
 - Las correcciones del código son de JG-23, JG-24 y JG-25 (`plan/auditorias/2026-10-22.md`).
 
+## Contraste del área de subida de las galerías (23/10/2026, DM-07)
+
+- **Excepción de contraste a la decisión 89, por decisión de Jordin:** el texto del área de subida de las galerías del panel («Arrastre aquí…», `CampoGaleria`) usa `--g600` y no el `--g500` del prototipo (`.subida`). Con `--g500` el contraste es 4,47:1 sobre `--g50` (en reposo) y 4,41:1 sobre `--v50` (al pasar el cursor), por debajo del 4,5:1 de RNF-08; con `--g600` es 7,02:1 y 6,94:1. Aplica a Noticias (DM-07) y a las galerías de DM-04 y DM-05, que ya lo usaban. El borde, el fondo, el tamaño y la disposición siguen el prototipo, y la prueba de axe no cambia ([20](20-prototipo-aprobado.md)). JG-24 no la revierte.
+
 ## Documentos no alineados con las reuniones 4 y 5
 
 Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los cambios del 29/09, del 11/10 ni del 13/10:

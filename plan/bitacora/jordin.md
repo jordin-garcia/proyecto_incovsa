@@ -177,3 +177,10 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 **José Daniel:** Jordin cambia en JG-24 el agrupamiento de entregas de `src/modulos/envios/opciones.ts` y el conteo de clientes de `src/componentes/picking/facturacion/OpcionEnvio.tsx` (RN-49, D-01); actualiza tu rama desde `develop` después de JG-24. Se confirmó el filtro por sede de la Bitácora (D-02, `specs/10`) y se conserva la rejilla de tarjetas de Facturación (D-06, RF-SL-07).
 **Carlos:** `specs/11` ahora dice que no se puede cambiar de sede un camión elegido en «Envío por camión» y que Gerencia y Soporte no pueden desactivar su propia cuenta (D-03 y D-04); lo implementa Jordin en JG-25. Según D-05 (`specs/16`, «Respaldos»), los secretos del VPS se guardan solo en el medio seguro de entrega de credenciales: tenlo en cuenta en CE-11 (Documento 5) y CE-12 (Anexo J).
 **Daniela:** en DM-07, DM-08, DM-09 y DM-11 el diseño es el del prototipo aunque `specs/05` lo describa de otra forma (decisión 89).
+
+## 2026-10-23 · DM-07 · Contraste del área de subida de las galerías
+
+- Hecho: se resolvió el bloqueo de DM-07 (#114). DM-07 vuelve a `estado: pendiente`, con la sección «Desbloqueo» en su tarea. La excepción quedó en `specs/18` y en `specs/20`, y en el paso 7 de JG-24 para que no se revierta.
+- Decisiones: Jordin decidió conservar `--g600` en el texto del área de subida de las galerías del panel (`CampoGaleria`), como excepción de contraste a la decisión 89. Con el `--g500` del prototipo queda en 4,47:1 sobre `--g50` y 4,41:1 sobre `--v50` (RNF-08 exige 4,5:1); con `--g600`, en 7,02:1 y 6,94:1. Lo demás del área sigue el prototipo. No cambia código ni pruebas: `develop` ya usa `--g600` desde DM-04.
+- Pendiente o aviso para otros:
+**Daniela:** DM-07 ya está desbloqueada. Actualiza `daniela/DM-07-noticias-panel` desde `develop` (cambiaron `plan/tareas/DM-07-noticias.md`, `specs/18` y `specs/20`), conserva `--g600` en el área de subida y completa B6–B11, con la batería E2E completa.

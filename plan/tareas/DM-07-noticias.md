@@ -5,8 +5,7 @@ persona: daniela
 responsable: Daniela Marín
 hito: E3
 prioridad: P1
-estado: bloqueada
-bloqueo: "Jordin debe resolver el contraste del área de subida del prototipo: su gris produce una violación seria de axe; reproducirlo contradice RNF-08 (decisión 89 y protocolo §C)."
+estado: pendiente
 depende_de: [DM-04]
 programada: 2026-10-22
 requisitos: [RF-SW-15, RF-SW-18, CU-07, CU-08]
@@ -64,3 +63,9 @@ La implementación permanece sin integrar en `daniela/DM-07-noticias-panel`, com
 [Evidencia del contraste](https://github.com/jordin-garcia/proyecto_incovsa/blob/c944942/pruebas-e2e/sitio/evidencias/DM-07/contraste-prototipo.json) y [avance, capturas y verificaciones](https://github.com/jordin-garcia/proyecto_incovsa/blob/c944942/pruebas-e2e/sitio/evidencias/DM-07/README.md).
 
 Para desbloquear: Jordin debe decidir cómo resolver el conflicto de diseño y accesibilidad. Después se retoma la rama de implementación, se incorpora esa decisión y se completan B6–B11, incluida la batería E2E completa, la revisión actualizada y los 14 controles obligatorios. Este registro de bloqueo solo modifica la tarea y la bitácora.
+
+## Desbloqueo · 23/10/2026
+
+Jordin decidió **conservar `--g600`** en el texto del área de subida de las galerías del panel (`CampoGaleria`), en reposo y al pasar el cursor. Con el `--g500` del prototipo el contraste es 4,47:1 sobre `--g50` y 4,41:1 sobre `--v50`; con `--g600` es 7,02:1 y 6,94:1 (RNF-08). Es una excepción de contraste a la decisión 89, registrada en `specs/18` y `specs/20`. El resto del área sigue el prototipo. La prueba de axe no cambia.
+
+Para terminar: retoma `daniela/DM-07-noticias-panel` actualizada desde `develop`, conserva `--g600` en el área de subida y completa B6–B11.
