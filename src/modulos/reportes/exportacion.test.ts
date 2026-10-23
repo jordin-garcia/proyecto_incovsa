@@ -176,6 +176,21 @@ it("RF-SL-38 / CAM-96: descarga los seis archivos con una sola hoja o un PDF tit
   }
 });
 
+it("RF-SL-38: el total del despacho conserva unidades y kilogramos cuando el resto es cero", async () => {
+  const linea = await prisma.lineaPreparacion.findFirstOrThrow();
+  await prisma.lineaPreparacion.update({ where: { id: linea.id }, data: { cantidadKg: "50.000" } });
+
+  const respuesta = await GET(solicitud("despacho", "xlsx"));
+  expect(respuesta.status).toBe(200);
+  const libro = XLSX.read(Buffer.from(await respuesta.arrayBuffer()), { type: "buffer" });
+  const filas = XLSX.utils.sheet_to_json<unknown[]>(libro.Sheets[libro.SheetNames[0]!]!, {
+    header: 1,
+    raw: false,
+    defval: "",
+  });
+  expect(filas).toContainEqual(["Total del periodo", "50", "2 unidades + 0 kg"]);
+});
+
 it("RF-SL-38 / RNF-08: la ruta rechaza sesiones, permisos y sedes no autorizadas", async () => {
   sesion = null;
   const sinSesion = await GET(solicitud("despacho", "xlsx"));

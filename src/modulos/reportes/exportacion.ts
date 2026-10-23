@@ -44,8 +44,7 @@ function textoUnidadesDespacho(fila: Despacho["filas"][number], incluirPesoConve
 }
 
 function textoTotalDespacho(despacho: Despacho) {
-  const conversion = `${textoUnidades(despacho.unidades)}${Number(despacho.restoKg) > 0 ? ` + ${fmt(despacho.restoKg)} kg` : ""}`;
-  return conversion;
+  return `${fmt(despacho.unidades)} unidades + ${fmt(despacho.restoKg)} kg`;
 }
 
 function indicadoresDespacho(despacho: Despacho) {
@@ -172,6 +171,16 @@ function cargarLogo() {
   return logoEnBase64;
 }
 
+let colorTextoPdf: Promise<string> | undefined;
+function cargarColorTextoPdf() {
+  colorTextoPdf ??= readFile(path.join(process.cwd(), "src/app/globals.css"), "utf8").then((css) => {
+    const color = css.match(/--color-g900:\s*([^;\s]+)/)?.[1];
+    if (!color) throw new Error("No se encontró el token --color-g900 del tema.");
+    return color;
+  });
+  return colorTextoPdf;
+}
+
 function tituloPdf(datos: DatosExportacion) {
   return tituloDe(datos);
 }
@@ -186,6 +195,7 @@ export async function crearPdf(datos: DatosExportacion): Promise<Buffer> {
   const tabla = tablaDe(datos);
   const titulo = tituloPdf(datos);
   const logo = await cargarLogo();
+  const colorTexto = await cargarColorTextoPdf();
   const filas = [
     tabla.encabezados.map((texto) => ({ text: texto, style: "cabeceraTabla" })),
     ...tabla.filas.map((fila) =>
@@ -229,7 +239,7 @@ export async function crearPdf(datos: DatosExportacion): Promise<Buffer> {
     pageSize: "A4",
     pageOrientation: "landscape",
     pageMargins: [32, 32, 32, 36],
-    defaultStyle: { font: "Figtree", fontSize: 8, color: "#1b2623" },
+    defaultStyle: { font: "Figtree", fontSize: 8, color: colorTexto },
     content: contenido,
     styles: {
       titulo: { font: "Figtree", fontSize: 18, bold: true, margin: [0, 0, 0, 5] },
