@@ -597,6 +597,16 @@ Al trasladar el prototipo se comprobó con axe que `--g500` sobre `--g50` da un 
 - La regla de permisos respeta la ruta exacta de imágenes públicas de disco de la decisión 78, que nunca sirve archivos en producción. La publicación de imágenes sigue protegida.
 - Jordin autorizó agregar `@stryker-mutator/core`, `@stryker-mutator/vitest-runner` y `lockfile-lint` como dependencias de desarrollo. Se fija `qs` 6.16.1 únicamente bajo `typed-rest-client`, dependencia de Stryker, porque la versión 6.15.1 fija de ese paquete tiene tres avisos moderados publicados y corregidos. No cambia el código de producción.
 
+## Decisiones de la auditoría del 22/10 (22/10/2026, JG-12)
+
+- **En diseño manda el prototipo** (decisión 89 de `specs/16`), por decisión de Jordin: en cómo se ve la aplicación, el prototipo aprobado manda sobre `specs/`, sin excepciones. `AGENTS.md`, `plan/protocolo.md` §C, `plan/convenciones.md` §7 y `plan/prompts/revision.md` se actualizaron.
+- **D-01, RN-49:** el nombre y el sector se comparan sin mayúsculas, tildes ni espacios sobrantes, como `claveRuta()` del prototipo ([12](12-reglas-de-negocio.md), [08](08-picking-ruta.md)). Antes se comparaban exactos (JC-04).
+- **D-02, Bitácora:** se confirma el filtro por sede de JC-06 ([10](10-picking-reportes.md)).
+- **D-03 y D-04, Configuración:** no se puede cambiar de sede un camión elegido en «Envío por camión», y Gerencia y Soporte no pueden desactivar su propia cuenta ([11](11-picking-configuracion.md)).
+- **D-05, RNF-09:** la configuración sin secretos se respalda en el repositorio, y los secretos del VPS en el medio seguro de entrega de credenciales ([16](16-arquitectura-y-tecnologia.md), "Respaldos").
+- **D-06, RF-SL-07:** las tarjetas de Facturación van en la rejilla del prototipo; «todo el ancho» se reescribió ([04](04-requerimientos-funcionales.md), [06](06-picking-facturacion.md)).
+- Las correcciones del código son de JG-23, JG-24 y JG-25 (`plan/auditorias/2026-10-22.md`).
+
 ## Documentos no alineados con las reuniones 4 y 5
 
 Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los cambios del 29/09, del 11/10 ni del 13/10:

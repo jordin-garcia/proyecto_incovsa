@@ -48,7 +48,7 @@ Catálogo único de requerimientos funcionales. La columna **Estado** compara ca
 | RF-SL-04 | **(13/10)** Desde Configuración se ven, crean, editan y eliminan los **camiones**. Ya no hay productos, clientes ni sectores | Modificado |
 | RF-SL-05 | **(13/10)** El facturador decide si cada pedido facturado va en un camión o lo recoge el cliente, arrastrándolo a una de las dos opciones de envío | Modificado |
 | RF-SL-06 | **(13/10)** La opción "Envío por camión" tiene listas desplegables para elegir el camión y el piloto de la sede | Modificado |
-| RF-SL-07 | **(13/10)** Facturación muestra cada pedido facturado del tablero en una tarjeta de todo el ancho: número, cliente, sector, total en kg y productos con su cantidad, sin asa de arrastre ni "x" | Modificado |
+| RF-SL-07 | **(13/10)** Facturación muestra cada pedido facturado del tablero en una tarjeta: número, cliente, sector, total en kg y productos con su cantidad, sin asa de arrastre ni "x". **(22/10)** Las tarjetas van en la rejilla del prototipo (decisión 89) | Modificado |
 | RF-SL-08 | La tabla empieza vacía y cada clic en el botón "+" agrega una fila | **Eliminado** (29/09) |
 | RF-SL-09 | Búsqueda de clientes en tiempo real al capturar | **Eliminado** (29/09) |
 | RF-SL-10 | Búsqueda de productos en tiempo real al capturar | **Eliminado** (29/09) |

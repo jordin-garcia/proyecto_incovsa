@@ -79,6 +79,7 @@ La columna "Pedido" se quitó el 13/10: la ruta ya no tiene un pedido aparte.
 | Detalle | Datos de la operación |
 
 - Se ve con el permiso de Reportes.
+- **Sedes (22/10, JG-06 y JC-06, confirmado por Jordin):** Gerencia y Soporte ven todos los registros. A un usuario con sedes asignadas se le ocultan los registros del picking que pertenecen a otra sede, por ejemplo los envíos, los camiones y los cambios de usuarios de otras sedes (RN-17). Los registros que no pertenecen a ninguna sede, como los inicios de sesión, los intentos fallidos, los bloqueos y las operaciones del sitio, se muestran completos.
 - Se filtra con el mismo periodo que las otras pestañas.
 - Qué registra está en [12-reglas-de-negocio.md](12-reglas-de-negocio.md).
 - **(16/10)** Botones **Excel** y **PDF**, como en Despacho ("Exportación", abajo).
