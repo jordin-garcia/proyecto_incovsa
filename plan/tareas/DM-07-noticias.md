@@ -53,3 +53,19 @@ npm run verificar
 npm run build
 npm run e2e -- pruebas-e2e/sitio/noticias.spec.ts
 ```
+
+## Bloqueo · 23/10/2026
+
+Daniela confirmó que queda pendiente consultar a Jordin. El área de subida del prototipo usa `--g500` (`#727372`, 13,5 px), que axe identifica con contraste 4,4:1 y severidad seria; exige 4,5:1. La implementación conserva `--g600`, que pasa axe. La decisión 89 y el protocolo §C obligan a consultar cuando seguir el diseño del prototipo haría fallar una prueba. No se autoriza una excepción ni se debilita axe en este PR.
+
+La implementación permanece sin integrar en `daniela/DM-07-noticias-panel`, commit `c944942`: panel, publicación, edición, eliminación, galerías y bitácora; página pública completa; permiso explícito del endpoint según JG-11. Las correcciones de avisos, geometría de galería y columna de imagen pasaron las dos E2E de escritorio; las seis pruebas de integración de Noticias también pasaron. La batería general se interrumpió por petición de Daniela el 22/10 y todavía no tiene un resultado final; la tarea no está hecha.
+
+[Evidencia del contraste](https://github.com/jordin-garcia/proyecto_incovsa/blob/c944942/pruebas-e2e/sitio/evidencias/DM-07/contraste-prototipo.json) y [avance, capturas y verificaciones](https://github.com/jordin-garcia/proyecto_incovsa/blob/c944942/pruebas-e2e/sitio/evidencias/DM-07/README.md).
+
+Para desbloquear: Jordin debe decidir cómo resolver el conflicto de diseño y accesibilidad. Después se retoma la rama de implementación, se incorpora esa decisión y se completan B6–B11, incluida la batería E2E completa, la revisión actualizada y los 14 controles obligatorios. Este registro de bloqueo solo modifica la tarea y la bitácora.
+
+## Desbloqueo · 23/10/2026
+
+Jordin decidió **conservar `--g600`** en el texto del área de subida de `CampoGaleria`, en reposo y al pasar el cursor. Con el `--g500` del prototipo el contraste es 4.46:1 sobre `--g50` y 4.41:1 sobre `--v50`; con `--g600` es 7.02:1 y 6.94:1 (RNF-08). Es una excepción de contraste a la decisión 89, solo para el color del texto, registrada en `specs/18` y `specs/20`. La prueba de axe no cambia.
+
+Para terminar: retoma `daniela/DM-07-noticias-panel` actualizada desde `develop`, conserva `--g600` en el área de subida y completa B6–B11. El estado al pasar el cursor y el relleno de `CampoGaleria` (componente compartido) los corrige Jordin en JG-24; no los cambies en esta rama.
