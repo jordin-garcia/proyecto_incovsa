@@ -7,14 +7,14 @@ hito: E3
 prioridad: P1
 estado: pendiente
 depende_de: [DM-02, DM-04]
-programada: 2026-10-21
+programada: 2026-10-23
 requisitos: [RF-SW-06, RF-SW-15, RF-SW-19, RF-SW-22, RNF-05, CU-09]
 pantallas: [sitio.js › contacto, sedes; panel.js › contacto; base.js › paises, nombrePais, GUATEMALA, MAPAS]
 ---
 
 # DM-08 · Contacto, formulario de solicitudes e información de contacto
 
-**Responsable:** Daniela Marín · **Hito:** E3 · **Prioridad:** P1 · **Programada:** mié 21/10 · **Depende de:** DM-02, DM-04
+**Responsable:** Daniela Marín · **Hito:** E3 · **Prioridad:** P1 · **Programada:** vie 23/10 · **Depende de:** DM-02, DM-04
 
 ## Objetivo
 La página de **Contacto** con el formulario de solicitudes, quejas o reclamos (que **solo se guarda en el sistema**) y la sección **Información de contacto** del panel.

@@ -7,14 +7,14 @@ hito: E3
 prioridad: P1
 estado: pendiente
 depende_de: [DM-04]
-programada: 2026-10-20
+programada: 2026-10-22
 requisitos: [RF-SW-15, RF-SW-18, CU-07, CU-08]
 pantallas: [panel.js › noticias; sitio.js › noticias]
 ---
 
 # DM-07 · Noticias en el panel y en el sitio
 
-**Responsable:** Daniela Marín · **Hito:** E3 · **Prioridad:** P1 · **Programada:** mar 20/10 · **Depende de:** DM-04
+**Responsable:** Daniela Marín · **Hito:** E3 · **Prioridad:** P1 · **Programada:** jue 22/10 · **Depende de:** DM-04
 
 ## Objetivo
 Crear, editar y **eliminar** noticias desde el panel, y la página pública de Noticias con cada noticia completa a todo el ancho.
