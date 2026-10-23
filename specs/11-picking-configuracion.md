@@ -31,7 +31,7 @@ Los usuarios del sistema de picking se administran **aquí**, en la pestaña "Us
 - Campos del usuario: nombre completo, nombre de usuario, **contraseña** (al crearlo, 13/10), **rol** (texto libre), **sedes** a las que tiene acceso (casillas), **permisos** del picking (casillas), estado y correo opcional.
 - El nombre de usuario es único **dentro del picking**. Se puede usar el **mismo nombre de usuario** que tiene una cuenta del sitio, para que la persona entre a los dos sistemas con el mismo usuario (13/10, RN-54). La ventana del usuario no muestra una nota con esta regla debajo del campo "Usuario" (15/10).
 - Se pueden **crear, editar y eliminar** usuarios, y **agregar, editar o revocar** sus permisos y sedes.
-- **(22/10)** Gerencia y Soporte no pueden eliminar ni **desactivar** su propia cuenta: «No puede eliminar su propia cuenta.» (prototipo) y «No puede desactivar su propia cuenta.». Al eliminar o desactivar un piloto, se quita de «Envío por camión» si estaba elegido, como en el prototipo.
+- **(22/10)** Gerencia y Soporte no pueden eliminar ni **desactivar** su propia cuenta: «No puede eliminar su propia cuenta.» (prototipo) y «No puede desactivar su propia cuenta.». Al eliminar un piloto, se quita de «Envío por camión» si estaba elegido, como en el prototipo (`panel.js` › `eliminarUsuario()`).
 - Los pilotos son los usuarios cuyo rol es **"Piloto"**.
 - Desde aquí, Gerencia y Soporte **restablecen la contraseña** de un usuario que se lo pida, escribiendo la nueva contraseña (RF-SL-48). No hay restablecimiento por correo.
 - El modelo completo y el catálogo de permisos están en [03-roles-y-accesos.md](03-roles-y-accesos.md).

@@ -31,7 +31,7 @@ Corregir los hallazgos del paso 5 de la auditoría del 22/10 y los del paso 4 qu
 2. **Configuración de producción (H-49, H-50 y H-37):** `:produccion` como imagen por omisión, el límite de 27 MB registrado en `specs/16` y `specs/18`, y rechazar en producción los secretos de ejemplo («cambie-esto…»).
 3. **Despliegue y respaldos (H-52 a H-55):** pasar `github.ref` por `env`, quitar el disparador de `ce-06-prueba` y borrar la rama, preparar la poda para una organización, y cubrir el modo `docker compose exec` de los respaldos en una verificación automática.
 4. **CI (H-28, H-27 y H-40):** `prisma migrate diff --exit-code` en la CI; una prueba para las variables de `.env.example` y los nombres de los scripts; y que el veredicto acepte solo el comentario del flujo de `revision-claude`.
-5. **Configuración (H-41 a H-45 y H-36):** probar con `consultarOpciones` que un camión eliminado desaparece de Facturación; al eliminar o desactivar un piloto, limpiar su selección en «Envío por camión» como el prototipo; documentar la excepción de Semgrep de las acciones de usuarios; probar los registros de un usuario eliminado en Reportes; y `normalizarRol` y los mensajes en `crear-admin`. Además, bloquear el cambio de sede de un camión elegido en «Envío por camión» (D-03) y que Gerencia o Soporte desactiven su propia cuenta (D-04), como dice `specs/11`, con sus pruebas.
+5. **Configuración (H-41 a H-45 y H-36):** probar con `consultarOpciones` que un camión eliminado desaparece de Facturación; al eliminar un piloto, limpiar su selección en «Envío por camión» como el prototipo; documentar la excepción de Semgrep de las acciones de usuarios; probar los registros de un usuario eliminado en Reportes; y `normalizarRol` y los mensajes en `crear-admin`. Además, bloquear el cambio de sede de un camión elegido en «Envío por camión» (D-03) y que Gerencia o Soporte desactiven su propia cuenta (D-04), como dice `specs/11`, con sus pruebas.
 6. **D-05:** dejar en `evidencia/CE-07/README.md` la nota para el Documento 5 (CE-11) de cómo rehacer el `.env` del VPS desde la plantilla, según `specs/16` («Respaldos»).
 7. En el `## Resultado` de cada tarea corregida, agregar `### Correcciones de la auditoría (2026-10-22)`. Su estado no cambia.
 
@@ -48,13 +48,14 @@ Corregir los hallazgos del paso 5 de la auditoría del 22/10 y los del paso 4 qu
 2. **RNF-13 (H-47):** el flujo falla si el primer evento de `/api/tiempo-real` no llega a través de Caddy en pocos segundos.
 3. **JG-03, criterio 1 (H-28):** la CI falla si `schema.prisma` y las migraciones no coinciden (comprobado con un PR de prueba que se cierra sin integrar).
 4. **RF-SL-04 (H-41):** una prueba con `consultarOpciones` comprueba que un camión eliminado ya no se ofrece en Facturación.
-5. **RF-SL-57 (H-43, H-45):** al eliminar o desactivar un piloto, su selección en «Envío por camión» se limpia, y sus registros siguen en Reportes con su nombre.
+5. **RF-SL-57 (H-43, H-45):** al eliminar un piloto, su selección en «Envío por camión» se limpia, y sus registros siguen en Reportes con su nombre.
 6. **RNF-09 (H-55):** el modo `docker compose exec` del respaldo y la restauración se ejecuta en una verificación automática.
 7. Cada hallazgo restante (H-27, H-36, H-37, H-40, H-42, H-44 y H-49 a H-54) tiene su corrección y, donde se puede, una prueba que lo habría detectado.
 8. **D-03 y D-04:** cambiar de sede un camión elegido en «Envío por camión» se rechaza con el aviso de `specs/11`, y Gerencia o Soporte no pueden desactivar su propia cuenta («No puede desactivar su propia cuenta.»).
+9. **RNF-09 (D-05):** `evidencia/CE-07/README.md` explica cómo rehacer el `.env` y la configuración de `rclone` del VPS desde la plantilla, y no contiene ningún secreto (lo comprueba el trabajo `secretos` de la CI).
 
 ## Pruebas obligatorias
-- Una prueba o verificación por hallazgo (criterios 1 a 8)
+- Una prueba o verificación por hallazgo (criterios 1 a 9)
 - La batería completa de navegador si se toca algo que se ve en la aplicación (protocolo B7)
 
 ## Verificación

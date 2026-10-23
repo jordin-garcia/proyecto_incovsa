@@ -123,7 +123,7 @@ Medidas que el equipo adoptó el 12/10/2026 para que la aplicación sea segura y
 - Frecuencia: **diaria, en la noche** (`pg_dump` de la base). Se conservan **7 diarios y 4 semanales**.
 - Destino: fuera del servidor, en un bucket **privado** de Cloudflare R2, distinto del de las imágenes.
 - **Cómo (16/10):** una tarea de `cron` del VPS ejecuta `pg_dump` dentro del contenedor de PostgreSQL y sube el archivo a R2 con `rclone`. El mismo script borra los respaldos que sobran (conserva 7 diarios y 4 semanales). La credencial de R2 del VPS solo tiene acceso a ese bucket. No se agrega un cifrado propio: R2 cifra lo que guarda, y una llave de cifrado perdida dejaría los respaldos inservibles.
-- **Configuración (22/10, RNF-09):** la configuración sin secretos (`docker-compose.yml`, `Caddyfile` y `.env.produccion.example`) se respalda en el repositorio. Los secretos del `.env` del VPS y la configuración de `rclone` se guardan solo en el medio seguro que el coordinador acuerde con INCOVSA para entregar las credenciales (Anexo J, CE-12), nunca en las computadoras del equipo (decisión 70). El Documento 5 (CE-11) explica cómo rehacer el `.env` desde la plantilla con esos valores.
+- **Configuración (22/10, RNF-09):** la configuración sin secretos (`docker-compose.yml`, `Caddyfile` y `.env.produccion.example`) se respalda en el repositorio. La copia de respaldo de los secretos del `.env` del VPS y de la configuración de `rclone` se guarda solo en el medio seguro que el coordinador acuerde con INCOVSA para entregar las credenciales (Anexo J, CE-12), nunca en las computadoras del equipo (decisión 70). El Documento 5 (CE-11) explica cómo rehacer el `.env` desde la plantilla con esos valores.
 
 ### Mantenibilidad
 
