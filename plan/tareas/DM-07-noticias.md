@@ -5,7 +5,8 @@ persona: daniela
 responsable: Daniela Marín
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: bloqueada
+bloqueo: "Jordin debe resolver el contraste del área de subida del prototipo: su gris produce una violación seria de axe; reproducirlo contradice RNF-08 (decisión 89 y protocolo §C)."
 depende_de: [DM-04]
 programada: 2026-10-22
 requisitos: [RF-SW-15, RF-SW-18, CU-07, CU-08]
@@ -53,3 +54,13 @@ npm run verificar
 npm run build
 npm run e2e -- pruebas-e2e/sitio/noticias.spec.ts
 ```
+
+## Bloqueo · 23/10/2026
+
+Daniela confirmó que queda pendiente consultar a Jordin. El área de subida del prototipo usa `--g500` (`#727372`, 13,5 px), que axe identifica con contraste 4,4:1 y severidad seria; exige 4,5:1. La implementación conserva `--g600`, que pasa axe. La decisión 89 y el protocolo §C obligan a consultar cuando seguir el diseño del prototipo haría fallar una prueba. No se autoriza una excepción ni se debilita axe en este PR.
+
+La implementación permanece sin integrar en `daniela/DM-07-noticias-panel`, commit `c944942`: panel, publicación, edición, eliminación, galerías y bitácora; página pública completa; permiso explícito del endpoint según JG-11. Las correcciones de avisos, geometría de galería y columna de imagen pasaron las dos E2E de escritorio; las seis pruebas de integración de Noticias también pasaron. La batería general se interrumpió por petición de Daniela el 22/10 y todavía no tiene un resultado final; la tarea no está hecha.
+
+[Evidencia del contraste](https://github.com/jordin-garcia/proyecto_incovsa/blob/c944942/pruebas-e2e/sitio/evidencias/DM-07/contraste-prototipo.json) y [avance, capturas y verificaciones](https://github.com/jordin-garcia/proyecto_incovsa/blob/c944942/pruebas-e2e/sitio/evidencias/DM-07/README.md).
+
+Para desbloquear: Jordin debe decidir cómo resolver el conflicto de diseño y accesibilidad. Después se retoma la rama de implementación, se incorpora esa decisión y se completan B6–B11, incluida la batería E2E completa, la revisión actualizada y los 14 controles obligatorios. Este registro de bloqueo solo modifica la tarea y la bitácora.
