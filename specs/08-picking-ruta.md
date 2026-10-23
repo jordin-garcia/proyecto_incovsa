@@ -44,7 +44,7 @@ Muestra al piloto los clientes a los que debe ir en su ruta y registra que se en
 | Sector | Sector del cliente, tal como viene en `Contacto/Ciudad` |
 | Total | Suma en kg de todos los productos de ese cliente en la ruta |
 
-Hay **una fila por cliente**. Si un cliente tiene dos o más pedidos facturados en la misma ruta, van en **una sola fila**, con la suma de sus kg. Como ya no hay base de clientes, dos pedidos facturados son del mismo cliente cuando tienen el mismo nombre y el mismo sector (RN-49).
+Hay **una fila por cliente**. Si un cliente tiene dos o más pedidos facturados en la misma ruta, van en **una sola fila**, con la suma de sus kg. Como ya no hay base de clientes, dos pedidos facturados son del mismo cliente cuando tienen el mismo nombre y el mismo sector (RN-49). **(22/10)** Se comparan sin distinguir mayúsculas ni tildes y sin espacios al inicio ni al final, como `norm()` y `claveRuta()` del prototipo (un nombre o un sector vacío cuenta como «Sin nombre» o «Sin sector»), y la fila muestra el nombre y el sector del primer pedido facturado.
 
 No se muestran la dirección ni el teléfono.
 

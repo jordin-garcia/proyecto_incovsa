@@ -576,7 +576,7 @@ Al trasladar el prototipo se comprobó con axe que `--g500` sobre `--g50` da un 
 ## Opciones de envío y envío a Bodega (19/10/2026, JC-04)
 
 - En las tarjetas del tablero de Facturación, **Enter** selecciona y **Espacio** levanta y suelta la tarjeta para moverla con las flechas, porque así el arrastre funciona con teclado (RF-SL-63). En el prototipo, las dos teclas seleccionan.
-- RN-49 agrupa las filas de entrega de una ruta solo si el nombre del cliente y el sector son exactamente iguales a los del archivo (`specs/12`). Falta que el coordinador confirme si deben compararse sin mayúsculas, tildes ni espacios sobrantes, como hace `claveRuta()` en el prototipo.
+- RN-49 agrupa las filas de entrega de una ruta solo si el nombre del cliente y el sector son exactamente iguales a los del archivo (`specs/12`). Falta que el coordinador confirme si deben compararse sin mayúsculas, tildes ni espacios sobrantes, como hace `claveRuta()` en el prototipo. **Resuelto el 22/10:** ver «Decisiones de la auditoría del 22/10».
 
 ## Agente en la nube de Cursor en la revisión con Claude (19/10/2026, JG-08)
 
@@ -596,6 +596,18 @@ Al trasladar el prototipo se comprobó con axe que `--g500` sobre `--g50` da un 
 - RNF-16 usa CSP con nonce por respuesta y renderizado dinámico para hidratar Next.js; scripts externos y scripts en línea ajenos quedan bloqueados. Solo los estilos dinámicos de los componentes necesitan `unsafe-inline`. Se conservan Maps, Drive y el origen HTTPS de imágenes configurado.
 - La regla de permisos respeta la ruta exacta de imágenes públicas de disco de la decisión 78, que nunca sirve archivos en producción. La publicación de imágenes sigue protegida.
 - Jordin autorizó agregar `@stryker-mutator/core`, `@stryker-mutator/vitest-runner` y `lockfile-lint` como dependencias de desarrollo. Se fija `qs` 6.16.1 únicamente bajo `typed-rest-client`, dependencia de Stryker, porque la versión 6.15.1 fija de ese paquete tiene tres avisos moderados publicados y corregidos. No cambia el código de producción.
+
+## Decisiones de la auditoría del 22/10 (22/10/2026, JG-12)
+
+- **En diseño manda el prototipo** (decisión 89 de `specs/16`), por decisión de Jordin: en cómo se ve la aplicación, el prototipo aprobado manda sobre `specs/`, sin excepciones. `AGENTS.md`, `plan/protocolo.md` §C, `plan/convenciones.md` §7 y `plan/prompts/revision.md` se actualizaron.
+- **D-01, RN-49:** el nombre y el sector se comparan sin distinguir mayúsculas ni tildes y sin espacios al inicio ni al final, como `norm()` y `claveRuta()` del prototipo (un nombre o un sector vacío cuenta como «Sin nombre» o «Sin sector»), en la tabla de Ruta y al contar los clientes en Facturación y en Bodega ([12](12-reglas-de-negocio.md), [08](08-picking-ruta.md)). Antes se comparaban exactos en la Ruta y en Facturación (JC-04) y sin quitar tildes en Bodega (JM-03).
+- **D-02, Bitácora:** se confirma el filtro por sede de JC-06, descrito tal como está implementado ([10](10-picking-reportes.md)).
+- **D-03 y D-04, Configuración:** no se puede cambiar de sede un camión elegido en «Envío por camión», y Gerencia y Soporte no pueden desactivar su propia cuenta ([11](11-picking-configuracion.md)).
+- **Precisión de H-43 (prototipo):** al eliminar un piloto, se quita de «Envío por camión» si estaba elegido, como en `panel.js` › `eliminarUsuario()` ([11](11-picking-configuracion.md)).
+- **D-05, RNF-09:** la configuración sin secretos se respalda en el repositorio, y la copia de respaldo de los secretos del VPS en el medio seguro de entrega de credenciales ([16](16-arquitectura-y-tecnologia.md), "Respaldos").
+- **D-06, RF-SL-07:** las tarjetas de Facturación van en la rejilla del prototipo ([04](04-requerimientos-funcionales.md), [06](06-picking-facturacion.md)).
+- Las precisiones de diseño anteriores que se apartan del prototipo, como el `--g600` de los textos secundarios (JG-05, JG-06 y JM-08) y la etiqueta «RUTA» sin opacidad, quedan sujetas a la decisión 89. JG-24 las revisa y le pregunta a Jordin antes de cualquier cambio que haga fallar axe (RNF-08). Mientras tanto, las tareas nuevas siguen el prototipo.
+- Las correcciones del código son de JG-23, JG-24 y JG-25 (`plan/auditorias/2026-10-22.md`).
 
 ## Documentos no alineados con las reuniones 4 y 5
 

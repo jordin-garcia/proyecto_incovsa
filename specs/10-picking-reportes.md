@@ -79,6 +79,11 @@ La columna "Pedido" se quitó el 13/10: la ruta ya no tiene un pedido aparte.
 | Detalle | Datos de la operación |
 
 - Se ve con el permiso de Reportes.
+- **Sedes (22/10, JC-06, confirmado por Jordin):** Gerencia y Soporte ven todos los registros. A los demás se les muestran, de la **sede que consultan** en el selector (RN-17):
+  - todas las operaciones del sitio y las cinco de acceso: «Inicio de sesión», «Intento de acceso fallido», «Intento fallido de inicio de sesión», «Bloqueo de usuario» y «Bloqueo de IP»;
+  - del picking, solo los registros cuya sede es la consultada (los envíos y lo que guarda una sola sede);
+  - los cambios de un usuario del picking solo si todas las sedes relacionadas con ese usuario son la consultada; si mezclan esa sede con otra, se ocultan.
+  - El resto de los registros del picking no se muestra.
 - Se filtra con el mismo periodo que las otras pestañas.
 - Qué registra está en [12-reglas-de-negocio.md](12-reglas-de-negocio.md).
 - **(16/10)** Botones **Excel** y **PDF**, como en Despacho ("Exportación", abajo).
