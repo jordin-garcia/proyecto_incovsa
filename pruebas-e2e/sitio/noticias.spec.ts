@@ -99,10 +99,15 @@ test("RF-SW-18 / RF-SW-15 / RNF-08: estados vacíos y formulario accesibles sin 
   await captura(page, "panel-vacio");
   await page.getByRole("button", { name: "Nueva noticia", exact: true }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
+  const subida = page.getByRole("dialog").getByRole("button", { name: /Arrastre aquí/ });
+  await expect(subida).toHaveCSS("padding", "16px");
+  await expect(subida).toHaveCSS("font-size", "13.5px");
   await comprobarAxe(page);
   await captura(page, "nueva");
   await page.getByRole("button", { name: "Guardar", exact: true }).click();
   await expect(page.getByText("Escriba el título.", { exact: true })).toBeVisible();
+  await expect(page.getByRole("status")).toContainText("Escriba el título.");
+  await expect(page.getByRole("dialog").locator('[role="alert"]')).toHaveCount(0);
   await captura(page, "error");
 });
 test("RF-SW-18 / RN-56 / RN-39: crea, edita y elimina con confirmación; texto completo y sin desbordamiento", async ({
@@ -122,6 +127,9 @@ test("RF-SW-18 / RN-56 / RN-39: crea, edita y elimina con confirmación; texto c
   await expect(page.getByText("Agregue al menos una imagen.", { exact: true })).toBeVisible();
   const buffer = await readFile("public/marca/foto-equipo.webp");
   await dialogo.locator('input[type="file"]').setInputFiles({ name: "equipo.webp", mimeType: "image/webp", buffer });
+  const miniatura = dialogo.locator('[data-galeria="Noticia"] figure');
+  await expect(miniatura).toHaveCSS("aspect-ratio", "4 / 3");
+  await expect(miniatura.locator("img")).toHaveCSS("display", "block");
   await dialogo.getByRole("button", { name: "Guardar", exact: true }).click();
   await expect(dialogo).toHaveCount(0);
   const fila = page.getByRole("row").filter({ hasText: titulo });

@@ -36,3 +36,33 @@ Cada enlace agrupa teléfono (390 px), tableta (768 px) y escritorio (1440 px).
 ## Revisión independiente
 
 El revisor leyó la tarea, su contexto, servicios, acciones, ruta multipart, formulario, pruebas y capturas de los tres tamaños, siguiendo `plan/prompts/revision.md`. No modificó archivos ni ejecutó pruebas en paralelo. [Veredicto: LISTO, sin hallazgos de corrección ni opcionales](revision.md).
+
+## Verificación local · 22/10/2026
+
+Sobre `develop` con JC-06 y JM-04 integradas:
+
+- `node scripts/tareas.mjs --validar`: plan válido, 63 tareas.
+- `npm run verificar`: formato, lint y tipos aprobados; **345 pruebas en 39 archivos**, todas aprobadas.
+- `npm run build`: compilación, tipos y generación de páginas correctas; incluye `/noticias`, `/panel/noticias` y `/panel/noticias/publicar`.
+- `npm run e2e -- pruebas-e2e/sitio/noticias.spec.ts --workers=1`: **6 aprobadas**, sin reintentos, con axe y capturas en los tres tamaños.
+- `node --test scripts/design-system.test.mjs`: **3 aprobadas**, sin omisiones.
+- `node scripts/archivos-protegidos.mjs InAlexa`: sin archivos protegidos no permitidos, 63 archivos revisados en el commit de implementación. `.codex/config.toml` se conserva fuera del PR.
+- Next-devtools, `get_errors`: `configErrors: []`, `sessionErrors: []` al recorrer Noticias. La consola del recorrido público solo registra el 404 de `/favicon.ico`, que tampoco existe en `origin/develop`; no se modifica el layout ni se crea una imagen fuera del alcance.
+
+## Pausa solicitada por Daniela · 22/10/2026
+
+Se detuvo la suite completa y sus procesos por petición expresa de Daniela. **No hay resultado final de la suite general ni PR abierto. La tarea permanece pendiente.** Antes de la pausa, el despacho de Bodega falló inicialmente y pasó al reintentar el grupo; Reportes en teléfono agotó inicialmente los 30 segundos. No se modificaron pruebas ni código de esos módulos. El equipo tenía aproximadamente 500 MB de memoria física libre. Debe repetirse la suite completa antes del cierre.
+
+Rama: `daniela/DM-07-noticias-panel`; implementación y 48 capturas en el commit `c206720`. Este resumen de verificación permanece como cambio local. También hay capturas ajenas regeneradas por la suite, que deben excluirse del PR. Los cambios de capturas que ya existían antes de DM-07 están conservados en el stash «Capturas locales previas a DM-07». `.codex/config.toml` sigue intacto y fuera de los commits.
+
+Para retomar: completar B7 (suite general y diagnóstico de fallos persistentes), actualizar esta evidencia, completar B9 (Resultado de la tarea y bitácora), validar el cierre y seguir B10/B11 hasta integrar en `develop`. No se debe declarar terminada ni omitir verificaciones pendientes.
+
+## Reanudación y decisión pendiente · 23/10/2026
+
+Se incorporó `origin/develop` en `5046267`, con JG-11 y JG-12. Se instaló con `npm ci` sin cambiar dependencias ni el lockfile; la base local no tenía migraciones pendientes. La ruta POST ahora exige explícitamente `sit.noticias` y la prueba invoca el endpoint real.
+
+La revisión según la decisión 89 encontró tres diferencias de diseño: errores inline en vez del primer aviso flotante, dimensiones de galería y ancho de la primera columna. Se comprobaron en rojo y se corrigieron únicamente en Noticias. Las dos E2E de escritorio pasaron después de los ajustes, con axe y las aserciones originales conservadas. Falta repetir los demás tamaños, la verificación general y completar el cierre tras resolver el bloqueo.
+
+**Bloqueo de diseño y accesibilidad:** el gris `--g500` del área de subida del prototipo produce una violación seria de axe: contraste 4,4:1, inferior a 4,5:1. [Evidencia reproducida contra el prototipo](contraste-prototipo.json). La implementación conserva `--g600`, que pasa axe. El protocolo §C y la decisión 89 requieren consultar cuando seguir el diseño haría fallar una prueba. Daniela confirmó que la consulta a Jordin queda pendiente. No se cambia el prototipo, las especificaciones protegidas ni el criterio de axe sin esa decisión; el código no se integra.
+
+Los cambios de capturas preexistentes y los regenerados durante la pausa están conservados en stashes identificados. `.codex/config.toml` sigue fuera de los commits. La implementación permanece en `daniela/DM-07-noticias-panel`; el registro de bloqueo se tramita en un PR separado que solo modifica la tarea y la bitácora.

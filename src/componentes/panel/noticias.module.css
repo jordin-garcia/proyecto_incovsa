@@ -3,8 +3,65 @@
   margin: 0;
   border: 0;
 }
-.campos [data-galeria] > div:empty {
+.campos [data-galeria] > div:first-child:empty {
   display: none;
+}
+.campos [data-galeria] {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-prototipo-3);
+}
+.campos [data-galeria] > div:first-child {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 10px;
+}
+.campos [data-galeria] figure {
+  width: auto;
+  height: auto;
+  margin: 0;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-prototipo-1);
+  border-color: var(--g150);
+  background: var(--g50);
+}
+.campos [data-galeria] figure img {
+  display: block;
+}
+.campos [data-galeria] figure > span:first-of-type {
+  top: 6px;
+  left: 6px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: var(--radius-prototipo-5);
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--v950) 80%, transparent);
+  font: 700 11.5px/1 var(--f-mono);
+}
+.campos [data-galeria] figure > span:last-child {
+  right: 5px;
+  bottom: 5px;
+}
+.campos [data-galeria] figure button svg {
+  width: 16px;
+  height: 16px;
+}
+.campos [data-galeria] figure button {
+  min-height: 28px;
+  padding: 0;
+}
+.campos [data-galeria] > button {
+  padding: 16px;
+  font-size: 13.5px;
+}
+.campos [data-galeria] > p {
+  font-size: 13.5px;
+  color: var(--g500);
+}
+.columnaImagen {
+  width: 84px;
 }
 .lista {
   margin-top: 18px;
@@ -14,7 +71,7 @@
   height: 46px;
 }
 .miniatura img {
-  border-radius: var(--radius-prototipo-1);
+  border-radius: var(--radius-prototipo-2);
 }
 .descripcion {
   font-size: 13.5px;

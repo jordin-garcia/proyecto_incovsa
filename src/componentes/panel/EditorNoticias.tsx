@@ -49,32 +49,42 @@ function FormularioNoticia({
   return (
     <form
       onSubmit={(evento) => {
-        void handleSubmit(async (datos) => {
-          if (bloqueo.current) return;
-          if (!imagenes.length) {
-            mensaje("Agregue al menos una imagen.", "error");
-            return;
-          }
-          bloqueo.current = true;
-          ocupar(true);
-          alPublicar(true);
-          try {
-            const resultado = await publicarGaleria("noticias", { ...datos, id: noticia?.id }, imagenes);
-            if (!resultado.ok) {
-              mensaje(resultado.error, "error");
+        void handleSubmit(
+          async (datos) => {
+            if (bloqueo.current) return;
+            if (!imagenes.length) {
+              mensaje("Agregue al menos una imagen.", "error");
               return;
             }
-            alGuardar();
-            cerrar();
-            router.refresh();
-          } catch {
-            mensaje("No se pudo completar la operación. Inténtelo de nuevo.", "error");
-          } finally {
-            bloqueo.current = false;
-            ocupar(false);
-            alPublicar(false);
-          }
-        })(evento);
+            bloqueo.current = true;
+            ocupar(true);
+            alPublicar(true);
+            try {
+              const resultado = await publicarGaleria("noticias", { ...datos, id: noticia?.id }, imagenes);
+              if (!resultado.ok) {
+                mensaje(resultado.error, "error");
+                return;
+              }
+              alGuardar();
+              cerrar();
+              router.refresh();
+            } catch {
+              mensaje("No se pudo completar la operación. Inténtelo de nuevo.", "error");
+            } finally {
+              bloqueo.current = false;
+              ocupar(false);
+              alPublicar(false);
+            }
+          },
+          (errores) => {
+            mensaje(
+              errores.titulo?.message ??
+                errores.texto?.message ??
+                "No se pudo completar la operación. Inténtelo de nuevo.",
+              "error",
+            );
+          },
+        )(evento);
       }}
     >
       <div className="modal-cuerpo">
@@ -86,12 +96,10 @@ function FormularioNoticia({
           <label className="campo">
             <span>Título</span>
             <Input {...register("titulo")} autoFocus maxLength={200} aria-invalid={!!errors.titulo} />
-            {errors.titulo && <span role="alert">{errors.titulo.message}</span>}
           </label>
           <label className="campo">
             <span>Texto</span>
             <Textarea {...register("texto")} rows={7} aria-invalid={!!errors.texto} />
-            {errors.texto && <span role="alert">{errors.texto.message}</span>}
           </label>
         </fieldset>
       </div>
@@ -131,7 +139,7 @@ export function EditorNoticias({ noticias }: { noticias: NoticiaPublica[] }) {
             <table className="tabla">
               <thead>
                 <tr>
-                  <th aria-label="Imagen" />
+                  <th className={noticiasEstilos.columnaImagen} aria-label="Imagen" />
                   <th>Título</th>
                   <th>Fecha</th>
                   <th aria-label="Acciones" />

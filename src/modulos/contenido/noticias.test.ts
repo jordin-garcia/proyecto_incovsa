@@ -10,6 +10,7 @@ vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 import { publicarNoticia, eliminarNoticia } from "./acciones-noticias";
 import { leerNoticiasSitio, leerNoticiasPanel } from "./noticias";
 import { recibirNoticia } from "./multipart-noticias";
+import { POST } from "@/app/panel/noticias/publicar/route";
 const sesion: SesionActual = {
   sistema: "sitio",
   usuario: { id: "noticias-prueba", usuario: "noticias", nombre: "Prueba", rol: "Editor" },
@@ -155,7 +156,7 @@ it("RF-SW-25 / RNF-05: la ruta multipart exige permiso y origen propio antes de 
     new Request("http://localhost/panel/noticias/publicar", { method: "POST", headers: { origin }, body });
   for (const actual of [null, { ...sesion, permisos: [] }, { ...sesion, sistema: "picking" as const }]) {
     estado.sesion = actual;
-    expect((await recibirNoticia(request("http://localhost"))).status).toBe(403);
+    expect((await POST(request("http://localhost"))).status).toBe(403);
   }
   estado.sesion = sesion;
   expect((await recibirNoticia(request("http://ajena.invalid"))).status).toBe(403);
@@ -171,7 +172,7 @@ it("RF-SW-25 / RNF-05: la ruta multipart exige permiso y origen propio antes de 
     ).status,
   ).toBe(400);
   expect(await prisma.noticia.count()).toBe(0);
-  const respuesta = await recibirNoticia(request("http://localhost", formulario(campos, [await imagen()])));
+  const respuesta = await POST(request("http://localhost", formulario(campos, [await imagen()])));
   expect(respuesta.status).toBe(200);
   const datos = (await respuesta.json()) as { datos: { id: number } };
   expect((await eliminarNoticia(datos.datos.id)).ok).toBe(true);
