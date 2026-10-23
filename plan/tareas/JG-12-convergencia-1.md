@@ -64,7 +64,7 @@ node scripts/tareas.mjs --hoy
   - la tabla ✅/⚠️/❌ de los 120 requisitos que corresponden a lo integrado (107 ✅ y 13 ⚠️) y de los 25 de tareas pendientes (❌, todos con tarea y fecha);
   - las diferencias con el prototipo;
   - las tareas creadas y las fechas que cambiaron.
-  - Las capturas de Bodega, la única pantalla con diferencias, están en `plan/convergencia/2026-10-22/`.
+  - Las capturas de Bodega, la única pantalla con diferencias de diseño, están en `plan/convergencia/2026-10-22/`.
 - **Auditoría §E2:** [`plan/auditorias/2026-10-22.md`](../auditorias/2026-10-22.md). Es la primera del proyecto y cubre todas las tareas integradas, salvo las `XX-01` y JG-09. Tiene 55 hallazgos, ninguno Alto, 16 Medios y 39 Bajos, y 6 ❓ decisiones pendientes (D-01 a D-06). Se hizo con cinco revisiones en contexto limpio, una por área. El coordinador comprobó los hallazgos Medios y recorrió con Playwright las 15 pantallas integradas frente al prototipo.
 - **Tareas nuevas:** JG-23 (Bodega, 23/10), JG-24 (bitácora, acceso, sitio y Facturación, 24/10) y JG-25 (configuración, producción y CI, 27/10).
 - **Reprogramación:**
