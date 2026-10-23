@@ -8,7 +8,7 @@ prioridad: P1
 estado: pendiente
 depende_de: [JG-12, JM-05]
 programada: 2026-10-23
-requisitos: [RF-SL-61, RF-SL-23, RF-SL-74, RF-SL-75, RNF-13, RN-01]
+requisitos: [RF-SL-61, RF-SL-23, RF-SL-74, RF-SL-75, RNF-01, RNF-13, RN-01]
 pantallas: [picking.js › cab, bodega, herramientas, tarjetaPedido, detalle]
 ---
 
@@ -50,9 +50,11 @@ Corregir los hallazgos del paso 3 de la auditoría del 22/10, que tocan Bodega, 
 5. **H-22:** con un envío despachado desde otra pantalla, marcar una fila muestra un mensaje de negocio, no «No tiene permisos».
 6. **RNF-13 (H-26):** CP-37 pasa en los tres tamaños en el equipo de Jordin, con un solo worker, sin reintentos y con el mismo límite de 2 s.
 7. **RN-01 (H-16):** la conversión no acepta `number` en sus tipos, y las pruebas de CP-01 a CP-18 siguen pasando.
+8. **RNF-01 (H-19):** en 390 px, el avance de cada tarjeta ocupa todo el ancho, como en el prototipo.
+9. Cada hallazgo restante (H-20, H-23 y H-25) tiene su corrección y una prueba que lo habría detectado.
 
 ## Pruebas obligatorias
-- Una prueba por hallazgo que lo habría detectado (criterios 1 a 7)
+- Una prueba por hallazgo que lo habría detectado (criterios 1 a 9)
 - La batería completa de navegador (protocolo B7)
 
 ## Verificación

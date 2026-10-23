@@ -41,7 +41,7 @@ Corregir los hallazgos de los pasos 1 y 2 de la auditoría del 22/10, y los del 
 - `src/app/panel/catalogo/page.tsx`, `src/app/panel/industrias/page.tsx`, `src/modulos/contenido/**`, `src/componentes/panel/EditorContenido.tsx`, `src/app/api/imagenes/publicar/route.ts`
 - Las pruebas de cada área (`pruebas-e2e/acceso/**`, `pruebas-e2e/comunes/**`, `pruebas-e2e/sitio/**`, `pruebas-e2e/panel/**`, `pruebas-e2e/picking/reportes.spec.ts`, `pruebas-e2e/picking/facturacion-*.spec.ts`)
 - `evidencia/JC-06/` (mover); `specs/` y `specs/18` si las ❓ lo piden
-- `plan/tareas/` de las tareas corregidas (solo la sección de correcciones); `plan/bitacora/jordin.md` (con los avisos para Daniela y José Daniel)
+- `plan/tareas/` de las tareas corregidas (solo la sección de correcciones y, por H-03, la sección «## Avance» de DM-04); `plan/bitacora/jordin.md` (con los avisos para Daniela y José Daniel)
 
 ## Criterios de aceptación
 1. **RF-SL-36 / RN-39 / RF-SL-68 (H-09, H-12, H-32):** en Reportes › Bitácora, la carga del archivo, la eliminación de pedidos facturados, los intentos fallidos, el usuario inexistente y los bloqueos muestran el texto del prototipo; ninguna fila muestra `{}` ni JSON, y la prueba lo exige.
@@ -62,7 +62,7 @@ Además de los comandos generales del protocolo (B6 y B7):
 ```
 npm run verificar
 npm run build
-npm run e2e -- pruebas-e2e/acceso pruebas-e2e/picking/reportes.spec.ts pruebas-e2e/panel pruebas-e2e/sitio
+npm run e2e -- pruebas-e2e/acceso pruebas-e2e/comunes pruebas-e2e/picking/reportes.spec.ts pruebas-e2e/picking/facturacion-carga.spec.ts pruebas-e2e/picking/facturacion-envio.spec.ts pruebas-e2e/panel pruebas-e2e/sitio
 ```
 
 ## Fuera de alcance
