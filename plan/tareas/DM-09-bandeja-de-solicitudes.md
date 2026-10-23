@@ -7,14 +7,14 @@ hito: E3
 prioridad: P1
 estado: pendiente
 depende_de: [DM-08]
-programada: 2026-10-22
+programada: 2026-10-24
 requisitos: [RF-SW-12, RF-SW-20, RF-SW-31, RN-42, CU-21]
 pantallas: [panel.js › solicitudes, Panel.vista (indicador de nuevas)]
 ---
 
 # DM-09 · Bandeja de solicitudes del panel
 
-**Responsable:** Daniela Marín · **Hito:** E3 · **Prioridad:** P1 · **Programada:** jue 22/10 · **Depende de:** DM-08
+**Responsable:** Daniela Marín · **Hito:** E3 · **Prioridad:** P1 · **Programada:** sáb 24/10 · **Depende de:** DM-08
 
 ## Objetivo
 La **bandeja** del panel para ver y gestionar las solicitudes del formulario de contacto: división por motivo, responsable, comentario y estados, y el **indicador de solicitudes nuevas** en el menú.

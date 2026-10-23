@@ -1,8 +1,9 @@
 ---
 id: DM-10
 titulo: Documentación interna con enlaces de Google Drive
-persona: daniela
-responsable: Daniela Marín
+persona: carlos
+responsable: Carlos Hugo Escobar
+reasignada: si
 hito: E3
 prioridad: P1
 estado: pendiente
@@ -14,7 +15,7 @@ pantallas: [panel.js › documentos, idDrive, esDrive, vistaPrevia, descarga]
 
 # DM-10 · Documentación interna con enlaces de Google Drive
 
-**Responsable:** Daniela Marín · **Hito:** E3 · **Prioridad:** P1 · **Programada:** vie 23/10 · **Depende de:** DM-04
+**Responsable:** Carlos Hugo Escobar (reasignada de Daniela Marín el 22/10, JG-12) · **Hito:** E3 · **Prioridad:** P1 · **Programada:** vie 23/10 · **Depende de:** DM-04
 
 ## Objetivo
 El área protegida de **documentación interna**: los productos documentados con los enlaces de Google Drive de su ficha técnica, hoja de seguridad y certificado de análisis, y la ventana que muestra **solo las opciones que permiten los permisos** del usuario.
@@ -64,3 +65,7 @@ npm run e2e -- pruebas-e2e/panel/documentos.spec.ts
 
 ## Fuera de alcance
 - Cómo comparte INCOVSA los archivos en su Google Drive (P-92): se explica en el Documento 3.
+
+## Notas
+- **Reasignada a Carlos el 22/10 (JG-12)** porque Daniela tenía DM-07 y DM-08 atrasadas y CE-08 está bloqueada. Conserva su ID. Esta tarea autoriza a Carlos a crear y modificar los archivos de "Archivos que creas o modificas", aunque estén en las carpetas de Daniela (`plan/convenciones.md` §2). Daniela trabaja al mismo tiempo en `src/componentes/panel/**` (DM-07 y DM-08): actualizar la rama desde `develop` antes de abrir el PR.
+- La tarjeta «Documentación interna» del Resumen del panel ya existe (DM-04) y cuenta los productos documentados.
