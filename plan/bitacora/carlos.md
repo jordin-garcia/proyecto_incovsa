@@ -99,8 +99,15 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Pendiente o aviso para otros: ninguno nuevo; siguen P-10 / P-93 / P-94.
 
 ## 2026-10-21 · CE-09 · Documento 1 final (fuente v0.3)
-- Hecho: ocho capítulos y anexos A a E en `entregable-3/documento-1/`. Figuras 1 a 5 regeneradas. Diagramas de `entregable-1/diagramas/` alineados con `specs/` 1.7. `armar_documento.py` produjo el `.docx` local (5 figuras, 33 tablas). No se sube.
-- Decisiones: la v0.2 no está en el repositorio, así que el texto sale de `specs/`. Las actas no se inventan. Las figuras 6 a 8 quedan en Mermaid hasta tener `mermaid-cli`.
+- Avance, no cierre: ocho capítulos y anexos A a E en `entregable-3/documento-1/`. Figuras 1 a 5 regeneradas. Diagramas de `entregable-1/diagramas/` alineados con `specs/` 1.7.
+- Decisiones: la v0.2 no está en el repositorio, así que el texto sale de `specs/`. Las actas no se inventan.
 - Pendiente o aviso para otros:
-  - **Carlos:** aportar el `.docx` v0.2, las notas de las reuniones 4 y 5 (la 5 es del 13/10/2026) y subir el `.docx` v0.3 al Drive.
+  - **Carlos:** aportar el `.docx` v0.2 y las notas de las reuniones 4 y 5 (la 5 es del 13/10/2026).
   - **Jordin:** `entregable-3/equipo.local.json`. No se commitea. JG-17 sigue pendiente para cerrar la columna de implementación del anexo D.
+
+## 2026-10-23 · CE-09 · Bloqueada tras la revisión de Claude
+- Hecho en esta corrección: la tarea pasa a `estado: bloqueada` con campo `bloqueo`. Figuras 6 a 8 en PNG, generadas desde los `.mmd`, sin nueva dependencia. Anexo C con capturas del prototipo de simulación aprobado. Las imágenes de la v0.2, incluido Inventario, no se presentan como prototipo vigente.
+- Decisiones: no se marcan hechas la tarea ni las actas. No se inventan minutas ni fotografías. No se edita `specs/19`. `mermaid-cli` no entra en `package.json`.
+- Pendiente o aviso para otros:
+  - **Carlos:** incorporar las actas en Markdown de las reuniones 4 y 5 y las evidencias de `docs/Reuniones/` sin fotografías de personas. La reunión 5 va fechada el 13/10/2026 (P-77).
+  - **Jordin:** JG-17 sigue pendiente. Cuando esté hecha, el anexo D puede quitar los `TODO(CE-09)`. Si las evidencias del levantamiento no existen, la decisión queda en `specs/19`.

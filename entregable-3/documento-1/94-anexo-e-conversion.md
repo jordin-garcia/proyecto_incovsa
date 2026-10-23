@@ -1,10 +1,6 @@
 # Anexo E. Reglas y casos de conversión {-}
 
-La regla vigente es RN-01, estado Modificado, copiada de `specs/12-reglas-de-negocio.md`.
-
-Conversión. `unidades = parte entera (cantidad_kg ÷ Peso de Conversión)` y `resto_kg = cantidad_kg − unidades × Peso de Conversión`. Se muestra como "N unidades + R kg".
-
-El bloque siguiente es el que `specs/12` escribe bajo el título Conversión. Lleva paréntesis en el producto del resto. No es un caso nuevo.
+La regla vigente es RN-01, estado Modificado, copiada de `specs/12-reglas-de-negocio.md`. Se muestra como "N unidades + R kg". Esta es la fórmula de ese archivo.
 
 ```
 unidades = parte entera (cantidad_kg ÷ Peso de Conversión)

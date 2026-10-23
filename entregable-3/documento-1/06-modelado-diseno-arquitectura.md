@@ -67,17 +67,17 @@ El modelo conceptual está en `specs/14-modelo-de-datos.md`. Los nombres de las 
 
 Todas las entidades guardan la fecha y la hora de creación (RN-57). El rol no es una entidad. Es texto en Usuario. El producto, el lote, el cliente y el sector del picking son texto que llega en el archivo de Odoo. No hay entidades Producto, Cliente ni Sector en el picking.
 
-La figura 6 debía mostrar Sede, Usuario, Permiso, UsuarioPermiso, UsuarioSede, Camion y Bitacora.
+La figura 6 muestra Sede, Usuario, Permiso, UsuarioPermiso, UsuarioSede, Camion y Bitacora. El fuente es `entregable-1/diagramas/figura-6-modelo-er-catalogos.mmd`.
 
-TODO(CE-09): falta el PNG de la figura 6, modelo de acceso y camiones. `mermaid-cli` no está instalado y no se agregaron paquetes. El fuente actualizado está en `entregable-1/diagramas/figura-6-modelo-er-catalogos.mmd`.
+![Modelo de acceso y camiones](figuras/figura-6-modelo-er-catalogos.png){#fig:er-acceso}
 
-La figura 7 debía mostrar OpcionEnvio, PedidoFacturado, DetallePedidoFacturado, Envio, LineaPreparacion, EstadoEnvio, HistorialEstado y EntregaRuta, con Sede, Usuario y Camion. No incluye existencia, traslado, devolución, ruta como entidad aparte, ni un catálogo de productos.
+La figura 7 muestra OpcionEnvio, PedidoFacturado, DetallePedidoFacturado, Envio, LineaPreparacion, EstadoEnvio, HistorialEstado y EntregaRuta, con Sede, Usuario y Camion. No incluye existencia, traslado, devolución, ruta como entidad aparte, ni un catálogo de productos. El fuente es `entregable-1/diagramas/figura-7-modelo-er-pedidos.mmd`.
 
-TODO(CE-09): falta el PNG de la figura 7, modelo del picking. El fuente actualizado está en `entregable-1/diagramas/figura-7-modelo-er-pedidos.mmd`.
+![Modelo del picking](figuras/figura-7-modelo-er-pedidos.png){#fig:er-picking}
 
-La figura 8 debía mostrar los modelos del sitio: ConfiguracionSitio, ContenidoInstitucional, Valor, Industria, ProductoSitio, ProductoIndustria, Noticia, Imagen, ProductoDocumentado, SolicitudContacto, InformacionContacto, Pais, Departamento y Municipio.
+La figura 8 muestra los modelos del sitio: ConfiguracionSitio, ContenidoInstitucional, Valor, Industria, ProductoSitio, ProductoIndustria, Noticia, Imagen, ProductoDocumentado, SolicitudContacto, InformacionContacto, Pais, Departamento y Municipio. El fuente es `entregable-1/diagramas/figura-8-modelo-er-sitio.mmd`.
 
-TODO(CE-09): falta el PNG de la figura 8, modelo del sitio. El fuente actualizado está en `entregable-1/diagramas/figura-8-modelo-er-sitio.mmd`.
+![Modelo del sitio](figuras/figura-8-modelo-er-sitio.png){#fig:er-sitio}
 
 Quedaron fuera del modelo, con la fecha en que salieron (`specs/14-modelo-de-datos.md`).
 

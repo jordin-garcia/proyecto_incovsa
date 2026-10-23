@@ -2,31 +2,42 @@
 
 El prototipo aprobado es el prototipo de simulación (`specs/20-prototipo-aprobado.md`). El código fuente está en `entregable-1/prototipos/simulacion/src/`. El HTML armado está en `entregable-1/prototipos/prototipo-simulacion-incovsa.html`. Se presentó el 29/09/2026 y el 13/10/2026. El Ing. William Ambrossio lo aprobó el 13/10/2026 con los cambios de la reunión 4, y pidió los de la reunión 5. El 15/10/2026 y el 16/10/2026 se aplicaron los ajustes posteriores que `specs/20` enumera.
 
-Este anexo no trae capturas nuevas. No se tomaron pantallazos del prototipo de simulación ni de la aplicación para esta versión.
+Las capturas de este anexo salen de ese HTML, servido con `node scripts/servir-prototipo.mjs`, en una ventana de 1440 por 900. No son las imágenes de `entregable-1/figuras/prototipos/`. Esas son de la v0.2. El guion que las generaba ya no aplica, porque los archivos `.dc.html` y `canvas.json` se borraron el 14/10/2026. `figura-23-modulo-de-inventario.png` es histórica. El módulo de Inventario se eliminó el 29/09/2026 y no aparece en estas capturas.
 
-`entregable-1/LEEME.md` dice que las imágenes de `entregable-1/figuras/prototipos/` son las capturas de la v0.2, y que el guion que las generaba ya no aplica porque los archivos `.dc.html` y `canvas.json` se borraron el 14/10/2026. Esas imágenes sí están en el repositorio. El número del nombre de archivo sigue el orden del lienzo de entonces. `LEEME.md` dice que en el Documento 1 de la v0.2 eran las figuras 20 a 36. Esta versión no les asigna un número nuevo.
+En las capturas se ocultó el botón Demostración y se apagaron las notas amarillas de pendientes. `specs/20` los lista como herramientas de presentación y de validación, no como pantallas del sistema.
 
-Tabla: Capturas existentes en `entregable-1/figuras/prototipos/` {#tab:capturas-v02}
+Las páginas públicas no tienen sesión. El panel, la documentación interna, Reportes y Configuración usan la cuenta de ejemplo `ejemplo.01`, rol Gerencia. Facturación usa `ejemplo.03`. Bodega y el tablero usan `ejemplo.05`. Ruta usa `ejemplo.06`, rol Piloto. La contraseña de demostración es `demo`. Esas cuentas son del prototipo.
 
-| Archivo | Qué nombra el archivo |
-|---|---|
-| `figura-09-inicio.png` | Inicio |
-| `figura-10-quienes-somos.png` | Quiénes somos |
-| `figura-11-industrias.png` | Industrias |
-| `figura-12-catalogo-de-productos.png` | Catálogo de productos |
-| `figura-13-detalle-de-producto.png` | Detalle de producto |
-| `figura-14-contacto.png` | Contacto |
-| `figura-15-noticias.png` | Noticias |
-| `figura-16-inicio-movil-390-px.png` | Inicio en 390 px. `LEEME.md` dice que el Documento 1 no usa la captura de inicio en teléfono |
-| `figura-17-ingreso-de-personal.png` | Ingreso de personal |
-| `inicio-de-sesion.png` | Inicio de sesión. `LEEME.md` dice que es la figura de Ingreso con Administración del sitio, y que el guion no la genera |
-| `figura-18-documentacion-interna.png` | Documentación interna |
-| `figura-19-panel-del-sitio.png` | Panel del sitio |
-| `figura-20-modulo-de-facturacion.png` | Módulo de Facturación |
-| `figura-21-modulo-de-bodega-tablero.png` | Módulo de Bodega, tablero |
-| `figura-22-modulo-de-ruta.png` | Módulo de Ruta |
-| `figura-23-modulo-de-inventario.png` | Módulo de Inventario. Es histórico. El módulo se eliminó el 29/09/2026 |
-| `figura-24-modulo-de-reportes.png` | Módulo de Reportes |
-| `figura-25-modulo-de-configuracion.png` | Módulo de Configuración |
+La pantalla de acceso lista las cuentas de demostración del prototipo, entre ellas Administrativo, Operativo y Vista general. Esos nombres están en el HTML aprobado. No son roles vigentes del sistema. Los roles vigentes son Gerencia y Soporte.
 
-La captura de Inventario no representa el sistema vigente. Se conserva porque es un archivo de la v0.2, no porque el módulo siga en el alcance.
+![Inicio del sitio](figuras/prototipo-inicio.png){#fig:proto-inicio}
+
+![Quiénes somos](figuras/prototipo-quienes-somos.png){#fig:proto-nosotros}
+
+![Industrias](figuras/prototipo-industrias.png){#fig:proto-industrias}
+
+![Catálogo de productos](figuras/prototipo-catalogo.png){#fig:proto-catalogo}
+
+![Detalle de producto, el primero del catálogo](figuras/prototipo-detalle-producto.png){#fig:proto-detalle}
+
+![Noticias](figuras/prototipo-noticias.png){#fig:proto-noticias}
+
+![Contacto](figuras/prototipo-contacto.png){#fig:proto-contacto}
+
+![Acceso personal](figuras/prototipo-acceso.png){#fig:proto-acceso}
+
+![Panel del sitio, resumen](figuras/prototipo-panel.png){#fig:proto-panel}
+
+![Documentación interna](figuras/prototipo-documentacion.png){#fig:proto-documentos}
+
+![Facturación](figuras/prototipo-facturacion.png){#fig:proto-facturacion}
+
+![Bodega](figuras/prototipo-bodega.png){#fig:proto-bodega}
+
+![Tablero de bodega](figuras/prototipo-tablero.png){#fig:proto-tablero}
+
+![Ruta, mis rutas del piloto](figuras/prototipo-ruta.png){#fig:proto-ruta}
+
+![Reportes](figuras/prototipo-reportes.png){#fig:proto-reportes}
+
+![Configuración, camiones y usuarios](figuras/prototipo-configuracion.png){#fig:proto-configuracion}

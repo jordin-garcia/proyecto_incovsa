@@ -9,7 +9,7 @@
   "versiones": [
     ["0.1", "21/09/2026", "Equipo del proyecto", "Versión entregada del Entregable 1, de 79 páginas, según entregable-1/LEEME.md. El repositorio no nombra a quien la redactó."],
     ["0.2", "24/09/2026", "Equipo del proyecto", "Versión del 24/09/2026, de 86 páginas, según entregable-1/LEEME.md. Incorpora las decisiones del 23/09/2026 y del 24/09/2026. El repositorio no nombra a quien la redactó y no contiene el texto de esa versión."],
-    ["0.3", "30/10/2026", "Carlos Hugo Escobar", "Alineación con la especificación 1.7, corte del 16/10/2026. Incorpora lo registrado de las reuniones 4 y 5, la salida del inventario del alcance con la aprobación del docente, los permisos por usuario y los diagramas del sistema vigente."]
+    ["0.3", "30/10/2026", "Carlos Hugo Escobar", "Alineación con la especificación 1.7, corte del 16/10/2026. El inventario queda fuera del alcance, con la aprobación del docente. Incluye los permisos por usuario, los diagramas vigentes y las capturas del prototipo de simulación. Las actas y las evidencias del Drive siguen pendientes."]
   ],
   "secciones": [
     "01-introduccion.md",
