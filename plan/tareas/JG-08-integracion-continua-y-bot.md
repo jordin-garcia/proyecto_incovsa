@@ -143,3 +143,11 @@ Quedaron funcionando en GitHub la integración continua, las verificaciones de t
 
 - `revision-claude` no revisaba los PR cuyos cambios sube el agente en la nube de Cursor (actor `cursor[bot]`): la acción rechaza los eventos de bots, y `gh run rerun` no lo resolvía porque conserva el actor. Ocurrió en #83, #85 y #86. Por decisión del coordinador, el paso «Revisar con Claude» agrega `allowed_bots: "cursor"`, solo ese bot (decisión 62 y `specs/18`).
 - Mientras tanto, para revisar como humano un PR que disparó un bot no admitido: pasarlo a borrador y volver a marcarlo listo (`gh pr ready <n> --undo` y `gh pr ready <n>`). Eso desactiva la integración automática, que hay que volver a activar.
+
+### Correcciones de la auditoría (2026-10-24)
+
+- La ronda semanal de Dependabot del 24/10 abrió 9 PR a la vez, uno por paquete (#117 a #125): `dependabot.yml` no agrupaba nada y permitía 5 PR por ecosistema. Además propuso TypeScript 7, que rompe `calidad`, `plan` e `integridad-pruebas` porque quitó la API de JavaScript que usa `scripts/integridad-pruebas.mjs`, y `@types/node` 26, que no corresponde al Node.js 24 de `specs/16`. Por decisión del coordinador:
+  - En los dos ecosistemas, las versiones menores y los parches llegan juntos en un solo PR (grupo `menores-y-parches`); cada versión mayor, en su propio PR.
+  - En npm se ignoran las versiones mayores de `typescript` y de `@types/node`.
+  - Lo prueba `scripts/flujos.test.mjs` («Dependabot junta menores y parches…»).
+- De esa ronda, #118 y #123 son actualizaciones menores para integrar. Se cerraron #124 y #125, y siguen abiertas para revisión las versiones mayores #117, #119, #120 (acciones de Docker), #121 (ESLint 10) y #122 (`@hookform/resolvers` 6).
