@@ -322,7 +322,7 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
     const sinRed = (url: URL) => url.pathname === "/picking/tablero";
     await page.route(sinRed, (r) => (r.request().headers()["next-action"] ? r.abort("connectionreset") : r.continue()));
     await lineas.nth(0).click();
-    await expect(page.getByRole("alert")).toContainText("No se pudo completar la operación");
+    await expect(page.locator(".toast.t-error")).toContainText("No se pudo completar la operación");
     await expect(lineas.nth(0)).not.toHaveClass(/\blista\b/);
     await page.unroute(sinRed);
 
@@ -367,8 +367,12 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
     await abrirTablero(page, ruta.envioId);
     for (const modo of ["Modo oscuro", "Modo claro"] as const) {
       await page.getByRole("button", { name: modo }).click();
-      await expect(page.getByText("Tablero de preparación")).toBeVisible();
-      await expect(page.getByText("Bodega Quetzaltenango")).toBeVisible();
+      // Como el prototipo, en el teléfono (720 px o menos) se oculta el título de la barra superior.
+      const titulo = page.locator(".tb-tit");
+      await expect(titulo).toContainText("Tablero de preparación");
+      await expect(titulo).toContainText("Bodega Quetzaltenango");
+      if (page.viewportSize()!.width <= 720) await expect(titulo).toBeHidden();
+      else await expect(titulo).toBeVisible();
       await expect(page.locator(".tb-pill").nth(1)).toContainText("en cola");
       await expect(page.locator(".tb-reloj")).toHaveText(/^\d{2}:\d{2}$/);
       await expect(page.locator(".tb-cab h2")).toContainText(/Prioridad \d+ de \d+/);

@@ -95,6 +95,12 @@ El módulo tiene un botón para abrir el tablero en pantalla completa, que es el
 - **Lote en el tablero (15/10):** en el modo claro, la etiqueta del lote es **verde**, como en el módulo; en el modo oscuro, **gris** (fondo #3A3A3E, texto #EDEDED), acorde con la escala de grises de ese modo.
 - **Cuadro del número en el tablero (15/10):** como en el módulo, el cuadro de "PEDIDO" se distingue del de "RUTA": en el modo claro va en **verde lima** (`--lima`) y en el modo oscuro en **gris** (fondo #3A3A3E, texto #EDEDED, como la etiqueta del lote), acorde con la escala de grises de ese modo (decisión del coordinador del 16/10; el 15/10 se había aplicado lima en los dos modos).
 - **Silueta del camión (15/10):** todas las rutas usan la **silueta del camión grande** (la que antes se usaba solo para el de 6,000 kg), cualquiera que sea la capacidad del camión, porque la empresa puede comprar camiones de otras capacidades. El nombre y la capacidad del camión se siguen mostrando arriba de la silueta.
+- **Precisiones del tablero (24/10, JM-05, del prototipo aprobado):**
+  - Muestra la primera ruta o el primer pedido de la cola. Al tocar otro en la cola, **esa pantalla** pasa a mostrarlo; la elección no se comparte ni cambia la prioridad.
+  - Sin una elección previa abre en **modo oscuro**. El modo se guarda en la sesión del navegador de esa pantalla: se conserva al recargar y no pasa a otras pestañas ni pantallas (decisión 56).
+  - Cada línea se marca o se desmarca tocándola completa, o con su casilla desde el teclado. Las líneas que cambian, también desde otra pantalla, se resaltan un momento.
+  - En el modo claro, la etiqueta del lote usa `--v100` con el texto en `--v800` y el borde en `--v300`, como `.lote-tb` del prototipo (en el módulo, el texto va en `--v700`).
+  - Quien no tiene el permiso de Bodega o no tiene sede vuelve a su módulo inicial, como en el prototipo.
 
 ## Legibilidad (RF-SL-25, RNF-02)
 
