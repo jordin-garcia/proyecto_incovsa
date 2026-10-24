@@ -74,3 +74,7 @@ El cambio local autorizado de `.codex/config.toml` se conserva fuera de los comm
 ### Corrección durante la CI
 
 La comprobación `plan` detectó radios literales en el CSS nuevo. Se reemplazaron por los tokens existentes con los mismos valores de 12, 10 y 999 px, conservando el diseño aprobado. No se cambiaron las pruebas ni los tokens globales; se ejecutaron también las pruebas de `scripts/*.test.mjs` para comprobar esta regla localmente.
+
+### Correcciones de la auditoría (2026-10-22)
+
+H-05, H-07 y H-08: las publicaciones multipart comparan el origen público configurado; las pantallas sin permiso ofrecen «Ir a mi módulo». La prueba del límite de imágenes usa referencias distintas y exige el error específico de una sexta imagen, separado de referencias duplicadas o ajenas.

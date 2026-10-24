@@ -1,0 +1,14 @@
+
+Running 3 tests using 1 worker
+
+(node:79732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [telefono] › pruebas-e2e\picking\auditoria-jg24.spec.ts:65:1 › RN-49 / D-01: la confirmación de Facturación cuenta un cliente aunque varíen mayúsculas, tildes y espacios exteriores (9.9s)
+(node:61528) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [tableta] › pruebas-e2e\picking\auditoria-jg24.spec.ts:65:1 › RN-49 / D-01: la confirmación de Facturación cuenta un cliente aunque varíen mayúsculas, tildes y espacios exteriores (10.8s)
+(node:7728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [escritorio] › pruebas-e2e\picking\auditoria-jg24.spec.ts:65:1 › RN-49 / D-01: la confirmación de Facturación cuenta un cliente aunque varíen mayúsculas, tildes y espacios exteriores (10.4s)
+
+  3 passed (1.1m)

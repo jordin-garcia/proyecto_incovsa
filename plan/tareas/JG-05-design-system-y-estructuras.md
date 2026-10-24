@@ -132,3 +132,7 @@ Los layouts `/panel` y `/picking` usan `ArmazonEjemplo`, con datos fijos y sin l
 - Las pruebas y capturas esperan la hidratación antes de tocar controles o de ocultar el cursor, evitando cambios del DOM anteriores a que React esté listo. La comprobación de ancho compara el documento con el viewport configurado, también con el menú abierto.
 - [Comparación visual y 33 capturas en los tres tamaños](../evidencias/JG-05/README.md), incluidos los componentes, los errores de fecha/hora y la confirmación. Playwright: 51 pruebas aprobadas en los tres tamaños; next-devtools sin errores de compilación ni de ejecución.
 - Verificación final: `npm run verificar` aprobó formato, lint, tipos y 91 pruebas después de incorporar JM-02 (57 antes de actualizar); `npm run build` generó correctamente `/`, `/panel` y `/picking`; los scripts aprobaron 109 pruebas y el plan validó sus 62 tareas. No se cambiaron umbrales ni se omitieron pruebas.
+
+### Correcciones de la auditoría (2026-10-22)
+
+H-30 y H-31: el botón de reducir y expandir el menú tiene el título del prototipo. Las iniciales omiten palabras que no empiezan con letra y usan «U» cuando no queda ninguna. Las excepciones de contraste de JG-24 están registradas en specs/18 y specs/20; las pruebas de axe se conservan.

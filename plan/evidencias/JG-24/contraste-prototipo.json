@@ -1,0 +1,428 @@
+[
+  {
+    "pantalla": "contenido",
+    "violaciones": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "nodes": [
+          {
+            "target": [
+              ".ruta-txt"
+            ],
+            "html": "<div class=\"ruta-txt\">Administración del sitio <svg class=\"ico ico-s\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 12h14M13 6l6 6-6 6\"></path></svg> <b>Contenido institucional</b></div>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".eyebrow"
+            ],
+            "html": "<p class=\"eyebrow\">Contenido institucional</p>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".cab-fx-txt"
+            ],
+            "html": "<p class=\"cab-fx-txt\">Se publica en Inicio, en los encabezados de las páginas y en «Quiénes somos».</p>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "div[data-galeria=\"portada\"] > .gc-subir.subida > span"
+            ],
+            "html": "<span>Arrastre aquí hasta 5 imágenes o haga clic para elegirlas</span>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.1pt (13.5px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "div[data-galeria=\"mision\"] > .gc-subir.subida > span"
+            ],
+            "html": "<span>Arrastre aquí hasta 5 imágenes o haga clic para elegirlas</span>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.1pt (13.5px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "div[data-galeria=\"vision\"] > .gc-subir.subida > span"
+            ],
+            "html": "<span>Arrastre aquí hasta 5 imágenes o haga clic para elegirlas</span>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.1pt (13.5px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "div[data-galeria=\"historia\"] > .gc-subir.subida > span"
+            ],
+            "html": "<span>Arrastre aquí hasta 5 imágenes o haga clic para elegirlas</span>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.1pt (13.5px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "label[data-img=\"valor0\"] > .txt > span"
+            ],
+            "html": "<span>Imagen del valor</span>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "label[data-img=\"valor1\"] > .txt > span"
+            ],
+            "html": "<span>Imagen del valor</span>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "label[data-img=\"valor2\"] > .txt > span"
+            ],
+            "html": "<span>Imagen del valor</span>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "label[data-img=\"valor3\"] > .txt > span"
+            ],
+            "html": "<span>Imagen del valor</span>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "label[data-img=\"valor4\"] > .txt > span"
+            ],
+            "html": "<span>Imagen del valor</span>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "pantalla": "facturacion",
+    "violaciones": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "nodes": [
+          {
+            "target": [
+              ".ruta-txt"
+            ],
+            "html": "<div class=\"ruta-txt\">Sistema de picking <svg class=\"ico ico-s\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 12h14M13 6l6 6-6 6\"></path></svg> <b>Facturación</b></div>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".eyebrow"
+            ],
+            "html": "<p class=\"eyebrow\">Módulo de facturación</p>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".cab-fx-txt"
+            ],
+            "html": "<p class=\"cab-fx-txt\">Cargue el .xlsx de Odoo, seleccione los pedidos facturados, arrástrelos a una opción de envío y envíela a Bodega.</p>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".fx-tit"
+            ],
+            "html": "<p class=\"fx-tit\">Opciones de envío</p>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "div[data-zona=\"camion\"] > .fx-zona-vacia"
+            ],
+            "html": "<div class=\"fx-zona-vacia\">Arrastre aquí pedidos facturados</div>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.61 (foreground color: #9a9b99, background color: #f7f8f5, font size: 10.1pt (13.5px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "div[data-zona=\"recoge\"] > .fx-zona-vacia"
+            ],
+            "html": "<div class=\"fx-zona-vacia\">Arrastre aquí pedidos facturados</div>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.61 (foreground color: #9a9b99, background color: #f7f8f5, font size: 10.1pt (13.5px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".fx-ayuda"
+            ],
+            "html": "<p class=\"muted fx-ayuda\">",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.1pt (13.5px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "pantalla": "bodega",
+    "violaciones": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "nodes": [
+          {
+            "target": [
+              ".ruta-txt"
+            ],
+            "html": "<div class=\"ruta-txt\">Sistema de picking <svg class=\"ico ico-s\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 12h14M13 6l6 6-6 6\"></path></svg> <b>Bodega</b></div>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".eyebrow"
+            ],
+            "html": "<p class=\"eyebrow\">Módulo de bodega · tablero de preparación</p>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".cab-fx-txt"
+            ],
+            "html": "<p class=\"cab-fx-txt\">Arrastre una ruta, un pedido o una fila para cambiar la prioridad; se ve al instante en todas las pantallas de la sede.</p>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "div:nth-child(2) > .muted"
+            ],
+            "html": "<span class=\"muted\" style=\"font-size:14px\">Quetzaltenango · la prioridad y las marcas no quedan en el historial</span>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "article[data-id=\"p4\"] > .ped-cab > .ped-num > div > small"
+            ],
+            "html": "<small>RUTA</small>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.44 (foreground color: #c4daca, background color: #126c2a, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "article[data-id=\"p4\"] > .tabla-caja > table > thead > tr > th:nth-child(2)"
+            ],
+            "html": "<th>Producto</th>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 8.6pt (11.5px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "article[data-id=\"p4\"] > .tabla-caja > table > thead > tr > th:nth-child(3)"
+            ],
+            "html": "<th>Lote</th>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 8.6pt (11.5px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "article[data-id=\"p4\"] > .tabla-caja > table > thead > tr > th:nth-child(4)"
+            ],
+            "html": "<th class=\"der\">Cantidad (kg)</th>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 8.6pt (11.5px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "article[data-id=\"p4\"] > .tabla-caja > table > thead > tr > th:nth-child(5)"
+            ],
+            "html": "<th>Unidades</th>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 8.6pt (11.5px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "article[data-id=\"p4\"] > .tabla-caja > table > thead > tr > th:nth-child(6)"
+            ],
+            "html": "<th class=\"cen\" style=\"width:70px\">Listo</th>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 8.6pt (11.5px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "article[data-id=\"p4\"] > .ped-pie > .muted"
+            ],
+            "html": "<span class=\"muted\" style=\"font-size:14px\">El botón se habilita cuando las 9 líneas estén marcadas.</span>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".recoge > div > small"
+            ],
+            "html": "<small>PEDIDO</small>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.76 (foreground color: #d8e4ca, background color: #64932a, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "article[data-id=\"p5\"] > .tabla-caja > table > thead > tr > th:nth-child(2)"
+            ],
+            "html": "<th>Producto</th>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 8.6pt (11.5px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "article[data-id=\"p5\"] > .tabla-caja > table > thead > tr > th:nth-child(3)"
+            ],
+            "html": "<th>Lote</th>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 8.6pt (11.5px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "article[data-id=\"p5\"] > .tabla-caja > table > thead > tr > th:nth-child(4)"
+            ],
+            "html": "<th class=\"der\">Cantidad (kg)</th>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 8.6pt (11.5px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "article[data-id=\"p5\"] > .tabla-caja > table > thead > tr > th:nth-child(5)"
+            ],
+            "html": "<th>Unidades</th>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 8.6pt (11.5px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "article[data-id=\"p5\"] > .tabla-caja > table > thead > tr > th:nth-child(6)"
+            ],
+            "html": "<th class=\"cen\" style=\"width:70px\">Listo</th>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 8.6pt (11.5px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "article[data-id=\"p5\"] > .ped-pie > .muted"
+            ],
+            "html": "<span class=\"muted\" style=\"font-size:14px\">El botón se habilita cuando las 2 líneas estén marcadas.</span>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "article[data-id=\"p6\"] > .ped-cab > .ped-num > div > small"
+            ],
+            "html": "<small>RUTA</small>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.44 (foreground color: #c4daca, background color: #126c2a, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "article[data-id=\"p6\"] > .tabla-caja > table > thead > tr > th:nth-child(2)"
+            ],
+            "html": "<th>Producto</th>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 8.6pt (11.5px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "article[data-id=\"p6\"] > .tabla-caja > table > thead > tr > th:nth-child(3)"
+            ],
+            "html": "<th>Lote</th>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 8.6pt (11.5px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "article[data-id=\"p6\"] > .tabla-caja > table > thead > tr > th:nth-child(4)"
+            ],
+            "html": "<th class=\"der\">Cantidad (kg)</th>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 8.6pt (11.5px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "article[data-id=\"p6\"] > .tabla-caja > table > thead > tr > th:nth-child(5)"
+            ],
+            "html": "<th>Unidades</th>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 8.6pt (11.5px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "article[data-id=\"p6\"] > .tabla-caja > table > thead > tr > th:nth-child(6)"
+            ],
+            "html": "<th class=\"cen\" style=\"width:70px\">Listo</th>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 8.6pt (11.5px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "article[data-id=\"p6\"] > .ped-pie > .muted"
+            ],
+            "html": "<span class=\"muted\" style=\"font-size:14px\">El botón se habilita cuando las 4 líneas estén marcadas.</span>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "pantalla": "reportes",
+    "violaciones": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "nodes": [
+          {
+            "target": [
+              ".ruta-txt"
+            ],
+            "html": "<div class=\"ruta-txt\">Sistema de picking <svg class=\"ico ico-s\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 12h14M13 6l6 6-6 6\"></path></svg> <b>Reportes</b></div>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".eyebrow"
+            ],
+            "html": "<p class=\"eyebrow\">Módulo de reportes</p>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".cab-fx-txt"
+            ],
+            "html": "<p class=\"cab-fx-txt\">Despacho, rutas realizadas y bitácora de los dos sistemas, por periodo.</p>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "button[data-tab=\"rutas\"]"
+            ],
+            "html": "<button data-tab=\"rutas\" class=\"\"><svg class=\"ico ico-s\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"6\" cy=\"19\" r=\"2.5\"></circle><circle cx=\"18\" cy=\"5\" r=\"2.5\"></circle><path d=\"M8.5 19H16a3.5 3.5 0 0 0 0-7H8a3.5 3.5 0 0 1 0-7h7.5\"></path></svg> Rutas realizadas</button>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 11.3pt (15px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "button[data-tab=\"bitacora\"]"
+            ],
+            "html": "<button data-tab=\"bitacora\" class=\"\"><svg class=\"ico ico-s\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M9 6h11M9 12h11M9 18h11\"></path><path d=\"M4 6h.01M4 12h.01M4 18h.01\"></path></svg> Bitácora</button>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 11.3pt (15px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "th:nth-child(1)"
+            ],
+            "html": "<th>Producto</th>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 8.6pt (11.5px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "tr > .der"
+            ],
+            "html": "<th class=\"der\">Cantidad (kg)</th>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 8.6pt (11.5px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "th:nth-child(4)"
+            ],
+            "html": "<th>Unidades</th>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 8.6pt (11.5px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "pantalla": "acceso",
+    "violaciones": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "nodes": [
+          {
+            "target": [
+              ".muted"
+            ],
+            "html": "<p class=\"muted\">Use el usuario que le asignaron Gerencia o Soporte.</p>",
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #727372, background color: #f7f8f5, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ]
+  }
+]

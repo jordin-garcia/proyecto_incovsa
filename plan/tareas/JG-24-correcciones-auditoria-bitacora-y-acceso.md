@@ -5,7 +5,7 @@ persona: jordin
 responsable: Jordin García
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JG-12]
 programada: 2026-10-24
 requisitos: [RF-SL-36, RF-SL-68, RN-39, RF-SL-02, RF-SW-03, RF-SW-27, RF-SW-09, RF-SW-25, RF-SW-30]
@@ -75,3 +75,29 @@ npm run e2e -- pruebas-e2e/acceso pruebas-e2e/comunes pruebas-e2e/picking/report
 
 ## Notas
 - Rama `jordin/JG-24-auditoria-bitacora-y-acceso`. Si JC-07 ya está integrada, actualizar la rama antes de tocar Reportes.
+
+## Resultado
+
+**Hecha el 23/10/2026**, un día antes de lo programado, sobre `develop` en `f39a72b`.
+
+### Qué se hizo
+- **Bitácora (H-09, H-12, H-14, H-32):** la carga del archivo de Odoo, la eliminación de pedidos facturados, los intentos fallidos y los bloqueos guardan `detalle.resumen` con el texto del prototipo. `detalleLegible()` (`src/modulos/bitacora/detalle.ts`) presenta también los registros históricos sin JSON ni `{}`: el cambio de una industria se lee «Industria *nombre*», como `bit()` del prototipo. Reportes muestra como máximo las 250 operaciones más recientes **después** del filtro por sede.
+- **Acceso (H-33 a H-35, H-38):** `/acceso/<sistema>` vuelve al paso 2 si la cuenta no tiene ese sistema, sin registrar un intento fallido. Al salir de cualquiera de los dos sistemas se ve «Sesión cerrada.» en Inicio, sin repetirse al volver atrás (`AvisoDeSalida`). El error lleva punto final, y una prueba comprueba que ningún paso pide la sede.
+- **Armazón (H-30, H-31, H-39):** `title` del botón de reducir y expandir, iniciales de `base.js` con respaldo «U». Una ruta inexistente queda dentro del armazón: «Sección no encontrada» en el panel y «Módulo no encontrado» en el picking, como `panel.js` y `picking.js`.
+- **Sitio y panel (H-01 a H-08):** aserciones de RF-SW-27, del título de la industria y del menú sin permiso; «Ir a mi módulo» en Industrias y Catálogo; aviso «Imagen del valor N»; las tres rutas multipart comparan el origen con `BETTER_AUTH_URL` (comprobado a través de Caddy real con `scripts/verificar-publicacion-caddy.mjs`); prueba de la sexta imagen; «Avance» de DM-04 marcado como histórico.
+- **Facturación y Reportes (H-10, H-11, H-13, H-15):** `title` completo de la tarjeta, texto fijo del botón de carga, texto sin permiso de Reportes y capturas de JC-06 movidas a `evidencia/JC-06/`.
+- **RN-49 (D-01):** `claveCliente()` de `src/modulos/envios/cliente.ts` es la única identidad de cliente para agrupar las entregas de la Ruta y contar clientes en Facturación y Bodega. Ignora mayúsculas, tildes y espacios exteriores; los interiores siguen distinguiendo clientes.
+- **Decisión 89:** las galerías recuperan el relleno de 16 px, la letra de 13.5 px, el interlineado 1.55 y el hover del prototipo; las tarjetas de selección del sistema, `--g500`; el resumen de «Enviar a Bodega», `--g800` y 16 px. El aviso de un campo de una sola imagen con imagen conserva interlineado 1 para no tapar la imagen (DM-04).
+- Se agregó `### Correcciones de la auditoría (2026-10-22)` a JG-05, JG-06, JG-07, DM-02 a DM-05, JC-03, JC-04, JC-06 y JM-03.
+
+### Decisiones
+- Jordin autorizó como excepciones de contraste a la decisión 89 los textos secundarios con `--g600`, «RUTA» sin opacidad y las zonas vacías de Facturación (`specs/18` y `specs/20`). Las pruebas de axe no cambiaron.
+- Jordin aprobó los textos de los bloqueos, que el prototipo no tiene, con la IP visible (`specs/10`, «Bloqueos»).
+
+### Cómo usarlo
+- Para identificar a un cliente (RN-49), usa `claveCliente()` de `src/modulos/envios/cliente.ts`; no compares `cliente` y `sector` directamente.
+- Una operación nueva de la bitácora debe guardar `detalle: { resumen: "<texto del prototipo>" }`; `detalleLegible()` lo presenta tal cual.
+- Para una ruta multipart nueva, compara el origen con `new URL(process.env.BETTER_AUTH_URL ?? request.url).origin`, después de `exigirPermiso`.
+
+### Verificación
+Evidencia en [`plan/evidencias/JG-24/`](../evidencias/JG-24/README.md): `npm run verificar` y `npm run build` pasaron; batería E2E completa sobre una base local limpia, 297 aprobadas y 3 fallos que se corrigieron (2) o son el intermitente conocido de RN-54 en este equipo (1); después de las correcciones, las 216 pruebas de la sección Verificación pasaron. Revisión en contexto limpio: 3 hallazgos de corrección, todos corregidos.

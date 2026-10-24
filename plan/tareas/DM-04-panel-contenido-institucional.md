@@ -71,11 +71,11 @@ npm run e2e -- pruebas-e2e/panel/contenido.spec.ts
 ## Fuera de alcance
 - Industrias y catálogo en el panel (DM-05); la configuración de R2 en producción (CE-05 y P-94).
 
-## Avance (19/10/2026; pendiente de integración)
+## Avance histórico (19/10/2026; antes de la integración)
 
 Implementados almacenamiento de imágenes, campo de galería, resumen en `/panel/resumen` y contenido institucional. Se conserva `/panel` como entrada que redirige, conforme a `specs/05` y JG-07. Publicación con Zod, permiso en servidor, transacción y bitácora; eliminación de imágenes sustituidas y revalidación del sitio.
 
-La usuaria autorizó avanzar DM-04 y esperar a DM-02 para integrar. Inicio, cabecera y pie aún no existen: faltan las verificaciones públicas de los criterios 3 y 5. La tarea permanece pendiente y no se declara terminada.
+En ese momento, la usuaria autorizó avanzar DM-04 y esperar a DM-02 para integrar. Inicio, cabecera y pie aún no existían y faltaban las verificaciones públicas de los criterios 3 y 5. Este registro es histórico; el cierre posterior está en «Resultado».
 
 Evidencia, interfaces, pruebas, revisión y capturas: [avance de DM-04](../../pruebas-e2e/panel/evidencias/README.md). Verificación local: 219 pruebas y compilación correctas; las 12 pruebas propias de Playwright pasan. La suite general detectó además un contraste insuficiente en Bodega, ajeno a estos cambios, que debe atender su responsable.
 
@@ -92,3 +92,7 @@ Se completó el 20/10/2026 después de incorporar `develop` con DM-02 y la corre
 - **Verificación:** `npm run verificar` pasó formato, lint, tipos y **279 pruebas en 30 archivos**. `npm run build` pasó. Las **21 pruebas propias de Playwright** pasaron en 390, 768 y 1440 px, con axe, carga real de 5 MB, persistencia, limpieza física y publicación pública. La suite completa terminó con código 0: **180 aprobadas directamente, 1 intermitente aprobada al reintentar y 2 omisiones preexistentes de Facturación** y sin fallos definitivos. Plan válido: 63 tareas; sin archivos protegidos no permitidos para InAlexa. Revisión independiente: **LISTO**, sin hallazgos pendientes.
 - **Evidencia:** [verificación, capturas e interfaces](../../pruebas-e2e/panel/evidencias/README.md) y [revisión en contexto limpio](../../pruebas-e2e/panel/evidencias/revision.md). No se agregaron dependencias, migraciones ni credenciales de servicios externos. La configuración de producción de R2 sigue siendo CE-05/P-94.
 - **Correcciones del PR:** las etiquetas reflejan el contenido publicado hasta guardar, aunque se elijan imágenes nuevas; el resumen reproduce los recuadros de sus iconos. Las pruebas aíslan y restauran el contenido institucional para tomar capturas con los textos aprobados sin alterar los datos anteriores del equipo. El selector muestra los logotipos completos dentro del campo, separados del aviso inferior de 13 px y radio de 10 px. Se añadieron comprobaciones de límites, no solapamiento y regresión y se repitió la revisión independiente.
+
+### Correcciones de la auditoría (2026-10-22)
+
+H-03 a H-06: el avance previo se identifica como histórico; publicar o quitar una imagen de valor registra y anuncia «Imagen del valor N». La ruta multipart usa el origen público configurado y el menú oculta la sección sin permiso. CampoGaleria recupera el relleno, tamaño de letra y hover del prototipo, conservando el color accesible aprobado.

@@ -102,3 +102,7 @@ La implementó Daniela y la terminó el coordinador (protocolo §E4), a partir d
   - las pruebas que necesiten imágenes de galería usan `pruebas-e2e/sitio/galerias.ts`.
 - **Evidencia:** `pruebas-e2e/sitio/evidencias/`.
 
+
+### Correcciones de la auditoría (2026-10-22)
+
+H-01: la prueba de Inicio comprueba que los textos no mencionan cantidades de sedes o bodegas fuera de la cifra expresamente permitida por RF-SW-27.
