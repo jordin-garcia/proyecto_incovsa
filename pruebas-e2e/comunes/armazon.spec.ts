@@ -29,7 +29,12 @@ for (const sistema of ["panel", "picking"]) {
     } else {
       await expect(lado).toHaveCSS("width", "264px");
       await info.attach(`${sistema}-expandido`, { body: await page.screenshot(), contentType: "image/png" });
+      await expect(page.getByRole("button", { name: "Reducir el menú a íconos" })).toHaveAttribute(
+        "title",
+        "Reducir el menú a íconos",
+      );
       await page.getByRole("button", { name: "Reducir el menú a íconos" }).click();
+      await expect(page.getByRole("button", { name: "Expandir el menú" })).toHaveAttribute("title", "Expandir el menú");
       await expect(lado).toHaveCSS("width", "76px");
       await expect(lado.getByRole("link", { name: "Solicitudes", exact: false })).toHaveCount(
         sistema === "panel" ? 1 : 0,

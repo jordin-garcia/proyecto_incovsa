@@ -211,7 +211,13 @@ async function filtrarRegistros(
     id: r.id.toString(),
     fecha: r.creadoEn.toISOString(),
     sistema: r.sistema,
-    usuario: r.usuario?.name ?? (r.usuarioEscrito ? `${r.usuarioEscrito} (no existe)` : "—"),
+    usuario:
+      r.usuario?.name ??
+      (r.usuarioEscrito
+        ? operacionesGlobalesDeAcceso.has(r.operacion) && r.operacion !== "Inicio de sesión"
+          ? `${r.usuarioEscrito} (no existe)`
+          : r.usuarioEscrito
+        : "—"),
     operacion: r.operacion,
     detalle: detalleLegible(r),
   }));

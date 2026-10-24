@@ -42,6 +42,7 @@ it("RF-SW-09: devuelve solo los sistemas activos y registra el usuario inexisten
     usuarioEscrito: "no.existe",
     ip: "192.0.2.6",
     usuarioId: null,
+    detalle: { resumen: "Acceso personal · el usuario no existe en ningún sistema" },
   });
 });
 
@@ -100,6 +101,12 @@ it("RNF-15: el quinto fallo bloquea incluso con clave correcta; no emite cookie 
   );
   expect(await prisma.sesion.count()).toBe(0);
   expect(await prisma.bitacora.count({ where: { operacion: "Bloqueo de usuario" } })).toBe(1);
+  expect((await prisma.bitacora.findFirstOrThrow({ where: { operacion: "Bloqueo de usuario" } })).detalle).toEqual({
+    resumen: "Sistema de picking · Bloqueo de usuario · ejemplo.05",
+  });
+  expect(
+    (await prisma.bitacora.findFirstOrThrow({ where: { operacion: "Intento fallido de inicio de sesión" } })).detalle,
+  ).toEqual({ resumen: "Sistema de picking · contraseña incorrecta" });
 });
 
 it("RNF-15: el inicio correcto reinicia la secuencia de fallos", async () => {
@@ -119,6 +126,9 @@ it("RNF-15: veinte usuarios inexistentes bloquean la IP para consultas y contras
     true,
   );
   expect(await prisma.bitacora.count({ where: { operacion: "Bloqueo de IP" } })).toBe(1);
+  expect((await prisma.bitacora.findFirstOrThrow({ where: { operacion: "Bloqueo de IP" } })).detalle).toEqual({
+    resumen: "Acceso personal · Bloqueo de IP · 192.0.2.6",
+  });
 });
 
 it("RNF-15: los intentos concurrentes no evaden el límite persistente", async () => {
@@ -262,7 +272,7 @@ it("RNF-15 / RNF-03: la API aplica los mismos límites, omite secretos y valida 
     const respuesta = await pedir();
     expect(respuesta.status).toBe(401);
     expect(respuesta.headers.get("set-cookie")).toBeNull();
-    expect(await respuesta.json()).toEqual({ ok: false, error: "Usuario o contraseña incorrectos" });
+    expect(await respuesta.json()).toEqual({ ok: false, error: "Usuario o contraseña incorrectos." });
   }
   expect(await prisma.bitacora.count({ where: { operacion: "Bloqueo de usuario" } })).toBe(1);
   expect(obtenerIp(new Headers({ "x-forwarded-for": "203.0.113.99" }))).toBe("127.0.0.1");

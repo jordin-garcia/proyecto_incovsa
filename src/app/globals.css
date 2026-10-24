@@ -1431,7 +1431,7 @@ tr.arrastrando td {
   top: 12px;
 }
 .confirmacion-texto {
-  color: var(--g600);
+  color: var(--g500);
   font-size: 15.5px;
 }
 .avisos {

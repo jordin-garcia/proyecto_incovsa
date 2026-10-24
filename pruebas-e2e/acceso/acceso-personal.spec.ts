@@ -36,6 +36,8 @@ test("RF-SW-09 / CAM-83: los tres pasos, sistemas habilitados, ayuda, contraseñ
   await page.getByRole("button", { name: "Entendido" }).click();
   await page.getByRole("link", { name: /Sistema de picking/ }).click();
   await expect(page.getByRole("heading", { name: "Sistema de picking", level: 2 })).toBeVisible();
+  await expect(page.getByRole("combobox")).toHaveCount(0);
+  await expect(page.getByLabel("Sede", { exact: true })).toHaveCount(0);
   await expect(page.locator(".acc-lay")).toHaveAttribute("data-hidratado", "true");
   await page.getByRole("button", { name: "¿Olvidó su contraseña?" }).click();
   await expect(page.getByRole("dialog")).toContainText("Pídale a Gerencia o a Soporte que la restablezcan.");
@@ -45,7 +47,7 @@ test("RF-SW-09 / CAM-83: los tres pasos, sistemas habilitados, ayuda, contraseñ
   await expect(page.getByLabel("Contraseña", { exact: true })).toHaveAttribute("type", "text");
   await page.getByRole("button", { name: "Ingresar" }).click();
   await expect(page.getByRole("region", { name: "Acceso para personal" }).getByRole("alert")).toContainText(
-    "Usuario o contraseña incorrectos",
+    "Usuario o contraseña incorrectos.",
   );
   expect(
     (await new AxeBuilder({ page }).analyze()).violations.filter((v) =>
