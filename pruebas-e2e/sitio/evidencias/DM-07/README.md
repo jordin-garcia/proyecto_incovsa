@@ -32,6 +32,7 @@ Cada enlace agrupa teléfono (390 px), tableta (768 px) y escritorio (1440 px).
 | Edición | [390](editar-390.png), [768](editar-768.png), [1440](editar-1440.png) | [390](prototipo-editar-390.png), [768](prototipo-editar-768.png), [1440](prototipo-editar-1440.png) |
 | Publicación completa | [390](publico-publicada-390.png), [768](publico-publicada-768.png), [1440](publico-publicada-1440.png) | [390](prototipo-publico-publicada-390.png), [768](prototipo-publico-publicada-768.png), [1440](prototipo-publico-publicada-1440.png) |
 | Confirmación de eliminación | [390](eliminar-390.png), [768](eliminar-768.png), [1440](eliminar-1440.png) | [390](prototipo-eliminar-390.png), [768](prototipo-eliminar-768.png), [1440](prototipo-eliminar-1440.png) |
+| Sin acceso | [390](sin-acceso-390.png), [768](sin-acceso-768.png), [1440](sin-acceso-1440.png) | [390](prototipo-sin-acceso-390.png), [768](prototipo-sin-acceso-768.png), [1440](prototipo-sin-acceso-1440.png) |
 
 ## Revisión independiente
 
@@ -99,3 +100,15 @@ Antes de JG-24 se ejecutaron las 285 E2E completas y sus casos fallidos se repit
 - Revisión independiente de la integración y del origen público: LISTO, sin hallazgos.
 - Batería E2E final con JG-24 sobre la base original: **300 aprobadas directamente, 2 fallidas y 4 no ejecutadas** en 16,1 minutos. Un grupo no inició su servidor de producción en teléfono; Bodega en escritorio falló al buscar la fila durante la reversión optimista. `--last-failed --workers=1` repitió los seis casos pendientes: **6 aprobadas en 59,3 segundos**, código 0. Quedan cubiertos los 306 casos sin modificar pruebas ni sus límites. Bitácora pasó en 2,7 segundos en los tres tamaños, conservando el historial original.
 - Las seis E2E de Noticias pasaron con JG-24, axe y capturas en 390, 768 y 1440 px. Next-devtools: `configErrors: []`, `sessionErrors: []` al abrir `/noticias` desde Playwright MCP.
+
+## Corrección de la revisión del PR #126 · 24/10/2026
+
+Claude señaló que faltaba el enlace al módulo permitido en la pantalla sin acceso. Se reprodujo primero en rojo: con `ejemplo.09`, la prueba de escritorio no encontraba «Ir a mi módulo». Noticias ahora obtiene el destino desde `opcionesPermitidas(sesion)`, como Catálogo tras JG-24; no cambia el componente compartido.
+
+- `npm run verificar`: formato, lint y tipos aprobados; **366 pruebas en 44 archivos** aprobadas.
+- `npm run build`: aprobado.
+- E2E de Noticias sobre la base original, con resolución IPv4 y un trabajador: **9 aprobadas en 42,7 segundos**, sin reintentos. Se conserva la cobertura anterior y se verifica, en cada tamaño, el enlace a `/panel/documentos`, la ausencia de creación, axe y la navegación efectiva al módulo permitido.
+- Evidencia: **54 capturas**, nueve estados en tres tamaños, de la aplicación y del prototipo. Las capturas móviles del prototipo esperan a que termine la transición del menú lateral.
+- Revisión independiente de la corrección: LISTO, sin hallazgos. La sugerencia opcional del bot de ofrecer otro mensaje ante una eliminación concurrente no se aplica: la operación ya se rechaza y ese texto visible no está definido en las especificaciones ni el prototipo.
+
+La batería general de 306 casos y su repetición descritas arriba corresponden a la implementación anterior a esta regresión nueva. Los tres casos de acceso elevan el total a 309; no se presenta la ejecución local de nueve casos como una nueva batería general completa.

@@ -4,6 +4,7 @@ import { ErrorAcceso } from "@/modulos/permisos/servicio";
 import { SinAcceso } from "@/componentes/comunes/armazon/SinAcceso";
 import { leerNoticiasPanel } from "@/modulos/contenido/noticias";
 import { EditorNoticias } from "@/componentes/panel/EditorNoticias";
+import { opcionesPermitidas } from "@/modulos/permisos/navegacion";
 export default async function NoticiasPanel() {
   const sesion = await obtenerSesion("sitio");
   if (!sesion) redirect("/acceso");
@@ -14,6 +15,9 @@ export default async function NoticiasPanel() {
   return noticias ? (
     <EditorNoticias noticias={noticias} />
   ) : (
-    <SinAcceso texto="Sus permisos no incluyen esta sección. Los asignan Gerencia o Soporte." />
+    <SinAcceso
+      destino={opcionesPermitidas(sesion)[0]?.href}
+      texto="Sus permisos no incluyen esta sección. Los asignan Gerencia o Soporte."
+    />
   );
 }

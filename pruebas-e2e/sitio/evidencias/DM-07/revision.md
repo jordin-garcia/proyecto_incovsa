@@ -8,6 +8,8 @@ El origen público detrás del proxy se valida igual que en Catálogo después d
 
 La excepción `--g600` está autorizada por Jordin y registrada en `specs/18` y `specs/20`. No se identificaron cambios fuera del alcance, pruebas debilitadas ni hallazgos de seguridad o corrección. Las revisiones anteriores y el desbloqueo quedan descritos en el README de esta carpeta y en el historial de Git. Los resultados de ejecución se registran en ese README.
 
+Tras la revisión de Claude en el PR #126, el revisor independiente comprobó también el destino de acceso denegado: Noticias deriva el enlace de `opcionesPermitidas(sesion)`, igual que Catálogo. La regresión exige el enlace al módulo propio, ausencia del botón de creación, axe y navegación efectiva. El usuario predeterminado del helper conserva los casos anteriores. Veredicto de esta corrección: LISTO, sin hallazgos.
+
 REVISIÓN DM-07
 
 CORRECCIÓN (obligatorio corregir):

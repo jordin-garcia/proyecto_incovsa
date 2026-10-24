@@ -76,10 +76,10 @@ async function captura(page: import("@playwright/test").Page, estado: string) {
   });
   await writeFile(archivo, imagen);
 }
-async function entrar(context: import("@playwright/test").BrowserContext) {
+async function entrar(context: import("@playwright/test").BrowserContext, usuario = "ejemplo.08") {
   const respuesta = await context.request.post("/api/auth/sitio/sign-in/username", {
     headers: { origin: "http://localhost:3000" },
-    data: { usuario: "ejemplo.08", clave: process.env.CLAVE_DEMO },
+    data: { usuario, clave: process.env.CLAVE_DEMO },
   });
   expect(respuesta.ok()).toBe(true);
 }
@@ -192,4 +192,18 @@ test("RF-SW-18 / RN-56 / RN-39: crea, edita y elimina con confirmación; texto c
   } finally {
     await bd.end();
   }
+});
+
+test("RF-SW-25 / RNF-08: sin permiso de Noticias ofrece volver al módulo propio", async ({ page, context }) => {
+  await entrar(context, "ejemplo.09");
+  await page.goto("/panel/noticias");
+  await expect(page.getByRole("heading", { name: "Sin acceso a este módulo", exact: true })).toBeVisible();
+  const volver = page.getByRole("link", { name: "Ir a mi módulo", exact: true });
+  await expect(volver).toHaveAttribute("href", "/panel/documentos");
+  await expect(page.getByRole("button", { name: "Nueva noticia", exact: true })).toHaveCount(0);
+  await comprobarAxe(page);
+  await captura(page, "sin-acceso");
+  await volver.click();
+  await expect(page).toHaveURL(/\/panel\/documentos$/);
+  await expect(page.locator(".app")).toBeVisible();
 });
