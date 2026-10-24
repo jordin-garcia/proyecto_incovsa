@@ -629,6 +629,10 @@ Al trasladar el prototipo se comprobó con axe que `--g500` sobre `--g50` da un 
 - **Excepciones a la decisión 89, por decisión de Jordin (24/10):** el tablero abre en **modo claro** sin elección previa y al reiniciar el navegador (el prototipo abre en oscuro); y en una ruta que no cabe en la pantalla todas las líneas se pueden ver y tocar en cualquier tamaño: en tableta, escritorio y TV se desplaza el área de las líneas, en el teléfono se desplaza toda la pantalla y su barra superior pasa a otra línea, y el panel del camión no se ensancha con muchas líneas (en el prototipo, las líneas que no caben quedan ocultas y a 390 px el contenido se corta por la derecha) ([07](07-picking-bodega.md)).
 - Lo implementó el coordinador por la ausencia de Josué (protocolo §E4).
 
+## Dependabot agrupado (24/10/2026, JG-08)
+
+- Por decisión del coordinador, `.github/dependabot.yml` junta en un solo PR por ecosistema (npm y GitHub Actions) las versiones menores y los parches de las actualizaciones de versión; cada versión mayor llega en su propio PR, y las de seguridad, aparte, en cuanto salen ([16](16-arquitectura-y-tecnologia.md), "Dependencias al día"). En npm se ignoran las versiones mayores de `typescript`, que se queda en la 6.0 (ver "Versión de ESLint (JG-02)"; TypeScript 7 quitó la API de JavaScript que usa `scripts/integridad-pruebas.mjs`), y de `@types/node`, que sigue a Node.js 24.
+
 ## Documentos no alineados con las reuniones 4 y 5
 
 Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los cambios del 29/09, del 11/10 ni del 13/10:

@@ -150,4 +150,4 @@ Quedaron funcionando en GitHub la integración continua, las verificaciones de t
   - En los dos ecosistemas, las versiones menores y los parches llegan juntos en un solo PR (grupo `menores-y-parches`); cada versión mayor, en su propio PR.
   - En npm se ignoran las versiones mayores de `typescript` y de `@types/node`.
   - Lo prueba `scripts/flujos.test.mjs` («Dependabot junta menores y parches…»).
-- De esa ronda, #118 y #123 son actualizaciones menores para integrar. Se cerraron #124 y #125, y siguen abiertas para revisión las versiones mayores #117, #119, #120 (acciones de Docker), #121 (ESLint 10) y #122 (`@hookform/resolvers` 6).
+- De esa ronda, #118 y #123 son actualizaciones menores o de parche para integrar. Se cerraron #124 y #125, y siguen abiertas para revisión las versiones mayores #117, #119, #120 (acciones de Docker), #121 (ESLint 10) y #122 (`@hookform/resolvers` 6).

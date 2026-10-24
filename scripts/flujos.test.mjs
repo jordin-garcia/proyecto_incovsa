@@ -257,7 +257,7 @@ test("JG-08: Dependabot junta menores y parches en un PR por ecosistema e ignora
   for (const ecosistema of ["npm", "github-actions"]) {
     assert.match(
       bloque(ecosistema),
-      /\n {4}groups:\n {6}[\w-]+:\n {8}update-types: \["minor", "patch"\]\n/,
+      /\n {4}groups:\n {6}[\w-]+:\n {8}update-types: \["minor", "patch"\](\n|$)/,
       `${ecosistema} debe agrupar las versiones menores y los parches`,
     );
   }
