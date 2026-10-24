@@ -260,11 +260,29 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
     await ultima.locator(".prod").click();
     await respuesta;
     await expect(ultima).toHaveClass(/\blista\b/);
-    // El botón de despacho sigue a la vista y nada se sale de la pantalla a lo ancho, ni el panel del camión.
-    await expect(page.getByRole("button", { name: "Ruta Despachada" })).toBeVisible();
+    const ancho = page.viewportSize()!.width;
+    if (ancho > 720) {
+      // En tableta, escritorio y TV solo se desplaza el área de las líneas: la pantalla y la tarjeta no se mueven,
+      // y la cabecera, las opciones y el despacho siguen a la vista. (En el teléfono se desplaza toda la pantalla.)
+      expect(await page.locator(".tb-lineas").evaluate((el) => el.scrollTop)).toBeGreaterThan(0);
+      expect(await page.locator(".tb-actual").evaluate((el) => el.scrollTop)).toBe(0);
+      expect(await page.locator(".tb").evaluate((el) => el.scrollTop)).toBe(0);
+      await expect(page.locator(".tb-cab")).toBeInViewport({ ratio: 1 });
+      await expect(page.locator(".tb-herr")).toBeInViewport({ ratio: 1 });
+      await expect(page.getByRole("button", { name: "Ruta Despachada" })).toBeInViewport({ ratio: 1 });
+    } else {
+      await expect(page.getByRole("button", { name: "Ruta Despachada" })).toBeVisible();
+    }
+    // Nada se sale de la pantalla a lo ancho, ni el panel del camión.
     expect(await page.locator(".tb").evaluate((el) => el.scrollWidth - el.clientWidth)).toBeLessThanOrEqual(0);
     const lado = await page.locator(".tb-lado").boundingBox();
-    expect(lado!.x + lado!.width).toBeLessThanOrEqual(page.viewportSize()!.width);
+    expect(lado!.x + lado!.width).toBeLessThanOrEqual(ancho);
+    if (ancho > 720 && ancho <= 1024) {
+      // En tableta, el camión y la cola se reparten el ancho por igual: las líneas no ensanchan el camión.
+      const camion = (await page.locator(".tb-camion").boundingBox())!.width;
+      const cola = (await page.locator(".tb-cola").boundingBox())!.width;
+      expect(Math.abs(camion - cola)).toBeLessThanOrEqual(2);
+    }
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
       page.viewportSize()!.width,
     );
