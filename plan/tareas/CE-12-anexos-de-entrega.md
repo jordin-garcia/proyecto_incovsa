@@ -5,7 +5,7 @@ persona: carlos
 responsable: Carlos Hugo Escobar
 hito: entrega
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [CE-10]
 programada: 2026-11-03
 requisitos: [RNF-10]
@@ -36,3 +36,9 @@ Preparar la **transferencia de accesos** a INCOVSA del 04/11 (specs/16, decisió
 1. El Anexo J cubre todos los servicios y no contiene ningún secreto.
 2. El procedimiento de entrega de credenciales y de transferencia del repositorio está listo para el 04/11.
 3. El formato del Anexo I está listo para firmarse.
+
+## Resultado
+
+Borrador del 21/10/2026. `entregable-3/anexos/anexo-j-servicios-y-accesos.md` inventaría el VPS, el DNS, los dos buckets de R2, GitHub y GHCR, el Drive de INCOVSA y las cuentas de administrador. No hay contraseñas, llaves, tokens ni direcciones IP. `anexo-i-evidencia-de-entrega.md` es el formulario para firmar el 4 de noviembre de 2026.
+
+El medio de entrega de credenciales no se elige. Queda `TODO(CE-12): preguntar a Jordin el medio`. Tampoco están el correo de INCOVSA, el proveedor del VPS, el registrador, quién administra el DNS, la carpeta de Drive, la persona y el usuario del administrador inicial, quién recibe las credenciales, ni el nombre de la cuenta u organización de GitHub de destino. CE-08 sigue bloqueada y JG-19 sigue pendiente. La transferencia no se ejecutó.
