@@ -170,9 +170,9 @@ async function principal() {
   const accion = process.argv[2] ?? "crear";
 
   if (accion === "limpiar") {
-    const envioIdArg = process.argv[3];
-    if (envioIdArg) {
-      await limpiarEnvioPrueba(Number(envioIdArg));
+    const envioIds = process.argv.slice(3);
+    if (envioIds.length) {
+      for (const id of envioIds) await limpiarEnvioPrueba(Number(id));
     } else {
       // Limpiar únicamente envíos de prueba conocidos (1, 2, 3) de la fecha 2026-10-18
       const enviosPrueba = await prisma.envio.findMany({
@@ -188,6 +188,32 @@ async function principal() {
         await limpiarEnvioPrueba(e.id);
       }
     }
+    return;
+  }
+
+  // JM-05: los envíos del tablero en un solo proceso, porque cada llamada tarda segundos (auditoría, H-26).
+  if (accion === "crear-tablero") {
+    const base = Number(process.argv[3]);
+    const ruta = await crearEnvioPrueba({ numero: base + 1, tipo: "ruta" });
+    const pedido = await crearEnvioPrueba({ numero: base + 2, tipo: "pedido" });
+    const larga = await crearEnvioPrueba({ numero: base + 3, tipo: "ruta" });
+    const despacho = await crearEnvioPrueba({ numero: base + 4, tipo: "pedido" });
+    // Más líneas de las que caben en una columna (RF-SL-77, CP-40), en el camión de 6,000 kg (CAM-94).
+    await prisma.lineaPreparacion.deleteMany({ where: { envioId: larga.envioId } });
+    await prisma.lineaPreparacion.createMany({
+      data: Array.from({ length: 25 }, (_, i) => ({
+        envioId: larga.envioId,
+        producto: `PRODUCTO DE PRUEBA ${String(i + 1).padStart(2, "0")}`,
+        lote: String(1000 + i),
+        pesoConversionKg: 25,
+        cantidadKg: 25 * (i + 1),
+        marcado: false,
+        posicion: i + 1,
+      })),
+    });
+    const grande = await prisma.camion.findFirstOrThrow({ where: { identificacion: "Camión 3" } });
+    await prisma.envio.update({ where: { id: larga.envioId }, data: { camionId: grande.id } });
+    console.log(JSON.stringify({ ruta, pedido, larga, despacho }));
     return;
   }
 

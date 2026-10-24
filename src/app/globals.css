@@ -113,6 +113,45 @@
   --color-prototipo-38: rgba(6, 45, 18, 0.22);
   --color-prototipo-39: rgba(6, 45, 18, 0.45);
   --color-prototipo-40: rgba(18, 108, 42, 0.16);
+  /* Tablero de Bodega en pantalla completa: .tb y siluetaCamion() del prototipo (specs/07, JM-05). */
+  --color-tb-oscuro-fondo: #0f0f10;
+  --color-tb-oscuro-sup: #1a1a1c;
+  --color-tb-oscuro-sup2: #242427;
+  --color-tb-oscuro-borde: rgba(255, 255, 255, 0.12);
+  --color-tb-oscuro-txt: #f2f2f2;
+  --color-tb-oscuro-sua: #a6a6a6;
+  --color-tb-oscuro-acento: #e0e0e0;
+  --color-tb-oscuro-ok: #cfcfcf;
+  --color-tb-oscuro-ok-f: rgba(255, 255, 255, 0.1);
+  --color-tb-oscuro-seg: rgba(255, 255, 255, 0.16);
+  --color-tb-oscuro-pulso: rgba(224, 224, 224, 0.5);
+  --color-tb-oscuro-barra-inicio: #8a8a8f;
+  --color-tb-oscuro-barra-fin: #d9d9dc;
+  --color-tb-oscuro-brillo: rgba(255, 255, 255, 0.05);
+  --color-tb-oscuro-trama: rgba(255, 255, 255, 0.03);
+  --color-tb-oscuro-velo: rgba(15, 15, 16, 0.86);
+  --color-tb-gris: #3a3a3e;
+  --color-tb-gris-texto: #ededed;
+  --color-tb-gris-borde: rgba(255, 255, 255, 0.22);
+  --color-tb-claro-fondo: #eef2ec;
+  --color-tb-claro-sup2: #f5f8f3;
+  --color-tb-claro-borde: #dce3d9;
+  --color-tb-claro-sua: #5e6a61;
+  --color-tb-claro-seg: #cfe8d6;
+  --color-tb-claro-velo: rgba(3, 31, 11, 0.82);
+  --color-tb-silueta-sombra: #000;
+  --color-tb-silueta-tinta-oscuro: #111113;
+  --color-tb-silueta-verde-oscuro: #3a3a3d;
+  --color-tb-silueta-lima-oscuro: #9a9a9e;
+  --color-tb-silueta-ventana-claro: #cfe3f0;
+  --color-tb-silueta-ventana-oscuro: #bdbdbd;
+  --radius-tb-1: 0.35em;
+  --radius-tb-2: 0.5em;
+  --radius-tb-3: 0.6em;
+  --radius-tb-4: 0.7em;
+  --radius-tb-5: 0.8em;
+  --radius-tb-6: 0.9em;
+  --radius-tb-7: 1.1em;
 }
 
 :root {
