@@ -97,3 +97,11 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Hecho: CORRECCIÓN 2 y 3 en `preparar-vps.sh` / `verificar-vps.sh` (SSH `00-incovsa.conf`, aborto sin llave, UFW 22/tcp, verificador solo root, solo puertos 22/80/443, `PermitRootLogin no`). CORRECCIÓN 1: se mantiene `evidencia/CE-08/` por la asignación del coordinador del proyecto («Prefer evidence under evidencia/CE-08/»); queda anotada en `## Resultado` y en el PR.
 - Decisiones: sin grupo sudo en el usuario de despliegue (opcional del bot); docker basta.
 - Pendiente o aviso para otros: ninguno nuevo; siguen P-10 / P-93 / P-94.
+
+## 2026-10-21 · CE-11 · Documento 5 y README final (borrador)
+- Hecho: 19 apartados en `entregable-3/documento-5/` y README sin «pendiente» en instalación, configuración, variables, base de datos, ejecución, pruebas y despliegue. `armar_documento.py` generó el `.docx` local (no se sube).
+- Decisiones: los apartados 14 y 15 son respaldo y restauración, como los nombró CE-07. La prueba de CE-07 es la de GitHub Actions con rclone local, no la de producción.
+- Pendiente o aviso para otros:
+  - **Carlos:** subir el `.docx` al Drive cuando Jordin entregue `entregable-3/equipo.local.json`. No commitear carnés.
+  - **CE-10 y JG-19:** sustituir los `TODO(CE-11)` de VPS, DNS, R2 y la restauración en el VPS.
+  - **Jordin:** P-08, quién es el administrador inicial, antes del 2 de noviembre.
