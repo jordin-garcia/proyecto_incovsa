@@ -66,7 +66,8 @@ export async function crearEnvioPrueba(
   const usuarioBodega = await prisma.usuario.findFirstOrThrow({ where: { displayUsername: "ejemplo.05" } });
   const usuarioPiloto = await prisma.usuario.findFirstOrThrow({ where: { displayUsername: "ejemplo.06" } });
   // Los camiones de demostración son de Quetzaltenango: solo la ruta los necesita.
-  const camion = tipo === "ruta" ? await prisma.camion.findFirstOrThrow({ where: { sedeId } }) : null;
+  const camion =
+    tipo === "ruta" ? await prisma.camion.findFirstOrThrow({ where: { sedeId }, orderBy: { id: "asc" } }) : null;
   // El pedido lleva además una línea y un detalle sin lote, que se muestran como «Sin lote» (decisión 42).
   const sinLote = tipo === "pedido";
 
@@ -170,9 +171,9 @@ async function principal() {
   const accion = process.argv[2] ?? "crear";
 
   if (accion === "limpiar") {
-    const envioIdArg = process.argv[3];
-    if (envioIdArg) {
-      await limpiarEnvioPrueba(Number(envioIdArg));
+    const envioIds = process.argv.slice(3);
+    if (envioIds.length) {
+      for (const id of envioIds) await limpiarEnvioPrueba(Number(id));
     } else {
       // Limpiar únicamente envíos de prueba conocidos (1, 2, 3) de la fecha 2026-10-18
       const enviosPrueba = await prisma.envio.findMany({
@@ -188,6 +189,39 @@ async function principal() {
         await limpiarEnvioPrueba(e.id);
       }
     }
+    return;
+  }
+
+  // JM-05: los envíos del tablero en un solo proceso, porque cada llamada tarda segundos (auditoría, H-26).
+  if (accion === "crear-tablero") {
+    const base = Number(process.argv[3]);
+    const ruta = await crearEnvioPrueba({ numero: base + 1, tipo: "ruta" });
+    const pedido = await crearEnvioPrueba({ numero: base + 2, tipo: "pedido" });
+    const larga = await crearEnvioPrueba({ numero: base + 3, tipo: "ruta" });
+    const despacho = await crearEnvioPrueba({ numero: base + 4, tipo: "pedido" });
+    const muyLarga = await crearEnvioPrueba({ numero: base + 5, tipo: "ruta" });
+    const grande = await prisma.camion.findFirstOrThrow({ where: { identificacion: "Camión 3" } });
+    // Más líneas de las que caben en una columna (RF-SL-77, CP-40), en el camión de 6,000 kg (CAM-94); y una ruta
+    // que no cabe en ninguna pantalla ni con el alto mínimo de las líneas (decisión de Jordin del 24/10).
+    for (const [envio, cantidad] of [
+      [larga, 25],
+      [muyLarga, 60],
+    ] as const) {
+      await prisma.lineaPreparacion.deleteMany({ where: { envioId: envio.envioId } });
+      await prisma.lineaPreparacion.createMany({
+        data: Array.from({ length: cantidad }, (_, i) => ({
+          envioId: envio.envioId,
+          producto: `PRODUCTO DE PRUEBA ${String(i + 1).padStart(2, "0")}`,
+          lote: String(1000 + i),
+          pesoConversionKg: 25,
+          cantidadKg: 25 * (i + 1),
+          marcado: false,
+          posicion: i + 1,
+        })),
+      });
+      await prisma.envio.update({ where: { id: envio.envioId }, data: { camionId: grande.id } });
+    }
+    console.log(JSON.stringify({ ruta, pedido, larga, despacho, muyLarga }));
     return;
   }
 

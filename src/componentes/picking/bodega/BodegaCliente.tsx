@@ -37,18 +37,19 @@ interface BodegaClienteProps {
   enviosIniciales: EnvioBodegaItem[];
 }
 
-type AccionOptimistaBodega =
+export type AccionOptimistaBodega =
   | { tipo: "reordenar-envios"; envioIds: number[] }
   | { tipo: "marcar-linea"; envioId: number; lineaId: number; marcado: boolean }
   | { tipo: "marcar-todo"; envioId: number; marcado: boolean }
   | { tipo: "reordenar-lineas"; envioId: number; lineaIds: number[] }
   | { tipo: "ordenar-por-peso"; envioId: number };
 
-function reducirEnviosOptimistas(envios: EnvioBodegaItem[], accion: AccionOptimistaBodega): EnvioBodegaItem[] {
+/** También la usa el tablero en pantalla completa (JM-05): conserva los demás datos de cada envío. */
+export function reducirEnviosOptimistas<T extends EnvioBodegaItem>(envios: T[], accion: AccionOptimistaBodega): T[] {
   switch (accion.tipo) {
     case "reordenar-envios": {
       const mapa = new Map(envios.map((e) => [e.id, e]));
-      return accion.envioIds.map((id) => mapa.get(id)).filter((e): e is EnvioBodegaItem => Boolean(e));
+      return accion.envioIds.map((id) => mapa.get(id)).filter((e): e is T => Boolean(e));
     }
     case "marcar-linea": {
       return envios.map((e) => {
@@ -115,7 +116,7 @@ export function BodegaCliente({ sede, enviosIniciales }: BodegaClienteProps) {
     setEnvios(enviosIniciales);
   }
 
-  const [enviosOptimistas, aplicarOptimista] = useOptimistic(envios, reducirEnviosOptimistas);
+  const [enviosOptimistas, aplicarOptimista] = useOptimistic(envios, reducirEnviosOptimistas<EnvioBodegaItem>);
   const [detalleEnvio, setDetalleEnvio] = useState<DetalleEnvioData | null>(null);
   const [modalAbierto, setModalAbierto] = useState(false);
 
