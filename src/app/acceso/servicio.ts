@@ -10,7 +10,7 @@ import type { SesionActual } from "@/lib/sesion";
 import { MENSAJE_ERROR_GENERAL } from "@/lib/errores";
 import { esquemaIngreso, esquemaSistema, esquemaUsuario, type Sistema } from "./esquemas";
 
-export const ERROR_CREDENCIALES = "Usuario o contraseña incorrectos";
+export const ERROR_CREDENCIALES = "Usuario o contraseña incorrectos.";
 export const ERROR_ACCESO =
   "No tiene permisos para acceder a los sistemas de INCOVSA. Si cree que es un error, comuníquese con Gerencia o con Soporte.";
 const FALLOS = ["Intento de acceso fallido", "Intento fallido de inicio de sesión"];
@@ -42,8 +42,14 @@ async function registrarFallo(
   usuarioId: string | null,
   pasoUsuario: boolean,
 ) {
-  const datos = { sistema, usuarioEscrito: usuario, ip, usuarioId, detalle: {} };
-  await registrarBitacora(tx, { ...datos, operacion: pasoUsuario ? FALLOS[0]! : FALLOS[1]! });
+  const nombreSistema = sistema === "picking" ? "Sistema de picking" : "Sitio web";
+  const datos = { sistema, usuarioEscrito: usuario, ip, usuarioId };
+  const detalle = {
+    resumen: pasoUsuario
+      ? "Acceso personal · el usuario no existe en ningún sistema"
+      : `${nombreSistema} · contraseña incorrecta`,
+  };
+  await registrarBitacora(tx, { ...datos, detalle, operacion: pasoUsuario ? FALLOS[0]! : FALLOS[1]! });
   const ultimoBloqueoIp = await tx.bitacora.findFirst({
     where: { operacion: "Bloqueo de IP", ip },
     orderBy: { id: "desc" },
@@ -52,7 +58,12 @@ async function registrarFallo(
     Math.max(Date.now() - QUINCE_MINUTOS, (ultimoBloqueoIp?.creadoEn.getTime() ?? 0) + QUINCE_MINUTOS),
   );
   const fallosIp = await tx.bitacora.count({ where: { ip, operacion: { in: FALLOS }, creadoEn: { gte: desdeIp } } });
-  if (fallosIp >= 20) await registrarBitacora(tx, { ...datos, operacion: "Bloqueo de IP" });
+  if (fallosIp >= 20)
+    await registrarBitacora(tx, {
+      ...datos,
+      operacion: "Bloqueo de IP",
+      detalle: { resumen: `Acceso personal · Bloqueo de IP · ${ip}` },
+    });
   if (pasoUsuario) return;
   const reinicio = await tx.bitacora.findFirst({
     where: { usuarioEscrito: usuario, operacion: { in: ["Inicio de sesión", "Bloqueo de usuario"] } },
@@ -61,7 +72,12 @@ async function registrarFallo(
   const fallosUsuario = await tx.bitacora.count({
     where: { usuarioEscrito: usuario, operacion: FALLOS[1], ...(reinicio ? { id: { gt: reinicio.id } } : {}) },
   });
-  if (fallosUsuario >= 5) await registrarBitacora(tx, { ...datos, operacion: "Bloqueo de usuario" });
+  if (fallosUsuario >= 5)
+    await registrarBitacora(tx, {
+      ...datos,
+      operacion: "Bloqueo de usuario",
+      detalle: { resumen: `${nombreSistema} · Bloqueo de usuario · ${usuario}` },
+    });
 }
 
 export async function consultarSistemas(entrada: unknown, cabeceras: Headers) {
@@ -157,7 +173,7 @@ export async function iniciarSesion(entrada: unknown, cabeceras: Headers) {
         usuarioId: u.id,
         usuarioEscrito: usuario,
         ip,
-        detalle: {},
+        detalle: { resumen: `${sistema === "picking" ? "Sistema de picking" : "Sitio web"} · ${usuario}` },
       });
       return {
         ok: true as const,

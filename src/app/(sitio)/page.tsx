@@ -6,13 +6,20 @@ import { MisionVision } from "@/componentes/sitio/MisionVision";
 import { Sedes } from "@/componentes/sitio/Sedes";
 import { ICONOS_INDUSTRIAS } from "@/componentes/sitio/navegacion";
 import { leerInicioSitio } from "@/modulos/contenido/servicio";
+import { AvisoDeSalida } from "@/componentes/comunes/AvisoDeSalida";
 
 export const metadata = { title: "Inicio" };
 
-export default async function Inicio() {
+export default async function Inicio({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const datos = await leerInicioSitio();
+  const mostrarSalida = (await searchParams).sesion === "cerrada";
   return (
     <main>
+      <AvisoDeSalida mostrar={mostrarSalida} />
       <section className="hero">
         <div className="hero-foto revelar-f">
           <Galeria imagenes={datos.portada} className="gal-fondo" />

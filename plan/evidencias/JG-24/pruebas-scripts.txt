@@ -1,0 +1,236 @@
+✔ RF-SL-50: el archivo tiene una sola hoja Sheet1 con las 16 columnas de Odoo (62.4006ms)
+✔ RF-SL-50: hay 1 fila de agrupación de Odoo y es la primera (0.7806ms)
+✔ RN-36: 80 referencias XE-IN, del 03539 al 03627, sin repetidos (1.3725ms)
+✔ RN-35: 1 referencia Cancelado y 79 Hecho con 205 líneas (1.1843ms)
+✔ RN-50: 82 líneas con Peso de Conversión 0 en 46 referencias; se cargarían 33 (1.4299ms)
+✔ RN-37: Pesos de Conversión 25, 30, 35, 45, 50, 120, 180 y 200, y ningún producto con dos pesos (4.8226ms)
+✔ RF-SL-51: ninguna línea de una referencia Hecho sin lote, y el lote se conserva como texto (1.9302ms)
+✔ RF-SL-53: 4 líneas con cantidad decimal y todas las cantidades son números (0.7731ms)
+✔ RN-37: SODA ASH (CHI-SAC/0040KG) tiene peso 25 en sus 12 líneas (P-90) (0.73ms)
+✔ RNF-10: 52 contactos distintos con el formato Cliente de ejemplo NNN, numerados en orden de aparición (2.1585ms)
+✔ RNF-10: Calle, Calle2 y Estado del contacto vacíos y Documento origen S9NNNN consecutivo (2.6125ms)
+✔ RNF-10: el libro no lleva las propiedades del archivo real (autor ni fechas) (33.3295ms)
+✔ JG-04: anonimizar reemplaza solo los datos personales y conserva todo lo demás (72.3573ms)
+✔ JG-04: ejecutar el script dos veces sobre el mismo archivo produce los mismos bytes (62.3693ms)
+✔ JG-04: rechaza un archivo al que le falta una columna que se anonimiza (12.8427ms)
+✔ decisión 80: los archivos de plan/convenciones.md §3 son protegidos (9.7636ms)
+✔ decisión 80: los archivos de las tareas no son protegidos (0.7308ms)
+✔ decisión 80: un PR de otra cuenta que cambia prisma/schema.prisma o AGENTS.md no se permite (2.2064ms)
+✔ decisión 80: el coordinador puede cambiar cualquier archivo protegido (0.3866ms)
+✔ decisión 80: Carlos puede cambiar los flujos de despliegue y producción, y nada más de .github (1.436ms)
+✔ decisión 80: un bot (por ejemplo Dependabot) tampoco puede cambiar archivos protegidos (0.414ms)
+✔ decisión 80: el usuario de GitHub se compara sin distinguir mayúsculas (0.5449ms)
+✔ decisión 80: en la CI, los archivos del PR son el commit de integración contra su primer padre (0.8142ms)
+✔ decisión 80: si no se puede leer el diff, devuelve null (la verificación falla) (0.6958ms)
+✔ H-03: el avance previo de DM-04 se identifica como histórico después del cierre (3.6924ms)
+✔ H-15: las evidencias de Reportes se conservan fuera del código de la aplicación (12.6985ms)
+✔ RNF-16: acepta únicamente el registro HTTPS oficial (5.0872ms)
+✔ RNF-16: rechaza origen de dependencia no permitido: https://otro.example/ejemplo.tgz (0.948ms)
+✔ RNF-16: rechaza origen de dependencia no permitido: http://registry.npmjs.org/ejemplo.tgz (0.4235ms)
+✔ RNF-16: rechaza origen de dependencia no permitido: https://registry.npmjs.org.evil.example/ejemplo.tgz (0.3775ms)
+✔ RNF-16: rechaza origen de dependencia no permitido: file:../otro.tgz (0.4462ms)
+✔ RNF-16: rechaza origen de dependencia no permitido: file:vendor/otro.tgz (0.4493ms)
+✔ RNF-16: rechaza origen de dependencia no permitido: git+https://github.com/otro/repo (0.4595ms)
+✔ RNF-16: rechaza origen de dependencia no permitido: https://usuario:clave@registry.npmjs.org/ejemplo.tgz (0.3539ms)
+✔ RNF-16: exige la huella SHA-512 completa (1.0748ms)
+✔ RNF-16: rechaza dependencias enlazadas o sin origen (0.9424ms)
+✔ RNF-16: un paquete incluido en un tarball se verifica mediante su contenedor npm íntegro (0.9096ms)
+✔ RNF-16: marcar inBundle no permite ocultar un origen remoto ajeno (0.4191ms)
+✔ RNF-16: los seis controles corren siempre en PR a develop y main (4.5232ms)
+✔ RNF-04/RNF-05: Semgrep ejecuta reglas propias, públicas y casos de regresión (1.0547ms)
+✔ RNF-10/RNF-16: secretos y dependencias fallan en vez de ignorar los resultados (4.1106ms)
+✔ RNF-16: la integridad compara contra la base del PR con historial completo (4.2994ms)
+✔ RNF-01: colores, fuentes, radios y sombras solo se definen en los tokens (101.9283ms)
+✔ RNF-01: shadcn usa las rutas y el tema del proyecto sin bibliotecas de íconos o animación (1.8294ms)
+✔ RNF-01: todos los íconos del prototipo, incluidas las nueve industrias, son SVG de React (6.7612ms)
+✔ JG-04: se extraen los 5 archivos de public/marca y las 28 imágenes del catálogo de prueba (5.4572ms)
+✔ JG-04: cada imagen subida existe y es idéntica a la del prototipo (se ve igual y no pesa más) (36.3433ms)
+✔ JG-04: el catálogo sigue el orden de window.RECURSOS.catalogo (2.788ms)
+✔ JG-04: leerRecursos no se confunde con las llaves y los ; dentro de los textos (1.6311ms)
+✔ JG-04: bytesWebp rechaza lo que no es WebP (1.5602ms)
+✔ RNF-16: existen las ocho verificaciones obligatorias y ninguna tiene `if` a nivel de trabajo (13.4721ms)
+✔ RNF-16: las verificaciones obligatorias corren en los PR a develop y main (23.4866ms)
+✔ decisión 66: todas las acciones van fijadas por un SHA de 40 caracteres (5.7905ms)
+✔ decisión 66: ningún flujo usa pull_request_target y todos declaran permisos mínimos (5.7711ms)
+✔ JG-08, criterio 9: el título, el cuerpo y la rama de un PR nunca se interpolan en un comando (7.7121ms)
+✔ RNF-16: todos los trabajos tienen timeout-minutes (11.9626ms)
+✔ JG-08, criterio 8: antes de JG-02, los trabajos que necesitan la aplicación terminan bien sin ejecutar nada (4.9365ms)
+✔ decisión 47: la CI ejecuta formato, lint, tipos, pruebas sobre PostgreSQL 18 con migraciones desde cero, compilación y npm audit (13.6352ms)
+✔ JG-08, criterio 3: titulo valida el formato y el cierre de la tarea, con el título en una variable (1.8098ms)
+✔ decisión 80: archivos-protegidos ejecuta la versión de develop del script, con el autor en una variable (1.1872ms)
+✔ decisión 60: revision-claude siempre decide el veredicto y deja la revisión formal (2.0259ms)
+✔ decisión 60: claude-interactivo responde a @claude y no genera un check revision-claude (1.0591ms)
+✔ decisión 87: el tablero corre en cada integración a develop, cada día a las 07:00 de Guatemala y a mano (1.235ms)
+✔ JG-08: Dependabot propone actualizaciones semanales de npm y de GitHub Actions a develop (3.1118ms)
+(node:56244) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Hecto/Documents/proyecto_incovsa/src/componentes/comunes/formato.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to C:\Users\Hecto\Documents\proyecto_incovsa\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ RNF-01: cifras con separador de miles, hasta tres decimales y signo del prototipo (3.0107ms)
+✔ RN-36: otra-bodega-gt.xlsx tiene todas las referencias con prefijo GT- y nada más (52.8059ms)
+✔ RN-36: bodegas-mezcladas.xlsx tiene referencias XE- y GT- y nada más (58.4182ms)
+✔ RN-36: prefijo-desconocido.xlsx tiene una sola referencia con prefijo ZZ- y nada más (44.2751ms)
+✔ RN-37: sin-columna-peso.xlsx no tiene la columna de peso y todo lo demás es igual (36.8889ms)
+✔ RN-50: cantidad-invalida.xlsx tiene una cantidad vacía, una con texto y una en 0, en tres referencias Hecho que sí se cargarían (42.6101ms)
+✔ RF-SL-50: no-es-xlsx.xlsx es un texto con extensión .xlsx (5.0684ms)
+✔ JG-04: los archivos inválidos subidos son los que genera el script (reproducibles) (235.7216ms)
+✔ RNF-16: rechaza borrar un archivo de pruebas aunque se agregue otro (2443.8694ms)
+✔ RNF-16: rechaza reducir pruebas en un archivo aunque crezca el total (2367.2808ms)
+✔ RNF-16: rechaza selección u omisión ejecutable: it.only("a", () => {}); (3561.4601ms)
+✔ RNF-16: rechaza selección u omisión ejecutable: describe.skip("a", () => {}); (2670.2161ms)
+✔ RNF-16: rechaza selección u omisión ejecutable: test["only"]("a", () => {}); (1972.8494ms)
+✔ RNF-16: rechaza selección u omisión ejecutable: it.skip.each([1, 2])("a", () => {}); (2011.6911ms)
+✔ RNF-16: rechaza selección u omisión ejecutable: test("a", { skip: true }, () => {}); (2257.6342ms)
+✔ RNF-16: rechaza selección u omisión ejecutable: test.skip(true, "motivo"); (1991.0783ms)
+✔ RNF-16: rechaza selección u omisión ejecutable: test.fixme("a", () => {}); (1818.0236ms)
+✔ RNF-16: rechaza selección u omisión ejecutable: test.describe.fixme("grupo", () => { test("a", () => {}); }); (3141.3752ms)
+✔ RNF-16: rechaza selección u omisión ejecutable: test("a", () => { test.fixme(); }); (5995.9365ms)
+✔ RNF-16: rechaza selección u omisión ejecutable: test("a", () => { test.fixme(true, "motivo"); }); (5105.4667ms)
+✔ RNF-16: rechaza selección u omisión ejecutable: import { test as caso } from "@playwright/test"; caso.fixme("a", () => {}); (5403.9556ms)
+✔ RNF-16: rechaza selección u omisión ejecutable: import { test as caso } from "vitest"; caso.only("a", () => {}); (3214.1348ms)
+✔ RNF-16: rechaza selección u omisión ejecutable: import { it as caso } from "vitest"; caso.skip("a", () => {}); (2083.1333ms)
+✔ RNF-16: no confunde textos, comentarios ni test.use con pruebas (2313.3218ms)
+✔ RNF-16: detecta reducción de casos de una prueba parametrizada (3266.0174ms)
+✔ RNF-16: detecta reducción de generadores de pruebas: it.each([1, 2, 3] as const)("a", () => {}); (2862.5092ms)
+✔ RNF-16: detecta reducción de generadores de pruebas: const casos = [1, 2, 3] as const; for (const caso of casos) it(`${caso}`, () => {}); (3083.3428ms)
+✔ RNF-16: detecta reducción de generadores de pruebas: [1, 2, 3].forEach(caso => test(`${caso}`, () => {})); (2959.9912ms)
+✔ RNF-16: detecta reducción de generadores de pruebas: comprobarRechazosDeAccion({ accion: primera }); comprobarRechazosDeAccion({ accion: segunda }); (2753.3738ms)
+✔ RNF-16: los bucles de aserciones dentro de una prueba no multiplican su registro (1.5106ms)
+✔ RNF-16: no permite bajar ni quitar el umbral de mutación: export default { thresholds: { break: 65 } }; (2118.3248ms)
+✔ RNF-16: no permite bajar ni quitar el umbral de mutación: export default {}; (1947.5373ms)
+✔ RNF-16: no permite bajar umbrales de cobertura aunque use claves entre comillas (2938.3721ms)
+✔ RNF-16: permite agregar pruebas y subir el umbral (4059.5428ms)
+✖ RNF-09: la retención conserva 7 diarios y 4 semanales (700.282ms)
+✖ RNF-09: un fallo de retención queda en el registro del sistema (44.5102ms)
+✖ RNF-09: la restauración exige confirmación para sobrescribir producción (822.1294ms)
+✔ RNF-09: el semanal se sube el domingo UTC o con FORZAR_SEMANAL (846.1665ms)
+✔ RNF-16: Stryker ejecuta y mata mutantes con pruebas de Vitest 5 en describe anidados (37234.7152ms)
+✔ decisión 71: la primera ejecución crea el tablero y no menciona a nadie (9.4513ms)
+✔ decisión 71: un cuerpo sin estado (issue recién creado) cuenta como primera ejecución (1.3288ms)
+✔ decisión 71: el cuerpo conserva el estado en un comentario HTML y muestra las bloqueadas (10.0156ms)
+✔ decisión 87: al integrar una tarea se menciona a todo el equipo con quién la hizo y lo que se desbloqueó (3.9318ms)
+✔ decisión 87: si la tarea integrada desbloquea varias, se nombran todas con su dueño (1.7509ms)
+✔ decisión 87: una tarea integrada que no desbloquea nada también menciona a todo el equipo (1.8054ms)
+✔ decisión 87: una tarea desbloqueada por dos integraciones a la vez aparece en las dos (1.5767ms)
+✔ decisión 87: una tarea que se bloquea menciona al coordinador con el dueño y el motivo (1.085ms)
+✔ decisión 71: una tarea que sale de bloqueada avisa a su dueño (0.9009ms)
+✔ decisión 71: una tarea que llega a su fecha avisa a su dueño (1.1582ms)
+✔ decisión 71: dos ejecuciones seguidas sin cambios no repiten avisos (1.4677ms)
+✔ decisión 71: tareas.mjs --json trae los campos que usa el tablero (150.453ms)
+✔ decisión 87: el recordatorio menciona a cada persona con sus tareas del día y las atrasadas (2.5957ms)
+✔ decisión 87: el recordatorio dice qué falta si la tarea del día todavía no se puede empezar (1.2202ms)
+✔ decisión 87: el recordatorio sale una vez al día, desde las 07:00 (2.5319ms)
+✔ decisión 87: la ejecución manual con forzarRecordatorio lo publica aunque ya haya salido hoy (3.5486ms)
+✔ decisión 87: antes de las 07:00 no hay recordatorio, pero sí novedades (1.1516ms)
+✔ decisión 87: si nadie tiene nada programado no se comenta, y el día cuenta como avisado (2.4799ms)
+✔ decisión 87: el recordatorio y las novedades van en un solo comentario, primero el recordatorio (1.0641ms)
+✔ decisión 71: el cuerpo muestra lo de hoy por persona y la fecha programada de cada tarea, sin menciones (1.8497ms)
+✔ aprueba cuando la última revisión de ese commit dice LISTO sin correcciones (7.9348ms)
+✔ también reconoce el commit en la línea del título (1.4979ms)
+✔ falla cuando la revisión pide corregir (12.7798ms)
+✔ falla si dice LISTO pero enumera hallazgos de corrección (1.4369ms)
+✔ usa la revisión más reciente del mismo commit (57.5025ms)
+✔ no usa la revisión de otro commit: sin revisión del commit actual, bloquea (5.1258ms)
+✔ ignora comentarios que imitan la revisión pero no son del bot (0.56ms)
+✔ ignora comentarios del bot que no son una revisión (0.5754ms)
+✔ una revisión sin veredicto cuenta como no completada (0.9096ms)
+✔ sin ningún comentario, la revisión no se completó (cuota, caída o tiempo) (0.8988ms)
+✔ lee los comentarios en JSON por línea, como los entrega gh api --paginate --jq (1.0666ms)
+✔ acepta las palabras clave con formato Markdown sin contar los hallazgos opcionales (0.8018ms)
+✔ los hallazgos con viñetas también cuentan como corrección (0.6889ms)
+✔ la palabra «Corrección» en el texto libre no se confunde con la sección de hallazgos (PR #24) (0.8079ms)
+✔ con cualquier forma del encabezado, un LISTO con hallazgos sigue fallando (0.9904ms)
+✔ sin una sección de corrección reconocida, nunca se aprueba (0.6457ms)
+✔ encabezados con mayúscula inicial: con hallazgos y LISTO, falla (0.5769ms)
+✔ la descripción después del guion del encabezado no es un hallazgo (0.7845ms)
+✔ un «Corrección (…)» del texto libre no reemplaza a la sección real (se usa la última antes del veredicto) (0.5453ms)
+✔ un hallazgo que empieza con «Opcional:» no cierra la sección, y el guion tras el paréntesis se quita (0.4989ms)
+✔ un segundo encabezado no oculta los hallazgos del primero (se prefiere el primero en MAYÚSCULAS) (0.6003ms)
+✔ «**Opcional:**» solo en su línea cierra la sección de corrección (0.5184ms)
+✔ acepta el veredicto con mayúscula inicial y en negrita (0.4088ms)
+✔ las notas posteriores al veredicto no lo cambian (0.3677ms)
+✔ no vuelve a revisar un commit que ya tiene una revisión completa de la misma tarea (rerun o reabrir) (0.3943ms)
+✔ revisa si el commit no tiene una revisión completa (0.4003ms)
+✔ una revisión editada después de publicarse no cuenta y no se repite (0.7526ms)
+✔ el commit tiene que estar en la línea "Commit revisado", no citado en otra parte (0.3769ms)
+✔ una revisión de otra tarea no cuenta: si la del título actual no se completó, bloquea (0.5407ms)
+✔ revisa otra vez el mismo commit solo si cambió la tarea del título (0.5631ms)
+✔ «Ninguno» seguido de una sección de lo comprobado no cuenta como hallazgo (PR #30) (1.2213ms)
+✔ una sección posterior no oculta hallazgos: solo se ignora si la corrección empieza con «Ninguno» (1.0522ms)
+✔ decisión 87: la mención al autor antes de REVISIÓN no cambia el veredicto ni la tarea (0.677ms)
+✔ RNF-16: con LISTO, el estado «aprobada» es el que deja la revisión formal de aprobación (0.6465ms)
+✔ RNF-16: con CORREGIR, el mensaje explica que hay que corregir y hacer push (3.1225ms)
+ℹ tests 158
+ℹ suites 0
+ℹ pass 155
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 77766.5192
+
+✖ failing tests:
+
+test at scripts\respaldo.test.mjs:27:1
+✖ RNF-09: la retención conserva 7 diarios y 4 semanales (700.282ms)
+  AssertionError [ERR_ASSERTION]: undefined
+  undefined
+  
+  null !== 0
+  
+      at TestContext.<anonymous> (file:///C:/Users/Hecto/Documents/proyecto_incovsa/scripts/respaldo.test.mjs:119:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.start (node:internal/test_runner/test:1003:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\respaldo.test.mjs:142:1
+✖ RNF-09: un fallo de retención queda en el registro del sistema (44.5102ms)
+  AssertionError [ERR_ASSERTION]: undefined
+  undefined
+  
+  null !== 1
+  
+      at TestContext.<anonymous> (file:///C:/Users/Hecto/Documents/proyecto_incovsa/scripts/respaldo.test.mjs:194:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\respaldo.test.mjs:203:1
+✖ RNF-09: la restauración exige confirmación para sobrescribir producción (822.1294ms)
+  AssertionError [ERR_ASSERTION]: undefined
+  undefined
+  
+  null !== 1
+  
+      at TestContext.<anonymous> (file:///C:/Users/Hecto/Documents/proyecto_incovsa/scripts/respaldo.test.mjs:244:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

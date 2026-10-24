@@ -123,3 +123,7 @@ Implementación verificada en la rama `jordin/JG-06-autenticacion-acceso-persona
 - Pruebas primero: la suite de acceso falló por el servicio ausente; la de consulta de bitácora rechazó la falta de cabeceras explícitas fuera de una petición; la nueva prueba de UTC falló con `America/Guatemala`. No se debilitaron pruebas ni umbrales.
 - `crear-admin` probado en terminal real contra una base desechable: se ocultaron ambas contraseñas y se creó la cuenta para los dos sistemas. No se usaron datos ni credenciales de INCOVSA.
 - [Verificación local](../evidencias/JG-06/verificacion.md): `npm run verificar` aprobó formato, lint, tipos y 108 pruebas; los scripts aprobaron 109; `npm run build` y las 63 pruebas de `npm run e2e -- --workers=1` pasaron. next-devtools sin errores. El reinicio autorizado de `incovsa_jg06_reinicio` y las dos semillas también pasaron.
+
+### Correcciones de la auditoría (2026-10-22)
+
+H-32 a H-35 y H-38: los intentos fallidos y los bloqueos guardan un resumen legible; el sistema no autorizado regresa al paso 2. La salida muestra «Sesión cerrada.» en Inicio y consume el aviso sin repetirlo al volver. El error de credenciales lleva punto final. Las pruebas comprueban que ninguno de los tres pasos pide la sede y que las sesiones siguen siendo independientes.

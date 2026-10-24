@@ -1,4 +1,5 @@
 import { Prisma } from "@/generated/prisma/client";
+import { formatoKg } from "@/componentes/comunes/formato";
 import { prisma } from "@/lib/prisma";
 import { ErrorNegocio } from "@/lib/errores";
 import { bloquearSede, exigirEstadoPedidos, AVISO_CONFLICTO } from "./concurrencia";
@@ -122,7 +123,7 @@ export async function guardarCargaDeOdoo(
         noCargados: lectura.noCargados,
         otrosEstados: lectura.otrosEstados,
         filasDeAgrupacion: lectura.filasDeAgrupacion,
-        resumen: detalleResumen,
+        resumen: [sede.nombre, ...detalleResumen].join(" · "),
       },
     });
   });
@@ -167,6 +168,7 @@ export async function eliminarDelTablero(
       detalle: {
         sede: sede.nombre,
         pedidos: bitacoraPedidos,
+        resumen: `${sede.nombre} · ${pedidos.length} pedido(s) facturado(s): ${bitacoraPedidos.map((pedido) => `${pedido.numero} (${pedido.cliente || "Sin nombre"}, ${formatoKg(pedido.totalKg)})`).join(", ")}`,
       },
     });
     const eliminacion = await tx.pedidoFacturado.deleteMany({

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import type { SesionActual } from "@/lib/sesion";
 import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import { sembrarDemo } from "../../../prisma/semillas/demo";
+import { listarEnviosEnPreparacion } from "@/modulos/bodega/servicio";
 import {
   consultarOpciones,
   guardarCampoOpcion,
@@ -54,6 +55,18 @@ beforeEach(async () => {
   };
 });
 afterEach(() => vi.useRealTimers());
+
+it("RN-49 / D-01: la entrega y Bodega agrupan tildes y espacios exteriores y conservan el primer nombre", async () => {
+  const ids = await preparar("camion", [" José Álvarez ", "jose alvarez", "José  Álvarez"], ["25.125", "15.001", "10"]);
+  await prisma.pedidoFacturado.update({ where: { id: ids[0] }, data: { sector: " ZÓNA 1 " } });
+  const envio = await enviarOpcion(sesion, opcion);
+  const entregas = await prisma.entregaRuta.findMany({ where: { envioId: envio!.id }, orderBy: { orden: "asc" } });
+  expect(entregas.map((e) => ({ cliente: e.cliente, sector: e.sector, total: e.totalKg.toFixed(3) }))).toEqual([
+    { cliente: " José Álvarez ", sector: " ZÓNA 1 ", total: "40.126" },
+    { cliente: "José  Álvarez", sector: "Zona 1", total: "10.000" },
+  ]);
+  expect((await listarEnviosEnPreparacion(1)).find((e) => e.id === envio!.id)?.clientesContador).toBe(2);
+});
 
 async function preparar(
   tipo: "camion" | "recoge" = "camion",
@@ -298,11 +311,11 @@ it("RNF-04 / RN-17: todas las lecturas y operaciones rechazan sesión, permiso o
   }
 });
 
-it("RN-52 / RN-49: separa sedes, nombres y sectores exactos, y agrega la cola de Bodega al final", async () => {
+it("RN-52 / RN-49: separa sedes y sectores, normaliza el nombre y agrega la cola de Bodega al final", async () => {
   const ids = await preparar("camion", ["Cliente A", "Cliente A", "cliente a"]);
   await prisma.pedidoFacturado.update({ where: { id: ids[1] }, data: { sector: "Zona 2" } });
   const primero = await enviarOpcion(sesion, opcion);
-  expect(await prisma.entregaRuta.count({ where: { envioId: primero!.id } })).toBe(3);
+  expect(await prisma.entregaRuta.count({ where: { envioId: primero!.id } })).toBe(2);
   const otraSede = { ...sesion, sedes: [...sesion.sedes, { id: 2, nombre: "Guatemala", prefijoOdoo: "GT" }] };
   const opcionOtraSede = await prisma.opcionEnvio.findUniqueOrThrow({
     where: { sedeId_tipo: { sedeId: 2, tipo: "recoge" } },

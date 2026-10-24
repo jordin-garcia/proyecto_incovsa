@@ -12,6 +12,6 @@ export const esquemaUsuario = z.object({
 });
 export const esquemaIngreso = esquemaUsuario.extend({
   sistema: esquemaSistema,
-  clave: z.string().min(1, "Usuario o contraseña incorrectos").max(128, "Usuario o contraseña incorrectos"),
+  clave: z.string().min(1, "Usuario o contraseña incorrectos.").max(128, "Usuario o contraseña incorrectos."),
 });
 export type DatosIngreso = z.infer<typeof esquemaIngreso>;

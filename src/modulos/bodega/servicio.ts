@@ -1,4 +1,5 @@
 import { Prisma } from "@/generated/prisma/client";
+import { claveCliente } from "@/modulos/envios/cliente";
 import { prisma } from "@/lib/prisma";
 import { ErrorNegocio } from "@/lib/errores";
 import { ErrorAcceso } from "@/modulos/permisos/servicio";
@@ -69,9 +70,7 @@ export async function listarEnviosEnPreparacion(sedeId: number) {
       (acum, l) => acum.plus(new Prisma.Decimal(l.cantidadKg)),
       new Prisma.Decimal(0),
     );
-    const clientesSet = new Set(
-      envio.pedidosFacturados.map((pf) => `${pf.cliente.trim().toLowerCase()}|${pf.sector.trim().toLowerCase()}`),
-    );
+    const clientesSet = new Set(envio.pedidosFacturados.map(claveCliente));
     const lineasPreparadas = envio.lineas.filter((l) => l.marcado).length;
 
     return {

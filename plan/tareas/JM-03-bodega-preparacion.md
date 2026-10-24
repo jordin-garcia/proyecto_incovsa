@@ -83,3 +83,7 @@ npm run e2e -- pruebas-e2e/picking/bodega.spec.ts
   - `pruebas-e2e/picking/bodega.spec.ts`: 15 pruebas Playwright aprobadas en teléfono, tableta y escritorio, incluyendo análisis de accesibilidad con axe y verificación de fecha del detalle.
   - Evidencias visuales y dictamen de revisión en `plan/evidencias/JM-03/`.
 
+
+### Correcciones de la auditoría (2026-10-22)
+
+D-01, RN-49: el conteo de clientes usa claveCliente(), compartida con Facturación y las entregas, y agrupa correctamente tildes, mayúsculas y espacios exteriores. No se incluyen las correcciones de Bodega asignadas a JG-23.

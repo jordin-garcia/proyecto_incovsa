@@ -1,5 +1,5 @@
 import { esquemaSistema } from "@/app/acceso/esquemas";
-import { iniciarSesion, cerrarSesion } from "@/app/acceso/servicio";
+import { iniciarSesion, cerrarSesion, ERROR_CREDENCIALES } from "@/app/acceso/servicio";
 import { leerSesion } from "@/lib/sesion";
 import { MENSAJE_ERROR_GENERAL } from "@/lib/errores";
 
@@ -40,7 +40,7 @@ async function atender(peticion: Request, contexto: Contexto) {
     try {
       datos = await peticion.json();
     } catch {
-      return json({ ok: false, error: "Usuario o contraseña incorrectos" }, 400);
+      return json({ ok: false, error: ERROR_CREDENCIALES }, 400);
     }
     const r = await iniciarSesion(
       typeof datos === "object" && datos !== null ? { ...datos, sistema: sistema.data } : datos,

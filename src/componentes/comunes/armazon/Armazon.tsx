@@ -8,6 +8,7 @@ import { SelectNativo } from "@/componentes/ui/select-nativo";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/componentes/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Icono, type NombreIcono } from "../iconos";
+import { iniciales } from "./iniciales";
 
 export type OpcionNavegacion = { href: string; texto: string; icono: NombreIcono; activa?: boolean; contador?: number };
 export type SedeArmazon = { id: string; nombre: string };
@@ -144,6 +145,7 @@ export function Armazon({
               className="lado-reducir"
               onClick={() => guardarPreferencia(!reducido)}
               aria-label={reducido ? "Expandir el menú" : "Reducir el menú a íconos"}
+              title={reducido ? "Expandir el menú" : "Reducir el menú a íconos"}
             >
               <Icono nombre={reducido ? "expandir" : "colapsar"} />
             </button>
@@ -182,12 +184,7 @@ export function Armazon({
           </nav>
           <div className="lado-usuario">
             <span className="avatar" title={usuario.nombre}>
-              {usuario.nombre
-                .split(/\s+/)
-                .slice(0, 2)
-                .map((n) => n[0])
-                .join("")
-                .toUpperCase()}
+              {iniciales(usuario.nombre)}
             </span>
             <div className="quien">
               <b>{usuario.nombre}</b>

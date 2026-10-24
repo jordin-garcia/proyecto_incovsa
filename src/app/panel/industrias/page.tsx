@@ -4,6 +4,7 @@ import { ErrorAcceso } from "@/modulos/permisos/servicio";
 import { SinAcceso } from "@/componentes/comunes/armazon/SinAcceso";
 import { leerIndustriasPanel } from "@/modulos/contenido/servicio-catalogo";
 import { EditorIndustrias } from "@/componentes/panel/EditorIndustrias";
+import { opcionesPermitidas } from "@/modulos/permisos/navegacion";
 export default async function IndustriasPanel() {
   const sesion = await obtenerSesion("sitio");
   if (!sesion) redirect("/acceso");
@@ -14,6 +15,9 @@ export default async function IndustriasPanel() {
   return datos ? (
     <EditorIndustrias datos={datos} />
   ) : (
-    <SinAcceso texto="Sus permisos no incluyen esta sección. Los asignan Gerencia o Soporte." />
+    <SinAcceso
+      destino={opcionesPermitidas(sesion)[0]?.href}
+      texto="Sus permisos no incluyen esta sección. Los asignan Gerencia o Soporte."
+    />
   );
 }

@@ -51,7 +51,7 @@ export async function salir(sistema: unknown) {
   try {
     const respuesta = await cerrarSesion(esquemaSistema.parse(sistema), await headers());
     await aplicarCookiesAuth(respuesta.headers);
-    redirect("/");
+    redirect("/?sesion=cerrada");
   } catch (error) {
     return errorSeguro(error);
   }

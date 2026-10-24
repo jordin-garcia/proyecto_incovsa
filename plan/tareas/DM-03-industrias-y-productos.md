@@ -74,3 +74,7 @@ Implementado el 21/10/2026 por Daniela Marín (`InAlexa`):
 - **Uso para DM-05:** administrar `Industria`, `ProductoSitio`, `ProductoIndustria` e `Imagen` mediante las acciones protegidas del panel; las lecturas públicas reflejan las relaciones e imágenes guardadas en cada visita. Las industrias de los productos son `{ id, nombre }` y los arreglos `imagenes` contienen solo direcciones públicas. Las fotos mantienen su orden `posicion` y el límite de cinco.
 
 El cambio local autorizado de `.codex/config.toml` se conserva fuera de los commits. Las capturas ajenas regeneradas por la suite se restauraron tras comprobar que no existían cambios previos del usuario en ellas. La edición de industrias y productos en el panel continúa en DM-05, en otra conversación.
+
+### Correcciones de la auditoría (2026-10-22)
+
+H-02: se comprueba el título «Productos para esta industria · N» con el recuento real de los productos relacionados.

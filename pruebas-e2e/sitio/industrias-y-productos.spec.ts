@@ -75,6 +75,9 @@ test("RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y
     await expect(page.locator(".lista-prod")).toContainText("DM03 Ácido");
     await expect(page.locator(".lista-prod a")).toHaveCount(0);
     const nombres = await page.locator(".lista-prod span").allTextContents();
+    await expect(
+      page.getByRole("heading", { name: `Productos para esta industria · ${nombres.length}`, exact: true }),
+    ).toBeVisible();
     expect(nombres).toEqual([...nombres].sort((a, b) => a.localeCompare(b, "es")));
     await page.evaluate(() => window.scrollTo(0, 200));
     const desplazamiento = await page.evaluate(() => window.scrollY);
@@ -94,6 +97,10 @@ test("RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y
     await page.goto("/industrias/cuero");
     await expect(page.locator(".lista-prod")).not.toContainText("DM03 Ácido");
     await expect(page.locator(".ind-img-vacia")).toContainText("Imagen de la industria");
+    // IntersectionObserver inicia la transición después de montar la página.
+    // Exige el estado final antes de medir contraste, sin desactivar animaciones ni reglas de axe.
+    await expect(page.locator(".ind-det")).toHaveClass(/\bvisible\b/);
+    await expect(page.locator(".ind-det")).toHaveCSS("opacity", "1");
     await accesible(page);
   });
 });

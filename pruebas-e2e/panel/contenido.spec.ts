@@ -91,6 +91,13 @@ test("RF-SW-25: el permiso se exige también al abrir la sección directamente",
   expect(respuesta.ok()).toBe(true);
   await page.goto("/panel/contenido");
   await expect(page.getByRole("heading", { name: "Sin acceso a este módulo" })).toBeVisible();
+  if (await page.getByRole("button", { name: "Menú", exact: true }).isVisible())
+    await page.getByRole("button", { name: "Menú", exact: true }).click();
+  await expect(
+    page
+      .getByRole("navigation", { name: "Módulos" })
+      .getByRole("link", { name: "Contenido institucional", exact: true }),
+  ).toHaveCount(0);
   expect(
     (
       await context.request.post("/api/imagenes/publicar", {

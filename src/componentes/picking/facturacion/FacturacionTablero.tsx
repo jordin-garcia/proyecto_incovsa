@@ -273,7 +273,7 @@ function TableroInteractivo({
         instruccion="Cargue el .xlsx de Odoo, seleccione los pedidos facturados, arrástrelos a una opción de envío y envíela a Bodega."
         acciones={
           <Button onClick={() => archivo.current?.click()} disabled={ocupado}>
-            <Icono nombre="subir" aria-hidden="true" /> {ocupado ? "Cargando archivo…" : "Cargar archivo .xlsx"}
+            <Icono nombre="subir" aria-hidden="true" /> Cargar archivo .xlsx
           </Button>
         }
       />
@@ -359,7 +359,7 @@ function TableroInteractivo({
                       role="button"
                       tabIndex={0}
                       aria-pressed={seleccionado}
-                      title="Clic para seleccionar"
+                      title="Clic para seleccionar; arrastre para llevarlo a una opción de envío"
                       onClick={() => alternarSeleccion(pedido.id)}
                       onKeyDown={(evento) => {
                         if (evento.key === "Enter") {
