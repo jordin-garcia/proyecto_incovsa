@@ -66,7 +66,8 @@ export async function crearEnvioPrueba(
   const usuarioBodega = await prisma.usuario.findFirstOrThrow({ where: { displayUsername: "ejemplo.05" } });
   const usuarioPiloto = await prisma.usuario.findFirstOrThrow({ where: { displayUsername: "ejemplo.06" } });
   // Los camiones de demostración son de Quetzaltenango: solo la ruta los necesita.
-  const camion = tipo === "ruta" ? await prisma.camion.findFirstOrThrow({ where: { sedeId } }) : null;
+  const camion =
+    tipo === "ruta" ? await prisma.camion.findFirstOrThrow({ where: { sedeId }, orderBy: { id: "asc" } }) : null;
   // El pedido lleva además una línea y un detalle sin lote, que se muestran como «Sin lote» (decisión 42).
   const sinLote = tipo === "pedido";
 

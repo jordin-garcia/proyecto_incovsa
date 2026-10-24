@@ -495,6 +495,15 @@
 .tb-linea.recien {
   animation: brillo-tb 1.2s ease;
 }
+/* La misma animación con otro nombre, para que se repita si la línea vuelve a cambiar. */
+.tb-linea.recien-2 {
+  animation: brillo-tb-2 1.2s ease;
+}
+@keyframes brillo-tb-2 {
+  from {
+    background: var(--tb-ok-f);
+  }
+}
 .tb-linea.arrastrando,
 .tb-sig.arrastrando {
   z-index: 3;

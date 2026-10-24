@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useOptimistic, useRef, useState, useTransition, type CSSProperties } from "react";
+import { useEffect, useLayoutEffect, useOptimistic, useRef, useState, useTransition, type CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -95,17 +95,27 @@ export function TableroCliente({
   // Resalta las marcas que cambiaron, también las que llegan de otra pantalla.
   const actuales = marcasDe(lista);
   const firma = JSON.stringify(actuales);
-  const [marcas, fijarMarcas] = useState({ firma, previas: {} as Record<string, boolean>, actuales });
-  if (marcas.firma !== firma) fijarMarcas({ firma, previas: marcas.actuales, actuales });
-  const recien = (clave: string) => clave in marcas.previas && marcas.previas[clave] !== actuales[clave];
+  // Cada cambio de una línea suma uno a su contador, para repetir el resaltado aunque cambie dos veces seguidas.
+  const [marcas, fijarMarcas] = useState({ firma, actuales, cambios: {} as Record<string, number> });
+  if (marcas.firma !== firma) {
+    const cambios = { ...marcas.cambios };
+    for (const [clave, marcado] of Object.entries(actuales))
+      if (clave in marcas.actuales && marcas.actuales[clave] !== marcado) cambios[clave] = (cambios[clave] ?? 0) + 1;
+    fijarMarcas({ firma, actuales, cambios });
+  }
+  const recien = (clave: string) => marcas.cambios[clave] ?? 0;
 
   // La ruta o el pedido que mira esta pantalla (local, no se comparte); si no hay, el primero de la cola.
+  // Se queda en la que está mostrando aunque cambie la prioridad, hasta que se despacha (`verPed` del prototipo).
   const [verId, ver] = useState<number | null>(null);
   const actual = lista.find((e) => e.id === verId) ?? lista[0] ?? null;
+  if (actual && actual.id !== verId) ver(actual.id);
   const posicion = actual ? lista.indexOf(actual) : -1;
 
   const [detalle, fijarDetalle] = useState<DetalleEnvioData | null>(null);
   const [hecho, fijarHecho] = useState<{ titulo: string; texto: string } | null>(null);
+  const temporizador = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(temporizador.current), []);
 
   const operar = (accion: AccionOptimistaBodega, ejecutar: () => Promise<{ ok: boolean; error?: string }>) => {
     iniciar(async () => {
@@ -145,7 +155,8 @@ export function TableroCliente({
       titulo: `${etiqueta(envio)} ${esRuta(envio) ? "despachada" : "despachado"}`,
       texto: esRuta(envio) ? `Pasa a En Ruta · ${envio.piloto?.name ?? "—"}` : "Pasa a Despachado",
     });
-    setTimeout(() => fijarHecho(null), 1900);
+    clearTimeout(temporizador.current);
+    temporizador.current = setTimeout(() => fijarHecho(null), 1900);
     router.refresh();
   };
 
@@ -309,7 +320,7 @@ function Actual({
   envio: EnvioTablero;
   posicion: number;
   total: number;
-  recien: (clave: string) => boolean;
+  recien: (clave: string) => number;
   alMarcar: (linea: Linea) => void;
   alMarcarTodo: (marcado: boolean) => void;
   alOrdenarPorPeso: () => void;
@@ -529,7 +540,8 @@ function LineaTablero({
 }: {
   linea: Linea;
   numero: number;
-  recien: boolean;
+  /** Cuántas veces cambió la marca de la línea; alterna dos animaciones iguales para repetir el resaltado. */
+  recien: number;
   disposicion: Disposicion;
   alMarcar: () => void;
 }) {
@@ -549,7 +561,7 @@ function LineaTablero({
     <div
       ref={setNodeRef}
       style={estilo}
-      className={`tb-linea ${linea.marcado ? "lista" : ""} ${recien ? "recien" : ""} ${isDragging ? "arrastrando" : ""}`}
+      className={`tb-linea ${linea.marcado ? "lista" : ""} ${recien ? (recien % 2 ? "recien" : "recien-2") : ""} ${isDragging ? "arrastrando" : ""}`}
       data-id={linea.id}
       onClick={(e) => {
         // Toda la línea se marca con un toque; la casilla también sirve con el teclado.

@@ -55,7 +55,7 @@ async function violacionesGraves(page: Page) {
       );
     await Promise.allSettled(enCurso.map((animacion) => animacion.finished));
   });
-  // Única excepción aprobada por el coordinador (specs/20): el cuadro lima del pedido conserva los colores del prototipo.
+  // Única excepción aprobada por el coordinador (specs/18, JM-08): el cuadro lima del pedido conserva los colores del prototipo.
   const resultado = await new AxeBuilder({ page }).exclude(".tb-num.recoge small").analyze();
   return resultado.violations
     .filter((v) => v.impact === "serious" || v.impact === "critical")
@@ -266,6 +266,23 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
       await expect(remota.locator(".chk-tb")).toHaveAttribute("aria-pressed", "true");
       await expect(tablero.locator(".tb-anillo span")).toHaveText("1/2");
       await expect(tablero.locator(`.tb-sig[data-id="${ruta.envioId}"] .p`)).toHaveText("1/2");
+
+      // Si la misma línea vuelve a cambiar, se resalta otra vez (el prototipo vuelve a pintar cada cambio).
+      const segunda = tablero.waitForFunction(
+        (id) => {
+          const el = document.querySelector(`.tb-linea[data-id="${id}"]`);
+          return !!el && el.classList.contains("recien-2") && el.getAnimations().length > 0;
+        },
+        lineaId,
+        { polling: "raf" },
+      );
+      const desmarcado = page.waitForResponse(
+        (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
+      );
+      await fila.locator("button.marca").click();
+      await desmarcado;
+      await segunda;
+      await expect(remota).not.toHaveClass(/\blista\b/);
     } finally {
       await segundo.close();
     }
@@ -335,6 +352,42 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
     await expect(ventana).toHaveCount(0);
   });
 
+  test("RF-SL-25: la pantalla se queda en la ruta que muestra aunque cambie la prioridad de la cola", async ({
+    context,
+    page,
+    baseURL,
+  }) => {
+    await entrar(context, baseURL);
+    await page.goto("/picking/tablero");
+    await expect(page.locator(".tb")).toHaveAttribute("data-hidratado", "true");
+    await expect(page.locator(".tb-pill[data-vivo]")).toHaveAttribute("data-conectado", "true", { timeout: 15_000 });
+    // Sin tocar la cola, muestra la primera; al bajarla con el teclado en la cola, la sigue mostrando.
+    const primera = (await page.locator(".tb-actual").getAttribute("data-id"))!;
+    const asa = page.locator(`.tb-sig[data-id="${primera}"] .asa-tb`);
+    const reordenar = async (tecla: "ArrowDown" | "ArrowUp") => {
+      const respuesta = page.waitForResponse(
+        (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
+      );
+      // Con pausas, como bodega-tiempo-real.spec.ts: el sensor de teclado de dnd-kit mide entre teclas.
+      await asa.scrollIntoViewIfNeeded();
+      await asa.focus();
+      await page.keyboard.press("Space", { delay: 80 });
+      await page.waitForTimeout(150);
+      await page.keyboard.press(tecla, { delay: 80 });
+      await page.waitForTimeout(150);
+      await page.keyboard.press("Space", { delay: 80 });
+      await respuesta;
+    };
+    await reordenar("ArrowDown");
+    await expect(page.locator(".tb-sig").nth(1)).toHaveAttribute("data-id", primera);
+    await expect(page.locator(".tb-actual")).toHaveAttribute("data-id", primera);
+    await expect(page.locator(".tb-cab h2")).toContainText(/Prioridad 2 de \d+/);
+    await page.reload();
+    await expect(page.locator(".tb")).toHaveAttribute("data-hidratado", "true");
+    await reordenar("ArrowUp");
+    await expect(page.locator(".tb-sig").first()).toHaveAttribute("data-id", primera);
+  });
+
   test("RF-SL-24: con todo marcado, Pedido Despachado confirma, avisa y saca el pedido del tablero", async ({
     context,
     page,
@@ -396,6 +449,21 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
         body: await page.screenshot(),
         contentType: "image/png",
       });
+    }
+
+    // El pedido, con el cuadro lima de «PEDIDO» y sin camión, en los dos modos.
+    await verEnvio(page, pedido.envioId);
+    for (const modo of ["Modo oscuro", "Modo claro"] as const) {
+      await page.getByRole("button", { name: modo }).click();
+      await expect(page.locator(".tb-num.recoge small")).toHaveText("Pedido");
+      await expect(page.locator(".tb-tipo")).toHaveText("Recoge en bodega");
+      await expect(page.locator(".tb-recoge")).toContainText(
+        "No pasa por Ruta. Al despachar, el pedido termina como Despachado.",
+      );
+      await expect(page.locator(".tb-camion .tb-carga")).toContainText("3 producto(s)");
+      expect(await violacionesGraves(page)).toEqual([]);
+      const nombre = `tablero-pedido-${informacion.project.name}-${modo === "Modo claro" ? "claro" : "oscuro"}`;
+      await test.info().attach(nombre, { body: await page.screenshot(), contentType: "image/png" });
     }
   });
 });
