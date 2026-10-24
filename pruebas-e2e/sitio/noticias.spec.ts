@@ -1,7 +1,7 @@
 import { test as base, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { Client } from "pg";
-import { readFile, unlink } from "node:fs/promises";
+import { readFile, unlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 try {
   process.loadEnvFile();
@@ -68,10 +68,13 @@ async function comprobarAxe(page: import("@playwright/test").Page) {
   ).toEqual([]);
 }
 async function captura(page: import("@playwright/test").Page, estado: string) {
-  await page.screenshot({
-    path: `pruebas-e2e/sitio/evidencias/DM-07/${estado}-${page.viewportSize()!.width}.png`,
-    fullPage: true,
+  const archivo = `pruebas-e2e/sitio/evidencias/DM-07/${estado}-${page.viewportSize()!.width}.png`;
+  const imagen = await page.screenshot({ fullPage: true });
+  // OneDrive puede impedir truncar un PNG existente; se reemplaza después de capturarlo.
+  await unlink(archivo).catch((error: NodeJS.ErrnoException) => {
+    if (error.code !== "ENOENT") throw error;
   });
+  await writeFile(archivo, imagen);
 }
 async function entrar(context: import("@playwright/test").BrowserContext) {
   const respuesta = await context.request.post("/api/auth/sitio/sign-in/username", {

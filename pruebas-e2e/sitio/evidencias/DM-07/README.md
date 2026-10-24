@@ -66,3 +66,19 @@ La revisión según la decisión 89 encontró tres diferencias de diseño: error
 **Bloqueo de diseño y accesibilidad:** el gris `--g500` del área de subida del prototipo produce una violación seria de axe: contraste 4,4:1, inferior a 4,5:1. [Evidencia reproducida contra el prototipo](contraste-prototipo.json). La implementación conserva `--g600`, que pasa axe. El protocolo §C y la decisión 89 requieren consultar cuando seguir el diseño haría fallar una prueba. Daniela confirmó que la consulta a Jordin queda pendiente. No se cambia el prototipo, las especificaciones protegidas ni el criterio de axe sin esa decisión; el código no se integra.
 
 Los cambios de capturas preexistentes y los regenerados durante la pausa están conservados en stashes identificados. `.codex/config.toml` sigue fuera de los commits. La implementación permanece en `daniela/DM-07-noticias-panel`; el registro de bloqueo se tramita en un PR separado que solo modifica la tarea y la bitácora.
+
+## Reanudación autorizada · 23/10/2026
+
+Se incorporó `develop` con el desbloqueo de Jordin, registrado en la tarea, `specs/18` y `specs/20`. Se conserva `--g600` sin modificar axe. Los ajustes del estado al pasar el cursor y del relleno del componente compartido quedan para JG-24, como indica el coordinador.
+
+- `npm ci`: 854 paquetes instalados, sin cambios de dependencias ni lockfile y cero vulnerabilidades informadas.
+- `npm run db:aplicar`: dos migraciones existentes, ninguna pendiente.
+- `node scripts/tareas.mjs --validar`: plan válido, 66 tareas.
+- `node --test scripts/design-system.test.mjs`: tres aprobadas, ninguna omitida.
+- `npm run verificar`: formato, lint y tipos aprobados; 356 pruebas aprobadas en 42 archivos, código de salida 0.
+- `npm run build`: compilación, tipos, páginas y artefacto standalone aprobados; incluye `/noticias`, `/panel/noticias` y `/panel/noticias/publicar`.
+- `npm run e2e -- pruebas-e2e/sitio/noticias.spec.ts --workers=1`: seis aprobadas en 2,3 minutos, sin reintentos; incluye axe y capturas en 390, 768 y 1440 px.
+- Playwright MCP abrió la aplicación y el prototipo. Next-devtools en el puerto 3000 devuelve `configErrors: []` y `sessionErrors: []`. La consola pública conserva únicamente el 404 preexistente de `/favicon.ico`.
+- Revisión independiente actualizada: LISTO, sin hallazgos de corrección ni opcionales; ver `revision.md`.
+
+La verificación general, la compilación y la batería E2E completa deben terminar antes del cierre. `.codex/config.toml` y las capturas regeneradas de otras tareas no se incluyen en el PR.
