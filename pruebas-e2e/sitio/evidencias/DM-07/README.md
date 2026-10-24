@@ -112,3 +112,5 @@ Claude señaló que faltaba el enlace al módulo permitido en la pantalla sin ac
 - Revisión independiente de la corrección: LISTO, sin hallazgos. La sugerencia opcional del bot de ofrecer otro mensaje ante una eliminación concurrente no se aplica: la operación ya se rechaza y ese texto visible no está definido en las especificaciones ni el prototipo.
 
 La batería general de 306 casos y su repetición descritas arriba corresponden a la implementación anterior a esta regresión nueva. Los tres casos de acceso elevan el total a 309; no se presenta la ejecución local de nueve casos como una nueva batería general completa.
+
+La inspección posterior detectó dos capturas móviles tomadas antes de cargar la foto. El helper ahora exige que las imágenes visibles estén completas y tengan `naturalWidth > 0`, mediante `expect.poll` con su límite predeterminado. Repetición con esa comprobación: **9 aprobadas en 41,5 segundos**, sin reintentos; las fotos aparecen en las capturas regeneradas. Revisión independiente de este ajuste: LISTO. No cambian los límites ni axe; una imagen rota o pendiente hace fallar la captura.

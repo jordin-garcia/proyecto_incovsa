@@ -69,6 +69,15 @@ async function comprobarAxe(page: import("@playwright/test").Page) {
 }
 async function captura(page: import("@playwright/test").Page, estado: string) {
   const archivo = `pruebas-e2e/sitio/evidencias/DM-07/${estado}-${page.viewportSize()!.width}.png`;
+  await expect
+    .poll(() =>
+      page
+        .locator("img:visible")
+        .evaluateAll((imagenes) =>
+          imagenes.every((imagen) => imagen instanceof HTMLImageElement && imagen.complete && imagen.naturalWidth > 0),
+        ),
+    )
+    .toBe(true);
   const imagen = await page.screenshot({ fullPage: true });
   // OneDrive puede impedir truncar un PNG existente; se reemplaza después de capturarlo.
   await unlink(archivo).catch((error: NodeJS.ErrnoException) => {

@@ -10,6 +10,8 @@ La excepción `--g600` está autorizada por Jordin y registrada en `specs/18` y 
 
 Tras la revisión de Claude en el PR #126, el revisor independiente comprobó también el destino de acceso denegado: Noticias deriva el enlace de `opcionesPermitidas(sesion)`, igual que Catálogo. La regresión exige el enlace al módulo propio, ausencia del botón de creación, axe y navegación efectiva. El usuario predeterminado del helper conserva los casos anteriores. Veredicto de esta corrección: LISTO, sin hallazgos.
 
+También se revisó la espera de imágenes visibles antes de capturar: exige carga completa y contenido, sin ampliar límites ni reducir axe. Evita evidencia incompleta y hace fallar una imagen rota. Veredicto: LISTO, sin hallazgos.
+
 REVISIÓN DM-07
 
 CORRECCIÓN (obligatorio corregir):
