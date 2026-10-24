@@ -366,7 +366,7 @@ it("RF-SL-36 / RN-39 / H-12: presenta contenido y registros históricos sin JSON
   expect(filas.map((f) => f.detalle)).toEqual(
     expect.arrayContaining([
       "Misión",
-      "Cuero",
+      "Industria Cuero",
       "Producto de prueba",
       "Acceso personal · el usuario no existe en ningún sistema",
       "Sistema de picking · contraseña incorrecta",

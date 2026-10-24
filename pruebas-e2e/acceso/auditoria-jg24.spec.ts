@@ -98,6 +98,11 @@ test("RF-SW-25 / H-07 / H-13 / H-39: acceso denegado ofrece el módulo propio y 
     await expect(volver).toHaveAttribute("href", "/panel/documentos");
     await evidencia(page, `sin-acceso-${modulo}`);
   }
+  // En el panel, el prototipo dice «Sección no encontrada» (panel.js › ruta); «Módulo» es solo del picking.
+  await page.goto("/panel/no-existe");
+  await expect(page.getByRole("heading", { name: "Sección no encontrada", exact: true })).toBeVisible();
+  await expect(page.locator(".app")).toBeVisible();
+  await evidencia(page, "seccion-inexistente");
   await entrar(context, "picking", "ejemplo.03");
   await page.goto("/picking/reportes");
   await expect(

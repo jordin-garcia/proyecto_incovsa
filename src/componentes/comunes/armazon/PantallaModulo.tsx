@@ -24,7 +24,7 @@ export async function PantallaModulo({ sistema, seccion }: { sistema: "sitio" | 
   if (!definicion)
     return (
       <div className="tarjeta">
-        <Vacio icono="buscar" titulo="Módulo no encontrado" />
+        <Vacio icono="buscar" titulo={sistema === "sitio" ? "Sección no encontrada" : "Módulo no encontrado"} />
       </div>
     );
   const destino = opcionesPermitidas(sesion)[0]?.href;

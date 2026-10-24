@@ -19,6 +19,9 @@ test("RF-SW-01 / RF-SW-27: Inicio informativo conserva secciones, cifras y texto
   await expect(page.locator(".ind-rejilla > a")).toHaveCount(9);
   await expect(page.getByText("sedes con bodega de distribución")).toBeVisible();
   await expect(page.locator("main")).not.toContainText(/Escuintla|Catálogo informativo|inventario|Gerencia|Soporte/);
+  const textos = await page.locator("main").innerText();
+  const sinCifraPermitida = textos.replace(/3\s+sedes con bodega de distribución/, "");
+  expect(sinCifraPermitida).not.toMatch(/\b(?:\d+|una?|dos|tres|cuatro|cinco)\s+(?:sedes?|bodegas?)\b/i);
   await expect(page.getByRole("link", { name: "Acceso personal" })).toHaveAttribute("href", "/acceso");
   await expect(page.getByRole("link", { name: "Enviar una solicitud" })).toHaveAttribute("href", "/contacto");
 });

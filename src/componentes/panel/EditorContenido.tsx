@@ -59,7 +59,7 @@ function BloqueEditor({
       }
       ponerImagenes(resultado.datos.imagenes);
       ponerPublicado({ imagenes: resultado.datos.imagenes, texto: datos.texto });
-      mensaje(`${nombresBloques[bloque]} publicado en el sitio.`);
+      mensaje(`${resultado.datos.nombrePublicacion} publicado en el sitio.`);
       router.refresh();
     } catch {
       mensaje("No se pudo completar la operación. Inténtelo de nuevo.", "error");

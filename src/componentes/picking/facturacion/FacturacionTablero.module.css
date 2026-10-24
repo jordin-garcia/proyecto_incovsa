@@ -287,6 +287,11 @@
   color: var(--g600);
 }
 
+.resumenEnvio {
+  color: var(--g800);
+  font-size: 16px;
+}
+
 @media (max-width: 1024px) {
   .disposicion {
     grid-template-columns: 1fr;

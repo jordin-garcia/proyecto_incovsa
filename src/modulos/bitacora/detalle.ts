@@ -30,7 +30,9 @@ export function detalleLegible(registro: Registro): string {
       });
       return `${typeof detalle.sede === "string" ? detalle.sede : "—"} · ${pedidos.length} pedido(s) facturado(s): ${pedidos.join(", ")}`;
     }
-    for (const campo of ["bloque", "industria", "producto", "sede"]) {
+    // Como bit() del prototipo: «Industria <nombre>» (panel.js › industrias).
+    if (typeof detalle.industria === "string") return `Industria ${detalle.industria}`;
+    for (const campo of ["bloque", "producto", "sede"]) {
       if (typeof detalle[campo] === "string") return detalle[campo];
     }
   }

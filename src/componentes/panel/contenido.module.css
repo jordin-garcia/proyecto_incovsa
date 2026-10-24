@@ -57,7 +57,7 @@
 .subida {
   border: 2px dashed var(--g300);
   border-radius: var(--radius-prototipo-8);
-  padding: 22px;
+  padding: 16px;
   color: var(--g600);
   background: var(--g50);
   cursor: pointer;
@@ -65,8 +65,9 @@
   flex-direction: column;
   white-space: normal;
   height: auto;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 400;
+  line-height: 1.55;
 }
 .subida [data-aviso] {
   display: flex;
@@ -74,9 +75,10 @@
   align-items: center;
   gap: 6px;
 }
-.subida:hover {
+.galeria .subida:hover {
   border-color: var(--v400);
   background: var(--v50);
+  color: var(--g600);
 }
 .individual {
   position: relative;
@@ -101,6 +103,7 @@
 }
 .individual .subida [data-aviso] {
   padding: 16px;
+  font-size: 14px;
 }
 .individual:has(img) .subida [data-aviso] {
   position: absolute;
@@ -113,6 +116,8 @@
   border-radius: var(--radius-prototipo-1);
   padding: 6px 10px;
   font-size: 13px;
+  /* Interlineado anterior a JG-24: con 1.55, el aviso ocupa dos líneas en teléfono y tableta y tapa la imagen (DM-04). */
+  line-height: 1;
 }
 .cuerpoIndividual {
   max-width: 520px;
