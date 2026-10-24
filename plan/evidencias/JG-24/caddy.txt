@@ -1,0 +1,1 @@
+H-05: las tres publicaciones multipart pasan a través de Caddy; origen interno rechazado y datos de prueba restaurados.

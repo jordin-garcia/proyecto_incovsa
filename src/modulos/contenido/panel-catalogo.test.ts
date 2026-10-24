@@ -10,6 +10,8 @@ const estado = vi.hoisted(() => ({ sesion: null as SesionActual | null }));
 vi.mock("@/lib/sesion", () => ({ obtenerSesion: async () => estado.sesion }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 import { publicarIndustria, publicarProducto, eliminarProducto } from "./acciones-catalogo";
+import { recibirGaleria } from "./multipart-catalogo";
+import { esquemaProductoPanel } from "./esquemas-catalogo";
 const sesion: SesionActual = {
   sistema: "sitio",
   usuario: { id: "catalogo-prueba", usuario: "catalogo", nombre: "Prueba", rol: "Editor" },
@@ -29,6 +31,17 @@ const producto = {
   industrias: [] as number[],
   imagenes: [] as (string | number)[],
 };
+
+it("RN-56 / H-08: el sexto elemento único falla por el límite y cinco referencias distintas sí son válidas", () => {
+  const imagenes = Array.from({ length: 6 }, (_, i) => `/api/imagenes/demo/${i + 1}.webp`);
+  expect(esquemaProductoPanel.safeParse({ ...producto, imagenes: imagenes.slice(0, 5) }).success).toBe(true);
+  const resultado = esquemaProductoPanel.safeParse({ ...producto, imagenes });
+  expect(resultado.success).toBe(false);
+  if (resultado.success) throw new Error("Se aceptó una sexta imagen");
+  expect(resultado.error.issues).toEqual([
+    expect.objectContaining({ code: "too_big", path: ["imagenes"], maximum: 5 }),
+  ]);
+});
 beforeEach(async () => {
   await limpiarTablasDeNegocio();
   await prisma.usuario.create({
@@ -97,13 +110,51 @@ it("RF-SW-07 / RN-56: publica descripción y galería de industria y limpia la i
 it("RN-56 / RNF-05: rechaza sexta imagen, referencias ajenas, índices duplicados, industria inexistente y nombre vacío", async () => {
   for (const datos of [
     { ...producto, nombre: " " },
-    { ...producto, imagenes: Array(6).fill(0) },
+    { ...producto, imagenes: Array.from({ length: 6 }, (_, i) => `/api/imagenes/demo/${i + 1}.webp`) },
     { ...producto, imagenes: ["https://ajena.invalid/a.webp"] },
     { ...producto, imagenes: [0, 0] },
     { ...producto, industrias: [2147483647] },
   ])
     expect((await publicarProducto(formulario(datos))).ok).toBe(false);
   expect(await prisma.bitacora.count()).toBe(0);
+});
+
+it("RNF-05 / H-05: multipart usa el origen público configurado detrás del proxy y rechaza un origen ajeno", async () => {
+  vi.stubEnv("BETTER_AUTH_URL", "https://incovsa.test");
+  try {
+    const industria = await prisma.industria.findFirstOrThrow();
+    for (const [tipo, datos] of [
+      ["industria", { id: industria.id, descripcion: "Detrás del proxy", imagenes: [] }],
+      ["producto", producto],
+    ] as const) {
+      for (const origin of ["http://localhost:3000", "https://ajeno.invalid"]) {
+        expect(
+          (
+            await recibirGaleria(
+              new Request("http://localhost:3000/publicar", {
+                method: "POST",
+                headers: { origin },
+                body: formulario(datos),
+              }),
+              tipo,
+            )
+          ).status,
+        ).toBe(403);
+      }
+      const respuesta = await recibirGaleria(
+        new Request("http://localhost:3000/publicar", {
+          method: "POST",
+          headers: { origin: "https://incovsa.test" },
+          body: formulario(datos),
+        }),
+        tipo,
+      );
+      expect(respuesta.status).toBe(200);
+      expect(await respuesta.json()).toMatchObject({ ok: true });
+    }
+  } finally {
+    vi.unstubAllEnvs();
+  }
 });
 it("RF-SW-23: eliminar producto borra físicamente su galería", async () => {
   const png = await sharp({ create: { width: 10, height: 10, channels: 4, background: "transparent" } })

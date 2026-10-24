@@ -1,0 +1,22 @@
+{
+  "caddy": "2.11.7",
+  "aplicacion": "3100",
+  "origenPublico": "http://localhost:3080",
+  "resultados": [
+    {
+      "ruta": "/api/imagenes/publicar",
+      "origenPublico": 200,
+      "origenInterno": 403
+    },
+    {
+      "ruta": "/panel/industrias/publicar",
+      "origenPublico": 200,
+      "origenInterno": 403
+    },
+    {
+      "ruta": "/panel/catalogo/publicar",
+      "origenPublico": 200,
+      "origenInterno": 403
+    }
+  ]
+}

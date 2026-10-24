@@ -8,6 +8,7 @@ import { CampoHora } from "@/componentes/comunes/CampoHora";
 import { Medidor } from "@/componentes/comunes/Medidor";
 import { Icono } from "@/componentes/comunes/iconos";
 import { formatoKg } from "@/componentes/comunes/formato";
+import { claveCliente } from "@/modulos/envios/cliente";
 import { formatoFecha } from "@/lib/fechas";
 import { ErrorNegocio } from "@/lib/errores";
 import { Button } from "@/componentes/ui/button";
@@ -89,7 +90,7 @@ export function OpcionEnvio({
     !ocupado
   );
   const etiqueta = `${esRuta ? "Ruta" : "Pedido"} ${opcion.siguienteNumero}`;
-  const clientes = new Set(opcion.pedidos.map((p) => JSON.stringify([p.cliente, p.sector]))).size;
+  const clientes = new Set(opcion.pedidos.map(claveCliente)).size;
 
   function cambiar(campo: "fecha" | "hora" | "camion" | "piloto", valor: string | number | null) {
     const atributo = campo === "camion" ? "camionId" : campo === "piloto" ? "pilotoId" : campo;
@@ -308,7 +309,7 @@ export function OpcionEnvio({
         <VentanaConfirmacion
           titulo="Enviar a Bodega"
           texto={
-            <div className={estilos.resumen}>
+            <div className={`${estilos.resumen} ${estilos.resumenEnvio}`}>
               <div>
                 Se crea {esRuta ? "la" : "el"} <b>{etiqueta}</b> de hoy en {sedeNombre} con {opcion.pedidos.length}{" "}
                 pedido(s) facturado(s) de {clientes} cliente(s) y {formatoKg(kg(total))}, en este orden:{" "}

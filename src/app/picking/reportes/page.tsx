@@ -21,7 +21,7 @@ export default async function ReportesPage({
   try {
     exigirPermiso(sesion, "pk.reportes", sede?.id);
   } catch {
-    return <SinAcceso destino="/picking" texto="No tiene permisos para acceder a este módulo." />;
+    return <SinAcceso destino="/picking" texto="Sus permisos no incluyen Reportes. Los asignan Gerencia o Soporte." />;
   }
   if (!sede)
     return (

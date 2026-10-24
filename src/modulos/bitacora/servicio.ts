@@ -22,15 +22,17 @@ export async function registrarBitacora(tx: Prisma.TransactionClient, registro: 
   return tx.bitacora.create({ data: { ...esquemaRegistro.parse(campos), detalle } });
 }
 
-export async function consultarBitacora(entrada: { desde: Date; hasta: Date }, cabeceras?: Headers) {
+export async function consultarBitacora(entrada: { desde: Date; hasta: Date; cursor?: bigint }, cabeceras?: Headers) {
   exigirPermiso(await obtenerSesion("picking", cabeceras), "pk.reportes");
   const rango = z
-    .object({ desde: z.date(), hasta: z.date() })
+    .object({ desde: z.date(), hasta: z.date(), cursor: z.bigint().positive().optional() })
     .refine((r) => r.desde <= r.hasta)
     .parse(entrada);
   return prisma.bitacora.findMany({
     where: { creadoEn: { gte: rango.desde, lte: rango.hasta } },
     orderBy: [{ creadoEn: "desc" }, { id: "desc" }],
+    take: 250,
+    ...(rango.cursor === undefined ? {} : { cursor: { id: rango.cursor }, skip: 1 }),
     select: {
       id: true,
       sistema: true,

@@ -57,7 +57,22 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
   await expect(page.getByTestId("tablero-pedidos").locator("article")).toHaveCount(0);
   await capturar(`facturacion-vacio-${width}`);
 
-  await page.getByLabel("Cargar archivo .xlsx").setInputFiles("pruebas/fixtures/odoo/odoo-ejemplo-anonimizado.xlsx");
+  let liberarCarga = () => {};
+  const cargaPendiente = new Promise<void>((resolver) => {
+    liberarCarga = resolver;
+  });
+  await page.route("**/picking/facturacion", async (ruta) => {
+    if (ruta.request().method() === "POST" && ruta.request().headers()["next-action"]) await cargaPendiente;
+    await ruta.continue();
+  });
+  try {
+    await page.getByLabel("Cargar archivo .xlsx").setInputFiles("pruebas/fixtures/odoo/odoo-ejemplo-anonimizado.xlsx");
+    const cargar = page.getByRole("button", { name: "Cargar archivo .xlsx", exact: true });
+    await expect(cargar).toBeDisabled();
+    await expect(cargar).toHaveText("Cargar archivo .xlsx");
+  } finally {
+    liberarCarga();
+  }
   await expect(page.getByRole("dialog")).toContainText(
     "33 pedido(s) facturado(s) de Quetzaltenango se agregaron al tablero",
   );
@@ -83,6 +98,11 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
   const tarjetas = tablero.getByRole("button");
   await expect(tarjetas).toHaveCount(33);
   await expect(tarjetas.first()).toContainText("03543");
+  await expect(tarjetas.first()).toHaveAttribute(
+    "title",
+    "Clic para seleccionar; arrastre para llevarlo a una opción de envío",
+  );
+  await expect(page.getByRole("button", { name: "Cargar archivo .xlsx", exact: true })).toBeVisible();
   await expect(tarjetas.first()).toContainText("Cliente de ejemplo 003");
   await expect(tarjetas.first()).toContainText("San Fransisco el Alto, Totonicapan");
   await expect(tarjetas.first()).toContainText("495 kg");

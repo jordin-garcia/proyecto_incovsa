@@ -8,7 +8,8 @@ import { ErrorNegocio, aResultadoDeError } from "@/lib/errores";
 export async function POST(request: Request) {
   try {
     exigirPermiso(await obtenerSesion("sitio", request.headers), "sit.contenido");
-    if (request.headers.get("origin") !== new URL(request.url).origin) throw new ErrorAcceso();
+    if (request.headers.get("origin") !== new URL(process.env.BETTER_AUTH_URL ?? request.url).origin)
+      throw new ErrorAcceso();
     const tipo = request.headers.get("content-type") ?? "";
     if (!tipo.startsWith("multipart/form-data;")) throw new ErrorNegocio("El contenido enviado no es válido.");
     const lector = request.body?.getReader();

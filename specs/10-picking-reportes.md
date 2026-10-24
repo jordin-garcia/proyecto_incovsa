@@ -85,6 +85,8 @@ La columna "Pedido" se quitó el 13/10: la ruta ya no tiene un pedido aparte.
   - los cambios de un usuario del picking solo si todas las sedes relacionadas con ese usuario son la consultada; si mezclan esa sede con otra, se ocultan.
   - El resto de los registros del picking no se muestra.
 - Se filtra con el mismo periodo que las otras pestañas.
+- **Detalle y límite (23/10, JG-24):** muestra texto legible de la operación, también para los registros históricos; nunca el JSON almacenado ni `{}`. En los intentos fallidos y bloqueos de un usuario inexistente, el usuario escrito lleva «(no existe)». Se muestran como máximo las 250 operaciones más recientes del periodo **después** del filtro por sede; los empates de fecha se ordenan por id descendente, como el orden inverso de inserción del prototipo.
+- **Bloqueos (23/10, JG-24, por decisión de Jordin):** el prototipo no tiene bloqueos (RNF-15). Su Detalle es «Sistema de picking · Bloqueo de usuario · *usuario*» (o «Sitio web · …») y «Acceso personal · Bloqueo de IP · *dirección IP*». La IP se muestra para que la fila diga qué se bloqueó; la Bitácora solo la ven quienes tienen `pk.reportes`.
 - Qué registra está en [12-reglas-de-negocio.md](12-reglas-de-negocio.md).
 - **(16/10)** Botones **Excel** y **PDF**, como en Despacho ("Exportación", abajo).
 

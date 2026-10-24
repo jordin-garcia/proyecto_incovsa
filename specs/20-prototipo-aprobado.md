@@ -255,3 +255,7 @@ Definidos e implementados en el prototipo el 16/10/2026.
 | Id | Cambio | Dónde |
 |---|---|---|
 | CAM-96 | Reportes: botones **Excel** y **PDF** también en "Rutas realizadas" y "Bitácora", como en Despacho | [10](10-picking-reportes.md) |
+
+## Contraste aprobado del 23/10/2026 (JG-24)
+
+Como excepciones de contraste a la decisión 89, Jordin autorizó conservar los colores accesibles actuales de los textos secundarios medidos con axe (4.46:1 en el prototipo), «RUTA» sin opacidad (4.44:1 con la opacidad del prototipo) y las zonas vacías de Facturación (2.61:1 en el prototipo). Las pruebas mantienen RNF-08 y su mínimo de 4.5:1. Se suma a la excepción del área de subida de `CampoGaleria`; los demás estilos siguen el prototipo. Evidencia en `plan/evidencias/JG-24/contraste-prototipo.json` y precisión en `specs/18`.

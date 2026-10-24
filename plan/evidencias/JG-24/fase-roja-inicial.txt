@@ -1,0 +1,214 @@
+
+> incovsa@0.1.0 test
+> vitest run src/modulos/envios/cliente.test.ts src/componentes/comunes/armazon/iniciales.test.ts src/modulos/envios/servicio.test.ts src/modulos/envios/opciones.test.ts src/app/acceso/servicio.test.ts src/modulos/reportes/servicio.test.ts
+
+
+ RUN  v5.0.5 C:/Users/Hecto/Documents/proyecto_incovsa
+
+ ❯ src/modulos/envios/opciones.test.ts (12 tests | 1 failed) 26622ms
+   × RN-52 / RN-49: separa sedes y sectores, normaliza el nombre y agrega la cola de Bodega al final 2000ms
+ ❯ src/app/acceso/servicio.test.ts (15 tests | 2 failed) 49536ms
+   × RF-SW-09: devuelve solo los sistemas activos y registra el usuario inexistente con su IP 2874ms
+stderr | src/app/acceso/servicio.test.ts > RNF-15 / RNF-03: la API aplica los mismos límites, omite secretos y valida origen
+2026-10-24T00:11:21.914Z WARN [Better Auth]: Invalid password
+   × RNF-15 / RNF-03: la API aplica los mismos límites, omite secretos y valida origen 2531ms
+
+ ❯ src/modulos/reportes/servicio.test.ts (9 tests | 3 failed) 3752ms
+   × RN-17 / RN-39: conserva operaciones globales de ambos sistemas, aísla sedes y no registra el marcado 376ms
+   × RF-SL-36 / H-14 / RN-17: muestra los últimos 250 registros visibles después de filtrar la sede 367ms
+   × RF-SL-36 / RN-39 / H-12: presenta contenido y registros históricos sin JSON ni objetos vacíos 123ms
+ ❯ src/modulos/envios/servicio.test.ts (7 tests | 2 failed) 22326ms
+   × RF-SL-50 / CU-01: guarda los 33 pedidos válidos, sus líneas y el resumen del prototipo 2833ms
+   × RF-SL-68 / decisión 3: elimina pedidos del tablero y registra número, cliente y total en la bitácora 3422ms
+ ❯ src/modulos/envios/cliente.test.ts (0 test)
+ ❯ src/componentes/comunes/armazon/iniciales.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/modulos/envios/cliente.test.ts [ src/modulos/envios/cliente.test.ts ]
+Error: Cannot find module './cliente' imported from C:/Users/Hecto/Documents/proyecto_incovsa/src/modulos/envios/cliente.test.ts
+ ❯ src/modulos/envios/cliente.test.ts:2:1
+      1| import { expect, it } from "vitest";
+      2| import { claveCliente } from "./cliente";
+       | ^
+      3|
+      4| it("RN-49: compara nombre y sector sin mayúsculas, tildes ni espacios …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  src/componentes/comunes/armazon/iniciales.test.ts [ src/componentes/comunes/armazon/iniciales.test.ts ]
+Error: Cannot find module './iniciales' imported from C:/Users/Hecto/Documents/proyecto_incovsa/src/componentes/comunes/armazon/iniciales.test.ts
+ ❯ src/componentes/comunes/armazon/iniciales.test.ts:2:1
+      1| import { expect, it } from "vitest";
+      2| import { iniciales } from "./iniciales";
+       | ^
+      3|
+      4| it("RF-SW-26 / H-31: las iniciales omiten palabras que no empiezan con…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/app/acceso/servicio.test.ts > RF-SW-09: devuelve solo los sistemas activos y registra el usuario inexistente con su IP
+AssertionError: expected { id: 1n, sistema: 'sitio', …(8) } to match object { …(5) }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "detalle": {
+-     "resumen": "Acceso personal · el usuario no existe en ningún sistema",
+-   },
++   "detalle": {},
+    "ip": "192.0.2.6",
+    "operacion": "Intento de acceso fallido",
+    "usuarioEscrito": "no.existe",
+    "usuarioId": null,
+  }
+
+ ❯ src/app/acceso/servicio.test.ts:40:45
+     38|   });
+     39|   expect((await consultarSistemas({ usuario: "no.existe" }, cabeceras(…
+     40|   expect(await prisma.bitacora.findFirst()).toMatchObject({
+       |                                             ^
+     41|     operacion: "Intento de acceso fallido",
+     42|     usuarioEscrito: "no.existe",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  src/app/acceso/servicio.test.ts > RNF-15 / RNF-03: la API aplica los mismos límites, omite secretos y valida origen
+AssertionError: expected { ok: false, …(1) } to deeply equal { ok: false, …(1) }
+
+- Expected
++ Received
+
+  {
+-   "error": "Usuario o contraseña incorrectos.",
++   "error": "Usuario o contraseña incorrectos",
+    "ok": false,
+  }
+
+ ❯ src/app/acceso/servicio.test.ts:266:36
+    264|     expect(respuesta.status).toBe(401);
+    265|     expect(respuesta.headers.get("set-cookie")).toBeNull();
+    266|     expect(await respuesta.json()).toEqual({ ok: false, error: "Usuari…
+       |                                    ^
+    267|   }
+    268|   expect(await prisma.bitacora.count({ where: { operacion: "Bloqueo de…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  src/modulos/envios/opciones.test.ts > RN-52 / RN-49: separa sedes y sectores, normaliza el nombre y agrega la cola de Bodega al final
+AssertionError: expected 3 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 3
+
+ ❯ src/modulos/envios/opciones.test.ts:305:79
+    303|       moverPedidos(s, { sedeId, ids: [1], origen: null, destino: "cami…
+    304|     (s: SesionActual | null, sedeId: number) => cancelarOpcion(s, { ..…
+    305|     (s: SesionActual | null, sedeId: number) => enviarOpcion(s, { ...o…
+       |                                                                               ^
+    306|   ];
+    307|   for (const accion of acciones) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  src/modulos/envios/servicio.test.ts > RF-SL-50 / CU-01: guarda los 33 pedidos válidos, sus líneas y el resumen del prototipo
+TypeError: .toMatch() expects to receive a string, but got object
+ ❯ src/modulos/envios/servicio.test.ts:72:61
+     70|   });
+     71|   expect((bitacora.detalle as { noCargados: unknown[] }).noCargados).t…
+     72|   expect((bitacora.detalle as { resumen: string }).resumen).toMatch(
+       |                                                             ^
+     73|     /^Quetzaltenango · odoo-ejemplo-anonimizado.xlsx · 33 pedido\(s\) …
+     74|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  src/modulos/envios/servicio.test.ts > RF-SL-68 / decisión 3: elimina pedidos del tablero y registra número, cliente y total en la bitácora
+AssertionError: expected undefined to be 'Quetzaltenango · 2 pedido(s) facturad…' // Object.is equality
+
+- Expected:
+"Quetzaltenango · 2 pedido(s) facturado(s): 03543 (Cliente de ejemplo 003, 495 kg), 03546 (Cliente de ejemplo 005, 220 kg)"
+
++ Received:
+undefined
+
+ ❯ src/modulos/envios/servicio.test.ts:128:64
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  src/modulos/reportes/servicio.test.ts > RN-17 / RN-39: conserva operaciones globales de ambos sistemas, aísla sedes y no registra el marcado
+AssertionError: expected [ …(7) ] to include 'Quetzaltenango'
+ ❯ src/modulos/reportes/servicio.test.ts:316:35
+    314|   expect(r.map((x) => x.detalle)).not.toContain("Guatemala · Ruta 1 pa…
+    315|   expect(r.every((x) => !x.detalle.includes("Guatemala"))).toBe(true);
+    316|   expect(r.map((x) => x.detalle)).toContain("Quetzaltenango");
+       |                                   ^
+    317|   expect(r.every((x) => !/[{}]/.test(x.detalle))).toBe(true);
+    318|   expect(r.map((x) => x.detalle)).toContain("Quetzaltenango · Ruta 1 p…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  src/modulos/reportes/servicio.test.ts > RF-SL-36 / H-14 / RN-17: muestra los últimos 250 registros visibles después de filtrar la sede
+AssertionError: expected [ { id: '519', …(5) }, …(259) ] to have a length of 250 but got 260
+
+- Expected
++ Received
+
+- 250
++ 260
+
+ ❯ src/modulos/reportes/servicio.test.ts:345:17
+    343|   })) });
+    344|   const filas = await consultarOperaciones(sesion, 1, dia);
+    345|   expect(filas).toHaveLength(250);
+       |                 ^
+    346|   expect(filas[0]?.detalle).toBe("Registro 518");
+    347|   expect(filas.at(-1)?.detalle).toBe("Registro 20");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+ FAIL  src/modulos/reportes/servicio.test.ts > RF-SL-36 / RN-39 / H-12: presenta contenido y registros históricos sin JSON ni objetos vacíos
+AssertionError: expected [ '{}', '{}', …(3) ] to deeply equal ArrayContaining{…}
+
+- Expected
++ Received
+
+- ArrayContaining [
+-   "Misión",
+-   "Cuero",
+-   "Producto de prueba",
+-   "Acceso personal · el usuario no existe en ningún sistema",
+-   "Sistema de picking · contraseña incorrecta",
++ [
++   "{}",
++   "{}",
++   "{\"producto\":\"Producto de prueba\"}",
++   "{\"industria\":\"Cuero\"}",
++   "{\"bloque\":\"Misión\"}",
+  ]
+
+ ❯ src/modulos/reportes/servicio.test.ts:360:35
+    358|   ].map(r=>({...r, creadoEn:new Date("2026-10-25T12:00:00-06:00")}))});
+    359|   const filas = await consultarOperaciones(sesion, 1, dia);
+    360|   expect(filas.map(f=>f.detalle)).toEqual(expect.arrayContaining([
+       |                                   ^
+    361|     "Misión", "Cuero", "Producto de prueba", "Acceso personal · el usu…
+    362|     "Sistema de picking · contraseña incorrecta",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯
+
+
+ Test Files  6 failed (6)
+      Tests  8 failed | 35 passed (43)
+   Start at  18:09:32
+   Duration  149.07s (tests 75%, import 24%, transform 1%)
+

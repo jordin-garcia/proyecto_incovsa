@@ -43,6 +43,7 @@ export async function guardarPublicacion(entrada: Publicacion, archivos: File[],
   const datos = esquemaPublicacion.parse(entrada);
   const nuevas: string[] = [];
   let antiguas: string[];
+  let nombrePublicacion: string = nombresBloques[datos.bloque];
   try {
     const indices = datos.imagenes.filter((i): i is number => typeof i === "number");
     if (
@@ -66,6 +67,10 @@ export async function guardarPublicacion(entrada: Publicacion, archivos: File[],
       )
         throw new ErrorNegocio("El contenido cambió. Recargue la página antes de publicar.");
       const urls = datos.imagenes.map((i) => (typeof i === "number" ? nuevas[i]! : i));
+      if (datos.bloque === "valores") {
+        const cambios = urls.flatMap((url, i) => (url !== actuales[i] ? [`Imagen del valor ${i + 1}`] : []));
+        if (cambios.length) nombrePublicacion = cambios.join(" · ");
+      }
       if (datos.bloque === "logo" || datos.bloque === "inquiserca") {
         await tx.configuracionSitio.update({
           where: { id: 1 },
@@ -101,7 +106,7 @@ export async function guardarPublicacion(entrada: Publicacion, archivos: File[],
         operacion: "Cambio de contenido del sitio",
         entidad: "contenido",
         usuarioId: sesion!.usuario.id,
-        detalle: { bloque: nombresBloques[datos.bloque] },
+        detalle: { bloque: nombrePublicacion },
       });
       return actuales.filter((url): url is string => !!url && !urls.includes(url));
     });
@@ -117,7 +122,11 @@ export async function guardarPublicacion(entrada: Publicacion, archivos: File[],
       console.error("No se pudo eliminar una imagen sustituida del almacenamiento.");
     }
   }
-  return { bloque: datos.bloque, imagenes: datos.imagenes.map((i) => (typeof i === "number" ? nuevas[i]! : i)) };
+  return {
+    bloque: datos.bloque,
+    nombrePublicacion,
+    imagenes: datos.imagenes.map((i) => (typeof i === "number" ? nuevas[i]! : i)),
+  };
 }
 
 // Lecturas exclusivamente públicas (DM-02). No consultan sesiones, usuarios ni datos del picking.
