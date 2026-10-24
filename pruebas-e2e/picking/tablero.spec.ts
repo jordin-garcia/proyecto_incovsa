@@ -77,19 +77,21 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
   let pedido: { envioId: number; numero: number };
   let larga: { envioId: number; numero: number };
   let despacho: { envioId: number; numero: number };
+  let muyLarga: { envioId: number; numero: number };
 
   test.beforeAll(async ({}, informacion) => {
-    ({ ruta, pedido, larga, despacho } = JSON.parse(
+    ({ ruta, pedido, larga, despacho, muyLarga } = JSON.parse(
       preparar("crear-tablero", String(BASE[informacion.project.name] ?? 250)),
     ));
   });
 
   test.afterAll(async () => {
-    const ids = [ruta, pedido, larga, despacho].filter(Boolean).map((d) => String(d.envioId));
+    const ids = [ruta, pedido, larga, despacho, muyLarga].filter(Boolean).map((d) => String(d.envioId));
     if (ids.length) preparar("limpiar", ...ids);
   });
 
   test("RF-SL-58: cambia entre modo claro y modo oscuro y el modo se conserva al recargar esa pantalla sin afectar a otras", async ({
+    browser,
     context,
     page,
     baseURL,
@@ -100,40 +102,46 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
     const claro = page.getByRole("button", { name: "Modo claro" });
     const oscuro = page.getByRole("button", { name: "Modo oscuro" });
 
-    // Sin elección previa, el tablero abre en modo oscuro, como el prototipo.
-    await expect(tablero).toHaveAttribute("data-tema", "oscuro");
-    await expect(oscuro).toHaveAttribute("aria-pressed", "true");
-    await expect(claro).toHaveAttribute("aria-pressed", "false");
-
-    await claro.click();
+    // Sin elección previa, el tablero abre en modo claro (decisión de Jordin del 24/10; el prototipo abre en oscuro).
     await expect(tablero).toHaveAttribute("data-tema", "claro");
     await expect(claro).toHaveAttribute("aria-pressed", "true");
+    await expect(oscuro).toHaveAttribute("aria-pressed", "false");
     await expect(page.locator(".tb-sup img")).toHaveAttribute("src", /incovsa-quimicos\.webp/);
+
+    await oscuro.click();
+    await expect(tablero).toHaveAttribute("data-tema", "oscuro");
+    await expect(oscuro).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator(".tb-sup img")).toHaveAttribute("src", /incovsa-quimicos-blanco\.webp/);
 
     await page.reload();
     await expect(page.locator(".tb")).toHaveAttribute("data-hidratado", "true");
-    await expect(page.locator(".tb")).toHaveAttribute("data-tema", "claro");
+    await expect(page.locator(".tb")).toHaveAttribute("data-tema", "oscuro");
 
     // Otra pantalla del mismo navegador no hereda el modo y su cambio no altera la primera.
     const otra = await context.newPage();
     try {
       await abrirTablero(otra, ruta.envioId);
-      await expect(otra.locator(".tb")).toHaveAttribute("data-tema", "oscuro");
-      await expect(otra.locator(".tb-sup img")).toHaveAttribute("src", /incovsa-quimicos-blanco\.webp/);
-      await otra.getByRole("button", { name: "Modo claro" }).click();
+      await expect(otra.locator(".tb")).toHaveAttribute("data-tema", "claro");
       await otra.getByRole("button", { name: "Modo oscuro" }).click();
-      await expect(otra.locator(".tb")).toHaveAttribute("data-tema", "oscuro");
+      await otra.getByRole("button", { name: "Modo claro" }).click();
+      await expect(otra.locator(".tb")).toHaveAttribute("data-tema", "claro");
     } finally {
       await otra.close();
     }
     await page.reload();
     await expect(page.locator(".tb")).toHaveAttribute("data-hidratado", "true");
-    await expect(page.locator(".tb")).toHaveAttribute("data-tema", "claro");
-
-    await page.getByRole("button", { name: "Modo oscuro" }).click();
-    await page.reload();
-    await expect(page.locator(".tb")).toHaveAttribute("data-hidratado", "true");
     await expect(page.locator(".tb")).toHaveAttribute("data-tema", "oscuro");
+
+    // Al reiniciar el navegador (un contexto nuevo, sin la sesión del navegador anterior) vuelve al modo claro.
+    const reiniciado = await browser.newContext({ baseURL });
+    try {
+      await entrar(reiniciado, baseURL);
+      const nueva = await reiniciado.newPage();
+      await abrirTablero(nueva, ruta.envioId);
+      await expect(nueva.locator(".tb")).toHaveAttribute("data-tema", "claro");
+    } finally {
+      await reiniciado.close();
+    }
   });
 
   test("CAM-93 / CAM-94: colores del lote y del cuadro del pedido en cada modo, y la silueta del camión grande en todas las rutas", async ({
@@ -145,6 +153,7 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
     await abrirTablero(page, pedido.envioId);
 
     // Modo oscuro: lote y cuadro de «PEDIDO» en gris (fondo #3A3A3E, texto #EDEDED).
+    await page.getByRole("button", { name: "Modo oscuro" }).click();
     await expect(page.locator(".tb")).toHaveAttribute("data-tema", "oscuro");
     await expect(page.locator(".tb-num")).toHaveClass(/recoge/);
     expect(await estilo(page, ".tb-num.recoge", "backgroundColor")).toBe("rgb(58, 58, 62)");
@@ -217,6 +226,48 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
       const ultima = await lineas.nth(12).boundingBox();
       expect(ultima!.y + ultima!.height).toBeLessThanOrEqual(page.viewportSize()!.height);
     }
+  });
+
+  test("RNF-02: en una ruta que no cabe en la pantalla se pueden ver y tocar todas las líneas", async ({
+    context,
+    page,
+    baseURL,
+  }) => {
+    await entrar(context, baseURL);
+    await abrirTablero(page, muyLarga.envioId);
+    const lineas = page.locator(".tb-linea");
+    await expect(lineas).toHaveCount(60);
+    // Cada línea, llevada a la vista, queda dentro de la pantalla y es lo que hay en su centro (nada la tapa).
+    const tapadas = await lineas.evaluateAll((els) =>
+      els.flatMap((el) => {
+        el.scrollIntoView({ block: "nearest" });
+        const r = el.getBoundingClientRect();
+        const x = r.left + r.width / 2;
+        const y = r.top + r.height / 2;
+        const dentro = r.left >= 0 && r.right <= innerWidth + 0.5 && r.top >= 0 && r.bottom <= innerHeight + 0.5;
+        const visible = document.elementFromPoint(x, y)?.closest(".tb-linea") === el;
+        const casilla = el.querySelector(".chk-tb")!.getBoundingClientRect();
+        const casillaVisible = casilla.right <= innerWidth + 0.5 && casilla.width > 0;
+        return dentro && visible && casillaVisible ? [] : [el.querySelector(".ord")?.textContent];
+      }),
+    );
+    expect(tapadas).toEqual([]);
+    // La última se marca con un toque.
+    const ultima = lineas.last();
+    const respuesta = page.waitForResponse(
+      (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
+    );
+    await ultima.locator(".prod").click();
+    await respuesta;
+    await expect(ultima).toHaveClass(/\blista\b/);
+    // El botón de despacho sigue a la vista y nada se sale de la pantalla a lo ancho, ni el panel del camión.
+    await expect(page.getByRole("button", { name: "Ruta Despachada" })).toBeVisible();
+    expect(await page.locator(".tb").evaluate((el) => el.scrollWidth - el.clientWidth)).toBeLessThanOrEqual(0);
+    const lado = await page.locator(".tb-lado").boundingBox();
+    expect(lado!.x + lado!.width).toBeLessThanOrEqual(page.viewportSize()!.width);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+      page.viewportSize()!.width,
+    );
   });
 
   test("RNF-13 / RF-SL-23: marcar una línea en Bodega se ve en el tablero en menos de 2 segundos, resaltada", async ({

@@ -624,8 +624,9 @@ Al trasladar el prototipo se comprobó con axe que `--g500` sobre `--g50` da un 
 
 ## Tablero de Bodega en pantalla completa (24/10/2026, JM-05)
 
-- El tablero sigue `tablero.js` del prototipo aprobado. `specs/07` («Tablero en pantalla completa») precisa lo que no decía: la ruta o el pedido que muestra cada pantalla, el modo oscuro de inicio guardado en la sesión del navegador, el marcado tocando la línea completa con el resaltado de los cambios, los colores de la etiqueta del lote en el modo claro (`--v800`, como `.lote-tb`) y la vuelta al módulo inicial sin permiso o sin sede ([07](07-picking-bodega.md)).
+- El tablero sigue `tablero.js` del prototipo aprobado. `specs/07` («Tablero en pantalla completa») precisa lo que no decía: la ruta o el pedido que muestra cada pantalla, el modo guardado en la sesión del navegador, el marcado tocando la línea completa con el resaltado de los cambios, los colores de la etiqueta del lote en el modo claro (`--v800`, como `.lote-tb`) y la vuelta al módulo inicial sin permiso o sin sede ([07](07-picking-bodega.md)).
 - El cuadro lima de «PEDIDO» del modo claro conserva los colores del prototipo, con la misma excepción de contraste aprobada para el módulo (JM-08, 19/10): la prueba de axe excluye solo su etiqueta pequeña «PEDIDO».
+- **Excepciones a la decisión 89, por decisión de Jordin (24/10):** el tablero abre en **modo claro** sin elección previa y al reiniciar el navegador (el prototipo abre en oscuro); y en una ruta que no cabe en la pantalla, el área de las líneas se desplaza para que todas se puedan ver y tocar en cualquier tamaño, la barra superior del teléfono pasa a otra línea y el panel del camión no se ensancha con muchas líneas (en el prototipo, las líneas que no caben quedan ocultas y a 390 px el contenido se corta por la derecha) ([07](07-picking-bodega.md)).
 - Lo implementó el coordinador por la ausencia de Josué (protocolo §E4).
 
 ## Documentos no alineados con las reuniones 4 y 5

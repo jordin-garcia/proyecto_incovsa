@@ -199,22 +199,29 @@ async function principal() {
     const pedido = await crearEnvioPrueba({ numero: base + 2, tipo: "pedido" });
     const larga = await crearEnvioPrueba({ numero: base + 3, tipo: "ruta" });
     const despacho = await crearEnvioPrueba({ numero: base + 4, tipo: "pedido" });
-    // Más líneas de las que caben en una columna (RF-SL-77, CP-40), en el camión de 6,000 kg (CAM-94).
-    await prisma.lineaPreparacion.deleteMany({ where: { envioId: larga.envioId } });
-    await prisma.lineaPreparacion.createMany({
-      data: Array.from({ length: 25 }, (_, i) => ({
-        envioId: larga.envioId,
-        producto: `PRODUCTO DE PRUEBA ${String(i + 1).padStart(2, "0")}`,
-        lote: String(1000 + i),
-        pesoConversionKg: 25,
-        cantidadKg: 25 * (i + 1),
-        marcado: false,
-        posicion: i + 1,
-      })),
-    });
+    const muyLarga = await crearEnvioPrueba({ numero: base + 5, tipo: "ruta" });
     const grande = await prisma.camion.findFirstOrThrow({ where: { identificacion: "Camión 3" } });
-    await prisma.envio.update({ where: { id: larga.envioId }, data: { camionId: grande.id } });
-    console.log(JSON.stringify({ ruta, pedido, larga, despacho }));
+    // Más líneas de las que caben en una columna (RF-SL-77, CP-40), en el camión de 6,000 kg (CAM-94); y una ruta
+    // que no cabe en ninguna pantalla ni con el alto mínimo de las líneas (decisión de Jordin del 24/10).
+    for (const [envio, cantidad] of [
+      [larga, 25],
+      [muyLarga, 60],
+    ] as const) {
+      await prisma.lineaPreparacion.deleteMany({ where: { envioId: envio.envioId } });
+      await prisma.lineaPreparacion.createMany({
+        data: Array.from({ length: cantidad }, (_, i) => ({
+          envioId: envio.envioId,
+          producto: `PRODUCTO DE PRUEBA ${String(i + 1).padStart(2, "0")}`,
+          lote: String(1000 + i),
+          pesoConversionKg: 25,
+          cantidadKg: 25 * (i + 1),
+          marcado: false,
+          posicion: i + 1,
+        })),
+      });
+      await prisma.envio.update({ where: { id: envio.envioId }, data: { camionId: grande.id } });
+    }
+    console.log(JSON.stringify({ ruta, pedido, larga, despacho, muyLarga }));
     return;
   }
 

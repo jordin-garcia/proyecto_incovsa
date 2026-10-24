@@ -34,6 +34,7 @@
   height: 100dvh;
   overflow: hidden;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr);
   background:
     radial-gradient(1200px 600px at 85% -10%, var(--color-tb-oscuro-brillo), transparent 60%), var(--tb-fondo);
@@ -317,6 +318,11 @@
   display: grid;
   gap: 0.5em;
   align-content: stretch;
+  /* Excepción al prototipo (Jordin, 24/10): si las líneas no caben ni con el alto mínimo, el área de líneas se
+     desplaza, para que todas se puedan ver y tocar en cualquier tamaño de pantalla. */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
 }
 .tb-linea {
   --alto: 5em;
@@ -589,6 +595,8 @@
 /* ---- Panel lateral: camión y cola */
 .tb-lado {
   display: grid;
+  /* La columna no crece con el contenido: con muchas líneas, la cama del camión lo ensanchaba (24/10). */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr);
   gap: 1.1em;
   min-height: 0;
@@ -955,11 +963,11 @@
 }
 @media (max-width: 1024px) {
   .tb-cuerpo {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: minmax(0, 1fr) auto;
   }
   .tb-lado {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: auto;
   }
   .tb-cola {
@@ -977,7 +985,7 @@
     overflow: auto;
   }
   .tb-lado {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .tb-linea {
     grid-template-columns: 1.6em minmax(0, 1fr) auto;
@@ -997,6 +1005,14 @@
   }
   .tb-sup {
     flex-wrap: wrap;
+  }
+  /* En el teléfono los botones de la barra pasan a otra línea en vez de salirse de la pantalla (Jordin, 24/10). */
+  .tb-sup .der {
+    flex-wrap: wrap;
+    margin-left: 0;
+  }
+  .tb-lineas {
+    overflow: visible;
   }
   .tb-tit {
     display: none;

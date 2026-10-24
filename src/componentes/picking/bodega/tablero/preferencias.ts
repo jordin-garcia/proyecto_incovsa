@@ -7,11 +7,11 @@ export type TemaTablero = "claro" | "oscuro";
 // Como el prototipo: el modo se guarda en la sesión del navegador de esa pantalla y no se comparte (decisión 56).
 const CLAVE = "incovsa-tb-tema";
 const EVENTO = "incovsa-tb-tema";
-let temaEnMemoria: TemaTablero = "oscuro";
+let temaEnMemoria: TemaTablero = "claro";
 
 function leerTema(): TemaTablero {
   try {
-    return sessionStorage.getItem(CLAVE) === "claro" ? "claro" : "oscuro";
+    return sessionStorage.getItem(CLAVE) === "oscuro" ? "oscuro" : "claro";
   } catch {
     return temaEnMemoria;
   }
@@ -32,9 +32,12 @@ export function fijarTema(tema: TemaTablero) {
   window.dispatchEvent(new Event(EVENTO));
 }
 
-/** Modo del tablero; sin elección previa, el oscuro, como el prototipo. */
+/**
+ * Modo del tablero. Sin elección previa, o al reiniciar el navegador, el claro: lo decidió Jordin el 24/10
+ * (el prototipo abre en oscuro).
+ */
 export function useTemaTablero(): TemaTablero {
-  return useSyncExternalStore(suscribirTema, leerTema, () => "oscuro");
+  return useSyncExternalStore(suscribirTema, leerTema, () => "claro");
 }
 
 function suscribirReloj(avisar: () => void) {
