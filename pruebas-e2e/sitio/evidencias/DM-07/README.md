@@ -82,3 +82,20 @@ Se incorporó `develop` con el desbloqueo de Jordin, registrado en la tarea, `sp
 - Revisión independiente actualizada: LISTO, sin hallazgos de corrección ni opcionales; ver `revision.md`.
 
 La verificación general, la compilación y la batería E2E completa deben terminar antes del cierre. `.codex/config.toml` y las capturas regeneradas de otras tareas no se incluyen en el PR.
+
+## Integración con JG-24 · 24/10/2026
+
+Se incorporó `develop` en `af69699`, con las correcciones compartidas del acceso, la bitácora y `CampoGaleria`. Noticias hereda ahora el relleno y la letra compartidos, sin la regla duplicada. El área de subida conserva `--g600` y el estado al pasar el cursor corregido por Jordin.
+
+El endpoint de Noticias aplica también el origen público de `BETTER_AUTH_URL`, como Catálogo después de JG-24. Se comprobó la fase roja: con un origen público configurado, el endpoint anterior aceptaba el origen interno (200 en lugar de 403). La nueva prueba verifica el rechazo de orígenes interno y ajeno, la publicación desde el origen público y la limpieza de la noticia creada.
+
+La escritura de capturas obtiene primero el PNG completo en memoria y reemplaza el archivo anterior, para evitar el error `UNKNOWN: open` observado al sobrescribir evidencias en OneDrive. Solo se ignora un archivo anterior inexistente (`ENOENT`); los demás errores siguen haciendo fallar la prueba. No cambian axe, las aserciones ni los tiempos máximos.
+
+Antes de JG-24 se ejecutaron las 285 E2E completas y sus casos fallidos se repitieron. La base original conservaba 3.086 registros de bitácora; su DOM sin límite agotaba el análisis de axe. Se contrastó con una base temporal local, creada con las mismas migraciones y semilla demo, sin borrar el historial original. JG-24 ya corrige esa causa al limitar a 250 las operaciones visibles. La verificación final se ejecuta nuevamente sobre la base original, con resolución IPv4 para el arranque local de producción. La suspensión del equipo interrumpió una repetición; ese resultado no se presenta como aprobado.
+
+- `npm ci`: 854 paquetes, cero vulnerabilidades informadas, lockfile conservado.
+- `npm run verificar`: formato, lint y tipos aprobados; **366 pruebas en 44 archivos**, todas aprobadas.
+- `npm run build`: aprobado, incluidas las tres rutas de Noticias y el artefacto standalone.
+- Revisión independiente de la integración y del origen público: LISTO, sin hallazgos.
+- Batería E2E final con JG-24 sobre la base original: **300 aprobadas directamente, 2 fallidas y 4 no ejecutadas** en 16,1 minutos. Un grupo no inició su servidor de producción en teléfono; Bodega en escritorio falló al buscar la fila durante la reversión optimista. `--last-failed --workers=1` repitió los seis casos pendientes: **6 aprobadas en 59,3 segundos**, código 0. Quedan cubiertos los 306 casos sin modificar pruebas ni sus límites. Bitácora pasó en 2,7 segundos en los tres tamaños, conservando el historial original.
+- Las seis E2E de Noticias pasaron con JG-24, axe y capturas en 390, 768 y 1440 px. Next-devtools: `configErrors: []`, `sessionErrors: []` al abrir `/noticias` desde Playwright MCP.

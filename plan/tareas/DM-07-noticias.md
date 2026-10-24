@@ -5,7 +5,7 @@ persona: daniela
 responsable: Daniela Marín
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [DM-04]
 programada: 2026-10-22
 requisitos: [RF-SW-15, RF-SW-18, CU-07, CU-08]
@@ -69,3 +69,15 @@ Para desbloquear: Jordin debe decidir cómo resolver el conflicto de diseño y a
 Jordin decidió **conservar `--g600`** en el texto del área de subida de `CampoGaleria`, en reposo y al pasar el cursor. Con el `--g500` del prototipo el contraste es 4.46:1 sobre `--g50` y 4.41:1 sobre `--v50`; con `--g600` es 7.02:1 y 6.94:1 (RNF-08). Es una excepción de contraste a la decisión 89, solo para el color del texto, registrada en `specs/18` y `specs/20`. La prueba de axe no cambia.
 
 Para terminar: retoma `daniela/DM-07-noticias-panel` actualizada desde `develop`, conserva `--g600` en el área de subida y completa B6–B11. El estado al pasar el cursor y el relleno de `CampoGaleria` (componente compartido) los corrige Jordin en JG-24; no los cambies en esta rama.
+
+## Resultado
+
+Implementación y verificación local completadas el 24/10/2026, después de incorporar JG-24 desde `develop`.
+
+- **Panel:** `/panel/noticias` permite crear, editar y eliminar con confirmación. Cada noticia tiene título, texto y entre una y cinco imágenes ordenadas; se publica al guardar, conserva su fecha al editar y no tiene estado de publicación ni opción de ocultar.
+- **Sitio:** `/noticias` muestra cada noticia completa a todo el ancho, de la más reciente a la más antigua, con galería, fecha y pie. En teléfono y tableta la imagen queda encima del texto; se respetan saltos de línea y palabras largas.
+- **Servidor:** las lecturas internas, acciones y endpoint exigen `sit.noticias`; las entradas se validan con Zod. Noticia, galería y bitácora se guardan en la misma transacción. Se comprueba que las referencias conservadas pertenecen a esa noticia, se validan los archivos por contenido mediante DM-04 y se eliminan las imágenes retiradas. El endpoint admite el origen público configurado en `BETTER_AUTH_URL`, también detrás del proxy, y rechaza orígenes interno y ajeno.
+- **Interfaces reutilizables:** `leerNoticiasSitio()` devuelve únicamente ID, título, texto, fecha ISO e imágenes públicas; `leerNoticiasPanel(sesion)` agrega el permiso. `publicarNoticia(FormData)` recibe `datos` como JSON e `imagenes` como archivos; `datos.imagenes` conserva direcciones propias o índices de los archivos nuevos. El panel usa `publicarGaleria("noticias", datos, imagenes)` con `/panel/noticias/publicar`; `eliminarNoticia(id)` elimina y revalida el sitio. Las operaciones registran «Creación de noticia», «Edición de noticia» y «Eliminación de noticia».
+- **Diseño:** se conserva `--g600` según la autorización de Jordin en `specs/18` y `specs/20`. Tras JG-24 se heredan las medidas y el estado al pasar el cursor del componente compartido. No se inventa contenido inicial (P-23). No se agregaron dependencias ni migraciones, y `.codex/config.toml` queda fuera de los commits.
+- **Verificación:** `npm run verificar` aprobado, con 366 pruebas en 44 archivos; `npm run build` aprobado. Batería E2E completa de 306 casos: 300 aprobados directamente y 6 pendientes por dos fallos intermitentes de tiempo real aprobados al repetir; código 0 en la repetición, sin cambiar aserciones, axe ni límites. Las seis E2E de Noticias pasaron en 390, 768 y 1440 px con capturas. Plan válido (66 tareas), design system aprobado y revisión independiente LISTO sin hallazgos.
+- **Archivos principales y evidencia:** servicios y pruebas en `src/modulos/contenido/*noticias*`, páginas de Noticias y `EditorNoticias.tsx`; [interfaces, verificaciones y 48 capturas comparativas](../../pruebas-e2e/sitio/evidencias/DM-07/README.md) y [revisión final](../../pruebas-e2e/sitio/evidencias/DM-07/revision.md).

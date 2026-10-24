@@ -1,4 +1,4 @@
-import { beforeEach, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import sharp from "sharp";
 import { prisma } from "@/lib/prisma";
 import type { SesionActual } from "@/lib/sesion";
@@ -30,6 +30,7 @@ async function imagen() {
   return new File([new Uint8Array(bytes)], "noticia.png");
 }
 const campos = { titulo: "Noticia de prueba", texto: "Primera línea\nSegunda línea", imagenes: [0] };
+afterEach(() => vi.unstubAllEnvs());
 beforeEach(async () => {
   await limpiarTablasDeNegocio();
   await prisma.usuario.create({
@@ -152,6 +153,7 @@ it("RN-56 / RNF-05: carga cinco archivos reales, sustituye su galería y borra l
 });
 
 it("RF-SW-25 / RNF-05: la ruta multipart exige permiso y origen propio antes de aceptar archivos", async () => {
+  vi.stubEnv("BETTER_AUTH_URL", "http://localhost");
   const request = (origin: string, body: FormData = formulario(campos)) =>
     new Request("http://localhost/panel/noticias/publicar", { method: "POST", headers: { origin }, body });
   for (const actual of [null, { ...sesion, permisos: [] }, { ...sesion, sistema: "picking" as const }]) {
@@ -173,6 +175,23 @@ it("RF-SW-25 / RNF-05: la ruta multipart exige permiso y origen propio antes de 
   ).toBe(400);
   expect(await prisma.noticia.count()).toBe(0);
   const respuesta = await POST(request("http://localhost", formulario(campos, [await imagen()])));
+  expect(respuesta.status).toBe(200);
+  const datos = (await respuesta.json()) as { datos: { id: number } };
+  expect((await eliminarNoticia(datos.datos.id)).ok).toBe(true);
+});
+
+it("RNF-05 / RF-SW-18: detrás del proxy acepta el origen público configurado y rechaza el interno", async () => {
+  vi.stubEnv("BETTER_AUTH_URL", "https://incovsa.prueba.invalid");
+  const request = async (origin: string) =>
+    new Request("http://localhost:3000/panel/noticias/publicar", {
+      method: "POST",
+      headers: { origin },
+      body: formulario(campos, [await imagen()]),
+    });
+  for (const origen of ["http://localhost:3000", "https://otro.prueba.invalid"])
+    expect((await POST(await request(origen))).status).toBe(403);
+  expect(await prisma.noticia.count()).toBe(0);
+  const respuesta = await POST(await request("https://incovsa.prueba.invalid"));
   expect(respuesta.status).toBe(200);
   const datos = (await respuesta.json()) as { datos: { id: number } };
   expect((await eliminarNoticia(datos.datos.id)).ok).toBe(true);
