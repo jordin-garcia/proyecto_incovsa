@@ -1,4 +1,5 @@
 import { Prisma } from "@/generated/prisma/client";
+import { claveCliente } from "./cliente";
 import { prisma } from "@/lib/prisma";
 import { ErrorNegocio } from "@/lib/errores";
 import { fechaGuatemala, formatoFecha, inicioDelDiaGuatemala } from "@/lib/fechas";
@@ -297,11 +298,15 @@ export async function enviarOpcion(sesion: SesionActual | null, entrada: unknown
     const clientes = new Map<string, { cliente: string; sector: string; totalKg: Prisma.Decimal }>();
     let totalKg = new Prisma.Decimal(0);
     for (const pedido of pedidos) {
-      const claveCliente = JSON.stringify([pedido.cliente, pedido.sector]);
-      let cliente = clientes.get(claveCliente);
+      const clave = claveCliente(pedido);
+      let cliente = clientes.get(clave);
       if (!cliente) {
-        cliente = { cliente: pedido.cliente, sector: pedido.sector, totalKg: new Prisma.Decimal(0) };
-        clientes.set(claveCliente, cliente);
+        cliente = {
+          cliente: pedido.cliente || "Sin nombre",
+          sector: pedido.sector || "Sin sector",
+          totalKg: new Prisma.Decimal(0),
+        };
+        clientes.set(clave, cliente);
       }
       for (const detalle of pedido.detalles) {
         const clave = JSON.stringify([detalle.producto, detalle.lote, detalle.pesoConversionKg.toFixed(3)]);

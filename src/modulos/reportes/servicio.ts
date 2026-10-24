@@ -8,6 +8,7 @@ import { consultarBitacora } from "@/modulos/bitacora/servicio";
 import { convertir } from "@/modulos/conversion/servicio";
 import { fechaGuatemala } from "@/lib/fechas";
 import { resolverPeriodo } from "./periodo";
+import { detalleLegible } from "@/modulos/bitacora/detalle";
 
 const operacionesGlobalesDeAcceso = new Set([
   "Inicio de sesión",
@@ -129,7 +130,24 @@ export async function consultarRutas(sesion: SesionActual | null, sedeId: number
 
 export async function consultarOperaciones(sesion: SesionActual | null, sedeId: number, entrada: unknown) {
   const p = autorizar(sesion, sedeId, entrada);
-  const registros = await consultarBitacora({ desde: p.desde, hasta: p.hasta });
+  const visibles: Awaited<ReturnType<typeof filtrarRegistros>> = [];
+  let cursor: bigint | undefined;
+  // Cada consulta es acotada. El límite se aplica después del filtro de sede, para no
+  // perder registros propios cuando los más recientes pertenecen a otras sedes.
+  while (visibles.length < 250) {
+    const registros = await consultarBitacora({ desde: p.desde, hasta: p.hasta, cursor });
+    visibles.push(...(await filtrarRegistros(registros, sesion, sedeId)));
+    if (registros.length < 250) break;
+    cursor = registros.at(-1)!.id;
+  }
+  return visibles.slice(0, 250);
+}
+
+async function filtrarRegistros(
+  registros: Awaited<ReturnType<typeof consultarBitacora>>,
+  sesion: SesionActual | null,
+  sedeId: number,
+) {
   const veTodasLasSedes = esAccesoTotal(sesion?.usuario.rol ?? "");
   const sede = veTodasLasSedes
     ? null
@@ -193,23 +211,9 @@ export async function consultarOperaciones(sesion: SesionActual | null, sedeId: 
     id: r.id.toString(),
     fecha: r.creadoEn.toISOString(),
     sistema: r.sistema,
-    usuario: r.usuario?.name ?? r.usuarioEscrito ?? "—",
+    usuario: r.usuario?.name ?? (r.usuarioEscrito ? `${r.usuarioEscrito} (no existe)` : "—"),
     operacion: r.operacion,
-    detalle:
-      typeof r.detalle === "string"
-        ? r.detalle
-        : r.detalle &&
-            typeof r.detalle === "object" &&
-            !Array.isArray(r.detalle) &&
-            typeof r.detalle.resumen === "string"
-          ? r.detalle.resumen
-          : r.detalle &&
-              typeof r.detalle === "object" &&
-              !Array.isArray(r.detalle) &&
-              Object.keys(r.detalle).length === 0 &&
-              r.operacion === "Inicio de sesión"
-            ? `${r.sistema === "picking" ? "Sistema de picking" : "Sitio web"} · ${r.usuarioEscrito ?? r.usuario?.name ?? "—"}`
-            : JSON.stringify(r.detalle),
+    detalle: detalleLegible(r),
   }));
 }
 

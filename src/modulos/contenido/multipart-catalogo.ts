@@ -9,7 +9,8 @@ export async function recibirGaleria(request: Request, tipo: "industria" | "prod
       await obtenerSesion("sitio", request.headers),
       tipo === "industria" ? "sit.industrias" : "sit.catalogo",
     );
-    if (request.headers.get("origin") !== new URL(request.url).origin) throw new ErrorAcceso();
+    if (request.headers.get("origin") !== new URL(process.env.BETTER_AUTH_URL ?? request.url).origin)
+      throw new ErrorAcceso();
     const contenido = request.headers.get("content-type") ?? "";
     if (!contenido.startsWith("multipart/form-data;")) throw new ErrorNegocio("El contenido enviado no es válido.");
     const lector = request.body?.getReader();

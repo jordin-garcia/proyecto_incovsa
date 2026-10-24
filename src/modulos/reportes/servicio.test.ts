@@ -313,7 +313,8 @@ it("RN-17 / RN-39: conserva operaciones globales de ambos sistemas, aísla sedes
   expect(r.map((x) => x.detalle)).not.toContain('{"sede":"Guatemala"}');
   expect(r.map((x) => x.detalle)).not.toContain("Guatemala · Ruta 1 pasa a En Ruta");
   expect(r.every((x) => !x.detalle.includes("Guatemala"))).toBe(true);
-  expect(r.map((x) => x.detalle)).toContain('{"sede":"Quetzaltenango"}');
+  expect(r.map((x) => x.detalle)).toContain("Quetzaltenango");
+  expect(r.every((x) => !/[{}]/.test(x.detalle))).toBe(true);
   expect(r.map((x) => x.detalle)).toContain("Quetzaltenango · Ruta 1 pasa a En Ruta");
   expect(r.some((x) => x.detalle.includes("usuario-xela"))).toBe(true);
   expect(r.some((x) => x.detalle.includes("usuario-restablecer-xela"))).toBe(true);
@@ -332,6 +333,46 @@ it("RNF-04 / RN-17: aísla la sede y rechaza sin sesión, sin permiso y otra sed
     await expect(consulta({ ...sesion!, permisos: [] }, 1, dia)).rejects.toThrow("No tiene permisos");
     await expect(consulta(sesion, 2, dia)).rejects.toThrow("No tiene permisos");
   }
+});
+
+it("RF-SL-36 / H-14 / RN-17: muestra los últimos 250 registros visibles después de filtrar la sede", async () => {
+  await prisma.bitacora.createMany({
+    data: Array.from({ length: 520 }, (_, i) => ({
+      sistema: "picking",
+      operacion: "Cambio de estado",
+      entidad: "envio",
+      detalle: { sede: i % 2 ? "Guatemala" : "Quetzaltenango", resumen: `Registro ${i}` },
+      creadoEn: new Date(new Date("2026-10-25T12:00:00-06:00").getTime() + i * 1000),
+    })),
+  });
+  const filas = await consultarOperaciones(sesion, 1, dia);
+  expect(filas).toHaveLength(250);
+  expect(filas[0]?.detalle).toBe("Registro 518");
+  expect(filas.at(-1)?.detalle).toBe("Registro 20");
+  expect(filas.every((f) => Number(f.detalle.split(" ")[1]) % 2 === 0)).toBe(true);
+});
+
+it("RF-SL-36 / RN-39 / H-12: presenta contenido y registros históricos sin JSON ni objetos vacíos", async () => {
+  await prisma.bitacora.createMany({
+    data: [
+      { sistema: "sitio", operacion: "Cambio de contenido del sitio", detalle: { bloque: "Misión" } },
+      { sistema: "sitio", operacion: "Cambio de contenido del sitio", detalle: { industria: "Cuero" } },
+      { sistema: "sitio", operacion: "Creación de producto público", detalle: { producto: "Producto de prueba" } },
+      { sistema: "sitio", operacion: "Intento de acceso fallido", usuarioEscrito: "no.existe", detalle: {} },
+      { sistema: "picking", operacion: "Intento fallido de inicio de sesión", usuarioId: "reportes", detalle: {} },
+    ].map((r) => ({ ...r, creadoEn: new Date("2026-10-25T12:00:00-06:00") })),
+  });
+  const filas = await consultarOperaciones(sesion, 1, dia);
+  expect(filas.map((f) => f.detalle)).toEqual(
+    expect.arrayContaining([
+      "Misión",
+      "Cuero",
+      "Producto de prueba",
+      "Acceso personal · el usuario no existe en ningún sistema",
+      "Sistema de picking · contraseña incorrecta",
+    ]),
+  );
+  expect(filas.find((f) => f.operacion === "Intento de acceso fallido")?.usuario).toBe("no.existe (no existe)");
 });
 it("RF-SL-59 / CAM-91: valida periodos y resuelve mes bisiesto, año y semana", () => {
   expect(resolverPeriodo({ tipo: "mes", mes: "2024-02" })).toMatchObject({

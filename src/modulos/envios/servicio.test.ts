@@ -69,6 +69,9 @@ it("RF-SL-50 / CU-01: guarda los 33 pedidos válidos, sus líneas y el resumen d
     otrosEstados: 1,
   });
   expect((bitacora.detalle as { noCargados: unknown[] }).noCargados).toHaveLength(46);
+  expect((bitacora.detalle as { resumen: string }).resumen).toMatch(
+    /^Quetzaltenango · odoo-ejemplo-anonimizado.xlsx · 33 pedido\(s\) facturado\(s\) cargado\(s\) · 46 sin cargar por Peso de Conversión/,
+  );
 });
 
 it("RN-48: conserva el tablero por sede y no deduplica números de Odoo", async () => {
@@ -122,6 +125,9 @@ it("RF-SL-68 / decisión 3: elimina pedidos del tablero y registra número, clie
   });
 
   expect(resultado).toBe(2);
+  expect((eliminacion.detalle as { resumen: string }).resumen).toBe(
+    `Quetzaltenango · 2 pedido(s) facturado(s): 03543 (Cliente de ejemplo 003, 495 kg), ${seleccionados[1]!.numero} (${seleccionados[1]!.cliente}, ${Number(seleccionados[1]!.totalKg).toLocaleString("en-US", { maximumFractionDigits: 3 })} kg)`,
+  );
   expect(await consultarTableroFacturacion(sesionFacturador, 1)).toHaveLength(31);
   expect(eliminacion.detalle).toMatchObject({
     pedidos: expect.arrayContaining([
