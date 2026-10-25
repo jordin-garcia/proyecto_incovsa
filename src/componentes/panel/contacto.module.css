@@ -1,0 +1,15 @@
+.mapa {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border: 0;
+  border-radius: var(--r);
+  margin-top: 6px;
+  background: var(--g100);
+  display: block;
+}
+.mapaDireccion {
+  font-size: 12px;
+}
+.guardar {
+  justify-self: start;
+}

@@ -1,7 +1,7 @@
 import { Icono, type NombreIcono } from "@/componentes/comunes/iconos";
 import type { EstructuraSitio } from "@/modulos/contenido/servicio";
 
-export function Sedes({ contactos }: { contactos: EstructuraSitio["contactos"] }) {
+export function Sedes({ contactos, conMapa = true }: { contactos: EstructuraSitio["contactos"]; conMapa?: boolean }) {
   return (
     <div className="sede-rejilla">
       {contactos.map((sede) => {
@@ -27,7 +27,7 @@ export function Sedes({ contactos }: { contactos: EstructuraSitio["contactos"] }
                   <span className={mono ? "mono" : undefined}>{texto}</span>
                 </div>
               ))}
-            {sede.mapaUrl && (
+            {conMapa && sede.mapaUrl && (
               <iframe
                 className="mapa"
                 src={sede.mapaUrl}

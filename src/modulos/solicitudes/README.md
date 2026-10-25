@@ -6,4 +6,6 @@ Solicitudes de contacto que llegan desde el formulario de Contacto (solicitud, q
 
 Especificación: `specs/05-sitio-web.md`, "Gestión de solicitudes".
 
-Archivos: `servicio.ts` (reglas de negocio), `esquemas.ts` (Zod), `acciones.ts` (acciones del servidor) y sus pruebas `*.test.ts` (`plan/convenciones.md` §4.1).
+Archivos: `servicio.ts` (reglas de negocio), `esquemas.ts` (Zod), `acciones.ts` (acciones del servidor de la bandeja, con `exigirPermiso`) y sus pruebas `*.test.ts` (`plan/convenciones.md` §4.1).
+
+`recepcion-publica.ts` contiene solo `enviarSolicitud`, la recepción pública del formulario (RF-SW-06), la única acción sin sesión. Semgrep falla si ese archivo exporta cualquier otra cosa: las acciones nuevas van en `acciones.ts` ([specs/16](../../../specs/16-arquitectura-y-tecnologia.md), "Seguridad").

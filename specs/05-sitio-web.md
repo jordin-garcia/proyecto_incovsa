@@ -176,10 +176,11 @@ La página muestra el formulario y los datos de Quetzaltenango y Guatemala. Escu
 | Departamento | **Lista** de los departamentos de Guatemala. **Solo aparece si el país es Guatemala**, y entonces es **obligatorio** (13/10) |
 | Municipio | **Lista** de los municipios del departamento elegido. **Solo aparece si el país es Guatemala**, y entonces es **obligatorio** (13/10) |
 | Sede a la que dirige su mensaje | **Obligatorio.** Solo **Quetzaltenango** y **Guatemala** |
-| Mensaje | Obligatorio |
+| Mensaje | Obligatorio. **(24/10)** Hasta **2000 caracteres** |
 
 - **(13/10)** La solicitud **solo se guarda en el sistema** y se consulta en la bandeja del panel. **No se envía a ningún correo.** Por eso el sistema no necesita una cuenta de correo (P-09 se cierra) y de P-22 queda solo el horario de las sedes.
 - **(15/10)** Al enviar el mensaje, la página **se desplaza hasta el aviso "Solicitud recibida"**, para que se vea sin buscarlo.
+- **(24/10, DM-08)** El aviso muestra el **folio** de la solicitud con el formato del prototipo: `SOL-` + año (hora de Guatemala) + `-` + consecutivo de al menos 4 dígitos, por ejemplo `SOL-2026-0001`. Como el contador del prototipo, el consecutivo es uno solo y **no se reinicia al cambiar de año**; se calcula en la misma transacción que guarda la solicitud, así que dos envíos simultáneos nunca reciben el mismo folio. El envío es público, sin sesión, y la respuesta no revela nada más que el folio ([16](16-arquitectura-y-tecnologia.md), "Seguridad").
 
 ### Textos que se reemplazan (RF-SW-27)
 

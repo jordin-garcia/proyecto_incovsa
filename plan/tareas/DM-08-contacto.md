@@ -5,8 +5,7 @@ persona: daniela
 responsable: Daniela Marín
 hito: E3
 prioridad: P1
-estado: bloqueada
-bloqueo: Jordin debe incorporar una excepción limitada y probada de Semgrep para la acción pública enviarSolicitud exigida por RF-SW-06.
+estado: hecha
 depende_de: [DM-02, DM-04]
 programada: 2026-10-23
 requisitos: [RF-SW-06, RF-SW-15, RF-SW-19, RF-SW-22, RNF-05, CU-09]
@@ -62,8 +61,25 @@ npm run e2e -- pruebas-e2e/sitio/contacto.spec.ts
 ## Fuera de alcance
 - La bandeja de solicitudes (DM-09).
 
-## Avance conservado (24/10/2026)
+## Resultado
 
-Implementados el formulario público de Contacto y la edición de información de contacto en el panel, con validación compartida, folio transaccional, permisos y bitácora. El avance permanece en `daniela/DM-08-contacto`; no está integrado ni se declara terminado.
+Lo implementó Daniela y lo terminó e integró el coordinador (Jordin) el 24/10/2026 (`plan/protocolo.md` §E4), a partir de `daniela/DM-08-contacto`. La tarea estuvo bloqueada porque la regla de Semgrep `incovsa-accion-sin-permiso` exigía `exigirPermiso` en toda acción del servidor, y RF-SW-06 exige que el formulario se envíe sin sesión.
 
-La regla `incovsa-accion-sin-permiso` de `.semgrep/seguridad.yml` exige `exigirPermiso` en toda acción del servidor y no contempla la recepción pública expresamente requerida por esta tarea. Agregar sesión contradiría RF-SW-06; omitir o debilitar la verificación está prohibido. Daniela confirmó que pedirá a Jordin una excepción limitada a esta acción pública, con su prueba, en un PR propio. Después se debe actualizar la rama, completar las verificaciones y cerrar B8–B11.
+**Qué se hizo.**
+- `/contacto`: formulario con tipo de mensaje, nombre, empresa, correo, teléfono con código por país (`libphonenumber-js`), país, departamento y municipio (solo con Guatemala, de la semilla), sede (solo Quetzaltenango y Guatemala) y mensaje. React Hook Form valida con el mismo `esquemaSolicitud` que el servidor, al salir de cada campo y al enviar, con el resumen rojo del prototipo. Al enviar, la página se desplaza hasta «Solicitud recibida» con el folio (CAM-82). A la derecha, las tarjetas de las dos oficinas (sin mapa) y el aviso de restricciones de venta.
+- `crearSolicitud` (`src/modulos/solicitudes/servicio.ts`): valida con el esquema estricto, comprueba país, sede y que el municipio sea del departamento, y en una transacción bloquea la fila de `configuracion_sitio` para calcular el folio `SOL-AAAA-NNNN` y guardar la solicitud sin estado y sin leer. No envía correo ni escribe la bitácora, y solo devuelve `{ folio }`.
+- **Excepción de seguridad (coordinador):** `enviarSolicitud` vive sola en `src/modulos/solicitudes/recepcion-publica.ts`. `.semgrep/seguridad.yml` excluye solo esa ruta de `incovsa-accion-sin-permiso`, y la regla nueva `incovsa-recepcion-publica` falla si el archivo exporta otra cosa (otras funciones, constantes, clases, reexportaciones o una exportación por defecto) o si cambian el cuerpo de `enviarSolicitud` o sus dos importaciones. `scripts/probar-semgrep.mjs` agrega 13 casos con el escáner real, incluido que `enviarSolicitud` en cualquier otro archivo sigue exigiendo permiso.
+- `/panel/contacto` (`sit.contacto`): dirección, teléfono, correo, WhatsApp, horario y mapa de Quetzaltenango y Guatemala. `guardarContacto` (`src/modulos/contenido/contacto.ts`) acepta solo `https://www.google.com/maps/embed?…`, limita las sedes a esas dos y escribe «Cambio de contenido del sitio» en la misma transacción; `publicarContacto` revalida el layout raíz para que se vea en Contacto, Inicio y el pie.
+
+**Decisiones tomadas.**
+- El consecutivo del folio es uno solo y no se reinicia al cambiar de año, como `S.corr.sol` del prototipo; el año es el de la hora de Guatemala (`specs/05`, «Contacto»).
+- La única acción sin sesión del sistema queda descrita en `specs/16` («Seguridad») y en `specs/18` («Recepción pública de Contacto»), por decisión de Jordin.
+- Por decisión de Jordin, el mensaje admite hasta 2000 caracteres (`specs/05`); el límite de envíos por IP queda como pendiente P-98 (`specs/19`).
+- `Sedes` acepta `conMapa={false}` para la presentación de Contacto, sin cambiar Inicio.
+
+**Archivos principales.** `src/app/(sitio)/contacto/page.tsx`, `src/componentes/sitio/FormularioContacto.tsx`, `src/modulos/solicitudes/{esquemas,servicio,recepcion-publica}.ts`, `src/app/panel/contacto/page.tsx`, `src/componentes/panel/EditorContacto.tsx`, `src/modulos/contenido/{contacto,esquemas-contacto,acciones-contacto}.ts`, `.semgrep/seguridad.yml`, `scripts/probar-semgrep.mjs` y `pruebas-e2e/sitio/contacto.spec.ts`. Evidencia en `pruebas-e2e/sitio/evidencias/DM-08/`.
+
+**Cómo usarlo (DM-09 y siguientes).**
+- Las solicitudes llegan a `solicitud_contacto` con `estado: null`, `leida: false` y sin responsable. La bandeja las lee y cambia con acciones nuevas en `src/modulos/solicitudes/acciones.ts`, **siempre con `exigirPermiso`**. No agregues nada a `recepcion-publica.ts`: Semgrep rechaza cualquier exportación distinta de `enviarSolicitud` y cualquier cambio en su cuerpo o en sus importaciones.
+- `leerOpcionesContacto()` devuelve países, departamentos, municipios y las dos oficinas, por si la bandeja necesita mostrar sus nombres.
+- `esquemaSolicitud` es la fuente de verdad de los campos; si cambia, cambia en el navegador y en el servidor a la vez.

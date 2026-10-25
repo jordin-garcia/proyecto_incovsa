@@ -1,0 +1,164 @@
+=== 1. Contacto (3 tamaños)
+
+Running 9 tests using 1 worker
+
+  ok 1 [telefono] › pruebas-e2e\sitio\contacto.spec.ts:63:1 › RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible (13.4s)
+  ok 2 [telefono] › pruebas-e2e\sitio\contacto.spec.ts:113:1 › RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito (4.4s)
+  ok 3 [telefono] › pruebas-e2e\sitio\contacto.spec.ts:146:1 › RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos (14.5s)
+  ok 4 [tableta] › pruebas-e2e\sitio\contacto.spec.ts:63:1 › RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible (7.9s)
+  ok 5 [tableta] › pruebas-e2e\sitio\contacto.spec.ts:113:1 › RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito (4.1s)
+  ok 6 [tableta] › pruebas-e2e\sitio\contacto.spec.ts:146:1 › RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos (11.5s)
+  ok 7 [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:63:1 › RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible (8.7s)
+  ok 8 [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:113:1 › RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito (4.4s)
+  ok 9 [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:146:1 › RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos (13.5s)
+
+  9 passed (1.6m)
+salida 0
+=== 2. Escritorio y TV
+
+Running 72 tests using 1 worker
+
+  ok  1 [escritorio] › pruebas-e2e\acceso\acceso-personal.spec.ts:17:5 › RF-SW-09 / CAM-83: los tres pasos, sistemas habilitados, ayuda, contraseña y accesibilidad (10.4s)
+  ok  2 [escritorio] › pruebas-e2e\acceso\acceso-personal.spec.ts:59:5 › RF-SW-09: restringe opciones según la cuenta y rechaza usuarios inexistentes (5.0s)
+  ok  3 [escritorio] › pruebas-e2e\acceso\acceso-personal.spec.ts:83:5 › RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio y conserva la otra (15.2s)
+  ok  4 [escritorio] › pruebas-e2e\acceso\acceso-personal.spec.ts:123:5 › RNF-05: no expone altas, cambios de contraseña ni accesos que evadan límites; verifica origen (441ms)
+  ok  5 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:81:7 › Módulo de Bodega E2E › Criterio 8 / RNF-08: Bodega con datos sin violaciones serias de axe, contraste incluido (4.6s)
+  ok  6 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:94:7 › Módulo de Bodega E2E › RNF-08: pedido que recoge el cliente, con «Sin lote», y su Detalle sin violaciones serias de axe (6.2s)
+  ok  7 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:115:7 › Módulo de Bodega E2E › RNF-08: líneas marcadas sin violaciones serias de axe, contraste incluido (6.7s)
+  ok  8 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:143:7 › Módulo de Bodega E2E › RNF-08: Detalle de Ruta sin violaciones serias de axe, contraste incluido (4.7s)
+  ok  9 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:157:7 › Módulo de Bodega E2E › RNF-08: Bodega vacía sin violaciones serias de axe, contraste incluido (3.6s)
+  ok 10 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:167:7 › Módulo de Bodega E2E › RF-SL-21 / RN-51 (CP-19): el envío muestra dos filas con lote resaltado y unidades correctas (2.0s)
+  ok 11 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:198:7 › Módulo de Bodega E2E › RF-SL-74 / RF-SL-75 (CP-36): fecha y hora programadas y Detalle de Ruta completo (3.2s)
+  ok 12 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:229:7 › Módulo de Bodega E2E › RF-SL-23 / RN-20: marcar línea persiste al recargar y marcar todo marca todas (6.8s)
+  ok 13 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:278:7 › Módulo de Bodega E2E › RF-SL-24 / RN-11 (CP-38): despacho solo habilitado con todo marcado y pasa a En Ruta (5.3s)
+  ok 14 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:323:7 › Módulo de Bodega E2E › Criterio 7: usuario sin pk.bodega ve pantalla sin acceso con textos del prototipo (1.8s)
+  ok 15 [escritorio] › pruebas-e2e\picking\camiones.spec.ts:27:7 › Configuración: camiones › RF-SL-04: se crea, edita y elimina un camión (8.7s)
+  ok 16 [escritorio] › pruebas-e2e\picking\camiones.spec.ts:73:7 › Configuración: camiones › criterio 6: sin violaciones serias de axe (4.2s)
+  ok 17 [escritorio] › pruebas-e2e\picking\camiones.spec.ts:82:7 › Configuración: camiones › RNF-04: sin pk.cfg.camiones la pantalla rechaza el acceso (2.0s)
+  ok 18 [escritorio] › pruebas-e2e\picking\facturacion-carga.spec.ts:37:1 › RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos facturados (18.1s)
+  ok 19 [escritorio] › pruebas-e2e\picking\facturacion-envio.spec.ts:49:5 › RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bodega (42.3s)
+  ok 20 [escritorio] › pruebas-e2e\picking\reportes-exportacion.spec.ts:22:5 › RF-SL-38 / CAM-96: descarga Excel y PDF desde las tres pestañas de Reportes (15.9s)
+  ok 21 [escritorio] › pruebas-e2e\picking\reportes.spec.ts:23:5 › RF-SL-59 / CP-64: periodos y fechas inválidas en Reportes (12.3s)
+  ok 22 [escritorio] › pruebas-e2e\picking\reportes.spec.ts:116:7 › RF-SL-59 / RNF-08: Despacho del periodo conserva el rango y es accesible (5.0s)
+  ok 23 [escritorio] › pruebas-e2e\picking\reportes.spec.ts:116:7 › RF-SL-59 / RNF-08: Rutas realizadas conserva el rango y es accesible (4.5s)
+  ok 24 [escritorio] › pruebas-e2e\picking\reportes.spec.ts:116:7 › RF-SL-59 / RNF-08: Bitácora conserva el rango y es accesible (5.2s)
+  ok 25 [escritorio] › pruebas-e2e\picking\reportes.spec.ts:147:5 › RF-SL-38 / RF-SL-37 / RN-39: datos de demostración, conversiones y recorrido en las tres pestañas (13.8s)
+  ok 26 [escritorio] › pruebas-e2e\picking\usuarios.spec.ts:30:7 › Configuración: usuarios del picking › RF-SL-03: Gerencia crea un usuario de Bodega que solo ve Quetzaltenango (8.5s)
+  ok 27 [escritorio] › pruebas-e2e\picking\usuarios.spec.ts:76:7 › Configuración: usuarios del picking › criterio 6: con pk.cfg.camiones sin Gerencia no ve la pestaña Usuarios (6.2s)
+  ok 28 [escritorio] › pruebas-e2e\picking\usuarios.spec.ts:105:7 › Configuración: usuarios del picking › criterio 8: la pestaña Usuarios no tiene violaciones serias de axe (5.7s)
+  ok 29 [escritorio] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:61:5 › RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y relaciones actuales (9.2s)
+  ok 30 [escritorio] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:108:5 › RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos, vacío y tarjetas sin lote (4.8s)
+  ok 31 [escritorio] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:131:5 › RF-SW-05 / RF-SW-17 / RF-SW-15: detalle público, galería, recomendados y enlaces (6.6s)
+  ok 32 [escritorio] › pruebas-e2e\sitio\inicio.spec.ts:5:5 › RF-SW-01 / RF-SW-27: Inicio informativo conserva secciones, cifras y textos aprobados (3.1s)
+  ok 33 [escritorio] › pruebas-e2e\sitio\inicio.spec.ts:29:5 › RF-SW-15 / RF-SW-22 / RF-SW-24: pie público y mapas solo de las dos oficinas (2.4s)
+  ok 34 [escritorio] › pruebas-e2e\sitio\inicio.spec.ts:63:5 › RF-SW-08 / RNF-08: menú responsivo, ausencia de desbordamiento y accesibilidad (3.3s)
+  ok 35 [escritorio] › pruebas-e2e\sitio\inicio.spec.ts:80:5 › RF-SW-16: tarjetas aparecen al entrar en pantalla y desaparecen al salir (2.9s)
+  ok 36 [escritorio] › pruebas-e2e\sitio\inicio.spec.ts:95:5 › RN-56 / RNF-17: cinco imágenes rotan cada 5 s, una queda fija y las secundarias cargan después (4.9s)
+  ok 37 [escritorio] › pruebas-e2e\sitio\nosotros.spec.ts:19:5 › RF-SW-02 / CAM-79 / RNF-08: secciones, fondos, pie y accesibilidad de Quiénes somos (3.5s)
+  ok 38 [escritorio] › pruebas-e2e\sitio\nosotros.spec.ts:55:5 › RF-SW-02 / CAM-80: ambos bloques alternan y quitar Inquiserca desde el panel deja solo INCOVSA (19.0s)
+  ok 39 [escritorio] › pruebas-e2e\sitio\nosotros.spec.ts:105:5 › RF-SW-29 / RF-SW-16: cinco valores pendientes y presentación dinámica (1.6s)
+  ok 40 [escritorio] › pruebas-e2e\sitio\nosotros.spec.ts:120:5 › RF-SW-02 / RF-SW-29 / RN-56: historia y cinco imágenes publicadas conservan orden, fila y ausencia de textos (6.1s)
+  ok 41 [escritorio] › pruebas-e2e\sitio\noticias.spec.ts:95:1 › RF-SW-18 / RF-SW-15 / RNF-08: estados vacíos y formulario accesibles sin opción de ocultar (7.4s)
+  ok 42 [escritorio] › pruebas-e2e\sitio\noticias.spec.ts:125:1 › RF-SW-18 / RN-56 / RN-39: crea, edita y elimina con confirmación; texto completo y sin desbordamiento (13.5s)
+  ok 43 [escritorio] › pruebas-e2e\sitio\noticias.spec.ts:206:1 › RF-SW-25 / RNF-08: sin permiso de Noticias ofrece volver al módulo propio (3.2s)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3101
+- Network:       http://127.0.0.1:3101
+✓ Ready in 0ms
+✓ Running next.config took 44ms
+  ok 44 [escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:85:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión (6.3s)
+  ok 45 [escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:116:7 › RNF-13: avisos de cambios por sede › RNF-13: al cortar SSE consulta cada 5 segundos, apaga En vivo y se reconecta sola (13.7s)
+  ok 46 [escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:147:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede (239ms)
+[escritorio] TIEMPO REAL SSE: 831 ms
+
+  ok 47 [escritorio] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:82:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RNF-13 / RF-SL-23 (CP-37): el marcado aparece de inmediato en quien marca (optimista), revierte ante fallo y sincroniza en < 2s (18.8s)
+  ok 48 [escritorio] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:185:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RF-SL-20 / RN-28 / RNF-13: reordenar filas y cola se refleja en tiempo real en otra pantalla en < 2s sin historial (5.7s)
+  ok 49 [escritorio] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:297:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RF-SL-20: el arrastre funciona con teclado, mouse y touch (dedo con pulsación de 380 ms) (8.5s)
+  ok 50 [escritorio] › pruebas-e2e\picking\facturacion-dos-facturadores.spec.ts:37:5 › RN-48 / RNF-13 / decisiones 39 y 41: dos facturadores, edición, arrastre y envío simultáneos (16.7s)
+  ok 51 [escritorio] › pruebas-e2e\picking\tablero.spec.ts:93:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-58: cambia entre modo claro y modo oscuro y el modo se conserva al recargar esa pantalla sin afectar a otras (4.6s)
+  ok 52 [escritorio] › pruebas-e2e\picking\tablero.spec.ts:147:7 › Tablero de Bodega en pantalla completa (JM-05) › CAM-93 / CAM-94: colores del lote y del cuadro del pedido en cada modo, y la silueta del camión grande en todas las rutas (1.9s)
+  ok 53 [escritorio] › pruebas-e2e\picking\tablero.spec.ts:194:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-77 (CP-40): con más líneas de las que caben en una columna, se numeran de arriba hacia abajo, primero la izquierda (1.4s)
+  ok 54 [escritorio] › pruebas-e2e\picking\tablero.spec.ts:231:7 › Tablero de Bodega en pantalla completa (JM-05) › RNF-02: en una ruta que no cabe en la pantalla se pueden ver y tocar todas las líneas (1.8s)
+  ok 55 [escritorio] › pruebas-e2e\picking\tablero.spec.ts:291:7 › Tablero de Bodega en pantalla completa (JM-05) › RNF-13 / RF-SL-23: marcar una línea en Bodega se ve en el tablero en menos de 2 segundos, resaltada (4.1s)
+  ok 56 [escritorio] › pruebas-e2e\picking\tablero.spec.ts:360:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-23 / RF-SL-20 / RF-SL-74: en el tablero se marca con un toque, se marca todo, se ordena por peso y se ve el detalle (3.9s)
+  ok 57 [escritorio] › pruebas-e2e\picking\tablero.spec.ts:424:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-25: la pantalla se queda en la ruta que muestra aunque cambie la prioridad de la cola (3.1s)
+(node:73720) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+  ok 58 [escritorio] › pruebas-e2e\picking\tablero.spec.ts:460:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-24: con todo marcado, Pedido Despachado confirma, avisa y saca el pedido del tablero (4.0s)
+  ok 59 [escritorio] › pruebas-e2e\picking\tablero.spec.ts:483:7 › Tablero de Bodega en pantalla completa (JM-05) › RNF-02 / RNF-08: coincide con el prototipo en los dos modos y no tiene violaciones serias de accesibilidad (7.5s)
+Error inesperado en una acción del servidor: Error [ZodError]: [
+  {
+    "expected": "string",
+    "code": "invalid_type",
+    "path": [
+      "sede"
+    ],
+    "message": "Invalid input: expected string, received undefined"
+  },
+  {
+    "code": "invalid_value",
+    "values": [
+      "facturacion",
+      "bodega",
+      "tablero",
+      "ruta",
+      "reportes",
+      "configuracion"
+    ],
+    "path": [
+      "modulo"
+    ],
+    "message": "Invalid option: expected one of \"facturacion\"|\"bodega\"|\"tablero\"|\"ruta\"|\"reportes\"|\"configuracion\""
+  }
+]
+    at c (.next\standalone\.next\server\chunks\_1nbnlp2k2vxpk._.js:1:6504)
+  ok 60 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:4:5 › RNF-16: páginas, errores, redirecciones, API y recursos envían las cabeceras de seguridad (247ms)
+  ok 61 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:20:5 › RNF-16: el navegador admite Google Maps y Drive, y rechaza marcos de otros orígenes (877ms)
+  ok 62 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:49:5 › RNF-16: otro sitio no puede insertar la aplicación dentro de un marco (237ms)
+  ok 63 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:66:5 › RNF-16: cada respuesta tiene su nonce y los scripts en línea ajenos quedan bloqueados (833ms)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3102
+- Network:       http://127.0.0.1:3102
+✓ Ready in 0ms
+✓ Running next.config took 48ms
+  ok 64 [tv] › pruebas-e2e\picking\tablero.spec.ts:93:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-58: cambia entre modo claro y modo oscuro y el modo se conserva al recargar esa pantalla sin afectar a otras (6.8s)
+  ok 65 [tv] › pruebas-e2e\picking\tablero.spec.ts:147:7 › Tablero de Bodega en pantalla completa (JM-05) › CAM-93 / CAM-94: colores del lote y del cuadro del pedido en cada modo, y la silueta del camión grande en todas las rutas (2.1s)
+  ok 66 [tv] › pruebas-e2e\picking\tablero.spec.ts:194:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-77 (CP-40): con más líneas de las que caben en una columna, se numeran de arriba hacia abajo, primero la izquierda (1.6s)
+  ok 67 [tv] › pruebas-e2e\picking\tablero.spec.ts:231:7 › Tablero de Bodega en pantalla completa (JM-05) › RNF-02: en una ruta que no cabe en la pantalla se pueden ver y tocar todas las líneas (2.0s)
+  ok 68 [tv] › pruebas-e2e\picking\tablero.spec.ts:291:7 › Tablero de Bodega en pantalla completa (JM-05) › RNF-13 / RF-SL-23: marcar una línea en Bodega se ve en el tablero en menos de 2 segundos, resaltada (4.8s)
+  ok 69 [tv] › pruebas-e2e\picking\tablero.spec.ts:360:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-23 / RF-SL-20 / RF-SL-74: en el tablero se marca con un toque, se marca todo, se ordena por peso y se ve el detalle (4.5s)
+  ok 70 [tv] › pruebas-e2e\picking\tablero.spec.ts:424:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-25: la pantalla se queda en la ruta que muestra aunque cambie la prioridad de la cola (3.2s)
+(node:57500) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+  ok 71 [tv] › pruebas-e2e\picking\tablero.spec.ts:460:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-24: con todo marcado, Pedido Despachado confirma, avisa y saca el pedido del tablero (4.3s)
+  ok 72 [tv] › pruebas-e2e\picking\tablero.spec.ts:483:7 › Tablero de Bodega en pantalla completa (JM-05) › RNF-02 / RNF-08: coincide con el prototipo en los dos modos y no tiene violaciones serias de accesibilidad (7.7s)
+
+  72 passed (8.6m)
+salida 0
+=== 3. Teléfono y tableta
+
+Running 20 tests using 1 worker
+
+  ok  1 [telefono] › pruebas-e2e\acceso\acceso-personal.spec.ts:17:5 › RF-SW-09 / CAM-83: los tres pasos, sistemas habilitados, ayuda, contraseña y accesibilidad (5.8s)
+  ok  2 [telefono] › pruebas-e2e\acceso\acceso-personal.spec.ts:59:5 › RF-SW-09: restringe opciones según la cuenta y rechaza usuarios inexistentes (4.4s)
+  ok  3 [telefono] › pruebas-e2e\acceso\acceso-personal.spec.ts:83:5 › RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio y conserva la otra (11.3s)
+  ok  4 [telefono] › pruebas-e2e\acceso\acceso-personal.spec.ts:123:5 › RNF-05: no expone altas, cambios de contraseña ni accesos que evadan límites; verifica origen (418ms)
+  ok  5 [telefono] › pruebas-e2e\picking\facturacion-carga.spec.ts:37:1 › RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos facturados (14.9s)
+  ok  6 [telefono] › pruebas-e2e\picking\facturacion-envio.spec.ts:49:5 › RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bodega (31.3s)
+  ok  7 [telefono] › pruebas-e2e\picking\reportes-exportacion.spec.ts:22:5 › RF-SL-38 / CAM-96: descarga Excel y PDF desde las tres pestañas de Reportes (8.4s)
+  ok  8 [telefono] › pruebas-e2e\sitio\noticias.spec.ts:95:1 › RF-SW-18 / RF-SW-15 / RNF-08: estados vacíos y formulario accesibles sin opción de ocultar (6.4s)
+  ok  9 [telefono] › pruebas-e2e\sitio\noticias.spec.ts:125:1 › RF-SW-18 / RN-56 / RN-39: crea, edita y elimina con confirmación; texto completo y sin desbordamiento (16.0s)
+  ok 10 [telefono] › pruebas-e2e\sitio\noticias.spec.ts:206:1 › RF-SW-25 / RNF-08: sin permiso de Noticias ofrece volver al módulo propio (3.9s)
+  ok 11 [tableta] › pruebas-e2e\acceso\acceso-personal.spec.ts:17:5 › RF-SW-09 / CAM-83: los tres pasos, sistemas habilitados, ayuda, contraseña y accesibilidad (5.5s)
+  ok 12 [tableta] › pruebas-e2e\acceso\acceso-personal.spec.ts:59:5 › RF-SW-09: restringe opciones según la cuenta y rechaza usuarios inexistentes (4.4s)
+  ok 13 [tableta] › pruebas-e2e\acceso\acceso-personal.spec.ts:83:5 › RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio y conserva la otra (11.4s)
+  ok 14 [tableta] › pruebas-e2e\acceso\acceso-personal.spec.ts:123:5 › RNF-05: no expone altas, cambios de contraseña ni accesos que evadan límites; verifica origen (421ms)
+  ok 15 [tableta] › pruebas-e2e\picking\facturacion-carga.spec.ts:37:1 › RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos facturados (15.3s)
+  ok 16 [tableta] › pruebas-e2e\picking\facturacion-envio.spec.ts:49:5 › RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bodega (31.2s)
+  ok 17 [tableta] › pruebas-e2e\picking\reportes-exportacion.spec.ts:22:5 › RF-SL-38 / CAM-96: descarga Excel y PDF desde las tres pestañas de Reportes (8.3s)
+  ok 18 [tableta] › pruebas-e2e\sitio\noticias.spec.ts:95:1 › RF-SW-18 / RF-SW-15 / RNF-08: estados vacíos y formulario accesibles sin opción de ocultar (6.3s)
+  ok 19 [tableta] › pruebas-e2e\sitio\noticias.spec.ts:125:1 › RF-SW-18 / RN-56 / RN-39: crea, edita y elimina con confirmación; texto completo y sin desbordamiento (12.4s)
+  ok 20 [tableta] › pruebas-e2e\sitio\noticias.spec.ts:206:1 › RF-SW-25 / RNF-08: sin permiso de Noticias ofrece volver al módulo propio (3.1s)
+
+  20 passed (3.5m)
+salida 0
