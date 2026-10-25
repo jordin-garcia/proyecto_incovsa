@@ -5,7 +5,8 @@ persona: daniela
 responsable: Daniela Marín
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: bloqueada
+bloqueo: Jordin debe incorporar una excepción limitada y probada de Semgrep para la acción pública enviarSolicitud exigida por RF-SW-06.
 depende_de: [DM-02, DM-04]
 programada: 2026-10-23
 requisitos: [RF-SW-06, RF-SW-15, RF-SW-19, RF-SW-22, RNF-05, CU-09]
@@ -60,3 +61,9 @@ npm run e2e -- pruebas-e2e/sitio/contacto.spec.ts
 
 ## Fuera de alcance
 - La bandeja de solicitudes (DM-09).
+
+## Avance conservado (24/10/2026)
+
+Implementados el formulario público de Contacto y la edición de información de contacto en el panel, con validación compartida, folio transaccional, permisos y bitácora. El avance permanece en `daniela/DM-08-contacto`; no está integrado ni se declara terminado.
+
+La regla `incovsa-accion-sin-permiso` de `.semgrep/seguridad.yml` exige `exigirPermiso` en toda acción del servidor y no contempla la recepción pública expresamente requerida por esta tarea. Agregar sesión contradiría RF-SW-06; omitir o debilitar la verificación está prohibido. Daniela confirmó que pedirá a Jordin una excepción limitada a esta acción pública, con su prueba, en un PR propio. Después se debe actualizar la rama, completar las verificaciones y cerrar B8–B11.
