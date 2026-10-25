@@ -1,0 +1,67 @@
+
+> incovsa@0.1.0 build
+> next build
+
+▲ Next.js 16.4.2 (Turbopack)
+- Environments: .env
+⚠ Warning: Next.js ignored package-lock.json in C:\Users\danie because it is outside the current Git repository (C:\Users\danie\OneDrive\Escritorio\progra web\proyecto_incovsa).
+ To use this directory, set `turbopack.root` in your Next.js config.
+
+✓ Running next.config.ts took 101ms
+- Experiments (use with caution):
+  · serverActions
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 12.1s
+  Running TypeScript ...
+  Finished TypeScript in 39.5s ...
+  Collecting page data using 19 workers ...
+  Generating static pages using 19 workers (0/5) ...
+  Generating static pages using 19 workers (1/5) 
+  Generating static pages using 19 workers (2/5) 
+  Generating static pages using 19 workers (3/5) 
+✓ Generating static pages using 19 workers (5/5) in 258ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /acceso
+├ ƒ /acceso/[sistema]
+├ ƒ /api/auth/[sistema]/[...ruta]
+├ ƒ /api/imagenes/[...clave]
+├ ƒ /api/imagenes/publicar
+├ ƒ /api/reportes/exportar
+├ ƒ /api/tiempo-real
+├ ƒ /contacto
+├ ƒ /industrias
+├ ƒ /industrias/[id]
+├ ƒ /muestras/[sistema]
+├ ƒ /nosotros
+├ ƒ /noticias
+├ ƒ /panel
+├ ƒ /panel/[...seccion]
+├ ƒ /panel/catalogo
+├ ƒ /panel/catalogo/publicar
+├ ƒ /panel/contacto
+├ ƒ /panel/contenido
+├ ƒ /panel/industrias
+├ ƒ /panel/industrias/publicar
+├ ƒ /panel/noticias
+├ ƒ /panel/noticias/publicar
+├ ƒ /panel/resumen
+├ ƒ /panel/usuarios
+├ ƒ /picking
+├ ƒ /picking/[...seccion]
+├ ƒ /picking/bodega
+├ ƒ /picking/configuracion
+├ ƒ /picking/facturacion
+├ ƒ /picking/reportes
+├ ƒ /productos
+└ ƒ /productos/[id]
+
+
+ƒ Proxy (Middleware)
+
+ƒ  (Dynamic)  server-rendered on demand
+
