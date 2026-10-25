@@ -1,0 +1,12 @@
+{
+  "fecha": "2026-10-25",
+  "pantalla": "http://127.0.0.1:4173/#/panel/solicitudes?cuenta=ejemplo.08",
+  "herramientas": ["Playwright MCP", "axe-core"],
+  "minimo": 4.5,
+  "mediciones": [
+    { "elemento": "Pestañas inactivas", "texto": "--g500", "fondo": "--g50", "contraste": 4.46 },
+    { "elemento": "Texto secundario de la fila seleccionada", "texto": "--g500", "fondo": "--v50", "contraste": 4.4 }
+  ],
+  "decision": "Daniela autorizó --g600 solo en esos textos, manteniendo todas las reglas y los umbrales de axe.",
+  "registro": ["specs/05-sitio-web.md", "specs/18-historial-de-decisiones.md"]
+}

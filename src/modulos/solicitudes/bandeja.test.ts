@@ -54,6 +54,8 @@ it("RF-SW-20 / RN-42: llega sin estado, permite cualquier orden y registra cada 
     expect((await prisma.solicitudContacto.findUniqueOrThrow({ where: { id: s.id } })).estado).toBe(estado);
   }
   expect(await prisma.bitacora.count({ where: { operacion: "Cambio de estado de solicitud" } })).toBe(4);
+  await gestionarSolicitud({ id: s.id, tipo: "estado", estado: "solucionado" }, sesion);
+  expect(await prisma.bitacora.count({ where: { operacion: "Cambio de estado de solicitud" } })).toBe(4);
 });
 it("RF-SW-31 / CP-59: abrir marca como leída una sola vez y reduce el indicador", async () => {
   const s = await nueva();

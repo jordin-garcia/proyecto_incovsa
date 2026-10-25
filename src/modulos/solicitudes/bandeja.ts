@@ -59,8 +59,12 @@ export async function gestionarSolicitud(entrada: unknown, sesion: SesionActual 
   if (!r.success) throw new ErrorNegocio("Revise los datos del formulario.");
   const d = r.data;
   return prisma.$transaction(async (tx) => {
-    const solicitud = await tx.solicitudContacto.findUnique({ where: { id: d.id }, select: { folio: true } });
+    const solicitud = await tx.solicitudContacto.findUnique({
+      where: { id: d.id },
+      select: { folio: true, estado: true },
+    });
     if (!solicitud) throw new ErrorNegocio("No se encontró la solicitud.");
+    if (d.tipo === "estado" && solicitud.estado === d.estado) return { id: d.id };
     if (
       d.tipo === "responsable" &&
       d.responsableId &&

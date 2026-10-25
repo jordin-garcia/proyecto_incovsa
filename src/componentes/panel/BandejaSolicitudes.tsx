@@ -44,6 +44,7 @@ function Detalle({
   const [pendiente, iniciar] = useTransition();
   const mensaje = useMensajes();
   function guardar(datos: GestionSolicitud) {
+    if (datos.tipo === "estado" && datos.estado === s.estado) return;
     iniciar(async () => {
       const r = await gestionar(datos);
       if (!r.ok) {

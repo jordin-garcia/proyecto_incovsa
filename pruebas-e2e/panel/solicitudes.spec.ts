@@ -9,10 +9,12 @@ try {
 }
 const test = base.extend<{ solicitudes: Client }>({
   solicitudes: [
-    async ({ baseURL }, usar) => {
+    async ({ baseURL, page }, usar) => {
       if (!baseURL || !["localhost", "127.0.0.1"].includes(new URL(baseURL).hostname))
         throw new Error("Se requiere una aplicación local.");
       const bd = new Client({ connectionString: process.env.DATABASE_URL });
+      const errores: string[] = [];
+      page.on("pageerror", (error) => errores.push(error.message));
       await bd.connect();
       try {
         await bd.query("SELECT pg_advisory_lock($1)", [2026102509]);
@@ -23,7 +25,7 @@ const test = base.extend<{ solicitudes: Client }>({
             await bd.query(
               "INSERT INTO solicitud_contacto (folio,motivo,nombre,correo,pais_id,sede_id,mensaje,actualizado_en) SELECT $1,$2,$3,$4,p.id,s.id,$5,now() FROM pais p CROSS JOIN sede s WHERE p.codigo='MX' AND s.nombre='Quetzaltenango'",
               [
-                `SOL-2099-DM09${i}`,
+                `SOL-2099-990${i}`,
                 motivo,
                 `Persona DM09 ${i}`,
                 `dm09-e2e-${i}@prueba.invalid`,
@@ -32,6 +34,7 @@ const test = base.extend<{ solicitudes: Client }>({
             );
           }
           await usar(bd);
+          expect(errores).toEqual([]);
         } finally {
           await bd.query("DELETE FROM solicitud_contacto WHERE correo LIKE 'dm09-e2e-%@prueba.invalid'");
           await bd.query(
@@ -49,6 +52,7 @@ const test = base.extend<{ solicitudes: Client }>({
 async function captura(page: Page, estado: string) {
   await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
   await expect(page.locator(".toast")).toHaveCount(0);
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
   const carpeta = "pruebas-e2e/panel/evidencias/DM-09";
   await mkdir(carpeta, { recursive: true });
   const archivo = `${carpeta}/aplicacion-${estado}-${page.viewportSize()!.width}.png`;
@@ -111,6 +115,17 @@ test("RF-SW-20 / CP-63 / RNF-08: filtros, estados libres, responsable y edición
   await page.getByRole("tab", { name: /^Quejas/ }).click();
   await expect(page.getByRole("heading", { name: "Persona DM09 1" })).toBeVisible();
   await captura(page, "queja");
+  await solicitudes.query("DELETE FROM solicitud_contacto WHERE correo=$1", ["dm09-e2e-1@prueba.invalid"]);
+  await page.reload();
+  await page.getByRole("tab", { name: /^Quejas/ }).click();
+  await expect(page.getByRole("heading", { name: "Sin solicitudes", exact: true })).toBeVisible();
+  await expect(page.getByText("Sin solicitudes de este motivo.", { exact: true })).toBeVisible();
+  await captura(page, "vacio");
+  expect(
+    (await new AxeBuilder({ page }).analyze()).violations.filter((v) =>
+      ["serious", "critical"].includes(v.impact ?? ""),
+    ),
+  ).toEqual([]);
 });
 test("RF-SW-31 / CP-59: indicador normal y reducido baja al abrir una solicitud", async ({ page }) => {
   await entrar(page);
