@@ -26,3 +26,12 @@ VEREDICTO: LISTO
 ## Revisión del registro de bloqueo
 
 Otra revisión independiente comprobó el diff exclusivo de tarea y bitácora en `daniela/DM-08-bloqueo-semgrep`, commit `49fd9f5`. Confirmó el conflicto real entre RF-SW-06 y `incovsa-accion-sin-permiso`, el alcance de dos archivos y el plan válido de 66 tareas. Veredicto: LISTO, sin hallazgos.
+
+## Revisión del coordinador (24/10/2026)
+
+El subagente `revisor`, que no escribió el código, revisó la rama `jordin/DM-08-contacto` con la excepción de Semgrep. Veredicto: **CORREGIR**, con dos hallazgos de corrección, ya aplicados:
+
+1. La prueba del criterio 1 marcaba el correo y el teléfono después de un envío, así que también pasaba con `mode: "onSubmit"`. Ahora comprueba la salida del campo en una página recién cargada, antes de cualquier envío, y falla con `onSubmit` (mutación verificada).
+2. El mensaje no tenía tope en la única acción sin sesión. Ahora admite hasta 2000 caracteres (decisión de Jordin), en el navegador y en el servidor, con pruebas en `servicio.test.ts`.
+
+Opcionales: se aplicó el cuerpo fijo de `enviarSolicitud` en Semgrep, con dos casos nuevos; el límite de envíos por IP quedó como P-98; y se conserva la presentación de los errores del mapa y de los campos al salir de ellos, ya revisada por la primera revisión.

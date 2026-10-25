@@ -22,8 +22,18 @@ const casos = [
   ["export async function servicio() { return 1; }", false, "src/modulos/prueba/servicio.ts"],
   // RF-SW-06: la recepción pública de Contacto es la única acción sin sesión, y solo en su archivo.
   [
-    '"use server"; export async function enviarSolicitud(entrada) { return crearSolicitud(entrada); }',
+    '"use server"; export async function enviarSolicitud(entrada: unknown) { try { return { ok: true as const, datos: await crearSolicitud(entrada) }; } catch (error) { return aResultadoDeError(error); } }',
     false,
+    "src/modulos/solicitudes/recepcion-publica.ts",
+  ],
+  [
+    '"use server"; export async function enviarSolicitud(entrada: unknown) { try { await borrarTodo(); return { ok: true as const, datos: await crearSolicitud(entrada) }; } catch (error) { return aResultadoDeError(error); } }',
+    true,
+    "src/modulos/solicitudes/recepcion-publica.ts",
+  ],
+  [
+    '"use server"; export async function enviarSolicitud(entrada: unknown) { return { ok: true as const, datos: await prisma.solicitudContacto.findMany() }; }',
+    true,
     "src/modulos/solicitudes/recepcion-publica.ts",
   ],
   [

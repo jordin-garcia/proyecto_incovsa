@@ -60,8 +60,15 @@ rules:
           - pattern: export class $CLASE { ... }
           # Reexportaciones y exportación por defecto: no tienen nombre que comprobar.
           - pattern-regex: \bexport\s*(?:\*|\{|default\b)
+      # Cuerpo fijo: solo crea la solicitud (validada en el servicio) y devuelve el folio o el error genérico.
       - pattern-not: |
-          export async function enviarSolicitud(...) { ... }
+          export async function enviarSolicitud($ENTRADA: unknown) {
+            try {
+              return { ok: true as const, datos: await crearSolicitud($ENTRADA) };
+            } catch ($ERROR) {
+              return aResultadoDeError($ERROR);
+            }
+          }
   - id: incovsa-api-insegura
     message: "RNF-05: no se permite SQL inseguro, eval ni HTML sin escapar."
     severity: ERROR

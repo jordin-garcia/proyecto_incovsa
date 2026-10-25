@@ -40,9 +40,11 @@ it("RF-SW-19: exige país, territorios de Guatemala y estructura válida de corr
     { correo: "incorrecto" },
     { telefono: "123" },
     { motivo: "otro" },
+    { mensaje: "a".repeat(2001) },
   ])
     expect(esquemaSolicitud.safeParse({ ...datos, ...cambio }).success).toBe(false);
   expect(esquemaSolicitud.safeParse(datos).success).toBe(true);
+  expect(esquemaSolicitud.safeParse({ ...datos, mensaje: "a".repeat(2000) }).success).toBe(true);
 });
 it("RF-SW-06: guarda sin estado ni lectura y solo devuelve el folio", async () => {
   const resultado = await crearSolicitud(await entrada());
@@ -73,6 +75,7 @@ it("RF-SW-19: el servidor rechaza entradas manipuladas, Escuintla y territorios 
     { sedeId: String(escuintla.id) },
     { pais: "GT", departamentoId: String(departamentos[0].id), municipioId: String(departamentos[1].municipios[0].id) },
     { leida: true },
+    { mensaje: "a".repeat(2001) },
   ])
     await expect(crearSolicitud({ ...datos, ...cambio })).rejects.toThrow();
   expect(await prisma.solicitudContacto.count()).toBe(0);

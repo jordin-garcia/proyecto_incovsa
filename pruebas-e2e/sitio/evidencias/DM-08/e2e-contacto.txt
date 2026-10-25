@@ -5,20 +5,14 @@
 
 Running 9 tests using 1 worker
 
-(node:37368) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
-(Use `node --trace-warnings ...` to show where the warning was created)
-  ok 1 [telefono] › pruebas-e2e\sitio\contacto.spec.ts:63:1 › RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible (2.4s)
-  ok 2 [telefono] › pruebas-e2e\sitio\contacto.spec.ts:100:1 › RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito (1.6s)
-  ok 3 [telefono] › pruebas-e2e\sitio\contacto.spec.ts:133:1 › RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos (3.5s)
-(node:1752) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
-(Use `node --trace-warnings ...` to show where the warning was created)
-  ok 4 [tableta] › pruebas-e2e\sitio\contacto.spec.ts:63:1 › RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible (2.1s)
-  ok 5 [tableta] › pruebas-e2e\sitio\contacto.spec.ts:100:1 › RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito (1.5s)
-  ok 6 [tableta] › pruebas-e2e\sitio\contacto.spec.ts:133:1 › RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos (3.5s)
-(node:16748) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
-(Use `node --trace-warnings ...` to show where the warning was created)
-  ok 7 [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:63:1 › RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible (2.4s)
-  ok 8 [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:100:1 › RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito (1.7s)
-  ok 9 [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:133:1 › RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos (4.0s)
+  ok 1 [telefono] › pruebas-e2e\sitio\contacto.spec.ts:63:1 › RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible (8.6s)
+  ok 2 [telefono] › pruebas-e2e\sitio\contacto.spec.ts:110:1 › RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito (4.3s)
+  ok 3 [telefono] › pruebas-e2e\sitio\contacto.spec.ts:143:1 › RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos (15.1s)
+  ok 4 [tableta] › pruebas-e2e\sitio\contacto.spec.ts:63:1 › RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible (7.2s)
+  ok 5 [tableta] › pruebas-e2e\sitio\contacto.spec.ts:110:1 › RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito (4.3s)
+  ok 6 [tableta] › pruebas-e2e\sitio\contacto.spec.ts:143:1 › RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos (13.8s)
+  ok 7 [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:63:1 › RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible (7.8s)
+  ok 8 [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:110:1 › RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito (4.4s)
+  ok 9 [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:143:1 › RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos (13.6s)
 
-  9 passed (26.4s)
+  9 passed (1.5m)

@@ -67,19 +67,27 @@ test("RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserv
   await page.goto("/contacto");
   await expect(page.getByRole("heading", { name: "Envíenos su mensaje" })).toBeVisible();
   await captura(page, "aplicacion-contacto");
+  // Sin ningún envío previo: el correo y el teléfono se marcan solo al salir del campo.
+  const correo = page.getByLabel("Correo electrónico *", { exact: true });
+  const telefono = page.getByLabel("Número de teléfono", { exact: true });
+  await correo.fill("incorrecto");
+  await expect(page.locator("#error-correo")).toHaveCount(0);
+  await expect(correo).toHaveAttribute("aria-invalid", "false");
+  await correo.blur();
+  await expect(page.locator("#error-correo")).toHaveText(
+    "Indique un correo con una estructura válida (nombre@dominio.com).",
+  );
+  await expect(correo).toHaveAttribute("aria-invalid", "true");
+  await telefono.fill("123");
+  await expect(page.locator("#error-telefono")).toHaveCount(0);
+  await telefono.blur();
+  await expect(page.locator("#error-telefono")).toHaveText("El teléfono no es válido para Guatemala.");
+  await expect(telefono).toHaveAttribute("aria-invalid", "true");
   await page.getByLabel("País *", { exact: true }).selectOption("GT");
   await captura(page, "aplicacion-guatemala");
   await page.getByLabel("País *", { exact: true }).selectOption("");
   await page.getByRole("button", { name: "Enviar mensaje", exact: true }).click();
   await expect(page.getByText("Elija el país.", { exact: true }).first()).toBeVisible();
-  await page.getByLabel("Correo electrónico *", { exact: true }).fill("incorrecto");
-  await page.getByLabel("Correo electrónico *", { exact: true }).blur();
-  await expect(
-    page.getByText("Indique un correo con una estructura válida (nombre@dominio.com).", { exact: true }).first(),
-  ).toBeVisible();
-  await page.getByLabel("Número de teléfono", { exact: true }).fill("123");
-  await page.getByLabel("Número de teléfono", { exact: true }).blur();
-  await expect(page.getByText("El teléfono no es válido para Guatemala.", { exact: true }).first()).toBeVisible();
   await page.getByLabel("País *", { exact: true }).selectOption("GT");
   await expect(page.getByLabel("Departamento *", { exact: true })).toBeVisible();
   await expect(page.getByLabel("Municipio *", { exact: true })).toBeVisible();

@@ -1,32 +1,21 @@
-# DM-08 · Avance de Contacto e Información de contacto
+# DM-08 · Contacto e Información de contacto
 
-Fecha: 24/10/2026. Rama: `daniela/DM-08-contacto`.
+Fecha: 24/10/2026. Implementó Daniela (`daniela/DM-08-contacto`); terminó e integró el coordinador (`jordin/DM-08-contacto`, protocolo §E4).
 
 ## Estado
 
-Avance implementado, sin integrar. Daniela coordinará con Jordin una excepción limitada y probada para la recepción pública `enviarSolicitud`: la regla `incovsa-accion-sin-permiso` todavía exige sesión en todas las acciones, mientras RF-SW-06 exige que esta sea pública. No se omitió ni modificó la regla.
+La recepción pública `enviarSolicitud` vive sola en `src/modulos/solicitudes/recepcion-publica.ts`. `incovsa-accion-sin-permiso` excluye solo esa ruta, y la regla `incovsa-recepcion-publica` falla si el archivo exporta otra cosa o si cambia el cuerpo de `enviarSolicitud` ([specs/16](../../../../specs/16-arquitectura-y-tecnologia.md), «Seguridad»). La revisión en contexto limpio pidió dos correcciones, ya aplicadas: el tope de 2000 caracteres del mensaje y que la prueba de salida del campo se haga antes de cualquier envío.
 
-El [PR de registro de bloqueo #129](https://github.com/jordin-garcia/proyecto_incovsa/pull/129) solo contiene tarea y bitácora; recibió revisión independiente LISTO. Su integración automática está activada, pero GitHub Actions no inicia por pagos fallidos o límite de gasto de la cuenta propietaria. La anotación de la ejecución 40146186623 confirma ese impedimento de infraestructura; ninguna verificación llegó a ejecutar código.
+## Verificación (coordinador, 24/10)
 
-## Verificación
-
-- Fase roja: las suites de integración fallaron por ausencia de los módulos; el E2E falló por ausencia del formulario.
-- Integración inicial: siete pruebas aprobadas. Se añadió una octava para comprobar la acción pública, su respuesta mínima y el rechazo de campos internos manipulados.
-- `npm run verificar`: repetición final aprobada, 374 pruebas en 46 archivos; salida completa en `verificacion-local.txt`.
-- `npm run build`: aprobado, incluidas `/contacto` y `/panel/contacto`.
-- E2E propio: nueve casos aprobados en 390, 768 y 1440 px con axe completo, sin violaciones serias ni críticas. Comprueban validaciones territoriales y de correo/teléfono, envío real, persistencia sin estado ni lectura, desplazamiento hasta el aviso, publicación del panel en Contacto/Inicio/pie y rechazo de mapas externos.
-- Batería E2E completa, 318 casos: la primera ejecución terminó con 297 aprobados, 13 fallidos, dos intermitentes y seis no ejecutados (`e2e-completo.txt`). Una compilación simultánea invalidó archivos del servidor standalone; se reconstruyó secuencialmente. Además, `flujo/tiempo-real.spec.ts` requiere que el proceso cargue el entorno local, como ya advierte la bitácora para pruebas aisladas. Se repitieron completos los 33 casos de los cuatro archivos afectados y los nueve de Contacto con carga explícita del entorno: **42 aprobados al primer intento en 3,4 minutos**, salida y código cero en `e2e-repeticion-entorno.txt`. Quedaron comprobados todos los casos, sin modificar pruebas ajenas, sus límites ni sus umbrales. No se presenta la primera ejecución como aprobada.
-- Plan: válido, 66 tareas. Design system: tres pruebas aprobadas. Next-devtools: sin errores de configuración ni de sesión en Contacto.
-- No se leyeron secretos ni se agregaron dependencias o migraciones. Las pruebas restauran la información de contacto y eliminan exclusivamente sus propias solicitudes de prueba.
-
-Comando de recuperación (solo carga variables; no muestra su contenido):
-
-```powershell
-$env:NODE_OPTIONS='--dns-result-order=ipv4first'
-node --env-file=.env node_modules/@playwright/test/cli.js test pruebas-e2e/flujo/tiempo-real.spec.ts pruebas-e2e/picking/bodega-tiempo-real.spec.ts pruebas-e2e/picking/facturacion-dos-facturadores.spec.ts pruebas-e2e/seguridad/cabeceras.spec.ts pruebas-e2e/sitio/contacto.spec.ts --workers=1 --retries=1
-```
-
-La compilación final, después de terminar la ejecución que retenía la DLL de `sharp`, pasó y está en `compilacion.txt`. Next-devtools no reportó errores de configuración o ejecución en Contacto. El navegador solo registró el 404 preexistente de `/favicon.ico` y el aviso de proporción del logotipo compartido.
+- Fase roja de la excepción: Semgrep 1.182.0 (Docker) rechaza `enviarSolicitud` de la rama de Daniela con `incovsa-accion-sin-permiso`.
+- `scripts/probar-semgrep.mjs` con el escáner real: **28 casos aprobados** (10 nuevos). Escaneo de la CI (`.semgrep/seguridad.yml`, `p/typescript`, `p/nextjs` sobre `src`): **0 hallazgos**.
+- `npm run verificar`: 48 archivos, **390 pruebas aprobadas** (`verificacion-local.txt`).
+- `npm run build`: aprobado, con `/contacto` y `/panel/contacto` (`compilacion.txt`).
+- `npm run e2e -- pruebas-e2e/sitio/contacto.spec.ts`: **9 aprobadas** en 390, 768 y 1440 px, con axe (`e2e-contacto.txt`). La prueba de salida del campo falla, como debe, si el formulario se cambia a `mode: "onSubmit"`.
+- `node scripts/tareas.mjs --validar`: plan válido.
+- Next-devtools sin errores; en la consola solo el 404 previo de `/favicon.ico`.
+- Suite E2E completa (`e2e-completo.txt`), en una base local nueva: Claude Code la detuvo a los 36,5 min por falta de memoria del equipo, con 279 aprobadas. Los fallos son los ya conocidos de este equipo en `develop` (RN-54 de `acceso-personal` y Facturación), tiempos agotados en archivos sin relación con DM-08 y, al final, fallos de 0 ms por la falta de memoria. Las pruebas de Contacto de esa corrida pasaron solas después (línea anterior). Esta corrida no se presenta como aprobada.
 
 ## Comparación visual
 

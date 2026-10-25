@@ -176,7 +176,7 @@ La página muestra el formulario y los datos de Quetzaltenango y Guatemala. Escu
 | Departamento | **Lista** de los departamentos de Guatemala. **Solo aparece si el país es Guatemala**, y entonces es **obligatorio** (13/10) |
 | Municipio | **Lista** de los municipios del departamento elegido. **Solo aparece si el país es Guatemala**, y entonces es **obligatorio** (13/10) |
 | Sede a la que dirige su mensaje | **Obligatorio.** Solo **Quetzaltenango** y **Guatemala** |
-| Mensaje | Obligatorio |
+| Mensaje | Obligatorio. **(24/10)** Hasta **2000 caracteres** |
 
 - **(13/10)** La solicitud **solo se guarda en el sistema** y se consulta en la bandeja del panel. **No se envía a ningún correo.** Por eso el sistema no necesita una cuenta de correo (P-09 se cierra) y de P-22 queda solo el horario de las sedes.
 - **(15/10)** Al enviar el mensaje, la página **se desplaza hasta el aviso "Solicitud recibida"**, para que se vea sin buscarlo.

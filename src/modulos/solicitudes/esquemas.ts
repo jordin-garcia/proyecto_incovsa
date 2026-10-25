@@ -17,7 +17,7 @@ export const esquemaSolicitud = z
     departamentoId: z.string().regex(/^\d*$/),
     municipioId: z.string().regex(/^\d*$/),
     sedeId: z.string().regex(/^[1-9]\d*$/, "Elija la sede."),
-    mensaje: z.string().trim().min(5, "Escriba su mensaje."),
+    mensaje: z.string().trim().min(5, "Escriba su mensaje.").max(2000, "El mensaje admite hasta 2000 caracteres."),
   })
   .superRefine((d, ctx) => {
     if (d.pais === "GT") {

@@ -637,6 +637,7 @@ Al trasladar el prototipo se comprobó con axe que `--g500` sobre `--g50` da un 
 
 - RF-SW-06 exige que el formulario de Contacto se envíe sin sesión, y la regla de Semgrep de JG-11 exigía `exigirPermiso` en toda acción. Por decisión del coordinador, la recepción vive sola en `src/modulos/solicitudes/recepcion-publica.ts`, excluida por su ruta exacta, y una regla nueva impide que ese archivo exporte otra cosa que `enviarSolicitud`; `scripts/probar-semgrep.mjs` lo comprueba con el escáner real ([16](16-arquitectura-y-tecnologia.md), "Seguridad").
 - El folio `SOL-AAAA-NNNN` sigue el contador único del prototipo, que no se reinicia al cambiar de año ([05](05-sitio-web.md), "Contacto").
+- Por decisión de Jordin, el mensaje admite hasta 2000 caracteres, para que la recepción pública no guarde textos de cualquier tamaño (RNF-05) ([05](05-sitio-web.md), "Contacto"). El límite de envíos por IP queda como P-98 ([19](19-pendientes.md)).
 - Lo terminó el coordinador a partir del avance de Daniela (protocolo §E4).
 
 ## Documentos no alineados con las reuniones 4 y 5

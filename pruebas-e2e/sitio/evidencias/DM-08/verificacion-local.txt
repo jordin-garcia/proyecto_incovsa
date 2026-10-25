@@ -21,17 +21,17 @@ All matched files use Prettier code style!
 > vitest run
 
 
- RUN  v5.0.5 C:/Users/danie/OneDrive/Escritorio/progra web/proyecto_incovsa
+ RUN  v5.0.5 C:/Users/Hecto/Documents/proyecto_incovsa
 
-(node:42220) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(node:34168) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
 (Use `node --trace-deprecation ...` to show where the warning was created)
 
- Test Files  46 passed (46)
-      Tests  374 passed (374)
-   Start at  18:26:19
-   Duration  178.68s (tests 60%, import 38%, transform 2%)
+ Test Files  48 passed (48)
+      Tests  390 passed (390)
+   Start at  23:40:34
+   Duration  259.25s (tests 66%, import 33%)
 
-     Import  155 modules were evaluated 261 times · 48.52s total, 38% of tracked time
-             ~19.71s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+     Import  159 modules were evaluated 277 times · 78.80s total, 33% of tracked time
+             ~33.57s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
              learn more: https://vitest.dev/guide/improving-performance#test-isolation
 
