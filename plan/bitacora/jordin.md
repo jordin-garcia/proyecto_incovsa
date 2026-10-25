@@ -201,3 +201,9 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Pendiente o aviso para otros:
 **Josué:** JM-05 quedó integrada; no la retomes. Actualiza tu rama desde `develop` antes de JM-06. Cambiaron `src/componentes/picking/bodega/BodegaCliente.tsx` (exporta `reducirEnviosOptimistas`, ahora genérica, y `AccionOptimistaBodega`) y `pruebas-e2e/picking/preparar-envio.ts` (acción `crear-tablero`, `limpiar` con varios envíos y el camión de prueba ordenado por id). Se crearon `src/modulos/bodega/tablero.ts`, `src/app/picking/tablero/` y `src/componentes/picking/bodega/tablero/`. En JM-06 usa la misma captura de errores de red de `TableroCliente.tsx` (H-24).
 **Todos:** `src/componentes/comunes/armazon/ArmazonConSesion.tsx` ya no dibuja el armazón en `/picking/tablero`. `src/app/globals.css` tiene los tokens `--color-tb-*` y `--radius-tb-*` del tablero.
+
+## 2026-10-24 · JG-08 · Dependabot agrupado
+
+- Hecho: `.github/dependabot.yml` junta las versiones menores y los parches en un solo PR por ecosistema e ignora las versiones mayores de `typescript` y `@types/node`, con su prueba en `scripts/flujos.test.mjs`. Se cerraron #124 (TypeScript 7, rompe la CI) y #125 (`@types/node` 26, no corresponde a Node.js 24).
+- Decisiones: Jordin decidió agrupar las actualizaciones menores y de parche, ignorar las mayores de esos dos paquetes y revisar una por una las demás versiones mayores.
+- Pendiente o aviso para otros: Jordin integra #118 y #123 y revisa los PR de versiones mayores #117, #119, #120, #121 y #122.

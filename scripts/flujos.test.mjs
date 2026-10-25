@@ -249,3 +249,24 @@ test("JG-08: Dependabot propone actualizaciones semanales de npm y de GitHub Act
     assert.match(bloque, /target-branch: "develop"/);
   }
 });
+
+test("JG-08: Dependabot junta menores y parches en un PR por ecosistema e ignora las mayores de typescript y @types/node", () => {
+  const dependabot = leer(".github", "dependabot.yml");
+  const bloque = (ecosistema) =>
+    dependabot.split(/\n(?= {2}- package-ecosystem:)/).find((b) => b.includes(`package-ecosystem: "${ecosistema}"`));
+  for (const ecosistema of ["npm", "github-actions"]) {
+    assert.match(
+      bloque(ecosistema),
+      /\n {4}groups:\n {6}[\w-]+:\n {8}update-types: \["minor", "patch"\](\n|$)/,
+      `${ecosistema} debe agrupar las versiones menores y los parches`,
+    );
+  }
+  // TypeScript 7 quitó la API de JavaScript que usa scripts/integridad-pruebas.mjs; Node.js 24 exige @types/node 24.
+  for (const paquete of ["typescript", "@types/node"]) {
+    assert.match(
+      bloque("npm"),
+      new RegExp(`- dependency-name: "${paquete}"\\n {8}update-types: \\["version-update:semver-major"\\]`),
+      `npm debe ignorar las versiones mayores de ${paquete}`,
+    );
+  }
+});
