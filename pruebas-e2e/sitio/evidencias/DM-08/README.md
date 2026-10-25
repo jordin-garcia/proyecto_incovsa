@@ -9,13 +9,14 @@ La recepción pública `enviarSolicitud` vive sola en `src/modulos/solicitudes/r
 ## Verificación (coordinador, 24/10)
 
 - Fase roja de la excepción: Semgrep 1.182.0 (Docker) rechaza `enviarSolicitud` de la rama de Daniela con `incovsa-accion-sin-permiso`.
-- `scripts/probar-semgrep.mjs` con el escáner real: **28 casos aprobados** (10 nuevos). Escaneo de la CI (`.semgrep/seguridad.yml`, `p/typescript`, `p/nextjs` sobre `src`): **0 hallazgos**.
+- `scripts/probar-semgrep.mjs` con el escáner real: **31 casos aprobados** (13 nuevos). Escaneo de la CI (`.semgrep/seguridad.yml`, `p/typescript`, `p/nextjs` sobre `src`): **0 hallazgos**.
 - `npm run verificar`: 48 archivos, **390 pruebas aprobadas** (`verificacion-local.txt`).
 - `npm run build`: aprobado, con `/contacto` y `/panel/contacto` (`compilacion.txt`).
 - `npm run e2e -- pruebas-e2e/sitio/contacto.spec.ts`: **9 aprobadas** en 390, 768 y 1440 px, con axe (`e2e-contacto.txt`). La prueba de salida del campo falla, como debe, si el formulario se cambia a `mode: "onSubmit"`.
 - `node scripts/tareas.mjs --validar`: plan válido.
 - Next-devtools sin errores; en la consola solo el 404 previo de `/favicon.ico`.
 - Suite E2E completa (`e2e-completo.txt`), en una base local nueva: Claude Code la detuvo a los 36,5 min por falta de memoria del equipo, con 279 aprobadas. Los fallos son los ya conocidos de este equipo en `develop` (RN-54 de `acceso-personal` y Facturación), tiempos agotados en archivos sin relación con DM-08 y, al final, fallos de 0 ms por la falta de memoria. Las pruebas de Contacto de esa corrida pasaron solas después (línea anterior). Esta corrida no se presenta como aprobada.
+- Repetición de todo lo que falló o no corrió (`e2e-repeticion.txt`), en otra base local nueva y con un worker: **Contacto 9/9**, **escritorio y TV 72/72** (17 archivos) y **teléfono y tableta 20/20** (5 archivos), todas aprobadas al primer intento. Junto con las 279 de la primera corrida, cubren la suite completa.
 
 ## Comparación visual
 

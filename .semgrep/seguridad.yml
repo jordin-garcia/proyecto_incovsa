@@ -60,6 +60,11 @@ rules:
           - pattern: export class $CLASE { ... }
           # Reexportaciones y exportación por defecto: no tienen nombre que comprobar.
           - pattern-regex: \bexport\s*(?:\*|\{|default\b)
+          # Solo las dos importaciones reales y ninguna declaración propia, para que los nombres del cuerpo fijo
+          # no puedan ser un alias ni una función local.
+          - pattern-regex: >-
+              (?m)^[ \t]*import\b(?![ \t]*\{[ \t]*aResultadoDeError[ \t]*\}[ \t]*from[ \t]*"@/lib/errores";?[ \t]*$)(?![ \t]*\{[ \t]*crearSolicitud[ \t]*\}[ \t]*from[ \t]*"\./servicio";?[ \t]*$).*$
+          - pattern-regex: (?m)^[ \t]*(?:const|let|var|function|async[ \t]+function|class)\b
       # Cuerpo fijo: solo crea la solicitud (validada en el servicio) y devuelve el folio o el error genérico.
       - pattern-not: |
           export async function enviarSolicitud($ENTRADA: unknown) {

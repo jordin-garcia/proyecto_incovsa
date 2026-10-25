@@ -35,3 +35,5 @@ El subagente `revisor`, que no escribió el código, revisó la rama `jordin/DM-
 2. El mensaje no tenía tope en la única acción sin sesión. Ahora admite hasta 2000 caracteres (decisión de Jordin), en el navegador y en el servidor, con pruebas en `servicio.test.ts`.
 
 Opcionales: se aplicó el cuerpo fijo de `enviarSolicitud` en Semgrep, con dos casos nuevos; el límite de envíos por IP quedó como P-98; y se conserva la presentación de los errores del mapa y de los campos al salir de ellos, ya revisada por la primera revisión.
+
+Segunda pasada del `revisor` sobre `50b6723..fc7fa88`: **LISTO**, sin correcciones. Se aplicaron también sus dos opcionales: la captura de Guatemala parte de una página recargada (mismo estado que el prototipo) y Semgrep fija las dos importaciones del archivo y prohíbe declaraciones propias, con tres casos nuevos (31 en total).

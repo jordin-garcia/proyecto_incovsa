@@ -6,6 +6,9 @@ import { spawnSync } from "node:child_process";
 // Reglas con paths reales: se ejecutan desde un repositorio desechable con esa misma estructura.
 const carpeta = mkdtempSync(join(tmpdir(), "incovsa-semgrep-"));
 const regla = readFileSync(".semgrep/seguridad.yml", "utf8");
+// Cuerpo exacto de la recepción pública de Contacto (RF-SW-06), el único que admite incovsa-recepcion-publica.
+const cuerpoPublico =
+  "export async function enviarSolicitud(entrada: unknown) { try { return { ok: true as const, datos: await crearSolicitud(entrada) }; } catch (error) { return aResultadoDeError(error); } }";
 const casos = [
   ['"use server"; export async function insegura() { return 1; }', true],
   ['"use server"; export const insegura = async () => { return 1; };', true],
@@ -58,6 +61,21 @@ const casos = [
   ],
   [
     '"use server"; export async function enviarSolicitud(e) { return 1; } export default async function () { return 1; }',
+    true,
+    "src/modulos/solicitudes/recepcion-publica.ts",
+  ],
+  [
+    `"use server";\nimport { aResultadoDeError } from "@/lib/errores";\nimport { crearSolicitud } from "./servicio";\n${cuerpoPublico}`,
+    false,
+    "src/modulos/solicitudes/recepcion-publica.ts",
+  ],
+  [
+    `"use server";\nimport { aResultadoDeError } from "@/lib/errores";\nimport { borrarTodo as crearSolicitud } from "./servicio";\n${cuerpoPublico}`,
+    true,
+    "src/modulos/solicitudes/recepcion-publica.ts",
+  ],
+  [
+    `"use server";\nimport { aResultadoDeError } from "@/lib/errores";\nasync function crearSolicitud(e) { return borrarTodo(e); }\n${cuerpoPublico}`,
     true,
     "src/modulos/solicitudes/recepcion-publica.ts",
   ],
