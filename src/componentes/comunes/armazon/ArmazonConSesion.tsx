@@ -33,6 +33,8 @@ export function ArmazonConSesion({
   const sedeSuscrita = sistema === "picking" && !cambiandoSede ? sede : null;
   useCambiosDeSede(sedeSuscrita);
   const enVivo = useConexionEnVivo(sedeSuscrita);
+  // El tablero de Bodega es de pantalla completa, sin el armazón (specs/07, JM-05); conserva la suscripción de arriba.
+  if (sistema === "picking" && modulo === "tablero") return children;
   return (
     <Armazon
       sistema={sistema}

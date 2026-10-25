@@ -622,6 +622,17 @@ Al trasladar el prototipo se comprobó con axe que `--g500` sobre `--g50` da un 
 - Jordin aprobó los textos de los bloqueos en la Bitácora, que el prototipo no tiene: «*sistema* · Bloqueo de usuario · *usuario*» y «Acceso personal · Bloqueo de IP · *IP*», con la IP visible ([10](10-picking-reportes.md)). El cambio de una industria se presenta como «Industria *nombre*», como `bit()` del prototipo. En el panel, una sección inexistente muestra «Sección no encontrada» (panel.js) y en el picking, «Módulo no encontrado» (picking.js).
 - Los textos de las tarjetas de selección del sistema recuperan `--g500`: cumplen RNF-08 sin excepción. Las confirmaciones comunes conservan `--g600` y 15.5 px, tal como `confirmar()` del prototipo. El resumen de «Enviar a Bodega» de Facturación recupera el resultado visual del prototipo: `--g800` y 16 px (su rejilla queda fuera del párrafo por las reglas del parser HTML). El ajuste es local a ese resumen. La Bitácora presenta detalles históricos legibles y limita las operaciones visibles a las 250 más recientes después del filtro por sede, como precisa `specs/10`.
 
+## Tablero de Bodega en pantalla completa (24/10/2026, JM-05)
+
+- El tablero sigue `tablero.js` del prototipo aprobado. `specs/07` («Tablero en pantalla completa») precisa lo que no decía: la ruta o el pedido que muestra cada pantalla, el modo guardado en la sesión del navegador, el marcado tocando la línea completa con el resaltado de los cambios, los colores de la etiqueta del lote en el modo claro (`--v800`, como `.lote-tb`) y la vuelta al módulo inicial sin permiso o sin sede ([07](07-picking-bodega.md)).
+- El cuadro lima de «PEDIDO» del modo claro conserva los colores del prototipo, con la misma excepción de contraste aprobada para el módulo (JM-08, 19/10): la prueba de axe excluye solo su etiqueta pequeña «PEDIDO».
+- **Excepciones a la decisión 89, por decisión de Jordin (24/10):** el tablero abre en **modo claro** sin elección previa y al reiniciar el navegador (el prototipo abre en oscuro); y en una ruta que no cabe en la pantalla todas las líneas se pueden ver y tocar en cualquier tamaño: en tableta, escritorio y TV se desplaza el área de las líneas, en el teléfono se desplaza toda la pantalla y su barra superior pasa a otra línea, y el panel del camión no se ensancha con muchas líneas (en el prototipo, las líneas que no caben quedan ocultas y a 390 px el contenido se corta por la derecha) ([07](07-picking-bodega.md)).
+- Lo implementó el coordinador por la ausencia de Josué (protocolo §E4).
+
+## Dependabot agrupado (24/10/2026, JG-08)
+
+- Por decisión del coordinador, `.github/dependabot.yml` junta en un solo PR por ecosistema (npm y GitHub Actions) las versiones menores y los parches de las actualizaciones de versión; cada versión mayor llega en su propio PR, y las de seguridad, aparte, en cuanto salen ([16](16-arquitectura-y-tecnologia.md), "Dependencias al día"). En npm se ignoran las versiones mayores de `typescript`, que se queda en la 6.0 (ver "Versión de ESLint (JG-02)"; TypeScript 7 quitó la API de JavaScript que usa `scripts/integridad-pruebas.mjs`), y de `@types/node`, que sigue a Node.js 24.
+
 ## Documentos no alineados con las reuniones 4 y 5
 
 Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los cambios del 29/09, del 11/10 ni del 13/10:
