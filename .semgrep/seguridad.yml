@@ -35,12 +35,33 @@ rules:
     languages: [typescript]
     paths:
       include: [/src/modulos/**/*.ts]
+      exclude:
+        # RF-SW-06: única recepción pública (sin sesión); la limita incovsa-recepcion-publica.
+        - /src/modulos/solicitudes/recepcion-publica.ts
     patterns:
       # El span abarca el módulo completo y se intersecta con cada exportación AST.
       # No confunde una cadena de prueba con la directiva inicial del módulo.
       - pattern-regex: >-
           (?s)\A(?:\s|//[^\n]*(?:\n|$)|/\*.*?\*/)*["']use server["']\s*;?.*
       - patterns: *operaciones-protegidas
+  - id: incovsa-recepcion-publica
+    message: "RF-SW-06 / RNF-04: la recepción pública solo exporta la función enviarSolicitud; cualquier otra operación va en un archivo que exija permisos."
+    severity: ERROR
+    languages: [typescript]
+    paths:
+      include: [/src/modulos/solicitudes/recepcion-publica.ts]
+    patterns:
+      - pattern-either:
+          - pattern: export function $FUNC(...) { ... }
+          - pattern: export async function $FUNC(...) { ... }
+          - pattern: export const $FUNC = $VALOR;
+          - pattern: export let $FUNC = $VALOR;
+          - pattern: export var $FUNC = $VALOR;
+          - pattern: export class $CLASE { ... }
+          # Reexportaciones y exportación por defecto: no tienen nombre que comprobar.
+          - pattern-regex: \bexport\s*(?:\*|\{|default\b)
+      - pattern-not: |
+          export async function enviarSolicitud(...) { ... }
   - id: incovsa-api-insegura
     message: "RNF-05: no se permite SQL inseguro, eval ni HTML sin escapar."
     severity: ERROR

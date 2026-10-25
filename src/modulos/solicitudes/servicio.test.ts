@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import { crearSolicitud, leerOpcionesContacto } from "./servicio";
 import { esquemaSolicitud } from "./esquemas";
-import { enviarSolicitud } from "./acciones";
+import { enviarSolicitud } from "./recepcion-publica";
 
 beforeEach(() => limpiarTablasDeNegocio());
 it("RF-SW-06 / RNF-05: la acción pública no requiere sesión, solo devuelve folio y rechaza campos internos", async () => {

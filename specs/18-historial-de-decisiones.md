@@ -633,6 +633,12 @@ Al trasladar el prototipo se comprobó con axe que `--g500` sobre `--g50` da un 
 
 - Por decisión del coordinador, `.github/dependabot.yml` junta en un solo PR por ecosistema (npm y GitHub Actions) las versiones menores y los parches de las actualizaciones de versión; cada versión mayor llega en su propio PR, y las de seguridad, aparte, en cuanto salen ([16](16-arquitectura-y-tecnologia.md), "Dependencias al día"). En npm se ignoran las versiones mayores de `typescript`, que se queda en la 6.0 (ver "Versión de ESLint (JG-02)"; TypeScript 7 quitó la API de JavaScript que usa `scripts/integridad-pruebas.mjs`), y de `@types/node`, que sigue a Node.js 24.
 
+## Recepción pública de Contacto (24/10/2026, DM-08)
+
+- RF-SW-06 exige que el formulario de Contacto se envíe sin sesión, y la regla de Semgrep de JG-11 exigía `exigirPermiso` en toda acción. Por decisión del coordinador, la recepción vive sola en `src/modulos/solicitudes/recepcion-publica.ts`, excluida por su ruta exacta, y una regla nueva impide que ese archivo exporte otra cosa que `enviarSolicitud`; `scripts/probar-semgrep.mjs` lo comprueba con el escáner real ([16](16-arquitectura-y-tecnologia.md), "Seguridad").
+- El folio `SOL-AAAA-NNNN` sigue el contador único del prototipo, que no se reinicia al cambiar de año ([05](05-sitio-web.md), "Contacto").
+- Lo terminó el coordinador a partir del avance de Daniela (protocolo §E4).
+
 ## Documentos no alineados con las reuniones 4 y 5
 
 Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los cambios del 29/09, del 11/10 ni del 13/10:

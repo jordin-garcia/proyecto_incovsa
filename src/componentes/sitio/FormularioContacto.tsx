@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { getCountryCallingCode, type CountryCode } from "libphonenumber-js";
 import { esquemaSolicitud, type Solicitud } from "@/modulos/solicitudes/esquemas";
 import type { leerOpcionesContacto } from "@/modulos/solicitudes/servicio";
-import { enviarSolicitud } from "@/modulos/solicitudes/acciones";
+import { enviarSolicitud } from "@/modulos/solicitudes/recepcion-publica";
 import { Icono } from "@/componentes/comunes/iconos";
 import { SelectNativo } from "@/componentes/ui/select-nativo";
 import { MENSAJE_ERROR_GENERAL } from "@/lib/errores";

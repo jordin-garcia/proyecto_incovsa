@@ -20,6 +20,39 @@ const casos = [
   ['"use server"; export async function insegura() { return 1; }', true, "src/modulos/prueba/acciones-catalogo.ts"],
   ['/* Módulo */\n"use server"; export async function insegura() { return 1; }', true, "src/modulos/prueba/otro.ts"],
   ["export async function servicio() { return 1; }", false, "src/modulos/prueba/servicio.ts"],
+  // RF-SW-06: la recepción pública de Contacto es la única acción sin sesión, y solo en su archivo.
+  [
+    '"use server"; export async function enviarSolicitud(entrada) { return crearSolicitud(entrada); }',
+    false,
+    "src/modulos/solicitudes/recepcion-publica.ts",
+  ],
+  [
+    '"use server"; export async function enviarSolicitud(e) { return 1; } export async function listarSolicitudes() { return 1; }',
+    true,
+    "src/modulos/solicitudes/recepcion-publica.ts",
+  ],
+  [
+    '"use server"; export async function enviarSolicitud(e) { return 1; } export async function marcar() { exigirPermiso(sesion, "sit.solicitudes"); }',
+    true,
+    "src/modulos/solicitudes/recepcion-publica.ts",
+  ],
+  [
+    '"use server"; export async function enviarSolicitud(e) { return 1; } export const borrar = async () => 1;',
+    true,
+    "src/modulos/solicitudes/recepcion-publica.ts",
+  ],
+  [
+    '"use server"; export async function enviarSolicitud(e) { return 1; } export { borrarSolicitud } from "./servicio";',
+    true,
+    "src/modulos/solicitudes/recepcion-publica.ts",
+  ],
+  [
+    '"use server"; export async function enviarSolicitud(e) { return 1; } export default async function () { return 1; }',
+    true,
+    "src/modulos/solicitudes/recepcion-publica.ts",
+  ],
+  ['"use server"; export async function enviarSolicitud(e) { return 1; }', true, "src/modulos/solicitudes/acciones.ts"],
+  ['"use server"; export async function insegura() { return 1; }', true, "src/modulos/solicitudes/acciones.ts"],
   ["export async function POST() { return Response.json({}); }", true, "src/app/panel/catalogo/publicar/route.ts"],
   ["export async function GET() { return Response.json({}); }", true, "src/app/api/prueba/route.ts"],
   [
