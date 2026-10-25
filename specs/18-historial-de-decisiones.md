@@ -650,3 +650,7 @@ Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los camb
 El prototipo de simulación se actualizó el 14/10/2026 con los cambios de la reunión 5 y el 15/10/2026 con los ajustes del coordinador ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)), y el Documento 2 pasó a la versión 0.2 (la entregada el 14/10) y el 15/10 a la versión 0.3, alineada con la especificación 1.3, y después a la versión 0.4, alineada con la especificación 1.4.
 
 El README del repositorio se actualizó el 16/10/2026 con la versión 1.5 de esta carpeta. El Documento 2 v0.4 **no** incorpora las decisiones del 16/10/2026 y, por decisión del coordinador del mismo día, **ya no se edita**: queda como la versión del Entregable 2, y para el Entregable 3 se crea una nueva versión del Documento 2 con todo actualizado. Mientras tanto vale lo que dice esta carpeta.
+
+## 25/10/2026 · DM-09 · Contraste de la bandeja de solicitudes
+
+Daniela autorizó usar `--g600` solo en las pestañas inactivas y el texto secundario de la fila seleccionada. Playwright y axe reprodujeron 4.46:1 y 4.40:1 con el `--g500` del prototipo. Se documenta esta excepción a la decisión 89 en `specs/05`, para cumplir RNF-08 sin cambiar las pruebas ni la paleta.

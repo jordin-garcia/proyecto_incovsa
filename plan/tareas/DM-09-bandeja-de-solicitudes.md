@@ -5,7 +5,7 @@ persona: daniela
 responsable: Daniela Marín
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [DM-08]
 programada: 2026-10-24
 requisitos: [RF-SW-12, RF-SW-20, RF-SW-31, RN-42, CU-21]
@@ -41,6 +41,7 @@ La **bandeja** del panel para ver y gestionar las solicitudes del formulario de 
 - `src/app/panel/solicitudes/**`, `src/componentes/panel/**` (crear)
 - `src/modulos/solicitudes/**` (modificar)
 - `src/app/panel/layout.tsx` (modificar, solo la insignia de Solicitudes)
+- `src/componentes/comunes/armazon/ArmazonServidor.tsx` (ampliación mínima autorizada por Daniela: propiedad opcional de contadores por ruta)
 - `pruebas-e2e/panel/solicitudes.spec.ts` (crear)
 
 ## Criterios de aceptación
@@ -61,3 +62,15 @@ npm run verificar
 npm run build
 npm run e2e -- pruebas-e2e/panel/solicitudes.spec.ts
 ```
+
+## Resultado
+
+Implementada `/panel/solicitudes` con pestañas y cuentas por motivo, lista y detalle, mensaje completo con saltos de línea y palabras largas partidas, datos de contacto, lugar y sede. La apertura marca la solicitud como leída y revalida el layout del panel para reducir la insignia. Los estados no tienen orden ni estado inicial; pulsar el estado activo no modifica datos ni duplica la bitácora, como en el prototipo.
+
+Con `sit.sol.gestionar` se eligen responsables activos del sitio o de ambos sistemas, se guarda y edita el comentario único y se cambia cualquier estado. Con solo `sit.sol.ver`, los controles quedan de solo lectura y el servidor rechaza la gestión. Sin permiso de lectura no se consulta ni se muestra la bandeja o el contador. Los cambios de responsable, comentario y estado se registran en la misma transacción. No se envían correos.
+
+**Archivos y uso.** `src/modulos/solicitudes/bandeja.ts` expone `leerBandeja(sesion)`, `contarSolicitudesNuevas(sesion)`, `abrirSolicitud(entrada, sesion)` y `gestionarSolicitud(entrada, sesion)`. `acciones.ts` obtiene la sesión real y autoriza las acciones `abrir` y `gestionar`; las entradas usan `esquemas-bandeja.ts`. La recepción pública de DM-08 permanece separada y sin nuevas exportaciones. `BandejaSolicitudes.tsx` y `solicitudes.module.css` reproducen la pantalla. La insignia se conecta desde `panel/layout.tsx`; `ArmazonServidor` acepta `contadores?: Record<string, number>` y solo los aplica a opciones ya permitidas.
+
+**Decisiones autorizadas por Daniela.** Se permitió esa ampliación mínima del adaptador del armazón, propiedad de Jordin. También se autorizó `--g600` únicamente en las pestañas inactivas y el texto secundario de la fila seleccionada: axe reprodujo 4.46:1 y 4.40:1 en el prototipo. La excepción está documentada en `specs/05` y `specs/18`, sin cambiar reglas o umbrales de axe. `.codex/config.toml` queda fuera de los commits.
+
+**Verificación.** Plan válido (66 tareas); formato, lint, tipos y 395 pruebas en 49 archivos aprobados; compilación aprobada. Cinco pruebas de integración propias con PostgreSQL, con fase roja y verde incluida para la repetición del estado activo. Nueve E2E finales aprobados sin reintentos en 390, 768 y 1440 px, incluidos filtros, vacío, permisos, comentario, indicador y axe. Suite E2E completa con código 0: 361 aprobadas y 2 intermitentes aprobadas al repetir los grupos de tiempo real de teléfono y escritorio; sin fallos definitivos. Next-devtools sin errores. Design system y gitleaks aprobados. Revisión independiente final: LISTO, sin hallazgos pendientes. Evidencia y 29 capturas en `pruebas-e2e/panel/evidencias/DM-09/`.
