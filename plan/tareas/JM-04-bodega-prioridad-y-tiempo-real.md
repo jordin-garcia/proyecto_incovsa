@@ -69,3 +69,8 @@ npm run e2e -- pruebas-e2e/picking/bodega-tiempo-real.spec.ts
   - `npm run build` aprobado: generación estática y bundles optimizados de producción con Turbopack.
   - `npm run e2e -- pruebas-e2e/picking/bodega-tiempo-real.spec.ts` aprobado: 9 pruebas en Playwright en teléfono, tableta y escritorio utilizando dos contextos de navegador independientes, validando actualización en tiempo real mediante SSE sin recarga, respuesta inmediata optimista, arrastre con mouse, dedo y teclado, y cero violaciones graves de accesibilidad con axe.
 
+### Correcciones de la auditoría (2026-10-22)
+
+H-24 (JG-23): las acciones de `BodegaCliente.tsx` pasan por `operar()`, que captura el rechazo del servidor y la falla de red, deja que `useOptimistic` vuelva atrás y muestra el mensaje; el Detalle y el despacho también capturan la falla de red. Lo prueba `bodega.spec.ts` con `route.abort()`.
+
+H-25 y H-26 (JG-23): CP-37 mide RNF-13 desde la publicación del aviso (`esperarPublicacion`), como JG-10; cambia el estado del envío con `pg.Client` en el mismo proceso, lo restaura solo si cambió, llama a tsx sin npx y ya no tiene el desfase fijo. Mismos escenarios y límite de 2 s. En el teléfono, la prueba de la cola reordena con el teclado porque la primera tarjeta mide más que la pantalla y el mouse no alcanza las dos asas.

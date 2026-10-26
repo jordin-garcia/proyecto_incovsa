@@ -654,3 +654,8 @@ El README del repositorio se actualizó el 16/10/2026 con la versión 1.5 de est
 ## 25/10/2026 · DM-09 · Contraste de la bandeja de solicitudes
 
 Daniela autorizó usar `--g600` solo en las pestañas inactivas y el texto secundario de la fila seleccionada. Playwright y axe reprodujeron 4.46:1 y 4.40:1 con el `--g500` del prototipo. Se documenta esta excepción a la decisión 89 en `specs/05`, para cumplir RNF-08 sin cambiar las pruebas ni la paleta.
+
+## 25/10/2026 · JG-23 · Correcciones de la auditoría del 22/10 en Bodega
+
+- Si una acción de Bodega no se guarda, la marca o el orden vuelven atrás y la pantalla sigue en uso. Un envío de la misma sede que otra pantalla ya despachó responde «El pedido ya no está en preparación.», el mismo mensaje del despacho, y «No tiene permisos» queda solo para otra sede (auditoría H-22). Una falla de red muestra el mensaje general «No se pudo completar la operación. Inténtelo de nuevo.» (H-24) ([07](07-picking-bodega.md), "Marcado de preparación").
+- La conversión solo recibe texto o `Decimal`, nunca `Number` (H-16, [16](16-arquitectura-y-tecnologia.md), decisión 1).

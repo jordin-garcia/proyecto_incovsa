@@ -87,3 +87,11 @@ npm run e2e -- pruebas-e2e/picking/bodega.spec.ts
 ### Correcciones de la auditoría (2026-10-22)
 
 D-01, RN-49: el conteo de clientes usa claveCliente(), compartida con Facturación y las entregas, y agrupa correctamente tildes, mayúsculas y espacios exteriores. No se incluyen las correcciones de Bodega asignadas a JG-23.
+
+H-17 (JG-23): el encabezado usa `EncabezadoModulo`, con la instrucción a la par del título y «Abrir tablero en pantalla completa» en `acciones`, como `cab()`; lo comprueba `pruebas-e2e/comunes/encabezado.ts`.
+
+H-18, H-19, H-20 y H-21 (JG-23): `bodega.css` agrega `.ped-meta .prog` (verde `--v700`, negrita) y la regla de ≤720 px de `.ped-avance`, iguala `.ped-herr` (8 px, `12px 22px`, fondo blanco) y quita el `max-height` de `.det-grupos`: en el Detalle se desplaza la ventana. `.det-grupos` ya no lleva `role="region"` ni `tabIndex`; las tablas internas sí, porque se desplazan a lo ancho en el teléfono.
+
+H-22 (JG-23): `exigirEnvioEnPreparacion()` de `src/modulos/bodega/servicio.ts` lanza `ErrorAcceso` para otra sede o un envío inexistente y `ErrorNegocio("El pedido ya no está en preparación.")` para un envío de la sede que ya salió de Bodega.
+
+H-23 (JG-23): el caso «otra sede» de `acciones.test.ts` usa un envío real de la sede 2; `comprobarRechazosDeAccion()` (`pruebas/permisos.ts`) acepta una función para la entrada de otra sede.

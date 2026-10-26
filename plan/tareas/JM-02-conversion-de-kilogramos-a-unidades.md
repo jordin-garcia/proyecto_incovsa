@@ -98,3 +98,7 @@ El cálculo convierte las cantidades y el Peso de Conversión a gramos enteros (
   // O con valores ya calculados:
   <Unidades unidades={linea.unidades} restoKg={linea.restoKg} />
   ```
+
+### Correcciones de la auditoría (2026-10-22)
+
+H-16 (JG-23): `DecimalExacto` ya no admite `number` (`string | (object & {…})`); `servicio.test.ts` lo comprueba con `@ts-expect-error`, que hace fallar `npm run tipos` si vuelve a admitirse. Bodega y su Detalle pasan las cantidades como texto (`toString()` del `Decimal`), y `Unidades` recibe texto o `Decimal`, nunca `Number`.

@@ -68,6 +68,7 @@ En la barra lateral, el módulo de Bodega **no** muestra el contador de rutas y 
 - El cambio se ve **al instante en todas las pantallas** de la sede.
 - **No se registra quién marcó.** Sirve solo para que los operarios vean qué se ha sacado y qué falta.
 - El marcado tampoco se registra en la bitácora.
+- **Si el cambio no se guarda (25/10):** la marca vuelve atrás y la pantalla sigue en uso. Si otra pantalla ya despachó la ruta o el pedido, se avisa «El pedido ya no está en preparación.» (el mismo mensaje del despacho) y la ruta o el pedido sale de la pantalla; «No tiene permisos» queda solo para otra sede. Si falla la red, se avisa «No se pudo completar la operación. Inténtelo de nuevo.». Lo mismo vale para marcar todo, ordenar por peso, cambiar la prioridad y el despacho. El Detalle solo muestra datos: se abre aunque la ruta o el pedido ya no esté en preparación, y si falla la red avisa con el mismo mensaje.
 
 ## Cierre (RF-SL-24)
 
