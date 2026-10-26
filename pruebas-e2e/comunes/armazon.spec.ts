@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { comprobarEncabezadoModulo } from "./encabezado";
 import { abrirMuestra } from "./preparar";
 
 for (const sistema of ["panel", "picking"]) {
@@ -46,6 +47,8 @@ for (const sistema of ["panel", "picking"]) {
       await expect(lado).toHaveCSS("width", "264px");
     }
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    // RF-SL-61 (auditoría H-29): la instrucción breve va a la par del título de EncabezadoModulo.
+    await comprobarEncabezadoModulo(page);
     await expect(page.getByRole("link", { name: "INCOVSA Químicos", includeHidden: true })).toHaveAttribute(
       "href",
       "/",

@@ -19,8 +19,10 @@ import {
   verticalListSortingStrategy,
   arrayMove,
 } from "@dnd-kit/sortable";
+import { EncabezadoModulo } from "@/componentes/comunes/EncabezadoModulo";
 import { Icono } from "@/componentes/comunes/iconos";
 import { useMensajes } from "@/componentes/comunes/Mensajes";
+import { MENSAJE_ERROR_GENERAL } from "@/lib/errores";
 import { TarjetaEnvio, type EnvioBodegaItem } from "./TarjetaEnvio";
 import { ModalDetalle, type DetalleEnvioData } from "./ModalDetalle";
 import {
@@ -129,77 +131,64 @@ export function BodegaCliente({ sede, enviosIniciales }: BodegaClienteProps) {
   );
 
   const alVerDetalle = async (envioId: number) => {
-    const res = await obtenerDetalleEnvioAccion({ envioId });
-    if (!res.ok) {
-      mostrarMensaje(res.error, "error");
-      return;
+    try {
+      const res = await obtenerDetalleEnvioAccion({ envioId });
+      if (!res.ok) {
+        mostrarMensaje(res.error, "error");
+        return;
+      }
+      setDetalleEnvio(res.datos);
+      setModalAbierto(true);
+    } catch {
+      mostrarMensaje(MENSAJE_ERROR_GENERAL, "error");
     }
-    setDetalleEnvio(res.datos);
-    setModalAbierto(true);
   };
 
   const alActualizar = () => {
     router.refresh();
   };
 
-  const alMarcarLinea = (envioId: number, lineaId: number, nuevoMarcado: boolean) => {
+  /**
+   * Aplica el cambio al instante y lo confirma con el servidor. Si el servidor lo rechaza o falla la red (una tableta
+   * pierde el wifi), el cambio optimista vuelve atrás con un mensaje y la pantalla sigue en uso (auditoría H-24).
+   */
+  const operar = (
+    accion: AccionOptimistaBodega,
+    ejecutar: () => Promise<{ ok: boolean; error?: string }>,
+    mensajeExito?: string,
+  ) => {
     startTransition(async () => {
-      aplicarOptimista({ tipo: "marcar-linea", envioId, lineaId, marcado: nuevoMarcado });
-      const res = await marcarLineaAccion({ envioId, lineaId, marcado: nuevoMarcado });
-      if (!res.ok) {
-        mostrarMensaje(res.error, "error");
-        aplicarOptimista({ tipo: "marcar-linea", envioId, lineaId, marcado: !nuevoMarcado });
-      } else {
-        setEnvios((actuales) =>
-          reducirEnviosOptimistas(actuales, { tipo: "marcar-linea", envioId, lineaId, marcado: nuevoMarcado }),
-        );
+      aplicarOptimista(accion);
+      try {
+        const res = await ejecutar();
+        if (!res.ok) {
+          mostrarMensaje(res.error ?? MENSAJE_ERROR_GENERAL, "error");
+        } else {
+          if (mensajeExito) mostrarMensaje(mensajeExito, "exito");
+          setEnvios((actuales) => reducirEnviosOptimistas(actuales, accion));
+        }
+      } catch {
+        mostrarMensaje(MENSAJE_ERROR_GENERAL, "error");
       }
       router.refresh();
     });
   };
 
-  const alMarcarTodo = (envioId: number, nuevoValor: boolean) => {
-    startTransition(async () => {
-      aplicarOptimista({ tipo: "marcar-todo", envioId, marcado: nuevoValor });
-      const res = await marcarTodoAccion({ envioId, marcado: nuevoValor });
-      if (!res.ok) {
-        mostrarMensaje(res.error, "error");
-        aplicarOptimista({ tipo: "marcar-todo", envioId, marcado: !nuevoValor });
-      } else {
-        setEnvios((actuales) =>
-          reducirEnviosOptimistas(actuales, { tipo: "marcar-todo", envioId, marcado: nuevoValor }),
-        );
-      }
-      router.refresh();
-    });
-  };
+  const alMarcarLinea = (envioId: number, lineaId: number, marcado: boolean) =>
+    operar({ tipo: "marcar-linea", envioId, lineaId, marcado }, () => marcarLineaAccion({ envioId, lineaId, marcado }));
 
-  const alOrdenarPorPeso = (envioId: number) => {
-    startTransition(async () => {
-      aplicarOptimista({ tipo: "ordenar-por-peso", envioId });
-      const res = await ordenarPorPesoAccion({ envioId });
-      if (!res.ok) {
-        mostrarMensaje(res.error, "error");
-      } else {
-        mostrarMensaje("Filas ordenadas de mayor a menor peso.", "exito");
-        setEnvios((actuales) => reducirEnviosOptimistas(actuales, { tipo: "ordenar-por-peso", envioId }));
-      }
-      router.refresh();
-    });
-  };
+  const alMarcarTodo = (envioId: number, marcado: boolean) =>
+    operar({ tipo: "marcar-todo", envioId, marcado }, () => marcarTodoAccion({ envioId, marcado }));
 
-  const alReordenarLineas = (envioId: number, lineaIds: number[]) => {
-    startTransition(async () => {
-      aplicarOptimista({ tipo: "reordenar-lineas", envioId, lineaIds });
-      const res = await reordenarLineasAccion({ envioId, lineaIds });
-      if (!res.ok) {
-        mostrarMensaje(res.error, "error");
-      } else {
-        setEnvios((actuales) => reducirEnviosOptimistas(actuales, { tipo: "reordenar-lineas", envioId, lineaIds }));
-      }
-      router.refresh();
-    });
-  };
+  const alOrdenarPorPeso = (envioId: number) =>
+    operar(
+      { tipo: "ordenar-por-peso", envioId },
+      () => ordenarPorPesoAccion({ envioId }),
+      "Filas ordenadas de mayor a menor peso.",
+    );
+
+  const alReordenarLineas = (envioId: number, lineaIds: number[]) =>
+    operar({ tipo: "reordenar-lineas", envioId, lineaIds }, () => reordenarLineasAccion({ envioId, lineaIds }));
 
   const alTerminarArrastreEnvios = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -211,35 +200,22 @@ export function BodegaCliente({ sede, enviosIniciales }: BodegaClienteProps) {
     if (viejoIndice === -1 || nuevoIndice === -1) return;
 
     const nuevosIds = arrayMove(viejosIds, viejoIndice, nuevoIndice);
-
-    startTransition(async () => {
-      aplicarOptimista({ tipo: "reordenar-envios", envioIds: nuevosIds });
-      const res = await reordenarColaAccion({ envioIds: nuevosIds });
-      if (!res.ok) {
-        mostrarMensaje(res.error, "error");
-      } else {
-        setEnvios((actuales) => reducirEnviosOptimistas(actuales, { tipo: "reordenar-envios", envioIds: nuevosIds }));
-      }
-      router.refresh();
-    });
+    operar({ tipo: "reordenar-envios", envioIds: nuevosIds }, () => reordenarColaAccion({ envioIds: nuevosIds }));
   };
 
   return (
     <>
-      <div className="encabezado-modulo">
-        <div>
-          <p className="encabezado-subtitulo">Módulo de bodega · tablero de preparación</p>
-          <h1 className="encabezado-titulo">Rutas y pedidos por preparar</h1>
-          <p className="encabezado-descripcion">
-            Arrastre una ruta, un pedido o una fila para cambiar la prioridad; se ve al instante en todas las pantallas
-            de la sede.
-          </p>
-        </div>
-
-        <Link className="btn btn-p" href="/picking/tablero">
-          <Icono nombre="tv" /> Abrir tablero en pantalla completa
-        </Link>
-      </div>
+      {/* Mismo encabezado que `cab()` del prototipo, con la instrucción a la par del título (RF-SL-61, H-17). */}
+      <EncabezadoModulo
+        eyebrow="Módulo de bodega · tablero de preparación"
+        titulo="Rutas y pedidos por preparar"
+        instruccion="Arrastre una ruta, un pedido o una fila para cambiar la prioridad; se ve al instante en todas las pantallas de la sede."
+        acciones={
+          <Link className="btn btn-p" href="/picking/tablero">
+            <Icono nombre="tv" /> Abrir tablero en pantalla completa
+          </Link>
+        }
+      />
 
       <div style={{ display: "flex", gap: "10px", alignItems: "center", marginBottom: "16px", flexWrap: "wrap" }}>
         <span className="chip chip-o">{enviosOptimistas.length} en cola</span>
