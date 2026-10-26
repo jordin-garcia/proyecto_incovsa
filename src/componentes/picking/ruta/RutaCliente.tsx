@@ -36,14 +36,7 @@ function reducirRutasOptimistas(rutas: RutaEnCursoItem[], accion: AccionOptimist
   return rutas;
 }
 
-export function RutaCliente({
-  rutasIniciales,
-  propias,
-}: {
-  rutasIniciales: RutaEnCursoItem[];
-  propias: boolean;
-  sedeId: number;
-}) {
+export function RutaCliente({ rutasIniciales, propias }: { rutasIniciales: RutaEnCursoItem[]; propias: boolean }) {
   const router = useRouter();
   const mostrarMensaje = useMensajes();
   const [pendiente, startTransition] = useTransition();

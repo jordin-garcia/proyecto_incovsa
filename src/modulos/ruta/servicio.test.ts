@@ -6,6 +6,7 @@ import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import { sembrarDemo } from "../../../prisma/semillas/demo";
 import { ErrorNegocio } from "@/lib/errores";
 import { ErrorAcceso } from "@/modulos/permisos/servicio";
+import { formatoFecha } from "@/lib/fechas";
 import { listarRutasEnRuta, reordenarRecorridoRuta, entregarRuta, requiereSoloPropias } from "./servicio";
 import { moverPedidos, guardarCampoOpcion, enviarOpcion } from "@/modulos/envios/opciones";
 
@@ -219,6 +220,33 @@ describe("Módulo de Ruta - Servicio (JM-06)", () => {
             rol: sesionBodega.usuario.rol,
             sedeId: 1,
             soloPropias: requiereSoloPropias(sesionBodega),
+          },
+        ),
+      ).rejects.toThrow(ErrorAcceso);
+    });
+
+    it("RN-46: un usuario con rol 'piloto' en minúsculas y permiso pk.ruta.todas solo ve sus rutas y no puede entregar una ajena", async () => {
+      const ruta06 = await crearRutaDePrueba({ numero: 1, pilotoId: piloto06Id });
+      const ruta07 = await crearRutaDePrueba({ numero: 2, pilotoId: piloto07Id });
+
+      const sesionPilotoConTodas = crearSesion({
+        usuarioId: piloto06Id,
+        rol: "piloto",
+        permisos: ["pk.ruta.todas", "pk.ruta.propias"],
+      });
+
+      const rutas = await listarRutasEnRuta(sesionPilotoConTodas, 1);
+      expect(rutas.map((r) => r.id)).toContain(ruta06.id);
+      expect(rutas.map((r) => r.id)).not.toContain(ruta07.id);
+
+      await expect(
+        entregarRuta(
+          { envioId: ruta07.id },
+          {
+            usuarioId: sesionPilotoConTodas.usuario.id,
+            rol: sesionPilotoConTodas.usuario.rol,
+            sedeId: 1,
+            soloPropias: requiereSoloPropias(sesionPilotoConTodas),
           },
         ),
       ).rejects.toThrow(ErrorAcceso);
@@ -501,7 +529,7 @@ describe("Módulo de Ruta - Servicio (JM-06)", () => {
       });
       expect(bitacoras).toHaveLength(1);
       expect(bitacoras[0].sistema).toBe("picking");
-      expect(bitacoras[0].detalle).toContain("Ruta 1 del 24 de octubre de 2026 entregada");
+      expect(bitacoras[0].detalle).toContain(`Ruta 1 del ${formatoFecha(ruta.fechaEnvio)} entregada`);
 
       // Deja de aparecer en el módulo
       const sesionPiloto06 = crearSesion({

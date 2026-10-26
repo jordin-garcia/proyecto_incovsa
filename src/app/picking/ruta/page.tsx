@@ -41,5 +41,5 @@ export default async function PaginaRuta() {
   const rutas = await listarRutasEnRuta(sesion, sede.id);
   const propias = esPiloto(sesion) || !tienePermiso(sesion, "pk.ruta.todas");
 
-  return <RutaCliente rutasIniciales={rutas} propias={propias} sedeId={sede.id} />;
+  return <RutaCliente rutasIniciales={rutas} propias={propias} />;
 }

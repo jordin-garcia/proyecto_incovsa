@@ -25,7 +25,12 @@ export async function prepararRutasPrueba(base = 9900) {
   const numeros = [base + 1, base + 2, base + 3];
   // Limpiar previas por si quedaron
   const previas = await prisma.envio.findMany({
-    where: { numero: { in: numeros } },
+    where: {
+      sedeId: 1,
+      tipo: "ruta",
+      numero: { in: numeros },
+      pilotoId: { in: [u06.id, u07.id] },
+    },
     select: { id: true },
   });
   await limpiarRutasPrueba(previas.map((p) => p.id));

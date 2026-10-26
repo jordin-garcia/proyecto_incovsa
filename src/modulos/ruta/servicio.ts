@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { type SesionActual } from "@/lib/sesion";
-import { tienePermiso, ErrorAcceso } from "@/modulos/permisos/servicio";
+import { tienePermiso, ErrorAcceso, esPiloto } from "@/modulos/permisos/servicio";
+import { normalizarRol, esAccesoTotal } from "@/lib/roles";
+import { formatoFecha } from "@/lib/fechas";
 import { ErrorNegocio } from "@/lib/errores";
 import { registrarBitacora } from "@/modulos/bitacora/servicio";
 import { Prisma } from "@/generated/prisma/client";
@@ -35,39 +37,14 @@ export type RutaEnCursoItem = {
   clientesContador: number;
 };
 
-function esAccesoTotal(rol: string | undefined): boolean {
-  const normal = (rol ?? "").toLowerCase().trim();
-  return normal === "gerencia" || normal === "soporte";
-}
-
-function normalizarRol(rol: string | undefined): string {
-  return (rol ?? "").toLowerCase().trim();
-}
-
 export function requiereSoloPropias(sesion: SesionActual): boolean {
+  if (esPiloto(sesion)) {
+    return true;
+  }
   const accesoTotal = esAccesoTotal(sesion.usuario.rol);
   const tieneTodas = tienePermiso(sesion, "pk.ruta.todas");
-  const puedeOperarTodas = sesion.usuario.rol !== "Piloto" && (tieneTodas || accesoTotal);
+  const puedeOperarTodas = tieneTodas || accesoTotal;
   return !puedeOperarTodas;
-}
-
-function formatoFecha(fechaIso: string): string {
-  const meses = [
-    "enero",
-    "febrero",
-    "marzo",
-    "abril",
-    "mayo",
-    "junio",
-    "julio",
-    "agosto",
-    "septiembre",
-    "octubre",
-    "noviembre",
-    "diciembre",
-  ];
-  const [año, mes, dia] = fechaIso.split("-");
-  return `${dia} de ${meses[Number(mes) - 1]} de ${año}`;
 }
 
 export async function listarRutasEnRuta(sesion: SesionActual | null, sedeId: number) {
@@ -254,11 +231,7 @@ export async function entregarRuta(entrada: EntradaEntregarRuta, contexto: Conte
       },
     });
 
-    const fechaDia =
-      ruta.fechaEnvio instanceof Date
-        ? ruta.fechaEnvio.toISOString().slice(0, 10)
-        : String(ruta.fechaEnvio).slice(0, 10);
-    const detalleBitacora = `${ruta.sede.nombre} · Ruta ${ruta.numero} del ${formatoFecha(fechaDia)} entregada`;
+    const detalleBitacora = `${ruta.sede.nombre} · Ruta ${ruta.numero} del ${formatoFecha(ruta.fechaEnvio)} entregada`;
 
     await registrarBitacora(tx, {
       sistema: "picking",

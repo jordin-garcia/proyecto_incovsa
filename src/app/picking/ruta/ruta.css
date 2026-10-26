@@ -103,8 +103,9 @@
 .ped-pie {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
+  gap: 16px;
   padding: 14px 22px;
   background: var(--g50);
-  border-top: 1px solid var(--g150);
+  flex-wrap: wrap;
 }
