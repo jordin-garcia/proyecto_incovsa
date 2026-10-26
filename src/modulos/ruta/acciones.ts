@@ -6,7 +6,7 @@ import { obtenerSedeDeTrabajo } from "@/modulos/permisos/sede";
 import { avisarCambio } from "@/modulos/tiempo-real/servidor";
 import { aResultadoDeError } from "@/lib/errores";
 import { esquemaReordenarRecorrido, esquemaEntregarRuta } from "./esquemas";
-import { reordenarRecorridoRuta, entregarRuta } from "./servicio";
+import { reordenarRecorridoRuta, entregarRuta, requiereSoloPropias } from "./servicio";
 
 export async function reordenarRecorridoRutaAccion(entrada: unknown) {
   try {
@@ -21,6 +21,7 @@ export async function reordenarRecorridoRutaAccion(entrada: unknown) {
       usuarioId: sesion.usuario.id,
       rol: sesion.usuario.rol,
       sedeId: sede.id,
+      soloPropias: requiereSoloPropias(sesion),
     });
     avisarCambio(sede.id);
     return { ok: true as const, datos: resultado };
@@ -42,6 +43,7 @@ export async function entregarRutaAccion(entrada: unknown) {
       usuarioId: sesion.usuario.id,
       rol: sesion.usuario.rol,
       sedeId: sede.id,
+      soloPropias: requiereSoloPropias(sesion),
     });
     avisarCambio(sede.id);
     return { ok: true as const, datos: resultado };

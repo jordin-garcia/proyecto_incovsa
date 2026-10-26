@@ -6,7 +6,8 @@ import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import { sembrarDemo } from "../../../prisma/semillas/demo";
 import { ErrorNegocio } from "@/lib/errores";
 import { ErrorAcceso } from "@/modulos/permisos/servicio";
-import { listarRutasEnRuta, reordenarRecorridoRuta, entregarRuta } from "./servicio";
+import { listarRutasEnRuta, reordenarRecorridoRuta, entregarRuta, requiereSoloPropias } from "./servicio";
+import { moverPedidos, guardarCampoOpcion, enviarOpcion } from "@/modulos/envios/opciones";
 
 describe("Módulo de Ruta - Servicio (JM-06)", () => {
   const clave = "Demo-12345";
@@ -177,6 +178,51 @@ describe("Módulo de Ruta - Servicio (JM-06)", () => {
 
       await expect(listarRutasEnRuta(sesionSedeInvalida, 1)).rejects.toThrow(ErrorAcceso);
     });
+
+    it("RN-46: un usuario con rol Bodega y solo pk.ruta.propias es rechazado al reordenar o entregar una ruta ajena", async () => {
+      const ruta = await crearRutaDePrueba({
+        numero: 1,
+        pilotoId: piloto06Id,
+        entregas: [
+          { cliente: "Cliente A", sector: "Zona 1", totalKg: 100, orden: 1 },
+          { cliente: "Cliente B", sector: "Zona 2", totalKg: 200, orden: 2 },
+        ],
+      });
+
+      const sesionBodega = crearSesion({
+        usuarioId: usuarioBodegaId,
+        rol: "Bodega",
+        permisos: ["pk.ruta.propias"],
+      });
+
+      const entregaIds = ruta.entregas.map((e) => e.id).reverse();
+
+      // Debe rechazar el reordenamiento de ruta asignada a piloto06
+      await expect(
+        reordenarRecorridoRuta(
+          { envioId: ruta.id, entregaIds },
+          {
+            usuarioId: sesionBodega.usuario.id,
+            rol: sesionBodega.usuario.rol,
+            sedeId: 1,
+            soloPropias: requiereSoloPropias(sesionBodega),
+          },
+        ),
+      ).rejects.toThrow(ErrorAcceso);
+
+      // Debe rechazar la entrega de ruta asignada a piloto06
+      await expect(
+        entregarRuta(
+          { envioId: ruta.id },
+          {
+            usuarioId: sesionBodega.usuario.id,
+            rol: sesionBodega.usuario.rol,
+            sedeId: 1,
+            soloPropias: requiereSoloPropias(sesionBodega),
+          },
+        ),
+      ).rejects.toThrow(ErrorAcceso);
+    });
   });
 
   describe("Criterio 2: RF-SL-78 - Orden de rutas En Ruta de la más reciente a la más antigua", () => {
@@ -214,14 +260,117 @@ describe("Módulo de Ruta - Servicio (JM-06)", () => {
   });
 
   describe("Criterio 3: RF-SL-27 / RN-49 - Una fila por cliente con la suma de sus kg", () => {
-    it("RF-SL-27 / RN-49: la tabla de ruta contiene una fila por cliente y suma sus kg", async () => {
-      const ruta = await crearRutaDePrueba({
-        numero: 1,
-        pilotoId: piloto06Id,
-        entregas: [
-          { cliente: "Textiles Modernos S.A.", sector: "Zona 12", totalKg: 250, orden: 1 },
-          { cliente: "Calzados El Águila", sector: "Zona 8", totalKg: 300, orden: 2 },
-        ],
+    it("RF-SL-27 / RN-49: la tabla de ruta contiene una sola fila por cliente con la suma de sus kg al agrupar pedidos facturados", async () => {
+      const sesionFacturacion = crearSesion({
+        usuarioId: usuarioBodegaId,
+        rol: "Facturador",
+        permisos: ["pk.facturacion"],
+      });
+
+      // Crear 2 pedidos facturados del mismo cliente y sector (José Álvarez, Zona 1)
+      const p1 = await prisma.pedidoFacturado.create({
+        data: {
+          sedeId: 1,
+          numeroOdoo: "801",
+          referencia: "XE-IN/SALIDA/801",
+          cliente: "José Álvarez",
+          sector: "Zona 1",
+          posicion: 1,
+          cargadoPorId: usuarioBodegaId,
+          detalles: {
+            create: [
+              {
+                producto: "SULFATO DE SODIO",
+                lote: "5287",
+                pesoConversionKg: "25",
+                cantidadKg: "25.000",
+                orden: 1,
+              },
+            ],
+          },
+        },
+      });
+
+      const p2 = await prisma.pedidoFacturado.create({
+        data: {
+          sedeId: 1,
+          numeroOdoo: "802",
+          referencia: "XE-IN/SALIDA/802",
+          cliente: "José Álvarez",
+          sector: "Zona 1",
+          posicion: 2,
+          cargadoPorId: usuarioBodegaId,
+          detalles: {
+            create: [
+              {
+                producto: "SULFATO DE SODIO",
+                lote: "5287",
+                pesoConversionKg: "25",
+                cantidadKg: "15.125",
+                orden: 1,
+              },
+            ],
+          },
+        },
+      });
+
+      const estadoOrigen = (
+        await prisma.pedidoFacturado.findMany({
+          where: { sedeId: 1, opcionEnvioId: null, envioId: null },
+          orderBy: [{ posicion: "asc" }, { id: "asc" }],
+        })
+      ).map((p) => ({ id: p.id, posicion: p.posicion, actualizadoEn: p.actualizadoEn.toISOString() }));
+
+      // Mover a camión y configurar opción de envío
+      await moverPedidos(sesionFacturacion, {
+        sedeId: 1,
+        ids: [p1.id, p2.id],
+        origen: null,
+        destino: "camion",
+        antesDe: null,
+        estadoOrigen,
+        estadoDestino: [],
+      });
+      await guardarCampoOpcion(sesionFacturacion, { sedeId: 1, tipo: "camion", campo: "fecha", valor: "2026-10-25" });
+      await guardarCampoOpcion(sesionFacturacion, { sedeId: 1, tipo: "camion", campo: "hora", valor: "14:00" });
+      await guardarCampoOpcion(sesionFacturacion, {
+        sedeId: 1,
+        tipo: "camion",
+        campo: "camion",
+        valor: camionId,
+      });
+      await guardarCampoOpcion(sesionFacturacion, {
+        sedeId: 1,
+        tipo: "camion",
+        campo: "piloto",
+        valor: piloto06Id,
+      });
+
+      const opcionCamion = await prisma.opcionEnvio.findUniqueOrThrow({
+        where: { sedeId_tipo: { sedeId: 1, tipo: "camion" } },
+      });
+      const pedidosCamion = await prisma.pedidoFacturado.findMany({
+        where: { sedeId: 1, opcionEnvioId: opcionCamion.id, envioId: null },
+        orderBy: [{ posicion: "asc" }, { id: "asc" }],
+      });
+
+      const envio = await enviarOpcion(sesionFacturacion, {
+        sedeId: 1,
+        tipo: "camion",
+        estadoEsperado: pedidosCamion.map((p) => ({
+          id: p.id,
+          posicion: p.posicion,
+          actualizadoEn: p.actualizadoEn.toISOString(),
+        })),
+      });
+
+      expect(envio).toBeDefined();
+
+      // Cambiar estado a En Ruta
+      const estadoEnRuta = await prisma.estadoEnvio.findUniqueOrThrow({ where: { nombre: "En Ruta" } });
+      await prisma.envio.update({
+        where: { id: envio!.id },
+        data: { estadoId: estadoEnRuta.id },
       });
 
       const sesionPiloto06 = crearSesion({
@@ -231,14 +380,15 @@ describe("Módulo de Ruta - Servicio (JM-06)", () => {
       });
 
       const rutas = await listarRutasEnRuta(sesionPiloto06, 1);
-      const r = rutas.find((item) => item.id === ruta.id);
+      const r = rutas.find((item) => item.id === envio!.id);
       expect(r).toBeDefined();
-      expect(r?.entregas).toHaveLength(2);
-      expect(r?.entregas[0].cliente).toBe("Textiles Modernos S.A.");
-      expect(r?.entregas[0].sector).toBe("Zona 12");
-      expect(r?.entregas[0].totalKg).toBe(250);
-      expect(r?.totalKg).toBe(550);
-      expect(r?.clientesContador).toBe(2);
+      // Dos pedidos del mismo cliente/sector se agruparon en UNA sola fila de entrega
+      expect(r?.entregas).toHaveLength(1);
+      expect(r?.entregas[0].cliente).toBe("José Álvarez");
+      expect(r?.entregas[0].sector).toBe("Zona 1");
+      expect(r?.entregas[0].totalKg).toBe(40.125);
+      expect(r?.totalKg).toBe(40.125);
+      expect(r?.clientesContador).toBe(1);
     });
   });
 
@@ -351,7 +501,7 @@ describe("Módulo de Ruta - Servicio (JM-06)", () => {
       });
       expect(bitacoras).toHaveLength(1);
       expect(bitacoras[0].sistema).toBe("picking");
-      expect(bitacoras[0].detalle).toContain("Ruta 1 del 24/10/2026 entregada");
+      expect(bitacoras[0].detalle).toContain("Ruta 1 del 24 de octubre de 2026 entregada");
 
       // Deja de aparecer en el módulo
       const sesionPiloto06 = crearSesion({

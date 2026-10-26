@@ -21,9 +21,9 @@
   width: 100%;
   text-align: left;
   padding: 16px 18px;
-  border-radius: 16px;
+  border-radius: var(--radius-r-l);
   border: 1.5px solid var(--g150);
-  background: #fff;
+  background: var(--color-blanco);
   cursor: pointer;
   margin-bottom: 10px;
   transition:
@@ -37,7 +37,7 @@
 
 .ruta-op.on {
   border-color: var(--v500);
-  box-shadow: 0 0 0 4px rgba(27, 130, 56, 0.1);
+  box-shadow: var(--shadow-prototipo-2);
 }
 
 .ruta-op b {
@@ -58,7 +58,7 @@
 }
 
 .ruta-datos div {
-  background: #fff;
+  background: var(--color-blanco);
   padding: 16px 20px;
 }
 
@@ -78,9 +78,9 @@
 .parada-n {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: var(--radius-prototipo-6);
   background: var(--v600);
-  color: #fff;
+  color: var(--color-blanco);
   display: grid;
   place-items: center;
   font: 700 14px/1 var(--f-disp);
@@ -97,5 +97,14 @@
 .recorrido span {
   background: var(--g100);
   padding: 4px 8px;
-  border-radius: 6px;
+  border-radius: var(--radius-resto);
+}
+
+.ped-pie {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 14px 22px;
+  background: var(--g50);
+  border-top: 1px solid var(--g150);
 }

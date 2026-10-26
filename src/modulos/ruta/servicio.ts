@@ -1,42 +1,76 @@
-import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
+import { type SesionActual } from "@/lib/sesion";
+import { tienePermiso, ErrorAcceso } from "@/modulos/permisos/servicio";
 import { ErrorNegocio } from "@/lib/errores";
-import { ErrorAcceso, tienePermiso, esPiloto } from "@/modulos/permisos/servicio";
-import { esAccesoTotal, normalizarRol } from "@/lib/roles";
-import { formatoFecha } from "@/lib/fechas";
 import { registrarBitacora } from "@/modulos/bitacora/servicio";
-import type { SesionActual } from "@/lib/sesion";
-import type { EntradaReordenarRecorrido, EntradaEntregarRuta } from "./esquemas";
+import { Prisma } from "@/generated/prisma/client";
+import { type EntradaReordenarRecorrido, type EntradaEntregarRuta } from "./esquemas";
 
 export interface ContextoOperacionRuta {
   usuarioId: string;
   rol: string;
   sedeId: number;
+  soloPropias?: boolean;
 }
 
-export interface EntregaRutaItem {
+export type EntregaRutaItem = {
   id: number;
   cliente: string;
   sector: string;
   totalKg: number;
   orden: number;
-}
+};
 
-export interface RutaEnCursoItem {
+export type RutaEnCursoItem = {
   id: number;
   sedeId: number;
   tipo: string;
   numero: number;
-  fechaEnvio: Date;
-  programadoPara: Date | null;
+  fechaEnvio: Date | string;
+  programadoPara: Date | string | null;
   camion: { id: number; identificacion: string } | null;
   piloto: { id: string; name: string } | null;
+  entregas: EntregaRutaItem[];
   totalKg: number;
   clientesContador: number;
-  entregas: EntregaRutaItem[];
+};
+
+function esAccesoTotal(rol: string | undefined): boolean {
+  const normal = (rol ?? "").toLowerCase().trim();
+  return normal === "gerencia" || normal === "soporte";
 }
 
-export async function listarRutasEnRuta(sesion: SesionActual | null, sedeId: number): Promise<RutaEnCursoItem[]> {
+function normalizarRol(rol: string | undefined): string {
+  return (rol ?? "").toLowerCase().trim();
+}
+
+export function requiereSoloPropias(sesion: SesionActual): boolean {
+  const accesoTotal = esAccesoTotal(sesion.usuario.rol);
+  const tieneTodas = tienePermiso(sesion, "pk.ruta.todas");
+  const puedeOperarTodas = sesion.usuario.rol !== "Piloto" && (tieneTodas || accesoTotal);
+  return !puedeOperarTodas;
+}
+
+function formatoFecha(fechaIso: string): string {
+  const meses = [
+    "enero",
+    "febrero",
+    "marzo",
+    "abril",
+    "mayo",
+    "junio",
+    "julio",
+    "agosto",
+    "septiembre",
+    "octubre",
+    "noviembre",
+    "diciembre",
+  ];
+  const [año, mes, dia] = fechaIso.split("-");
+  return `${dia} de ${meses[Number(mes) - 1]} de ${año}`;
+}
+
+export async function listarRutasEnRuta(sesion: SesionActual | null, sedeId: number) {
   if (!sesion) throw new ErrorAcceso();
 
   const tienePropias = tienePermiso(sesion, "pk.ruta.propias");
@@ -51,7 +85,7 @@ export async function listarRutasEnRuta(sesion: SesionActual | null, sedeId: num
     throw new ErrorAcceso();
   }
 
-  const soloPropias = esPiloto(sesion) || (!tieneTodas && !accesoTotal);
+  const soloPropias = requiereSoloPropias(sesion);
 
   const rutas = await prisma.envio.findMany({
     where: {
@@ -102,55 +136,67 @@ export async function listarRutasEnRuta(sesion: SesionActual | null, sedeId: num
 }
 
 export async function reordenarRecorridoRuta(entrada: EntradaReordenarRecorrido, contexto: ContextoOperacionRuta) {
-  const ruta = await prisma.envio.findFirst({
-    where: {
-      id: entrada.envioId,
-      sedeId: contexto.sedeId,
-      tipo: "ruta",
-    },
-    include: {
-      estado: true,
-      entregas: true,
-    },
-  });
+  return prisma.$transaction(async (tx) => {
+    // Bloqueo exclusivo de fila (specs/16, decisión 41)
+    const bloqueados = await tx.$queryRaw<{ id: number }[]>`
+      SELECT id FROM envio WHERE id = ${entrada.envioId} AND sede_id = ${contexto.sedeId} FOR UPDATE
+    `;
 
-  if (!ruta) {
-    throw new ErrorAcceso();
-  }
-
-  if (normalizarRol(contexto.rol) === "piloto" && ruta.pilotoId !== contexto.usuarioId) {
-    throw new ErrorAcceso();
-  }
-
-  if (ruta.estado.nombre !== "En Ruta") {
-    throw new ErrorNegocio("La ruta no está en curso.");
-  }
-
-  if (ruta.entregas.length !== entrada.entregaIds.length) {
-    throw new ErrorAcceso();
-  }
-
-  const idsExistentes = new Set(ruta.entregas.map((e) => e.id));
-  for (const id of entrada.entregaIds) {
-    if (!idsExistentes.has(id)) {
+    if (!bloqueados || bloqueados.length === 0) {
       throw new ErrorAcceso();
     }
-  }
 
-  // RN-28, RN-29: se guarda solo el orden actual, sin bitácora ni historial
-  await prisma.$transaction(
-    entrada.entregaIds.map((id, index) =>
-      prisma.entregaRuta.update({
-        where: { id },
-        data: { orden: index + 1 },
-      }),
-    ),
-  );
+    const ruta = await tx.envio.findFirst({
+      where: {
+        id: entrada.envioId,
+        sedeId: contexto.sedeId,
+        tipo: "ruta",
+      },
+      include: {
+        estado: true,
+        entregas: true,
+      },
+    });
 
-  return {
-    envioId: entrada.envioId,
-    orden: entrada.entregaIds,
-  };
+    if (!ruta) {
+      throw new ErrorAcceso();
+    }
+
+    const debeSerPropia = contexto.soloPropias ?? normalizarRol(contexto.rol) === "piloto";
+    if (debeSerPropia && ruta.pilotoId !== contexto.usuarioId) {
+      throw new ErrorAcceso();
+    }
+
+    if (ruta.estado.nombre !== "En Ruta") {
+      throw new ErrorNegocio("La ruta no está en curso.");
+    }
+
+    if (ruta.entregas.length !== entrada.entregaIds.length) {
+      throw new ErrorAcceso();
+    }
+
+    const idsExistentes = new Set(ruta.entregas.map((e) => e.id));
+    for (const id of entrada.entregaIds) {
+      if (!idsExistentes.has(id)) {
+        throw new ErrorAcceso();
+      }
+    }
+
+    // RN-28, RN-29: se guarda solo el orden actual, sin bitácora ni historial
+    await Promise.all(
+      entrada.entregaIds.map((id, index) =>
+        tx.entregaRuta.update({
+          where: { id },
+          data: { orden: index + 1 },
+        }),
+      ),
+    );
+
+    return {
+      envioId: entrada.envioId,
+      orden: entrada.entregaIds,
+    };
+  });
 }
 
 export async function entregarRuta(entrada: EntradaEntregarRuta, contexto: ContextoOperacionRuta) {
@@ -180,7 +226,8 @@ export async function entregarRuta(entrada: EntradaEntregarRuta, contexto: Conte
       throw new ErrorAcceso();
     }
 
-    if (normalizarRol(contexto.rol) === "piloto" && ruta.pilotoId !== contexto.usuarioId) {
+    const debeSerPropia = contexto.soloPropias ?? normalizarRol(contexto.rol) === "piloto";
+    if (debeSerPropia && ruta.pilotoId !== contexto.usuarioId) {
       throw new ErrorAcceso();
     }
 

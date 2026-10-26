@@ -2,7 +2,12 @@ import { z } from "zod";
 
 export const esquemaReordenarRecorrido = z.object({
   envioId: z.number().int().positive(),
-  entregaIds: z.array(z.number().int().positive()).min(1),
+  entregaIds: z
+    .array(z.number().int().positive())
+    .min(1)
+    .refine((ids) => new Set(ids).size === ids.length, {
+      message: "Los IDs de entrega no deben contener duplicados",
+    }),
 });
 
 export const esquemaEntregarRuta = z.object({

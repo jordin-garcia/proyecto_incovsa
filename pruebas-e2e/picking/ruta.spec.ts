@@ -170,7 +170,7 @@ test.describe("Módulo de Ruta E2E (JM-06)", () => {
     await expect(page.locator("tfoot")).toContainText("700");
   });
 
-  test("Criterio 4 y 5: RF-SL-28, RF-SL-29, RN-29, RN-11 - Cierre de ruta y entrega", async ({
+  test("Criterio 4 y 5: RF-SL-28, RF-SL-29, RN-29, RN-11 - Cierre de ruta y entrega con recorrido reordenado", async ({
     page,
     context,
     baseURL,
@@ -179,38 +179,63 @@ test.describe("Módulo de Ruta E2E (JM-06)", () => {
     await page.goto("/picking/ruta");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
-    // Seleccionar ruta secundaria
-    await page.locator(`button[data-r="${rutaSecundaria.id}"]`).click();
+    // Seleccionar ruta 1 (tiene 3 entregas)
+    await page.locator(`button[data-r="${rutaPiloto06.id}"]`).click();
+
+    // Reordenar paradas con teclado en el asa accesible: mover fila 1 abajo
+    const primerAsa = page.locator(".asa").first();
+    await primerAsa.focus();
+    await page.keyboard.press("Space");
+    await page.waitForTimeout(300);
+    await page.keyboard.press("ArrowDown");
+    await page.waitForTimeout(300);
+    await page.keyboard.press("Space");
+
+    // Verificar que el orden visual cambió: Calzados El Águila pasa a ser la primera parada
+    await expect(page.locator("tbody[data-paradas] tr").first()).toContainText("Calzados El Águila");
 
     // Botón "Ruta Entregada" sin texto de ayuda (CAM-95)
     const botonEntregar = page.getByRole("button", { name: "Ruta Entregada" });
     await expect(botonEntregar).toBeVisible();
     await expect(page.getByText("Al confirmar, la ruta se marca como entregada")).toHaveCount(0);
 
-    // Click abre modal de confirmación con el recorrido
+    // Click abre modal de confirmación con el nuevo recorrido reordenado
     await botonEntregar.click();
     const dialogo = page.getByRole("dialog");
     await expect(dialogo).toBeVisible();
-    await expect(dialogo.getByText(`Entregar Ruta ${rutaSecundaria.numero}`)).toBeVisible();
+    await expect(dialogo.getByText(`Entregar Ruta ${rutaPiloto06.numero}`)).toBeVisible();
     await expect(dialogo.getByText("Se registra la entrega completa")).toBeVisible();
-    await expect(dialogo.getByText("Química Industrial")).toBeVisible();
+    await expect(dialogo.getByText("Calzados El Águila")).toBeVisible();
+    await expect(dialogo.getByText("Textiles Modernos S.A.")).toBeVisible();
 
     // Confirmar entrega
     await dialogo.getByRole("button", { name: "Ruta Entregada" }).click();
 
     // Toast de éxito
     await expect(
-      page.getByText(`Ruta ${rutaSecundaria.numero} entregada. Quedó en el registro histórico de Reportes.`, {
+      page.getByText(`Ruta ${rutaPiloto06.numero} entregada. Quedó en el registro histórico de Reportes.`, {
         exact: true,
       }),
     ).toBeVisible();
 
     // La ruta deja de aparecer en el módulo
-    await expect(page.locator(`button[data-r="${rutaSecundaria.id}"]`)).toHaveCount(0);
+    await expect(page.locator(`button[data-r="${rutaPiloto06.id}"]`)).toHaveCount(0);
 
     // Verificar en BD que el estado sea Entregado
-    const resultado = ejecutarRuta("consultar", String(rutaSecundaria.id));
+    const resultado = ejecutarRuta("consultar", String(rutaPiloto06.id));
     expect(resultado.estado).toBe("Entregado");
+
+    // Verificar en BD que el recorrido guardado (orden) es el nuevo orden tras el reordenamiento (CP-41)
+    const entregasDb: { cliente: string; orden: number }[] = ejecutarRuta(
+      "consultar-entregas",
+      String(rutaPiloto06.id),
+    );
+    expect(entregasDb[0].cliente).toBe("Calzados El Águila");
+    expect(entregasDb[0].orden).toBe(1);
+    expect(entregasDb[1].cliente).toBe("Textiles Modernos S.A.");
+    expect(entregasDb[1].orden).toBe(2);
+    expect(entregasDb[2].cliente).toBe("Distribuidora La Central");
+    expect(entregasDb[2].orden).toBe(3);
   });
 
   test("Criterio 6 y 7 / RNF-08 / RNF-14: Accesibilidad con axe y responsividad", async ({
@@ -222,7 +247,17 @@ test.describe("Módulo de Ruta E2E (JM-06)", () => {
     await page.goto("/picking/ruta");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
-    await expect(page.locator(`button[data-r="${rutaPiloto06.id}"]`)).toBeVisible();
+    await expect(page.locator(`button[data-r="${rutaSecundaria.id}"]`)).toBeVisible();
+
+    // Verificar que no hay desborde horizontal (RNF-14)
+    const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+    const clientWidth = await page.evaluate(() => document.documentElement.clientWidth);
+    expect(scrollWidth).toBeLessThanOrEqual(clientWidth + 1);
+
+    // Seleccionar ruta secundaria y comprobar visibilidad del botón de entrega
+    await page.locator(`button[data-r="${rutaSecundaria.id}"]`).click();
+    const boton = page.getByRole("button", { name: "Ruta Entregada" });
+    await expect(boton).toBeVisible();
 
     // Axe: sin violaciones serias ni críticas
     const violaciones = await violacionesGraves(page);

@@ -82,8 +82,8 @@ Se implementó de forma completa el módulo de Ruta del piloto y registro de la 
    - Estado vacío ("No hay rutas en curso") cuando no existen rutas asignadas o disponibles.
 
 3. **Verificación y pruebas:**
-   - 10 pruebas unitarias y de integración en `src/modulos/ruta/servicio.test.ts` (criterios 1 a 5).
+   - 11 pruebas unitarias y de integración en `src/modulos/ruta/servicio.test.ts` (criterios 1 a 5, cubriendo RN-46 con rol Bodega y agrupación real de pedidos facturados).
    - 6 pruebas de rechazos de permisos y sedes en `src/modulos/ruta/acciones.test.ts`.
-   - 15 pruebas E2E en `pruebas-e2e/picking/ruta.spec.ts` ejecutadas en 3 resoluciones (390 px, 768 px y 1440 px), incluyendo auditoría de accesibilidad con axe (RNF-08, 0 violaciones).
+   - 15 pruebas E2E en `pruebas-e2e/picking/ruta.spec.ts` ejecutadas en 3 resoluciones (390 px, 768 px y 1440 px), incluyendo reordenamiento con teclado y consulta a base de datos, con auditoría de accesibilidad axe (RNF-08, 0 violaciones).
    - Capturas de evidencia en `pruebas-e2e/picking/evidencias/JM-06/` en 390, 768 y 1440 px para prototipo y aplicación.
    - `npm run verificar` y `npm run build` ejecutados con 0 errores y 0 advertencias.

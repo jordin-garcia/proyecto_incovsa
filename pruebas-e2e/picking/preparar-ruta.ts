@@ -141,6 +141,14 @@ async function principal() {
       include: { estado: true },
     });
     console.log(JSON.stringify({ estado: envio.estado.nombre }));
+  } else if (comando === "consultar-entregas") {
+    const id = Number(process.argv[3]);
+    const entregas = await prisma.entregaRuta.findMany({
+      where: { envioId: id },
+      orderBy: { orden: "asc" },
+      select: { id: true, cliente: true, orden: true },
+    });
+    console.log(JSON.stringify(entregas));
   }
 }
 
