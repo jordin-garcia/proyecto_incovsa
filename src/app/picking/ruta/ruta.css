@@ -1,0 +1,101 @@
+/* ---- Ruta (specs/08) */
+.ruta-lay {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.ruta-lay > * {
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .ruta-lay {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ruta-op {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 16px 18px;
+  border-radius: 16px;
+  border: 1.5px solid var(--g150);
+  background: #fff;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+
+.ruta-op:hover {
+  border-color: var(--v300);
+}
+
+.ruta-op.on {
+  border-color: var(--v500);
+  box-shadow: 0 0 0 4px rgba(27, 130, 56, 0.1);
+}
+
+.ruta-op b {
+  font: 700 18px/1.1 var(--f-disp);
+}
+
+.ruta-datos {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--g150);
+}
+
+@media (max-width: 600px) {
+  .ruta-datos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.ruta-datos div {
+  background: #fff;
+  padding: 16px 20px;
+}
+
+.ruta-datos small {
+  display: block;
+  font: 700 11px/1 var(--f-ui);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--g500);
+  margin-bottom: 8px;
+}
+
+.ruta-datos b {
+  font: 700 18px/1.2 var(--f-disp);
+}
+
+.parada-n {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--v600);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font: 700 14px/1 var(--f-disp);
+}
+
+.recorrido {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  font-size: 13px;
+}
+
+.recorrido span {
+  background: var(--g100);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
