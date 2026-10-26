@@ -22,6 +22,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { Icono } from "@/componentes/comunes/iconos";
 import { VentanaConfirmacion } from "@/componentes/comunes/VentanaConfirmacion";
 import { useMensajes } from "@/componentes/comunes/Mensajes";
+import { MENSAJE_ERROR_GENERAL } from "@/lib/errores";
 import { formatoFecha, formatoHora } from "@/lib/fechas";
 import { fmt } from "@/modulos/conversion/servicio";
 import { Unidades } from "./Unidades";
@@ -44,8 +45,9 @@ export interface EnvioBodegaItem {
     id: number;
     producto: string;
     lote: string;
-    pesoConversionKg: number | string;
-    cantidadKg: number | string;
+    /** Texto exacto del Decimal: la conversión no admite Number (RN-01, auditoría H-16). */
+    pesoConversionKg: string;
+    cantidadKg: string;
     marcado: boolean;
     posicion: number;
   }>;
@@ -82,9 +84,6 @@ function FilaPreparacion({
     position: isDragging ? ("relative" as const) : undefined,
   };
 
-  const cantNum = Number(linea.cantidadKg);
-  const pesoNum = Number(linea.pesoConversionKg);
-
   return (
     <tr
       ref={setNodeRef}
@@ -107,11 +106,11 @@ function FilaPreparacion({
       <td>
         <span className={`lote ${linea.lote ? "" : "sin"}`}>{linea.lote ? `Lote ${linea.lote}` : "Sin lote"}</span>
       </td>
-      <td className="der kg">{fmt(cantNum)}</td>
+      <td className="der kg">{fmt(linea.cantidadKg)}</td>
       <td>
         <Unidades cantidadKg={linea.cantidadKg} pesoConversionKg={linea.pesoConversionKg} />
         <span className="muted mono" style={{ fontSize: "11.5px", marginLeft: "4px" }}>
-          ÷ {fmt(pesoNum)}
+          ÷ {fmt(linea.pesoConversionKg)}
         </span>
       </td>
       <td className="cen">
@@ -169,12 +168,17 @@ export function TarjetaEnvio({
 
   const despachar = async () => {
     startTransition(async () => {
-      const res = await despacharAccion({ envioId: envio.id });
-      if (!res.ok) {
-        mostrarMensaje(res.error, "error");
-      } else {
-        mostrarMensaje(`${etiqueta} → ${destino}.`, "exito");
-        alActualizar();
+      // Una falla de red se informa con un mensaje y la pantalla sigue en uso (auditoría H-24).
+      try {
+        const res = await despacharAccion({ envioId: envio.id });
+        if (!res.ok) {
+          mostrarMensaje(res.error, "error");
+        } else {
+          mostrarMensaje(`${etiqueta} → ${destino}.`, "exito");
+          alActualizar();
+        }
+      } catch {
+        mostrarMensaje(MENSAJE_ERROR_GENERAL, "error");
       }
     });
   };

@@ -287,4 +287,16 @@ describe("Módulo de conversión de kilogramos a unidades (JM-02)", () => {
       expect(html).toContain("+ 12.5 kg");
     });
   });
+  describe("RN-01 (auditoría H-16): la conversión no admite Number", () => {
+    it("RN-01: el tipo DecimalExacto rechaza number y admite texto y Decimal de Prisma", () => {
+      // Si DecimalExacto volviera a admitir number, `npm run tipos` fallaría por las directivas sin uso.
+      // @ts-expect-error: una cantidad en Number puede perder precisión (specs/16, decisión 1).
+      const conNumber = () => convertir(60, "25");
+      // @ts-expect-error: el Peso de Conversión tampoco se admite en Number.
+      const pesoNumber = () => textoConversion("60", 25);
+      expect(typeof conNumber).toBe("function");
+      expect(typeof pesoNumber).toBe("function");
+      expect(textoConversion(new Prisma.Decimal("60.000"), "25")).toBe("2 unidades + 10 kg");
+    });
+  });
 });

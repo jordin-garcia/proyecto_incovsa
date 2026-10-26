@@ -2,8 +2,11 @@
 // Calcula en gramos enteros para evitar errores de redondeo de punto flotante (specs/16, decisión 1).
 import { ErrorNegocio } from "@/lib/errores";
 
-/** Tipo aceptado para cantidades en kg y Peso de Conversión exactos (texto o Decimal de Prisma, nunca Number). */
-export type DecimalExacto = string | { toFixed: (dp?: number) => string; toString: () => string };
+/**
+ * Tipo aceptado para cantidades en kg y Peso de Conversión exactos: texto o Decimal de Prisma, nunca Number.
+ * `object &` excluye `number`, que también tiene `toFixed` y `toString` (auditoría del 22/10, H-16).
+ */
+export type DecimalExacto = string | (object & { toFixed: (dp?: number) => string; toString: () => string });
 
 /** Resultado del cálculo de conversión. */
 export interface ResultadoConversion {
