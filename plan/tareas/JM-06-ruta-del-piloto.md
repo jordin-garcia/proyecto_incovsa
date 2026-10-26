@@ -5,7 +5,7 @@ persona: josue
 responsable: Josué Menéndez
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JM-03, JC-04]
 programada: 2026-10-24
 requisitos: [RF-SL-26, RF-SL-27, RF-SL-28, RF-SL-29, RF-SL-30, RF-SL-78, RF-SL-79, RN-29, RN-30, RN-46, RN-49, RNF-14, CU-05]
@@ -61,3 +61,29 @@ npm run e2e -- pruebas-e2e/picking/ruta.spec.ts
 
 ## Fuera de alcance
 - El registro histórico de rutas (está en Reportes, JC-06).
+
+## Resultado
+
+Se implementó de forma completa el módulo de Ruta del piloto y registro de la entrega (`/picking/ruta`) conforme a `specs/08-picking-ruta.md`, `specs/12`, `specs/14`, `specs/15` y el prototipo aprobado:
+
+1. **Servicio y esquemas (`src/modulos/ruta/`):**
+   - `esquemas.ts`: Esquemas Zod para reordenar recorrido y confirmar entrega de ruta.
+   - `servicio.ts`: Lógica de negocio con verificación estricta de permisos (`pk.ruta.propias` solo ve sus rutas asignadas, `pk.ruta.todas` o Gerencia/Soporte ve todas las de la sede autorizada).
+   - Ordenamiento de rutas en estado "En Ruta" de la más reciente a la más antigua (por fecha y número descendente, RF-SL-78).
+   - Reordenamiento persistente de paradas mediante dnd-kit sin registro en bitácora (RN-28, RN-29).
+   - Cierre y entrega de ruta en una sola transacción con bloqueo pesimista `FOR UPDATE` (RNF-06): transición de estado a "Entregado", registro en historial de estados, registro en bitácora de auditoría ("Cierre de ruta") y notificación reactiva vía `avisarCambio(sedeId)`.
+   - `acciones.ts`: Server Actions seguras con sesión obligatoria, validación Zod y manejo estructurado de errores con rollback optimista (H-24).
+
+2. **Interfaz de usuario (`src/app/picking/ruta/` y `src/componentes/picking/ruta/`):**
+   - Estilos CSS idénticos al prototipo (`ruta.css` basado en `estilos.css`).
+   - Encabezado con título e instrucciones (`EncabezadoModulo`, RF-SL-61): "Mis rutas" para pilotos y "Rutas en curso" para gerencia/administración.
+   - Tabla de paradas con Cliente, Sector y Total (kg) agrupados por cliente (RN-49), sin dirección ni teléfono, con capacidad táctil drag-and-drop (`@dnd-kit/sortable`, RNF-14).
+   - Botón "Ruta Entregada" alineado a la derecha sin texto de ayuda (CAM-95) que abre diálogo modal con el recorrido que se guardará.
+   - Estado vacío ("No hay rutas en curso") cuando no existen rutas asignadas o disponibles.
+
+3. **Verificación y pruebas:**
+   - 12 pruebas unitarias y de integración en `src/modulos/ruta/servicio.test.ts` (criterios 1 a 5, cubriendo RN-46 con rol Bodega, rol piloto con pk.ruta.todas y agrupación real de pedidos facturados).
+   - 6 pruebas de rechazos de permisos y sedes en `src/modulos/ruta/acciones.test.ts`.
+   - 15 pruebas E2E en `pruebas-e2e/picking/ruta.spec.ts` ejecutadas en 3 resoluciones (390 px, 768 px y 1440 px), incluyendo reordenamiento con teclado y consulta a base de datos, con auditoría de accesibilidad axe (RNF-08, 0 violaciones).
+   - Capturas de evidencia en `pruebas-e2e/picking/evidencias/JM-06/` en 390, 768 y 1440 px para prototipo y aplicación.
+   - `npm run verificar` y `npm run build` ejecutados con 0 errores y 0 advertencias.
