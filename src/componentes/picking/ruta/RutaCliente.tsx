@@ -19,18 +19,21 @@ type AccionOptimistaRuta = {
   nuevosIds: number[];
 };
 
+function reordenarEntregas(entregas: EntregaRutaItem[], nuevosIds: number[]): EntregaRutaItem[] {
+  const mapa = new Map(entregas.map((e) => [e.id, e]));
+  return nuevosIds
+    .map((id, i) => {
+      const item = mapa.get(id);
+      return item ? { ...item, orden: i + 1 } : null;
+    })
+    .filter(Boolean) as EntregaRutaItem[];
+}
+
 function reducirRutasOptimistas(rutas: RutaEnCursoItem[], accion: AccionOptimistaRuta): RutaEnCursoItem[] {
   if (accion.tipo === "reordenar") {
     return rutas.map((r) => {
       if (r.id !== accion.envioId) return r;
-      const mapa = new Map(r.entregas.map((e) => [e.id, e]));
-      const reordenadas = accion.nuevosIds
-        .map((id, i) => {
-          const item = mapa.get(id);
-          return item ? { ...item, orden: i + 1 } : null;
-        })
-        .filter(Boolean) as EntregaRutaItem[];
-      return { ...r, entregas: reordenadas };
+      return { ...r, entregas: reordenarEntregas(r.entregas, accion.nuevosIds) };
     });
   }
   return rutas;
@@ -78,14 +81,7 @@ export function RutaCliente({ rutasIniciales, propias }: { rutasIniciales: RutaE
           setRutas((prev) =>
             prev.map((r) => {
               if (r.id !== rutaActiva.id) return r;
-              const mapa = new Map(r.entregas.map((e) => [e.id, e]));
-              const reordenadas = nuevosIds
-                .map((id, i) => {
-                  const item = mapa.get(id);
-                  return item ? { ...item, orden: i + 1 } : null;
-                })
-                .filter(Boolean) as EntregaRutaItem[];
-              return { ...r, entregas: reordenadas };
+              return { ...r, entregas: reordenarEntregas(r.entregas, nuevosIds) };
             }),
           );
         }

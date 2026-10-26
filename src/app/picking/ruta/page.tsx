@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { obtenerSesion } from "@/lib/sesion";
-import { exigirPermiso, tienePermiso, esPiloto, ErrorAcceso } from "@/modulos/permisos/servicio";
+import { exigirPermiso, tienePermiso, ErrorAcceso } from "@/modulos/permisos/servicio";
 import { obtenerSedeDeTrabajo } from "@/modulos/permisos/sede";
 import { opcionesPermitidas } from "@/modulos/permisos/navegacion";
 import { SinAcceso } from "@/componentes/comunes/armazon/SinAcceso";
-import { listarRutasEnRuta } from "@/modulos/ruta/servicio";
+import { listarRutasEnRuta, requiereSoloPropias } from "@/modulos/ruta/servicio";
 import { RutaCliente } from "@/componentes/picking/ruta/RutaCliente";
 import "./ruta.css";
 
@@ -39,7 +39,7 @@ export default async function PaginaRuta() {
   }
 
   const rutas = await listarRutasEnRuta(sesion, sede.id);
-  const propias = esPiloto(sesion) || !tienePermiso(sesion, "pk.ruta.todas");
+  const propias = requiereSoloPropias(sesion);
 
   return <RutaCliente rutasIniciales={rutas} propias={propias} />;
 }

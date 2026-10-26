@@ -6,7 +6,6 @@ import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import { sembrarDemo } from "../../../prisma/semillas/demo";
 import { ErrorNegocio } from "@/lib/errores";
 import { ErrorAcceso } from "@/modulos/permisos/servicio";
-import { formatoFecha } from "@/lib/fechas";
 import { listarRutasEnRuta, reordenarRecorridoRuta, entregarRuta, requiereSoloPropias } from "./servicio";
 import { moverPedidos, guardarCampoOpcion, enviarOpcion } from "@/modulos/envios/opciones";
 
@@ -529,7 +528,7 @@ describe("Módulo de Ruta - Servicio (JM-06)", () => {
       });
       expect(bitacoras).toHaveLength(1);
       expect(bitacoras[0].sistema).toBe("picking");
-      expect(bitacoras[0].detalle).toContain(`Ruta 1 del ${formatoFecha(ruta.fechaEnvio)} entregada`);
+      expect(bitacoras[0].detalle).toContain("Ruta 1 del 24/10/2026 entregada");
 
       // Deja de aparecer en el módulo
       const sesionPiloto06 = crearSesion({

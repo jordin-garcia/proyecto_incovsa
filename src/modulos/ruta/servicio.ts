@@ -231,7 +231,11 @@ export async function entregarRuta(entrada: EntradaEntregarRuta, contexto: Conte
       },
     });
 
-    const detalleBitacora = `${ruta.sede.nombre} · Ruta ${ruta.numero} del ${formatoFecha(ruta.fechaEnvio)} entregada`;
+    const fechaDia =
+      ruta.fechaEnvio instanceof Date
+        ? ruta.fechaEnvio.toISOString().slice(0, 10)
+        : String(ruta.fechaEnvio).slice(0, 10);
+    const detalleBitacora = `${ruta.sede.nombre} · Ruta ${ruta.numero} del ${formatoFecha(fechaDia)} entregada`;
 
     await registrarBitacora(tx, {
       sistema: "picking",
