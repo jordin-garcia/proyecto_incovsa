@@ -1,0 +1,234 @@
+
+Running 60 tests using 1 worker
+
+  ok  1 [telefono] › pruebas-e2e\panel\auditoria-jg24.spec.ts:11:5 › RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recupera medidas y hover del prototipo (9.3s)
+  ok  2 [telefono] › pruebas-e2e\panel\auditoria-jg24.spec.ts:50:5 › RF-SW-29 / RN-39 / H-04: publicar y quitar un valor muestra el número del valor en el aviso (6.3s)
+  ok  3 [telefono] › pruebas-e2e\panel\contenido.spec.ts:19:5 › RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y accesibilidad (10.0s)
+  ok  4 [telefono] › pruebas-e2e\panel\contenido.spec.ts:85:5 › RF-SW-25: el permiso se exige también al abrir la sección directamente (2.4s)
+  ok  5 [telefono] › pruebas-e2e\panel\contenido.spec.ts:111:5 › RF-SW-23 / RNF-05: publica una imagen de 5 MB y limpia la imagen retirada (5.9s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok  6 [telefono] › pruebas-e2e\panel\contenido.spec.ts:150:5 › RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas (4.2s)
+  ok  7 [telefono] › pruebas-e2e\panel\contenido.spec.ts:170:5 › RF-SW-23: un borrador de portada o historia no cambia la etiqueta publicada (2.2s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok  8 [telefono] › pruebas-e2e\panel\contenido.spec.ts:186:5 › RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visita sin sesión (5.6s)
+  ok  9 [telefono] › pruebas-e2e\panel\contenido.spec.ts:245:5 › RF-SW-23 / RF-SW-24: reemplazar INCOVSA actualiza cabecera y pie públicos (6.0s)
+  ok 10 [telefono] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:21:5 › RF-SW-07 / RN-56: guardar descripción y galería publica la industria sin perder los datos anteriores (9.0s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok 11 [telefono] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:82:5 › RF-SW-07 / RNF-08: industrias y catálogo conservan estructura y accesibilidad (11.6s)
+  ok 12 [telefono] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:114:5 › RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes de eliminar (11.1s)
+  ok 13 [telefono] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:159:5 › RF-SW-23: impide cerrar el editor mientras se publica y conserva el borrador si falla (5.1s)
+  ok 14 [telefono] › pruebas-e2e\panel\solicitudes.spec.ts:71:1 › RF-SW-20 / CP-63 / RNF-08: filtros, estados libres, responsable y edición del comentario accesibles (19.7s)
+  ok 15 [telefono] › pruebas-e2e\panel\solicitudes.spec.ts:130:1 › RF-SW-31 / CP-59: indicador normal y reducido baja al abrir una solicitud (4.4s)
+[WebServer] [browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+[WebServer] 
+[WebServer] - A server/client branch `if (typeof window !== 'undefined')`.
+[WebServer] - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+[WebServer] - Date formatting in a user's locale which doesn't match the server.
+[WebServer] - External changing data without sending a snapshot of it along with the HTML.
+[WebServer] - Invalid HTML tag nesting.
+[WebServer] 
+[WebServer] It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+[WebServer] 
+[WebServer] https://react.dev/link/hydration-mismatch
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <Primitive.div dir="ltr" data-orientation="horizontal" ref={null}>
+[WebServer]       <div dir="ltr" data-orientation="horizontal" ref={null}>
+[WebServer]         <TabsList>
+[WebServer]         <TabsContent value="todas">
+[WebServer]           <Presence present={true}>
+[WebServer]             <Primitive.div data-state="active" data-orientation="horizontal" role="tabpanel" ...>
+[WebServer]               <div data-state="active" data-orientation="horizontal" role="tabpanel" aria-labelledby="radix-_R_k..." ...>
+[WebServer]                 <div className="tarjeta so...">
+[WebServer]                   <div>
+[WebServer]                   <div>
+[WebServer]                     <Detalle s={{id:9,folio:"SO...", ...}} responsables={[...]} gestiona={false}>
+[WebServer]                       <div className="bloque-cuerpo">
+[WebServer]                         <div>
+[WebServer]                         <div>
+[WebServer]                         <div className="solicitude..." aria-busy={false}>
+[WebServer]                           <div>
+[WebServer]                           <div>
+[WebServer]                           <div className="campo soli...">
+[WebServer]                             <label>
+[WebServer]                             <Textarea id="comentario..." rows={3} readOnly={true} disabled={false} value="" ...>
+[WebServer]                               <textarea
+[WebServer]                                 className="txa"
+[WebServer]                                 id="comentario-solicitud"
+[WebServer]                                 rows={3}
+[WebServer]                                 readOnly={true}
+[WebServer]                                 disabled={false}
+[WebServer]                                 value=""
+[WebServer]                                 onChange={function onChange}
+[WebServer]                                 placeholder="Sin comentario"
+[WebServer] -                               style={{caret-color:"transparent"}}
+[WebServer]                               >
+[WebServer]         ...
+[WebServer]  
+  ok 16 [telefono] › pruebas-e2e\panel\solicitudes.spec.ts:148:1 › RNF-04 / RF-SW-20: solo lectura sin gestionar y sección ausente sin permisos (5.0s)
+  ok 17 [telefono] › pruebas-e2e\panel\usuarios.spec.ts:30:7 › Panel: usuarios del sitio › RF-SW-13: Gerencia crea un usuario con solo sit.doc.ver y ese usuario solo ve la documentación (8.1s)
+  ok 18 [telefono] › pruebas-e2e\panel\usuarios.spec.ts:80:7 › Panel: usuarios del sitio › RF-SW-11 / RN-47: restablecer la contraseña no ofrece correo y la nueva clave entra (6.8s)
+  ok 19 [telefono] › pruebas-e2e\panel\usuarios.spec.ts:116:7 › Panel: usuarios del sitio › RF-SW-11: ¿Olvidó su contraseña? del sitio pide a Gerencia o a Soporte (5.1s)
+  ok 20 [telefono] › pruebas-e2e\panel\usuarios.spec.ts:131:7 › Panel: usuarios del sitio › criterio 5: la lista y el alta no tienen violaciones serias de axe (5.2s)
+  ok 21 [tableta] › pruebas-e2e\panel\auditoria-jg24.spec.ts:11:5 › RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recupera medidas y hover del prototipo (6.4s)
+  ok 22 [tableta] › pruebas-e2e\panel\auditoria-jg24.spec.ts:50:5 › RF-SW-29 / RN-39 / H-04: publicar y quitar un valor muestra el número del valor en el aviso (5.6s)
+  ok 23 [tableta] › pruebas-e2e\panel\contenido.spec.ts:19:5 › RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y accesibilidad (10.2s)
+  ok 24 [tableta] › pruebas-e2e\panel\contenido.spec.ts:85:5 › RF-SW-25: el permiso se exige también al abrir la sección directamente (2.5s)
+  ok 25 [tableta] › pruebas-e2e\panel\contenido.spec.ts:111:5 › RF-SW-23 / RNF-05: publica una imagen de 5 MB y limpia la imagen retirada (5.8s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok 26 [tableta] › pruebas-e2e\panel\contenido.spec.ts:150:5 › RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas (3.5s)
+  ok 27 [tableta] › pruebas-e2e\panel\contenido.spec.ts:170:5 › RF-SW-23: un borrador de portada o historia no cambia la etiqueta publicada (2.3s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 28 [tableta] › pruebas-e2e\panel\contenido.spec.ts:186:5 › RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visita sin sesión (6.1s)
+  ok 29 [tableta] › pruebas-e2e\panel\contenido.spec.ts:245:5 › RF-SW-23 / RF-SW-24: reemplazar INCOVSA actualiza cabecera y pie públicos (6.5s)
+  ok 30 [tableta] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:21:5 › RF-SW-07 / RN-56: guardar descripción y galería publica la industria sin perder los datos anteriores (7.0s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok 31 [tableta] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:82:5 › RF-SW-07 / RNF-08: industrias y catálogo conservan estructura y accesibilidad (12.6s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok 32 [tableta] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:114:5 › RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes de eliminar (12.3s)
+  ok 33 [tableta] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:159:5 › RF-SW-23: impide cerrar el editor mientras se publica y conserva el borrador si falla (5.4s)
+  ok 34 [tableta] › pruebas-e2e\panel\solicitudes.spec.ts:71:1 › RF-SW-20 / CP-63 / RNF-08: filtros, estados libres, responsable y edición del comentario accesibles (20.5s)
+  ok 35 [tableta] › pruebas-e2e\panel\solicitudes.spec.ts:130:1 › RF-SW-31 / CP-59: indicador normal y reducido baja al abrir una solicitud (4.3s)
+[WebServer] [browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+[WebServer] 
+[WebServer] - A server/client branch `if (typeof window !== 'undefined')`.
+[WebServer] - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+[WebServer] - Date formatting in a user's locale which doesn't match the server.
+[WebServer] - External changing data without sending a snapshot of it along with the HTML.
+[WebServer] - Invalid HTML tag nesting.
+[WebServer] 
+[WebServer] It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+[WebServer] 
+[WebServer] https://react.dev/link/hydration-mismatch
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <Primitive.div dir="ltr" data-orientation="horizontal" ref={null}>
+[WebServer]       <div dir="ltr" data-orientation="horizontal" ref={null}>
+[WebServer]         <TabsList>
+[WebServer]         <TabsContent value="todas">
+[WebServer]           <Presence present={true}>
+[WebServer]             <Primitive.div data-state="active" data-orientation="horizontal" role="tabpanel" ...>
+[WebServer]               <div data-state="active" data-orientation="horizontal" role="tabpanel" aria-labelledby="radix-_R_k..." ...>
+[WebServer]                 <div className="tarjeta so...">
+[WebServer]                   <div>
+[WebServer]                   <div>
+[WebServer]                     <Detalle s={{id:18,folio:"S...", ...}} responsables={[...]} gestiona={false}>
+[WebServer]                       <div className="bloque-cuerpo">
+[WebServer]                         <div>
+[WebServer]                         <div>
+[WebServer]                         <div className="solicitude..." aria-busy={false}>
+[WebServer]                           <div>
+[WebServer]                           <div>
+[WebServer]                           <div className="campo soli...">
+[WebServer]                             <label>
+[WebServer]                             <Textarea id="comentario..." rows={3} readOnly={true} disabled={false} value="" ...>
+[WebServer]                               <textarea
+[WebServer]                                 className="txa"
+[WebServer]                                 id="comentario-solicitud"
+[WebServer]                                 rows={3}
+[WebServer]                                 readOnly={true}
+[WebServer]                                 disabled={false}
+[WebServer]                                 value=""
+[WebServer]                                 onChange={function onChange}
+[WebServer]                                 placeholder="Sin comentario"
+[WebServer] -                               style={{caret-color:"transparent"}}
+[WebServer]                               >
+[WebServer]         ...
+[WebServer]  
+  ok 36 [tableta] › pruebas-e2e\panel\solicitudes.spec.ts:148:1 › RNF-04 / RF-SW-20: solo lectura sin gestionar y sección ausente sin permisos (4.9s)
+  ok 37 [tableta] › pruebas-e2e\panel\usuarios.spec.ts:30:7 › Panel: usuarios del sitio › RF-SW-13: Gerencia crea un usuario con solo sit.doc.ver y ese usuario solo ve la documentación (6.9s)
+  ok 38 [tableta] › pruebas-e2e\panel\usuarios.spec.ts:80:7 › Panel: usuarios del sitio › RF-SW-11 / RN-47: restablecer la contraseña no ofrece correo y la nueva clave entra (7.5s)
+  ok 39 [tableta] › pruebas-e2e\panel\usuarios.spec.ts:116:7 › Panel: usuarios del sitio › RF-SW-11: ¿Olvidó su contraseña? del sitio pide a Gerencia o a Soporte (3.0s)
+  ok 40 [tableta] › pruebas-e2e\panel\usuarios.spec.ts:131:7 › Panel: usuarios del sitio › criterio 5: la lista y el alta no tienen violaciones serias de axe (6.2s)
+  ok 41 [escritorio] › pruebas-e2e\panel\auditoria-jg24.spec.ts:11:5 › RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recupera medidas y hover del prototipo (7.1s)
+  ok 42 [escritorio] › pruebas-e2e\panel\auditoria-jg24.spec.ts:50:5 › RF-SW-29 / RN-39 / H-04: publicar y quitar un valor muestra el número del valor en el aviso (6.1s)
+  ok 43 [escritorio] › pruebas-e2e\panel\contenido.spec.ts:19:5 › RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y accesibilidad (10.5s)
+  ok 44 [escritorio] › pruebas-e2e\panel\contenido.spec.ts:85:5 › RF-SW-25: el permiso se exige también al abrir la sección directamente (2.1s)
+  ok 45 [escritorio] › pruebas-e2e\panel\contenido.spec.ts:111:5 › RF-SW-23 / RNF-05: publica una imagen de 5 MB y limpia la imagen retirada (6.2s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok 46 [escritorio] › pruebas-e2e\panel\contenido.spec.ts:150:5 › RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas (3.7s)
+  ok 47 [escritorio] › pruebas-e2e\panel\contenido.spec.ts:170:5 › RF-SW-23: un borrador de portada o historia no cambia la etiqueta publicada (2.3s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 48 [escritorio] › pruebas-e2e\panel\contenido.spec.ts:186:5 › RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visita sin sesión (5.9s)
+  ok 49 [escritorio] › pruebas-e2e\panel\contenido.spec.ts:245:5 › RF-SW-23 / RF-SW-24: reemplazar INCOVSA actualiza cabecera y pie públicos (7.6s)
+  ok 50 [escritorio] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:21:5 › RF-SW-07 / RN-56: guardar descripción y galería publica la industria sin perder los datos anteriores (7.7s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok 51 [escritorio] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:82:5 › RF-SW-07 / RNF-08: industrias y catálogo conservan estructura y accesibilidad (13.3s)
+  ok 52 [escritorio] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:114:5 › RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes de eliminar (13.7s)
+  ok 53 [escritorio] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:159:5 › RF-SW-23: impide cerrar el editor mientras se publica y conserva el borrador si falla (6.1s)
+  ok 54 [escritorio] › pruebas-e2e\panel\solicitudes.spec.ts:71:1 › RF-SW-20 / CP-63 / RNF-08: filtros, estados libres, responsable y edición del comentario accesibles (19.6s)
+  ok 55 [escritorio] › pruebas-e2e\panel\solicitudes.spec.ts:130:1 › RF-SW-31 / CP-59: indicador normal y reducido baja al abrir una solicitud (4.4s)
+[WebServer] [browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+[WebServer] 
+[WebServer] - A server/client branch `if (typeof window !== 'undefined')`.
+[WebServer] - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+[WebServer] - Date formatting in a user's locale which doesn't match the server.
+[WebServer] - External changing data without sending a snapshot of it along with the HTML.
+[WebServer] - Invalid HTML tag nesting.
+[WebServer] 
+[WebServer] It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+[WebServer] 
+[WebServer] https://react.dev/link/hydration-mismatch
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <Primitive.div dir="ltr" data-orientation="horizontal" ref={null}>
+[WebServer]       <div dir="ltr" data-orientation="horizontal" ref={null}>
+[WebServer]         <TabsList>
+[WebServer]         <TabsContent value="todas">
+[WebServer]           <Presence present={true}>
+[WebServer]             <Primitive.div data-state="active" data-orientation="horizontal" role="tabpanel" ...>
+[WebServer]               <div data-state="active" data-orientation="horizontal" role="tabpanel" aria-labelledby="radix-_R_k..." ...>
+[WebServer]                 <div className="tarjeta so...">
+[WebServer]                   <div>
+[WebServer]                   <div>
+[WebServer]                     <Detalle s={{id:27,folio:"S...", ...}} responsables={[...]} gestiona={false}>
+[WebServer]                       <div className="bloque-cuerpo">
+[WebServer]                         <div>
+[WebServer]                         <div>
+[WebServer]                         <div className="solicitude..." aria-busy={false}>
+[WebServer]                           <div>
+[WebServer]                           <div>
+[WebServer]                           <div className="campo soli...">
+[WebServer]                             <label>
+[WebServer]                             <Textarea id="comentario..." rows={3} readOnly={true} disabled={false} value="" ...>
+[WebServer]                               <textarea
+[WebServer]                                 className="txa"
+[WebServer]                                 id="comentario-solicitud"
+[WebServer]                                 rows={3}
+[WebServer]                                 readOnly={true}
+[WebServer]                                 disabled={false}
+[WebServer]                                 value=""
+[WebServer]                                 onChange={function onChange}
+[WebServer]                                 placeholder="Sin comentario"
+[WebServer] -                               style={{caret-color:"transparent"}}
+[WebServer]                               >
+[WebServer]         ...
+[WebServer]  
+  ok 56 [escritorio] › pruebas-e2e\panel\solicitudes.spec.ts:148:1 › RNF-04 / RF-SW-20: solo lectura sin gestionar y sección ausente sin permisos (5.3s)
+  ok 57 [escritorio] › pruebas-e2e\panel\usuarios.spec.ts:30:7 › Panel: usuarios del sitio › RF-SW-13: Gerencia crea un usuario con solo sit.doc.ver y ese usuario solo ve la documentación (7.7s)
+  ok 58 [escritorio] › pruebas-e2e\panel\usuarios.spec.ts:80:7 › Panel: usuarios del sitio › RF-SW-11 / RN-47: restablecer la contraseña no ofrece correo y la nueva clave entra (7.9s)
+  ok 59 [escritorio] › pruebas-e2e\panel\usuarios.spec.ts:116:7 › Panel: usuarios del sitio › RF-SW-11: ¿Olvidó su contraseña? del sitio pide a Gerencia o a Soporte (3.3s)
+  ok 60 [escritorio] › pruebas-e2e\panel\usuarios.spec.ts:131:7 › Panel: usuarios del sitio › criterio 5: la lista y el alta no tienen violaciones serias de axe (6.4s)
+
+  60 passed (7.6m)

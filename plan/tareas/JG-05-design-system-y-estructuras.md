@@ -136,3 +136,5 @@ Los layouts `/panel` y `/picking` usan `ArmazonEjemplo`, con datos fijos y sin l
 ### Correcciones de la auditoría (2026-10-22)
 
 H-30 y H-31: el botón de reducir y expandir el menú tiene el título del prototipo. Las iniciales omiten palabras que no empiezan con letra y usan «U» cuando no queda ninguna. Las excepciones de contraste de JG-24 están registradas en specs/18 y specs/20; las pruebas de axe se conservan.
+
+H-29 (JG-23): `pruebas-e2e/comunes/armazon.spec.ts` comprueba con `comprobarEncabezadoModulo()` (`pruebas-e2e/comunes/encabezado.ts`) que la instrucción de `EncabezadoModulo` va a la par del título cuando cabe (RF-SL-61).

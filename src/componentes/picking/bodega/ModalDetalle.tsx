@@ -29,8 +29,8 @@ export interface DetalleEnvioData {
       id: number;
       producto: string;
       lote: string;
-      pesoConversionKg: number;
-      cantidadKg: number;
+      pesoConversionKg: string;
+      cantidadKg: string;
       orden: number;
     }>;
   }>;
@@ -98,8 +98,9 @@ export function ModalDetalle({ abierto, alCerrar, datos }: ModalDetalleProps) {
             tal como vinieron en el archivo de Odoo.
           </p>
 
-          {/* En teléfono las zonas con desplazamiento deben poder enfocarse para recorrerlas con teclado (RNF-08). */}
-          <div className="det-grupos" tabIndex={0} role="region" aria-label="Pedidos facturados">
+          {/* Se desplaza la ventana, no esta zona (specs/07, 15/10; auditoría H-21). Las tablas sí pueden desplazarse
+              a lo ancho en el teléfono y por eso siguen pudiendo enfocarse con el teclado (RNF-08). */}
+          <div className="det-grupos">
             {datos.pedidosFacturados.map((g, i) => (
               <section key={g.id} className="det-g">
                 <div className="det-g-cab">

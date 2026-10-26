@@ -5,7 +5,7 @@ persona: jordin
 responsable: Jordin García
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JG-12, JM-05]
 programada: 2026-10-23
 requisitos: [RF-SL-61, RF-SL-23, RF-SL-74, RF-SL-75, RNF-01, RNF-13, RN-01]
@@ -71,3 +71,28 @@ npm run e2e -- pruebas-e2e/picking/bodega.spec.ts pruebas-e2e/picking/bodega-tie
 
 ## Notas
 - Rama `jordin/JG-23-auditoria-bodega`. Se hace después de integrar JM-05, que toca los mismos archivos.
+
+## Resultado
+
+**Hecha el 25/10/2026**, dos días después de lo programado, sobre `develop` en `f489ab7`.
+
+### Qué se hizo
+- **Encabezado (H-17, H-29):** Bodega usa `EncabezadoModulo` con el eyebrow, el título, la instrucción a la par y «Abrir tablero en pantalla completa» en `acciones`, como `cab()`. `pruebas-e2e/comunes/encabezado.ts` (`comprobarEncabezadoModulo()`) comprueba la estructura y la posición; lo usan `bodega.spec.ts` y `armazon.spec.ts`.
+- **Estilos (H-18 a H-21):** `bodega.css` agrega `.ped-meta .prog` (verde `--v700`, negrita), la regla de ≤720 px de `.ped-avance` y las medidas de `.ped-herr` de `estilos.css:960`, y quita el `max-height` de `.det-grupos`: en el Detalle se desplaza la ventana. `.det-grupos` ya no lleva `role="region"` ni `tabIndex`.
+- **Fallas de red (H-24):** las acciones de `BodegaCliente.tsx` pasan por `operar()`, que captura el rechazo del servidor y la falla de red; `useOptimistic` vuelve atrás y se muestra el mensaje. El Detalle y el despacho también capturan la falla de red, y el despacho refresca la pantalla al fallar.
+- **Envío que ya salió de Bodega (H-22):** `exigirEnvioEnPreparacion()` de `src/modulos/bodega/servicio.ts` responde `ErrorAcceso` para otra sede o un envío inexistente, y `ErrorNegocio("El pedido ya no está en preparación.")` si es de la sede y otra pantalla ya lo despachó. Si el estado cambia entre la comprobación y el cambio y ningún `updateMany` encuentra la fila, la respuesta es el mismo error.
+- **Conversión (H-16):** `DecimalExacto` ya no admite `number`; Bodega y su Detalle pasan las cantidades como texto.
+- **Pruebas (H-23, H-25, H-26):** el caso «otra sede» de `acciones.test.ts` usa un envío real de la sede 2 (`comprobarRechazosDeAccion()` acepta una función). CP-37 mide RNF-13 desde `esperarPublicacion`, como JG-10, cambia el estado con `pg.Client` en el mismo proceso, lo restaura solo si cambió, llama a tsx sin npx y ya no tiene el desfase fijo; mismos escenarios y límite de 2 s.
+- Se agregó `### Correcciones de la auditoría (2026-10-22)` a JM-02, JM-03, JM-04 y JG-05.
+
+### Decisiones
+- El mensaje de un envío que otra pantalla ya despachó es el mismo del despacho, como pedía la auditoría; la falla de red usa el mensaje general de la aplicación. Se registró en `specs/07` («Marcado de preparación») y `specs/18`.
+- En el teléfono, la segunda prueba de `bodega-tiempo-real.spec.ts` reordena la cola con el teclado: la primera tarjeta mide más que la pantalla y el mouse no alcanza las dos asas. En tableta y escritorio sigue usando el mouse, y el arrastre táctil sigue cubierto en la tercera prueba.
+
+### Cómo usarlo
+- Para comprobar el encabezado de un módulo (RF-SL-61): `await comprobarEncabezadoModulo(page, { eyebrow, titulo, instruccion, accion })` de `pruebas-e2e/comunes/encabezado.ts`.
+- En una operación nueva de Bodega, llama a `exigirEnvioEnPreparacion(envioId, sedeId)` antes de leer o cambiar el envío, y a `exigirCambios()` con el resultado de los `updateMany`.
+- Para pasar cantidades a `convertir()`, `textoConversion()` o `<Unidades />`, usa el `Decimal` de Prisma o su `toString()`, nunca `Number(...)`.
+
+### Verificación
+Evidencia en [`plan/evidencias/JG-23/`](../evidencias/JG-23/README.md): `npm run verificar` (418 pruebas) y `npm run build` pasaron. La batería E2E completa, sobre una base local limpia y con un worker, pasó 390 de 390 pruebas, corrida por partes por falta de memoria del equipo. CP-37 pasa en los tres tamaños, sin reintentos, entre 621 y 666 ms. Las capturas en 390, 768 y 1440 px coinciden con el prototipo. La revisión en contexto limpio dejó 1 hallazgo de corrección, que se corrigió.

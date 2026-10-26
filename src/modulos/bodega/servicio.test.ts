@@ -2,6 +2,8 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { prisma } from "@/lib/prisma";
 import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import { sembrarDemo } from "../../../prisma/semillas/demo";
+import { ErrorNegocio } from "@/lib/errores";
+import { ErrorAcceso } from "@/modulos/permisos/servicio";
 import {
   listarEnviosEnPreparacion,
   obtenerDetalleEnvio,
@@ -472,6 +474,65 @@ describe("Módulo de Bodega - Servicio", () => {
     await expect(
       reordenarLineasPreparacion({ envioId: envioSede2.id, lineaIds: [envioSede2.lineas[0].id] }, contextoSede1),
     ).rejects.toThrow();
+  });
+
+  it("RN-17 / RF-SL-23 (auditoría H-22): un envío de la misma sede que ya salió de Bodega da un error de negocio, no de permisos", async () => {
+    const despachado = await crearEnvioDePrueba({
+      sedeId: 1,
+      tipo: "ruta",
+      numero: 7,
+      estadoNombre: "En Ruta",
+      lineas: [{ producto: "P1", lote: "L1", pesoConversionKg: 25, cantidadKg: 50, posicion: 1 }],
+    });
+    const envioSede2 = await crearEnvioDePrueba({
+      sedeId: 2,
+      tipo: "ruta",
+      numero: 8,
+      lineas: [{ producto: "P1", lote: "L1", pesoConversionKg: 25, cantidadKg: 50, posicion: 1 }],
+    });
+    const contexto = { usuarioId: usuarioBodegaId, sedeId: 1 };
+    const lineaId = despachado.lineas[0].id;
+    const operaciones = (envio: typeof despachado) => [
+      () => marcarLinea({ envioId: envio.id, lineaId: envio.lineas[0].id, marcado: true }, contexto),
+      () => marcarTodasLineas({ envioId: envio.id, marcado: true }, contexto),
+      () => ordenarLineasPorPeso({ envioId: envio.id }, contexto),
+      () => despacharEnvio({ envioId: envio.id }, contexto),
+      () => reordenarColaBodega({ envioIds: [envio.id] }, contexto),
+      () => reordenarLineasPreparacion({ envioId: envio.id, lineaIds: [envio.lineas[0].id] }, contexto),
+    ];
+
+    for (const operar of operaciones(despachado)) {
+      const error = await operar().catch((e: unknown) => e);
+      expect(error).toBeInstanceOf(ErrorNegocio);
+      expect(error).not.toBeInstanceOf(ErrorAcceso);
+      expect((error as Error).message).toBe("El pedido ya no está en preparación.");
+    }
+    // Otra sede sigue respondiendo como sin permiso, sin revelar el envío (RN-17).
+    for (const operar of operaciones(envioSede2)) {
+      await expect(operar()).rejects.toBeInstanceOf(ErrorAcceso);
+    }
+    // Nada cambió en el envío despachado.
+    const linea = await prisma.lineaPreparacion.findUniqueOrThrow({ where: { id: lineaId } });
+    expect(linea.marcado).toBe(false);
+  });
+
+  it("RN-01 (auditoría H-16): el Detalle entrega las cantidades como texto exacto, nunca como Number", async () => {
+    const envio = await crearEnvioDePrueba({
+      pedidosFacturados: [
+        {
+          numeroOdoo: "90021",
+          cliente: "Cliente 1",
+          sector: "Sector 1",
+          posicion: 1,
+          detalles: [{ producto: "P1", lote: "L1", pesoConversionKg: 25, cantidadKg: 60.125, orden: 1 }],
+        },
+      ],
+    });
+    const detalle = await obtenerDetalleEnvio(envio.id, 1);
+    const linea = detalle.pedidosFacturados[0].lineas[0];
+    expect(typeof linea.cantidadKg).toBe("string");
+    expect(typeof linea.pesoConversionKg).toBe("string");
+    expect(linea.cantidadKg).toBe("60.125");
   });
 
   it("RF-SL-20 / RN-28: reordenar la cola de rutas y pedidos guarda solo el orden actual sin historial ni bitácora", async () => {

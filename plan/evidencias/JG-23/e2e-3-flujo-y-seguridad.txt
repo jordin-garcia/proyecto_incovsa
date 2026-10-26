@@ -1,0 +1,143 @@
+
+Running 21 tests using 1 worker
+
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3100
+- Network:       http://127.0.0.1:3100
+✓ Ready in 0ms
+✓ Running next.config took 35ms
+  x   1 [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:85:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión (1ms)
+  -   2 [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:116:7 › RNF-13: avisos de cambios por sede › RNF-13: al cortar SSE consulta cada 5 segundos, apaga En vivo y se reconecta sola
+  -   3 [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:147:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3101
+- Network:       http://127.0.0.1:3101
+✓ Ready in 0ms
+✓ Running next.config took 29ms
+Error inesperado en una acción del servidor: Error [ZodError]: [
+  {
+    "expected": "string",
+    "code": "invalid_type",
+    "path": [
+      "sede"
+    ],
+    "message": "Invalid input: expected string, received undefined"
+  },
+  {
+    "code": "invalid_value",
+    "values": [
+      "facturacion",
+      "bodega",
+      "tablero",
+      "ruta",
+      "reportes",
+      "configuracion"
+    ],
+    "path": [
+      "modulo"
+    ],
+    "message": "Invalid option: expected one of \"facturacion\"|\"bodega\"|\"tablero\"|\"ruta\"|\"reportes\"|\"configuracion\""
+  }
+]
+    at c (C:\Users\Hecto\Documents\proyecto_incovsa\.next\standalone\.next\server\chunks\_1nbnlp2k2vxpk._.js:1:6504)
+  ok  4 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:4:5 › RNF-16: páginas, errores, redirecciones, API y recursos envían las cabeceras de seguridad (3.2s)
+  ok  5 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:20:5 › RNF-16: el navegador admite Google Maps y Drive, y rechaza marcos de otros orígenes (1.3s)
+  ok  6 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:49:5 › RNF-16: otro sitio no puede insertar la aplicación dentro de un marco (232ms)
+  ok  7 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:66:5 › RNF-16: cada respuesta tiene su nonce y los scripts en línea ajenos quedan bloqueados (664ms)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3102
+- Network:       http://127.0.0.1:3102
+✓ Ready in 0ms
+✓ Running next.config took 31ms
+  ok  8 [tableta] › pruebas-e2e\flujo\tiempo-real.spec.ts:85:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión (7.4s)
+  ok  9 [tableta] › pruebas-e2e\flujo\tiempo-real.spec.ts:116:7 › RNF-13: avisos de cambios por sede › RNF-13: al cortar SSE consulta cada 5 segundos, apaga En vivo y se reconecta sola (13.4s)
+  ok 10 [tableta] › pruebas-e2e\flujo\tiempo-real.spec.ts:147:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede (287ms)
+Error inesperado en una acción del servidor: Error [ZodError]: [
+  {
+    "expected": "string",
+    "code": "invalid_type",
+    "path": [
+      "sede"
+    ],
+    "message": "Invalid input: expected string, received undefined"
+  },
+  {
+    "code": "invalid_value",
+    "values": [
+      "facturacion",
+      "bodega",
+      "tablero",
+      "ruta",
+      "reportes",
+      "configuracion"
+    ],
+    "path": [
+      "modulo"
+    ],
+    "message": "Invalid option: expected one of \"facturacion\"|\"bodega\"|\"tablero\"|\"ruta\"|\"reportes\"|\"configuracion\""
+  }
+]
+    at c (C:\Users\Hecto\Documents\proyecto_incovsa\.next\standalone\.next\server\chunks\_1nbnlp2k2vxpk._.js:1:6504)
+  ok 11 [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:4:5 › RNF-16: páginas, errores, redirecciones, API y recursos envían las cabeceras de seguridad (254ms)
+  ok 12 [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:20:5 › RNF-16: el navegador admite Google Maps y Drive, y rechaza marcos de otros orígenes (852ms)
+  ok 13 [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:49:5 › RNF-16: otro sitio no puede insertar la aplicación dentro de un marco (277ms)
+  ok 14 [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:66:5 › RNF-16: cada respuesta tiene su nonce y los scripts en línea ajenos quedan bloqueados (708ms)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3103
+- Network:       http://127.0.0.1:3103
+✓ Ready in 0ms
+✓ Running next.config took 33ms
+  ok 15 [escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:85:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión (6.0s)
+  ok 16 [escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:116:7 › RNF-13: avisos de cambios por sede › RNF-13: al cortar SSE consulta cada 5 segundos, apaga En vivo y se reconecta sola (13.1s)
+  ok 17 [escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:147:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede (244ms)
+Error inesperado en una acción del servidor: Error [ZodError]: [
+  {
+    "expected": "string",
+    "code": "invalid_type",
+    "path": [
+      "sede"
+    ],
+    "message": "Invalid input: expected string, received undefined"
+  },
+  {
+    "code": "invalid_value",
+    "values": [
+      "facturacion",
+      "bodega",
+      "tablero",
+      "ruta",
+      "reportes",
+      "configuracion"
+    ],
+    "path": [
+      "modulo"
+    ],
+    "message": "Invalid option: expected one of \"facturacion\"|\"bodega\"|\"tablero\"|\"ruta\"|\"reportes\"|\"configuracion\""
+  }
+]
+    at c (C:\Users\Hecto\Documents\proyecto_incovsa\.next\standalone\.next\server\chunks\_1nbnlp2k2vxpk._.js:1:6504)
+  ok 18 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:4:5 › RNF-16: páginas, errores, redirecciones, API y recursos envían las cabeceras de seguridad (193ms)
+  ok 19 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:20:5 › RNF-16: el navegador admite Google Maps y Drive, y rechaza marcos de otros orígenes (921ms)
+  ok 20 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:49:5 › RNF-16: otro sitio no puede insertar la aplicación dentro de un marco (280ms)
+  ok 21 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:66:5 › RNF-16: cada respuesta tiene su nonce y los scripts en línea ajenos quedan bloqueados (812ms)
+
+
+  1) [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:85:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión 
+
+    Error: No inició el servidor de producción de JG-10.
+
+       at flujo\servidor-produccion.ts:74
+
+      72 |           const listo = await fetch(`${url}/acceso`, { signal: AbortSignal.timeout(1000) }).catch(() => null);
+      73 |           if (listo?.ok) break;
+    > 74 |           if (Date.now() >= limite) throw new Error("No inició el servidor de producción de JG-10.");
+         |                                           ^
+      75 |           await esperar(100);
+      76 |         }
+      77 |         await usar({ url, avisos });
+        at Object.exports.test._test.test.extend.produccion.scope (C:\Users\Hecto\Documents\proyecto_incovsa\pruebas-e2e\flujo\servidor-produccion.ts:74:43)
+
+  1 failed
+    [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:85:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión 
+  2 did not run
+  18 passed (1.7m)

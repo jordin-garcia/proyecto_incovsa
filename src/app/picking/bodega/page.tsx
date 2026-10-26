@@ -39,13 +39,13 @@ export default async function PaginaBodega() {
 
   const envios = await listarEnviosEnPreparacion(sede.id);
 
-  // Mapear Decimales a tipos serializables para el componente cliente
+  // Los Decimal pasan al componente cliente como texto exacto, nunca como Number (RN-01, auditoría H-16).
   const enviosSerializables = envios.map((e) => ({
     ...e,
     lineas: e.lineas.map((l) => ({
       ...l,
-      pesoConversionKg: Number(l.pesoConversionKg),
-      cantidadKg: Number(l.cantidadKg),
+      pesoConversionKg: l.pesoConversionKg.toString(),
+      cantidadKg: l.cantidadKg.toString(),
     })),
   }));
 

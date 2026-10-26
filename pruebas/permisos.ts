@@ -15,11 +15,13 @@ export function comprobarRechazosDeAccion<T>({
   sesion: SesionActual;
   permiso: string;
   entrada: T;
-  entradaOtraSede: T;
+  /** Una función si la entrada depende de datos creados en `beforeEach` (por ejemplo, un envío real de otra sede). */
+  entradaOtraSede: T | (() => T);
 }) {
   it.each(["sin sesión", "sin permiso", "otra sede"])(`RNF-04 / RN-17: ${permiso} rechaza %s`, async (caso) => {
     establecerSesion(caso === "sin sesión" ? null : { ...sesion, permisos: caso === "sin permiso" ? [] : [permiso] });
-    const resultado = await accion(caso === "otra sede" ? entradaOtraSede : entrada);
+    const otraSede = typeof entradaOtraSede === "function" ? (entradaOtraSede as () => T)() : entradaOtraSede;
+    const resultado = await accion(caso === "otra sede" ? otraSede : entrada);
     expect(resultado).toEqual({ ok: false, error: "No tiene permisos para acceder a este módulo." });
   });
 }

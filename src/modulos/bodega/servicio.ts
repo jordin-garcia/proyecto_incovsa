@@ -27,11 +27,33 @@ function etiquetaEnvio(tipo: string, numero: number): string {
   return (esTipoRuta(tipo) ? "Ruta " : "Pedido ") + numero;
 }
 
+const EN_PREPARACION = "En Preparación";
+const MENSAJE_FUERA_DE_PREPARACION = "El pedido ya no está en preparación.";
+
+/**
+ * Comprueba que el envío es de la sede de trabajo y sigue En Preparación. Otra sede o un envío inexistente se
+ * rechazan como sin permiso, sin revelar nada (RN-17); uno de la sede que otra pantalla ya despachó da un error de
+ * negocio con un mensaje claro (auditoría del 22/10, H-22).
+ */
+async function exigirEnvioEnPreparacion(envioId: number, sedeId: number) {
+  const envio = await prisma.envio.findFirst({
+    where: { id: envioId, sedeId },
+    select: { id: true, estado: { select: { nombre: true } } },
+  });
+  if (!envio) throw new ErrorAcceso();
+  if (envio.estado.nombre !== EN_PREPARACION) throw new ErrorNegocio(MENSAJE_FUERA_DE_PREPARACION);
+}
+
+/** Si el envío salió de preparación entre la comprobación y el cambio, ningún `updateMany` encuentra la fila. */
+function exigirCambios(resultados: { count: number }[]) {
+  if (resultados.some((r) => r.count === 0)) throw new ErrorNegocio(MENSAJE_FUERA_DE_PREPARACION);
+}
+
 export async function listarEnviosEnPreparacion(sedeId: number) {
   const envios = await prisma.envio.findMany({
     where: {
       sedeId,
-      estado: { nombre: "En Preparación" },
+      estado: { nombre: EN_PREPARACION },
     },
     orderBy: [{ posicionCola: "asc" }, { creadoEn: "asc" }, { id: "asc" }],
     select: {
@@ -128,8 +150,9 @@ export async function obtenerDetalleEnvio(envioId: number, sedeId: number) {
         id: d.id,
         producto: d.producto,
         lote: d.lote,
-        pesoConversionKg: Number(d.pesoConversionKg),
-        cantidadKg: Number(d.cantidadKg),
+        // Texto exacto para la conversión, nunca Number (RN-01, auditoría H-16).
+        pesoConversionKg: d.pesoConversionKg.toString(),
+        cantidadKg: d.cantidadKg.toString(),
         orden: d.orden,
       })),
     };
@@ -154,17 +177,7 @@ export async function obtenerDetalleEnvio(envioId: number, sedeId: number) {
 }
 
 export async function marcarLinea(entrada: EntradaMarcarLinea, contexto: ContextoOperacion) {
-  const envio = await prisma.envio.findFirst({
-    where: {
-      id: entrada.envioId,
-      sedeId: contexto.sedeId,
-      estado: { nombre: "En Preparación" },
-    },
-  });
-
-  if (!envio) {
-    throw new ErrorAcceso();
-  }
+  await exigirEnvioEnPreparacion(entrada.envioId, contexto.sedeId);
 
   const linea = await prisma.lineaPreparacion.findFirst({
     where: { id: entrada.lineaId, envioId: entrada.envioId },
@@ -183,14 +196,15 @@ export async function marcarLinea(entrada: EntradaMarcarLinea, contexto: Context
       envioId: entrada.envioId,
       envio: {
         sedeId: contexto.sedeId,
-        estado: { nombre: "En Preparación" },
+        estado: { nombre: EN_PREPARACION },
       },
     },
     data: { marcado: nuevoMarcado },
   });
 
+  // El envío salió de preparación entre la comprobación y el cambio.
   if (resultado.count === 0) {
-    throw new ErrorAcceso();
+    throw new ErrorNegocio(MENSAJE_FUERA_DE_PREPARACION);
   }
 
   return {
@@ -200,29 +214,20 @@ export async function marcarLinea(entrada: EntradaMarcarLinea, contexto: Context
 }
 
 export async function marcarTodasLineas(entrada: EntradaMarcarTodo, contexto: ContextoOperacion) {
-  const envio = await prisma.envio.findFirst({
-    where: {
-      id: entrada.envioId,
-      sedeId: contexto.sedeId,
-      estado: { nombre: "En Preparación" },
-    },
-  });
-
-  if (!envio) {
-    throw new ErrorAcceso();
-  }
+  await exigirEnvioEnPreparacion(entrada.envioId, contexto.sedeId);
 
   // RN-20: marcar todo no va a la bitácora
-  await prisma.lineaPreparacion.updateMany({
+  const resultado = await prisma.lineaPreparacion.updateMany({
     where: {
       envioId: entrada.envioId,
       envio: {
         sedeId: contexto.sedeId,
-        estado: { nombre: "En Preparación" },
+        estado: { nombre: EN_PREPARACION },
       },
     },
     data: { marcado: entrada.marcado },
   });
+  exigirCambios([resultado]);
 
   return {
     envioId: entrada.envioId,
@@ -231,20 +236,11 @@ export async function marcarTodasLineas(entrada: EntradaMarcarTodo, contexto: Co
 }
 
 export async function ordenarLineasPorPeso(entrada: EntradaOrdenarPorPeso, contexto: ContextoOperacion) {
-  const envio = await prisma.envio.findFirst({
-    where: {
-      id: entrada.envioId,
-      sedeId: contexto.sedeId,
-      estado: { nombre: "En Preparación" },
-    },
-    include: {
-      lineas: true,
-    },
+  await exigirEnvioEnPreparacion(entrada.envioId, contexto.sedeId);
+  const envio = await prisma.envio.findFirstOrThrow({
+    where: { id: entrada.envioId, sedeId: contexto.sedeId },
+    include: { lineas: true },
   });
-
-  if (!envio) {
-    throw new ErrorAcceso();
-  }
 
   // Ordenar de mayor a menor kg (RN-28: es un orden más, se guarda, no va a la bitácora)
   const lineasOrdenadas = [...envio.lineas].sort((a, b) => {
@@ -253,7 +249,7 @@ export async function ordenarLineasPorPeso(entrada: EntradaOrdenarPorPeso, conte
     return a.id - b.id;
   });
 
-  await prisma.$transaction(
+  const resultados = await prisma.$transaction(
     lineasOrdenadas.map((l, index) =>
       prisma.lineaPreparacion.updateMany({
         where: {
@@ -261,13 +257,14 @@ export async function ordenarLineasPorPeso(entrada: EntradaOrdenarPorPeso, conte
           envioId: entrada.envioId,
           envio: {
             sedeId: contexto.sedeId,
-            estado: { nombre: "En Preparación" },
+            estado: { nombre: EN_PREPARACION },
           },
         },
         data: { posicion: index + 1 },
       }),
     ),
   );
+  exigirCambios(resultados);
 
   return {
     envioId: entrada.envioId,
@@ -302,8 +299,8 @@ export async function despacharEnvio(entrada: EntradaDespachar, contexto: Contex
       throw new ErrorAcceso();
     }
 
-    if (envio.estado.nombre !== "En Preparación") {
-      throw new ErrorNegocio("El pedido ya no está en preparación.");
+    if (envio.estado.nombre !== EN_PREPARACION) {
+      throw new ErrorNegocio(MENSAJE_FUERA_DE_PREPARACION);
     }
 
     if (envio.lineas.some((l) => !l.marcado)) {
@@ -358,34 +355,34 @@ export async function despacharEnvio(entrada: EntradaDespachar, contexto: Contex
 }
 
 export async function reordenarColaBodega(entrada: EntradaReordenarCola, contexto: ContextoOperacion) {
-  // Verificar que todos los envíos existen, pertenecen a la sede y están En Preparación
+  // Todos los envíos deben ser de la sede (RN-17) y seguir En Preparación (H-22).
   const envios = await prisma.envio.findMany({
-    where: {
-      id: { in: entrada.envioIds },
-      sedeId: contexto.sedeId,
-      estado: { nombre: "En Preparación" },
-    },
-    select: { id: true },
+    where: { id: { in: entrada.envioIds }, sedeId: contexto.sedeId },
+    select: { id: true, estado: { select: { nombre: true } } },
   });
 
   if (envios.length !== entrada.envioIds.length) {
     throw new ErrorAcceso();
   }
+  if (envios.some((e) => e.estado.nombre !== EN_PREPARACION)) {
+    throw new ErrorNegocio(MENSAJE_FUERA_DE_PREPARACION);
+  }
 
   // Actualizar posiciones enteras (decisión 57)
   // RN-28: no va al historial ni a la bitácora
-  await prisma.$transaction(
+  const resultados = await prisma.$transaction(
     entrada.envioIds.map((id, index) =>
       prisma.envio.updateMany({
         where: {
           id,
           sedeId: contexto.sedeId,
-          estado: { nombre: "En Preparación" },
+          estado: { nombre: EN_PREPARACION },
         },
         data: { posicionCola: index + 1 },
       }),
     ),
   );
+  exigirCambios(resultados);
 
   return {
     envioIds: entrada.envioIds,
@@ -393,20 +390,11 @@ export async function reordenarColaBodega(entrada: EntradaReordenarCola, context
 }
 
 export async function reordenarLineasPreparacion(entrada: EntradaReordenarLineas, contexto: ContextoOperacion) {
-  const envio = await prisma.envio.findFirst({
-    where: {
-      id: entrada.envioId,
-      sedeId: contexto.sedeId,
-      estado: { nombre: "En Preparación" },
-    },
-    include: {
-      lineas: { select: { id: true } },
-    },
+  await exigirEnvioEnPreparacion(entrada.envioId, contexto.sedeId);
+  const envio = await prisma.envio.findFirstOrThrow({
+    where: { id: entrada.envioId, sedeId: contexto.sedeId },
+    include: { lineas: { select: { id: true } } },
   });
-
-  if (!envio) {
-    throw new ErrorAcceso();
-  }
 
   const idsExistentes = new Set(envio.lineas.map((l) => l.id));
   const todosPertenecen =
@@ -417,7 +405,7 @@ export async function reordenarLineasPreparacion(entrada: EntradaReordenarLineas
 
   // Actualizar posiciones enteras (decisión 57)
   // RN-28: no va al historial ni a la bitácora
-  await prisma.$transaction(
+  const resultados = await prisma.$transaction(
     entrada.lineaIds.map((id, index) =>
       prisma.lineaPreparacion.updateMany({
         where: {
@@ -425,13 +413,14 @@ export async function reordenarLineasPreparacion(entrada: EntradaReordenarLineas
           envioId: entrada.envioId,
           envio: {
             sedeId: contexto.sedeId,
-            estado: { nombre: "En Preparación" },
+            estado: { nombre: EN_PREPARACION },
           },
         },
         data: { posicion: index + 1 },
       }),
     ),
   );
+  exigirCambios(resultados);
 
   return {
     envioId: entrada.envioId,

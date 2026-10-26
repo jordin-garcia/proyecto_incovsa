@@ -1,12 +1,37 @@
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
+import { writeFile } from "node:fs/promises";
 import { expect, type BrowserContext, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { Client } from "pg";
 import { test } from "../flujo/servidor-produccion";
 
 try {
   process.loadEnvFile();
 } catch {
   // Ignorar si no existe
+}
+
+/** Llama a tsx sin npx, como flujo/tiempo-real.spec.ts: npx tarda varios segundos en un equipo de 8 GB (H-26). */
+function preparar(...argumentos: string[]) {
+  return execFileSync(
+    process.execPath,
+    ["node_modules/tsx/dist/cli.mjs", "pruebas-e2e/picking/preparar-envio.ts", ...argumentos],
+    { encoding: "utf8" },
+  ).trim();
+}
+
+/** Cambia el estado del envío en este mismo proceso, como si otra pantalla lo despachara (H-26). */
+async function cambiarEstado(envioId: number, estado: string) {
+  const bd = new Client({ connectionString: process.env.DATABASE_URL });
+  await bd.connect();
+  try {
+    await bd.query("UPDATE envio SET estado_id = (SELECT id FROM estado_envio WHERE nombre = $1) WHERE id = $2", [
+      estado,
+      envioId,
+    ]);
+  } finally {
+    await bd.end();
+  }
 }
 
 async function entrar(context: BrowserContext, urlBase: string, usuario = "ejemplo.05") {
@@ -57,26 +82,15 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
   test.beforeAll(async ({}, testInfo) => {
     const base = BASE_POR_PROYECTO[testInfo.project.name] ?? 140;
     const crear = (numero: number, tipo: "ruta" | "pedido", sedeId: number) =>
-      JSON.parse(
-        execSync(`npx tsx pruebas-e2e/picking/preparar-envio.ts crear ${numero} ${tipo} ${sedeId}`, {
-          encoding: "utf-8",
-        }).trim(),
-      );
+      JSON.parse(preparar("crear", String(numero), tipo, String(sedeId)));
 
     envioA = crear(base + 1, "ruta", 1);
     envioB = crear(base + 2, "pedido", 1);
   });
 
   test.afterAll(async () => {
-    for (const datos of [envioA, envioB]) {
-      if (datos?.envioId) {
-        try {
-          execSync(`npx tsx pruebas-e2e/picking/preparar-envio.ts limpiar ${datos.envioId}`, { stdio: "ignore" });
-        } catch {
-          // Ignorar errores de limpieza final
-        }
-      }
-    }
+    const ids = [envioA, envioB].filter((datos) => datos?.envioId).map((datos) => String(datos.envioId));
+    if (ids.length) preparar("limpiar", ...ids);
   });
 
   test("RNF-13 / RF-SL-23 (CP-37): el marcado aparece de inmediato en quien marca (optimista), revierte ante fallo y sincroniza en < 2s", async ({
@@ -84,6 +98,7 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
     context,
     page: page1,
     produccion,
+    esperarPublicacion,
   }, testInfo) => {
     await entrar(context, produccion.url);
 
@@ -92,30 +107,19 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
     const page2 = await context2.newPage();
 
     const rutaBodega = (url: URL) => url.pathname.includes("/picking/bodega");
+    let estadoCambiado = false;
 
     try {
       await abrirBodega(page1);
       await abrirBodega(page2);
 
-      await expect(page1.locator(`article.ped[data-id="${envioA.envioId}"]`)).toBeVisible();
-      await expect(page2.locator(`article.ped[data-id="${envioA.envioId}"]`)).toBeVisible();
-
       const tarjeta1 = page1.locator(`article.ped[data-id="${envioA.envioId}"]`);
-      const tarjeta2 = page2.locator(`article.ped[data-id="${envioA.envioId}"]`);
+      await expect(tarjeta1).toBeVisible();
+      await expect(page2.locator(`article.ped[data-id="${envioA.envioId}"]`)).toBeVisible();
 
       const fila1 = tarjeta1.locator("tbody tr").first();
       const botonMarca1 = fila1.locator("button.marca");
-      const fila2 = tarjeta2.locator("tbody tr").first();
-
-      // Escalonar inicio entre proyectos paralelos para evitar contención de renders.
-      const desfaseMs: Record<string, number> = {
-        telefono: 0,
-        tableta: 1500,
-        escritorio: 3000,
-      };
-      if (desfaseMs[testInfo.project.name]) {
-        await page1.waitForTimeout(desfaseMs[testInfo.project.name]);
-      }
+      const lineaId = await fila1.getAttribute("data-id");
 
       // Criterio 3: El marcado aparece de inmediato en la pantalla de quien marca (useOptimistic)
       // Retenemos la petición de la acción para demostrar que la UI cambia ANTES de que responda el servidor
@@ -136,6 +140,22 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
       const respuestaMarcado = page1.waitForResponse(
         (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
       );
+      // Criterio 2 (RNF-13 / CP-37), medido como JG-10 (H-25): el reloj empieza cuando el servidor publica el aviso
+      // (avisarCambio), no cuando llega la respuesta de la acción. Se escucha antes del clic.
+      const propagacion = esperarPublicacion(1).then(async (inicio) => {
+        const actualizado = await page2.waitForFunction(
+          (id) => document.querySelector(`tr[data-id="${id}"]`)?.classList.contains("lista") ?? false,
+          lineaId,
+          { timeout: Math.max(1, 1999 - (Date.now() - inicio)), polling: "raf" },
+        );
+        const transcurrido = Date.now() - inicio;
+        await actualizado.dispose();
+        console.log(`[${testInfo.project.name}] TIEMPO REAL SSE: ${transcurrido} ms`);
+        expect(transcurrido).toBeLessThan(2000);
+        const archivo = testInfo.outputPath("latencia-bodega.json");
+        await writeFile(archivo, JSON.stringify({ sede: 1, ms: transcurrido, limite: 1999 }));
+        await testInfo.attach("latencia-publicacion", { path: archivo, contentType: "application/json" });
+      });
 
       await botonMarca1.click();
 
@@ -143,41 +163,37 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
       await expect(fila1).toHaveClass(/lista/);
       await expect(botonMarca1).toHaveAttribute("aria-pressed", "true");
 
-      // 2. Liberamos la petición retenida y esperamos la respuesta del servidor
+      // 2. Se libera la petición retenida; el aviso llega a la pantalla 2 en menos de 2 s desde su publicación.
       liberarAccion!();
-      await respuestaMarcado;
+      const [resultado] = await Promise.all([respuestaMarcado, propagacion]);
+      expect(resultado.ok()).toBe(true);
+      await page1.unroute(rutaBodega);
 
-      // 3. Criterio 2: En pantalla 2 se ve reflejado en menos de 2s desde la confirmación por SSE (RNF-13 / CP-37)
-      const tInicioSse = Date.now();
-      await expect(fila2).toHaveClass(/lista/, { timeout: 2000 });
-      const msSse = Date.now() - tInicioSse;
-      console.log(`[${testInfo.project.name}] TIEMPO REAL SSE: ${msSse} ms`);
-      expect(msSse).toBeLessThan(2000);
-
-      // 4. Demostrar reversión (rollback) si la acción de servidor falla (Qué hacer, paso 3)
-      execSync(`npx tsx pruebas-e2e/picking/preparar-envio.ts cambiar-estado ${envioA.envioId} "En Ruta"`);
+      // 3. Reversión si la acción falla: otra pantalla ya despachó la ruta (H-22). El operario ve un mensaje de
+      // negocio, no «No tiene permisos»; la marca no se guarda y la ruta sale de la pantalla al refrescarse.
+      await cambiarEstado(envioA.envioId, "En Ruta");
+      estadoCambiado = true;
 
       const fila1B = tarjeta1.locator("tbody tr").nth(1);
-      const botonMarca1B = fila1B.locator("button.marca");
-      await botonMarca1B.click();
-
-      // Al ser rechazada por el servidor, muestra el mensaje y el estado optimista vuelve atrás
-      await expect(page1.getByRole("alert")).toBeVisible({ timeout: 3000 });
-      await expect(fila1B).not.toHaveClass(/lista/, { timeout: 3000 });
-
-      // Restaurar el estado para las siguientes pruebas
-      execSync(`npx tsx pruebas-e2e/picking/preparar-envio.ts cambiar-estado ${envioA.envioId} "En Preparación"`);
+      const lineaB = await fila1B.getAttribute("data-id");
+      await fila1B.locator("button.marca").click();
+      const aviso = page1.locator(".toast.t-error");
+      await expect(aviso).toContainText("El pedido ya no está en preparación.", { timeout: 3000 });
+      await expect(aviso).not.toContainText("No tiene permisos");
+      await expect(tarjeta1).toHaveCount(0, { timeout: 3000 });
+      await expect(page1.getByRole("heading", { level: 1, name: "Rutas y pedidos por preparar" })).toBeVisible();
+      const bd = new Client({ connectionString: process.env.DATABASE_URL });
+      await bd.connect();
+      try {
+        const { rows } = await bd.query("SELECT marcado FROM linea_preparacion WHERE id = $1", [Number(lineaB)]);
+        expect(rows[0]?.marcado).toBe(false);
+      } finally {
+        await bd.end();
+      }
     } finally {
-      try {
-        await page1.unroute(rutaBodega);
-      } catch {
-        // Ignorar
-      }
-      try {
-        execSync(`npx tsx pruebas-e2e/picking/preparar-envio.ts cambiar-estado ${envioA.envioId} "En Preparación"`);
-      } catch {
-        // Ignorar si ya estaba limpio o en preparación
-      }
+      await page1.unroute(rutaBodega).catch(() => undefined);
+      // Solo se restaura si la prueba llegó a cambiar el estado.
+      if (estadoCambiado) await cambiarEstado(envioA.envioId, "En Preparación");
       await context2.close();
     }
   });
@@ -206,6 +222,9 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
       // Movemos la fila 0 (40 kg) hacia la posición de fila 1 con arrastre de mouse
       const asaFila1 = tarjeta1.locator("tbody tr .asa").first();
       const asaFila2 = tarjeta1.locator("tbody tr .asa").nth(1);
+      // El mouse solo actúa dentro de la pantalla: en el teléfono, las filas quedan debajo del encabezado.
+      await asaFila2.scrollIntoViewIfNeeded();
+      await asaFila1.scrollIntoViewIfNeeded();
       const boxFila1 = (await asaFila1.boundingBox())!;
       const boxFila2 = (await asaFila2.boundingBox())!;
 
@@ -253,16 +272,32 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
 
       const asaCard1 = primeraTarjeta1.locator(".asa-ped");
       const asaCard2 = segundaTarjeta1.locator(".asa-ped");
+      // Deja las dos asas dentro de la pantalla antes de arrastrar con el mouse.
+      await asaCard2.scrollIntoViewIfNeeded();
+      await asaCard1.scrollIntoViewIfNeeded();
       const boxCard1 = (await asaCard1.boundingBox())!;
       const boxCard2 = (await asaCard2.boundingBox())!;
 
       const respCola = page1.waitForResponse(
         (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
       );
-      await page1.mouse.move(boxCard1.x + boxCard1.width / 2, boxCard1.y + boxCard1.height / 2);
-      await page1.mouse.down();
-      await page1.mouse.move(boxCard2.x + boxCard2.width / 2, boxCard2.y + boxCard2.height / 2 + 30, { steps: 10 });
-      await page1.mouse.up();
+      if (boxCard2.y + boxCard2.height <= page1.viewportSize()!.height) {
+        await page1.mouse.move(boxCard1.x + boxCard1.width / 2, boxCard1.y + boxCard1.height / 2);
+        await page1.mouse.down();
+        await page1.mouse.move(boxCard2.x + boxCard2.width / 2, boxCard2.y + boxCard2.height / 2 + 30, {
+          steps: 10,
+        });
+        await page1.mouse.up();
+      } else {
+        // En el teléfono la tarjeta mide más que la pantalla y el mouse no alcanza las dos asas: se arrastra con el
+        // teclado, con pausas entre teclas como en la prueba de teclado de este archivo.
+        await asaCard1.focus();
+        await page1.keyboard.press("Space", { delay: 80 });
+        await page1.waitForTimeout(150);
+        await page1.keyboard.press("ArrowDown", { delay: 80 });
+        await page1.waitForTimeout(150);
+        await page1.keyboard.press("Space", { delay: 80 });
+      }
       await respCola;
 
       // En pantalla 1: envioB ahora está antes que envioA
