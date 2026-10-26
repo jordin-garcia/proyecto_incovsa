@@ -44,6 +44,11 @@ async function exigirEnvioEnPreparacion(envioId: number, sedeId: number) {
   if (envio.estado.nombre !== EN_PREPARACION) throw new ErrorNegocio(MENSAJE_FUERA_DE_PREPARACION);
 }
 
+/** Si el envío salió de preparación entre la comprobación y el cambio, ningún `updateMany` encuentra la fila. */
+function exigirCambios(resultados: { count: number }[]) {
+  if (resultados.some((r) => r.count === 0)) throw new ErrorNegocio(MENSAJE_FUERA_DE_PREPARACION);
+}
+
 export async function listarEnviosEnPreparacion(sedeId: number) {
   const envios = await prisma.envio.findMany({
     where: {
@@ -212,7 +217,7 @@ export async function marcarTodasLineas(entrada: EntradaMarcarTodo, contexto: Co
   await exigirEnvioEnPreparacion(entrada.envioId, contexto.sedeId);
 
   // RN-20: marcar todo no va a la bitácora
-  await prisma.lineaPreparacion.updateMany({
+  const resultado = await prisma.lineaPreparacion.updateMany({
     where: {
       envioId: entrada.envioId,
       envio: {
@@ -222,6 +227,7 @@ export async function marcarTodasLineas(entrada: EntradaMarcarTodo, contexto: Co
     },
     data: { marcado: entrada.marcado },
   });
+  exigirCambios([resultado]);
 
   return {
     envioId: entrada.envioId,
@@ -243,7 +249,7 @@ export async function ordenarLineasPorPeso(entrada: EntradaOrdenarPorPeso, conte
     return a.id - b.id;
   });
 
-  await prisma.$transaction(
+  const resultados = await prisma.$transaction(
     lineasOrdenadas.map((l, index) =>
       prisma.lineaPreparacion.updateMany({
         where: {
@@ -258,6 +264,7 @@ export async function ordenarLineasPorPeso(entrada: EntradaOrdenarPorPeso, conte
       }),
     ),
   );
+  exigirCambios(resultados);
 
   return {
     envioId: entrada.envioId,
@@ -363,7 +370,7 @@ export async function reordenarColaBodega(entrada: EntradaReordenarCola, context
 
   // Actualizar posiciones enteras (decisión 57)
   // RN-28: no va al historial ni a la bitácora
-  await prisma.$transaction(
+  const resultados = await prisma.$transaction(
     entrada.envioIds.map((id, index) =>
       prisma.envio.updateMany({
         where: {
@@ -375,6 +382,7 @@ export async function reordenarColaBodega(entrada: EntradaReordenarCola, context
       }),
     ),
   );
+  exigirCambios(resultados);
 
   return {
     envioIds: entrada.envioIds,
@@ -397,7 +405,7 @@ export async function reordenarLineasPreparacion(entrada: EntradaReordenarLineas
 
   // Actualizar posiciones enteras (decisión 57)
   // RN-28: no va al historial ni a la bitácora
-  await prisma.$transaction(
+  const resultados = await prisma.$transaction(
     entrada.lineaIds.map((id, index) =>
       prisma.lineaPreparacion.updateMany({
         where: {
@@ -412,6 +420,7 @@ export async function reordenarLineasPreparacion(entrada: EntradaReordenarLineas
       }),
     ),
   );
+  exigirCambios(resultados);
 
   return {
     envioId: entrada.envioId,

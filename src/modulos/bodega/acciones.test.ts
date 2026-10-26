@@ -40,7 +40,7 @@ describe("Módulo de Bodega - Acciones del servidor", () => {
   };
 
   /** Envío En Preparación real de la sede 2, que la sesión (sede 1) no puede tocar (auditoría H-23). */
-  let otraSede: { envioId: number; lineaId: number };
+  let otraSede: { envioId: number; lineaId: number; lineaIds: number[] };
 
   async function crearPedido(sedeId: number, estadoNombre: string, numero: number) {
     const [estadoEnvio, usuario] = await Promise.all([
@@ -73,7 +73,7 @@ describe("Módulo de Bodega - Acciones del servidor", () => {
     await limpiarTablasDeNegocio();
     await sembrarDemo(prisma, { claveDemo: "Demo-12345" });
     const pedidoSede2 = await crearPedido(2, "En Preparación", 1);
-    otraSede = { envioId: pedidoSede2.envioId, lineaId: pedidoSede2.lineaIds[0] };
+    otraSede = { envioId: pedidoSede2.envioId, lineaId: pedidoSede2.lineaIds[0], lineaIds: pedidoSede2.lineaIds };
     estado.sesion = sesion;
     estado.cookieSede = "1";
   });
@@ -165,7 +165,8 @@ describe("Módulo de Bodega - Acciones del servidor", () => {
       sesion,
       permiso: "pk.bodega",
       entrada: { envioId: 1, lineaIds: [10, 20] },
-      entradaOtraSede: () => ({ envioId: otraSede.envioId, lineaIds: [otraSede.lineaId] }),
+      // Todas las líneas del envío: así solo el filtro por sede puede rechazarlo (revisión de JG-23).
+      entradaOtraSede: () => ({ envioId: otraSede.envioId, lineaIds: otraSede.lineaIds }),
     });
   });
 

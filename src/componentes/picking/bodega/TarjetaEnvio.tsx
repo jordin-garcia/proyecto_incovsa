@@ -171,12 +171,10 @@ export function TarjetaEnvio({
       // Una falla de red se informa con un mensaje y la pantalla sigue en uso (auditoría H-24).
       try {
         const res = await despacharAccion({ envioId: envio.id });
-        if (!res.ok) {
-          mostrarMensaje(res.error, "error");
-        } else {
-          mostrarMensaje(`${etiqueta} → ${destino}.`, "exito");
-          alActualizar();
-        }
+        if (!res.ok) mostrarMensaje(res.error, "error");
+        else mostrarMensaje(`${etiqueta} → ${destino}.`, "exito");
+        // También al fallar: si otra pantalla ya lo despachó, al refrescar sale de Bodega (H-22).
+        alActualizar();
       } catch {
         mostrarMensaje(MENSAJE_ERROR_GENERAL, "error");
       }

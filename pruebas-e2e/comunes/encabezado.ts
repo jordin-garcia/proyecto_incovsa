@@ -24,20 +24,28 @@ export async function comprobarEncabezadoModulo(
 
   const medidas = await cab.evaluate((el) => {
     const caja = (selector: string) => el.querySelector(selector)!.getBoundingClientRect();
-    const fila = el.querySelector(".cab-fx-t")!;
-    const separacion = parseFloat(getComputedStyle(fila).columnGap) || 0;
-    const bloqueTitulo = caja(".cab-fx-t > div");
+    // Ancho del texto del título y del eyebrow, no de su contenedor: si `.cab-fx-t` dejara de ser flex, el contenedor
+    // ocuparía toda la fila y la prueba creería que no cabe la instrucción a la derecha (revisión de JG-23).
+    const anchoTexto = (selector: string) => {
+      const rango = document.createRange();
+      rango.selectNodeContents(el.querySelector(selector)!);
+      return Math.max(...[...rango.getClientRects()].map((r) => r.width), 0);
+    };
+    const anchoTitulo = Math.max(anchoTexto(".cab-fx-t h1"), anchoTexto(".cab-fx-t .eyebrow"));
+    // 22 px es la separación de `.cab-fx-t` del prototipo (estilos.css:920); 240 px, el mínimo de `.cab-fx-txt`.
     return {
       cabeza: caja(".cab-fx-t"),
-      bloqueTitulo,
+      bloqueTitulo: caja(".cab-fx-t > div"),
       titulo: caja(".cab-fx-t h1"),
       instruccion: caja(".cab-fx-t > .cab-fx-txt"),
       cabecera: el.getBoundingClientRect(),
       acciones: el.querySelector(".acc")?.getBoundingClientRect() ?? null,
-      cabeDerecha: fila.getBoundingClientRect().width - bloqueTitulo.width - separacion >= 240,
+      cabeDerecha: caja(".cab-fx-t").width - anchoTitulo - 22 >= 240,
     };
   });
 
+  // En escritorio siempre cabe a la par: si no, la estructura dejó de ser la de `cab()`.
+  if (page.viewportSize()!.width >= 1280) expect(medidas.cabeDerecha).toBe(true);
   if (medidas.cabeDerecha) {
     // A la par: a la derecha del título y en la misma franja vertical.
     expect(medidas.instruccion.left).toBeGreaterThanOrEqual(medidas.titulo.right);
