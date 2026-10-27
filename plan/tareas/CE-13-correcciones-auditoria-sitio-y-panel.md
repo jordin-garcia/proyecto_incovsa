@@ -117,3 +117,5 @@ Cerrada el 27/10/2026. La rama es `cursor/ce-13-correcciones-auditoria-0917`: el
 **Ayuda de evidencia.** `capturaEvidencia(page, ruta, opciones)` y `archivoEvidencia(ruta, contenido)` no hacen nada salvo que `process.env.EVIDENCIA === "1"`. La captura se toma en memoria y luego se reemplaza el archivo.
 
 **Contrato de `detalle.resumen`.** Es el texto que muestra la Bitácora. Si no es una cadena, se ve «—».
+
+**Verificación local.** `npm run verificar`: formato, lint, tipos y 431 pruebas en 52 archivos, código 0. `npm run build`: compiló, código 0. `npm run e2e`: 414 pasaron en 12.0 min, código 0. Después, `git status --short` no mostró capturas ni archivos de prueba (solo esta nota, aún sin commit). Con `EVIDENCIA=1 npx playwright test pruebas-e2e/panel/solicitudes.spec.ts --project=escritorio`: 3 pasaron y `git status --short` listó siete PNG reescritos en `pruebas-e2e/panel/evidencias/DM-09/`. Esos PNG se restauraron para no mezclar evidencia regenerada con el cambio.
