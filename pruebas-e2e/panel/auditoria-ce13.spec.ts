@@ -287,36 +287,40 @@ async function restaurarCorreo(correo: string) {
   }
 }
 
-test("H-62 / CE-13b: un correo mal formado se rechaza al salir del campo y no se guarda", async ({ page }, info) => {
-  test.skip(info.project.name !== "escritorio", "Guatemala se comparte entre proyectos; basta escritorio.");
-  await entrar(page, "sitio", "ejemplo.08");
-  const { sede, correo } = await correoDeGuatemala(page);
-  const original = await correo.inputValue();
-  await correo.fill("no-es-correo");
-  await correo.blur();
-  await expect(sede.getByText(MENSAJE_CORREO, { exact: true })).toBeVisible();
-  await expect(correo).toHaveAttribute("aria-invalid", "true");
-  await sede.getByRole("button", { name: "Guardar", exact: true }).click();
-  await expect(page.locator(".toast")).toHaveCount(0);
-  await page.reload();
-  const otraVez = await correoDeGuatemala(page);
-  await expect(otraVez.correo).toHaveValue(original);
-});
+test.describe("H-62 / CE-13b: el correo de Guatemala", () => {
+  test.describe.configure({ mode: "serial" });
 
-test("H-62 / CE-13b: un correo con formato válido se guarda", async ({ page }, info) => {
-  test.skip(info.project.name !== "escritorio", "Guatemala se comparte entre proyectos; basta escritorio.");
-  await entrar(page, "sitio", "ejemplo.08");
-  const { sede, correo } = await correoDeGuatemala(page);
-  const original = await correo.inputValue();
-  try {
-    await correo.fill("oficina@ejemplo.com");
+  test("H-62 / CE-13b: un correo mal formado se rechaza al salir del campo y no se guarda", async ({ page }, info) => {
+    test.skip(info.project.name !== "escritorio", "Guatemala se comparte entre proyectos; basta escritorio.");
+    await entrar(page, "sitio", "ejemplo.08");
+    const { sede, correo } = await correoDeGuatemala(page);
+    const original = await correo.inputValue();
+    await correo.fill("no-es-correo");
     await correo.blur();
-    await expect(sede.getByText(MENSAJE_CORREO, { exact: true })).toHaveCount(0);
+    await expect(sede.getByText(MENSAJE_CORREO, { exact: true })).toBeVisible();
+    await expect(correo).toHaveAttribute("aria-invalid", "true");
     await sede.getByRole("button", { name: "Guardar", exact: true }).click();
-    await expect(page.locator(".toast").getByText("Datos de Guatemala publicados.", { exact: true })).toBeVisible();
-    const guardado = await correoDeGuatemala(page);
-    await expect(guardado.correo).toHaveValue("oficina@ejemplo.com");
-  } finally {
-    await restaurarCorreo(original);
-  }
+    await expect(page.locator(".toast")).toHaveCount(0);
+    await page.reload();
+    const otraVez = await correoDeGuatemala(page);
+    await expect(otraVez.correo).toHaveValue(original);
+  });
+
+  test("H-62 / CE-13b: un correo con formato válido se guarda", async ({ page }, info) => {
+    test.skip(info.project.name !== "escritorio", "Guatemala se comparte entre proyectos; basta escritorio.");
+    await entrar(page, "sitio", "ejemplo.08");
+    const { sede, correo } = await correoDeGuatemala(page);
+    const original = await correo.inputValue();
+    try {
+      await correo.fill("oficina@ejemplo.com");
+      await correo.blur();
+      await expect(sede.getByText(MENSAJE_CORREO, { exact: true })).toHaveCount(0);
+      await sede.getByRole("button", { name: "Guardar", exact: true }).click();
+      await expect(page.locator(".toast").getByText("Datos de Guatemala publicados.", { exact: true })).toBeVisible();
+      const guardado = await correoDeGuatemala(page);
+      await expect(guardado.correo).toHaveValue("oficina@ejemplo.com");
+    } finally {
+      await restaurarCorreo(original);
+    }
+  });
 });
