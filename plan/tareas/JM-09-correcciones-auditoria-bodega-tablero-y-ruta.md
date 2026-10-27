@@ -71,4 +71,3 @@ npm run e2e -- pruebas-e2e/picking
 
 ## Notas
 - Rama `josue/JM-09-correcciones-auditoria`. Tarea creada en la convergencia 2 (JG-13), por decisión de Jordin del 26/10.
-- CE-13 cambia cómo las pruebas de navegador guardan la evidencia (`EVIDENCIA=1`, `plan/convenciones.md` §6) y toca `tablero.spec.ts` y `bodega-tiempo-real.spec.ts`. Si integra antes que tú, actualiza tu rama desde `develop` y conserva los dos cambios.

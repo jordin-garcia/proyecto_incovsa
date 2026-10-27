@@ -21,7 +21,7 @@ Corregir los hallazgos del paso 1 de la auditoría del 26/10 (H-56 a H-63 y H-65
 - el Detalle «—» de la Bitácora en Noticias (H-56) y en Solicitudes (H-57);
 - la galería del panel, distinta del prototipo (H-58).
 
-Jordin asignó este trabajo a Carlos el 26/10 porque Daniela tiene DM-10 y DM-11 atrasadas, y Carlos no tiene nada disponible mientras CE-08 siga bloqueada.
+Jordin asignó este trabajo a Carlos el 26/10 porque Daniela tenía DM-10 y DM-11 atrasadas al decidirlo, y Carlos no tiene nada disponible mientras CE-08 siga bloqueada.
 
 ## Contexto que debes leer
 - `plan/auditorias/2026-10-26.md`, paso 1 (H-56 a H-65), D-07 y D-08
@@ -57,10 +57,8 @@ Jordin asignó este trabajo a Carlos el 26/10 porque Daniela tiene DM-10 y DM-11
 9. **H-65 (D-08):** **toda** prueba de `pruebas-e2e/**` que escribe capturas o archivos dentro del repositorio, fuera de `test-results/`, solo lo hace con `EVIDENCIA=1`. Usa una sola ayuda compartida en `pruebas-e2e/comunes/`. Para encontrarlas, busca `screenshot({ path`, `writeFile` y `evidencias` en `pruebas-e2e/`. Al 26/10 son, al menos:
    - sitio: `noticias.spec.ts`, `contacto.spec.ts` y `nosotros.spec.ts` (DM-06);
    - panel: `solicitudes.spec.ts`, `contenido.spec.ts` (DM-04), `industrias-y-catalogo.spec.ts` (DM-05), `documentos.spec.ts` (DM-10) y `auditoria-jg24.spec.ts`;
-   - acceso: `auditoria-jg24.spec.ts` y `permisos.spec.ts`;
-   - comunes: `armazon.spec.ts`;
-   - picking: `auditoria-jg24.spec.ts`, `facturacion-*.spec.ts` (evidencia `jc-05/latencia-*.json`), `reportes.spec.ts`, `tablero.spec.ts` y `bodega-tiempo-real.spec.ts`;
-   - flujo: `tiempo-real.spec.ts`.
+   - acceso: `auditoria-jg24.spec.ts`;
+   - picking: `auditoria-jg24.spec.ts` y `facturacion-dos-facturadores.spec.ts` (evidencia `jc-05/latencia-*.json`).
 
    Las capturas que solo se adjuntan al reporte (`info.attach` o `info.outputPath`) no cambian. Sin la variable, una corrida completa de `npm run e2e` deja `git status` limpio. Las aserciones no cambian: solo se salta la escritura del archivo.
 10. En el `## Resultado` de DM-04, DM-05, DM-07, DM-08 y DM-09, agrega `### Correcciones de la auditoría (2026-10-26)`. Su estado no cambia.
@@ -71,7 +69,7 @@ Jordin asignó este trabajo a Carlos el 26/10 porque Daniela tiene DM-10 y DM-11
 - `src/componentes/sitio/FormularioContacto.tsx`
 - `pruebas-e2e/comunes/` (ayuda de evidencia, crear); toda prueba de `pruebas-e2e/**` que escribe evidencia en el repositorio (paso 9); `pruebas-e2e/panel/**` (prueba de la galería)
 - `specs/05-sitio-web.md`, `specs/18-historial-de-decisiones.md` (H-63)
-- `plan/tareas/DM-04-*.md`, `DM-05-*.md`, `DM-07-*.md`, `DM-08-*.md`, `DM-09-*.md` (solo la sección de correcciones); `plan/bitacora/carlos.md` (con el aviso para Daniela, Josué y José Daniel)
+- `plan/tareas/DM-04-*.md`, `DM-05-*.md`, `DM-07-*.md`, `DM-08-*.md`, `DM-09-*.md` (solo la sección de correcciones); `plan/bitacora/carlos.md` (con el aviso para Daniela y José Daniel)
 
 ## Criterios de aceptación
 1. **RF-SL-36 / RN-39 (H-56, H-57):** en Reportes › Bitácora, las operaciones de Noticias muestran el título, y las de Solicitudes, los textos del prototipo; nunca «—».
@@ -99,5 +97,5 @@ git status --short
 
 ## Notas
 - Rama `carlos/CE-13-correcciones-auditoria-sitio-y-panel`. Tarea creada en la convergencia 2 (JG-13), por decisión de Jordin del 26/10.
-- Tocas archivos de Daniela (sitio y panel), de Josué y José Daniel (las pruebas que escriben evidencia), y la evidencia de JG-24. Esta tarea te autoriza a hacerlo. En tu bitácora deja el aviso para cada uno, con los archivos que cambiaron.
+- Tocas archivos de Daniela (sitio y panel), de José Daniel (`facturacion-dos-facturadores.spec.ts`), y la evidencia de JG-24. Esta tarea te autoriza a hacerlo. En tu bitácora deja el aviso para cada uno, con los archivos que cambiaron.
 - En Cursor, trabaja en local, no con el agente en la nube (decisión del coordinador del 18/10; ver tu bitácora).

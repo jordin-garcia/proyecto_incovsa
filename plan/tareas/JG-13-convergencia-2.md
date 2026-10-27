@@ -81,7 +81,7 @@ node scripts/tareas.mjs --hoy
 - **Decisiones registradas:** D-07 en `specs/05`, `specs/18` y `specs/20` (y H-64 resuelto); D-08 en `plan/convenciones.md` §6; D-09 en `specs/08`; D-10 en `specs/10`; todas en `specs/18`, «Decisiones de la auditoría del 26/10».
 
 ### Decisiones tomadas
-- Por decisión de Jordin, cada paso de la auditoría lo corrige el dueño de lo auditado. La excepción es el sitio y el panel, que pasan a Carlos (CE-13), porque Daniela tiene DM-10 y DM-11 atrasadas.
+- Por decisión de Jordin, cada paso de la auditoría lo corrige el dueño de lo auditado. La excepción es el sitio y el panel, que pasan a Carlos (CE-13), porque Daniela tenía DM-10 y DM-11 atrasadas al decidirlo.
 - Jordin aceptó las cuatro recomendaciones: ratificar la excepción de contraste de DM-09 (D-07), escribir la evidencia solo con `EVIDENCIA=1` (D-08), filtrar la Ruta del piloto por sede de trabajo (D-09) y dejar el logotipo fijo en el PDF (D-10).
 - La numeración de los hallazgos y las decisiones sigue la de la auditoría del 22/10 (H-56 y D-07 en adelante), para que ningún H-xx o D-xx se repita entre auditorías (decisión mía).
 - DM-11 espera a CE-13, para que la revisión integral de Daniela se haga sobre el sitio y el panel ya corregidos (decisión mía).
