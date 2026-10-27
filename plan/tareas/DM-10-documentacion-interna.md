@@ -5,7 +5,7 @@ persona: daniela
 responsable: Daniela Marín
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [DM-04]
 programada: 2026-10-23
 requisitos: [RF-SW-10, RF-SW-14, RF-SW-21, RF-SW-25, RN-19, RN-41, RN-55, CU-10, CU-15]
@@ -68,3 +68,16 @@ npm run e2e -- pruebas-e2e/panel/documentos.spec.ts
 ## Notas
 - **Vuelve a Daniela el 26/10 (decisión de Jordin, JG-13).** El 22/10 (JG-12) se había reasignado a Carlos, que no llegó a empezarla: no hay rama ni PR suyos. Conserva su fecha (23/10): queda atrasada, así que Daniela la hace antes de DM-11, que depende de ella.
 - La tarjeta «Documentación interna» del Resumen del panel ya existe (DM-04) y cuenta los productos documentados.
+
+## Resultado
+
+Implementado el 26/10/2026. `/panel/documentos` permite buscar por lote, producto y país; crear, editar y eliminar con confirmación los productos documentados; y abrir sus FT, HS y COA según los permisos efectivos de la sesión.
+
+- **Servidor:** `src/modulos/documentos/servicio.ts`, `esquemas.ts` y `acciones.ts`. Cada operación exige el permiso correspondiente y valida su entrada con Zod. La gestión usa `sit.doc.gestionar`; la lectura admite cualquiera de los tres permisos. Los países proceden de la lista completa de la base. El sitio no usa la restricción de sedes del picking (`specs/03`). Las escrituras y la bitácora se confirman en una transacción.
+- **Drive:** `idDrive()` valida origen HTTPS exacto y extrae un identificador válido. El servidor genera las direcciones de vista previa y descarga, y omite cada dirección sin su permiso. Solo quien gestiona recibe los enlaces originales editables. No se suben PDF ni se requieren credenciales de Google. P-92 continúa pendiente para la configuración de compartición de INCOVSA.
+- **Duplicados:** comparación normalizada como el prototipo, sin distinguir acentos, mayúsculas ni espacios exteriores. Las altas y ediciones usan un bloqueo transaccional de PostgreSQL para que las escrituras simultáneas no creen duplicados equivalentes, sin modificar el esquema.
+- **Interfaz:** componentes existentes del panel y estilos locales del prototipo. La tabla conserva sus cinco columnas y solo muestra acciones con permiso de gestión. La ventana limita Ver y Descargar y carga Drive dentro del marco. Se conserva el aviso verde de protección en Drive, sin la frase sobre el producto de simulación excluido por `specs/20`.
+- **Cómo reutilizar:** `leerDocumentos(sesion, busqueda?)` devuelve productos, documentos con direcciones condicionadas por permiso y países solo para gestión. `guardar(entrada)` y `eliminar({ id })` obtienen la sesión real y revalidan el panel y su Resumen. El contrato y los comandos están en `src/modulos/documentos/README.md`.
+- **Verificación:** plan válido; formato, lint, tipos y **426 pruebas en 52 archivos** aprobados; compilación aprobada. **Seis E2E propios** aprobados en los tres tamaños con axe, respuesta del servidor sin descarga para la cuenta de solo lectura y carga efectiva del iframe bajo la CSP real. Suite general inicial: 384 aprobados, cuatro fallos de tiempo real y ocho sin ejecutar; con el artefacto recién compilado, se repitieron íntegros los 18 casos de esos dos archivos: 17 aprobados directamente y uno intermitente aprobado al reintentar. Quedan cubiertos los 396 casos, sin fallos pendientes ni pruebas modificadas de otras tareas. Design system y gitleaks aprobados; next-devtools sin errores.
+- **Revisión:** independiente según `plan/prompts/revision.md`, veredicto final **LISTO**. Se corrigieron duplicados normalizados/concurrentes y la comprobación efectiva de CSP/iframe, con pruebas de regresión. No se agregaron dependencias, migraciones ni cambios a archivos protegidos. `.codex/config.toml` se conserva fuera de los commits.
+- **Evidencia:** [57 capturas y registro de revisión y pruebas](../../pruebas-e2e/panel/evidencias/DM-10/README.md), con aplicación y prototipo en 390, 768 y 1440 px. Las capturas y latencias ajenas regeneradas por la suite se restauraron.
