@@ -102,7 +102,7 @@ La columna "Pedido" se quitó el 13/10: la ruta ya no tiene un pedido aparte.
 
 - Cada archivo lleva las filas de la pestaña con el periodo elegido.
 - **Excel:** una sola hoja, sin colores ni formato, generada con SheetJS (la versión gratuita no permite formato).
-- **PDF:** generado con **pdfmake**, con el logotipo de INCOVSA, el título de la pestaña, la sede (salvo en la Bitácora), el periodo y la tabla.
+- **PDF:** generado con **pdfmake**, con el logotipo de INCOVSA, el título de la pestaña, la sede (salvo en la Bitácora), el periodo y la tabla. **(26/10, D-10)** El logotipo es siempre el del sistema (`public/marca/incovsa-quimicos.webp`), no el que se configura en el panel del sitio ([18](18-historial-de-decisiones.md)).
 - Los dos se generan **en el servidor**, que verifica el permiso de Reportes y la sede antes de entregar el archivo ([16](16-arquitectura-y-tecnologia.md)).
 - **Nombre del archivo:** la pestaña, la sede (salvo en la Bitácora) y el periodo, con las fechas en dd-mm-aaaa. Por ejemplo, `despacho-quetzaltenango-16-10-2026.xlsx`, `rutas-realizadas-quetzaltenango-del-01-10-2026-al-31-10-2026.pdf` o `bitacora-16-10-2026.xlsx`.
 

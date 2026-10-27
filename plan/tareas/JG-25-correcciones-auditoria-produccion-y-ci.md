@@ -20,6 +20,7 @@ pantallas: [panel.js › eliminarUsuario (limpieza del piloto)]
 Corregir los hallazgos del paso 5 de la auditoría del 22/10 y los del paso 4 que tocan scripts y la CI. Así la producción se verifica a través de Caddy con todas las cabeceras y con SSE (RNF-16, RNF-13), la CI detecta diferencias entre el esquema y las migraciones, y Configuración limpia las opciones de envío como el prototipo. Son correcciones del coordinador sobre tareas ya integradas (`plan/protocolo.md` §E3).
 
 ## Contexto que debes leer
+- `plan/auditorias/2026-10-26.md`, paso 3 (H-82 a H-84)
 - `plan/auditorias/2026-10-22.md`, paso 4 (H-27, H-28, H-36 y H-37) y paso 5 (H-40 a H-55), con las decisiones D-03, D-04 y D-05 (resueltas al final de la auditoría)
 - `plan/protocolo.md` §E3
 - `specs/11-picking-configuracion.md`; `specs/15`: RNF-09, RNF-12, RNF-13 y RNF-16; `specs/16`: decisiones 29, 58 y 70, y "Seguridad"
@@ -33,7 +34,11 @@ Corregir los hallazgos del paso 5 de la auditoría del 22/10 y los del paso 4 qu
 4. **CI (H-28, H-27 y H-40):** `prisma migrate diff --exit-code` en la CI; una prueba para las variables de `.env.example` y los nombres de los scripts; y que el veredicto acepte solo el comentario del flujo de `revision-claude`.
 5. **Configuración (H-41 a H-45 y H-36):** probar con `consultarOpciones` que un camión eliminado desaparece de Facturación; al eliminar un piloto, limpiar su selección en «Envío por camión» como el prototipo; documentar la excepción de Semgrep de las acciones de usuarios; probar los registros de un usuario eliminado en Reportes; y `normalizarRol` y los mensajes en `crear-admin`. Además, bloquear el cambio de sede de un camión elegido en «Envío por camión» (D-03) y que Gerencia o Soporte desactiven su propia cuenta (D-04), como dice `specs/11`, con sus pruebas.
 6. **D-05:** dejar en `evidencia/CE-07/README.md` la nota para el Documento 5 (CE-11) de cómo rehacer el `.env` del VPS desde la plantilla, según `specs/16` («Respaldos»).
-7. En el `## Resultado` de cada tarea corregida, agregar `### Correcciones de la auditoría (2026-10-22)`. Su estado no cambia.
+7. **Auditoría del 26/10 (agregado en la convergencia 2, JG-13):**
+   - **H-82:** corregir el `## Resultado` de JG-08 (la auditoría «2026-10-24» no existe; #117, #119 y #120 ya se integraron) y agregar el agrupamiento de Dependabot a `specs/16`, «Dependencias al día».
+   - **H-83:** ejecutar `gh workflow run despliegue.yml -f modo_prueba=true` con las nuevas versiones mayores de las acciones de Docker y guardar el resultado como evidencia.
+   - **H-84:** en `pruebas-e2e/flujo/servidor-produccion.ts`, consultar `127.0.0.1`, que es donde escucha el servidor, y dar más tiempo al primer arranque en frío, para que la carpeta `flujo` no falle al primer intento en Windows. Comprobarlo con dos corridas seguidas de `pruebas-e2e/flujo` después de `npm run build`.
+8. En el `## Resultado` de cada tarea corregida, agregar `### Correcciones de la auditoría (2026-10-22)`, y `### Correcciones de la auditoría (2026-10-26)` en JG-08 y JG-10 para H-82 a H-84. Su estado no cambia.
 
 ## Archivos que creas o modificas
 - `.github/workflows/ci.yml`, `.github/workflows/produccion-imagen.yml`, `.github/workflows/despliegue.yml`, `.github/workflows/produccion-respaldo.yml`
@@ -41,6 +46,7 @@ Corregir los hallazgos del paso 5 de la auditoría del 22/10 y los del paso 4 qu
 - `evidencia/CE-07/README.md` (D-05); `.semgrep/**` (H-44); `scripts/veredicto-revision.mjs`, `scripts/administrador.ts`, `scripts/crear-admin.ts`, `scripts/*.test.mjs`
 - `src/modulos/camiones/**`, `src/modulos/usuarios/**` y sus pruebas
 - `specs/16-arquitectura-y-tecnologia.md`, `specs/18-historial-de-decisiones.md` (H-50)
+- `pruebas-e2e/flujo/servidor-produccion.ts` (H-84); `specs/16` («Dependencias al día», H-82)
 - `plan/tareas/` de las tareas corregidas (solo la sección de correcciones); `plan/bitacora/jordin.md` (con el aviso para Carlos)
 
 ## Criterios de aceptación
@@ -53,9 +59,10 @@ Corregir los hallazgos del paso 5 de la auditoría del 22/10 y los del paso 4 qu
 7. Cada hallazgo restante (H-27, H-36, H-37, H-40, H-42, H-44 y H-49 a H-54) tiene su corrección y, donde se puede, una prueba que lo habría detectado.
 8. **D-03 y D-04:** cambiar de sede un camión elegido en «Envío por camión» se rechaza con el aviso de `specs/11`, y Gerencia o Soporte no pueden desactivar su propia cuenta («No puede desactivar su propia cuenta.»).
 9. **RNF-09 (D-05):** `evidencia/CE-07/README.md` explica cómo rehacer el `.env` y la configuración de `rclone` del VPS desde la plantilla, y no contiene ningún secreto (lo comprueba el trabajo `secretos` de la CI).
+10. **Auditoría del 26/10 (H-82 a H-84):** el Resultado de JG-08 y `specs/16` describen el agrupamiento de Dependabot; `despliegue.yml` corrió en modo prueba con las acciones nuevas; `pruebas-e2e/flujo` pasa dos veces seguidas, sin reintentos, después de `npm run build`.
 
 ## Pruebas obligatorias
-- Una prueba o verificación por hallazgo (criterios 1 a 9)
+- Una prueba o verificación por hallazgo (criterios 1 a 10)
 - La batería completa de navegador si se toca algo que se ve en la aplicación (protocolo B7)
 
 ## Verificación

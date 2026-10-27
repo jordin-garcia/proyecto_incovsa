@@ -230,3 +230,19 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Pendiente o aviso para otros:
 **Daniela:** DM-10 vuelve a ser tuya; hazla antes de DM-11. Lee la tarea completa y actualiza tu rama desde `develop`.
 **Carlos:** DM-10 ya no te toca. No tienes nada disponible hasta que INCOVSA dé los accesos de CE-08.
+
+## 2026-10-26 · JG-13 · Convergencia 2
+
+- Hecho: informe [`plan/convergencia/2026-10-26.md`](../convergencia/2026-10-26.md) y auditoría [`plan/auditorias/2026-10-26.md`](../auditorias/2026-10-26.md) de lo integrado desde el 22/10.
+  - Requisitos: 139 de lo integrado, con 129 ✅ y 10 ⚠️; 6 ❌ con tarea pendiente.
+  - Auditoría: 29 hallazgos (H-56 a H-84), ninguno Alto y 3 Medios, y 4 decisiones (D-07 a D-10).
+  - Verificación: `npm run verificar` 418 de 418, compilación sin errores y batería de navegador 390 de 390 en una base nueva. `flujo` pasó al repetirla (H-84).
+  - Tareas nuevas: CE-13, JM-09 y JC-09. JG-25 suma H-82 a H-84.
+  - Fechas: DM-11 pasa al 28/10 y JG-14 al 27/10. Se regeneró el calendario. DM-10 se integró el 26/10 (#138), después del commit evaluado.
+- Decisiones: Jordin resolvió D-07 a D-10 como se recomendó (`specs/05`, `08`, `10`, `18`, `20` y `plan/convenciones.md` §6). También decidió que cada dueño corrige lo suyo, salvo el sitio y el panel, que pasan a Carlos. DM-11 espera a CE-13 (decisión mía).
+- Pendiente o aviso para otros:
+**Carlos:** te toca CE-13 (27/10): las correcciones del sitio y del panel de la auditoría del 26/10 (paso 1), con los tres hallazgos Medios. Lee la tarea completa y actualiza tu rama desde `develop`. Tocas archivos de Daniela y las pruebas que escriben evidencia de Josué y José Daniel: la tarea te autoriza, y debes dejarles el aviso en tu bitácora.
+**Daniela:** DM-11 pasa al 28/10 y ahora espera solo a CE-13, en la que Carlos corrige tus hallazgos de la auditoría del 26/10 (Detalle de la Bitácora de Noticias y Solicitudes, galería del panel, formulario e Información de contacto). Jordin ratificó tu excepción de contraste de la bandeja (D-07). CE-13 también hace que tus pruebas que guardan evidencia (entre ellas las de DM-04, DM-06 y DM-10) solo la escriban con `EVIDENCIA=1`. Actualiza tu rama desde `develop`.
+**Josué:** te toca JM-09 (27/10): las correcciones de Ruta, el tablero y Bodega de la auditoría del 26/10 (H-66 a H-74), y la prueba de D-09. El filtro de Ruta por sede de trabajo se queda como está (`specs/08`). Actualiza tu rama desde `develop`.
+**José Daniel:** te toca JC-09 (27/10): las correcciones de Reportes, Facturación y la Bitácora de la auditoría del 26/10 (H-75 a H-81), y la prueba de D-10. El PDF conserva el logotipo fijo (`specs/10`). Actualiza tu rama desde `develop`.
+**Todos:** desde CE-13, las pruebas de navegador solo escriben evidencia con `EVIDENCIA=1` (`plan/convenciones.md` §6, D-08). Hasta que se integre, restaura con `git restore` los PNG y JSON de evidencia ajenos que regenere una corrida.
