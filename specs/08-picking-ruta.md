@@ -10,6 +10,7 @@ Muestra al piloto los clientes a los que debe ir en su ruta y registra que se en
 
 - Los usuarios con rol **"Piloto"** ven **solo sus rutas asignadas** (RF-SL-26). El rol "Piloto" es el que identifica a los pilotos ([03-roles-y-accesos.md](03-roles-y-accesos.md)).
 - Los usuarios con el permiso "Ver todas las rutas", y Gerencia y Soporte, ven todas las rutas de las sedes que tienen asignadas.
+- **(26/10, D-09 de la auditoría del 26/10, decisión de Jordin)** Como en los demás módulos (RN-17), la lista muestra solo las rutas de la **sede de trabajo** elegida en la barra superior. Un piloto con varias sedes cambia de sede para ver las rutas de otra. El prototipo le muestra al piloto las suyas de todas sus sedes; aquí manda `specs/` porque es comportamiento, no diseño ([18](18-historial-de-decisiones.md)).
 - El piloto lo usa desde un **teléfono o una tableta**, así que la pantalla tiene que ser responsiva (RNF-14).
 
 ## Cuándo se crea y cuándo aparece una ruta

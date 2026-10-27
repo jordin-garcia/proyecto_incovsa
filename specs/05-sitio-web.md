@@ -244,7 +244,7 @@ Cada sección muestra su **instrucción, lo más breve posible, a la par del tí
 - **No** se avisa por correo al responsable.
 - **Aviso de solicitudes nuevas (13/10):** el ícono de Solicitudes del menú lateral muestra un **indicador de notificaciones** cuando hay solicitudes nuevas (sin leer), también cuando el menú está reducido a íconos.
 - Ver la bandeja y gestionarla dependen de los permisos del usuario.
-- **Accesibilidad (25/10, DM-09; autorizado por Daniela):** las pestañas inactivas y el texto secundario de la fila seleccionada usan `--g600`. Con el `--g500` del prototipo producen 4.46:1 y 4.40:1, respectivamente, por debajo de RNF-08. La excepción solo cambia el color de esos textos; las pruebas de axe se conservan.
+- **Accesibilidad (25/10, DM-09; autorizado por Daniela y ratificado por Jordin el 26/10, D-07):** las pestañas inactivas y el texto secundario de la fila seleccionada usan `--g600`. Con el `--g500` del prototipo producen 4.46:1 y 4.40:1, respectivamente, por debajo de RNF-08. La excepción solo cambia el color de esos textos; las pruebas de axe se conservan.
 
 ## Documentación interna (RF-SW-10, RF-SW-14, RF-SW-21)
 

@@ -7,14 +7,14 @@ hito: E3
 prioridad: P1
 estado: pendiente
 depende_de: [JC-06, JM-06, JC-05, JM-04]
-programada: 2026-10-26
+programada: 2026-10-27
 requisitos: [RN-11, RF-SL-16, RF-SL-24, RF-SL-29, RF-SL-37, RF-SL-38, RNF-06]
 pantallas: []
 ---
 
 # JG-14 · Prueba del flujo completo y recorrido diario en GitHub Actions
 
-**Responsable:** Jordin García · **Hito:** E3 · **Prioridad:** P1 · **Programada:** lun 26/10 · **Depende de:** JC-06, JM-06, JC-05, JM-04
+**Responsable:** Jordin García · **Hito:** E3 · **Prioridad:** P1 · **Programada:** mar 27/10 · **Depende de:** JC-06, JM-06, JC-05, JM-04
 
 ## Objetivo
 Escribir la **prueba integral** que exigen los lineamientos (Documento 6 §10) y programarla para que GitHub Actions la corra **cada día** sobre `develop` (specs/16, decisión 67): pedido facturado → conversión de kg a unidades → generación del picking → preparación → carga → despacho → actualización de estado → reporte. La actualización de inventario no aplica (exclusión aprobada, P-58).
@@ -60,3 +60,6 @@ gh workflow run recorrido-diario.yml --ref develop
 
 ## Fuera de alcance
 - Corregir los módulos: si un paso falla por un error de otro módulo, crea la tarea para su dueño (protocolo §C) o corrígelo (§E1).
+
+## Notas
+- **(26/10, convergencia 2)** El arranque en frío del servidor de producción de `pruebas-e2e/flujo/servidor-produccion.ts` falla a menudo en Windows (auditoría del 26/10, H-84). Lo corrige JG-25. Si haces esta tarea antes, repite la carpeta `flujo` cuando aparezca «No inició el servidor de producción de JG-10», sin cambiar sus tiempos máximos.
