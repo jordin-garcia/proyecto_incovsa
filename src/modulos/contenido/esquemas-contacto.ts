@@ -3,7 +3,11 @@ export const esquemaContacto = z.strictObject({
   sedeId: z.number().int().positive(),
   direccion: z.string().trim().max(250),
   telefono: z.string().trim().max(60),
-  correo: z.string().trim().max(120),
+  correo: z
+    .string()
+    .trim()
+    .max(120)
+    .refine((v) => !v || z.email().safeParse(v).success, "Indique un correo válido."),
   whatsapp: z.string().trim().max(30),
   horario: z.string().trim().max(120),
   mapaUrl: z

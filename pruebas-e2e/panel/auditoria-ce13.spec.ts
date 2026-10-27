@@ -244,19 +244,13 @@ test("RF-SL-36 / RN-39 / H-57 / RNF-05 / H-63: la bitácora de solicitudes usa l
   }
 });
 
-test("H-62: el mapa inválido avisa con el texto del prototipo y no pide un correo válido", async ({ page }, info) => {
+test("H-62: el mapa inválido avisa con el texto del prototipo", async ({ page }, info) => {
   await entrar(page, "sitio", "ejemplo.08");
   await page.goto("/panel/contacto");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   const sede = page.getByRole("region", { name: "Guatemala", exact: true });
   const mapa = sede.getByLabel("Mapa (dirección del mapa insertado de Google Maps)", { exact: true });
-  const correo = sede.getByLabel("Correo", { exact: true });
   const mapaOriginal = await mapa.inputValue();
-  const correoOriginal = await correo.inputValue();
-  await correo.fill("no-es-correo");
-  await correo.blur();
-  await expect(page.getByText("Indique un correo válido.", { exact: true })).toHaveCount(0);
-  await correo.fill(correoOriginal);
   await mapa.fill("https://example.com/mapa");
   await mapa.blur();
   await expect(sede.getByText(MENSAJE_MAPA, { exact: true })).toHaveCount(0);
@@ -268,4 +262,61 @@ test("H-62: el mapa inválido avisa con el texto del prototipo y no pide un corr
     body: await page.screenshot({ fullPage: true }),
     contentType: "image/png",
   });
+});
+
+const MENSAJE_CORREO = "Indique un correo válido.";
+
+async function correoDeGuatemala(page: Page) {
+  await page.goto("/panel/contacto");
+  await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
+  const sede = page.getByRole("region", { name: "Guatemala", exact: true });
+  const correo = sede.getByLabel("Correo", { exact: true });
+  return { sede, correo };
+}
+
+async function restaurarCorreo(correo: string) {
+  const bd = new Client({ connectionString: process.env.DATABASE_URL });
+  await bd.connect();
+  try {
+    await bd.query(
+      "UPDATE informacion_contacto SET correo = $1 WHERE sede_id = (SELECT id FROM sede WHERE nombre = 'Guatemala')",
+      [correo],
+    );
+  } finally {
+    await bd.end();
+  }
+}
+
+test("H-62 / CE-13b: un correo mal formado se rechaza al salir del campo y no se guarda", async ({ page }, info) => {
+  test.skip(info.project.name !== "escritorio", "Guatemala se comparte entre proyectos; basta escritorio.");
+  await entrar(page, "sitio", "ejemplo.08");
+  const { sede, correo } = await correoDeGuatemala(page);
+  const original = await correo.inputValue();
+  await correo.fill("no-es-correo");
+  await correo.blur();
+  await expect(sede.getByText(MENSAJE_CORREO, { exact: true })).toBeVisible();
+  await expect(correo).toHaveAttribute("aria-invalid", "true");
+  await sede.getByRole("button", { name: "Guardar", exact: true }).click();
+  await expect(page.locator(".toast")).toHaveCount(0);
+  await page.reload();
+  const otraVez = await correoDeGuatemala(page);
+  await expect(otraVez.correo).toHaveValue(original);
+});
+
+test("H-62 / CE-13b: un correo con formato válido se guarda", async ({ page }, info) => {
+  test.skip(info.project.name !== "escritorio", "Guatemala se comparte entre proyectos; basta escritorio.");
+  await entrar(page, "sitio", "ejemplo.08");
+  const { sede, correo } = await correoDeGuatemala(page);
+  const original = await correo.inputValue();
+  try {
+    await correo.fill("oficina@ejemplo.com");
+    await correo.blur();
+    await expect(sede.getByText(MENSAJE_CORREO, { exact: true })).toHaveCount(0);
+    await sede.getByRole("button", { name: "Guardar", exact: true }).click();
+    await expect(page.locator(".toast").getByText("Datos de Guatemala publicados.", { exact: true })).toBeVisible();
+    const guardado = await correoDeGuatemala(page);
+    await expect(guardado.correo).toHaveValue("oficina@ejemplo.com");
+  } finally {
+    await restaurarCorreo(original);
+  }
 });
