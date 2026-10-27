@@ -7,6 +7,17 @@ try {
 } catch {
   /* CI */
 }
+// Coordina las altas temporales con la revisión integral de DM-11.
+const candados = new WeakMap<Page, Client>();
+test.beforeEach(async ({ page }) => {
+  const bd = new Client({ connectionString: process.env.DATABASE_URL });
+  candados.set(page, bd);
+  await bd.connect();
+  await bd.query("SELECT pg_advisory_lock($1)", [2026102610]);
+});
+test.afterEach(async ({ page }) => {
+  await candados.get(page)?.end();
+});
 async function entrar(page: Page, usuario: string) {
   const r = await page.request.post("/api/auth/sitio/sign-in/username", {
     headers: { origin: "http://localhost:3000" },
