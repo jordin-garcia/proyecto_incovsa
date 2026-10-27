@@ -4,6 +4,7 @@ import type { SesionActual } from "@/lib/sesion";
 import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import { crearSolicitud, leerOpcionesContacto } from "./servicio";
 import { leerBandeja, contarSolicitudesNuevas, abrirSolicitud, gestionarSolicitud } from "./bandeja";
+import { esquemaGestion } from "./esquemas-bandeja";
 const contexto = vi.hoisted(() => ({ sesion: null as SesionActual | null }));
 vi.mock("@/lib/sesion", () => ({ obtenerSesion: async () => contexto.sesion }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
@@ -64,6 +65,43 @@ it("RF-SW-31 / CP-59: abrir marca como leída una sola vez y reduce el indicador
   await abrirSolicitud({ id: s.id }, sesion);
   expect(await contarSolicitudesNuevas(sesion)).toBe(0);
   expect((await leerBandeja(sesion)).solicitudes[0].mensaje).toBe("Mensaje completo\ncon saltos");
+});
+it("RF-SL-36 / RN-39 / H-57: la bitácora guarda los textos del prototipo y nunca un detalle vacío", async () => {
+  const s = await nueva();
+  await gestionarSolicitud({ id: s.id, tipo: "estado", estado: "en_proceso" }, sesion);
+  await gestionarSolicitud({ id: s.id, tipo: "estado", estado: "asignado" }, sesion);
+  await gestionarSolicitud({ id: s.id, tipo: "estado", estado: "solucionado" }, sesion);
+  await gestionarSolicitud({ id: s.id, tipo: "responsable", responsableId: "dm09" }, sesion);
+  await gestionarSolicitud({ id: s.id, tipo: "responsable", responsableId: null }, sesion);
+  await gestionarSolicitud({ id: s.id, tipo: "comentario", comentario: "Nota de atención" }, sesion);
+  expect((await prisma.bitacora.findMany({ orderBy: { id: "asc" } })).map((b) => b.detalle)).toEqual([
+    { resumen: `${s.folio} · En proceso` },
+    { resumen: `${s.folio} · Asignado` },
+    { resumen: `${s.folio} · Solucionado` },
+    { resumen: `${s.folio} · Prueba` },
+    { resumen: `${s.folio} · sin responsable` },
+    { resumen: s.folio },
+  ]);
+});
+it("RNF-05 / H-63: el servidor rechaza un comentario de más de 2000 caracteres y acepta el tope", async () => {
+  const s = await nueva();
+  const largo = "a".repeat(2001);
+  const esquema = esquemaGestion.safeParse({ id: s.id, tipo: "comentario", comentario: largo });
+  expect(esquema.success).toBe(false);
+  if (esquema.success) throw new Error("Aceptó 2001 caracteres");
+  expect(esquema.error.issues).toEqual([
+    expect.objectContaining({
+      code: "too_big",
+      maximum: 2000,
+      message: "El comentario admite hasta 2000 caracteres.",
+      path: ["comentario"],
+    }),
+  ]);
+  expect((await gestionar({ id: s.id, tipo: "comentario", comentario: largo })).ok).toBe(false);
+  expect(await prisma.bitacora.count()).toBe(0);
+  expect((await prisma.solicitudContacto.findUniqueOrThrow({ where: { id: s.id } })).comentario).toBeNull();
+  expect((await gestionar({ id: s.id, tipo: "comentario", comentario: "a".repeat(2000) })).ok).toBe(true);
+  expect((await prisma.solicitudContacto.findUniqueOrThrow({ where: { id: s.id } })).comentario).toHaveLength(2000);
 });
 it("RF-SW-20 / RN-39: responsable activo del sitio y comentario único con bitácora transaccional", async () => {
   const s = await nueva();

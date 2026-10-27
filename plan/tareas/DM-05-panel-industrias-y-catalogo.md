@@ -78,3 +78,7 @@ La comprobación `plan` detectó radios literales en el CSS nuevo. Se reemplazar
 ### Correcciones de la auditoría (2026-10-22)
 
 H-05, H-07 y H-08: las publicaciones multipart comparan el origen público configurado; las pantallas sin permiso ofrecen «Ir a mi módulo». La prueba del límite de imágenes usa referencias distintas y exige el error específico de una sexta imagen, separado de referencias duplicadas o ajenas.
+
+### Correcciones de la auditoría (2026-10-26)
+
+CE-13 (H-58) mide la misma galería en Catálogo › Editar producto y en Industrias. H-65 escribe las capturas de `pruebas-e2e/panel/industrias-y-catalogo.spec.ts` solo con `EVIDENCIA=1`. El estado de esta tarea no cambia.

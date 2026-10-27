@@ -5,7 +5,7 @@ persona: carlos
 responsable: Carlos Hugo Escobar
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [DM-09]
 programada: 2026-10-27
 requisitos: [RF-SL-36, RN-39, RF-SW-07, RF-SW-23, RF-SW-06, RF-SW-12, RNF-05]
@@ -99,3 +99,21 @@ git status --short
 - Rama `carlos/CE-13-correcciones-auditoria-sitio-y-panel`. Tarea creada en la convergencia 2 (JG-13), por decisión de Jordin del 26/10.
 - Tocas archivos de Daniela (sitio y panel), de José Daniel (`facturacion-dos-facturadores.spec.ts`), y la evidencia de JG-24. Esta tarea te autoriza a hacerlo. En tu bitácora deja el aviso para cada uno, con los archivos que cambiaron.
 - En Cursor, trabaja en local, no con el agente en la nube (decisión del coordinador del 18/10; ver tu bitácora).
+
+## Resultado
+
+Cerrada el 27/10/2026. La rama es `cursor/ce-13-correcciones-auditoria-0917`: el entorno del agente exige ese nombre. La nota de la tarea pedía `carlos/CE-13-correcciones-auditoria-sitio-y-panel`.
+
+- **H-56.** Crear, editar y eliminar una noticia guardan `detalle: { resumen }` con el título de ese momento. Reportes › Bitácora muestra el título y no «—».
+- **H-57.** El resumen de la solicitud usa «SOL-… · Asignado», «En proceso» o «Solucionado»; «SOL-… · {nombre}» o «SOL-… · sin responsable»; y solo el folio en el comentario.
+- **H-58.** La galería compartida usa `repeat(auto-fill, minmax(104px, 1fr))`, miniatura 4:3, radio de 10 px, número redondo y acciones de 28 px. Se quitó la copia de `noticias.module.css`. El área de subida sigue en `--g600`.
+- **H-59.** Un sexto elemento válido y único falla solo con `too_big` y máximo 5. Cinco referencias distintas pasan.
+- **H-60.** Nombre, empresa y correo llevan `maxLength` 150 y el mensaje «El … admite hasta 150 caracteres.» (el correo: «El correo admite hasta 150 caracteres.»). El teléfono lleva 20 y «El teléfono admite hasta 20 caracteres.». Decisión reversible de plano: tope del navegador y mensaje en español.
+- **H-61.** El formulario valida al enviar. Al salir del campo solo se validan el correo y el teléfono.
+- **H-62.** El mapa inválido se avisa en el aviso del prototipo, no bajo el campo. Se quitó «Indique un correo válido.»; el correo del panel queda en `z.string().trim().max(120)`. Decisión reversible; no se registró en `specs/`.
+- **H-63.** El comentario admite 2000 caracteres en el navegador y en el servidor. Los ya guardados no se reescriben y no hay migración. Quedó en `specs/05` y `specs/18`.
+- **H-65.** `pruebas-e2e/comunes/evidencia.ts` escribe capturas y archivos solo con `EVIDENCIA=1`. `info.attach` y lo que ya cae en `test-results/` no cambian. `plan/convenciones.md` ya documentaba D-08 y es archivo protegido: no se editó.
+
+**Ayuda de evidencia.** `capturaEvidencia(page, ruta, opciones)` y `archivoEvidencia(ruta, contenido)` no hacen nada salvo que `process.env.EVIDENCIA === "1"`. La captura se toma en memoria y luego se reemplaza el archivo.
+
+**Contrato de `detalle.resumen`.** Es el texto que muestra la Bitácora. Si no es una cadena, se ve «—».

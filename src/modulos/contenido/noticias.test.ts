@@ -8,6 +8,7 @@ const estado = vi.hoisted(() => ({ sesion: null as SesionActual | null }));
 vi.mock("@/lib/sesion", () => ({ obtenerSesion: async () => estado.sesion }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 import { publicarNoticia, eliminarNoticia } from "./acciones-noticias";
+import { esquemaNoticia } from "./esquemas-noticias";
 import { leerNoticiasSitio, leerNoticiasPanel } from "./noticias";
 import { recibirNoticia } from "./multipart-noticias";
 import { POST } from "@/app/panel/noticias/publicar/route";
@@ -70,10 +71,39 @@ it("RF-SW-18 / RN-39: publica, conserva fecha al editar y elimina noticia, imág
     "Eliminación de noticia",
   ]);
 });
-it("RN-56 / RF-SW-18: rechaza cero, seis, referencias ajenas, índices repetidos y textos vacíos sin publicar", async () => {
+it("RF-SL-36 / RN-39 / H-56: crear, editar y eliminar guardan el título en el detalle de la bitácora", async () => {
+  const creada = await publicarNoticia(formulario(campos, [await imagen()]));
+  expect(creada.ok).toBe(true);
+  if (!creada.ok) throw new Error("No creada");
+  const original = (await leerNoticiasSitio()).find((n) => n.id === creada.datos.id)!;
+  expect(
+    (
+      await publicarNoticia(
+        formulario({ ...campos, id: creada.datos.id, titulo: "Editada", imagenes: original.imagenes }),
+      )
+    ).ok,
+  ).toBe(true);
+  expect((await eliminarNoticia(creada.datos.id)).ok).toBe(true);
+  expect((await prisma.bitacora.findMany({ orderBy: { id: "asc" } })).map((b) => b.detalle)).toEqual([
+    { resumen: "Noticia de prueba" },
+    { resumen: "Editada" },
+    { resumen: "Editada" },
+  ]);
+});
+it("RN-56 / H-59: el sexto elemento único falla por el límite de 5 y cinco referencias distintas sí son válidas", () => {
+  const imagenes = Array.from({ length: 6 }, (_, i) => `/api/imagenes/demo/${i + 1}.webp`);
+  const base = { titulo: "Noticia de prueba", texto: "Texto de la noticia" };
+  expect(esquemaNoticia.safeParse({ ...base, imagenes: imagenes.slice(0, 5) }).success).toBe(true);
+  const resultado = esquemaNoticia.safeParse({ ...base, imagenes });
+  expect(resultado.success).toBe(false);
+  if (resultado.success) throw new Error("Se aceptó una sexta imagen");
+  expect(resultado.error.issues).toEqual([
+    expect.objectContaining({ code: "too_big", path: ["imagenes"], maximum: 5 }),
+  ]);
+});
+it("RN-56 / RF-SW-18: rechaza cero imágenes, referencias ajenas, índices repetidos, textos vacíos y archivos inválidos sin publicar", async () => {
   for (const datos of [
     { ...campos, imagenes: [] },
-    { ...campos, imagenes: [0, 1, 2, 3, 4, 5] },
     { ...campos, imagenes: ["/marca/ajena.webp"] },
     { ...campos, imagenes: [0, 0] },
     { ...campos, titulo: " " },

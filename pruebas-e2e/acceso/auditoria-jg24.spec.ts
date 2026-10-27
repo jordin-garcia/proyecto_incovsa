@@ -1,6 +1,7 @@
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { Client } from "pg";
+import { capturaEvidencia } from "../comunes/evidencia";
 
 try {
   process.loadEnvFile();
@@ -21,10 +22,7 @@ async function evidencia(page: Page, nombre: string) {
       ["serious", "critical"].includes(v.impact ?? ""),
     ),
   ).toEqual([]);
-  await page.screenshot({
-    path: `plan/evidencias/JG-24/aplicacion-${nombre}-${page.viewportSize()!.width}.png`,
-    fullPage: true,
-  });
+  await capturaEvidencia(page, `plan/evidencias/JG-24/aplicacion-${nombre}-${page.viewportSize()!.width}.png`);
 }
 
 test("RF-SW-09 / RF-SL-02 / H-33: el sistema no autorizado vuelve al paso 2 sin registrar un fallo ni pedir sede", async ({

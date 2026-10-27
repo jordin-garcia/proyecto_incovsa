@@ -1,7 +1,7 @@
 import { test as base, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { Client } from "pg";
-import { mkdir, unlink } from "node:fs/promises";
+import { capturaEvidencia } from "../comunes/evidencia";
 try {
   process.loadEnvFile();
 } catch {
@@ -45,12 +45,7 @@ async function captura(page: Page, estado: string) {
     );
   });
   await page.evaluate(() => document.fonts.ready);
-  await mkdir("pruebas-e2e/sitio/evidencias/DM-08", { recursive: true });
-  const archivo = `pruebas-e2e/sitio/evidencias/DM-08/${estado}-${page.viewportSize()!.width}.png`;
-  await unlink(archivo).catch((e: NodeJS.ErrnoException) => {
-    if (e.code !== "ENOENT") throw e;
-  });
-  await page.screenshot({ path: archivo, fullPage: true });
+  await capturaEvidencia(page, `pruebas-e2e/sitio/evidencias/DM-08/${estado}-${page.viewportSize()!.width}.png`);
 }
 async function axe(page: Page) {
   expect(
@@ -165,13 +160,15 @@ test("RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas
       "El mapa debe ser la dirección del mapa insertado de Google Maps (https://www.google.com/maps/embed?…).",
       { exact: true },
     ),
-  ).toBeVisible();
+  ).toHaveCount(0);
   await sede.getByRole("button", { name: "Guardar", exact: true }).click();
   await expect(
-    sede.getByText(
-      "El mapa debe ser la dirección del mapa insertado de Google Maps (https://www.google.com/maps/embed?…).",
-      { exact: true },
-    ),
+    page
+      .locator(".toast")
+      .getByText(
+        "El mapa debe ser la dirección del mapa insertado de Google Maps (https://www.google.com/maps/embed?…).",
+        { exact: true },
+      ),
   ).toBeVisible();
   await captura(page, "aplicacion-panel-error");
   await mapa.fill(original);

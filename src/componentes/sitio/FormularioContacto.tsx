@@ -25,7 +25,8 @@ export function FormularioContacto({ opciones }: { opciones: Awaited<ReturnType<
     formState: { errors, isSubmitting, submitCount },
   } = useForm<Solicitud>({
     resolver: zodResolver(esquemaSolicitud),
-    mode: "onBlur",
+    mode: "onSubmit",
+    reValidateMode: "onSubmit",
     defaultValues: {
       motivo: "solicitud",
       nombre: "",
@@ -50,7 +51,13 @@ export function FormularioContacto({ opciones }: { opciones: Awaited<ReturnType<
     window.scrollTo({ top: caja.current.getBoundingClientRect().top + window.scrollY - alto - 24, behavior: "smooth" });
     caja.current.focus({ preventScroll: true });
   }, [recibida]);
-  const campo = (nombre: keyof Solicitud, etiqueta: string, placeholder: string, tipo = "text") => (
+  const campo = (
+    nombre: keyof Solicitud,
+    etiqueta: string,
+    placeholder: string,
+    tipo = "text",
+    opciones?: { maxLength?: number; alSalir?: boolean },
+  ) => (
     <label className="campo">
       <span>{etiqueta}</span>
       <input
@@ -58,7 +65,8 @@ export function FormularioContacto({ opciones }: { opciones: Awaited<ReturnType<
         type={tipo}
         aria-label={etiqueta}
         placeholder={placeholder}
-        {...register(nombre)}
+        maxLength={opciones?.maxLength}
+        {...register(nombre, opciones?.alSalir ? { onBlur: () => void trigger(nombre) } : undefined)}
         aria-invalid={!!errors[nombre]}
         aria-describedby={errors[nombre] ? `error-${nombre}` : undefined}
       />
@@ -184,11 +192,14 @@ export function FormularioContacto({ opciones }: { opciones: Awaited<ReturnType<
               </div>
             </div>
             <div className="rejilla r2">
-              {campo("nombre", "Nombre completo *", "Su nombre")}
-              {campo("empresa", "Empresa", "Nombre de su empresa")}
+              {campo("nombre", "Nombre completo *", "Su nombre", "text", { maxLength: 150 })}
+              {campo("empresa", "Empresa", "Nombre de su empresa", "text", { maxLength: 150 })}
             </div>
             <div className="rejilla r2">
-              {campo("correo", "Correo electrónico *", "correo@empresa.com", "email")}
+              {campo("correo", "Correo electrónico *", "correo@empresa.com", "email", {
+                maxLength: 150,
+                alSalir: true,
+              })}
               <div className="campo">
                 <span>Teléfono</span>
                 <div className="tel-caja">
@@ -217,7 +228,8 @@ export function FormularioContacto({ opciones }: { opciones: Awaited<ReturnType<
                     aria-label="Número de teléfono"
                     inputMode="tel"
                     placeholder="5123 4567"
-                    {...register("telefono")}
+                    maxLength={20}
+                    {...register("telefono", { onBlur: () => void trigger("telefono") })}
                     aria-invalid={!!errors.telefono}
                     aria-describedby={errors.telefono ? "error-telefono" : undefined}
                   />

@@ -1,6 +1,7 @@
 import { expect, test as base } from "@playwright/test";
 import { Client } from "pg";
 import AxeBuilder from "@axe-core/playwright";
+import { capturaEvidencia } from "../comunes/evidencia";
 
 try {
   process.loadEnvFile();
@@ -87,8 +88,7 @@ test("RN-49 / D-01: la confirmación de Facturación cuenta un cliente aunque va
       ["serious", "critical"].includes(v.impact ?? ""),
     ),
   ).toEqual([]);
-  await page.screenshot({
-    path: `plan/evidencias/JG-24/aplicacion-un-cliente-${page.viewportSize()!.width}.png`,
+  await capturaEvidencia(page, `plan/evidencias/JG-24/aplicacion-un-cliente-${page.viewportSize()!.width}.png`, {
     fullPage: false,
   });
 });

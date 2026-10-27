@@ -139,6 +139,7 @@ function Detalle({
           <Textarea
             id="comentario-solicitud"
             rows={3}
+            maxLength={2000}
             readOnly={!gestiona || !editando}
             disabled={pendiente}
             value={comentario}

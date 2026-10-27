@@ -1,7 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { Client } from "pg";
-import { mkdir, unlink } from "node:fs/promises";
+import { capturaEvidencia } from "../comunes/evidencia";
 try {
   process.loadEnvFile();
 } catch {
@@ -15,13 +15,13 @@ async function entrar(page: Page, usuario: string) {
   expect(r.ok()).toBe(true);
 }
 async function captura(page: Page, nombre: string) {
-  const carpeta = "pruebas-e2e/panel/evidencias/DM-10";
-  await mkdir(carpeta, { recursive: true });
-  const archivo = `${carpeta}/aplicacion-${nombre}-${page.viewportSize()!.width}.png`;
-  await unlink(archivo).catch((e: NodeJS.ErrnoException) => {
-    if (e.code !== "ENOENT") throw e;
-  });
-  await page.screenshot({ path: archivo, fullPage: true, animations: "disabled" });
+  await capturaEvidencia(
+    page,
+    `pruebas-e2e/panel/evidencias/DM-10/aplicacion-${nombre}-${page.viewportSize()!.width}.png`,
+    {
+      animations: "disabled",
+    },
+  );
 }
 async function axe(page: Page) {
   expect(

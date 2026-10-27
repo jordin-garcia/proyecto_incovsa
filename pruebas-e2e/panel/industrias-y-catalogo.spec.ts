@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { Client } from "pg";
 import sharp from "sharp";
+import { capturaEvidencia } from "../comunes/evidencia";
 try {
   process.loadEnvFile();
 } catch {
@@ -45,10 +46,10 @@ test("RF-SW-07 / RN-56: guardar descripción y galería publica la industria sin
       await expect(page.getByRole("status")).toContainText("Cuero publicada.");
       await page.goto("/industrias/cuero");
       await expect(page.getByText(texto, { exact: true })).toBeVisible();
-      await page.screenshot({
-        path: `pruebas-e2e/panel/evidencias/DM-05/industria-publicada-${page.viewportSize()!.width}.png`,
-        fullPage: true,
-      });
+      await capturaEvidencia(
+        page,
+        `pruebas-e2e/panel/evidencias/DM-05/industria-publicada-${page.viewportSize()!.width}.png`,
+      );
       const guardadas = await conexion.query("SELECT url FROM imagen WHERE industria_id = $1", [original.id]);
       expect(guardadas.rows).toHaveLength(1);
       expect(await page.locator(`img[src="${guardadas.rows[0].url}"]`).count()).toBeGreaterThan(0);
@@ -92,10 +93,10 @@ test("RF-SW-07 / RNF-08: industrias y catálogo conservan estructura y accesibil
         ["serious", "critical"].includes(v.impact ?? ""),
       ),
     ).toEqual([]);
-    await page.screenshot({
-      path: `pruebas-e2e/panel/evidencias/DM-05/aplicacion-${ruta}-${page.viewportSize()!.width}.png`,
-      fullPage: true,
-    });
+    await capturaEvidencia(
+      page,
+      `pruebas-e2e/panel/evidencias/DM-05/aplicacion-${ruta}-${page.viewportSize()!.width}.png`,
+    );
   }
   await page.getByRole("button", { name: "Nuevo producto", exact: true }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
@@ -106,10 +107,10 @@ test("RF-SW-07 / RNF-08: industrias y catálogo conservan estructura y accesibil
     ),
   ).toEqual([]);
   await info.attach("producto", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" });
-  await page.screenshot({
-    path: `pruebas-e2e/panel/evidencias/DM-05/aplicacion-producto-${page.viewportSize()!.width}.png`,
-    fullPage: true,
-  });
+  await capturaEvidencia(
+    page,
+    `pruebas-e2e/panel/evidencias/DM-05/aplicacion-producto-${page.viewportSize()!.width}.png`,
+  );
 });
 test("RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes de eliminar", async ({
   page,
@@ -129,10 +130,7 @@ test("RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes 
   await fila.getByRole("button", { name: "Editar", exact: true }).click();
   await ventana.getByLabel("Presentación", { exact: true }).fill("Saco de prueba");
   await ventana.evaluate((e) => e.getAnimations().forEach((a) => a.finish()));
-  await page.screenshot({
-    path: `pruebas-e2e/panel/evidencias/DM-05/producto-editar-${page.viewportSize()!.width}.png`,
-    fullPage: true,
-  });
+  await capturaEvidencia(page, `pruebas-e2e/panel/evidencias/DM-05/producto-editar-${page.viewportSize()!.width}.png`);
   await ventana.getByRole("button", { name: "Guardar", exact: true }).click();
   await expect(ventana).toHaveCount(0);
   for (const industria of ["cuero", "textil"]) {
@@ -145,10 +143,7 @@ test("RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes 
   await fila.getByRole("button", { name: "Eliminar", exact: true }).click();
   await expect(ventana).toContainText("Deja de mostrarse en el sitio.");
   await ventana.evaluate((e) => e.getAnimations().forEach((a) => a.finish()));
-  await page.screenshot({
-    path: `pruebas-e2e/panel/evidencias/DM-05/eliminar-${page.viewportSize()!.width}.png`,
-    fullPage: true,
-  });
+  await capturaEvidencia(page, `pruebas-e2e/panel/evidencias/DM-05/eliminar-${page.viewportSize()!.width}.png`);
   await ventana.getByRole("button", { name: "Volver", exact: true }).click();
   await expect(fila).toBeVisible();
   await fila.getByRole("button", { name: "Eliminar", exact: true }).click();
@@ -191,8 +186,5 @@ test("RF-SW-23: impide cerrar el editor mientras se publica y conserva el borrad
   }
   await expect(ventana.getByRole("button", { name: "Guardar", exact: true })).toBeEnabled();
   await expect(ventana.getByLabel("Nombre", { exact: true })).toHaveValue("Borrador pendiente");
-  await page.screenshot({
-    path: `pruebas-e2e/panel/evidencias/DM-05/producto-error-${page.viewportSize()!.width}.png`,
-    fullPage: true,
-  });
+  await capturaEvidencia(page, `pruebas-e2e/panel/evidencias/DM-05/producto-error-${page.viewportSize()!.width}.png`);
 });

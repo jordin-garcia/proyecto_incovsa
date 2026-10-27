@@ -652,10 +652,14 @@ Daniela autorizó usar `--g600` solo en las pestañas inactivas y el texto secun
 ## Decisiones de la auditoría del 26/10 (26/10/2026, JG-13)
 
 - **D-07, RNF-08:** Jordin ratifica la excepción de contraste de la bandeja de Solicitudes que había autorizado Daniela (DM-09): `--g600` en las pestañas inactivas y en el texto secundario de la fila seleccionada ([05](05-sitio-web.md), [20](20-prototipo-aprobado.md)).
-- **D-08, pruebas de navegador:** las pruebas que guardan capturas o archivos de evidencia dentro del repositorio solo los escriben con la variable `EVIDENCIA=1`. Así, una corrida normal de `npm run e2e` deja el árbol limpio (`plan/convenciones.md` §6). Lo aplica CE-13.
+- **D-08, pruebas de navegador:** las pruebas que guardan capturas o archivos de evidencia dentro del repositorio solo los escriben con la variable `EVIDENCIA=1`. Así, una corrida normal de `npm run e2e` deja el árbol limpio (`plan/convenciones.md` §6). Lo aplicó CE-13 el 27/10, con una sola ayuda en `pruebas-e2e/comunes/evidencia.ts`.
 - **D-09, Ruta:** el piloto ve sus rutas solo de la sede de trabajo elegida, como los demás módulos (RN-17) y como la suscripción de tiempo real, que es por sede. El prototipo le muestra las de todas sus sedes ([08](08-picking-ruta.md), "Acceso"). JM-09 agrega la prueba con un piloto de dos sedes.
 - **D-10, Reportes:** el PDF usa siempre el logotipo de INCOVSA del sistema (`public/marca/incovsa-quimicos.webp`), no el que se configura en el panel del sitio ([10](10-picking-reportes.md), "Exportación").
 - Las correcciones del código son de CE-13 (sitio y panel), JM-09 (Bodega, tablero y Ruta), JC-09 (Reportes y Facturación) y JG-25 (CI y pruebas de JG-10) (`plan/auditorias/2026-10-26.md`).
+
+## Comentario de la bandeja (27/10/2026, CE-13)
+
+- El comentario del responsable admite hasta 2000 caracteres, el mismo tope del mensaje de Contacto (RNF-05, auditoría H-63). Se valida en el navegador (`maxLength`) y en el servidor. Los comentarios ya guardados no se reescriben y no hay migración ([05](05-sitio-web.md), "Gestión de solicitudes").
 
 ## Documentos no alineados con las reuniones 4 y 5
 

@@ -1,7 +1,7 @@
 import { expect, type BrowserContext, type Page } from "@playwright/test";
 import { Client } from "pg";
-import { writeFile } from "node:fs/promises";
 import AxeBuilder from "@axe-core/playwright";
+import { archivoEvidencia, capturaEvidencia } from "../comunes/evidencia";
 import { test } from "../flujo/servidor-produccion";
 
 const aviso =
@@ -81,10 +81,7 @@ test("RN-48 / RNF-13 / decisiones 39 y 41: dos facturadores, edición, arrastre 
     await expect(opcion(segunda, "Envío por camión").locator(`[data-pedido-id="${ids[0]}"]`)).toHaveCount(1);
     // Espera la animación de caída de dnd-kit antes de capturar el estado final.
     await segunda.waitForTimeout(350);
-    await segunda.screenshot({
-      path: `pruebas-e2e/picking/evidencias/jc-05/conflicto-${info.project.name}.png`,
-      fullPage: true,
-    });
+    await capturaEvidencia(segunda, `pruebas-e2e/picking/evidencias/jc-05/conflicto-${info.project.name}.png`);
     await info.attach("conflicto-de-movimiento", {
       body: await segunda.screenshot({ fullPage: true }),
       contentType: "image/png",
@@ -128,7 +125,7 @@ test("RN-48 / RNF-13 / decisiones 39 y 41: dos facturadores, edición, arrastre 
       );
       const ms = Date.now() - inicio;
       expect(ms).toBeLessThan(2000);
-      await writeFile(
+      await archivoEvidencia(
         `pruebas-e2e/picking/evidencias/jc-05/latencia-${info.project.name}.json`,
         JSON.stringify({ ms, sede: 1 }, null, 2) + "\n",
       );
@@ -170,10 +167,7 @@ test("RN-48 / RNF-13 / decisiones 39 y 41: dos facturadores, edición, arrastre 
         ["serious", "critical"].includes(v.impact ?? ""),
       ),
     ).toEqual([]);
-    await segunda.screenshot({
-      path: `pruebas-e2e/picking/evidencias/jc-05/final-${info.project.name}.png`,
-      fullPage: true,
-    });
+    await capturaEvidencia(segunda, `pruebas-e2e/picking/evidencias/jc-05/final-${info.project.name}.png`);
     await info.attach("facturacion-final", {
       body: await segunda.screenshot({ fullPage: true }),
       contentType: "image/png",
