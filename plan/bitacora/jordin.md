@@ -222,3 +222,11 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Pendiente o aviso para otros:
 **Josué:** actualiza tu rama desde `develop` después de JG-23. Cambiaron `src/modulos/bodega/servicio.ts` (`exigirEnvioEnPreparacion()` y `exigirCambios()`; `ErrorNegocio` para un envío de la sede que ya no está En Preparación), sus pruebas y las de `acciones.ts`, `BodegaCliente.tsx` (encabezado con `EncabezadoModulo` y `operar()` para las acciones), `TarjetaEnvio.tsx`, `ModalDetalle.tsx`, `src/app/picking/bodega/page.tsx` y `bodega.css`, `src/modulos/conversion/servicio.ts` (`DecimalExacto` sin `number`), `pruebas-e2e/picking/bodega.spec.ts` y `bodega-tiempo-real.spec.ts`. Pasa siempre las cantidades como texto o `Decimal`, nunca con `Number(...)`. Se agregaron correcciones a los Resultados de JM-02, JM-03 y JM-04.
 **Todos:** `comprobarRechazosDeAccion()` de `pruebas/permisos.ts` acepta una función en `entradaOtraSede` para usar datos creados en `beforeEach`. Para comprobar el encabezado de un módulo, usen `comprobarEncabezadoModulo()` de `pruebas-e2e/comunes/encabezado.ts`.
+
+## 2026-10-26 · JG-13 · DM-10 vuelve a Daniela
+
+- Hecho: DM-10 (documentación interna con enlaces de Google Drive) pasa de Carlos a Daniela. Cambiaron `plan/tareas/DM-10-documentacion-interna.md` (`persona`, responsable y Notas; sin `reasignada`, porque el ID ya es de Daniela) y `plan/calendario.md` (regenerado). Carlos no la había empezado: no hay rama ni PR de DM-10.
+- Decisiones: Jordin decidió el 26/10 devolverle DM-10 a Daniela. Conserva su fecha (23/10), así que queda atrasada y Daniela la ve antes de DM-11, que depende de ella. No cambia código ni requisitos.
+- Pendiente o aviso para otros:
+**Daniela:** DM-10 vuelve a ser tuya; hazla antes de DM-11. Lee la tarea completa y actualiza tu rama desde `develop`.
+**Carlos:** DM-10 ya no te toca. No tienes nada disponible hasta que INCOVSA dé los accesos de CE-08.
