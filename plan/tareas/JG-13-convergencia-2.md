@@ -57,7 +57,7 @@ node scripts/tareas.mjs --hoy
 
 ## Resultado
 
-**Hecha el 26/10/2026** sobre `develop` en `ec6b593`. Se hizo un día después de lo programado; por eso el informe y la auditoría llevan la fecha del 26/10, y no la de `2026-10-25.md` que indicaba la sección de archivos. El 26/10 también se integró #137, que devolvió DM-10 a Daniela.
+**Hecha el 26/10/2026** sobre `develop` en `ec6b593`. Se hizo un día después de lo programado; por eso el informe y la auditoría llevan la fecha del 26/10, y no la de `2026-10-25.md` que indicaba la sección de archivos. El 26/10 también se integraron #137, que devolvió DM-10 a Daniela, y DM-10 misma (#138), después del commit evaluado: sus requisitos siguen como ❌ en el informe y los clasifica JG-17.
 
 ### Qué se hizo
 - **Informe de convergencia:** [`plan/convergencia/2026-10-26.md`](../convergencia/2026-10-26.md). Incluye:
@@ -74,7 +74,7 @@ node scripts/tareas.mjs --hoy
   - batería de navegador: 390 de 390, por partes, con 1 worker y en la base nueva `incovsa_jg13`. `flujo` pasó al repetirla, por H-84.
 - **Tareas nuevas:** CE-13 (Carlos), JM-09 (Josué) y JC-09 (José Daniel), las tres para el 27/10. JG-25 suma H-82 a H-84.
 - **Reprogramación:**
-  - DM-10 pasa al 27/10 y DM-11 al 28/10; DM-11 espera también a CE-13.
+  - DM-11 pasa al 28/10 y espera también a CE-13. DM-10 se integró el 26/10 (#138), después del commit evaluado, y conserva su fecha.
   - JG-14 pasa al 27/10.
   - JG-17 espera también a CE-13, JM-09 y JC-09.
   - Se regeneró el calendario.
@@ -92,4 +92,4 @@ node scripts/tareas.mjs --hoy
 ### Cómo usarlo
 - **CE-13, JM-09 y JC-09:** cada hallazgo tiene su ID, su archivo y línea y su corrección en la auditoría. En el `## Resultado` de cada tarea auditada se agrega `### Correcciones de la auditoría (2026-10-26)`.
 - **JG-25:** suma H-82 a H-84 (paso 7 y criterio 10).
-- **JG-17 (convergencia final, 30/10):** parte de este informe. Comprueba los 10 ⚠️ y vuelve a clasificar lo que se integre entre el 26 y el 30/10: DM-10, DM-11, JG-14, JG-15, JG-16, JG-25, CE-13, JM-09 y JC-09.
+- **JG-17 (convergencia final, 30/10):** parte de este informe. Comprueba los 10 ⚠️ y vuelve a clasificar lo que se integró o se integre desde el commit evaluado hasta el 30/10: DM-10 (#138), DM-11, JG-14, JG-15, JG-16, JG-25, CE-13, JM-09 y JC-09.

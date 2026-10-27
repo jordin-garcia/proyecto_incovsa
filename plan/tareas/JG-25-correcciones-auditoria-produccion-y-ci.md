@@ -20,6 +20,7 @@ pantallas: [panel.js › eliminarUsuario (limpieza del piloto)]
 Corregir los hallazgos del paso 5 de la auditoría del 22/10 y los del paso 4 que tocan scripts y la CI. Así la producción se verifica a través de Caddy con todas las cabeceras y con SSE (RNF-16, RNF-13), la CI detecta diferencias entre el esquema y las migraciones, y Configuración limpia las opciones de envío como el prototipo. Son correcciones del coordinador sobre tareas ya integradas (`plan/protocolo.md` §E3).
 
 ## Contexto que debes leer
+- `plan/auditorias/2026-10-26.md`, paso 3 (H-82 a H-84)
 - `plan/auditorias/2026-10-22.md`, paso 4 (H-27, H-28, H-36 y H-37) y paso 5 (H-40 a H-55), con las decisiones D-03, D-04 y D-05 (resueltas al final de la auditoría)
 - `plan/protocolo.md` §E3
 - `specs/11-picking-configuracion.md`; `specs/15`: RNF-09, RNF-12, RNF-13 y RNF-16; `specs/16`: decisiones 29, 58 y 70, y "Seguridad"
@@ -37,7 +38,7 @@ Corregir los hallazgos del paso 5 de la auditoría del 22/10 y los del paso 4 qu
    - **H-82:** corregir el `## Resultado` de JG-08 (la auditoría «2026-10-24» no existe; #117, #119 y #120 ya se integraron) y agregar el agrupamiento de Dependabot a `specs/16`, «Dependencias al día».
    - **H-83:** ejecutar `gh workflow run despliegue.yml -f modo_prueba=true` con las nuevas versiones mayores de las acciones de Docker y guardar el resultado como evidencia.
    - **H-84:** en `pruebas-e2e/flujo/servidor-produccion.ts`, consultar `127.0.0.1`, que es donde escucha el servidor, y dar más tiempo al primer arranque en frío, para que la carpeta `flujo` no falle al primer intento en Windows. Comprobarlo con dos corridas seguidas de `pruebas-e2e/flujo` después de `npm run build`.
-8. En el `## Resultado` de cada tarea corregida, agregar `### Correcciones de la auditoría (2026-10-22)`. Su estado no cambia.
+8. En el `## Resultado` de cada tarea corregida, agregar `### Correcciones de la auditoría (2026-10-22)`, y `### Correcciones de la auditoría (2026-10-26)` en JG-08 y JG-10 para H-82 a H-84. Su estado no cambia.
 
 ## Archivos que creas o modificas
 - `.github/workflows/ci.yml`, `.github/workflows/produccion-imagen.yml`, `.github/workflows/despliegue.yml`, `.github/workflows/produccion-respaldo.yml`

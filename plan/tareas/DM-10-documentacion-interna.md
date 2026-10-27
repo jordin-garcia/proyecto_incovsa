@@ -7,14 +7,14 @@ hito: E3
 prioridad: P1
 estado: hecha
 depende_de: [DM-04]
-programada: 2026-10-27
+programada: 2026-10-23
 requisitos: [RF-SW-10, RF-SW-14, RF-SW-21, RF-SW-25, RN-19, RN-41, RN-55, CU-10, CU-15]
 pantallas: [panel.js › documentos, idDrive, esDrive, vistaPrevia, descarga]
 ---
 
 # DM-10 · Documentación interna con enlaces de Google Drive
 
-**Responsable:** Daniela Marín (vuelve a ella el 26/10; del 22 al 26/10 la tuvo Carlos Hugo Escobar) · **Hito:** E3 · **Prioridad:** P1 · **Programada:** mar 27/10 · **Depende de:** DM-04
+**Responsable:** Daniela Marín (vuelve a ella el 26/10; del 22 al 26/10 la tuvo Carlos Hugo Escobar) · **Hito:** E3 · **Prioridad:** P1 · **Programada:** vie 23/10 · **Depende de:** DM-04
 
 ## Objetivo
 El área protegida de **documentación interna**: los productos documentados con los enlaces de Google Drive de su ficha técnica, hoja de seguridad y certificado de análisis, y la ventana que muestra **solo las opciones que permiten los permisos** del usuario.

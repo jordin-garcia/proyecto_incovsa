@@ -9,7 +9,7 @@ estado: pendiente
 depende_de: [JM-06, JG-23]
 programada: 2026-10-27
 requisitos: [RF-SL-26, RF-SL-61, RNF-14, RN-17]
-pantallas: [picking.js › ruta(), tablero.js › Tablero.ruta()]
+pantallas: [picking.js › rutaMod(), tablero.js › Tablero.ruta()]
 ---
 
 # JM-09 · Correcciones de la auditoría del 26/10 en Bodega, el tablero y Ruta
@@ -23,13 +23,13 @@ Corregir los hallazgos del paso 2 de la auditoría del 26/10 (H-66 a H-74) en Ru
 - `plan/auditorias/2026-10-26.md`, paso 2 (H-66 a H-74) y D-09
 - `specs/08-picking-ruta.md` («Acceso», precisión del 26/10 de D-09); `specs/07-picking-bodega.md` (tablero en pantalla completa); `specs/18`, «Decisiones de la auditoría del 26/10»
 - `plan/protocolo.md` §E3: aunque no eres el coordinador, se corrige igual: cada hallazgo lleva una prueba que lo habría detectado
-- Prototipo: `picking.js` › `ruta()` y `rutasVisibles` (l. 385); `tablero.js` (l. 96, camión «—»); `estilos.css:401` (`.ruta-op`)
+- Prototipo: `picking.js` › `rutaMod()` (l. 390) y `rutasVisibles` (l. 385); `tablero.js` (l. 96, camión «—»); `estilos.css:401` (`.ruta-op`)
 - `## Resultado` de JM-05, JM-06 y JG-23 (y las ayudas de prueba que dejó JG-23: `comprobarRechazosDeAccion()` con función en `entradaOtraSede`, y `comprobarEncabezadoModulo()`)
 
 ## Qué hacer
 1. **H-66:** en `src/modulos/ruta/acciones.test.ts`, el caso «otra sede» usa una ruta En Ruta **real** de la sede 2 (función en `entradaOtraSede`) y comprueba que no cambió.
 2. **H-67:** `totalKg` de Ruta viaja como texto exacto (`toString()`), no con `.toNumber()`. Ajusta el tipo `EntregaRutaItem.totalKg` y `servicio.test.ts`.
-3. **H-68:** `.ruta-op` con el radio de 16 px del prototipo (`estilos.css:401`). No hay un token de 16 px: usa el valor del design system más cercano que dé 16 px, o pregúntale al coordinador antes de agregar un token.
+3. **H-68:** `.ruta-op` con el radio de 16 px del prototipo (`estilos.css:401`). No hay ningún token de 16 px. Esta tarea te autoriza a agregar `--radius-prototipo-10: 16px` en `src/app/globals.css`, junto a los demás `--radius-prototipo-*`, y a usarlo (decisión del coordinador del 26/10).
 4. **H-69 (RNF-14):** una prueba de navegador con `hasTouch` que reordena dos clientes con el arrastre táctil en el teléfono, como `bodega-tiempo-real.spec.ts:422`.
 5. **H-70 (RF-SL-61):** `ruta.spec.ts` llama a `comprobarEncabezadoModulo()` con «Mis rutas» (piloto) y «Rutas en curso» (con `pk.ruta.todas`).
 6. **H-71:** si el camión de una ruta En Preparación se cambió de sede, el tablero muestra la **ruta** con el camión «—», como `tablero.js:96`, y no el texto de «El cliente recoge en bodega». Con su prueba.
@@ -40,7 +40,7 @@ Corregir los hallazgos del paso 2 de la auditoría del 26/10 (H-66 a H-74) en Ru
 11. En el `## Resultado` de JM-05, JM-06 y JG-23, agrega `### Correcciones de la auditoría (2026-10-26)` con lo que se corrigió. Su estado no cambia.
 
 ## Archivos que creas o modificas
-- `src/modulos/ruta/**` (servicio, acciones y sus pruebas); `src/componentes/picking/ruta/**`; `src/app/picking/ruta/ruta.css`
+- `src/modulos/ruta/**` (servicio, acciones y sus pruebas); `src/componentes/picking/ruta/**`; `src/app/picking/ruta/ruta.css`; `src/app/globals.css` (solo el token de H-68)
 - `src/modulos/bodega/servicio.ts`, `src/modulos/bodega/tablero.ts` y sus pruebas; `src/componentes/picking/bodega/tablero/TableroCliente.tsx`
 - `pruebas-e2e/picking/ruta.spec.ts`, `pruebas-e2e/picking/tablero.spec.ts`
 - `plan/tareas/JM-05-*.md`, `plan/tareas/JM-06-*.md`, `plan/tareas/JG-23-*.md` (solo la sección de correcciones); `plan/bitacora/josue.md`

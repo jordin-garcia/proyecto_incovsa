@@ -48,4 +48,4 @@ npm run e2e -- pruebas-e2e/sitio pruebas-e2e/panel
 ```
 
 ## Notas
-- **(26/10, convergencia 2)** Esta tarea espera a CE-13, en la que Carlos corrige los hallazgos del sitio y del panel de la auditoría del 26/10 (`plan/auditorias/2026-10-26.md`, paso 1), entre ellos la galería de imágenes compartida (H-58). Empieza tu revisión después de que CE-13 esté integrada y actualiza tu rama desde `develop`; las diferencias que ya corrigió CE-13 no se vuelven a corregir.
+- **(26/10, convergencia 2)** Esta tarea espera a CE-13, en la que Carlos corrige los hallazgos del sitio y del panel de la auditoría del 26/10 (`plan/auditorias/2026-10-26.md`, paso 1), entre ellos la galería de imágenes compartida (H-58). Empieza tu revisión después de que CE-13 esté integrada y actualiza tu rama desde `develop`; las diferencias que ya corrigió CE-13 no se vuelven a corregir. Revisa además una diferencia que vio la convergencia y que no es un hallazgo: al abrir Catálogo › Editar producto, el nombre queda seleccionado, y en el prototipo solo queda con el foco (`plan/convergencia/2026-10-26.md`).

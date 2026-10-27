@@ -54,21 +54,22 @@ Jordin asignó este trabajo a Carlos el 26/10 porque Daniela tiene DM-10 y DM-11
    - el mapa inválido se avisa con el mensaje de error del prototipo («El mapa debe ser la dirección del mapa insertado de Google Maps (https://www.google.com/maps/embed?…).»);
    - se quita «Indique un correo válido.», salvo que `specs/05` lo pida.
 8. **H-63 (RNF-05):** el comentario del responsable tiene un tope de 2000 caracteres, igual que el mensaje de Contacto, validado en el navegador y en el servidor. Regístralo en `specs/05` y en `specs/18`.
-9. **H-65 (D-08):** las pruebas que escriben capturas o archivos dentro del repositorio solo lo hacen con `EVIDENCIA=1`. Usa una sola ayuda compartida en `pruebas-e2e/comunes/`. Las pruebas son:
-   - `sitio/noticias.spec.ts`, `sitio/contacto.spec.ts`, `panel/solicitudes.spec.ts`;
-   - `acceso/auditoria-jg24.spec.ts`, `panel/auditoria-jg24.spec.ts`;
-   - las de `panel/` de DM-05;
-   - `picking/` (evidencia `jc-05/latencia-*.json`, `tablero`, `bodega-tiempo-real`);
-   - `flujo/tiempo-real`.
+9. **H-65 (D-08):** **toda** prueba de `pruebas-e2e/**` que escribe capturas o archivos dentro del repositorio, fuera de `test-results/`, solo lo hace con `EVIDENCIA=1`. Usa una sola ayuda compartida en `pruebas-e2e/comunes/`. Para encontrarlas, busca `screenshot({ path`, `writeFile` y `evidencias` en `pruebas-e2e/`. Al 26/10 son, al menos:
+   - sitio: `noticias.spec.ts`, `contacto.spec.ts` y `nosotros.spec.ts` (DM-06);
+   - panel: `solicitudes.spec.ts`, `contenido.spec.ts` (DM-04), `industrias-y-catalogo.spec.ts` (DM-05), `documentos.spec.ts` (DM-10) y `auditoria-jg24.spec.ts`;
+   - acceso: `auditoria-jg24.spec.ts` y `permisos.spec.ts`;
+   - comunes: `armazon.spec.ts`;
+   - picking: `auditoria-jg24.spec.ts`, `facturacion-*.spec.ts` (evidencia `jc-05/latencia-*.json`), `reportes.spec.ts`, `tablero.spec.ts` y `bodega-tiempo-real.spec.ts`;
+   - flujo: `tiempo-real.spec.ts`.
 
-   Sin la variable, una corrida completa de `npm run e2e` deja `git status` limpio. Las aserciones no cambian: solo se salta la escritura del archivo.
+   Las capturas que solo se adjuntan al reporte (`info.attach` o `info.outputPath`) no cambian. Sin la variable, una corrida completa de `npm run e2e` deja `git status` limpio. Las aserciones no cambian: solo se salta la escritura del archivo.
 10. En el `## Resultado` de DM-04, DM-05, DM-07, DM-08 y DM-09, agrega `### Correcciones de la auditoría (2026-10-26)`. Su estado no cambia.
 
 ## Archivos que creas o modificas
 - `src/modulos/contenido/noticias.ts`, `noticias.test.ts`; `src/modulos/solicitudes/bandeja.ts`, `esquemas-bandeja.ts`, `esquemas.ts` y sus pruebas
 - `src/componentes/panel/contenido.module.css`, `noticias.module.css`, `src/componentes/panel/CampoGaleria.tsx`, `EditorContacto.tsx`; `src/modulos/contenido/esquemas-contacto.ts`
 - `src/componentes/sitio/FormularioContacto.tsx`
-- `pruebas-e2e/comunes/` (ayuda de evidencia, crear); los archivos de prueba del paso 9; `pruebas-e2e/panel/**` (prueba de la galería)
+- `pruebas-e2e/comunes/` (ayuda de evidencia, crear); toda prueba de `pruebas-e2e/**` que escribe evidencia en el repositorio (paso 9); `pruebas-e2e/panel/**` (prueba de la galería)
 - `specs/05-sitio-web.md`, `specs/18-historial-de-decisiones.md` (H-63)
 - `plan/tareas/DM-04-*.md`, `DM-05-*.md`, `DM-07-*.md`, `DM-08-*.md`, `DM-09-*.md` (solo la sección de correcciones); `plan/bitacora/carlos.md` (con el aviso para Daniela, Josué y José Daniel)
 
