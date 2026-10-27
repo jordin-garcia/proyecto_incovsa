@@ -188,7 +188,7 @@ test("RF-SW-18 / RN-56 / RN-39: crea, edita y elimina con confirmación; texto c
   try {
     expect(
       (
-        await bd.query("SELECT operacion FROM bitacora WHERE detalle->>'noticia' IN ($1,$2) ORDER BY id", [
+        await bd.query("SELECT operacion FROM bitacora WHERE detalle->>'resumen' IN ($1,$2) ORDER BY id", [
           titulo,
           `${titulo} editada`,
         ])
