@@ -138,6 +138,7 @@ Si tu tarea necesita cambiar uno (por ejemplo, una columna o una dependencia), d
 - Cada acción del servidor nueva tiene una prueba que confirma que rechaza a un usuario sin sesión, sin el permiso o de otra sede.
 - **Playwright** en `pruebas-e2e/<area>/`, con localizadores por rol y texto visible. Proyectos: `telefono` (390 × 844), `tableta` (768 × 1024), `escritorio` (1440 × 900) y `tv` (1920 × 1080, solo el tablero). Accesibilidad con `@axe-core/playwright`, sin violaciones serias ni críticas.
 - Los datos de prueba del archivo de Odoo están en `pruebas/fixtures/` (JG-04). El archivo real de INCOVSA nunca se sube.
+- **Evidencia (26/10, D-08):** una prueba que guarda capturas o archivos de evidencia dentro del repositorio (`plan/evidencias/`, `pruebas-e2e/**/evidencias/`) solo los escribe si la variable `EVIDENCIA=1` está definida. Así, una corrida normal de `npm run e2e` deja el árbol limpio. Para regenerar la evidencia de tu tarea: `EVIDENCIA=1 npm run e2e -- <archivos>`. CE-13 aplica la regla a las pruebas existentes.
 
 ---
 

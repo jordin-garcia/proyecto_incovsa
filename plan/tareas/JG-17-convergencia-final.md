@@ -6,7 +6,7 @@ responsable: Jordin García
 hito: E3
 prioridad: P1
 estado: pendiente
-depende_de: [JG-13, JG-15, JG-16, JG-23, JG-24, JG-25]
+depende_de: [JG-13, JG-15, JG-16, JG-23, JG-24, JG-25, JM-09, JC-09, CE-13]
 programada: 2026-10-30
 requisitos: []
 pantallas: []
@@ -14,7 +14,7 @@ pantallas: []
 
 # JG-17 · Convergencia final y cierre del desarrollo
 
-**Responsable:** Jordin García · **Hito:** E3 · **Prioridad:** P1 · **Programada:** vie 30/10 · **Depende de:** JG-13, JG-15, JG-16, JG-23, JG-24, JG-25
+**Responsable:** Jordin García · **Hito:** E3 · **Prioridad:** P1 · **Programada:** vie 30/10 · **Depende de:** JG-13, JG-15, JG-16, JG-23, JG-24, JG-25, JM-09, JC-09, CE-13
 
 ## Objetivo
 Última convergencia antes de cerrar el desarrollo el 02/11: comprobar que **todo** `specs/` y el prototipo aprobado están en `develop`, que no queda ningún ⚠️ ni ❌, y dejar las correcciones restantes programadas para el 31/10 y el 01/11.

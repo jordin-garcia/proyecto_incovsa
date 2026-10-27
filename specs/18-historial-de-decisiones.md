@@ -640,6 +640,23 @@ Al trasladar el prototipo se comprobó con axe que `--g500` sobre `--g50` da un 
 - Por decisión de Jordin, el mensaje admite hasta 2000 caracteres, para que la recepción pública no guarde textos de cualquier tamaño (RNF-05) ([05](05-sitio-web.md), "Contacto"). El límite de envíos por IP queda como P-98 ([19](19-pendientes.md)).
 - Lo terminó el coordinador a partir del avance de Daniela (protocolo §E4).
 
+## Contraste de la bandeja de solicitudes (25/10/2026, DM-09)
+
+Daniela autorizó usar `--g600` solo en las pestañas inactivas y el texto secundario de la fila seleccionada. Playwright y axe reprodujeron 4.46:1 y 4.40:1 con el `--g500` del prototipo. Se documenta esta excepción a la decisión 89 en `specs/05`, para cumplir RNF-08 sin cambiar las pruebas ni la paleta. El 26/10, Jordin la ratificó (auditoría del 26/10, D-07), y quedó también en [20](20-prototipo-aprobado.md).
+
+## Correcciones de la auditoría del 22/10 en Bodega (25/10/2026, JG-23)
+
+- Si una acción de Bodega no se guarda, la marca o el orden vuelven atrás y la pantalla sigue en uso. Un envío de la misma sede que otra pantalla ya despachó responde «El pedido ya no está en preparación.», el mismo mensaje del despacho, y «No tiene permisos» queda solo para otra sede (auditoría H-22). Una falla de red muestra el mensaje general «No se pudo completar la operación. Inténtelo de nuevo.» (H-24) ([07](07-picking-bodega.md), "Marcado de preparación").
+- La conversión solo recibe texto o `Decimal`, nunca `Number` (H-16, [16](16-arquitectura-y-tecnologia.md), decisión 1).
+
+## Decisiones de la auditoría del 26/10 (26/10/2026, JG-13)
+
+- **D-07, RNF-08:** Jordin ratifica la excepción de contraste de la bandeja de Solicitudes que había autorizado Daniela (DM-09): `--g600` en las pestañas inactivas y en el texto secundario de la fila seleccionada ([05](05-sitio-web.md), [20](20-prototipo-aprobado.md)).
+- **D-08, pruebas de navegador:** las pruebas que guardan capturas o archivos de evidencia dentro del repositorio solo los escriben con la variable `EVIDENCIA=1`. Así, una corrida normal de `npm run e2e` deja el árbol limpio (`plan/convenciones.md` §6). Lo aplica CE-13.
+- **D-09, Ruta:** el piloto ve sus rutas solo de la sede de trabajo elegida, como los demás módulos (RN-17) y como la suscripción de tiempo real, que es por sede. El prototipo le muestra las de todas sus sedes ([08](08-picking-ruta.md), "Acceso"). JM-09 agrega la prueba con un piloto de dos sedes.
+- **D-10, Reportes:** el PDF usa siempre el logotipo de INCOVSA del sistema (`public/marca/incovsa-quimicos.webp`), no el que se configura en el panel del sitio ([10](10-picking-reportes.md), "Exportación").
+- Las correcciones del código son de CE-13 (sitio y panel), JM-09 (Bodega, tablero y Ruta), JC-09 (Reportes y Facturación) y JG-25 (CI y pruebas de JG-10) (`plan/auditorias/2026-10-26.md`).
+
 ## Documentos no alineados con las reuniones 4 y 5
 
 Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los cambios del 29/09, del 11/10 ni del 13/10:
@@ -650,12 +667,3 @@ Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los camb
 El prototipo de simulación se actualizó el 14/10/2026 con los cambios de la reunión 5 y el 15/10/2026 con los ajustes del coordinador ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)), y el Documento 2 pasó a la versión 0.2 (la entregada el 14/10) y el 15/10 a la versión 0.3, alineada con la especificación 1.3, y después a la versión 0.4, alineada con la especificación 1.4.
 
 El README del repositorio se actualizó el 16/10/2026 con la versión 1.5 de esta carpeta. El Documento 2 v0.4 **no** incorpora las decisiones del 16/10/2026 y, por decisión del coordinador del mismo día, **ya no se edita**: queda como la versión del Entregable 2, y para el Entregable 3 se crea una nueva versión del Documento 2 con todo actualizado. Mientras tanto vale lo que dice esta carpeta.
-
-## 25/10/2026 · DM-09 · Contraste de la bandeja de solicitudes
-
-Daniela autorizó usar `--g600` solo en las pestañas inactivas y el texto secundario de la fila seleccionada. Playwright y axe reprodujeron 4.46:1 y 4.40:1 con el `--g500` del prototipo. Se documenta esta excepción a la decisión 89 en `specs/05`, para cumplir RNF-08 sin cambiar las pruebas ni la paleta.
-
-## 25/10/2026 · JG-23 · Correcciones de la auditoría del 22/10 en Bodega
-
-- Si una acción de Bodega no se guarda, la marca o el orden vuelven atrás y la pantalla sigue en uso. Un envío de la misma sede que otra pantalla ya despachó responde «El pedido ya no está en preparación.», el mismo mensaje del despacho, y «No tiene permisos» queda solo para otra sede (auditoría H-22). Una falla de red muestra el mensaje general «No se pudo completar la operación. Inténtelo de nuevo.» (H-24) ([07](07-picking-bodega.md), "Marcado de preparación").
-- La conversión solo recibe texto o `Decimal`, nunca `Number` (H-16, [16](16-arquitectura-y-tecnologia.md), decisión 1).
