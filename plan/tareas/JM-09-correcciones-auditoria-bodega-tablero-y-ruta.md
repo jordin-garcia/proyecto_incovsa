@@ -5,7 +5,7 @@ persona: josue
 responsable: Josué Menéndez
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JM-06, JG-23]
 programada: 2026-10-27
 requisitos: [RF-SL-26, RF-SL-61, RNF-14, RN-17]
@@ -71,3 +71,30 @@ npm run e2e -- pruebas-e2e/picking
 
 ## Notas
 - Rama `josue/JM-09-correcciones-auditoria`. Tarea creada en la convergencia 2 (JG-13), por decisión de Jordin del 26/10.
+
+## Resultado
+
+Implementado por Josué Menéndez el 27/10/2026 sobre la rama `josue/JM-09-correcciones-auditoria` desde `develop` (`ec6b593`).
+
+### Qué se hizo
+1. **H-66 (RN-17):** En `src/modulos/ruta/acciones.test.ts`, se actualizó el caso de prueba «otra sede» usando una función generadora que crea una ruta En Ruta real en la sede 2 (`entradaOtraSede`). Se verificó que las server actions rechazan la operación (`ErrorAcceso`) y que en base de datos la ruta no cambia ni su orden de paradas ni su estado.
+2. **D-09 (RF-SL-26):** En `src/modulos/ruta/servicio.test.ts`, se agregó prueba de integración con un piloto que tiene dos sedes asignadas (sede 1 y sede 2), verificando que cuando su sede activa es la sede 1 solo ve las rutas de esa sede, y al cambiar a sede 2 solo ve las de la sede 2.
+3. **H-67:** En `src/modulos/ruta/servicio.ts`, `EntregaRutaItem.totalKg` y `RutaEnCursoItem.totalKg` se tiparon y serializan como texto exacto (`toString()`, tipo `string`), eliminando conversiones a `number` vía `.toNumber()`. Se actualizaron las aserciones de `servicio.test.ts` para verificar la precisión exacta como texto.
+4. **H-68:** Se agregó el token CSS `--radius-prototipo-10: 16px` en `src/app/globals.css` y se actualizó `src/app/picking/ruta/ruta.css` para que `.ruta-op` use `border-radius: var(--radius-prototipo-10);`, igualando los 16 px del prototipo (`estilos.css:401`).
+5. **H-69 (RNF-14):** En `pruebas-e2e/picking/ruta.spec.ts`, se añadió prueba E2E de reordenamiento de clientes mediante arrastre táctil en teléfono utilizando emulación CDP `Input.dispatchTouchEvent` con `hasTouch: true`, espera de retardo táctil de 420 ms y verificación de persistencia en la tabla y en BD. Se enriqueció `pruebas-e2e/picking/preparar-ruta.ts` con una segunda entrega en la ruta 3.
+6. **H-70 (RF-SL-61):** En `pruebas-e2e/picking/ruta.spec.ts`, se incorporaron llamadas a `comprobarEncabezadoModulo()` para validar tanto el encabezado de «Mis rutas» (piloto) como el de «Rutas en curso» (usuario con `pk.ruta.todas`).
+7. **H-71:** En `src/componentes/picking/bodega/tablero/TableroCliente.tsx`, si una ruta En Preparación carece de camión asignado (`camion == null`), la tarjeta lateral muestra la silueta del camión con matrícula «—», capacidad de 1 kg y cálculo de ocupación porcentual sobre las líneas, en lugar de mostrar «El cliente recoge en bodega». En `src/modulos/bodega/tablero.test.ts` y `pruebas-e2e/picking/tablero.spec.ts` se crearon pruebas unitarias y E2E correspondientes.
+8. **H-72:** En `pruebas-e2e/picking/tablero.spec.ts`, la exclusión de contraste de axe para `.tb-num.recoge small` se restringió exclusivamente al modo claro, comprobando accesibilidad estricta en modo oscuro.
+9. **H-73:** En `pruebas-e2e/picking/tablero.spec.ts`, se agregó caso de prueba E2E que comprueba que un usuario sin permiso de Bodega o sin sede activa (`ejemplo.06`) es redirigido a su módulo inicial (`/picking/ruta`).
+10. **H-74:** En `src/modulos/bodega/servicio.ts`, las funciones `ordenarLineasPorPeso`, `reordenarColaBodega` y `reordenarLineasPreparacion` se migraron de transacciones por lotes (`$transaction([...])`) a transacciones interactivas (`prisma.$transaction(async (tx) => ...)`) con `exigirCambios(resultados)` ejecutado dentro del callback para garantizar rollback atómico si el envío deja de estar En Preparación. Se agregó prueba de concurrencia en `servicio.test.ts`.
+11. Se agregaron las subsecciones `### Correcciones de la auditoría (2026-10-26)` en `JM-05`, `JM-06` y `JG-23`.
+
+### Verificación
+- `npm run formato`: Archivos formateados con Prettier.
+- `npm run lint`: 0 errores, 0 advertencias.
+- `npm run tipos`: TypeScript compila sin errores.
+- `npm test`: 52 archivos de prueba pasados, 432 pruebas unitarias/integración aprobadas (incluyendo `servicio.test.ts`, `acciones.test.ts`, `tablero.test.ts`).
+- `npm run build`: Compilación de producción Next.js 16 exitosa.
+- `npx playwright test pruebas-e2e/picking/ruta.spec.ts --workers=1`: 18/18 pruebas aprobadas (teléfono, tableta y escritorio).
+- `npx playwright test pruebas-e2e/picking/tablero.spec.ts --workers=1`: 44/44 pruebas aprobadas (teléfono, tableta, escritorio y TV).
+

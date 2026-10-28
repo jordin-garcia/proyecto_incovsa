@@ -184,4 +184,21 @@ describe("RF-SL-25: datos del tablero en pantalla completa", () => {
     expect(envio!.lineas.map((l) => l.cantidadKg)).toEqual(["1500", "105.5"]);
     expect(typeof envio!.camion!.capacidadKg).toBe("string");
   });
+
+  it("H-71: si el camión de una ruta En Preparación se cambió de sede, camion y ocupacion quedan en null pero conserva tipo ruta", async () => {
+    const ruta = await crear(1, "ruta", 99, 1);
+    const camionSede2 = await prisma.camion.create({
+      data: { identificacion: "Camión Sede 2", capacidadKg: new Prisma.Decimal("4000"), sedeId: 2 },
+    });
+    await prisma.envio.update({
+      where: { id: ruta.id },
+      data: { camionId: camionSede2.id },
+    });
+
+    const [envio] = await listarTableroBodega(1);
+    expect(envio.id).toBe(ruta.id);
+    expect(envio.tipo).toBe("ruta");
+    expect(envio.camion).toBeNull();
+    expect(envio.ocupacion).toBeNull();
+  });
 });
