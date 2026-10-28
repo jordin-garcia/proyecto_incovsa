@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getCountryCallingCode, type CountryCode } from "libphonenumber-js";
@@ -10,7 +10,14 @@ import { Icono } from "@/componentes/comunes/iconos";
 import { SelectNativo } from "@/componentes/ui/select-nativo";
 import { MENSAJE_ERROR_GENERAL } from "@/lib/errores";
 
+const suscribirHidratacion = () => () => {};
+
 export function FormularioContacto({ opciones }: { opciones: Awaited<ReturnType<typeof leerOpcionesContacto>> }) {
+  const hidratado = useSyncExternalStore(
+    suscribirHidratacion,
+    () => true,
+    () => false,
+  );
   const [recibida, recibir] = useState<{ folio: string; nombre: string; motivo: string; sede: string } | null>(null);
   const [error, cambiarError] = useState("");
   const caja = useRef<HTMLDivElement>(null);
@@ -149,6 +156,7 @@ export function FormularioContacto({ opciones }: { opciones: Awaited<ReturnType<
           </p>
           <form
             className="rejilla contacto-form"
+            data-hidratado={hidratado}
             noValidate
             onSubmit={(evento) => {
               void handleSubmit(async (datos) => {

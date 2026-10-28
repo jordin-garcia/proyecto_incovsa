@@ -61,6 +61,8 @@ test("RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserv
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/contacto");
   await expect(page.getByRole("heading", { name: "Envíenos su mensaje" })).toBeVisible();
+  // Sin EVIDENCIA=1 la captura no espera nada: se interactúa solo cuando React ya tomó el formulario.
+  await expect(page.locator("form.contacto-form")).toHaveAttribute("data-hidratado", "true");
   await captura(page, "aplicacion-contacto");
   await page.getByLabel("País *", { exact: true }).selectOption("GT");
   await expect(page.getByLabel("Departamento *", { exact: true })).toBeVisible();
@@ -106,6 +108,7 @@ test("RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserv
 test("RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito", async ({ page, contactoDePrueba }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/contacto");
+  await expect(page.locator("form.contacto-form")).toHaveAttribute("data-hidratado", "true");
   const correo = `dm08-e2e-${Date.now()}@prueba.invalid`;
   await page.getByLabel("Nombre completo *", { exact: true }).fill("Persona de prueba");
   await page.getByLabel("Correo electrónico *", { exact: true }).fill(correo);

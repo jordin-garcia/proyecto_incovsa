@@ -214,7 +214,7 @@ Entran los usuarios del sitio según sus permisos ([03-roles-y-accesos.md](03-ro
 | Industrias | Descripción y galería de hasta 5 imágenes de cada industria |
 | Catálogo | Productos públicos y sus industrias, con galería de hasta 5 imágenes. Se pueden eliminar |
 | Noticias | Título, texto y galería de hasta 5 imágenes de cada noticia. La lista muestra imagen, título, fecha y los botones **editar** (lápiz) y **eliminar** (basurero, con confirmación), como en el Catálogo. Sin columna de estado ni botón "Ocultar" (15/10) |
-| Información de contacto | Dirección, teléfono, correo, WhatsApp, horario y mapa de Google Maps de Quetzaltenango y Guatemala. **(27/10, CE-13b)** El correo puede quedar vacío. Si se escribe, debe tener una estructura válida: al salir del campo el panel muestra «Indique un correo válido.» y no guarda, y el servidor rechaza el mismo caso antes de guardar. H-62, «revertido: Carlos 2A» |
+| Información de contacto | Dirección, teléfono, correo, WhatsApp, horario y mapa de Google Maps de Quetzaltenango y Guatemala. **(27/10, CE-13)** El correo puede quedar vacío. Si se escribe, debe tener un formato válido: al salir del campo el panel muestra «Indique un correo válido.» y no guarda, y el servidor rechaza el mismo caso antes de guardar. Se conserva esta validación por decisión de Carlos, confirmada por Jordin el 27/10 (auditoría H-62, [18](18-historial-de-decisiones.md)) |
 | Solicitudes | Bandeja del formulario de contacto (abajo) |
 | Documentación interna | Productos documentados (abajo) |
 | Usuarios | Usuarios del sitio. Los administran Gerencia y Soporte, con contraseña, rol y permisos ([03-roles-y-accesos.md](03-roles-y-accesos.md)) |

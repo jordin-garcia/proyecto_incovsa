@@ -110,7 +110,7 @@ Cerrada el 27/10/2026. La rama es `cursor/ce-13-correcciones-auditoria-0917`: el
 - **H-59.** Un sexto elemento válido y único falla solo con `too_big` y máximo 5. Cinco referencias distintas pasan.
 - **H-60.** Nombre, empresa y correo llevan `maxLength` 150 y el mensaje «El … admite hasta 150 caracteres.» (el correo: «El correo admite hasta 150 caracteres.»). El teléfono lleva 20 y «El teléfono admite hasta 20 caracteres.». Decisión reversible de plano: tope del navegador y mensaje en español.
 - **H-61.** El formulario valida al enviar. Al salir del campo solo se validan el correo y el teléfono.
-- **H-62.** El mapa inválido se avisa en el aviso del prototipo, no bajo el campo. Se quitó «Indique un correo válido.»; el correo del panel queda en `z.string().trim().max(120)`. Decisión reversible; no se registró en `specs/`.
+- **H-62.** El mapa inválido se avisa en el aviso del prototipo, no bajo el campo. El correo del panel **sí se valida** (ver «Terminada por el coordinador»).
 - **H-63.** El comentario admite 2000 caracteres en el navegador y en el servidor. Los ya guardados no se reescriben y no hay migración. Quedó en `specs/05` y `specs/18`.
 - **H-65.** `pruebas-e2e/comunes/evidencia.ts` escribe capturas y archivos solo con `EVIDENCIA=1`. `info.attach` y lo que ya cae en `test-results/` no cambian. `plan/convenciones.md` ya documentaba D-08 y es archivo protegido: no se editó.
 
@@ -119,3 +119,13 @@ Cerrada el 27/10/2026. La rama es `cursor/ce-13-correcciones-auditoria-0917`: el
 **Contrato de `detalle.resumen`.** Es el texto que muestra la Bitácora. Si no es una cadena, se ve «—».
 
 **Verificación local.** `npm run verificar`: formato, lint, tipos y 431 pruebas en 52 archivos, código 0. `npm run build`: compiló, código 0. `npm run e2e`: 414 pasaron en 12.0 min, código 0. Después, `git status --short` no mostró capturas ni archivos de prueba (solo esta nota, aún sin commit). Con `EVIDENCIA=1 npx playwright test pruebas-e2e/panel/solicitudes.spec.ts --project=escritorio`: 3 pasaron y `git status --short` listó siete PNG reescritos en `pruebas-e2e/panel/evidencias/DM-09/`. Esos PNG se restauraron para no mezclar evidencia regenerada con el cambio.
+
+### Terminada por el coordinador (27/10/2026)
+
+Jordin la terminó a partir de #140 y de su seguimiento #141 (CE-13b), que se cierran (protocolo §E4). La rama es `jordin/CE-13-correcciones-auditoria-sitio-y-panel`.
+
+- **H-62, correo del panel.** Carlos decidió conservar la validación del correo de Información de contacto y Jordin la confirmó el 27/10: puede quedar vacío y, si se escribe, «Indique un correo válido.» al salir del campo, sin guardar; el servidor rechaza el mismo caso. Quedó en `specs/05` («Panel administrativo») y `specs/18`.
+- **Pruebas de CE-13b.** Usaban `test.skip`, que `integridad-pruebas` rechaza (#141 nunca pasó por la CI). Ahora corren en todos los tamaños, sin omitirse: guardan el mismo correo fijo, como DM-08, y el caso inválido comprueba que nunca se guarde.
+- **Carrera en `sitio/contacto.spec.ts`.** Con D-08, la captura sin `EVIDENCIA=1` ya no espera, y la prueba elegía el país antes de que React tomara el formulario («Departamento» no aparecía). El formulario de Contacto expone `data-hidratado`, como el Catálogo, y las dos pruebas lo esperan.
+- **`specs/18`.** Se resolvió el conflicto con JG-14: quedan las dos secciones.
+
