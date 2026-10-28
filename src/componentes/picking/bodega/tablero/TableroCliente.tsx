@@ -612,29 +612,8 @@ function LineaTablero({
   );
 }
 
-function calcularOcupacionFallback(lineas: EnvioTablero["lineas"]): NonNullable<EnvioTablero["ocupacion"]> {
-  const tot = lineas.reduce((acc, l) => acc + Number(l.cantidadKg), 0);
-  const base = Math.max(1, tot);
-  const segmentos: Record<number, { ancho: number; numerado: boolean }> = {};
-  for (const l of lineas) {
-    const kg = Number(l.cantidadKg);
-    const fraccion = base > 0 ? kg / base : 0;
-    segmentos[l.id] = {
-      ancho: fraccion * 100,
-      numerado: fraccion > 0.035,
-    };
-  }
-  return {
-    totalKg: String(tot),
-    porcentaje: Math.round(tot * 100),
-    porcentajeBarra: Math.min(100, tot * 100),
-    lleno: tot >= 1,
-    segmentos,
-  };
-}
-
 function Carga({ envio }: { envio: EnvioTablero }) {
-  if (!esRuta(envio))
+  if (!esRuta(envio) || !envio.ocupacion)
     return (
       <div className="tb-camion">
         <div className="tb-recoge">
@@ -649,7 +628,7 @@ function Carga({ envio }: { envio: EnvioTablero }) {
       </div>
     );
   const camion = envio.camion ?? { identificacion: "—", capacidadKg: "1" };
-  const ocupacion = envio.ocupacion ?? calcularOcupacionFallback(envio.lineas);
+  const ocupacion = envio.ocupacion;
   return (
     <div className="tb-camion">
       <div className="tt">

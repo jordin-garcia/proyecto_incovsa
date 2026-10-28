@@ -59,11 +59,7 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
   - **H-73:** Se añadió prueba E2E en `tablero.spec.ts` de redirección al módulo inicial (`/picking/ruta`) cuando un usuario sin permiso de Bodega o sin sede intenta acceder al tablero.
   - **H-74:** En `src/modulos/bodega/servicio.ts`, `ordenarLineasPorPeso`, `reordenarColaBodega` y `reordenarLineasPreparacion` se migraron a transacciones interactivas con `exigirCambios(resultados)` dentro del callback para asegurar rollback atómico en condiciones de carrera.
   - Se documentaron las correcciones en el `## Resultado` de `JM-05`, `JM-06` y `JG-23`.
-- Decisiones: Se evitó importar funciones dependientes de Prisma/Node en componentes cliente para mantener los bundles limpios (`calcularOcupacionFallback` en `TableroCliente.tsx`); las pruebas E2E de tablero y ruta se ejecutan con `--workers=1` para estabilidad garantizada en entornos Windows.
+- Decisiones: Se calcula la ocupación en el servidor con capacidad 1 para rutas sin camión de la sede (`calcularOcupacion(lineas, "1")` en `tablero.ts`), eliminando cálculos en punto flotante en el cliente; las pruebas E2E de tablero y ruta se ejecutan con `--workers=1` para estabilidad garantizada en entornos Windows.
 - Pendiente o aviso para otros:
 **Jordin (JG-23) / Bodega:** En `pruebas-e2e/picking/preparar-envio.ts`, la acción `crear-tablero` crea ahora un envío de prueba adicional (`sinCamion`, con `camionId: null`) para verificar que el tablero muestra la ruta con camión «—» (H-71).
 **Todos:** Quedan subsanados todos los hallazgos del paso 2 de la auditoría en Bodega, Tablero y Ruta.
-
-
-
-

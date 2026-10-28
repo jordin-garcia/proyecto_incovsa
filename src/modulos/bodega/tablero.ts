@@ -74,7 +74,8 @@ export async function listarTableroBodega(sedeId: number) {
       ...envio,
       lineas,
       camion: envio.camion && capacidadKg !== undefined ? { ...envio.camion, capacidadKg } : null,
-      ocupacion: capacidadKg !== undefined ? calcularOcupacion(lineas, capacidadKg) : null,
+      ocupacion:
+        envio.tipo === "ruta" ? calcularOcupacion(lineas, capacidadKg !== undefined ? capacidadKg : "1") : null,
     };
   });
 }
