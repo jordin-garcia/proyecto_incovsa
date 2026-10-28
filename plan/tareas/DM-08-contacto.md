@@ -86,4 +86,4 @@ Lo implementó Daniela y lo terminó e integró el coordinador (Jordin) el 24/10
 
 ### Correcciones de la auditoría (2026-10-26)
 
-CE-13: H-60 limita nombre, empresa y correo a 150 y el teléfono a 20, con `maxLength` y mensaje en español; H-61 valida al salir del campo solo el correo y el teléfono; H-62 avisa el mapa inválido con el texto del prototipo y quita «Indique un correo válido.». H-65 escribe las capturas de `pruebas-e2e/sitio/contacto.spec.ts` solo con `EVIDENCIA=1`. El estado de esta tarea no cambia.
+CE-13: H-60 limita nombre, empresa y correo a 150 y el teléfono a 20, con `maxLength` y mensaje en español; H-61 valida al salir del campo solo el correo y el teléfono; H-62 avisa el mapa inválido con el texto del prototipo; el correo de Información de contacto sigue validándose («Indique un correo válido.»), decisión de Carlos confirmada por Jordin el 27/10 (`specs/05`, `specs/18`). H-65 escribe las capturas de `pruebas-e2e/sitio/contacto.spec.ts` solo con `EVIDENCIA=1`. El estado de esta tarea no cambia.

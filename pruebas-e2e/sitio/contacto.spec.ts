@@ -33,6 +33,13 @@ const test = base.extend<{ contactoDePrueba: Client }>({
     { auto: true, timeout: 60000 },
   ],
 });
+// Contacto, Inicio y el panel muestran los mapas de Google de las sedes. Como en `seguridad/cabeceras.spec.ts`,
+// se responden en local para que la carga de la página no dependa de la red externa.
+test.beforeEach(async ({ page }) => {
+  await page.route("https://www.google.com/maps/embed**", (ruta) =>
+    ruta.fulfill({ contentType: "text/html", body: "Mapa de prueba" }),
+  );
+});
 async function captura(page: Page, estado: string) {
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
   await page.locator("img").evaluateAll(async (elementos) => {

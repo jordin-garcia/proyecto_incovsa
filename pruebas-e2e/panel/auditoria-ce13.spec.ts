@@ -252,7 +252,35 @@ test("RF-SL-36 / RN-39 / H-57 / RNF-05 / H-63: la bitácora de solicitudes usa l
   }
 });
 
-test("H-62: el mapa inválido avisa con el texto del prototipo", async ({ page }, info) => {
+// Información de contacto es compartida por todos los proyectos y por DM-08: como su fixture
+// (`sitio/contacto.spec.ts`), las pruebas de H-62 toman el mismo bloqueo y restauran las filas al terminar.
+const testContacto = test.extend<{ contactoDePrueba: void }>({
+  contactoDePrueba: [
+    async ({ baseURL }, usar) => {
+      if (!baseURL || !["localhost", "127.0.0.1"].includes(new URL(baseURL).hostname))
+        throw new Error("Las pruebas requieren una aplicación local.");
+      const bd = new Client({ connectionString: process.env.DATABASE_URL });
+      await bd.connect();
+      try {
+        await bd.query("SELECT pg_advisory_lock($1)", [2026102408]);
+        const contactos = (await bd.query("SELECT * FROM informacion_contacto")).rows;
+        try {
+          await usar();
+        } finally {
+          await bd.query(
+            "UPDATE informacion_contacto c SET direccion=o.direccion, telefono=o.telefono, correo=o.correo, whatsapp=o.whatsapp, horario=o.horario, mapa_url=o.mapa_url FROM json_populate_recordset(NULL::informacion_contacto,$1::json) o WHERE c.id=o.id",
+            [JSON.stringify(contactos)],
+          );
+        }
+      } finally {
+        await bd.end();
+      }
+    },
+    { auto: true, timeout: 60000 },
+  ],
+});
+
+testContacto("H-62: el mapa inválido avisa con el texto del prototipo", async ({ page }, info) => {
   await entrar(page, "sitio", "ejemplo.08");
   await page.goto("/panel/contacto");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
@@ -282,14 +310,13 @@ async function correoDeGuatemala(page: Page) {
   return { sede, correo };
 }
 
-// Los proyectos corren en paralelo sobre la misma sede: como en DM-08 (`sitio/contacto.spec.ts`),
-// todos guardan el mismo correo fijo, y el caso inválido solo comprueba que nunca se guarde.
 const CORREO_VALIDO = "ce13-e2e-correo@prueba.invalid";
 const CORREO_INVALIDO = "no-es-correo";
 
-test("H-62: un correo mal formado se rechaza al salir del campo y no se guarda", async ({ page }) => {
+testContacto("H-62: un correo mal formado se rechaza al salir del campo y no se guarda", async ({ page }) => {
   await entrar(page, "sitio", "ejemplo.08");
   const { sede, correo } = await correoDeGuatemala(page);
+  const original = await correo.inputValue();
   await correo.fill(CORREO_INVALIDO);
   await correo.blur();
   await expect(sede.getByText(MENSAJE_CORREO, { exact: true })).toBeVisible();
@@ -297,10 +324,10 @@ test("H-62: un correo mal formado se rechaza al salir del campo y no se guarda",
   await sede.getByRole("button", { name: "Guardar", exact: true }).click();
   await expect(page.locator(".toast")).toHaveCount(0);
   const otraVez = await correoDeGuatemala(page);
-  await expect(otraVez.correo).not.toHaveValue(CORREO_INVALIDO);
+  await expect(otraVez.correo).toHaveValue(original);
 });
 
-test("H-62: un correo con formato válido se guarda", async ({ page }) => {
+testContacto("H-62: un correo con formato válido se guarda", async ({ page }) => {
   await entrar(page, "sitio", "ejemplo.08");
   const { sede, correo } = await correoDeGuatemala(page);
   await correo.fill(CORREO_VALIDO);
