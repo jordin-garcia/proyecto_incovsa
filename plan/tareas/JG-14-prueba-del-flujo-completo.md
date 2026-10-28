@@ -98,5 +98,5 @@ gh workflow run recorrido-diario.yml --ref develop
 
 **Evidencia**
 - Carpeta `flujo`: 12 de 12 en local, en una base nueva (`plan/evidencias/JG-14/e2e-flujo.txt`).
-- `npm run verificar`: 426 de 426 (`verificar.txt`). `npm run build`: sin errores (`build.txt`). La ejecución en GitHub Actions está enlazada en el PR.
+- `npm run verificar`: 426 de 426 (`verificar.txt`). `npm run build`: sin errores (`build.txt`). En GitHub Actions, el flujo pasó en el PR #142 (3 de 3 en 45 s, artefacto con las capturas): https://github.com/jordin-garcia/proyecto_incovsa/actions/runs/40624973151.
 
