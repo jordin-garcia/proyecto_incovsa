@@ -1,6 +1,7 @@
 import { execFileSync } from "node:child_process";
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { comprobarEncabezadoModulo } from "../comunes/encabezado";
 
 try {
   process.loadEnvFile();
@@ -16,17 +17,18 @@ function ejecutarRuta(...args: string[]) {
   );
 }
 
-async function entrar(context: BrowserContext, usuario = "ejemplo.06") {
+async function entrar(context: BrowserContext, baseURL: string | undefined, usuario = "ejemplo.06") {
   expect(process.env.CLAVE_DEMO, "Se requiere la clave demo").toBeTruthy();
+  await context.setExtraHTTPHeaders({ "x-real-ip": "127.0.0.1" });
   const r = await context.request.post("/api/auth/picking/sign-in/username", {
-    headers: { origin: "http://localhost:3000" },
+    headers: { origin: baseURL ?? "http://localhost:3000" },
     data: { usuario, clave: process.env.CLAVE_DEMO },
   });
   expect(r.ok()).toBe(true);
 }
 
 async function entrarEnSede(context: BrowserContext, baseURL: string | undefined, usuario: string, sedeId: number) {
-  await entrar(context, usuario);
+  await entrar(context, baseURL, usuario);
   await context.addCookies([{ name: "incovsa-sede", value: String(sedeId), url: baseURL ?? "http://localhost:3000" }]);
 }
 
@@ -89,9 +91,13 @@ test.describe("Módulo de Ruta E2E (JM-06)", () => {
     await expect(page.locator(`button[data-r="${rutaSecundaria.id}"]`)).toBeVisible();
     await expect(page.locator(`button[data-r="${rutaPiloto07.id}"]`)).toHaveCount(0);
 
-    // Encabezado para piloto
-    await expect(page.locator("h1")).toHaveText("Mis rutas");
-    await expect(page.getByText("Sus rutas asignadas.")).toBeVisible();
+    // H-70 (RF-SL-61): Encabezado para piloto comprobado con la ayuda común
+    await comprobarEncabezadoModulo(page, {
+      eyebrow: "Módulo de ruta",
+      titulo: "Mis rutas",
+      instruccion:
+        "Sus rutas asignadas. Arrastre los clientes para acomodar el recorrido y pulse «Ruta Entregada» al terminar.",
+    });
 
     // 2. ejemplo.07 solo ve su ruta asignada
     await entrarEnSede(context, baseURL, "ejemplo.07", 1);
@@ -109,8 +115,13 @@ test.describe("Módulo de Ruta E2E (JM-06)", () => {
     await expect(page.locator(`button[data-r="${rutaPiloto06.id}"]`)).toBeVisible();
     await expect(page.locator(`button[data-r="${rutaPiloto07.id}"]`)).toBeVisible();
     await expect(page.locator(`button[data-r="${rutaSecundaria.id}"]`)).toBeVisible();
-    await expect(page.locator("h1")).toHaveText("Rutas en curso");
-    await expect(page.getByText("Rutas en curso de la sede.")).toBeVisible();
+    // H-70 (RF-SL-61): Encabezado para gerencia comprobado con la ayuda común
+    await comprobarEncabezadoModulo(page, {
+      eyebrow: "Módulo de ruta",
+      titulo: "Rutas en curso",
+      instruccion:
+        "Rutas en curso de la sede. Arrastre los clientes para acomodar el recorrido y pulse «Ruta Entregada» al terminar.",
+    });
 
     // 4. ejemplo.05 (Bodega) no tiene permisos para el módulo de ruta -> SinAcceso
     await entrarEnSede(context, baseURL, "ejemplo.05", 1);
@@ -262,5 +273,88 @@ test.describe("Módulo de Ruta E2E (JM-06)", () => {
     // Axe: sin violaciones serias ni críticas
     const violaciones = await violacionesGraves(page);
     expect(violaciones).toEqual([]);
+  });
+
+  test("H-69 / RNF-14: el piloto reordena los clientes con el arrastre táctil (hasTouch) en el teléfono", async ({
+    browser,
+    context,
+    page,
+    baseURL,
+  }, testInfo) => {
+    let ctxTouch = context;
+    let pageTouch = page;
+    let cerrarCtxTouch = false;
+
+    if (!testInfo.project.use.hasTouch) {
+      ctxTouch = await browser.newContext({
+        baseURL: baseURL ?? "http://localhost:3000",
+        hasTouch: true,
+        viewport: { width: 390, height: 844 },
+      });
+      await entrarEnSede(ctxTouch, baseURL, "ejemplo.06", 1);
+      pageTouch = await ctxTouch.newPage();
+      cerrarCtxTouch = true;
+    } else {
+      await entrarEnSede(ctxTouch, baseURL, "ejemplo.06", 1);
+    }
+
+    try {
+      await pageTouch.goto("/picking/ruta");
+      await expect(pageTouch.locator(".app")).toHaveAttribute("data-hidratado", "true");
+
+      // Seleccionar la ruta secundaria que tiene dos paradas
+      await pageTouch.locator(`button[data-r="${rutaSecundaria.id}"]`).click();
+      const tabla = pageTouch.locator("tbody[data-paradas]");
+      await expect(tabla).toBeVisible();
+
+      const filasAntes = tabla.locator("tr");
+      await expect(filasAntes).toHaveCount(2);
+      const cliente1Antes = await filasAntes.first().locator("b").innerText();
+      const cliente2Antes = await filasAntes.nth(1).locator("b").innerText();
+      expect(cliente1Antes).toBe("Química Industrial");
+      expect(cliente2Antes).toBe("Curtidos del Norte");
+
+      const asa1 = filasAntes.first().locator(".asa");
+      const asa2 = filasAntes.nth(1).locator(".asa");
+      await asa1.scrollIntoViewIfNeeded();
+
+      const box1 = (await asa1.boundingBox())!;
+      const box2 = (await asa2.boundingBox())!;
+
+      const respTouch = pageTouch.waitForResponse(
+        (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
+      );
+
+      const sesionCdp = await ctxTouch.newCDPSession(pageTouch);
+      await sesionCdp.send("Input.dispatchTouchEvent", {
+        type: "touchStart",
+        touchPoints: [{ x: box1.x + box1.width / 2, y: box1.y + box1.height / 2 }],
+      });
+      // Esperar 420 ms para superar el umbral de 380 ms de pulsación larga del sensor táctil
+      await pageTouch.waitForTimeout(420);
+      await sesionCdp.send("Input.dispatchTouchEvent", {
+        type: "touchMove",
+        touchPoints: [{ x: box2.x + box2.width / 2, y: box2.y + box2.height / 2 + 10 }],
+      });
+      await pageTouch.waitForTimeout(100);
+      await sesionCdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+      await sesionCdp.detach();
+      await respTouch;
+
+      // Comprobar que en el DOM se reordenaron las paradas
+      await expect(tabla.locator("tr").first().locator("b")).toHaveText("Curtidos del Norte");
+      await expect(tabla.locator("tr").nth(1).locator("b")).toHaveText("Química Industrial");
+
+      // Comprobar persistencia tras recargar
+      await pageTouch.reload();
+      await expect(pageTouch.locator(".app")).toHaveAttribute("data-hidratado", "true");
+      await pageTouch.locator(`button[data-r="${rutaSecundaria.id}"]`).click();
+      await expect(pageTouch.locator("tbody[data-paradas] tr").first().locator("b")).toHaveText("Curtidos del Norte");
+      await expect(pageTouch.locator("tbody[data-paradas] tr").nth(1).locator("b")).toHaveText("Química Industrial");
+    } finally {
+      if (cerrarCtxTouch) {
+        await ctxTouch.close();
+      }
+    }
   });
 });

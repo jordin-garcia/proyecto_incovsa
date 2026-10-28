@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { prisma } from "@/lib/prisma";
 import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import { sembrarDemo } from "../../../prisma/semillas/demo";
@@ -615,4 +615,66 @@ describe("Módulo de Bodega - Servicio", () => {
     });
     expect(bitacoras).toHaveLength(0);
   });
+
+  it.each([
+    {
+      operacion: "ordenarLineasPorPeso",
+      ejecutar: (envioId: number, _lIds: number[], ctx: { usuarioId: string; sedeId: number }) =>
+        ordenarLineasPorPeso({ envioId }, ctx),
+    },
+    {
+      operacion: "reordenarLineasPreparacion",
+      ejecutar: (envioId: number, lIds: number[], ctx: { usuarioId: string; sedeId: number }) =>
+        reordenarLineasPreparacion({ envioId, lineaIds: [lIds[2], lIds[0], lIds[1]] }, ctx),
+    },
+  ])(
+    "H-74: en $operacion, si el envío deja de estar En Preparación durante la operación, la transacción interactiva revierte y no queda ningún cambio guardado",
+    async ({ ejecutar }) => {
+      const envio = await crearEnvioDePrueba({
+        sedeId: 1,
+        tipo: "ruta",
+        numero: Math.floor(Math.random() * 100000) + 100,
+        posicionCola: 1,
+        lineas: [
+          { producto: "Prod A", lote: "L1", pesoConversionKg: 25, cantidadKg: 10, posicion: 1 },
+          { producto: "Prod B", lote: "L2", pesoConversionKg: 25, cantidadKg: 20, posicion: 2 },
+          { producto: "Prod C", lote: "L3", pesoConversionKg: 25, cantidadKg: 30, posicion: 3 },
+        ],
+      });
+
+      const l1 = envio.lineas[0].id;
+      const l2 = envio.lineas[1].id;
+      const l3 = envio.lineas[2].id;
+      const contexto = { usuarioId: usuarioBodegaId, sedeId: 1 };
+      const estadoDespachado = await prisma.estadoEnvio.findUniqueOrThrow({ where: { nombre: "Despachado" } });
+
+      const txOriginal = prisma.$transaction.bind(prisma);
+      vi.spyOn(prisma, "$transaction").mockImplementationOnce(async (callback: unknown) => {
+        return txOriginal(async (tx) => {
+          // En la transacción interactiva modificamos una línea
+          await tx.lineaPreparacion.update({
+            where: { id: l1 },
+            data: { posicion: 99 },
+          });
+          // Otra pantalla despacha el envío en paralelo antes de completar los updates
+          await prisma.envio.update({
+            where: { id: envio.id },
+            data: { estadoId: estadoDespachado.id },
+          });
+          return (callback as (txClient: typeof tx) => Promise<unknown>)(tx);
+        });
+      });
+
+      await expect(ejecutar(envio.id, [l1, l2, l3], contexto)).rejects.toThrow("El pedido ya no está en preparación.");
+
+      // Comprobar que ninguna posición cambió y el cambio en la transacción (posicion: 99) revirtió:
+      const lineasDespues = await prisma.lineaPreparacion.findMany({
+        where: { envioId: envio.id },
+        orderBy: { id: "asc" },
+      });
+      expect(lineasDespues.find((l) => l.id === l1)?.posicion).toBe(1);
+      expect(lineasDespues.find((l) => l.id === l2)?.posicion).toBe(2);
+      expect(lineasDespues.find((l) => l.id === l3)?.posicion).toBe(3);
+    },
+  );
 });

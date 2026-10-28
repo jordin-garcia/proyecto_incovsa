@@ -55,8 +55,13 @@ async function violacionesGraves(page: Page) {
       );
     await Promise.allSettled(enCurso.map((animacion) => animacion.finished));
   });
-  // Única excepción aprobada por el coordinador (specs/18, JM-08): el cuadro lima del pedido conserva los colores del prototipo.
-  const resultado = await new AxeBuilder({ page }).exclude(".tb-num.recoge small").analyze();
+  // H-72: Única excepción aprobada por el coordinador (specs/18, JM-08): el cuadro lima del pedido conserva los colores del prototipo solo en el modo claro.
+  const builder = new AxeBuilder({ page });
+  const esModoOscuro = (await page.locator(".tb[data-tema='oscuro']").count()) > 0;
+  if (!esModoOscuro) {
+    builder.exclude(".tb-num.recoge small");
+  }
+  const resultado = await builder.analyze();
   return resultado.violations
     .filter((v) => v.impact === "serious" || v.impact === "critical")
     .map((v) => ({ regla: v.id, nodos: v.nodes.map((n) => `${n.target.join(" ")} · ${n.failureSummary ?? ""}`) }));
@@ -78,15 +83,16 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
   let larga: { envioId: number; numero: number };
   let despacho: { envioId: number; numero: number };
   let muyLarga: { envioId: number; numero: number };
+  let sinCamion: { envioId: number; numero: number };
 
   test.beforeAll(async ({}, informacion) => {
-    ({ ruta, pedido, larga, despacho, muyLarga } = JSON.parse(
+    ({ ruta, pedido, larga, despacho, muyLarga, sinCamion } = JSON.parse(
       preparar("crear-tablero", String(BASE[informacion.project.name] ?? 250)),
     ));
   });
 
   test.afterAll(async () => {
-    const ids = [ruta, pedido, larga, despacho, muyLarga].filter(Boolean).map((d) => String(d.envioId));
+    const ids = [ruta, pedido, larga, despacho, muyLarga, sinCamion].filter(Boolean).map((d) => String(d.envioId));
     if (ids.length) preparar("limpiar", ...ids);
   });
 
@@ -534,5 +540,35 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
       const nombre = `tablero-pedido-${informacion.project.name}-${modo === "Modo claro" ? "claro" : "oscuro"}`;
       await test.info().attach(nombre, { body: await page.screenshot(), contentType: "image/png" });
     }
+  });
+
+  test("H-71: si la ruta no tiene camión asignado se muestra con camión «—» y no como recogida en bodega", async ({
+    page,
+    context,
+    baseURL,
+  }) => {
+    await entrar(context, baseURL);
+    await abrirTablero(page, sinCamion.envioId);
+    await expect(page.locator(".tb-tipo")).toHaveText("Envío en camión");
+    await expect(page.locator(".tb-camion .tt b")).toHaveText("—");
+    await expect(page.locator(".tb-camion .tt small")).toHaveText("Capacidad 1 kg");
+    await expect(page.locator(".tb-recoge")).toHaveCount(0);
+    await expect(page.locator(`.tb-sig[data-id="${sinCamion.envioId}"] b`)).toContainText("—");
+  });
+
+  test("H-73: un usuario sin permiso de Bodega (ejemplo.06) es redirigido a su módulo inicial (/picking/ruta)", async ({
+    context,
+    page,
+    baseURL,
+  }) => {
+    await context.setExtraHTTPHeaders({ "x-real-ip": "127.0.0.1" });
+    const respuesta = await context.request.post("/api/auth/picking/sign-in/username", {
+      headers: { origin: baseURL! },
+      data: { usuario: "ejemplo.06", clave: process.env.CLAVE_DEMO },
+    });
+    expect(respuesta.ok()).toBe(true);
+
+    await page.goto("/picking/tablero");
+    await expect(page).toHaveURL(/\/picking\/ruta/);
   });
 });

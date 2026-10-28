@@ -90,3 +90,10 @@ Lo terminó el coordinador (Jordin) el 24/10/2026, por la ausencia de Josué y c
 - Para las pruebas: `npx tsx pruebas-e2e/picking/preparar-envio.ts crear-tablero <base>` crea una ruta, un pedido, una ruta de 25 líneas en el Camión 3, otro pedido y una ruta de 60 líneas; `limpiar <id> <id> …` los borra.
 
 **Verificación (24/10/2026).** `npm run verificar`: formato, lint, tipos y 375 pruebas de Vitest (16 nuevas). `npm run build`: aprobado. `pruebas-e2e/picking/tablero.spec.ts`: 36 aprobadas (9 casos en teléfono, tableta, escritorio y TV), con axe en los dos modos sobre la ruta y el pedido, RNF-13 por debajo de 1999 ms desde `avisarCambio` y una ruta de 60 líneas. Batería E2E completa con un *worker*: 336 aprobadas (dos casos ajenos se repitieron: `permisos.spec.ts`, por envíos de ejemplo que quedaron en la base local, y `bodega-tiempo-real.spec.ts:185` en teléfono, por tiempo, como H-26). Mutación de `src/modulos/bodega/tablero.ts`: 86.11 %. Dos revisiones en contexto limpio; sus hallazgos de corrección quedaron corregidos. Capturas lado a lado con el prototipo en `plan/evidencias/JM-05/`.
+
+### Correcciones de la auditoría (2026-10-26)
+En la tarea JM-09 se corrigieron los siguientes hallazgos del tablero:
+- **H-71:** Cuando una ruta En Preparación se queda sin camión asignado (o el camión cambia de sede), el tablero muestra el panel de ruta con camión «—» (`tablero.js:96`), capacidad de 1 kg y porcentaje sobre las líneas en vez de mostrar «El cliente recoge en bodega».
+- **H-72:** En `tablero.spec.ts`, la exclusión de contraste de axe para `.tb-num.recoge small` (cuadro lima de pedido) se aplica únicamente en el modo claro, respetando la regla en modo oscuro (`specs/16`, decisión 67).
+- **H-73:** Se agregó prueba E2E de que acceder a `/picking/tablero` sin permiso de Bodega o sin sede redirige al usuario a su módulo inicial (`ejemplo.06` -> `/picking/ruta`).
+
