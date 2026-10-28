@@ -61,7 +61,9 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
   - Se documentaron las correcciones en el `## Resultado` de `JM-05`, `JM-06` y `JG-23`.
 - Decisiones: Se evitó importar funciones dependientes de Prisma/Node en componentes cliente para mantener los bundles limpios (`calcularOcupacionFallback` en `TableroCliente.tsx`); las pruebas E2E de tablero y ruta se ejecutan con `--workers=1` para estabilidad garantizada en entornos Windows.
 - Pendiente o aviso para otros:
+**Jordin (JG-23) / Bodega:** En `pruebas-e2e/picking/preparar-envio.ts`, la acción `crear-tablero` crea ahora un envío de prueba adicional (`sinCamion`, con `camionId: null`) para verificar que el tablero muestra la ruta con camión «—» (H-71).
 **Todos:** Quedan subsanados todos los hallazgos del paso 2 de la auditoría en Bodega, Tablero y Ruta.
+
 
 
 

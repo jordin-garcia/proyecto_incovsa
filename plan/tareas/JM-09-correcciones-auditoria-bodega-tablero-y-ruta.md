@@ -90,11 +90,14 @@ Implementado por Josué Menéndez el 27/10/2026 sobre la rama `josue/JM-09-corre
 11. Se agregaron las subsecciones `### Correcciones de la auditoría (2026-10-26)` en `JM-05`, `JM-06` y `JG-23`.
 
 ### Verificación
-- `npm run formato`: Archivos formateados con Prettier.
+Evidencias fotográficas y comparación con el prototipo documentadas en [`plan/evidencias/JM-09/`](../evidencias/JM-09/README.md).
+- `npm run formato`: Archivos formateados con Prettier (aprobado).
 - `npm run lint`: 0 errores, 0 advertencias.
 - `npm run tipos`: TypeScript compila sin errores.
 - `npm test`: 52 archivos de prueba pasados, 432 pruebas unitarias/integración aprobadas (incluyendo `servicio.test.ts`, `acciones.test.ts`, `tablero.test.ts`).
 - `npm run build`: Compilación de producción Next.js 16 exitosa.
-- `npx playwright test pruebas-e2e/picking/ruta.spec.ts --workers=1`: 18/18 pruebas aprobadas (teléfono, tableta y escritorio).
-- `npx playwright test pruebas-e2e/picking/tablero.spec.ts --workers=1`: 44/44 pruebas aprobadas (teléfono, tableta, escritorio y TV).
+- `node scripts/tareas.mjs --validar`: Plan válido, 69 tareas.
+- `npm run e2e -- pruebas-e2e/picking`: Batería completa de picking aprobada con 161 de 161 pruebas pasadas (13.8m con 1 worker), cubriendo `bodega.spec.ts`, `bodega-tiempo-real.spec.ts`, `tablero.spec.ts`, `ruta.spec.ts`, `camiones.spec.ts`, `facturacion-carga.spec.ts`, `facturacion-dos-facturadores.spec.ts`, `facturacion-envio.spec.ts`, `reportes.spec.ts`, `reportes-exportacion.spec.ts`, `usuarios.spec.ts` y `auditoria-jg24.spec.ts`.
+- Capturas lado a lado con el prototipo aprobadas en 390, 768 y 1440 px para Ruta (`rutaMod()`, H-68) y en 390, 768, 1440 y 1920 px para Tablero (`Tablero.ruta()`, H-71) en [`plan/evidencias/JM-09/`](../evidencias/JM-09/README.md).
+
 
