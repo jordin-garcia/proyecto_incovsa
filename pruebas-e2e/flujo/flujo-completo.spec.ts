@@ -45,7 +45,7 @@ type Linea = { producto: string; lote: string; peso: string; cantidad: string };
 
 let bd: Client | null = null;
 let sedeId = 0;
-let facturadorId = 0;
+let facturadorId = "";
 let ultimoPedidoAnterior = 0;
 
 async function consultar<T extends Record<string, unknown>>(sql: string, valores: unknown[] = []) {
@@ -124,7 +124,7 @@ test.beforeEach(async () => {
   // Comparte el tablero de Facturación de Quetzaltenango con facturacion-carga y facturacion-envio: una prueba a la vez.
   await bd.query("SELECT pg_advisory_lock(hashtext($1))", ["e2e:facturacion-envio"]);
   [{ id: sedeId }] = await consultar<{ id: number }>("SELECT id FROM sede WHERE nombre = 'Quetzaltenango'");
-  [{ id: facturadorId }] = await consultar<{ id: number }>(
+  [{ id: facturadorId }] = await consultar<{ id: string }>(
     "SELECT id FROM usuario WHERE username = 'picking.ejemplo.03'",
   );
   [{ ultimo: ultimoPedidoAnterior }] = await consultar<{ ultimo: number }>(
@@ -180,10 +180,11 @@ async function mover(page: Page, id: number, tecla: "ArrowRight" | "ArrowLeft", 
   await expect(page.getByRole("region", { name: destino, exact: true }).locator(tarjeta)).toHaveCount(1);
 }
 
-/** Espera la respuesta de la acción del servidor que dispara `accion`. */
+/** Espera la respuesta de la acción del servidor que dispara `accion`, con un tiempo propio para fallar pronto. */
 async function conAccion(page: Page, accion: () => Promise<void>) {
   const respuesta = page.waitForResponse(
     (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
+    { timeout: 30_000 },
   );
   await accion();
   expect((await respuesta).ok()).toBe(true);
@@ -301,6 +302,14 @@ test("RN-11 / RN-52 / RN-29 / RF-SL-16 / RF-SL-24 / RF-SL-29 / RF-SL-37 / RF-SL-
     );
     expect(await estadoEnvio(rutaId)).toEqual({ estado: "En Preparación", numero: 1, tipo: "ruta" });
     expect(await historial(rutaId)).toEqual(["En Preparación"]);
+    // RNF-06: la ruta se guardó completa, con sus líneas de preparación, sus clientes y su registro de bitácora.
+    expect((await lineas(rutaId)).length).toBeGreaterThan(0);
+    expect(await recorridoGuardado(rutaId)).toHaveLength(3);
+    const [{ registros }] = await consultar<{ registros: number }>(
+      "SELECT COUNT(*)::int AS registros FROM bitacora WHERE operacion = 'Envío de ruta a bodega' AND registro_id = $1",
+      [String(rutaId)],
+    );
+    expect(registros).toBe(1);
   });
 
   let pedidoId = 0;

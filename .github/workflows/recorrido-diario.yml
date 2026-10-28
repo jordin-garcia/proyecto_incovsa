@@ -28,7 +28,7 @@ jobs:
   recorrido:
     name: recorrido
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     # Base vacía en cada ejecución. La contraseña es solo de este contenedor temporal.
     services:
       postgres:
@@ -47,7 +47,7 @@ jobs:
     env:
       DATABASE_URL: postgresql://incovsa:incovsa@localhost:5432/incovsa_recorrido
       ALMACENAMIENTO: disco
-      TZ: America/Guatemala
+      # Sin TZ: el servidor corre en UTC, como el contenedor de producción.
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -97,7 +97,8 @@ jobs:
   aviso:
     name: aviso
     needs: recorrido
-    if: ${{ failure() && github.event_name != 'pull_request' }}
+    # También cuando el recorrido se cancela por agotar su tiempo máximo: entonces failure() no se cumple.
+    if: ${{ always() && needs.recorrido.result != 'success' && github.event_name != 'pull_request' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -117,7 +118,7 @@ jobs:
             exit 1
           fi
           {
-            echo "@jordin-garcia El recorrido diario del flujo completo falló en \`$RAMA\` (${COMMIT:0:7})."
+            echo "@jordin-garcia El recorrido diario del flujo completo falló o no terminó en \`$RAMA\` (${COMMIT:0:7})."
             echo
             echo "Ejecución, capturas y reporte de Playwright: $EJECUCION"
           } > "$RUNNER_TEMP/aviso.md"
