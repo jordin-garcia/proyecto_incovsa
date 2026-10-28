@@ -1,0 +1,124 @@
+# Recorrido diario del flujo completo (JG-14, specs/16 decisión 67). Mientras no exista el primer despliegue, GitHub
+# Actions recorre cada día, sobre develop y en su propio entorno temporal (PostgreSQL 18 y el servidor de producción
+# standalone), la prueba integral de pruebas-e2e/flujo/flujo-completo.spec.ts: pedido facturado → conversión →
+# preparación → despacho → entrega → reporte. Si falla, avisa al coordinador en el issue "Tablero del plan".
+# También corre en los PR que cambian la prueba o este flujo, para verificarlos antes de integrarlos (sin avisar).
+name: Recorrido diario
+
+on:
+  schedule:
+    # 06:00 en Guatemala (UTC-6, sin horario de verano). Los flujos programados corren sobre la rama por defecto (develop).
+    - cron: "0 12 * * *"
+  workflow_dispatch:
+  pull_request:
+    branches: [develop]
+    paths:
+      - .github/workflows/recorrido-diario.yml
+      - pruebas-e2e/flujo/flujo-completo.spec.ts
+      - pruebas-e2e/flujo/servidor-produccion.ts
+
+concurrency:
+  group: recorrido-diario-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  recorrido:
+    name: recorrido
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Base vacía en cada ejecución. La contraseña es solo de este contenedor temporal.
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: incovsa
+          POSTGRES_PASSWORD: incovsa
+          POSTGRES_DB: incovsa_recorrido
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U incovsa -d incovsa_recorrido"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://incovsa:incovsa@localhost:5432/incovsa_recorrido
+      ALMACENAMIENTO: disco
+      TZ: America/Guatemala
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+
+      # Claves aleatorias de cada ejecución: no hay secretos en el repositorio y no sirven fuera de este entorno.
+      - name: Generar las claves temporales
+        run: |
+          for variable in BETTER_AUTH_SECRET_SITIO BETTER_AUTH_SECRET_PICKING CLAVE_DEMO; do
+            valor="$(openssl rand -hex 32)"
+            echo "::add-mask::$valor"
+            echo "$variable=$valor" >> "$GITHUB_ENV"
+          done
+
+      - name: Aplicar las migraciones y las semillas
+        run: |
+          npm run db:aplicar
+          npm run db:semilla
+          npm run semilla:demo
+
+      - name: Instalar Chromium
+        run: npx playwright install --with-deps chromium
+
+      - run: npm run build
+
+      # El fixture de pruebas-e2e/flujo/servidor-produccion.ts arranca .next/standalone/server.js, lo mismo que ejecuta
+      # la imagen de Docker en producción (next.config.ts usa output: "standalone").
+      - name: Recorrer el flujo completo
+        run: npm run e2e -- pruebas-e2e/flujo/flujo-completo.spec.ts
+
+      - name: Conservar las capturas y el reporte
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: recorrido-diario-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: warn
+          retention-days: 14
+
+  aviso:
+    name: aviso
+    needs: recorrido
+    if: ${{ failure() && github.event_name != 'pull_request' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      EJECUCION: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      COMMIT: ${{ github.sha }}
+      RAMA: ${{ github.ref_name }}
+    steps:
+      - name: Avisar en el Tablero del plan
+        run: |
+          numero=$(gh issue list --label tablero --state all --limit 100 --json number,title --jq 'map(select(.title == "Tablero del plan")) | .[0].number // empty')
+          if [ -z "$numero" ]; then
+            echo "::error::No existe el issue «Tablero del plan» para avisar del fallo."
+            exit 1
+          fi
+          {
+            echo "@jordin-garcia El recorrido diario del flujo completo falló en \`$RAMA\` (${COMMIT:0:7})."
+            echo
+            echo "Ejecución, capturas y reporte de Playwright: $EJECUCION"
+          } > "$RUNNER_TEMP/aviso.md"
+          gh issue comment "$numero" --body-file "$RUNNER_TEMP/aviso.md"
