@@ -32,6 +32,28 @@ async function entrada() {
     mensaje: "Consulta de prueba",
   };
 }
+it("RF-SW-06 / H-60: los topes de 150 y 20 caracteres avisan en español", async () => {
+  const datos = await entrada();
+  const casos = [
+    { campo: "nombre", valor: "a".repeat(151), mensaje: "El nombre admite hasta 150 caracteres." },
+    { campo: "empresa", valor: "a".repeat(151), mensaje: "La empresa admite hasta 150 caracteres." },
+    {
+      campo: "correo",
+      valor: `${"a".repeat(139)}@ejemplo.com`,
+      mensaje: "El correo admite hasta 150 caracteres.",
+    },
+    { campo: "telefono", valor: "1".repeat(21), mensaje: "El teléfono admite hasta 20 caracteres." },
+  ] as const;
+  for (const caso of casos) {
+    const resultado = esquemaSolicitud.safeParse({ ...datos, [caso.campo]: caso.valor });
+    expect(resultado.success).toBe(false);
+    if (resultado.success) throw new Error(caso.campo);
+    expect(resultado.error.issues).toEqual(
+      expect.arrayContaining([expect.objectContaining({ path: [caso.campo], message: caso.mensaje })]),
+    );
+    expect(resultado.error.issues.map((issue) => issue.message).join(" ")).not.toMatch(/Too big|expected string/i);
+  }
+});
 it("RF-SW-19: exige país, territorios de Guatemala y estructura válida de correo y teléfono", async () => {
   const datos = await entrada();
   for (const cambio of [

@@ -4,6 +4,10 @@ export const esquemaAbrir = z.strictObject({ id });
 export const esquemaGestion = z.discriminatedUnion("tipo", [
   z.strictObject({ id, tipo: z.literal("estado"), estado: z.enum(["asignado", "en_proceso", "solucionado"]) }),
   z.strictObject({ id, tipo: z.literal("responsable"), responsableId: z.string().min(1).nullable() }),
-  z.strictObject({ id, tipo: z.literal("comentario"), comentario: z.string().trim() }),
+  z.strictObject({
+    id,
+    tipo: z.literal("comentario"),
+    comentario: z.string().trim().max(2000, "El comentario admite hasta 2000 caracteres."),
+  }),
 ]);
 export type GestionSolicitud = z.output<typeof esquemaGestion>;

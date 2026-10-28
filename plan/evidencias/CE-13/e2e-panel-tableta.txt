@@ -1,0 +1,59 @@
+
+Running 28 tests using 1 worker
+
+  ok  1 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:82:5 › RF-SW-07 / RF-SW-23 / H-58: la galería compartida mide como el prototipo (19.6s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok  2 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:135:5 › RF-SL-36 / RN-39 / H-56: Reportes › Bitácora muestra el título de la noticia (17.8s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok  3 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:193:5 › RF-SL-36 / RN-39 / H-57 / RNF-05 / H-63: la bitácora de solicitudes usa los textos del prototipo y el comentario tiene tope (9.3s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok  4 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:247:5 › H-62: el mapa inválido avisa con el texto del prototipo (3.6s)
+  ok  5 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:282:5 › H-62: un correo mal formado se rechaza al salir del campo y no se guarda (4.9s)
+  ok  6 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:295:5 › H-62: un correo con formato válido se guarda (6.3s)
+  ok  7 [tableta] › pruebas-e2e\panel\auditoria-jg24.spec.ts:12:5 › RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recupera medidas y hover del prototipo (6.1s)
+  ok  8 [tableta] › pruebas-e2e\panel\auditoria-jg24.spec.ts:51:5 › RF-SW-29 / RN-39 / H-04: publicar y quitar un valor muestra el número del valor en el aviso (7.2s)
+  ok  9 [tableta] › pruebas-e2e\panel\contenido.spec.ts:20:5 › RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y accesibilidad (10.3s)
+  ok 10 [tableta] › pruebas-e2e\panel\contenido.spec.ts:83:5 › RF-SW-25: el permiso se exige también al abrir la sección directamente (2.5s)
+  ok 11 [tableta] › pruebas-e2e\panel\contenido.spec.ts:109:5 › RF-SW-23 / RNF-05: publica una imagen de 5 MB y limpia la imagen retirada (6.0s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok 12 [tableta] › pruebas-e2e\panel\contenido.spec.ts:148:5 › RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas (3.7s)
+  ok 13 [tableta] › pruebas-e2e\panel\contenido.spec.ts:165:5 › RF-SW-23: un borrador de portada o historia no cambia la etiqueta publicada (2.4s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 14 [tableta] › pruebas-e2e\panel\contenido.spec.ts:181:5 › RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visita sin sesión (6.6s)
+  ok 15 [tableta] › pruebas-e2e\panel\contenido.spec.ts:243:5 › RF-SW-23 / RF-SW-24: reemplazar INCOVSA actualiza cabecera y pie públicos (6.8s)
+  ok 16 [tableta] › pruebas-e2e\panel\documentos.spec.ts:33:5 › RF-SW-14 / RN-41 / RNF-08: crear, buscar, editar y eliminar productos documentados (11.3s)
+  ok 17 [tableta] › pruebas-e2e\panel\documentos.spec.ts:84:5 › RN-19 / RF-SW-21 / RNF-08: solo ver y ver-descargar reciben opciones y direcciones autorizadas; CSP permite Drive (7.0s)
+  ok 18 [tableta] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:22:5 › RF-SW-07 / RN-56: guardar descripción y galería publica la industria sin perder los datos anteriores (9.3s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok 19 [tableta] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:83:5 › RF-SW-07 / RNF-08: industrias y catálogo conservan estructura y accesibilidad (11.1s)
+  ok 20 [tableta] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:115:5 › RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes de eliminar (11.9s)
+  ok 21 [tableta] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:154:5 › RF-SW-23: impide cerrar el editor mientras se publica y conserva el borrador si falla (5.0s)
+  ok 22 [tableta] › pruebas-e2e\panel\solicitudes.spec.ts:68:1 › RF-SW-20 / CP-63 / RNF-08: filtros, estados libres, responsable y edición del comentario accesibles (18.2s)
+  ok 23 [tableta] › pruebas-e2e\panel\solicitudes.spec.ts:127:1 › RF-SW-31 / CP-59: indicador normal y reducido baja al abrir una solicitud (3.8s)
+  ok 24 [tableta] › pruebas-e2e\panel\solicitudes.spec.ts:145:1 › RNF-04 / RF-SW-20: solo lectura sin gestionar y sección ausente sin permisos (4.4s)
+  ok 25 [tableta] › pruebas-e2e\panel\usuarios.spec.ts:30:7 › Panel: usuarios del sitio › RF-SW-13: Gerencia crea un usuario con solo sit.doc.ver y ese usuario solo ve la documentación (7.0s)
+  ok 26 [tableta] › pruebas-e2e\panel\usuarios.spec.ts:80:7 › Panel: usuarios del sitio › RF-SW-11 / RN-47: restablecer la contraseña no ofrece correo y la nueva clave entra (7.4s)
+  ok 27 [tableta] › pruebas-e2e\panel\usuarios.spec.ts:116:7 › Panel: usuarios del sitio › RF-SW-11: ¿Olvidó su contraseña? del sitio pide a Gerencia o a Soporte (5.0s)
+  ok 28 [tableta] › pruebas-e2e\panel\usuarios.spec.ts:131:7 › Panel: usuarios del sitio › criterio 5: la lista y el alta no tienen violaciones serias de axe (5.8s)
+[WebServer] npm notice
+[WebServer] npm notice New minor version of npm available! 11.19.0 -> 11.21.1
+[WebServer] npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.21.1
+[WebServer] npm notice To update run: npm install -g npm@11.21.1
+[WebServer] npm notice
+
+  28 passed (4.1m)

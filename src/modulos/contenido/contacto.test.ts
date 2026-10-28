@@ -4,6 +4,7 @@ import type { SesionActual } from "@/lib/sesion";
 import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import { leerEstructuraSitio } from "./servicio";
 import { leerContactoPanel, guardarContacto } from "./contacto";
+import { esquemaContacto } from "./esquemas-contacto";
 const estado = vi.hoisted(() => ({ sesion: null as SesionActual | null }));
 vi.mock("@/lib/sesion", () => ({ obtenerSesion: async () => estado.sesion }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
@@ -65,4 +66,43 @@ it("RF-SW-22: rechaza mapas externos, variantes engañosas y la bodega de Escuin
   const sede = await prisma.sede.findUniqueOrThrow({ where: { nombre: "Escuintla" } });
   expect((await publicarContacto({ ...datos, sedeId: sede.id })).ok).toBe(false);
   expect(await prisma.bitacora.count()).toBe(0);
+});
+const MENSAJE_CORREO = "Indique un correo válido.";
+const contactoBase = {
+  sedeId: 1,
+  direccion: "Calle",
+  telefono: "",
+  whatsapp: "",
+  horario: "",
+  mapaUrl: "",
+};
+it("H-62 / CE-13b: el correo vacío o válido pasa y el mal formado se rechaza", () => {
+  for (const correo of ["", "oficina@ejemplo.com", "a.b@dominio.com.gt", "  oficina@ejemplo.com  "]) {
+    expect(esquemaContacto.safeParse({ ...contactoBase, correo }).success, correo).toBe(true);
+  }
+  for (const correo of [
+    "sin-arroba",
+    "sin-dominio@",
+    "con espacio@dominio.com",
+    "correo@dominio.",
+    "correo@dominio.com.",
+  ]) {
+    const resultado = esquemaContacto.safeParse({ ...contactoBase, correo });
+    expect(resultado.success, correo).toBe(false);
+    if (resultado.success) throw new Error("Se aceptó un correo mal formado");
+    expect(resultado.error.issues).toEqual([expect.objectContaining({ message: MENSAJE_CORREO, path: ["correo"] })]);
+  }
+});
+it("H-62 / CE-13b: el servidor no guarda un correo mal formado y sí guarda uno válido", async () => {
+  const [actual] = await leerContactoPanel(sesion);
+  const { sedeId, direccion, telefono, whatsapp, horario, mapaUrl } = actual;
+  const datos = { sedeId, direccion, telefono, whatsapp, horario: horario ?? "", mapaUrl, correo: actual.correo };
+  for (const correo of ["sin-arroba", "sin-dominio@", "con espacio@dominio.com", "correo@dominio."]) {
+    await expect(guardarContacto({ ...datos, correo }, sesion)).rejects.toThrow(MENSAJE_CORREO);
+    expect(await publicarContacto({ ...datos, correo })).toEqual({ ok: false, error: MENSAJE_CORREO });
+  }
+  expect((await leerContactoPanel(sesion)).find((s) => s.sedeId === sedeId)?.correo).toBe(actual.correo);
+  expect(await prisma.bitacora.count()).toBe(0);
+  await guardarContacto({ ...datos, correo: "oficina@ejemplo.com" }, sesion);
+  expect((await leerContactoPanel(sesion)).find((s) => s.sedeId === sedeId)?.correo).toBe("oficina@ejemplo.com");
 });

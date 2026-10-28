@@ -67,7 +67,7 @@ export async function guardarNoticia(entrada: NoticiaEntrada, archivos: File[], 
         usuarioId: sesion!.usuario.id,
         operacion: datos.id ? "Edición de noticia" : "Creación de noticia",
         entidad: "noticia",
-        detalle: { noticia: datos.titulo },
+        detalle: { resumen: datos.titulo },
       });
       return { id: noticia.id, antiguas: actuales.filter((url) => !urls.includes(url)) };
     });
@@ -90,7 +90,7 @@ export async function borrarNoticia(entrada: number, sesion: SesionActual | null
       usuarioId: sesion!.usuario.id,
       operacion: "Eliminación de noticia",
       entidad: "noticia",
-      detalle: { noticia: noticia.titulo },
+      detalle: { resumen: noticia.titulo },
     });
     return imagenes.map((i) => i.url);
   });
