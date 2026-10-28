@@ -657,6 +657,12 @@ Daniela autorizó usar `--g600` solo en las pestañas inactivas y el texto secun
 - **D-10, Reportes:** el PDF usa siempre el logotipo de INCOVSA del sistema (`public/marca/incovsa-quimicos.webp`), no el que se configura en el panel del sitio ([10](10-picking-reportes.md), "Exportación").
 - Las correcciones del código son de CE-13 (sitio y panel), JM-09 (Bodega, tablero y Ruta), JC-09 (Reportes y Facturación) y JG-25 (CI y pruebas de JG-10) (`plan/auditorias/2026-10-26.md`).
 
+## Prueba integral y recorrido diario (27/10/2026, JG-14)
+
+- **Decisión 67:** el recorrido diario arranca el servidor de producción *standalone* (`node .next/standalone/server.js`, el mismo de la imagen de Docker) en lugar de `next start`, que no aplica con `output: "standalone"`. Lo decidió Jordin el 27/10 ([16](16-arquitectura-y-tecnologia.md)).
+- La prueba integral (`pruebas-e2e/flujo/flujo-completo.spec.ts`) exige una base sin rutas, pedidos ni cambios de estado de hoy en Quetzaltenango, para comprobar que la numeración diaria empieza en Ruta 1 y Pedido 1 (RN-52). Al terminar borra los envíos y los pedidos facturados que creó; la bitácora se conserva. Corre en teléfono, tableta y escritorio, una a la vez.
+- El flujo `recorrido-diario.yml` también corre en los PR que cambian la prueba o el flujo, sin avisar en el tablero.
+
 ## Documentos no alineados con las reuniones 4 y 5
 
 Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los cambios del 29/09, del 11/10 ni del 13/10:
