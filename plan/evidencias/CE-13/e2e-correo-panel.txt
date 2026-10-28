@@ -1,0 +1,96 @@
+
+Running 27 tests using 1 worker
+
+  ok  1 [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:82:5 › RF-SW-07 / RF-SW-23 / H-58: la galería compartida mide como el prototipo (22.6s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok  2 [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:135:5 › RF-SL-36 / RN-39 / H-56: Reportes › Bitácora muestra el título de la noticia (20.4s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok  3 [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:193:5 › RF-SL-36 / RN-39 / H-57 / RNF-05 / H-63: la bitácora de solicitudes usa los textos del prototipo y el comentario tiene tope (9.7s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok  4 [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:247:5 › H-62: el mapa inválido avisa con el texto del prototipo (4.4s)
+  ok  5 [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:282:5 › H-62: un correo mal formado se rechaza al salir del campo y no se guarda (4.7s)
+  ok  6 [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:295:5 › H-62: un correo con formato válido se guarda (6.7s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok  7 [telefono] › pruebas-e2e\sitio\contacto.spec.ts:58:1 › RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible (7.3s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok  8 [telefono] › pruebas-e2e\sitio\contacto.spec.ts:108:1 › RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito (4.4s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok  9 [telefono] › pruebas-e2e\sitio\contacto.spec.ts:142:1 › RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos (11.6s)
+  ok 10 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:82:5 › RF-SW-07 / RF-SW-23 / H-58: la galería compartida mide como el prototipo (14.7s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok 11 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:135:5 › RF-SL-36 / RN-39 / H-56: Reportes › Bitácora muestra el título de la noticia (18.1s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok 12 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:193:5 › RF-SL-36 / RN-39 / H-57 / RNF-05 / H-63: la bitácora de solicitudes usa los textos del prototipo y el comentario tiene tope (9.5s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok 13 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:247:5 › H-62: el mapa inválido avisa con el texto del prototipo (3.4s)
+  ok 14 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:282:5 › H-62: un correo mal formado se rechaza al salir del campo y no se guarda (5.8s)
+  ok 15 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:295:5 › H-62: un correo con formato válido se guarda (6.9s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 16 [tableta] › pruebas-e2e\sitio\contacto.spec.ts:58:1 › RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible (5.6s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 17 [tableta] › pruebas-e2e\sitio\contacto.spec.ts:108:1 › RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito (4.6s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 18 [tableta] › pruebas-e2e\sitio\contacto.spec.ts:142:1 › RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos (16.2s)
+  ok 19 [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:82:5 › RF-SW-07 / RF-SW-23 / H-58: la galería compartida mide como el prototipo (15.9s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok 20 [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:135:5 › RF-SL-36 / RN-39 / H-56: Reportes › Bitácora muestra el título de la noticia (18.7s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok 21 [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:193:5 › RF-SL-36 / RN-39 / H-57 / RNF-05 / H-63: la bitácora de solicitudes usa los textos del prototipo y el comentario tiene tope (9.7s)
+  ok 22 [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:247:5 › H-62: el mapa inválido avisa con el texto del prototipo (3.2s)
+  ok 23 [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:282:5 › H-62: un correo mal formado se rechaza al salir del campo y no se guarda (6.4s)
+  ok 24 [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:295:5 › H-62: un correo con formato válido se guarda (7.8s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 25 [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:58:1 › RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible (5.9s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 26 [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:108:1 › RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito (5.4s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 27 [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:142:1 › RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos (21.0s)
+
+  27 passed (4.9m)

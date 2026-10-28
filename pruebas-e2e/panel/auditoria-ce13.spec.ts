@@ -12,6 +12,14 @@ try {
 const MENSAJE_MAPA =
   "El mapa debe ser la dirección del mapa insertado de Google Maps (https://www.google.com/maps/embed?…).";
 
+// Información de contacto muestra los mapas de Google de las dos sedes. Como en `seguridad/cabeceras.spec.ts`,
+// se responden en local para que la carga de la página no dependa de la red externa.
+test.beforeEach(async ({ page }) => {
+  await page.route("https://www.google.com/maps/embed**", (ruta) =>
+    ruta.fulfill({ contentType: "text/html", body: "Mapa de prueba" }),
+  );
+});
+
 async function entrar(page: Page, sistema: "sitio" | "picking", usuario: string) {
   const respuesta = await page.request.post(`/api/auth/${sistema}/sign-in/username`, {
     headers: { origin: "http://localhost:3000" },
