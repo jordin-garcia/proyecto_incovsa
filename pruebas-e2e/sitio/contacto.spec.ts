@@ -1,7 +1,7 @@
 import { test as base, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { Client } from "pg";
-import { mkdir, unlink } from "node:fs/promises";
+import { capturaEvidencia } from "../comunes/evidencia";
 try {
   process.loadEnvFile();
 } catch {
@@ -33,6 +33,13 @@ const test = base.extend<{ contactoDePrueba: Client }>({
     { auto: true, timeout: 60000 },
   ],
 });
+// Contacto, Inicio y el panel muestran los mapas de Google de las sedes. Como en `seguridad/cabeceras.spec.ts`,
+// se responden en local para que la carga de la página no dependa de la red externa.
+test.beforeEach(async ({ page }) => {
+  await page.route("https://www.google.com/maps/embed**", (ruta) =>
+    ruta.fulfill({ contentType: "text/html", body: "Mapa de prueba" }),
+  );
+});
 async function captura(page: Page, estado: string) {
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
   await page.locator("img").evaluateAll(async (elementos) => {
@@ -45,12 +52,7 @@ async function captura(page: Page, estado: string) {
     );
   });
   await page.evaluate(() => document.fonts.ready);
-  await mkdir("pruebas-e2e/sitio/evidencias/DM-08", { recursive: true });
-  const archivo = `pruebas-e2e/sitio/evidencias/DM-08/${estado}-${page.viewportSize()!.width}.png`;
-  await unlink(archivo).catch((e: NodeJS.ErrnoException) => {
-    if (e.code !== "ENOENT") throw e;
-  });
-  await page.screenshot({ path: archivo, fullPage: true });
+  await capturaEvidencia(page, `pruebas-e2e/sitio/evidencias/DM-08/${estado}-${page.viewportSize()!.width}.png`);
 }
 async function axe(page: Page) {
   expect(
@@ -66,6 +68,8 @@ test("RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserv
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/contacto");
   await expect(page.getByRole("heading", { name: "Envíenos su mensaje" })).toBeVisible();
+  // Sin EVIDENCIA=1 la captura no espera nada: se interactúa solo cuando React ya tomó el formulario.
+  await expect(page.locator("form.contacto-form")).toHaveAttribute("data-hidratado", "true");
   await captura(page, "aplicacion-contacto");
   await page.getByLabel("País *", { exact: true }).selectOption("GT");
   await expect(page.getByLabel("Departamento *", { exact: true })).toBeVisible();
@@ -111,6 +115,7 @@ test("RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserv
 test("RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito", async ({ page, contactoDePrueba }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/contacto");
+  await expect(page.locator("form.contacto-form")).toHaveAttribute("data-hidratado", "true");
   const correo = `dm08-e2e-${Date.now()}@prueba.invalid`;
   await page.getByLabel("Nombre completo *", { exact: true }).fill("Persona de prueba");
   await page.getByLabel("Correo electrónico *", { exact: true }).fill(correo);
@@ -165,13 +170,15 @@ test("RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas
       "El mapa debe ser la dirección del mapa insertado de Google Maps (https://www.google.com/maps/embed?…).",
       { exact: true },
     ),
-  ).toBeVisible();
+  ).toHaveCount(0);
   await sede.getByRole("button", { name: "Guardar", exact: true }).click();
   await expect(
-    sede.getByText(
-      "El mapa debe ser la dirección del mapa insertado de Google Maps (https://www.google.com/maps/embed?…).",
-      { exact: true },
-    ),
+    page
+      .locator(".toast")
+      .getByText(
+        "El mapa debe ser la dirección del mapa insertado de Google Maps (https://www.google.com/maps/embed?…).",
+        { exact: true },
+      ),
   ).toBeVisible();
   await captura(page, "aplicacion-panel-error");
   await mapa.fill(original);

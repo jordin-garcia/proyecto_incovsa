@@ -96,3 +96,7 @@ Se completó el 20/10/2026 después de incorporar `develop` con DM-02 y la corre
 ### Correcciones de la auditoría (2026-10-22)
 
 H-03 a H-06: el avance previo se identifica como histórico; publicar o quitar una imagen de valor registra y anuncia «Imagen del valor N». La ruta multipart usa el origen público configurado y el menú oculta la sección sin permiso. CampoGaleria recupera el relleno, tamaño de letra y hover del prototipo, conservando el color accesible aprobado.
+
+### Correcciones de la auditoría (2026-10-26)
+
+CE-13 (H-58) dejó la galería compartida con la rejilla, la miniatura 4:3, el radio y las acciones del prototipo, sin cambiar el contraste `--g600` del área de subida. H-65 escribe las capturas de `pruebas-e2e/panel/contenido.spec.ts` solo con `EVIDENCIA=1`. El estado de esta tarea no cambia.

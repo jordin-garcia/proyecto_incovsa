@@ -214,7 +214,7 @@ Entran los usuarios del sitio según sus permisos ([03-roles-y-accesos.md](03-ro
 | Industrias | Descripción y galería de hasta 5 imágenes de cada industria |
 | Catálogo | Productos públicos y sus industrias, con galería de hasta 5 imágenes. Se pueden eliminar |
 | Noticias | Título, texto y galería de hasta 5 imágenes de cada noticia. La lista muestra imagen, título, fecha y los botones **editar** (lápiz) y **eliminar** (basurero, con confirmación), como en el Catálogo. Sin columna de estado ni botón "Ocultar" (15/10) |
-| Información de contacto | Dirección, teléfono, correo, WhatsApp, horario y mapa de Google Maps de Quetzaltenango y Guatemala |
+| Información de contacto | Dirección, teléfono, correo, WhatsApp, horario y mapa de Google Maps de Quetzaltenango y Guatemala. **(27/10, CE-13)** El correo puede quedar vacío. Si se escribe, debe tener un formato válido: al salir del campo el panel muestra «Indique un correo válido.» y no guarda, y el servidor rechaza el mismo caso antes de guardar. Se conserva esta validación por decisión de Carlos, confirmada por Jordin el 27/10 (auditoría H-62, [18](18-historial-de-decisiones.md)) |
 | Solicitudes | Bandeja del formulario de contacto (abajo) |
 | Documentación interna | Productos documentados (abajo) |
 | Usuarios | Usuarios del sitio. Los administran Gerencia y Soporte, con contraseña, rol y permisos ([03-roles-y-accesos.md](03-roles-y-accesos.md)) |
@@ -239,7 +239,7 @@ Cada sección muestra su **instrucción, lo más breve posible, a la par del tí
 - Las solicitudes se **dividen por motivo**: **solicitud, queja y reclamo**. En la bandeja el motivo se muestra con **inicial mayúscula** ("Solicitud", "Queja", "Reclamo"), en verde, ámbar y rojo (15/10).
 - El **mensaje** se muestra **completo dentro de su cuadro**, con sus saltos de línea; las palabras muy largas se parten (15/10).
 - **Responsable:** se elige entre los **usuarios del sitio**.
-- **Comentario:** un solo comentario del responsable. **(15/10)** Mientras no hay comentario, el botón dice **"Guardar comentario"**. Una vez guardado, el cuadro queda de solo lectura y el botón pasa a **"Editar comentario"**; al pulsarlo, el cuadro se habilita y el botón vuelve a "Guardar comentario".
+- **Comentario:** un solo comentario del responsable. **(15/10)** Mientras no hay comentario, el botón dice **"Guardar comentario"**. Una vez guardado, el cuadro queda de solo lectura y el botón pasa a **"Editar comentario"**; al pulsarlo, el cuadro se habilita y el botón vuelve a "Guardar comentario". **(27/10, CE-13, RNF-05)** Admite hasta **2000 caracteres**, el mismo tope del mensaje de Contacto. El navegador lo limita y el servidor rechaza lo que lo exceda; los comentarios ya guardados no se modifican.
 - **Estados:** botones **Asignado**, **En proceso** y **Solucionado** (RN-42), sin estado inicial y sin restricción de orden.
 - **No** se avisa por correo al responsable.
 - **Aviso de solicitudes nuevas (13/10):** el ícono de Solicitudes del menú lateral muestra un **indicador de notificaciones** cuando hay solicitudes nuevas (sin leer), también cuando el menú está reducido a íconos.

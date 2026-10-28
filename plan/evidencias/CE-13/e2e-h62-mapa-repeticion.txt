@@ -1,0 +1,133 @@
+
+Running 36 tests using 1 worker
+
+  ok  1 [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:90:5 › RF-SW-07 / RF-SW-23 / H-58: la galería compartida mide como el prototipo (19.4s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok  2 [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:143:5 › RF-SL-36 / RN-39 / H-56: Reportes › Bitácora muestra el título de la noticia (20.4s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok  3 [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:201:5 › RF-SL-36 / RN-39 / H-57 / RNF-05 / H-63: la bitácora de solicitudes usa los textos del prototipo y el comentario tiene tope (9.7s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok  4 [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:255:5 › H-62: el mapa inválido avisa con el texto del prototipo (2.8s)
+  ok  5 [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:290:5 › H-62: un correo mal formado se rechaza al salir del campo y no se guarda (3.3s)
+  ok  6 [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:303:5 › H-62: un correo con formato válido se guarda (4.8s)
+  ok  7 [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:90:5 › RF-SW-07 / RF-SW-23 / H-58: la galería compartida mide como el prototipo (14.5s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok  8 [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:143:5 › RF-SL-36 / RN-39 / H-56: Reportes › Bitácora muestra el título de la noticia (19.1s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok  9 [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:201:5 › RF-SL-36 / RN-39 / H-57 / RNF-05 / H-63: la bitácora de solicitudes usa los textos del prototipo y el comentario tiene tope (9.6s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok 10 [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:255:5 › H-62: el mapa inválido avisa con el texto del prototipo (2.6s)
+  ok 11 [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:290:5 › H-62: un correo mal formado se rechaza al salir del campo y no se guarda (3.4s)
+  ok 12 [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:303:5 › H-62: un correo con formato válido se guarda (4.5s)
+  ok 13 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:90:5 › RF-SW-07 / RF-SW-23 / H-58: la galería compartida mide como el prototipo (14.4s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok 14 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:143:5 › RF-SL-36 / RN-39 / H-56: Reportes › Bitácora muestra el título de la noticia (19.9s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok 15 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:201:5 › RF-SL-36 / RN-39 / H-57 / RNF-05 / H-63: la bitácora de solicitudes usa los textos del prototipo y el comentario tiene tope (9.5s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok 16 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:255:5 › H-62: el mapa inválido avisa con el texto del prototipo (2.8s)
+  ok 17 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:290:5 › H-62: un correo mal formado se rechaza al salir del campo y no se guarda (3.3s)
+  ok 18 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:303:5 › H-62: un correo con formato válido se guarda (4.5s)
+  ok 19 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:90:5 › RF-SW-07 / RF-SW-23 / H-58: la galería compartida mide como el prototipo (15.2s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok 20 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:143:5 › RF-SL-36 / RN-39 / H-56: Reportes › Bitácora muestra el título de la noticia (20.1s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok 21 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:201:5 › RF-SL-36 / RN-39 / H-57 / RNF-05 / H-63: la bitácora de solicitudes usa los textos del prototipo y el comentario tiene tope (9.6s)
+  ok 22 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:255:5 › H-62: el mapa inválido avisa con el texto del prototipo (2.5s)
+  ok 23 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:290:5 › H-62: un correo mal formado se rechaza al salir del campo y no se guarda (3.4s)
+  ok 24 [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:303:5 › H-62: un correo con formato válido se guarda (4.4s)
+  ok 25 [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:90:5 › RF-SW-07 / RF-SW-23 / H-58: la galería compartida mide como el prototipo (15.5s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok 26 [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:143:5 › RF-SL-36 / RN-39 / H-56: Reportes › Bitácora muestra el título de la noticia (20.4s)
+  ok 27 [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:201:5 › RF-SL-36 / RN-39 / H-57 / RNF-05 / H-63: la bitácora de solicitudes usa los textos del prototipo y el comentario tiene tope (9.7s)
+  ok 28 [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:255:5 › H-62: el mapa inválido avisa con el texto del prototipo (2.9s)
+  ok 29 [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:290:5 › H-62: un correo mal formado se rechaza al salir del campo y no se guarda (3.4s)
+  ok 30 [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:303:5 › H-62: un correo con formato válido se guarda (4.5s)
+  ok 31 [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:90:5 › RF-SW-07 / RF-SW-23 / H-58: la galería compartida mide como el prototipo (15.3s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok 32 [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:143:5 › RF-SL-36 / RN-39 / H-56: Reportes › Bitácora muestra el título de la noticia (20.2s)
+  ok 33 [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:201:5 › RF-SL-36 / RN-39 / H-57 / RNF-05 / H-63: la bitácora de solicitudes usa los textos del prototipo y el comentario tiene tope (9.8s)
+  ok 34 [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:255:5 › H-62: el mapa inválido avisa con el texto del prototipo (2.9s)
+  ok 35 [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:290:5 › H-62: un correo mal formado se rechaza al salir del campo y no se guarda (3.5s)
+  ok 36 [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:303:5 › H-62: un correo con formato válido se guarda (4.6s)
+
+  36 passed (6.0m)

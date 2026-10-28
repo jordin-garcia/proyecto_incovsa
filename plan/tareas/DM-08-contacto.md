@@ -83,3 +83,7 @@ Lo implementó Daniela y lo terminó e integró el coordinador (Jordin) el 24/10
 - Las solicitudes llegan a `solicitud_contacto` con `estado: null`, `leida: false` y sin responsable. La bandeja las lee y cambia con acciones nuevas en `src/modulos/solicitudes/acciones.ts`, **siempre con `exigirPermiso`**. No agregues nada a `recepcion-publica.ts`: Semgrep rechaza cualquier exportación distinta de `enviarSolicitud` y cualquier cambio en su cuerpo o en sus importaciones.
 - `leerOpcionesContacto()` devuelve países, departamentos, municipios y las dos oficinas, por si la bandeja necesita mostrar sus nombres.
 - `esquemaSolicitud` es la fuente de verdad de los campos; si cambia, cambia en el navegador y en el servidor a la vez.
+
+### Correcciones de la auditoría (2026-10-26)
+
+CE-13: H-60 limita nombre, empresa y correo a 150 y el teléfono a 20, con `maxLength` y mensaje en español; H-61 valida al salir del campo solo el correo y el teléfono; H-62 avisa el mapa inválido con el texto del prototipo; el correo de Información de contacto sigue validándose («Indique un correo válido.»), decisión de Carlos confirmada por Jordin el 27/10 (`specs/05`, `specs/18`). H-65 escribe las capturas de `pruebas-e2e/sitio/contacto.spec.ts` solo con `EVIDENCIA=1`. El estado de esta tarea no cambia.
