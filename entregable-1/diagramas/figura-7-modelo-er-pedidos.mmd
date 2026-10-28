@@ -1,21 +1,50 @@
+%% Picking. Nombres de prisma/schema.prisma.
+%% Sin cliente, sector, catálogo de productos, ruta aparte,
+%% devolución, existencia ni traslado (specs/14).
 erDiagram
-    SEDE ||--o{ PEDIDO : recibe
-    USUARIO ||--o{ PEDIDO : registra
-    PEDIDO }o--o| CAMION : "se carga en"
-    ESTADO_PEDIDO ||--o{ PEDIDO : "define el estado de"
-    ESTADO_PEDIDO ||--o{ HISTORIAL_ESTADO : clasifica
-    USUARIO ||--o{ HISTORIAL_ESTADO : "cambia el estado"
-    PEDIDO ||--|{ HISTORIAL_ESTADO : registra
-    PEDIDO ||--|{ DETALLE_PEDIDO : contiene
-    CLIENTE ||--o{ DETALLE_PEDIDO : solicita
-    PRODUCTO ||--o{ DETALLE_PEDIDO : "se solicita en"
-    PEDIDO ||--|{ LINEA_PREPARACION : genera
-    PRODUCTO ||--o{ LINEA_PREPARACION : "se prepara en"
-    PEDIDO ||--o| RUTA : origina
-    USUARIO ||--o{ RUTA : conduce
-    RUTA ||--|{ ENTREGA_RUTA : contiene
-    CLIENTE ||--o{ ENTREGA_RUTA : recibe
-    DEVOLUCION }o--|| PEDIDO : "corrige"
-    USUARIO ||--o{ DEVOLUCION : registra
-    DEVOLUCION ||--|{ MOVIMIENTO_INVENTARIO : genera
-    DETALLE_PEDIDO ||--o{ MOVIMIENTO_INVENTARIO : "se vende o devuelve en"
+    Sede ||--|{ OpcionEnvio : "dos por sede"
+    Camion |o--o| OpcionEnvio : "elegido si es camión"
+    Usuario |o--o| OpcionEnvio : "piloto elegido"
+    Sede ||--o{ PedidoFacturado : recibe
+    Usuario ||--o{ PedidoFacturado : carga
+    OpcionEnvio |o--o{ PedidoFacturado : "vacío es el tablero"
+    Envio |o--o{ PedidoFacturado : contiene
+    PedidoFacturado ||--|{ DetallePedidoFacturado : detalla
+    Sede ||--o{ Envio : despacha
+    EstadoEnvio ||--o{ Envio : clasifica
+    Usuario ||--o{ Envio : envia
+    Camion |o--o{ Envio : "solo si es ruta"
+    Usuario |o--o{ Envio : "piloto si es ruta"
+    Envio ||--|{ LineaPreparacion : prepara
+    Envio ||--|{ HistorialEstado : historial
+    Usuario ||--o{ HistorialEstado : cambia
+    Envio ||--o{ EntregaRuta : "clientes si es ruta"
+
+    PedidoFacturado {
+        string numeroOdoo
+        string nombreCliente
+        string sector
+    }
+    DetallePedidoFacturado {
+        string producto
+        string lote
+        decimal pesoConversionKg
+        decimal cantidadKg
+    }
+    Envio {
+        string tipo
+        int numeroDia
+        datetime programadoEn
+    }
+    LineaPreparacion {
+        string producto
+        string lote
+        decimal pesoConversionKg
+        decimal cantidadKg
+        boolean marcado
+    }
+    EntregaRuta {
+        string nombreCliente
+        string sector
+        decimal totalKg
+    }

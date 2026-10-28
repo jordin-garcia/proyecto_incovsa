@@ -1,8 +1,46 @@
+%% Sitio. Nombres de prisma/schema.prisma.
+%% ProductoDocumentado reemplaza al documento interno en PDF (specs/14).
 erDiagram
-    INDUSTRIA }o--o{ PRODUCTO_SITIO : clasifica
-    DOCUMENTO_INTERNO }o--|{ PRODUCTO_SITIO : "se asocia a"
-    USUARIO ||--o{ DOCUMENTO_INTERNO : carga
-    SEDE ||--o{ INFORMACION_CONTACTO : describe
-    CONTENIDO_INSTITUCIONAL
-    NOTICIA
-    SOLICITUD_CONTACTO
+    ConfiguracionSitio ||--o{ Imagen : portada
+    ContenidoInstitucional ||--o{ Imagen : galeria
+    Industria ||--o{ Imagen : galeria
+    ProductoSitio ||--o{ Imagen : galeria
+    Noticia ||--o{ Imagen : galeria
+    Industria ||--o{ ProductoIndustria : clasifica
+    ProductoSitio ||--o{ ProductoIndustria : pertenece
+    Usuario ||--o{ Noticia : crea
+    Pais ||--o{ ProductoDocumentado : origen
+    Usuario ||--o{ ProductoDocumentado : crea
+    Sede ||--o| InformacionContacto : "solo con oficina"
+    Sede ||--o{ SolicitudContacto : destino
+    Pais ||--o{ SolicitudContacto : pais
+    Departamento |o--o{ SolicitudContacto : "si es Guatemala"
+    Municipio |o--o{ SolicitudContacto : "si es Guatemala"
+    Departamento ||--o{ Municipio : contiene
+    Usuario |o--o{ SolicitudContacto : responsable
+
+    Valor {
+        int posicion
+        string imagenUrl
+    }
+    ProductoSitio {
+        string nombre
+        string presentacion
+        string paisesOrigen
+    }
+    ProductoDocumentado {
+        string nombre
+        string lote
+        string enlaceFicha
+        string enlaceHoja
+        string enlaceCertificado
+    }
+    SolicitudContacto {
+        string folio
+        string motivo
+        string estado
+    }
+    Noticia {
+        string titulo
+        string texto
+    }

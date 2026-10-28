@@ -5,7 +5,8 @@ persona: carlos
 responsable: Carlos Hugo Escobar
 hito: entrega
 prioridad: P1
-estado: pendiente
+estado: bloqueada
+bloqueo: Faltan la convergencia de JG-17, que sigue pendiente, las actas en Markdown de las reuniones 4 y 5 (Drive, docs/Reuniones, la 5 fechada el 13/10/2026, P-77) y las evidencias del levantamiento sin fotografías de personas. Carlos aporta el docx v0.2 y esas notas. Si las evidencias no existen, el coordinador lo registra en specs/19. No se inventan actas ni fotos.
 depende_de: [CE-01, JG-17]
 programada: 2026-10-30
 requisitos: []
@@ -49,3 +50,15 @@ python entregable-2/herramientas/armar_documento.py entregable-3/documento-1
 ## Notas
 - La portada del documento lee los nombres y carnés de `entregable-3/equipo.local.json`, que no se sube al repositorio (tiene datos personales). Si no existe en tu equipo, pídele a Jordin una copia de `entregable-2/equipo.local.json` y guárdala con ese nombre en `entregable-3/`.
 - Los `.docx` y `.pdf` no se suben al repositorio (`.gitignore`): se guardan en la carpeta local y en el Drive del equipo.
+
+## Resultado
+
+La tarea queda `bloqueada`. No está hecha. JG-17 sigue `pendiente`, así que el anexo D no puede cerrar la columna de implementación. Las actas de las reuniones 4 y 5 no están en el repositorio. Las evidencias del anexo B tampoco.
+
+Queda la fuente v0.3 en `entregable-3/documento-1/`, alineada con `specs/` 1.7 en lo que el repositorio sí contiene. El inventario queda fuera del alcance. Los roles vigentes son Gerencia y Soporte.
+
+Las figuras 1 a 8 están en `entregable-3/documento-1/figuras/`. Las 6 a 8 salen de los `.mmd` de `entregable-1/diagramas/`, sin agregar `mermaid-cli` a `package.json`. El anexo C trae capturas del prototipo de simulación aprobado, servido con `node scripts/servir-prototipo.mjs`. No usa las imágenes de la v0.2 ni el módulo de Inventario.
+
+`python entregable-2/herramientas/armar_documento.py entregable-3/documento-1` arma el `.docx` local. No se sube. `equipo.local.json` tampoco.
+
+Siguen como `TODO(CE-09)` el texto de la v0.2, las actas (la reunión 5 es del 13/10/2026, P-77), las evidencias del Drive y la convergencia de JG-17.

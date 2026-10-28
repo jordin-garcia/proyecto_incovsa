@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
-"""Figura 3. Diagrama de actividades del flujo principal."""
+"""Figura 3. Actividades del flujo pedido facturado, conversión, preparación y despacho.
+
+Sin paso de inventario, sin existencias y sin captura manual.
+"""
 import os
 import sys
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from uml import Canvas
 
-W, H = 1500, 2130
-TS = 31          # texto de actividades
-GS = 29          # texto de guardas
+W, H = 1680, 2280
+TS = 28
+GS = 26
 cv = Canvas(W, H)
-
-SP = 600         # eje principal
-BR = 1150        # columna de ramas
+SP = 640
+BR = 1280
 
 
 def act(cx, cy, w, h, text, size=TS):
@@ -21,69 +24,59 @@ def act(cx, cy, w, h, text, size=TS):
             "l": (cx - w / 2, cy), "r": (cx + w / 2, cy)}
 
 
-def rombo(cx, cy, hw=78, hh=52):
+def rombo(cx, cy, hw=90, hh=56):
     cv.polygon([(cx, cy - hh), (cx + hw, cy), (cx, cy + hh), (cx - hw, cy)], w=2.4)
     return {"c": (cx, cy), "t": (cx, cy - hh), "b": (cx, cy + hh),
             "l": (cx - hw, cy), "r": (cx + hw, cy)}
 
 
-def guard(x, y, text, anchor="mm"):
-    cv.text(x, y, text, size=GS, anchor=anchor)
+def final(cx, cy):
+    cv.disc(cx, cy, 26, fill=(255, 255, 255), outline=(0, 0, 0), w=2.6)
+    cv.disc(cx, cy, 16)
 
 
-# ---------------- nodos ----------------
-cv.disc(SP, 60, 27)                                   # nodo inicial
-A = act(SP, 185, 700, 110, "Facturación registra el pedido\nya facturado en Odoo")
-D1 = rombo(SP, 350)
-B = act(BR, 350, 480, 100, "Asignar camión y piloto")
-C = act(SP, 560, 700, 100, "Capturar cliente, producto y cantidad en kg")
-D = act(SP, 730, 700, 120, "Validar la existencia sumando el mismo\nproducto y acumular el total en kg")
-E = act(SP, 915, 800, 150, "Enviar a bodega: guardar el pedido con su\nPeso2, registrar la salida por venta y, si es\nenvío en camión, crear la ruta con número y fecha", size=29)
-F = act(SP, 1095, 700, 120, "Agrupar por producto y convertir\na unidades más resto en kg")
-G = act(SP, 1265, 700, 110, "Preparar, marcar cada línea\ny cerrar el pedido")
-D2 = rombo(SP, 1430)
-Hn = act(400, 1660, 420, 95, "Estado Despachado")
-I = act(BR, 1600, 560, 120, "Ordenar las entregas y confirmar;\nse guarda el recorrido")
-J = act(BR, 1790, 420, 95, "Estado Entregado")
-K = act(750, 1970, 780, 100, "Bitácora, registro histórico de rutas y reportes")
-cv.disc(750, 2085, 30, fill=(255, 255, 255), outline=(0, 0, 0), w=2.6)
-cv.disc(750, 2085, 20)
+cv.disc(SP, 48, 24)
+A = act(SP, 170, 760, 110, "Cargar el archivo .xlsx de Odoo.\nPedidos facturados en el tablero")
+B = act(SP, 360, 760, 110, "Arrastrar a una opción de envío\ny ordenar los pedidos facturados")
+D1 = rombo(SP, 540)
+C = act(BR, 540, 520, 110, "Elegir camión y piloto\nde la sede")
+E = act(SP, 760, 760, 110, "Escribir la fecha y la hora\nprogramadas")
+D2 = rombo(SP, 960)
+F = act(280, 960, 420, 120, "Cancelar.\nLos pedidos facturados\nvuelven al tablero", size=26)
+G = act(SP, 1160, 780, 120, "Enviar a Bodega.\nCrea la ruta o el pedido\nen estado En Preparación")
+H = act(SP, 1380, 820, 130, "Convertir kilogramos a unidades (RN-01),\nagrupado por producto, lote\ny Peso de Conversión")
+I = act(SP, 1600, 700, 110, "Preparar.\nMarcar las líneas")
+D3 = rombo(SP, 1780)
+J = act(280, 1980, 460, 120, "Pedido Despachado.\nEstado Despachado", size=26)
+K = act(BR, 1980, 460, 110, "Ruta Despachada.\nEstado En Ruta")
+L = act(BR, 2160, 420, 100, "Ruta Entregada.\nEstado Entregado")
 
-# ---------------- flujos ----------------
-cv.arrow((SP, 87), A["t"])
-cv.arrow(A["b"], D1["t"])
-
-# rama: envio en camion
-cv.path([D1["r"], (BR - 240, 350)])
-guard((D1["r"][0] + BR - 240) / 2, 350 - 26, "[envío en camión]")
-
-# retorno de la rama al eje
-cv.path([B["b"], (BR, 470), (SP, 470), (SP, C["t"][1])])
-
-# rama: cliente recoge en bodega
-cv.arrow(D1["b"], C["t"])
-guard(SP - 22, 440, "[cliente recoge\nen bodega]", anchor="rm")
-
-cv.arrow(C["b"], D["t"])
-cv.arrow(D["b"], E["t"])
-cv.arrow(E["b"], F["t"])
-cv.arrow(F["b"], G["t"])
-cv.arrow(G["b"], D2["t"])
-
-# decision final
-cv.path([D2["l"], (400, 1430), (400, Hn["t"][1])])
-guard(400 - 22, 1500, "[cliente recoge\nen bodega]", anchor="rm")
-cv.path([D2["r"], (BR, 1430), (BR, I["t"][1])])
-guard(BR + 26, 1500, "[envío en camión]", anchor="lm")
-
-cv.arrow(I["b"], J["t"])
-
-# union de ambas ramas
-cv.line(Hn["b"], (400, 1885))
-cv.line(J["b"], (BR, 1885))
-cv.line((400, 1885), (BR, 1885))
-cv.arrow((750, 1885), K["t"])
-
-cv.arrow(K["b"], (750, 2085 - 32))
+cv.arrow((SP, 72), A["t"])
+cv.arrow(A["b"], B["t"])
+cv.arrow(B["b"], D1["t"])
+cv.path([D1["r"], C["l"]])
+cv.text((D1["r"][0] + C["l"][0]) / 2, 500, "[envío por camión]", size=GS, anchor="mm")
+cv.path([C["b"], (BR, 660), (SP, 660), E["t"]])
+cv.arrow(D1["b"], E["t"])
+cv.text(SP - 16, 640, "[cliente recoge]", size=GS, anchor="rm")
+cv.arrow(E["b"], D2["t"])
+cv.path([D2["l"], F["r"]])
+cv.text(400, 880, "[Cancelar]", size=GS, anchor="mm")
+final(280, 1100)
+cv.arrow(F["b"], (280, 1074))
+cv.arrow(D2["b"], G["t"])
+cv.text(SP + 18, 1040, "[Enviar a Bodega]", size=GS, anchor="lm")
+cv.arrow(G["b"], H["t"])
+cv.arrow(H["b"], I["t"])
+cv.arrow(I["b"], D3["t"])
+cv.path([D3["l"], (280, 1780), J["t"]])
+cv.text(300, 1860, "[pedido]", size=GS, anchor="lm")
+cv.path([D3["r"], (BR, 1780), K["t"]])
+cv.text(BR - 16, 1860, "[ruta]", size=GS, anchor="rm")
+final(280, 2140)
+cv.arrow(J["b"], (280, 2114))
+cv.arrow(K["b"], L["t"])
+final(BR, 2248)
+cv.arrow(L["b"], (BR, 2222))
 
 print(cv.save(sys.argv[1] if len(sys.argv) > 1 else "fig3.png"))
