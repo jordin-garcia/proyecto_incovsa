@@ -114,9 +114,10 @@ Medidas que el equipo adoptó el 12/10/2026 para que la aplicación sea segura y
 ### Secretos y dependencias
 
 - Claves, contraseña de la base de datos y credenciales de R2 solo en variables de entorno, fuera del repositorio (RNF-10).
-- **Dependencias al día** (RNF-16): Dependabot de GitHub activado, `npm audit` en cada pull request y el archivo de bloqueo (`package-lock.json`) en el repositorio. Los parches de seguridad de Next.js, Better Auth y Prisma se aplican en cuanto salen.
+- **Dependencias al día** (RNF-16): Dependabot de GitHub activado, `npm audit` en cada pull request y el archivo de bloqueo (`package-lock.json`) en el repositorio. Los parches de seguridad de Next.js, Better Auth y Prisma se aplican en cuanto salen. **(24/10)** Dependabot junta en un solo PR por ecosistema (npm y GitHub Actions) las versiones menores y los parches; cada versión mayor llega en su propio PR, y las actualizaciones de seguridad, aparte, en cuanto salen. En npm ignora las versiones mayores de `typescript` (se queda en la 6.0) y de `@types/node` (sigue a Node.js 24) ([18](18-historial-de-decisiones.md), "Dependabot agrupado").
 - **(22/10, JG-11)** Las reglas propias de Semgrep comprueban las operaciones exportadas y las API inseguras. La ruta exacta de imágenes públicas de disco de la decisión 78 conserva su acceso sin sesión (404 en producción); no es una operación de datos internos y no exige permisos. Better Auth conserva sus controles propios. `lockfile-lint` y la validación previa a la descarga admiten solo el registro HTTPS oficial de npm y el tarball de SheetJS de `vendor/` con su huella aprobada; los paquetes incluidos dentro de otro tarball se verifican mediante su contenedor íntegro.
 - **(24/10, DM-08)** La recepción del formulario de Contacto (RF-SW-06) es la **única acción del servidor sin sesión**: la persona que escribe no tiene cuenta. Vive sola en `src/modulos/solicitudes/recepcion-publica.ts`, que la regla de permisos de Semgrep excluye por su ruta exacta, y otra regla (`incovsa-recepcion-publica`) hace fallar la CI si ese archivo exporta algo que no sea `enviarSolicitud`, si cambia su cuerpo o si importa algo distinto de `crearSolicitud` y `aResultadoDeError`. La acción valida la entrada con un esquema Zod estricto, comprueba país, sede y territorios contra la base, solo crea la solicitud y solo devuelve el folio. Todas las demás acciones, incluidas las de la bandeja de solicitudes, siguen exigiendo `exigirPermiso`.
+- **(28/10, JG-25)** Las acciones de administración de usuarios (`src/modulos/usuarios/acciones.ts`, del picking y del sitio) no dependen de ninguna casilla de permisos: solo Gerencia y Soporte las ejecutan, con la sesión del mismo sistema ([03](03-roles-y-accesos.md)). Llaman a `exigirAccesoTotal(sesion, sistema)` en lugar de `exigirPermiso` con un permiso de otro módulo, como hacían antes solo para que Semgrep no fallara (auditoría del 22/10, H-44). La regla de permisos excluye ese archivo exacto, y la regla `incovsa-usuarios-acceso-total` hace fallar la CI si alguna de sus acciones no llama a `exigirAccesoTotal`.
 
 ### Respaldos
 
@@ -259,7 +260,7 @@ Las tomó el coordinador (Jordin García) el 16/10/2026 a partir de las recomend
 |---|---|---|
 | 27 | Docker | **Solo en producción.** En el VPS, Docker Compose con Caddy, la aplicación y PostgreSQL 18. En las computadoras del equipo no se usa Docker: ya tienen Node.js 24 y PostgreSQL 18, y en Windows Docker hace lenta la recarga automática de Next.js ("Despliegue") |
 | 28 | Servidor (VPS) | Ubuntu Server 24.04 LTS, 2 vCPU, 4 GB de RAM, 80 GB SSD, IP fija y SSH con llave. Lo contrata INCOVSA (P-10) |
-| 29 | HTTPS y proxy inverso | **Caddy**, en un contenedor: certificado automático, HSTS y avisos en tiempo real sin configuración extra. La aplicación toma la IP del usuario solo de la cabecera de Caddy (RNF-15) |
+| 29 | HTTPS y proxy inverso | **Caddy**, en un contenedor: certificado automático y avisos en tiempo real sin búfer (`flush_interval -1`). La aplicación toma la IP del usuario solo de la cabecera de Caddy (RNF-15). **(28/10)** HSTS y las demás cabeceras de seguridad las envía Next.js (RNF-16); Caddy no las repite, para que no salgan dos HSTS. El flujo de la imagen de producción comprueba a través de Caddy las cabeceras y el primer aviso en tiempo real |
 | 30 | Ambientes | **Solo producción** en internet. Desarrollo en las computadoras del equipo |
 | 31 | Despliegue | El primero, cuando la aplicación esté completa. Después, **automático** al integrar en `main`: GitHub Actions compila la imagen, la guarda en GHCR y la despliega en el VPS por SSH, con las migraciones. Se conservan las últimas 5 imágenes para volver atrás |
 | 32 | DNS e imágenes | El DNS de incovsa.com pasa a **Cloudflare** (plan gratuito) para servir las imágenes de R2 desde `imagenes.incovsa.com`. Si no se pudiera (P-93), la aplicación serviría las imágenes desde una ruta propia |
@@ -308,7 +309,7 @@ Las tomó el coordinador (Jordin García) el 16/10/2026 a partir de las recomend
 | 55 | Sede de trabajo | La sede elegida en la barra superior se guarda en una cookie; el servidor verifica en cada operación que el usuario la tenga asignada |
 | 56 | Modo claro u oscuro del tablero | Se guarda en cada pantalla (en el navegador) y no se comparte |
 | 57 | Orden de las listas | Posiciones enteras que se vuelven a escribir al reordenar |
-| 58 | Límite de envío al servidor | 3 MB para las acciones del servidor, para el archivo de Odoo de hasta 2 MB |
+| 58 | Límite de envío al servidor | 3 MB para las acciones del servidor, para el archivo de Odoo de hasta 2 MB. **(28/10)** Caddy acepta cuerpos de hasta **27 MB** (`max_size 27MB`, en MB de base 10): es el tope de `/api/imagenes/publicar`, que recibe hasta 5 imágenes de 5 MB más el formato multipart en una sola petición (decisión 44) |
 
 ## Decisiones del 16/10 sobre el desarrollo con agentes de IA
 

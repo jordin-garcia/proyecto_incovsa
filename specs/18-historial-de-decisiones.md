@@ -668,6 +668,17 @@ Daniela autorizó usar `--g600` solo en las pestañas inactivas y el texto secun
 - El comentario del responsable admite hasta 2000 caracteres, el mismo tope del mensaje de Contacto (RNF-05, auditoría H-63). Se valida en el navegador (`maxLength`) y en el servidor. Los comentarios ya guardados no se reescriben y no hay migración ([05](05-sitio-web.md), "Gestión de solicitudes").
 - El correo de Información de contacto del panel puede quedar vacío; si se escribe, debe tener un formato válido. Al salir del campo el panel muestra «Indique un correo válido.» y no guarda, y el servidor rechaza el mismo caso antes de guardar. El prototipo (`panel.js` › `contacto()`) no lo valida: es una precisión de comportamiento, no de diseño. Lo decidió Carlos y lo confirmó Jordin el 27/10, en lugar de quitar el mensaje como proponía la auditoría (H-62) ([05](05-sitio-web.md), "Panel administrativo").
 
+## Correcciones de la auditoría del 22/10 en configuración, producción y CI (28/10/2026, JG-25)
+
+- **Límite del cuerpo en Caddy (H-50):** Caddy acepta cuerpos de hasta 27 MB, en MB de base 10. Es el tope de `/api/imagenes/publicar`, que recibe hasta 5 imágenes de 5 MB más el formato multipart (decisión 44). Las acciones del servidor siguen en 3 MB ([16](16-arquitectura-y-tecnologia.md), decisión 58).
+- **HSTS (H-48):** Next.js envía HSTS y las demás cabeceras de seguridad (JG-11). Caddy ya no agrega la suya: salían dos cabeceras HSTS. El flujo de la imagen de producción comprueba a través de Caddy que llegan todas, con una sola HSTS, y que el primer aviso de `/api/tiempo-real` llega en menos de 5 segundos (H-46, H-47) ([16](16-arquitectura-y-tecnologia.md), decisión 29).
+- **Administración de usuarios (H-44):** sus acciones exigen el acceso total con `exigirAccesoTotal`, no un permiso de otro módulo, y una regla propia de Semgrep lo comprueba ([16](16-arquitectura-y-tecnologia.md), "Seguridad").
+- **Veredicto de `revision-claude` (H-40):** solo cuenta el comentario que cita una ejecución de `revision-claude.yml` para ese commit y que se publicó después de que empezara. El comentario lleva en la segunda línea «Commit revisado: <sha> · Ejecución: <id>».
+- **Producción (H-49, H-51, H-37):** Compose usa por omisión la etiqueta `produccion`; el código de la imagen es de root y el proceso solo escribe en la caché de Next.js; y en producción la aplicación no arranca con las claves de ejemplo «cambie-esto…».
+- **CI (H-28):** el trabajo `pruebas` compara la base recién migrada con `schema.prisma` (`prisma migrate diff --exit-code`).
+- **`crear-admin` (H-36):** acepta el rol escrito de cualquier forma, como `normalizarRol` (decisión 8), y dice si la contraseña es corta, si no coincide o si el usuario ya existe.
+- D-03 y D-04 se aplicaron tal como están en [11](11-picking-configuracion.md). Las correcciones son de JG-25 (`plan/auditorias/2026-10-22.md` y `plan/auditorias/2026-10-26.md`).
+
 ## Documentos no alineados con las reuniones 4 y 5
 
 Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los cambios del 29/09, del 11/10 ni del 13/10:

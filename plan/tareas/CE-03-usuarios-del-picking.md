@@ -97,3 +97,12 @@ Pestaña Usuarios de `/picking/configuracion` para Gerencia y Soporte: alta con 
 
 - Criterio 4 (registros en reportes): se verifica conservación en bitácora; el módulo de reportes aún no existe.
 - Criterio 6: e2e comprueba que un usuario con solo `pk.cfg.camiones` no ve la pestaña Usuarios.
+
+### Correcciones de la auditoría (2026-10-22)
+
+Las corrigió el coordinador en JG-25.
+
+- **H-43:** al eliminar un piloto, `eliminarUsuario` quita su selección de «Envío por camión» en todas las sedes, como `eliminarUsuario()` del prototipo, y devuelve esas sedes (`sedesConCambios`). La acción avisa a cada una en tiempo real, para que Facturación se actualice. Lo prueba «RF-SL-57 (H-43)» de `src/modulos/usuarios/servicio.test.ts`.
+- **H-44:** las acciones de usuarios llamaban a `exigirPermiso` con `pk.cfg.camiones` o `sit.contenido` solo para que Semgrep no fallara. Ahora llaman a `exigirAccesoTotal(sesion, sistema)` (`src/modulos/permisos/servicio.ts`): solo Gerencia o Soporte, con la sesión del mismo sistema, sin depender de ninguna casilla. La excepción está documentada en `.semgrep/README.md` y la regla `incovsa-usuarios-acceso-total` la limita a ese archivo; `scripts/probar-semgrep.mjs` tiene sus casos.
+- **H-45:** la parte «registros en los reportes» del criterio 4 ya tiene prueba: «RF-SL-57 (H-45)» elimina un piloto con una ruta y un registro de la bitácora, y comprueba su nombre en Reportes › Rutas y en Reportes › Bitácora.
+- **D-04:** Gerencia y Soporte no pueden desactivar su propia cuenta: «No puede desactivar su propia cuenta.» (`MENSAJE_DESACTIVAR_PROPIA_CUENTA`). Lo prueba «D-04».
