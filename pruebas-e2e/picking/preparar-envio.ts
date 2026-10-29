@@ -221,7 +221,9 @@ async function principal() {
       });
       await prisma.envio.update({ where: { id: envio.envioId }, data: { camionId: grande.id } });
     }
-    console.log(JSON.stringify({ ruta, pedido, larga, despacho, muyLarga }));
+    const sinCamion = await crearEnvioPrueba({ numero: base + 6, tipo: "ruta" });
+    await prisma.envio.update({ where: { id: sinCamion.envioId }, data: { camionId: null } });
+    console.log(JSON.stringify({ ruta, pedido, larga, despacho, muyLarga, sinCamion }));
     return;
   }
 

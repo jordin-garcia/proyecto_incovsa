@@ -2,6 +2,7 @@ import { expect } from "@playwright/test";
 import { test, MISION } from "./datos";
 import AxeBuilder from "@axe-core/playwright";
 import sharp from "sharp";
+import { capturaEvidencia } from "../comunes/evidencia";
 
 try {
   process.loadEnvFile();
@@ -77,10 +78,7 @@ test("RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y 
     body: await page.screenshot({ fullPage: true }),
     contentType: "image/png",
   });
-  await page.screenshot({
-    fullPage: true,
-    path: `pruebas-e2e/panel/evidencias/aplicacion-contenido-${page.viewportSize()!.width}.png`,
-  });
+  await capturaEvidencia(page, `pruebas-e2e/panel/evidencias/aplicacion-contenido-${page.viewportSize()!.width}.png`);
 });
 test("RF-SW-25: el permiso se exige también al abrir la sección directamente", async ({ page, context }) => {
   await context.clearCookies();
@@ -161,10 +159,7 @@ test("RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas
     ),
   ).toEqual([]);
   await info.attach("resumen-panel", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" });
-  await page.screenshot({
-    fullPage: true,
-    path: `pruebas-e2e/panel/evidencias/aplicacion-resumen-${page.viewportSize()!.width}.png`,
-  });
+  await capturaEvidencia(page, `pruebas-e2e/panel/evidencias/aplicacion-resumen-${page.viewportSize()!.width}.png`);
 });
 
 test("RF-SW-23: un borrador de portada o historia no cambia la etiqueta publicada", async ({ page }) => {
@@ -227,10 +222,13 @@ test("RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visi
     if (page.viewportSize()!.width > 900) expect(texto.x + texto.width).toBeLessThanOrEqual(galeria.x);
     else expect(texto.y + texto.height).toBeLessThanOrEqual(galeria.y);
     expect(errores).toEqual([]);
-    await publico.screenshot({
-      fullPage: false,
-      path: `pruebas-e2e/panel/evidencias/publicacion-inicio-${page.viewportSize()!.width}.png`,
-    });
+    await capturaEvidencia(
+      publico,
+      `pruebas-e2e/panel/evidencias/publicacion-inicio-${page.viewportSize()!.width}.png`,
+      {
+        fullPage: false,
+      },
+    );
     await info.attach("publicacion-en-inicio", { body: await publico.screenshot(), contentType: "image/png" });
   } finally {
     await contextoPublico.close();
@@ -263,10 +261,7 @@ test("RF-SW-23 / RF-SW-24: reemplazar INCOVSA actualiza cabecera y pie públicos
     await expect(publico.locator("footer img")).toHaveAttribute("src", imagen!);
     await expect(publico.locator("footer .logo-placa")).toHaveCount(1);
     expect((await publico.request.get(imagen!)).ok()).toBe(true);
-    await publico.screenshot({
-      fullPage: true,
-      path: `pruebas-e2e/panel/evidencias/logotipo-publico-${page.viewportSize()!.width}.png`,
-    });
+    await capturaEvidencia(publico, `pruebas-e2e/panel/evidencias/logotipo-publico-${page.viewportSize()!.width}.png`);
     await info.attach("logotipo-publico", { body: await publico.screenshot(), contentType: "image/png" });
   } finally {
     await contextoPublico.close();

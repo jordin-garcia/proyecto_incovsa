@@ -1,6 +1,7 @@
 import { expect } from "@playwright/test";
 import { test } from "./datos";
 import AxeBuilder from "@axe-core/playwright";
+import { capturaEvidencia } from "../comunes/evidencia";
 
 try {
   process.loadEnvFile();
@@ -39,10 +40,10 @@ test("RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recup
         ["serious", "critical"].includes(v.impact ?? ""),
       ),
     ).toEqual([]);
-    await page.screenshot({
-      path: `plan/evidencias/JG-24/aplicacion-galeria-${individual ? "individual" : "multiple"}-${page.viewportSize()!.width}.png`,
-      fullPage: true,
-    });
+    await capturaEvidencia(
+      page,
+      `plan/evidencias/JG-24/aplicacion-galeria-${individual ? "individual" : "multiple"}-${page.viewportSize()!.width}.png`,
+    );
     await page.mouse.move(0, 0);
   }
 });
@@ -63,10 +64,7 @@ test("RF-SW-29 / RN-39 / H-04: publicar y quitar un valor muestra el número del
   await valores.getByLabel("Valor 3: elegir imágenes").setInputFiles("public/marca/foto-reunion.webp");
   await expect(page.getByText("Imagen del valor 3 publicado en el sitio.", { exact: true })).toBeVisible();
   await expect(valores.getByRole("img")).toHaveCount(1);
-  await page.screenshot({
-    path: `plan/evidencias/JG-24/aplicacion-valor-publicado-${page.viewportSize()!.width}.png`,
-    fullPage: true,
-  });
+  await capturaEvidencia(page, `plan/evidencias/JG-24/aplicacion-valor-publicado-${page.viewportSize()!.width}.png`);
   await valores.getByRole("button", { name: "Quitar", exact: true }).click();
   await expect(valores.getByRole("img")).toHaveCount(0);
   expect(

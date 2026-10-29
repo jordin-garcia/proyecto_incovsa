@@ -96,3 +96,8 @@ npm run e2e -- pruebas-e2e/picking/bodega.spec.ts pruebas-e2e/picking/bodega-tie
 
 ### Verificación
 Evidencia en [`plan/evidencias/JG-23/`](../evidencias/JG-23/README.md): `npm run verificar` (418 pruebas) y `npm run build` pasaron. La batería E2E completa, sobre una base local limpia y con un worker, pasó 390 de 390 pruebas, corrida por partes por falta de memoria del equipo. CP-37 pasa en los tres tamaños, sin reintentos, entre 621 y 666 ms. Las capturas en 390, 768 y 1440 px coinciden con el prototipo. La revisión en contexto limpio dejó 1 hallazgo de corrección, que se corrigió.
+
+### Correcciones de la auditoría (2026-10-26)
+En la tarea JM-09 se corrigió el siguiente hallazgo de Bodega:
+- **H-74:** En `src/modulos/bodega/servicio.ts`, las operaciones `ordenarLineasPorPeso`, `reordenarColaBodega` y `reordenarLineasPreparacion` utilizaban `$transaction([...])` pasando un arreglo de promesas y validando `exigirCambios()` fuera de la transacción. Se actualizaron a transacciones interactivas (`prisma.$transaction(async (tx) => ...)`) ejecutando `exigirCambios(resultados)` dentro del callback para asegurar atomicidad y rollback completo si el envío deja de estar En Preparación durante una condición de carrera. Se añadió prueba unitaria que verifica que ningún cambio queda guardado si ocurre la carrera.
+

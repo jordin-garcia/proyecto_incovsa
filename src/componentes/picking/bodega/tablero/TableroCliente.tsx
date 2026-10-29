@@ -613,7 +613,7 @@ function LineaTablero({
 }
 
 function Carga({ envio }: { envio: EnvioTablero }) {
-  if (!esRuta(envio) || !envio.camion || !envio.ocupacion)
+  if (!esRuta(envio) || !envio.ocupacion)
     return (
       <div className="tb-camion">
         <div className="tb-recoge">
@@ -627,7 +627,8 @@ function Carga({ envio }: { envio: EnvioTablero }) {
         </div>
       </div>
     );
-  const { camion, ocupacion } = envio;
+  const camion = envio.camion ?? { identificacion: "—", capacidadKg: "1" };
+  const ocupacion = envio.ocupacion;
   return (
     <div className="tb-camion">
       <div className="tt">

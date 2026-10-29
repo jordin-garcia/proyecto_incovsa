@@ -46,4 +46,20 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 **JC-06:** Las rutas entregadas pasan al estado "Entregado" con su registro histórico y de bitácora, quedando disponibles para las consultas y exportaciones del módulo de Reportes.
 **Todos:** El módulo de Ruta está completamente funcional y verificado.
 
-
+## 2026-10-27 · JM-09 · Correcciones de la auditoría del 26/10 en Bodega, el tablero y Ruta
+- Hecho: Se implementaron todas las correcciones de auditoría asignadas a Josué (H-66 a H-74 y D-09):
+  - **H-66:** En `acciones.test.ts` de Ruta, el caso de «otra sede» utiliza una ruta En Ruta real de la sede 2 generada mediante función en `entradaOtraSede` y verifica que ni su orden de paradas ni su estado cambien en BD.
+  - **D-09:** Se añadió prueba de integración en `servicio.test.ts` para un piloto con dos sedes asignadas que solo ve las rutas de su sede de trabajo activa y ve las de la otra al cambiar de sede activa.
+  - **H-67:** `totalKg` en `EntregaRutaItem` y `RutaEnCursoItem` viaja al cliente como texto exacto (`toString()`, tipo `string`) sin conversiones numéricas de IEEE 754.
+  - **H-68:** Se definió el token `--radius-prototipo-10: 16px` en `src/app/globals.css` y se aplicó a `.ruta-op` en `ruta.css` para reproducir fielmente el prototipo.
+  - **H-69:** Se añadió prueba E2E de reordenamiento de clientes con arrastre táctil (`hasTouch: true`, retardo de 420 ms) en teléfono en `ruta.spec.ts`.
+  - **H-70:** Se validó el encabezado del módulo de Ruta con `comprobarEncabezadoModulo()` para «Mis rutas» y «Rutas en curso».
+  - **H-71:** Cuando una ruta En Preparación carece de camión asignado, el tablero lateral muestra silueta de camión con matrícula «—», capacidad de 1 kg y porcentaje sobre las líneas en vez de mostrar «El cliente recoge en bodega».
+  - **H-72:** En `tablero.spec.ts`, la exclusión de contraste de axe para `.tb-num.recoge small` se restringió únicamente al modo claro.
+  - **H-73:** Se añadió prueba E2E en `tablero.spec.ts` de redirección al módulo inicial (`/picking/ruta`) cuando un usuario sin permiso de Bodega o sin sede intenta acceder al tablero.
+  - **H-74:** En `src/modulos/bodega/servicio.ts`, `ordenarLineasPorPeso`, `reordenarColaBodega` y `reordenarLineasPreparacion` se migraron a transacciones interactivas con `exigirCambios(resultados)` dentro del callback para asegurar rollback atómico en condiciones de carrera.
+  - Se documentaron las correcciones en el `## Resultado` de `JM-05`, `JM-06` y `JG-23`.
+- Decisiones: Se calcula la ocupación en el servidor con capacidad 1 para rutas sin camión de la sede (`calcularOcupacion(lineas, "1")` en `tablero.ts`), eliminando cálculos en punto flotante en el cliente; las pruebas E2E de tablero y ruta se ejecutan con `--workers=1` para estabilidad garantizada en entornos Windows.
+- Pendiente o aviso para otros:
+**Jordin (JG-23) / Bodega:** En `pruebas-e2e/picking/preparar-envio.ts`, la acción `crear-tablero` crea ahora un envío de prueba adicional (`sinCamion`, con `camionId: null`) para verificar que el tablero muestra la ruta con camión «—» (H-71).
+**Todos:** Quedan subsanados todos los hallazgos del paso 2 de la auditoría en Bodega, Tablero y Ruta.

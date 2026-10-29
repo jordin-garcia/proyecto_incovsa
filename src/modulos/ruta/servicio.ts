@@ -19,7 +19,7 @@ export type EntregaRutaItem = {
   id: number;
   cliente: string;
   sector: string;
-  totalKg: number;
+  totalKg: string;
   orden: number;
 };
 
@@ -33,7 +33,7 @@ export type RutaEnCursoItem = {
   camion: { id: number; identificacion: string } | null;
   piloto: { id: string; name: string } | null;
   entregas: EntregaRutaItem[];
-  totalKg: number;
+  totalKg: string;
   clientesContador: number;
 };
 
@@ -102,11 +102,11 @@ export async function listarRutasEnRuta(sesion: SesionActual | null, sedeId: num
 
     return {
       ...r,
-      totalKg: totalDecimal.toNumber(),
+      totalKg: totalDecimal.toString(),
       clientesContador: r.entregas.length,
       entregas: r.entregas.map((e) => ({
         ...e,
-        totalKg: new Prisma.Decimal(e.totalKg).toNumber(),
+        totalKg: new Prisma.Decimal(e.totalKg).toString(),
       })),
     };
   });

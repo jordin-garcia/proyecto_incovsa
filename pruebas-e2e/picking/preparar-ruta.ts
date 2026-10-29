@@ -114,6 +114,12 @@ export async function prepararRutasPrueba(base = 9900) {
             totalKg: 500,
             orden: 1,
           },
+          {
+            cliente: "Curtidos del Norte",
+            sector: "Zona 1",
+            totalKg: 350,
+            orden: 2,
+          },
         ],
       },
     },

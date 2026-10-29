@@ -4,15 +4,15 @@ const paises = new Set<string>(getCountries());
 export const esquemaSolicitud = z
   .strictObject({
     motivo: z.enum(["solicitud", "queja", "reclamo"]),
-    nombre: z.string().trim().min(2, "Indique su nombre.").max(150),
-    empresa: z.string().trim().max(150),
+    nombre: z.string().trim().min(2, "Indique su nombre.").max(150, "El nombre admite hasta 150 caracteres."),
+    empresa: z.string().trim().max(150, "La empresa admite hasta 150 caracteres."),
     correo: z
       .string()
       .trim()
-      .max(150)
+      .max(150, "El correo admite hasta 150 caracteres.")
       .pipe(z.email("Indique un correo con una estructura válida (nombre@dominio.com).")),
     telefonoPais: z.string().refine((c) => paises.has(c), "Elija el código de país."),
-    telefono: z.string().trim().max(20),
+    telefono: z.string().trim().max(20, "El teléfono admite hasta 20 caracteres."),
     pais: z.string().refine((c) => paises.has(c), "Elija el país."),
     departamentoId: z.string().regex(/^\d*$/),
     municipioId: z.string().regex(/^\d*$/),

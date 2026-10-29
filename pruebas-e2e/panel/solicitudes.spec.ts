@@ -1,7 +1,7 @@
 import { test as base, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { Client } from "pg";
-import { mkdir, unlink } from "node:fs/promises";
+import { capturaEvidencia } from "../comunes/evidencia";
 try {
   process.loadEnvFile();
 } catch {
@@ -53,13 +53,10 @@ async function captura(page: Page, estado: string) {
   await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
   await expect(page.locator(".toast")).toHaveCount(0);
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
-  const carpeta = "pruebas-e2e/panel/evidencias/DM-09";
-  await mkdir(carpeta, { recursive: true });
-  const archivo = `${carpeta}/aplicacion-${estado}-${page.viewportSize()!.width}.png`;
-  await unlink(archivo).catch((e: NodeJS.ErrnoException) => {
-    if (e.code !== "ENOENT") throw e;
-  });
-  await page.screenshot({ path: archivo, fullPage: true });
+  await capturaEvidencia(
+    page,
+    `pruebas-e2e/panel/evidencias/DM-09/aplicacion-${estado}-${page.viewportSize()!.width}.png`,
+  );
 }
 async function entrar(page: Page, usuario = "ejemplo.08") {
   const r = await page.request.post("/api/auth/sitio/sign-in/username", {

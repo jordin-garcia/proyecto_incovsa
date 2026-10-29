@@ -87,3 +87,13 @@ Se implementó de forma completa el módulo de Ruta del piloto y registro de la 
    - 15 pruebas E2E en `pruebas-e2e/picking/ruta.spec.ts` ejecutadas en 3 resoluciones (390 px, 768 px y 1440 px), incluyendo reordenamiento con teclado y consulta a base de datos, con auditoría de accesibilidad axe (RNF-08, 0 violaciones).
    - Capturas de evidencia en `pruebas-e2e/picking/evidencias/JM-06/` en 390, 768 y 1440 px para prototipo y aplicación.
    - `npm run verificar` y `npm run build` ejecutados con 0 errores y 0 advertencias.
+
+### Correcciones de la auditoría (2026-10-26)
+En la tarea JM-09 se corrigieron los siguientes hallazgos de Ruta:
+- **H-66:** En `src/modulos/ruta/acciones.test.ts`, el caso de «otra sede» usa una ruta En Ruta real de la sede 2 generada mediante función en `entradaOtraSede` y verifica en base de datos que ni su orden ni su estado cambian.
+- **D-09:** Se agregó prueba de integración en `src/modulos/ruta/servicio.test.ts` para un piloto con dos sedes asignadas, comprobando que solo ve las rutas de su sede de trabajo activa y ve las de la otra al cambiar de sede activa.
+- **H-67:** `totalKg` en `EntregaRutaItem` y `RutaEnCursoItem` viaja al cliente como texto exacto (`toString()`, tipo `string`) para evitar imprecisiones de coma flotante de IEEE 754.
+- **H-68:** Las tarjetas de opciones `.ruta-op` utilizan el radio de 16 px del prototipo mediante el token `--radius-prototipo-10: 16px` en `src/app/globals.css`.
+- **H-69 (RNF-14):** Se añadió prueba E2E en `pruebas-e2e/picking/ruta.spec.ts` que valida el reordenamiento de clientes en recorrido mediante arrastre táctil (`hasTouch: true`) en teléfono.
+- **H-70 (RF-SL-61):** Se validó el encabezado del módulo con `comprobarEncabezadoModulo()` para las variantes de «Mis rutas» (piloto) y «Rutas en curso» (permiso `pk.ruta.todas`).
+

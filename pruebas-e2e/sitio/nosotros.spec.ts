@@ -2,6 +2,7 @@ import { expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { test } from "../panel/datos";
 import { readFile } from "node:fs/promises";
+import { capturaEvidencia } from "../comunes/evidencia";
 
 async function cargarImagenes(page: import("@playwright/test").Page) {
   await page.evaluate(() => window.scrollTo(0, 0));
@@ -46,10 +47,7 @@ test("RF-SW-02 / CAM-79 / RNF-08: secciones, fondos, pie y accesibilidad de Qui�
     ),
   ).toEqual([]);
   await cargarImagenes(page);
-  await page.screenshot({
-    path: `pruebas-e2e/sitio/evidencias/DM-06/aplicacion-vacio-${info.project.name}.png`,
-    fullPage: true,
-  });
+  await capturaEvidencia(page, `pruebas-e2e/sitio/evidencias/DM-06/aplicacion-vacio-${info.project.name}.png`);
 });
 
 test("RF-SW-02 / CAM-80: ambos bloques alternan y quitar Inquiserca desde el panel deja solo INCOVSA", async ({
@@ -96,10 +94,7 @@ test("RF-SW-02 / CAM-80: ambos bloques alternan y quitar Inquiserca desde el pan
   }
   await page.emulateMedia({ reducedMotion: "reduce" });
   await cargarImagenes(page);
-  await page.screenshot({
-    path: `pruebas-e2e/sitio/evidencias/DM-06/aplicacion-sin-inquiserca-${info.project.name}.png`,
-    fullPage: true,
-  });
+  await capturaEvidencia(page, `pruebas-e2e/sitio/evidencias/DM-06/aplicacion-sin-inquiserca-${info.project.name}.png`);
 });
 
 test("RF-SW-29 / RF-SW-16: cinco valores pendientes y presentación dinámica", async ({ page }) => {
@@ -168,8 +163,5 @@ test("RF-SW-02 / RF-SW-29 / RN-56: historia y cinco imágenes publicadas conserv
     ),
   ).toEqual([]);
   await cargarImagenes(page);
-  await page.screenshot({
-    path: `pruebas-e2e/sitio/evidencias/DM-06/aplicacion-contenido-${info.project.name}.png`,
-    fullPage: true,
-  });
+  await capturaEvidencia(page, `pruebas-e2e/sitio/evidencias/DM-06/aplicacion-contenido-${info.project.name}.png`);
 });

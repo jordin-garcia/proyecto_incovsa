@@ -39,20 +39,25 @@ function FormularioSede({ sede }: { sede: Fila }) {
       <form
         className="bloque-cuerpo rejilla"
         noValidate
-        onSubmit={handleSubmit(async (entrada) => {
-          try {
-            const r = await publicarContacto(entrada);
-            if (!r.ok) {
-              mensaje(r.error, "error");
-              return;
+        onSubmit={handleSubmit(
+          async (entrada) => {
+            try {
+              const r = await publicarContacto(entrada);
+              if (!r.ok) {
+                mensaje(r.error, "error");
+                return;
+              }
+              publicar(entrada);
+              mensaje(`Datos de ${r.datos.nombre} publicados.`);
+              router.refresh();
+            } catch {
+              mensaje("No se pudo completar la operación. Inténtelo de nuevo.", "error");
             }
-            publicar(entrada);
-            mensaje(`Datos de ${r.datos.nombre} publicados.`);
-            router.refresh();
-          } catch {
-            mensaje("No se pudo completar la operación. Inténtelo de nuevo.", "error");
-          }
-        })}
+          },
+          (errores) => {
+            if (typeof errores.mapaUrl?.message === "string") mensaje(errores.mapaUrl.message, "error");
+          },
+        )}
       >
         {campos.map(([campo, texto]) => (
           <label className="campo" key={campo}>
@@ -63,9 +68,9 @@ function FormularioSede({ sede }: { sede: Fila }) {
               className={`inp${campo === "mapaUrl" ? ` mono ${estilos.mapaDireccion}` : ""}${errors[campo] ? " error" : ""}`}
               placeholder={campo === "mapaUrl" ? "https://www.google.com/maps/embed?pb=…" : undefined}
               aria-invalid={!!errors[campo]}
-              aria-describedby={errors[campo] ? `error-${datos.sedeId}-${campo}` : undefined}
+              aria-describedby={errors[campo] && campo !== "mapaUrl" ? `error-${datos.sedeId}-${campo}` : undefined}
             />
-            {errors[campo] && (
+            {errors[campo] && campo !== "mapaUrl" && (
               <small className="msg-error" id={`error-${datos.sedeId}-${campo}`}>
                 {errors[campo].message}
               </small>

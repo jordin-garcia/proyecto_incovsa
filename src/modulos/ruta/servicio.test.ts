@@ -250,6 +250,27 @@ describe("Módulo de Ruta - Servicio (JM-06)", () => {
         ),
       ).rejects.toThrow(ErrorAcceso);
     });
+
+    it("D-09 / RN-17: un piloto con dos sedes ve solo las rutas de la sede de trabajo elegida y las de la otra al cambiar de sede", async () => {
+      const rSede1 = await crearRutaDePrueba({ sedeId: 1, numero: 1, pilotoId: piloto06Id });
+      const rSede2 = await crearRutaDePrueba({ sedeId: 2, numero: 2, pilotoId: piloto06Id });
+
+      const sesionPilotoDosSedes = crearSesion({
+        usuarioId: piloto06Id,
+        usuario: "ejemplo.06",
+        rol: "Piloto",
+        permisos: ["pk.ruta.propias"],
+        sedeIds: [1, 2],
+      });
+
+      const rutasSede1 = await listarRutasEnRuta(sesionPilotoDosSedes, 1);
+      expect(rutasSede1.map((r) => r.id)).toContain(rSede1.id);
+      expect(rutasSede1.map((r) => r.id)).not.toContain(rSede2.id);
+
+      const rutasSede2 = await listarRutasEnRuta(sesionPilotoDosSedes, 2);
+      expect(rutasSede2.map((r) => r.id)).toContain(rSede2.id);
+      expect(rutasSede2.map((r) => r.id)).not.toContain(rSede1.id);
+    });
   });
 
   describe("Criterio 2: RF-SL-78 - Orden de rutas En Ruta de la más reciente a la más antigua", () => {
@@ -413,9 +434,37 @@ describe("Módulo de Ruta - Servicio (JM-06)", () => {
       expect(r?.entregas).toHaveLength(1);
       expect(r?.entregas[0].cliente).toBe("José Álvarez");
       expect(r?.entregas[0].sector).toBe("Zona 1");
-      expect(r?.entregas[0].totalKg).toBe(40.125);
-      expect(r?.totalKg).toBe(40.125);
+      expect(r?.entregas[0].totalKg).toBe("40.125");
+      expect(r?.totalKg).toBe("40.125");
       expect(r?.clientesContador).toBe(1);
+    });
+
+    it("H-67: totalKg de la ruta y de cada entrega viaja como texto exacto (string), nunca number", async () => {
+      const ruta = await crearRutaDePrueba({
+        numero: 1,
+        pilotoId: piloto06Id,
+        entregas: [
+          { cliente: "Cliente Uno", sector: "Zona 1", totalKg: 150.5, orden: 1 },
+          { cliente: "Cliente Dos", sector: "Zona 2", totalKg: 200.25, orden: 2 },
+        ],
+      });
+
+      const sesion = crearSesion({
+        usuarioId: piloto06Id,
+        rol: "Piloto",
+        permisos: ["pk.ruta.propias"],
+      });
+
+      const rutas = await listarRutasEnRuta(sesion, 1);
+      const r = rutas.find((item) => item.id === ruta.id);
+      expect(r).toBeDefined();
+      expect(typeof r!.totalKg).toBe("string");
+      expect(r!.totalKg).toBe("350.75");
+      for (const entrega of r!.entregas) {
+        expect(typeof entrega.totalKg).toBe("string");
+      }
+      expect(r!.entregas[0].totalKg).toBe("150.5");
+      expect(r!.entregas[1].totalKg).toBe("200.25");
     });
   });
 

@@ -65,21 +65,28 @@ export async function gestionarSolicitud(entrada: unknown, sesion: SesionActual 
     });
     if (!solicitud) throw new ErrorNegocio("No se encontró la solicitud.");
     if (d.tipo === "estado" && solicitud.estado === d.estado) return { id: d.id };
-    if (
-      d.tipo === "responsable" &&
-      d.responsableId &&
-      !(await tx.usuario.findFirst({
+    let nombreResponsable: string | null = null;
+    if (d.tipo === "responsable" && d.responsableId) {
+      const usuario = await tx.usuario.findFirst({
         where: { id: d.responsableId, activo: true, eliminadoEn: null, sistema: { in: ["sitio", "ambos"] } },
-        select: { id: true },
-      }))
-    )
-      throw new ErrorNegocio("Elija un usuario activo del sitio.");
+        select: { name: true },
+      });
+      if (!usuario) throw new ErrorNegocio("Elija un usuario activo del sitio.");
+      nombreResponsable = usuario.name;
+    }
     const datos =
       d.tipo === "estado"
         ? { estado: d.estado }
         : d.tipo === "responsable"
           ? { responsableId: d.responsableId }
           : { comentario: d.comentario || null };
+    const etiquetas = { asignado: "Asignado", en_proceso: "En proceso", solucionado: "Solucionado" } as const;
+    const resumen =
+      d.tipo === "estado"
+        ? `${solicitud.folio} · ${etiquetas[d.estado]}`
+        : d.tipo === "responsable"
+          ? `${solicitud.folio} · ${nombreResponsable ?? "sin responsable"}`
+          : solicitud.folio;
     await tx.solicitudContacto.update({ where: { id: d.id }, data: datos });
     await registrarBitacora(tx, {
       sistema: "sitio",
@@ -92,7 +99,7 @@ export async function gestionarSolicitud(entrada: unknown, sesion: SesionActual 
           : d.tipo === "responsable"
             ? "Responsable de solicitud"
             : "Comentario de solicitud",
-      detalle: { folio: solicitud.folio, ...datos },
+      detalle: { resumen },
     });
     return { id: d.id };
   });

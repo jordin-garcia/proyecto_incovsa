@@ -249,22 +249,24 @@ export async function ordenarLineasPorPeso(entrada: EntradaOrdenarPorPeso, conte
     return a.id - b.id;
   });
 
-  const resultados = await prisma.$transaction(
-    lineasOrdenadas.map((l, index) =>
-      prisma.lineaPreparacion.updateMany({
-        where: {
-          id: l.id,
-          envioId: entrada.envioId,
-          envio: {
-            sedeId: contexto.sedeId,
-            estado: { nombre: EN_PREPARACION },
+  await prisma.$transaction(async (tx) => {
+    const resultados = await Promise.all(
+      lineasOrdenadas.map((l, index) =>
+        tx.lineaPreparacion.updateMany({
+          where: {
+            id: l.id,
+            envioId: entrada.envioId,
+            envio: {
+              sedeId: contexto.sedeId,
+              estado: { nombre: EN_PREPARACION },
+            },
           },
-        },
-        data: { posicion: index + 1 },
-      }),
-    ),
-  );
-  exigirCambios(resultados);
+          data: { posicion: index + 1 },
+        }),
+      ),
+    );
+    exigirCambios(resultados);
+  });
 
   return {
     envioId: entrada.envioId,
@@ -370,19 +372,21 @@ export async function reordenarColaBodega(entrada: EntradaReordenarCola, context
 
   // Actualizar posiciones enteras (decisión 57)
   // RN-28: no va al historial ni a la bitácora
-  const resultados = await prisma.$transaction(
-    entrada.envioIds.map((id, index) =>
-      prisma.envio.updateMany({
-        where: {
-          id,
-          sedeId: contexto.sedeId,
-          estado: { nombre: EN_PREPARACION },
-        },
-        data: { posicionCola: index + 1 },
-      }),
-    ),
-  );
-  exigirCambios(resultados);
+  await prisma.$transaction(async (tx) => {
+    const resultados = await Promise.all(
+      entrada.envioIds.map((id, index) =>
+        tx.envio.updateMany({
+          where: {
+            id,
+            sedeId: contexto.sedeId,
+            estado: { nombre: EN_PREPARACION },
+          },
+          data: { posicionCola: index + 1 },
+        }),
+      ),
+    );
+    exigirCambios(resultados);
+  });
 
   return {
     envioIds: entrada.envioIds,
@@ -405,22 +409,24 @@ export async function reordenarLineasPreparacion(entrada: EntradaReordenarLineas
 
   // Actualizar posiciones enteras (decisión 57)
   // RN-28: no va al historial ni a la bitácora
-  const resultados = await prisma.$transaction(
-    entrada.lineaIds.map((id, index) =>
-      prisma.lineaPreparacion.updateMany({
-        where: {
-          id,
-          envioId: entrada.envioId,
-          envio: {
-            sedeId: contexto.sedeId,
-            estado: { nombre: EN_PREPARACION },
+  await prisma.$transaction(async (tx) => {
+    const resultados = await Promise.all(
+      entrada.lineaIds.map((id, index) =>
+        tx.lineaPreparacion.updateMany({
+          where: {
+            id,
+            envioId: entrada.envioId,
+            envio: {
+              sedeId: contexto.sedeId,
+              estado: { nombre: EN_PREPARACION },
+            },
           },
-        },
-        data: { posicion: index + 1 },
-      }),
-    ),
-  );
-  exigirCambios(resultados);
+          data: { posicion: index + 1 },
+        }),
+      ),
+    );
+    exigirCambios(resultados);
+  });
 
   return {
     envioId: entrada.envioId,

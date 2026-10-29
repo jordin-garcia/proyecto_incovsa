@@ -1,0 +1,37 @@
+
+> incovsa@0.1.0 verificar
+> npm run formato && npm run lint && npm run tipos && npm test
+
+
+> incovsa@0.1.0 formato
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> incovsa@0.1.0 lint
+> eslint .
+
+
+> incovsa@0.1.0 tipos
+> tsc --noEmit
+
+
+> incovsa@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.5 C:/Users/Hecto/Documents/proyecto_incovsa
+
+(node:13200) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+ Test Files  52 passed (52)
+      Tests  426 passed (426)
+   Start at  20:45:41
+   Duration  380.00s (tests 69%, import 29%, transform 1%)
+
+     Import  172 modules were evaluated 304 times · 102.72s total, 29% of tracked time
+             ~44.60s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+
