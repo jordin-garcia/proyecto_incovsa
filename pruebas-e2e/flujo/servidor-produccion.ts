@@ -66,10 +66,14 @@ export const test = base.extend<{ esperarPublicacion: EsperarPublicacion }, { pr
       });
       const salida = once(servidor, "exit");
       try {
-        const limite = Date.now() + 20000;
+        // H-84 (auditoría del 26/10): el servidor escucha en 127.0.0.1 y en Windows `localhost` puede resolver
+        // primero a ::1. La primera página en frío compila y conecta con la base: puede tardar más de 20 s.
+        const limite = Date.now() + 90000;
         for (;;) {
           if (servidor.exitCode !== null) throw new Error("El servidor de producción terminó antes de iniciar.");
-          const listo = await fetch(`${url}/acceso`, { signal: AbortSignal.timeout(1000) }).catch(() => null);
+          const listo = await fetch(`http://127.0.0.1:${puerto}/acceso`, { signal: AbortSignal.timeout(10000) }).catch(
+            () => null,
+          );
           if (listo?.ok) break;
           if (Date.now() >= limite) throw new Error("No inició el servidor de producción de JG-10.");
           await esperar(100);
@@ -80,7 +84,8 @@ export const test = base.extend<{ esperarPublicacion: EsperarPublicacion }, { pr
         await salida;
       }
     },
-    { scope: "worker" },
+    // El arranque en frío tiene su propio límite, aparte del de cada prueba.
+    { scope: "worker", timeout: 120000 },
   ],
   baseURL: async ({ produccion }, usar) => usar(produccion.url),
   esperarPublicacion: async ({ produccion }, usar) =>

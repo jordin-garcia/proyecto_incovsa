@@ -1,12 +1,14 @@
 # CE-06. Despliegue automático desde main: imagen en GHCR y, si hay VPS, SSH.
 # Antes de CE-08 el paso SSH se omite cuando faltan los secretos del environment.
-# La rama ce-06-prueba solo publica en GHCR (criterio 1); no toca la etiqueta produccion.
+# Para probar la publicación sin desplegar: `gh workflow run despliegue.yml -f modo_prueba=true` (paquete
+# <repo>-prueba, sin la etiqueta produccion). La rama de prueba de CE-06 ya no existe (auditoría del 22/10, H-53).
+# Los contextos de GitHub pasan por `env`, nunca dentro del script (H-52).
 
 name: Despliegue
 
 on:
   push:
-    branches: [main, ce-06-prueba]
+    branches: [main]
   workflow_dispatch:
     inputs:
       etiqueta:
@@ -48,20 +50,31 @@ jobs:
 
       - name: Etiquetas de la imagen
         id: meta
+        env:
+          REPOSITORIO: ${{ github.repository }}
+          DUENO: ${{ github.repository_owner }}
+          # User o Organization: al transferir el repositorio a INCOVSA (P-94), la API de paquetes es /orgs/ (H-54).
+          TIPO_DUENO: ${{ github.event.repository.owner.type }}
+          NOMBRE_REPOSITORIO: ${{ github.event.repository.name }}
+          SHA_COMMIT: ${{ github.sha }}
+          EVENTO: ${{ github.event_name }}
+          MODO_PRUEBA_ENTRADA: ${{ inputs.modo_prueba }}
+          REF: ${{ github.ref }}
         run: |
           set -euo pipefail
-          repo_lc="$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')"
-          owner_lc="$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
-          pkg_prod="$(echo '${{ github.event.repository.name }}' | tr '[:upper:]' '[:lower:]')"
-          sha="$(echo '${{ github.sha }}' | cut -c1-40)"
+          repo_lc="$(printf '%s' "$REPOSITORIO" | tr '[:upper:]' '[:lower:]')"
+          owner_lc="$(printf '%s' "$DUENO" | tr '[:upper:]' '[:lower:]')"
+          pkg_prod="$(printf '%s' "$NOMBRE_REPOSITORIO" | tr '[:upper:]' '[:lower:]')"
+          sha="$(printf '%s' "$SHA_COMMIT" | cut -c1-40)"
+          if [ "$TIPO_DUENO" = 'Organization' ]; then ambito=orgs; else ambito=users; fi
           # Paquete de producción SOLO en main y sin modo_prueba (decisiones 31 y 75).
           # Cualquier otra ref (p. ej. workflow_dispatch en develop) usa <repo>-prueba.
           modo_prueba_input=false
-          if [ '${{ github.event_name }}' = 'workflow_dispatch' ] && [ '${{ inputs.modo_prueba }}' = 'true' ]; then
+          if [ "$EVENTO" = 'workflow_dispatch' ] && [ "$MODO_PRUEBA_ENTRADA" = 'true' ]; then
             modo_prueba_input=true
           fi
           usa_paquete_prod=false
-          if [ '${{ github.ref }}' = 'refs/heads/main' ] && [ "$modo_prueba_input" = 'false' ]; then
+          if [ "$REF" = 'refs/heads/main' ] && [ "$modo_prueba_input" = 'false' ]; then
             usa_paquete_prod=true
           fi
           if [ "$usa_paquete_prod" = 'true' ]; then
@@ -81,6 +94,7 @@ jobs:
             echo "imagen=${imagen}"
             echo "paquete=${pkg}"
             echo "owner=${owner_lc}"
+            echo "ambito=${ambito}"
             echo "etiqueta_sha=${sha}"
             echo "tag_sha=${tag_sha}"
             echo "tag_produccion=${tag_produccion}"
@@ -115,11 +129,15 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
 
       - name: "RNF-12: la imagen quedó en GHCR"
+        env:
+          TAG_SHA: ${{ steps.meta.outputs.tag_sha }}
+          TAG_PRODUCCION: ${{ steps.meta.outputs.tag_produccion }}
+          PUBLICO_PRODUCCION: ${{ steps.meta.outputs.publico_produccion }}
         run: |
           set -euo pipefail
-          docker buildx imagetools inspect "${{ steps.meta.outputs.tag_sha }}"
-          if [ '${{ steps.meta.outputs.publico_produccion }}' = 'true' ]; then
-            docker buildx imagetools inspect "${{ steps.meta.outputs.tag_produccion }}"
+          docker buildx imagetools inspect "$TAG_SHA"
+          if [ "$PUBLICO_PRODUCCION" = 'true' ]; then
+            docker buildx imagetools inspect "$TAG_PRODUCCION"
           fi
 
       - name: "RNF-12: variantes ligeras para ejercer la poda (modo prueba)"
@@ -151,13 +169,14 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OWNER: ${{ steps.meta.outputs.owner }}
+          AMBITO: ${{ steps.meta.outputs.ambito }}
           PKG: ${{ steps.meta.outputs.paquete }}
           MODO_PRUEBA: ${{ steps.meta.outputs.modo_prueba }}
         run: |
           set -euo pipefail
           # Cada modo poda solo su propio paquete (prod vs <repo>-prueba).
           echo "Podando paquete container/${PKG} (modo_prueba=${MODO_PRUEBA})"
-          api="/users/${OWNER}/packages/container/${PKG}/versions?per_page=100"
+          api="/${AMBITO}/${OWNER}/packages/container/${PKG}/versions?per_page=100"
           if ! gh api "$api" --jq 'length' >/tmp/ghcr-count.txt 2>/tmp/ghcr-err.txt; then
             if grep -qi '404\|Not Found' /tmp/ghcr-err.txt; then
               echo "Paquete sin versiones listables todavía; se omite la poda."
@@ -191,7 +210,7 @@ jobs:
           fi
           for id in "${ids[@]:5}"; do
             echo "Borrando versión etiquetada ${id}"
-            if ! gh api --method DELETE "/users/${OWNER}/packages/container/${PKG}/versions/${id}" 2>/tmp/ghcr-del-err.txt; then
+            if ! gh api --method DELETE "/${AMBITO}/${OWNER}/packages/container/${PKG}/versions/${id}" 2>/tmp/ghcr-del-err.txt; then
               if grep -qi '403\|Forbidden' /tmp/ghcr-del-err.txt; then
                 echo "GHCR: sin permiso para borrar versiones (403)." >&2
                 cat /tmp/ghcr-del-err.txt >&2
@@ -214,10 +233,11 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IMAGEN: ${{ steps.meta.outputs.imagen }}
           OWNER: ${{ steps.meta.outputs.owner }}
+          AMBITO: ${{ steps.meta.outputs.ambito }}
           PKG: ${{ steps.meta.outputs.paquete }}
         run: |
           set -euo pipefail
-          api="/users/${OWNER}/packages/container/${PKG}/versions?per_page=100"
+          api="/${AMBITO}/${OWNER}/packages/container/${PKG}/versions?per_page=100"
           gh api --paginate "$api" --jq '.[]' \
             | jq -s '
                 map(select((.metadata.container.tags // []) | length > 0))
