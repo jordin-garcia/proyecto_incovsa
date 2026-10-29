@@ -50,6 +50,7 @@ describe("usuarios del picking", () => {
   let contexto: ContextoUsuario;
 
   beforeEach(async () => {
+    estado.sesion = null;
     await limpiarTablasDeNegocio();
     actorId = randomUUID();
     const username = claveAccesoInterna("ambos", "actor.prueba");

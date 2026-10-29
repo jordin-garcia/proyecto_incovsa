@@ -11,8 +11,8 @@
 // Solo cuenta el comentario que publicó una ejecución del flujo revision-claude (auditoría del 22/10, H-40): cualquier
 // flujo con `pull-requests: write` publica como github-actions[bot]. La segunda línea del comentario cita la ejecución
 // ("Commit revisado: <sha> · Ejecución: <id>"), y el comentario vale solo si esa ejecución es de revision-claude.yml
-// para ese commit y se publicó después de que empezara. Un flujo nuevo tendría que tocar `.github/**`, que además
-// protege archivos-protegidos.
+// para ese commit y se publicó después de que empezara. La cita no prueba la autoría (otro flujo podría copiarla):
+// la protección de fondo sigue siendo archivos-protegidos, que impide agregar o cambiar flujos de `.github/**`.
 // Uso en la CI (<ejecuciones.jsonl>: un {id, creado} por línea, las ejecuciones de revision-claude.yml del commit):
 //   node scripts/veredicto-revision.mjs --decidir <comentarios.jsonl> <sha> <id> --ejecuciones <ejecuciones.jsonl>
 //       → imprime true o false

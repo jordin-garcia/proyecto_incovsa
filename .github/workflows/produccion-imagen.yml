@@ -104,7 +104,7 @@ jobs:
         # H-46 y H-48: las mismas rutas que la prueba de JG-11 (páginas, error, redirección, API y recursos).
         run: |
           set -euo pipefail
-          for ruta in / /acceso /panel /no-existe-jg25 /api/tiempo-real /marca/incovsa-oscuro.svg; do
+          for ruta in / /acceso /panel /no-existe-jg25 /api/tiempo-real /marca/inquiserca.webp; do
             curl -ksS -o /dev/null -D /tmp/cabeceras-crudas.txt --resolve localhost:443:127.0.0.1 "https://localhost${ruta}"
             tr -d '\r' </tmp/cabeceras-crudas.txt | tr '[:upper:]' '[:lower:]' >/tmp/cabeceras.txt
             contar() { grep -c "$1" /tmp/cabeceras.txt || true; }

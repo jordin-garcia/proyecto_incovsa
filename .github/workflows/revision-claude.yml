@@ -66,7 +66,8 @@ jobs:
           } >> "$GITHUB_OUTPUT"
           gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
             --jq '.[] | {usuario: .user.login, body: .body, fecha: .created_at, editado: (.updated_at != .created_at)}' > "$RUNNER_TEMP/comentarios.jsonl"
-          gh api "repos/$GITHUB_REPOSITORY/actions/workflows/revision-claude.yml/runs?head_sha=$SHA&per_page=100" --paginate             --jq '.workflow_runs[] | {id, creado: .created_at}' > "$RUNNER_TEMP/ejecuciones.jsonl"
+          gh api "repos/$GITHUB_REPOSITORY/actions/workflows/revision-claude.yml/runs?head_sha=$SHA&per_page=100" --paginate \
+            --jq '.workflow_runs[] | {id, creado: .created_at}' > "$RUNNER_TEMP/ejecuciones.jsonl"
           # Solo se revisa si este commit no tiene una revisión completa o si cambió la tarea del título.
           revisar=$(node scripts/veredicto-revision.mjs --decidir "$RUNNER_TEMP/comentarios.jsonl" "$SHA" "$id" --ejecuciones "$RUNNER_TEMP/ejecuciones.jsonl")
           if [[ "$borrador" == "true" || "$estado" != "OPEN" ]]; then revisar=false; fi
@@ -127,7 +128,8 @@ jobs:
           fi
           gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
             --jq '.[] | {usuario: .user.login, body: .body, fecha: .created_at, editado: (.updated_at != .created_at)}' > "$RUNNER_TEMP/comentarios.jsonl"
-          gh api "repos/$GITHUB_REPOSITORY/actions/workflows/revision-claude.yml/runs?head_sha=$SHA&per_page=100" --paginate             --jq '.workflow_runs[] | {id, creado: .created_at}' > "$RUNNER_TEMP/ejecuciones.jsonl"
+          gh api "repos/$GITHUB_REPOSITORY/actions/workflows/revision-claude.yml/runs?head_sha=$SHA&per_page=100" --paginate \
+            --jq '.workflow_runs[] | {id, creado: .created_at}' > "$RUNNER_TEMP/ejecuciones.jsonl"
           node scripts/veredicto-revision.mjs "$RUNNER_TEMP/comentarios.jsonl" "$SHA" "$TAREA" --ejecuciones "$RUNNER_TEMP/ejecuciones.jsonl"
 
       # Aprobar con LISTO y solicitar cambios con CORREGIR (decisión 60). Requiere que el repositorio permita a

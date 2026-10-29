@@ -74,7 +74,7 @@ Nota para el Documento 5 (CE-11), según `specs/16` («Respaldos», D-05). La co
    chmod 600 .env
    ```
 
-   Escriba en `.env` los valores guardados en el medio seguro: la contraseña de PostgreSQL (en `POSTGRES_PASSWORD` y dentro de `DATABASE_URL`), las dos claves de autenticación (`BETTER_AUTH_SECRET_SITIO` y `BETTER_AUTH_SECRET_PICKING`, distintas entre sí, de al menos 32 caracteres) y las llaves de R2 de las imágenes. Ninguna línea puede quedar con el valor de la plantilla: la aplicación no arranca en producción con las claves «cambie-esto…». Si se crean claves nuevas en lugar de recuperar las guardadas, se cierran todas las sesiones abiertas, y hay que guardar las nuevas en el medio seguro.
+   Escriba en `.env` los valores guardados en el medio seguro: la contraseña de PostgreSQL (en `POSTGRES_PASSWORD` y dentro de `DATABASE_URL`), las dos claves de autenticación (`BETTER_AUTH_SECRET_SITIO` y `BETTER_AUTH_SECRET_PICKING`, distintas entre sí, de al menos 32 caracteres) y las llaves de R2 de las imágenes. Ninguna línea puede quedar con el valor de la plantilla. Con las claves «cambie-esto…», el sitio público responde y el contenedor queda sano, pero nadie puede iniciar sesión: el acceso muestra el mensaje general de error. Si se crean claves nuevas en lugar de recuperar las guardadas, se cierran todas las sesiones abiertas, y hay que guardar las nuevas en el medio seguro.
 2. **`rclone`:** con el mismo usuario, cree el remoto `r2` con la llave limitada al bucket privado de respaldos, también guardada en el medio seguro.
 
    ```
