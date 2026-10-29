@@ -1,0 +1,169 @@
+
+Running 54 tests using 1 worker
+
+[1/54] [telefono] › pruebas-e2e\acceso\acceso-personal.spec.ts:17:5 › RF-SW-09 / CAM-83: los tres pasos, sistemas habilitados, ayuda, contraseña y accesibilidad
+[WebServer] 2026-10-29T03:49:47.762Z WARN [Better Auth]: Invalid password
+
+[2/54] [telefono] › pruebas-e2e\acceso\acceso-personal.spec.ts:59:5 › RF-SW-09: restringe opciones según la cuenta y rechaza usuarios inexistentes
+[3/54] [telefono] › pruebas-e2e\acceso\acceso-personal.spec.ts:83:5 › RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio y conserva la otra
+[4/54] [telefono] › pruebas-e2e\acceso\acceso-personal.spec.ts:123:5 › RNF-05: no expone altas, cambios de contraseña ni accesos que evadan límites; verifica origen
+[5/54] [telefono] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:28:5 › RF-SW-09 / RF-SL-02 / H-33: el sistema no autorizado vuelve al paso 2 sin registrar un fallo ni pedir sede
+[6/54] [telefono] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:68:7 › RF-SW-30 / H-34: cerrar sitio muestra Sesión cerrada en Inicio
+[7/54] [telefono] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:68:7 › RF-SW-30 / H-34: cerrar picking muestra Sesión cerrada en Inicio
+[8/54] [telefono] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:87:5 › RF-SW-25 / H-07 / H-13 / H-39: acceso denegado ofrece el módulo propio y un módulo inexistente conserva el armazón
+[WebServer] Error inesperado en una acción del servidor: Error [ZodError]: [
+[WebServer]   {
+[WebServer]     "code": "invalid_value",
+[WebServer]     "values": [
+[WebServer]       "facturacion",
+[WebServer]       "bodega",
+[WebServer]       "tablero",
+[WebServer]       "ruta",
+[WebServer]       "reportes",
+[WebServer]       "configuracion"
+[WebServer]     ],
+[WebServer]     "path": [
+[WebServer]       "modulo"
+[WebServer]     ],
+[WebServer]     "message": "Invalid option: expected one of \"facturacion\"|\"bodega\"|\"tablero\"|\"ruta\"|\"reportes\"|\"configuracion\""
+[WebServer]   }
+[WebServer] ]
+[WebServer]     at GET (src\app\api\tiempo-real\route.ts:12:38)
+[WebServer]   10 | export async function GET(request: Request) {
+[WebServer]   11 |   try {
+[WebServer] > 12 |     const datos = esquemaSuscripcion.parse(Object.fromEntries(new URL(request.url).searchParams));
+[WebServer]      |                                      ^
+[WebServer]   13 |     const autorizar = async () => {
+[WebServer]   14 |       const sesion = await obtenerSesion("picking", request.headers);
+[WebServer]   15 |       exigirPermiso(sesion, permisoDelModulo(sesion, datos.modulo), datos.sede);
+
+[9/54] [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.03 en picking solo ve sus módulos
+[10/54] [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.03 en sitio solo ve sus módulos
+[11/54] [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.05 en picking solo ve sus módulos
+[12/54] [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.06 en picking solo ve sus módulos
+[13/54] [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.08 en sitio solo ve sus módulos
+[14/54] [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.09 en sitio solo ve sus módulos
+[15/54] [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.01 en picking solo ve sus módulos
+[16/54] [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.01 en sitio solo ve sus módulos
+[17/54] [telefono] › pruebas-e2e\acceso\permisos.spec.ts:73:5 › RNF-04: primera barrera por sistema y rechazo de acceso directo en el servidor
+[18/54] [telefono] › pruebas-e2e\acceso\permisos.spec.ts:86:5 › RN-17 / RF-SL-66: cookie ajena se ignora y la sede autorizada persiste
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[19/54] [tableta] › pruebas-e2e\acceso\acceso-personal.spec.ts:17:5 › RF-SW-09 / CAM-83: los tres pasos, sistemas habilitados, ayuda, contraseña y accesibilidad
+[WebServer] 2026-10-29T03:52:02.148Z WARN [Better Auth]: Invalid password
+
+[20/54] [tableta] › pruebas-e2e\acceso\acceso-personal.spec.ts:59:5 › RF-SW-09: restringe opciones según la cuenta y rechaza usuarios inexistentes
+[21/54] [tableta] › pruebas-e2e\acceso\acceso-personal.spec.ts:83:5 › RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio y conserva la otra
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[22/54] [tableta] › pruebas-e2e\acceso\acceso-personal.spec.ts:123:5 › RNF-05: no expone altas, cambios de contraseña ni accesos que evadan límites; verifica origen
+[23/54] [tableta] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:28:5 › RF-SW-09 / RF-SL-02 / H-33: el sistema no autorizado vuelve al paso 2 sin registrar un fallo ni pedir sede
+[24/54] [tableta] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:68:7 › RF-SW-30 / H-34: cerrar sitio muestra Sesión cerrada en Inicio
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[25/54] [tableta] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:68:7 › RF-SW-30 / H-34: cerrar picking muestra Sesión cerrada en Inicio
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[26/54] [tableta] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:87:5 › RF-SW-25 / H-07 / H-13 / H-39: acceso denegado ofrece el módulo propio y un módulo inexistente conserva el armazón
+[WebServer] Error inesperado en una acción del servidor: Error [ZodError]: [
+[WebServer]   {
+[WebServer]     "code": "invalid_value",
+[WebServer]     "values": [
+[WebServer]       "facturacion",
+[WebServer]       "bodega",
+[WebServer]       "tablero",
+[WebServer]       "ruta",
+[WebServer]       "reportes",
+[WebServer]       "configuracion"
+[WebServer]     ],
+[WebServer]     "path": [
+[WebServer]       "modulo"
+[WebServer]     ],
+[WebServer]     "message": "Invalid option: expected one of \"facturacion\"|\"bodega\"|\"tablero\"|\"ruta\"|\"reportes\"|\"configuracion\""
+[WebServer]   }
+[WebServer] ]
+[WebServer]     at GET (src\app\api\tiempo-real\route.ts:12:38)
+[WebServer]   10 | export async function GET(request: Request) {
+[WebServer]   11 |   try {
+[WebServer] > 12 |     const datos = esquemaSuscripcion.parse(Object.fromEntries(new URL(request.url).searchParams));
+[WebServer]      |                                      ^
+[WebServer]   13 |     const autorizar = async () => {
+[WebServer]   14 |       const sesion = await obtenerSesion("picking", request.headers);
+[WebServer]   15 |       exigirPermiso(sesion, permisoDelModulo(sesion, datos.modulo), datos.sede);
+
+[27/54] [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.03 en picking solo ve sus módulos
+[28/54] [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.03 en sitio solo ve sus módulos
+[29/54] [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.05 en picking solo ve sus módulos
+[30/54] [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.06 en picking solo ve sus módulos
+[31/54] [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.08 en sitio solo ve sus módulos
+[32/54] [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.09 en sitio solo ve sus módulos
+[33/54] [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.01 en picking solo ve sus módulos
+[34/54] [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.01 en sitio solo ve sus módulos
+[35/54] [tableta] › pruebas-e2e\acceso\permisos.spec.ts:73:5 › RNF-04: primera barrera por sistema y rechazo de acceso directo en el servidor
+[36/54] [tableta] › pruebas-e2e\acceso\permisos.spec.ts:86:5 › RN-17 / RF-SL-66: cookie ajena se ignora y la sede autorizada persiste
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[37/54] [escritorio] › pruebas-e2e\acceso\acceso-personal.spec.ts:17:5 › RF-SW-09 / CAM-83: los tres pasos, sistemas habilitados, ayuda, contraseña y accesibilidad
+[WebServer] 2026-10-29T03:53:57.622Z WARN [Better Auth]: Invalid password
+
+[38/54] [escritorio] › pruebas-e2e\acceso\acceso-personal.spec.ts:59:5 › RF-SW-09: restringe opciones según la cuenta y rechaza usuarios inexistentes
+[39/54] [escritorio] › pruebas-e2e\acceso\acceso-personal.spec.ts:83:5 › RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio y conserva la otra
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[40/54] [escritorio] › pruebas-e2e\acceso\acceso-personal.spec.ts:123:5 › RNF-05: no expone altas, cambios de contraseña ni accesos que evadan límites; verifica origen
+[41/54] [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:28:5 › RF-SW-09 / RF-SL-02 / H-33: el sistema no autorizado vuelve al paso 2 sin registrar un fallo ni pedir sede
+[42/54] [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:68:7 › RF-SW-30 / H-34: cerrar sitio muestra Sesión cerrada en Inicio
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[43/54] [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:68:7 › RF-SW-30 / H-34: cerrar picking muestra Sesión cerrada en Inicio
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[44/54] [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:87:5 › RF-SW-25 / H-07 / H-13 / H-39: acceso denegado ofrece el módulo propio y un módulo inexistente conserva el armazón
+[WebServer] Error inesperado en una acción del servidor: Error [ZodError]: [
+[WebServer]   {
+[WebServer]     "code": "invalid_value",
+[WebServer]     "values": [
+[WebServer]       "facturacion",
+[WebServer]       "bodega",
+[WebServer]       "tablero",
+[WebServer]       "ruta",
+[WebServer]       "reportes",
+[WebServer]       "configuracion"
+[WebServer]     ],
+[WebServer]     "path": [
+[WebServer]       "modulo"
+[WebServer]     ],
+[WebServer]     "message": "Invalid option: expected one of \"facturacion\"|\"bodega\"|\"tablero\"|\"ruta\"|\"reportes\"|\"configuracion\""
+[WebServer]   }
+[WebServer] ]
+[WebServer]     at GET (src\app\api\tiempo-real\route.ts:12:38)
+[WebServer]   10 | export async function GET(request: Request) {
+[WebServer]   11 |   try {
+[WebServer] > 12 |     const datos = esquemaSuscripcion.parse(Object.fromEntries(new URL(request.url).searchParams));
+[WebServer]      |                                      ^
+[WebServer]   13 |     const autorizar = async () => {
+[WebServer]   14 |       const sesion = await obtenerSesion("picking", request.headers);
+[WebServer]   15 |       exigirPermiso(sesion, permisoDelModulo(sesion, datos.modulo), datos.sede);
+
+[45/54] [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.03 en picking solo ve sus módulos
+[46/54] [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.03 en sitio solo ve sus módulos
+[47/54] [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.05 en picking solo ve sus módulos
+[48/54] [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.06 en picking solo ve sus módulos
+[49/54] [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.08 en sitio solo ve sus módulos
+[50/54] [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.09 en sitio solo ve sus módulos
+[51/54] [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.01 en picking solo ve sus módulos
+[52/54] [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.01 en sitio solo ve sus módulos
+[53/54] [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:73:5 › RNF-04: primera barrera por sistema y rechazo de acceso directo en el servidor
+[54/54] [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:86:5 › RN-17 / RF-SL-66: cookie ajena se ignora y la sede autorizada persiste
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+  54 passed (6.5m)
