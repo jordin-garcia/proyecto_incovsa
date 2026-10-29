@@ -35,6 +35,12 @@ async function captura(page: Page, nombre: string) {
   );
 }
 async function axe(page: Page) {
+  // Medir el estado final del diálogo, también cuando no se guardan capturas.
+  await page
+    .getByRole("dialog")
+    .evaluateAll((dialogos) =>
+      Promise.all(dialogos.flatMap((dialogo) => dialogo.getAnimations().map((animacion) => animacion.finished))),
+    );
   expect(
     (await new AxeBuilder({ page }).analyze()).violations.filter((v) =>
       ["serious", "critical"].includes(v.impact ?? ""),

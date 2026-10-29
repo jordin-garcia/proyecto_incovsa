@@ -689,3 +689,16 @@ Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los camb
 El prototipo de simulación se actualizó el 14/10/2026 con los cambios de la reunión 5 y el 15/10/2026 con los ajustes del coordinador ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)), y el Documento 2 pasó a la versión 0.2 (la entregada el 14/10) y el 15/10 a la versión 0.3, alineada con la especificación 1.3, y después a la versión 0.4, alineada con la especificación 1.4.
 
 El README del repositorio se actualizó el 16/10/2026 con la versión 1.5 de esta carpeta. El Documento 2 v0.4 **no** incorpora las decisiones del 16/10/2026 y, por decisión del coordinador del mismo día, **ya no se edita**: queda como la versión del Entregable 2, y para el Entregable 3 se crea una nueva versión del Documento 2 con todo actualizado. Mientras tanto vale lo que dice esta carpeta.
+
+## 25/10/2026 · DM-09 · Contraste de la bandeja de solicitudes
+
+Daniela autorizó usar `--g600` solo en las pestañas inactivas y el texto secundario de la fila seleccionada. Playwright y axe reprodujeron 4.46:1 y 4.40:1 con el `--g500` del prototipo. Se documenta esta excepción a la decisión 89 en `specs/05`, para cumplir RNF-08 sin cambiar las pruebas ni la paleta.
+
+## 25/10/2026 · JG-23 · Correcciones de la auditoría del 22/10 en Bodega
+
+- Si una acción de Bodega no se guarda, la marca o el orden vuelven atrás y la pantalla sigue en uso. Un envío de la misma sede que otra pantalla ya despachó responde «El pedido ya no está en preparación.», el mismo mensaje del despacho, y «No tiene permisos» queda solo para otra sede (auditoría H-22). Una falla de red muestra el mensaje general «No se pudo completar la operación. Inténtelo de nuevo.» (H-24) ([07](07-picking-bodega.md), "Marcado de preparación").
+- La conversión solo recibe texto o `Decimal`, nunca `Number` (H-16, [16](16-arquitectura-y-tecnologia.md), decisión 1).
+
+## 26/10/2026 · DM-11 · Ruido temporal en la medición de galerías
+
+Daniela autorizó un margen temporal de **10 ms** para comparar las medianas del tiempo hasta la primera imagen de portada y hasta `load` con una y cinco imágenes. Se mide el artefacto de producción con calentamiento equilibrado, muestras alternadas y contextos sin caché. La igualdad de bytes iniciales y la ausencia de solicitudes de imágenes secundarias antes de `load` permanecen estrictas. La precisión queda en `specs/05` y RNF-17 de `specs/15`; no cambia el comportamiento de las galerías ni los umbrales de axe.

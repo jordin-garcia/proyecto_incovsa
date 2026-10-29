@@ -220,13 +220,9 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-@media (max-width: 1024px) {
-  .tres {
-    grid-template-columns: 1fr;
-  }
-}
 @media (max-width: 720px) {
   .dos,
+  .tres,
   .resumen {
     grid-template-columns: 1fr;
   }

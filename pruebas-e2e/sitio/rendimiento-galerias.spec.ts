@@ -1,7 +1,7 @@
 import { expect, type Browser, type Request } from "@playwright/test";
 import { test } from "../flujo/servidor-produccion";
 import { Client } from "pg";
-import { mkdir, writeFile } from "node:fs/promises";
+import { archivoEvidencia } from "../comunes/evidencia";
 
 try {
   process.loadEnvFile();
@@ -120,9 +120,8 @@ test("RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respec
         body: JSON.stringify({ una, cinco }, null, 2),
         contentType: "application/json",
       });
-      await mkdir("pruebas-e2e/sitio/evidencias/DM-11", { recursive: true });
-      await writeFile(
-        `pruebas-e2e/sitio/evidencias/DM-11/rendimiento-${page.viewportSize()!.width}.json`,
+      await archivoEvidencia(
+        `pruebas-e2e/sitio/evidencias/DM-11/rendimiento-${page.viewportSize()!.width}.txt`,
         JSON.stringify({ una, cinco }, null, 2),
       );
       for (const muestra of [...una, ...cinco]) {
@@ -130,13 +129,15 @@ test("RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respec
         expect(muestra.imagenes).toEqual(una[0].imagenes);
         expect(muestra.bytes).toBe(una[0].bytes);
       }
-      // Comparación estricta de medianas, sin márgenes ni valores atípicos como umbral.
+      // Margen de 10 ms autorizado por Daniela y registrado en specs/05 y specs/15.
       const mediana = (valores: number[]) => {
         const ordenados = valores.toSorted((a, b) => a - b);
         return (ordenados[5] + ordenados[6]) / 2;
       };
       for (const metrica of ["primeraPortadaMs", "cargaMs"] as const) {
-        expect(mediana(cinco.map((m) => m[metrica])), metrica).toBeLessThanOrEqual(mediana(una.map((m) => m[metrica])));
+        expect(mediana(cinco.map((m) => m[metrica])), metrica).toBeLessThanOrEqual(
+          mediana(una.map((m) => m[metrica])) + 10,
+        );
       }
     } finally {
       await bd.query("BEGIN");

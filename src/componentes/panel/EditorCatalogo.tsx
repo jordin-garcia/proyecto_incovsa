@@ -138,6 +138,7 @@ function FormularioProducto({
 }
 export function EditorCatalogo({ datos }: { datos: CatalogoSitio }) {
   const publicando = useRef(false);
+  const focoAnterior = useRef<HTMLElement | null>(null);
   const [editor, editar] = useState<{ producto: ProductoPublico | null } | null>(null);
   const mensaje = useMensajes();
   const router = useRouter();
@@ -249,6 +250,18 @@ export function EditorCatalogo({ datos }: { datos: CatalogoSitio }) {
         <DialogContent
           grande
           aria-describedby={undefined}
+          onOpenAutoFocus={(evento) => {
+            const nombre = (evento.target as HTMLElement).querySelector<HTMLInputElement>('input[name="nombre"]');
+            if (!nombre) return;
+            focoAnterior.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+            evento.preventDefault();
+            nombre.focus();
+          }}
+          onCloseAutoFocus={(evento) => {
+            if (!focoAnterior.current?.isConnected) return;
+            evento.preventDefault();
+            focoAnterior.current.focus();
+          }}
           onEscapeKeyDown={(e) => {
             if (publicando.current) e.preventDefault();
           }}

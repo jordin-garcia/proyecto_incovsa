@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
-import { mkdir, writeFile } from "node:fs/promises";
 import { Client } from "pg";
+import { archivoEvidencia, capturaEvidencia } from "../comunes/evidencia";
 
 try {
   process.loadEnvFile();
@@ -51,13 +51,11 @@ async function revisar(page: Page, nombre: string) {
   );
   const resultado = await new AxeBuilder({ page }).analyze();
   const graves = resultado.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
-  await mkdir(CARPETA, { recursive: true });
-  await writeFile(
+  await archivoEvidencia(
     `${CARPETA}/axe-${nombre}-${page.viewportSize()!.width}.json`,
     `${JSON.stringify(graves, null, 2)}\n`,
   );
-  await page.screenshot({
-    path: `${CARPETA}/aplicacion-${nombre}-${page.viewportSize()!.width}.png`,
+  await capturaEvidencia(page, `${CARPETA}/aplicacion-${nombre}-${page.viewportSize()!.width}.png`, {
     fullPage: true,
     animations: "disabled",
   });
@@ -178,6 +176,26 @@ for (const usuario of ["ejemplo.08", "ejemplo.09", "ejemplo.10"]) {
         }
       }
       await revisar(page, `${usuario}-${seccion}`);
+      if (seccion === "catalogo") {
+        const editar = page.getByRole("button", { name: "Editar", exact: true }).first();
+        await editar.click();
+        const nombre = page.getByRole("dialog").getByLabel("Nombre", { exact: true });
+        await expect(nombre).toBeFocused();
+        // El prototipo enfoca el nombre; no selecciona ni reemplaza el texto del producto.
+        await expect
+          .poll(() => nombre.evaluate((campo: HTMLInputElement) => campo.selectionStart === campo.selectionEnd))
+          .toBe(true);
+        // Medir el contraste del estado abierto, después de la aparición del diálogo.
+        await page
+          .getByRole("dialog")
+          .evaluate((elemento) => Promise.all(elemento.getAnimations().map((animacion) => animacion.finished)));
+        await revisar(page, "catalogo-editor");
+        await page.keyboard.press("Tab");
+        await expect(nombre).not.toBeFocused();
+        await page.keyboard.press("Escape");
+        await expect(page.getByRole("dialog")).toHaveCount(0);
+        await expect(editar).toBeFocused();
+      }
     }
     const reducir = page.getByRole("button", { name: "Reducir el menú a íconos" });
     if (await reducir.isVisible()) {
