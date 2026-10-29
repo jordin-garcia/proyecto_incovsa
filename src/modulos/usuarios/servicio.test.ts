@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { verifyPassword } from "better-auth/crypto";
 import { prisma } from "@/lib/prisma";
 import { claveAccesoInterna, correoInterno } from "@/lib/cuentas";
@@ -7,8 +7,17 @@ import { ErrorNegocio } from "@/lib/errores";
 import { ErrorAcceso } from "@/modulos/permisos/servicio";
 import { iniciarSesion } from "@/app/acceso/servicio";
 import { consultarOpciones } from "@/modulos/envios/opciones";
+import { consultarOperaciones, consultarRutas } from "@/modulos/reportes/servicio";
+import { fechaGuatemala } from "@/lib/fechas";
 import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import type { SesionActual } from "@/lib/sesion";
+
+// Reportes lee la sesión de la petición (consultarBitacora); solo esa lectura se sustituye.
+const estado = vi.hoisted(() => ({ sesion: null as import("@/lib/sesion").SesionActual | null }));
+vi.mock("@/lib/sesion", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/sesion")>()),
+  obtenerSesion: async () => estado.sesion,
+}));
 import {
   esquemaCrearUsuarioPicking,
   esquemaCrearUsuarioSitio,
@@ -18,6 +27,7 @@ import {
 } from "./esquemas";
 import {
   MENSAJE_CUENTA_TOTAL,
+  MENSAJE_DESACTIVAR_PROPIA_CUENTA,
   MENSAJE_NOMBRE_COMPARTIDO,
   MENSAJE_PROPIA_CUENTA,
   crearUsuario,
@@ -325,6 +335,109 @@ describe("usuarios del picking", () => {
     expect(ids).toContain(piloto.id);
     expect(ids).not.toContain(bodega.id);
     expect(ids).not.toContain(enGuatemala.id);
+  });
+
+  it("RF-SL-57 (H-43): al eliminar un piloto, su selección en «Envío por camión» se limpia", async () => {
+    const piloto = await crearUsuario(
+      entrada({ usuario: "piloto.elegido", nombre: "Piloto Elegido", rol: "Piloto", permisosCodigos: [] }),
+      contexto,
+    );
+    await prisma.opcionEnvio.update({
+      where: { sedeId_tipo: { sedeId: quetzaltenango, tipo: "camion" } },
+      data: { pilotoId: piloto.id },
+    });
+    const facturacion: SesionActual = {
+      sistema: "picking",
+      usuario: { id: actorId, usuario: "actor.prueba", nombre: "Gerencia de prueba", rol: "Facturador" },
+      permisos: ["pk.facturacion"],
+      sedes: [{ id: quetzaltenango, nombre: "Quetzaltenango", prefijoOdoo: "XE" }],
+    };
+    const camion = async () =>
+      (await consultarOpciones(facturacion, quetzaltenango)).opciones.find((o) => o.tipo === "camion")!;
+    expect((await camion()).pilotoId).toBe(piloto.id);
+
+    // La sede de la opción se avisa en tiempo real para que Facturación quite la selección.
+    expect(await eliminarUsuario({ id: piloto.id }, contexto)).toEqual({
+      id: piloto.id,
+      sedesConCambios: [quetzaltenango],
+    });
+
+    expect((await camion()).pilotoId).toBeNull();
+    expect((await consultarOpciones(facturacion, quetzaltenango)).pilotos.map((p) => p.id)).not.toContain(piloto.id);
+  });
+
+  it("RF-SL-57 (H-45): los registros de un usuario eliminado siguen en Reportes con su nombre", async () => {
+    const piloto = await crearUsuario(
+      entrada({ usuario: "piloto.reportes", nombre: "Piloto De Reportes", rol: "Piloto", permisosCodigos: [] }),
+      contexto,
+    );
+    const hoy = fechaGuatemala(new Date());
+    const enRuta = await prisma.estadoEnvio.findUniqueOrThrow({ where: { nombre: "En Ruta" } });
+    await prisma.envio.create({
+      data: {
+        sedeId: quetzaltenango,
+        tipo: "ruta",
+        numero: 1,
+        fechaEnvio: new Date(`${hoy}T00:00:00Z`),
+        programadoPara: new Date(`${hoy}T13:30:00-06:00`),
+        estadoId: enRuta.id,
+        enviadoPorId: actorId,
+        pilotoId: piloto.id,
+      },
+    });
+    await prisma.$transaction(async (tx) => {
+      const { registrarBitacora } = await import("@/modulos/bitacora/servicio");
+      await registrarBitacora(tx, {
+        sistema: "picking",
+        operacion: "Inicio de sesión",
+        entidad: "usuario",
+        registroId: piloto.id,
+        usuarioId: piloto.id,
+        detalle: { resumen: "Sistema de picking" },
+      });
+    });
+
+    await eliminarUsuario({ id: piloto.id }, contexto);
+
+    const gerencia: SesionActual = {
+      sistema: "picking",
+      usuario: { id: actorId, usuario: "actor.prueba", nombre: "Gerencia de prueba", rol: "Gerencia" },
+      permisos: [],
+      sedes: [{ id: quetzaltenango, nombre: "Quetzaltenango", prefijoOdoo: "XE" }],
+    };
+    estado.sesion = gerencia;
+    const periodo = { tipo: "dia", referencia: hoy };
+    expect((await consultarRutas(gerencia, quetzaltenango, periodo)).map((r) => r.piloto)).toEqual([
+      "Piloto De Reportes",
+    ]);
+    const operaciones = await consultarOperaciones(gerencia, quetzaltenango, periodo);
+    expect(operaciones).toContainEqual(
+      expect.objectContaining({ usuario: "Piloto De Reportes", operacion: "Inicio de sesión" }),
+    );
+  });
+
+  it("D-04: Gerencia o Soporte no pueden desactivar su propia cuenta", async () => {
+    await expect(
+      editarUsuario(
+        edicion(actorId, {
+          nombre: "Gerencia de prueba",
+          rol: "Gerencia",
+          sedesIds: [],
+          permisosCodigos: [],
+          activo: false,
+        }),
+        contexto,
+      ),
+    ).rejects.toThrow(new ErrorNegocio(MENSAJE_DESACTIVAR_PROPIA_CUENTA));
+    expect(MENSAJE_DESACTIVAR_PROPIA_CUENTA).toBe("No puede desactivar su propia cuenta.");
+    expect((await prisma.usuario.findUniqueOrThrow({ where: { id: actorId } })).activo).toBe(true);
+    expect(await prisma.bitacora.count({ where: { operacion: "Edición de usuario", registroId: actorId } })).toBe(0);
+
+    // Sí puede desactivar a otra persona.
+    const otra = await crearUsuario(entrada({ usuario: "otra.persona", nombre: "Otra Persona" }), contexto);
+    expect((await editarUsuario(edicion(otra.id, { nombre: "Otra Persona", activo: false }), contexto)).activo).toBe(
+      false,
+    );
   });
 
   it("criterio 6: un rol sin acceso total no crea, edita, restablece ni elimina", async () => {

@@ -79,6 +79,33 @@ const casos = [
     true,
     "src/modulos/solicitudes/recepcion-publica.ts",
   ],
+  // H-44: la administración de usuarios exige el acceso total (specs/03), no un permiso ajeno.
+  [
+    '"use server"; export async function crearUsuarioAccion(e) { return guardar("picking", (sesion) => { exigirAccesoTotal(sesion, "picking"); return crearUsuario(e); }); }',
+    false,
+    "src/modulos/usuarios/acciones.ts",
+  ],
+  [
+    '"use server"; export async function crearUsuarioAccion(e) { return guardar("picking", (sesion) => { exigirPermiso(sesion, "pk.cfg.camiones"); return crearUsuario(e); }); }',
+    true,
+    "src/modulos/usuarios/acciones.ts",
+  ],
+  [
+    '"use server"; export async function crearUsuarioAccion(e) { return crearUsuario(e); }',
+    true,
+    "src/modulos/usuarios/acciones.ts",
+  ],
+  [
+    '"use server"; export async function a(e) { exigirAccesoTotal(sesion, "picking"); return 1; } export const b = async () => { return 1; };',
+    true,
+    "src/modulos/usuarios/acciones.ts",
+  ],
+  // Fuera de ese archivo, exigirAccesoTotal no reemplaza a exigirPermiso.
+  [
+    '"use server"; export async function insegura() { exigirAccesoTotal(sesion, "picking"); return 1; }',
+    true,
+    "src/modulos/camiones/acciones.ts",
+  ],
   ['"use server"; export async function enviarSolicitud(e) { return 1; }', true, "src/modulos/solicitudes/acciones.ts"],
   ['"use server"; export async function insegura() { return 1; }', true, "src/modulos/solicitudes/acciones.ts"],
   ["export async function POST() { return Response.json({}); }", true, "src/app/panel/catalogo/publicar/route.ts"],
