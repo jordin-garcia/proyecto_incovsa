@@ -3,7 +3,8 @@
 }
 
 {$DOMINIO:incovsa.com} {
-	header Strict-Transport-Security "max-age=31536000; includeSubDomains"
+	# HSTS y las demás cabeceras de seguridad las envía Next.js (JG-11, src/lib/cabeceras.ts). Caddy no las repite:
+	# con las dos salían dos cabeceras HSTS (auditoría del 22/10, H-48).
 	# 27 MB: tope de /api/imagenes/publicar (5 imágenes × 5 MB + multipart, decisión 44).
 	# Caddy mide MB en base 10. Las acciones del servidor siguen en 3 MB (decisión 58).
 	request_body {

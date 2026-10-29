@@ -32,21 +32,25 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends openssl ca-certificates \
   && rm -rf /var/lib/apt/lists/* \
   && groupadd --system --gid 1001 nodejs \
-  && useradd --system --uid 1001 --gid nodejs --home-dir /app nextjs
-COPY --from=compilacion --chown=nextjs:nodejs /app/public ./public
-COPY --from=compilacion --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=compilacion --chown=nextjs:nodejs /app/.next/static ./.next/static
+  && useradd --system --uid 1001 --gid nodejs --create-home --home-dir /home/nextjs nextjs
+# El código es de root y el proceso no puede reescribirlo (auditoría del 22/10, H-51). Solo la caché de Next.js
+# (optimización de imágenes) es de nextjs. npm y tsx escriben en /home/nextjs y en /tmp.
+COPY --from=compilacion /app/public ./public
+COPY --from=compilacion /app/.next/standalone ./
+COPY --from=compilacion /app/.next/static ./.next/static
 # prisma y tsx son devDependencies: hacen falta para migrate deploy y crear-admin.
-COPY --from=dependencias --chown=nextjs:nodejs /app/node_modules ./node_modules
-COPY --from=compilacion --chown=nextjs:nodejs /app/package.json ./package.json
-COPY --from=compilacion --chown=nextjs:nodejs /app/tsconfig.json ./tsconfig.json
-COPY --from=compilacion --chown=nextjs:nodejs /app/prisma.config.ts ./prisma.config.ts
-COPY --from=compilacion --chown=nextjs:nodejs /app/prisma ./prisma
-COPY --from=compilacion --chown=nextjs:nodejs /app/scripts ./scripts
-COPY --from=compilacion --chown=nextjs:nodejs /app/src ./src
+COPY --from=dependencias /app/node_modules ./node_modules
+COPY --from=compilacion /app/package.json ./package.json
+COPY --from=compilacion /app/tsconfig.json ./tsconfig.json
+COPY --from=compilacion /app/prisma.config.ts ./prisma.config.ts
+COPY --from=compilacion /app/prisma ./prisma
+COPY --from=compilacion /app/scripts ./scripts
+COPY --from=compilacion /app/src ./src
 RUN printf '%s\n' '#!/bin/sh' 'set -eu' 'cd /app' './node_modules/.bin/prisma migrate deploy' 'exec node server.js' > /app/entrada.sh \
   && chmod 755 /app/entrada.sh \
-  && chown nextjs:nodejs /app/entrada.sh
+  && chmod -R go-w /app \
+  && mkdir -p /app/.next/cache \
+  && chown nextjs:nodejs /app/.next/cache
 USER nextjs
 EXPOSE 3000
 ENTRYPOINT ["/app/entrada.sh"]
