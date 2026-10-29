@@ -245,7 +245,11 @@ jobs:
             --resolve localhost:443:127.0.0.1 \
             "https://localhost/api/tiempo-real?sede=${sede}&modulo=facturacion" || estado=$?
           # 28: curl cortó por el límite de 5 s con el flujo todavía abierto, como debe ser.
-          test "$estado" = "28"
+          if [ "$estado" != "28" ]; then
+            echo "RNF-13: /api/tiempo-real no quedó abierto (curl terminó con ${estado})"
+            cat /tmp/sse-cabeceras.txt /tmp/sse.txt
+            exit 1
+          fi
           tr -d '\r' </tmp/sse-cabeceras.txt | grep -qi '^content-type: text/event-stream'
           if ! grep -q '^: conectado' /tmp/sse.txt; then
             echo "RNF-13: el primer evento no llegó a través de Caddy en 5 s"
