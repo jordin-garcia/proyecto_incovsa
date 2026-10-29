@@ -62,3 +62,12 @@ El flujo `.github/workflows/despliegue.yml` (`name: Despliegue`) hace esto:
 4. **`workflow_dispatch` con `etiqueta`:** desde `main`, vuelve a `ghcr.io/<repo>:<etiqueta>` sin migraciones (`env` + validación).
 
 **Evidencia:** `evidencia/CE-06/workflow-run.txt` y `ghcr-pull.txt` (run en `ce-06-prueba` → paquete `-prueba`).
+
+### Correcciones de la auditoría (2026-10-22)
+
+Las corrigió el coordinador en JG-25.
+
+- **H-52:** `github.ref` y los demás contextos de GitHub pasan por `env`; ningún script de `despliegue.yml` los interpola. Lo prueba `scripts/auditoria-jg25.test.mjs`.
+- **H-53:** se quitó el disparador de la rama `ce-06-prueba` y se borró la rama del remoto. Para probar la publicación sin desplegar: `gh workflow run despliegue.yml -f modo_prueba=true`.
+- **H-54:** la poda usa `/orgs/` cuando el dueño del repositorio es una organización (`github.event.repository.owner.type`) y `/users/` si no. Así sigue funcionando al transferir el repositorio a INCOVSA (P-94).
+- **H-83 (auditoría del 26/10):** `despliegue.yml` corrió en modo prueba con las acciones de Docker nuevas (evidencia en `plan/evidencias/JG-25/README.md`).

@@ -58,3 +58,31 @@ El flujo "Respaldo y restauración" (`.github/workflows/produccion-respaldo.yml`
 - Job: https://github.com/jordin-garcia/proyecto_incovsa/actions/runs/39480510922/job/118827517023
 - **Comparar las filas de cada tabla (RNF-09):** success. Contó filas en `incovsa` y `incovsa_restaurada`; `diff -u` sin diferencias. Antes: `restauración de diarios/20261020.dump en incovsa_restaurada lista`.
 - **Comprobar la retención de 7 diarios y 4 semanales:** success. Con `SOLO_RETENCION=1` borró el excedente (`diarios/20200101.dump`, `diarios/20200102.dump`, `semanales/20200105.dump`, `semanales/20200112.dump`) y dejó 7 diarios y 4 semanales, con `20261020.dump` conservado.
+
+### Modo `docker compose exec` (auditoría del 22/10, H-55)
+
+Desde JG-25, el mismo flujo prueba también el modo del VPS: levanta el servicio `postgres` de `docker-compose.yml` y, sin `USAR_DOCKER_RUN`, restaura en él el respaldo de demostración, lo respalda con `docker compose exec`, lo restaura en `incovsa_copia` y compara la cantidad de filas de cada tabla con la base original.
+
+## Rehacer el `.env` y `rclone` del VPS
+
+Nota para el Documento 5 (CE-11), según `specs/16` («Respaldos», D-05). La configuración sin secretos (`docker-compose.yml`, `Caddyfile` y `.env.produccion.example`) está en el repositorio. Los secretos del VPS no: su copia de respaldo vive solo en el medio seguro que el coordinador acuerde con INCOVSA para entregar las credenciales (Anexo J, CE-12), nunca en las computadoras del equipo (decisión 70). Si se pierde el VPS o hay que instalar uno nuevo:
+
+1. **`.env`:** con el usuario de despliegue, en `~/incovsa`, copie la plantilla y cámbiele los permisos para que solo ese usuario la lea.
+
+   ```
+   cp .env.produccion.example .env
+   chmod 600 .env
+   ```
+
+   Escriba en `.env` los valores guardados en el medio seguro: la contraseña de PostgreSQL (en `POSTGRES_PASSWORD` y dentro de `DATABASE_URL`), las dos claves de autenticación (`BETTER_AUTH_SECRET_SITIO` y `BETTER_AUTH_SECRET_PICKING`, distintas entre sí, de al menos 32 caracteres) y las llaves de R2 de las imágenes. Ninguna línea puede quedar con el valor de la plantilla: la aplicación no arranca en producción con las claves «cambie-esto…». Si se crean claves nuevas en lugar de recuperar las guardadas, se cierran todas las sesiones abiertas, y hay que guardar las nuevas en el medio seguro.
+2. **`rclone`:** con el mismo usuario, cree el remoto `r2` con la llave limitada al bucket privado de respaldos, también guardada en el medio seguro.
+
+   ```
+   rclone config create r2 s3 provider Cloudflare env_auth false \
+     access_key_id <llave> secret_access_key <secreto> \
+     endpoint https://<cuenta>.r2.cloudflarestorage.com
+   rclone lsf r2:incovsa-respaldos/diarios
+   ```
+
+   La configuración queda en `~/.config/rclone/rclone.conf`. `RCLONE_DEST` del `.env` apunta a `r2:incovsa-respaldos`. Si `rclone lsf` lista los respaldos, el remoto funciona.
+3. **Comprobar:** ejecute una vez `./scripts/respaldo.sh` a mano, con las variables del `.env` cargadas como en la línea del cron, y restaure ese respaldo en una base nueva («Restaurar en una base nueva»).
