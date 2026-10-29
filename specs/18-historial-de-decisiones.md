@@ -657,6 +657,10 @@ Daniela autorizó usar `--g600` solo en las pestañas inactivas y el texto secun
 - **D-10, Reportes:** el PDF usa siempre el logotipo de INCOVSA del sistema (`public/marca/incovsa-quimicos.webp`), no el que se configura en el panel del sitio ([10](10-picking-reportes.md), "Exportación").
 - Las correcciones del código son de CE-13 (sitio y panel), JM-09 (Bodega, tablero y Ruta), JC-09 (Reportes y Facturación) y JG-25 (CI y pruebas de JG-10) (`plan/auditorias/2026-10-26.md`).
 
+## Ruido temporal en la medición de galerías (26/10/2026, DM-11)
+
+Daniela autorizó un margen temporal de **10 ms** para comparar las medianas del tiempo hasta la primera imagen de portada y hasta `load` con una y cinco imágenes. Se mide el artefacto de producción con calentamiento equilibrado, muestras alternadas y contextos sin caché. La igualdad de bytes iniciales y la ausencia de solicitudes de imágenes secundarias antes de `load` permanecen estrictas. La precisión queda en `specs/05` y RNF-17 de `specs/15`; no cambia el comportamiento de las galerías ni los umbrales de axe.
+
 ## Prueba integral y recorrido diario (27/10/2026, JG-14)
 
 - **Decisión 67:** el recorrido diario arranca el servidor de producción *standalone* (`node .next/standalone/server.js`, el mismo de la imagen de Docker) en lugar de `next start`, que no aplica con `output: "standalone"`. Lo decidió Jordin el 27/10 ([16](16-arquitectura-y-tecnologia.md)).

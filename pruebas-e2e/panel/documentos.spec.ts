@@ -7,6 +7,17 @@ try {
 } catch {
   /* CI */
 }
+// Coordina las altas temporales con la revisión integral de DM-11.
+const candados = new WeakMap<Page, Client>();
+test.beforeEach(async ({ page }) => {
+  const bd = new Client({ connectionString: process.env.DATABASE_URL });
+  candados.set(page, bd);
+  await bd.connect();
+  await bd.query("SELECT pg_advisory_lock($1)", [2026102610]);
+});
+test.afterEach(async ({ page }) => {
+  await candados.get(page)?.end();
+});
 async function entrar(page: Page, usuario: string) {
   const r = await page.request.post("/api/auth/sitio/sign-in/username", {
     headers: { origin: "http://localhost:3000" },
@@ -24,6 +35,12 @@ async function captura(page: Page, nombre: string) {
   );
 }
 async function axe(page: Page) {
+  // Medir el estado final del diálogo, también cuando no se guardan capturas.
+  await page
+    .getByRole("dialog")
+    .evaluateAll((dialogos) =>
+      Promise.all(dialogos.flatMap((dialogo) => dialogo.getAnimations().map((animacion) => animacion.finished))),
+    );
   expect(
     (await new AxeBuilder({ page }).analyze()).violations.filter((v) =>
       ["serious", "critical"].includes(v.impact ?? ""),

@@ -1,0 +1,195 @@
+
+> incovsa@0.1.0 e2e
+> playwright test pruebas-e2e/sitio/revision-integral.spec.ts pruebas-e2e/sitio/rendimiento-galerias.spec.ts --workers 1
+
+[WebServer] (node:48952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:46040) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] ⚠ Warning: Next.js ignored package-lock.json in C:\Users\danie because it is outside the current Git repository (C:\Users\danie\OneDrive\Escritorio\progra web\proyecto_incovsa).
+[WebServer]  To use this directory, set `turbopack.root` in your Next.js config.
+[WebServer] 
+[WebServer] (node:47628) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:20752) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25900) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:52016) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 42 tests using 1 worker
+
+(node:28408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3100
+- Network:       http://127.0.0.1:3100
+✓ Ready in 0ms
+✓ Running next.config took 25ms
+  x   1 [telefono] › pruebas-e2e\sitio\rendimiento-galerias.spec.ts:73:5 › RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respecto de una (1ms)
+(node:49412) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  2 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:75:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública / (3.9s)
+  ok  3 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:75:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /nosotros (1.6s)
+  ok  4 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:75:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /industrias (1.7s)
+[WebServer] (node:38964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:49320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  5 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:75:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /productos (3.0s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok  6 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:75:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /noticias (1.3s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok  7 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:75:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /contacto (2.2s)
+  ok  8 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:75:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /acceso (1.3s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] (node:20916) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok  9 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:90:5 › RF-SW-16 / RNF-08: aparición, desaparición y navegación pública completa con teclado (7.4s)
+[WebServer] (node:23876) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:40228) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 10 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:124:5 › RF-SW-05 / RNF-08: detalle del producto y regreso al catálogo con teclado (3.3s)
+[WebServer] (node:49904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:17992) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 11 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:141:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.08 (14.7s)
+[WebServer] (node:39488) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 12 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:141:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.09 (1.3s)
+[WebServer] (node:3300) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 13 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:141:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.10 (1.4s)
+[WebServer] (node:8712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 14 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:210:5 › RNF-01 / RNF-08: revisión de Usuarios del sitio con Gerencia (3.8s)
+(node:30284) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7092) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3102
+- Network:       http://127.0.0.1:3102
+✓ Ready in 0ms
+✓ Running next.config took 14ms
+  ok 15 [tableta] › pruebas-e2e\sitio\rendimiento-galerias.spec.ts:73:5 › RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respecto de una (17.5s)
+(node:21256) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 16 [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:75:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública / (2.9s)
+  ok 17 [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:75:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /nosotros (1.6s)
+  ok 18 [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:75:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /industrias (1.3s)
+[WebServer] (node:45092) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 19 [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:75:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /productos (2.1s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 20 [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:75:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /noticias (1.0s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 21 [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:75:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /contacto (1.8s)
+  ok 22 [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:75:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /acceso (1.3s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] (node:35712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 23 [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:90:5 › RF-SW-16 / RNF-08: aparición, desaparición y navegación pública completa con teclado (7.3s)
+[WebServer] (node:36768) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:3300) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 24 [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:124:5 › RF-SW-05 / RNF-08: detalle del producto y regreso al catálogo con teclado (2.3s)
+[WebServer] (node:14796) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:51728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 25 [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:141:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.08 (10.0s)
+[WebServer] (node:23372) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 26 [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:141:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.09 (1.4s)
+[WebServer] (node:20584) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 27 [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:141:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.10 (1.4s)
+[WebServer] (node:6496) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 28 [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:210:5 › RNF-01 / RNF-08: revisión de Usuarios del sitio con Gerencia (3.5s)
+(node:51884) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:48408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3104
+- Network:       http://127.0.0.1:3104
+✓ Ready in 0ms
+✓ Running next.config took 15ms
+  ok 29 [escritorio] › pruebas-e2e\sitio\rendimiento-galerias.spec.ts:73:5 › RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respecto de una (14.3s)
+(node:24740) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 30 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:75:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública / (3.2s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 31 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:75:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /nosotros (1.9s)
+  ok 32 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:75:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /industrias (1.7s)
+[WebServer] (node:17160) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 33 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:75:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /productos (3.0s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 34 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:75:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /noticias (1.3s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 35 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:75:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /contacto (2.1s)
+  ok 36 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:75:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /acceso (1.2s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] (node:36396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 37 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:90:5 › RF-SW-16 / RNF-08: aparición, desaparición y navegación pública completa con teclado (6.2s)
+[WebServer] (node:47588) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:49828) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 38 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:124:5 › RF-SW-05 / RNF-08: detalle del producto y regreso al catálogo con teclado (2.4s)
+[WebServer] (node:29628) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:37084) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 39 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:141:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.08 (10.7s)
+[WebServer] (node:14088) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 40 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:141:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.09 (1.9s)
+[WebServer] (node:12548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 41 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:141:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.10 (1.8s)
+[WebServer] (node:18008) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 42 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:210:5 › RNF-01 / RNF-08: revisión de Usuarios del sitio con Gerencia (4.0s)
+
+
+  1) [telefono] › pruebas-e2e\sitio\rendimiento-galerias.spec.ts:73:5 › RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respecto de una 
+
+    Error: No inició el servidor de producción de JG-10.
+
+       at flujo\servidor-produccion.ts:74
+
+      72 |           const listo = await fetch(`${url}/acceso`, { signal: AbortSignal.timeout(1000) }).catch(() => null);
+      73 |           if (listo?.ok) break;
+    > 74 |           if (Date.now() >= limite) throw new Error("No inició el servidor de producción de JG-10.");
+         |                                           ^
+      75 |           await esperar(100);
+      76 |         }
+      77 |         await usar({ url, avisos });
+        at Object.exports.test._test.test.extend.produccion.scope (C:\Users\danie\OneDrive\Escritorio\progra web\proyecto_incovsa\pruebas-e2e\flujo\servidor-produccion.ts:74:43)
+
+  1 failed
+    [telefono] › pruebas-e2e\sitio\rendimiento-galerias.spec.ts:73:5 › RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respecto de una 
+  41 passed (3.5m)

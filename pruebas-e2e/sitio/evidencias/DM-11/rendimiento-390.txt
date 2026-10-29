@@ -1,0 +1,438 @@
+{
+  "una": [
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 54.89999997615814,
+      "cargaMs": 144.5,
+      "cargaEpoch": 1793236258520.2,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/incovsa-quimicos.webp",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 39.5,
+      "cargaMs": 121.5,
+      "cargaEpoch": 1793236258929,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/incovsa-quimicos.webp",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 43.60000002384186,
+      "cargaMs": 108,
+      "cargaEpoch": 1793236259961.6,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1",
+        "http://localhost:3100/marca/incovsa-quimicos.webp"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 32.10000002384186,
+      "cargaMs": 121.89999997615814,
+      "cargaEpoch": 1793236260297.7998,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/incovsa-quimicos.webp",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 55.5,
+      "cargaMs": 154.30000007152557,
+      "cargaEpoch": 1793236261422.6,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/incovsa-quimicos.webp",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 38.300000071525574,
+      "cargaMs": 108.5,
+      "cargaEpoch": 1793236261828.4,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1",
+        "http://localhost:3100/marca/incovsa-quimicos.webp"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 31.700000047683716,
+      "cargaMs": 117.5,
+      "cargaEpoch": 1793236263086.8,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/incovsa-quimicos.webp",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 32.200000047683716,
+      "cargaMs": 100.60000002384186,
+      "cargaEpoch": 1793236263398.5,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/incovsa-quimicos.webp",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 39.799999952316284,
+      "cargaMs": 133.29999995231628,
+      "cargaEpoch": 1793236264550.8,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1",
+        "http://localhost:3100/marca/incovsa-quimicos.webp"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 32.10000002384186,
+      "cargaMs": 108.10000002384186,
+      "cargaEpoch": 1793236264895.3,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1",
+        "http://localhost:3100/marca/incovsa-quimicos.webp"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 44.89999997615814,
+      "cargaMs": 156.10000002384186,
+      "cargaEpoch": 1793236266153.1,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/incovsa-quimicos.webp",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 48.299999952316284,
+      "cargaMs": 150.5,
+      "cargaEpoch": 1793236266592.9,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1",
+        "http://localhost:3100/marca/incovsa-quimicos.webp"
+      ]
+    }
+  ],
+  "cinco": [
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 37.89999997615814,
+      "cargaMs": 131.30000007152557,
+      "cargaEpoch": 1793236258092.7,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1",
+        "http://localhost:3100/marca/incovsa-quimicos.webp"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 39.700000047683716,
+      "cargaMs": 120,
+      "cargaEpoch": 1793236259268.4,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1",
+        "http://localhost:3100/marca/incovsa-quimicos.webp"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 30.700000047683716,
+      "cargaMs": 105.89999997615814,
+      "cargaEpoch": 1793236259601.2998,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1",
+        "http://localhost:3100/marca/incovsa-quimicos.webp"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 33.5,
+      "cargaMs": 121.10000002384186,
+      "cargaEpoch": 1793236260684,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/incovsa-quimicos.webp",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 30.199999928474426,
+      "cargaMs": 100.69999992847443,
+      "cargaEpoch": 1793236261015.4,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1",
+        "http://localhost:3100/marca/incovsa-quimicos.webp"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 44.699999928474426,
+      "cargaMs": 133,
+      "cargaEpoch": 1793236262271.5,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1",
+        "http://localhost:3100/marca/incovsa-quimicos.webp"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 33.60000002384186,
+      "cargaMs": 105.90000009536743,
+      "cargaEpoch": 1793236262650.2,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/incovsa-quimicos.webp",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 28.100000023841858,
+      "cargaMs": 96.39999997615814,
+      "cargaEpoch": 1793236263745.5,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1",
+        "http://localhost:3100/marca/incovsa-quimicos.webp"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 44.60000002384186,
+      "cargaMs": 139.60000002384186,
+      "cargaEpoch": 1793236264127.1,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/incovsa-quimicos.webp",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 42.09999990463257,
+      "cargaMs": 139.59999990463257,
+      "cargaEpoch": 1793236265301.7002,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1",
+        "http://localhost:3100/marca/incovsa-quimicos.webp"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 47.10000002384186,
+      "cargaMs": 148.79999995231628,
+      "cargaEpoch": 1793236265761.8,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1",
+        "http://localhost:3100/marca/incovsa-quimicos.webp"
+      ]
+    },
+    {
+      "bytes": 161702,
+      "imagenes": [
+        "/marca/foto-equipo.webp?dm11=mision-1",
+        "/marca/foto-equipo.webp?dm11=portada-1",
+        "/marca/foto-equipo.webp?dm11=vision-1",
+        "/marca/incovsa-quimicos.webp"
+      ],
+      "primeraPortadaMs": 53.10000002384186,
+      "cargaMs": 148.80000007152557,
+      "cargaEpoch": 1793236267017.6,
+      "iniciadasAntesDeLoad": [
+        "http://localhost:3100/marca/incovsa-quimicos.webp",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=portada-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=mision-1",
+        "http://localhost:3100/marca/foto-equipo.webp?dm11=vision-1"
+      ]
+    }
+  ]
+}

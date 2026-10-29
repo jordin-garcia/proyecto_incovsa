@@ -55,7 +55,7 @@ Las imágenes y las tarjetas del contenido de las páginas públicas tienen una 
 
 - **No rotan:** los logotipos, que son una sola imagen cada uno, y los **valores**, que son 5 imágenes fijas, una por valor (RF-SW-29).
 - En el banner de Quiénes somos se alternan los logotipos de INCOVSA e Inquiserca (RF-SW-02).
-- **Rendimiento (RNF-17):** la galería no puede hacer más lenta la carga de la página. Al abrir la página solo se descarga la primera imagen de cada galería; las demás se descargan después, mientras se ve la primera. Se comprueba con pruebas de rendimiento (Documento 6) que la carga inicial de una página con galerías de 5 imágenes no tarda más que con galerías de una.
+- **Rendimiento (RNF-17):** la galería no puede hacer más lenta la carga de la página. Al abrir la página solo se descarga la primera imagen de cada galería; las demás se descargan después, mientras se ve la primera. Se comprueba con pruebas de rendimiento (Documento 6) que la carga inicial de una página con galerías de 5 imágenes no tarda más que con galerías de una. **(26/10, DM-11; autorizado por Daniela)** Para el ruido de medición se admite un margen temporal de **10 ms** al comparar las medianas del tiempo hasta la primera imagen de portada y hasta `load`, en producción, con calentamiento equilibrado, muestras alternadas y caché vacía. La igualdad de bytes iniciales es estricta y ninguna imagen secundaria puede iniciar su solicitud antes de `load`, aunque no haya terminado de descargarse.
 
 ## Sedes que se muestran en el sitio
 
