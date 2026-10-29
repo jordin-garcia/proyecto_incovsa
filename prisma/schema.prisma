@@ -22,6 +22,7 @@ model Sede {
   nombre       String   @unique @db.VarChar(40)
   prefijoOdoo  String   @unique @map("prefijo_odoo") @db.VarChar(5)
   tieneOficina Boolean  @map("tiene_oficina")
+  pruebaJg25   String?  @map("prueba_jg25") @db.VarChar(10)
   creadoEn     DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
 
   usuarios            UsuarioSede[]
