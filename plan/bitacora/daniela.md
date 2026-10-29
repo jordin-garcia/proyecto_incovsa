@@ -128,3 +128,4 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Pendiente o aviso para otros:
   - **Jordin y Josué:** la repetición general detectó un timeout intermitente en `pruebas-e2e/picking/bodega-tiempo-real.spec.ts:179`: el botón se retiró del DOM antes del clic al simular el pedido ya despachado. El grupo íntegro pasó al repetir (SSE 320 ms); no se cambió código ajeno ni se debilitaron pruebas.
 - Revisión independiente final: LISTO, sin hallazgos de corrección ni opcionales; comprobados código, especificaciones, evidencias y cierre.
+- Revisión automática del PR #147: se quitaron solo las copias antiguas de DM-09/JG-23 del final de specs/18, conservando las versiones canónicas y D-07; DM-11 quedó en orden cronológico. Sin cambios de código ni pruebas.

@@ -25,3 +25,11 @@ CORRECCIÓN (obligatorio corregir): Ninguno.
 OPCIONAL (no bloquea): Ninguno.
 
 **VEREDICTO: LISTO.**
+
+## Corrección de la revisión automática del PR #147
+
+Claude detectó dos copias antiguas de DM-09 y JG-23 al final de specs/18. Se retiraron únicamente las copias; las entradas canónicas, incluida la ratificación D-07 de Jordin, permanecen intactas. La decisión de DM-11 se colocó en orden cronológico con el formato de encabezados del historial. No cambian requisitos, código, pruebas ni resultados.
+
+Opcionales no aplicados: ratificación adicional del coordinador del margen ya autorizado por Daniela; comprobación de desaparición cuando una página corta no permite sacar el primer bloque de la vista; reducción del volumen de capturas y de rutas locales en los registros. Las capturas en tres tamaños son evidencia exigida por la tarea y los registros no contienen secretos.
+
+Revisión independiente de esta corrección: LISTO, sin hallazgos. Confirmadas las entradas canónicas intactas y el orden cronológico de DM-11.
