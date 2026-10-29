@@ -127,3 +127,6 @@ Implementación verificada en la rama `jordin/JG-06-autenticacion-acceso-persona
 ### Correcciones de la auditoría (2026-10-22)
 
 H-32 a H-35 y H-38: los intentos fallidos y los bloqueos guardan un resumen legible; el sistema no autorizado regresa al paso 2. La salida muestra «Sesión cerrada.» en Inicio y consume el aviso sin repetirlo al volver. El error de credenciales lleva punto final. Las pruebas comprueban que ninguno de los tres pasos pide la sede y que las sesiones siguen siendo independientes.
+
+- **H-36 (JG-25):** `crear-admin` compara el rol con `normalizarRol` (decisión 8): acepta «gerencia», « SOPORTE » y otras formas, y guarda «Gerencia» o «Soporte». En lugar de un solo mensaje, dice si la contraseña es corta, si no coincide, si falta el nombre o el usuario, si el rol no es Gerencia ni Soporte o si el usuario ya existe (`mensajeDeError` de `scripts/administrador.ts`). Un error inesperado sigue mostrando solo el mensaje general, sin su texto técnico. Lo prueba `scripts/administrador.test.ts`.
+- **H-37 (JG-25):** en producción, `crearAuth` rechaza las claves de ejemplo de `.env.example` y `.env.produccion.example` («cambie-esto…»), que tienen más de 32 caracteres: «La clave de autenticación es la de ejemplo: cámbiela.». Fuera de producción se siguen aceptando. Lo prueba `src/lib/auth-configuracion.test.ts`.

@@ -5,7 +5,7 @@ persona: jordin
 responsable: Jordin García
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JG-12]
 programada: 2026-10-27
 requisitos: [RF-SL-04, RF-SL-57, RNF-09, RNF-12, RNF-13, RNF-16]
@@ -79,3 +79,35 @@ gh pr checks --watch
 
 ## Notas
 - Rama `jordin/JG-25-auditoria-produccion-y-ci`. Varios archivos son protegidos o de Carlos: el coordinador los modifica con el aviso en su bitácora (protocolo §E1).
+
+## Resultado
+
+Se corrigieron los 25 hallazgos de la tarea (H-27, H-28, H-36, H-37, H-40 a H-55 y H-82 a H-84) y se aplicaron D-03, D-04 y D-05. Cada corrección tiene una prueba o una verificación automática que la habría detectado. La tabla de cobertura y la evidencia están en [`plan/evidencias/JG-25/README.md`](../evidencias/JG-25/README.md), y cada tarea corregida tiene su sección `### Correcciones de la auditoría`.
+
+### Qué cambió
+
+- **Configuración (CE-02, CE-03):** `editarCamion` rechaza cambiar de sede un camión elegido en «Envío por camión» (D-03); `editarUsuario` rechaza desactivar la propia cuenta (D-04); `eliminarUsuario` quita al piloto de «Envío por camión» y devuelve `sedesConCambios`, que la acción avisa en tiempo real (H-43). Las acciones de usuarios exigen `exigirAccesoTotal(sesion, sistema)` en lugar de un permiso ajeno, con su regla de Semgrep (H-44). H-41 y H-45 ya se cumplían y ahora tienen prueba.
+- **Acceso (JG-06):** `crear-admin` usa `normalizarRol` y mensajes propios (`mensajeDeError`, H-36). En producción, `crearAuth` rechaza las claves «cambie-esto…» (H-37): el sitio público responde, pero no se puede iniciar sesión.
+- **Producción (CE-05):** Caddy ya no agrega HSTS (la envía Next.js). `produccion-imagen.yml` comprueba a través de Caddy todas las cabeceras con una sola HSTS (H-46, H-48), el primer evento de `/api/tiempo-real` con sesión (H-47) y que el proceso no puede escribir en su código (H-51), y su `paths` incluye las cabeceras, el *proxy*, el tiempo real y `crear-admin`. Compose usa `:produccion` por omisión (H-49). El límite de 27 MB está en `specs/16` y `specs/18` (H-50).
+- **Despliegue y respaldos (CE-06, CE-07):** contextos por `env` (H-52), sin la rama `ce-06-prueba` (H-53), poda en `/orgs/` o `/users/` según el dueño (H-54) y una pasada de respaldo y restauración en modo `docker compose exec` (H-55). Nota para el Documento 5 en `evidencia/CE-07/README.md` (D-05).
+- **CI (JG-02, JG-03, JG-08):** el trabajo `pruebas` compara la base migrada con `schema.prisma` (H-28); `scripts/auditoria-jg25.test.mjs` cubre `.env.example` y los scripts (H-27); y el veredicto de `revision-claude` solo acepta el comentario que cita una ejecución de ese flujo para el commit (H-40).
+- **Auditoría del 26/10:** Resultado de JG-08 y `specs/16` con el agrupamiento de Dependabot (H-82); despliegue en modo prueba con las acciones de Docker nuevas, run 40812088052 (H-83); y el servidor de producción de las pruebas espera en `127.0.0.1` hasta 90 s, con su propio límite (H-84).
+
+### Decisiones tomadas
+
+- **H-28:** se compara la base recién migrada (`--from-config-datasource`) en lugar de usar `--from-migrations`, que en Prisma 7 exige una base *shadow* configurada en `prisma.config.ts`. El resultado es el mismo y no cambia la configuración.
+- **H-48:** se quitó la HSTS de Caddy y no la de Next.js, porque la prueba de JG-11 (`seguridad/cabeceras.spec.ts`) la exige en el servidor de la aplicación.
+- **H-40:** la cita de la ejecución descarta los comentarios de otros flujos que no la imitan, pero no prueba la autoría. La protección de fondo sigue siendo `archivos-protegidos`.
+- **H-36:** se reutilizan los textos de `src/modulos/usuarios/esquemas.ts`. El único texto nuevo es «El rol debe ser Gerencia o Soporte.», de la terminal de `crear-admin`.
+- **H-51:** el usuario `nextjs` tiene su carpeta en `/home/nextjs` (antes era `/app`) para que npm y tsx escriban fuera del código.
+
+### Cómo usarlo
+
+- Para iniciar sesión con el servidor de producción en local (por ejemplo, en `pruebas-e2e/flujo`), `.env` necesita dos claves propias: `openssl rand -base64 32` para cada una (`plan/instalacion.md`).
+- La administración de usuarios exige `exigirAccesoTotal(sesion, "picking" | "sitio")`. Fuera de `src/modulos/usuarios/acciones.ts`, sigue siendo obligatorio `exigirPermiso`.
+- El comentario del bot de revisión lleva «Commit revisado: <sha> · Ejecución: <id>». `scripts/veredicto-revision.mjs` exige `--ejecuciones <archivo>`.
+- Para probar la publicación en GHCR sin desplegar: `gh workflow run despliegue.yml -f modo_prueba=true`.
+
+### Verificación
+
+`npm run verificar` y `npm run build` pasan; Semgrep (36 casos y escaneo de `src`) sin hallazgos; la batería de navegador completa pasa por partes (detalle en la evidencia); `produccion-imagen`, `produccion-respaldo` y las verificaciones obligatorias pasan en el PR.

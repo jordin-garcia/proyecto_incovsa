@@ -31,6 +31,17 @@ export function exigirPermiso(
     throw new ErrorAcceso();
 }
 
+/**
+ * Administración de usuarios (specs/03): solo Gerencia y Soporte, con la sesión de ese sistema. No depende de
+ * ninguna casilla de permisos. La regla `incovsa-usuarios-acceso-total` de Semgrep la exige en esas acciones.
+ */
+export function exigirAccesoTotal(
+  sesion: SesionActual | null,
+  sistema: SesionActual["sistema"],
+): asserts sesion is SesionActual {
+  if (!sesion || sesion.sistema !== sistema || !esAccesoTotal(sesion.usuario.rol)) throw new ErrorAcceso();
+}
+
 export async function sedesDelUsuario(sesion: SesionActual | null) {
   if (!sesion) return [];
   return esAccesoTotal(sesion.usuario.rol)

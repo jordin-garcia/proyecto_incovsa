@@ -17,6 +17,14 @@ on:
       - package.json
       - package-lock.json
       - prisma/**
+      # Cabeceras de seguridad (JG-11), tiempo real (JG-10) y crear-admin: este flujo los comprueba a través de Caddy.
+      - next.config.ts
+      - src/lib/cabeceras.ts
+      - src/proxy.ts
+      - src/app/api/tiempo-real/**
+      - src/modulos/tiempo-real/**
+      - scripts/administrador.ts
+      - scripts/crear-admin.ts
 
 permissions:
   contents: read
@@ -34,6 +42,23 @@ jobs:
 
       - name: Confirmar que la imagen no lleva secretos
         run: docker run --rm --entrypoint sh incovsa-app:ci -c 'test ! -e .env && test ! -e .env.produccion.example'
+
+      - name: El código de la imagen es de solo lectura para el proceso
+        # H-51: el proceso corre como nextjs y no puede reescribir su propio código. Solo escribe en la caché de
+        # Next.js, en su carpeta personal y en /tmp.
+        run: |
+          docker run --rm --entrypoint sh incovsa-app:ci -c '
+            set -eu
+            test "$(id -un)" = nextjs
+            for ruta in /app /app/server.js /app/entrada.sh /app/package.json /app/node_modules /app/node_modules/next/package.json /app/src /app/scripts /app/prisma /app/.next/static; do
+              if [ -w "$ruta" ]; then echo "El proceso puede escribir en $ruta"; exit 1; fi
+            done
+            if touch /app/server.js 2>/dev/null || mkdir /app/nueva 2>/dev/null; then echo "El proceso modificó /app"; exit 1; fi
+            ajeno="$(find /app -user nextjs -not -path "/app/.next/cache*" -print -quit)"
+            if [ -n "$ajeno" ]; then echo "Archivo de nextjs fuera de la caché: $ajeno"; exit 1; fi
+            test -w /app/.next/cache
+            test -w "$HOME"
+          '
 
       - name: Validar el Caddyfile de producción
         run: |
@@ -71,10 +96,29 @@ jobs:
             sleep 5
           done
           test "$listo" = 1
-          curl -kfsSI --resolve localhost:443:127.0.0.1 https://localhost/ | grep -i '^strict-transport-security:'
           docker compose exec -T caddy grep -q 'header_up X-Real-IP {remote_host}' /etc/caddy/Caddyfile
           docker compose exec -T caddy grep -q 'flush_interval -1' /etc/caddy/Caddyfile
           docker compose exec -T caddy grep -q 'max_size 27MB' /etc/caddy/Caddyfile
+
+      - name: "RNF-16: las cabeceras de seguridad llegan a través de Caddy, con una sola HSTS"
+        # H-46 y H-48: las mismas rutas que la prueba de JG-11 (páginas, error, redirección, API y recursos).
+        run: |
+          set -euo pipefail
+          for ruta in / /acceso /panel /no-existe-jg25 /api/tiempo-real /marca/inquiserca.webp; do
+            curl -ksS -o /dev/null -D /tmp/cabeceras-crudas.txt --resolve localhost:443:127.0.0.1 "https://localhost${ruta}"
+            tr -d '\r' </tmp/cabeceras-crudas.txt | tr '[:upper:]' '[:lower:]' >/tmp/cabeceras.txt
+            contar() { grep -c "$1" /tmp/cabeceras.txt || true; }
+            fallo() { echo "RNF-16 en ${ruta}: $1"; cat /tmp/cabeceras.txt; exit 1; }
+            if [ "$(contar '^strict-transport-security:')" -ne 1 ]; then fallo "debe haber exactamente una HSTS"; fi
+            grep -q '^strict-transport-security: max-age=31536000; includesubdomains$' /tmp/cabeceras.txt || fallo "HSTS"
+            if [ "$(contar '^content-security-policy:')" -ne 1 ]; then fallo "debe haber exactamente una CSP"; fi
+            grep -q "^content-security-policy: .*default-src 'self'" /tmp/cabeceras.txt || fallo "CSP sin default-src"
+            grep -q "^content-security-policy: .*frame-ancestors 'none'" /tmp/cabeceras.txt || fallo "CSP sin frame-ancestors"
+            if grep -q "^content-security-policy: .*'unsafe-eval'" /tmp/cabeceras.txt; then fallo "CSP con unsafe-eval"; fi
+            grep -q '^x-content-type-options: nosniff$' /tmp/cabeceras.txt || fallo "sin nosniff"
+            grep -q '^referrer-policy: strict-origin-when-cross-origin$' /tmp/cabeceras.txt || fallo "sin Referrer-Policy"
+            echo "RNF-16 en ${ruta}: cabeceras completas."
+          done
 
       - name: Un cuerpo de galería no recibe 413 de Caddy
         run: |
@@ -175,6 +219,44 @@ jobs:
           test -n "$ip"
           test "$ip" != "203.0.113.9"
           python3 -c 'import ipaddress, sys; ipaddress.ip_address(sys.argv[1])' "$ip"
+
+      - name: "RNF-13: el tiempo real llega a través de Caddy sin búfer"
+        # H-47: con la sesión de la cuenta de crear-admin, el primer evento de /api/tiempo-real tiene que llegar en
+        # pocos segundos. Con búfer, Caddy lo retendría y curl terminaría sin datos.
+        run: |
+          set -euo pipefail
+          # La base de la CI solo tiene las migraciones: se agrega una sede de prueba.
+          sede="$(docker compose exec -T postgres sh -c 'psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -tAq' <<'SQL' | tr -d '[:space:]'
+          INSERT INTO sede (nombre, prefijo_odoo, tiene_oficina) VALUES ('Prueba CI', 'PCI', true) RETURNING id;
+          SQL
+          )"
+          test -n "$sede"
+          sesion="$(mktemp)"
+          codigo="$(curl -ksS -o /dev/null -w '%{http_code}' -c "$sesion" \
+            --resolve localhost:443:127.0.0.1 \
+            -X POST 'https://localhost/api/auth/picking/sign-in/username' \
+            -H 'Origin: https://localhost' \
+            -H 'Content-Type: application/json' \
+            --data '{"usuario":"admin.ci","clave":"Clave-ci-1234"}')"
+          test "$codigo" = "200"
+          estado=0
+          curl -ksSN --max-time 5 -b "$sesion" -D /tmp/sse-cabeceras.txt -o /tmp/sse.txt \
+            -w 'primer byte en %{time_starttransfer} s\n' \
+            --resolve localhost:443:127.0.0.1 \
+            "https://localhost/api/tiempo-real?sede=${sede}&modulo=facturacion" || estado=$?
+          # 28: curl cortó por el límite de 5 s con el flujo todavía abierto, como debe ser.
+          if [ "$estado" != "28" ]; then
+            echo "RNF-13: /api/tiempo-real no quedó abierto (curl terminó con ${estado})"
+            cat /tmp/sse-cabeceras.txt /tmp/sse.txt
+            exit 1
+          fi
+          tr -d '\r' </tmp/sse-cabeceras.txt | grep -qi '^content-type: text/event-stream'
+          if ! grep -q '^: conectado' /tmp/sse.txt; then
+            echo "RNF-13: el primer evento no llegó a través de Caddy en 5 s"
+            cat /tmp/sse-cabeceras.txt /tmp/sse.txt
+            exit 1
+          fi
+          echo "RNF-13: el primer evento llegó a través de Caddy."
 
       - name: Bajar el entorno
         if: always()

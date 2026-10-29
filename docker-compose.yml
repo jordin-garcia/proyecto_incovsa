@@ -27,7 +27,8 @@ services:
         max-file: "5"
 
   app:
-    image: ${IMAGEN_APP:-ghcr.io/jordin-garcia/proyecto_incovsa:latest}
+    # CE-06 publica <sha> y produccion, no latest (H-49). El despliegue fija IMAGEN_APP con el <sha>.
+    image: ${IMAGEN_APP:-ghcr.io/jordin-garcia/proyecto_incovsa:produccion}
     restart: unless-stopped
     env_file: .env
     expose: ["3000"]

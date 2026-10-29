@@ -41,6 +41,8 @@ jobs:
       contents: read
       pull-requests: write
       issues: read
+      # Para listar las ejecuciones de este flujo del commit: el veredicto solo acepta sus comentarios (H-40).
+      actions: read
     env:
       GH_TOKEN: ${{ github.token }}
       PR: ${{ github.event.pull_request.number }}
@@ -64,8 +66,10 @@ jobs:
           } >> "$GITHUB_OUTPUT"
           gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
             --jq '.[] | {usuario: .user.login, body: .body, fecha: .created_at, editado: (.updated_at != .created_at)}' > "$RUNNER_TEMP/comentarios.jsonl"
+          gh api "repos/$GITHUB_REPOSITORY/actions/workflows/revision-claude.yml/runs?head_sha=$SHA&per_page=100" --paginate \
+            --jq '.workflow_runs[] | {id, creado: .created_at}' > "$RUNNER_TEMP/ejecuciones.jsonl"
           # Solo se revisa si este commit no tiene una revisión completa o si cambió la tarea del título.
-          revisar=$(node scripts/veredicto-revision.mjs --decidir "$RUNNER_TEMP/comentarios.jsonl" "$SHA" "$id")
+          revisar=$(node scripts/veredicto-revision.mjs --decidir "$RUNNER_TEMP/comentarios.jsonl" "$SHA" "$id" --ejecuciones "$RUNNER_TEMP/ejecuciones.jsonl")
           if [[ "$borrador" == "true" || "$estado" != "OPEN" ]]; then revisar=false; fi
           echo "revisar=$revisar" >> "$GITHUB_OUTPUT"
           echo "Tarea: '${id}'. Autor: ${autor}. Borrador: $borrador. Estado: $estado. Revisión nueva: $revisar."
@@ -99,7 +103,8 @@ jobs:
                (sin archivos ni sustitución de comandos; si el texto tiene comillas simples, cámbialas por comillas tipográficas).
             5. La CI lee tu comentario para decidir el check obligatorio `revision-claude`, así que respeta este formato:
                - la primera línea es exactamente "🤖 Revisión automática con Claude";
-               - la segunda línea es exactamente "Commit revisado: ${{ github.event.pull_request.head.sha }}";
+               - la segunda línea es exactamente
+                 "Commit revisado: ${{ github.event.pull_request.head.sha }} · Ejecución: ${{ github.run_id }}";
                - si el veredicto es CORREGIR, la tercera línea es exactamente
                  "@${{ steps.tarea.outputs.autor }}: la revisión encontró hallazgos de corrección; corrígelos y haz push.",
                  y cada hallazgo de corrección explica su razón;
@@ -123,7 +128,9 @@ jobs:
           fi
           gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
             --jq '.[] | {usuario: .user.login, body: .body, fecha: .created_at, editado: (.updated_at != .created_at)}' > "$RUNNER_TEMP/comentarios.jsonl"
-          node scripts/veredicto-revision.mjs "$RUNNER_TEMP/comentarios.jsonl" "$SHA" "$TAREA"
+          gh api "repos/$GITHUB_REPOSITORY/actions/workflows/revision-claude.yml/runs?head_sha=$SHA&per_page=100" --paginate \
+            --jq '.workflow_runs[] | {id, creado: .created_at}' > "$RUNNER_TEMP/ejecuciones.jsonl"
+          node scripts/veredicto-revision.mjs "$RUNNER_TEMP/comentarios.jsonl" "$SHA" "$TAREA" --ejecuciones "$RUNNER_TEMP/ejecuciones.jsonl"
 
       # Aprobar con LISTO y solicitar cambios con CORREGIR (decisión 60). Requiere que el repositorio permita a
       # GitHub Actions aprobar PR. No repite la misma revisión formal sobre el mismo commit (por ejemplo, al editar el PR).

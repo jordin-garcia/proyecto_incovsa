@@ -1,7 +1,15 @@
 import { describe, expect, it } from "vitest";
 import type { SesionActual } from "@/lib/sesion";
 import { prisma } from "@/lib/prisma";
-import { accesoModulo, esPiloto, exigirPermiso, sedesDelUsuario, tienePermiso } from "./servicio";
+import {
+  ErrorAcceso,
+  accesoModulo,
+  esPiloto,
+  exigirAccesoTotal,
+  exigirPermiso,
+  sedesDelUsuario,
+  tienePermiso,
+} from "./servicio";
 import { seleccionarSedeDeTrabajo } from "./sede";
 import { opcionesPermitidas } from "./navegacion";
 
@@ -27,6 +35,16 @@ describe("Autorización central", () => {
     expect(sedes.map((sede) => sede.nombre)).toEqual(["Quetzaltenango", "Guatemala", "Escuintla"]);
     expect(() => exigirPermiso(s, "pk.bodega", 2)).not.toThrow();
     expect(tienePermiso({ ...s, sistema: "sitio" }, "sit.contenido")).toBe(true);
+  });
+  it("specs/03 (H-44): solo Gerencia y Soporte del sistema administran usuarios, sin permisos ajenos", () => {
+    const gerencia = sesionDePrueba({ usuario: { ...sesionDePrueba().usuario, rol: " Gérencia " }, permisos: [] });
+    expect(() => exigirAccesoTotal(gerencia, "picking")).not.toThrow();
+    expect(() => exigirAccesoTotal({ ...gerencia, sistema: "sitio" }, "sitio")).not.toThrow();
+    // La sesión del otro sistema, un rol sin acceso total aunque tenga todas las casillas, o sin sesión.
+    expect(() => exigirAccesoTotal(gerencia, "sitio")).toThrow(ErrorAcceso);
+    const conCasillas = sesionDePrueba({ permisos: ["pk.cfg.camiones", "pk.facturacion", "pk.reportes"] });
+    expect(() => exigirAccesoTotal(conCasillas, "picking")).toThrow(ErrorAcceso);
+    expect(() => exigirAccesoTotal(null, "picking")).toThrow(ErrorAcceso);
   });
   it("RN-38: las casillas y el sistema limitan los módulos", () => {
     const s = sesionDePrueba();

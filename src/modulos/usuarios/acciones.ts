@@ -1,9 +1,9 @@
 "use server";
 
 import { obtenerSesion, type SesionActual } from "@/lib/sesion";
-import { esAccesoTotal } from "@/lib/roles";
 import { ErrorNegocio, MENSAJE_ERROR_GENERAL, aResultadoDeError } from "@/lib/errores";
-import { ErrorAcceso, exigirPermiso } from "@/modulos/permisos/servicio";
+import { exigirAccesoTotal } from "@/modulos/permisos/servicio";
+import { avisarCambio } from "@/modulos/tiempo-real/servidor";
 import {
   esquemaCrearUsuarioPicking,
   esquemaCrearUsuarioSitio,
@@ -14,6 +14,9 @@ import {
 } from "./esquemas";
 import { crearUsuario, editarUsuario, eliminarUsuario, restablecerClave, type ContextoUsuario } from "./servicio";
 import type { SistemaPestana } from "./tipos";
+
+// Solo Gerencia y Soporte administran usuarios (specs/03): cada acción exige el acceso total con
+// `exigirAccesoTotal`, no un permiso de otro módulo. Semgrep lo comprueba (`.semgrep/README.md`).
 
 function leer<T>(
   esquema: {
@@ -28,79 +31,77 @@ function leer<T>(
   return resultado.data;
 }
 
-async function sesionAdmin(sistema: SistemaPestana) {
-  const sesion = await obtenerSesion(sistema);
-  if (!sesion || sesion.sistema !== sistema || !esAccesoTotal(sesion.usuario.rol)) throw new ErrorAcceso();
-  return sesion;
-}
-
 function contexto(sesion: SesionActual, sistema: SistemaPestana): ContextoUsuario {
   return { actorId: sesion.usuario.id, actorRol: sesion.usuario.rol, sistema };
 }
 
-async function guardar<T>(sistema: SistemaPestana, trabajo: (sesion: SesionActual) => Promise<T>) {
+async function guardar<T>(sistema: SistemaPestana, trabajo: (sesion: SesionActual | null) => Promise<T>) {
   try {
-    // Solo los roles de acceso total administran usuarios. Los permisos explícitos de cada
-    // acción se verifican después de este filtro y no habilitan por sí solos esta administración.
-    const sesion = await sesionAdmin(sistema);
-    return { ok: true as const, datos: await trabajo(sesion) };
+    return { ok: true as const, datos: await trabajo(await obtenerSesion(sistema)) };
   } catch (error) {
     return aResultadoDeError(error);
   }
 }
 
+/** Facturación de cada sede donde el piloto estaba elegido se actualiza en tiempo real. */
+async function eliminarYAvisar(entrada: unknown, contextoUsuario: ContextoUsuario) {
+  const resultado = await eliminarUsuario(leer(esquemaEliminarUsuario, entrada), contextoUsuario);
+  for (const sede of resultado.sedesConCambios) avisarCambio(sede);
+  return { id: resultado.id };
+}
+
 export async function crearUsuarioAccion(entrada: unknown) {
   return guardar("picking", (sesion) => {
-    exigirPermiso(sesion, "pk.cfg.camiones");
+    exigirAccesoTotal(sesion, "picking");
     return crearUsuario(leer(esquemaCrearUsuarioPicking, entrada), contexto(sesion, "picking"));
   });
 }
 
 export async function editarUsuarioAccion(entrada: unknown) {
   return guardar("picking", (sesion) => {
-    exigirPermiso(sesion, "pk.cfg.camiones");
+    exigirAccesoTotal(sesion, "picking");
     return editarUsuario(leer(esquemaEditarUsuarioPicking, entrada), contexto(sesion, "picking"));
   });
 }
 
 export async function eliminarUsuarioAccion(entrada: unknown) {
   return guardar("picking", (sesion) => {
-    exigirPermiso(sesion, "pk.cfg.camiones");
-    return eliminarUsuario(leer(esquemaEliminarUsuario, entrada), contexto(sesion, "picking"));
+    exigirAccesoTotal(sesion, "picking");
+    return eliminarYAvisar(entrada, contexto(sesion, "picking"));
   });
 }
 
 export async function restablecerClaveAccion(entrada: unknown) {
   return guardar("picking", (sesion) => {
-    exigirPermiso(sesion, "pk.cfg.camiones");
+    exigirAccesoTotal(sesion, "picking");
     return restablecerClave(leer(esquemaRestablecerClave, entrada), contexto(sesion, "picking"));
   });
 }
 
 export async function crearUsuarioSitioAccion(entrada: unknown) {
   return guardar("sitio", (sesion) => {
-    exigirPermiso(sesion, "sit.contenido");
+    exigirAccesoTotal(sesion, "sitio");
     return crearUsuario(leer(esquemaCrearUsuarioSitio, entrada), contexto(sesion, "sitio"));
   });
 }
 
 export async function editarUsuarioSitioAccion(entrada: unknown) {
   return guardar("sitio", (sesion) => {
-    exigirPermiso(sesion, "sit.contenido");
+    exigirAccesoTotal(sesion, "sitio");
     return editarUsuario(leer(esquemaEditarUsuarioSitio, entrada), contexto(sesion, "sitio"));
   });
 }
 
 export async function eliminarUsuarioSitioAccion(entrada: unknown) {
   return guardar("sitio", (sesion) => {
-    exigirPermiso(sesion, "sit.contenido");
-    return eliminarUsuario(leer(esquemaEliminarUsuario, entrada), contexto(sesion, "sitio"));
+    exigirAccesoTotal(sesion, "sitio");
+    return eliminarYAvisar(entrada, contexto(sesion, "sitio"));
   });
 }
 
 export async function restablecerClaveSitioAccion(entrada: unknown) {
   return guardar("sitio", (sesion) => {
-    exigirPermiso(sesion, "sit.contenido");
+    exigirAccesoTotal(sesion, "sitio");
     return restablecerClave(leer(esquemaRestablecerClave, entrada), contexto(sesion, "sitio"));
   });
 }
