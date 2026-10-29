@@ -61,7 +61,7 @@ Todo debe aparecer con ✅. Si algo falla, el mismo script dice qué instalar.
    psql -U postgres -c "CREATE DATABASE incovsa_pruebas;"
    ```
    En macOS con Homebrew, el usuario es el tuyo: `psql postgres -c "CREATE DATABASE incovsa;"`.
-2. Copia `.env.example` a `.env` (PowerShell: `Copy-Item .env.example .env`; macOS: `cp .env.example .env`) y **tú** escribe en `.env` el usuario y la contraseña de tu PostgreSQL. Los agentes no leen `.env` (specs/16, decisión 70).
+2. Copia `.env.example` a `.env` (PowerShell: `Copy-Item .env.example .env`; macOS: `cp .env.example .env`) y **tú** escribe en `.env` el usuario y la contraseña de tu PostgreSQL. Cambia también `BETTER_AUTH_SECRET_SITIO` y `BETTER_AUTH_SECRET_PICKING` por dos claves distintas, generadas cada una con `openssl rand -base64 32`: con las de ejemplo («cambie-esto…»), el modo de producción no deja iniciar sesión, y las pruebas de `pruebas-e2e/flujo` usan ese modo (JG-25). Los agentes no leen `.env` (specs/16, decisión 70).
 3. Instala y prepara:
    ```bash
    npm ci

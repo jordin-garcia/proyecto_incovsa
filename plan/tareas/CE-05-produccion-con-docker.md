@@ -75,3 +75,13 @@ No se desplegó nada. La verificación de la tarea es `gh pr checks --watch` sob
 ### Correcciones post-integración (2026-10-20)
 
 Tras el merge de #86, la revisión B8 local pidió CORREGIR: (1) `max_size 6MB` no cubría la galería de hasta 5×5 MB en una sola petición; (2) el criterio 3 solo se comprobaba con `grep`. Quedó en `max_size 27MB` y en la prueba de inicio de sesión fallido a través de Caddy.
+
+### Correcciones de la auditoría (2026-10-22)
+
+Las corrigió el coordinador en JG-25.
+
+- **H-46 y H-48:** el flujo `produccion-imagen` comprueba a través de Caddy, en las mismas rutas que la prueba de JG-11, que llegan CSP (con `default-src 'self'` y `frame-ancestors 'none'`), HSTS, `nosniff` y `Referrer-Policy`, con una sola HSTS y una sola CSP. Caddy ya no agrega HSTS: la envía Next.js, y salían dos. `paths` incluye ahora `next.config.ts`, `src/lib/cabeceras.ts`, `src/proxy.ts`, el tiempo real y `crear-admin`.
+- **H-47:** el flujo inicia sesión con la cuenta de `crear-admin`, abre `/api/tiempo-real` a través de Caddy y exige el primer evento (`: conectado`) en menos de 5 s.
+- **H-49:** la imagen por omisión de `docker-compose.yml` es `:produccion`, la que publica CE-06, y no `:latest`.
+- **H-50:** el límite de 27 MB quedó en `specs/16` (decisión 58) y en `specs/18`.
+- **H-51:** el código de la imagen es de root y el proceso, que corre como `nextjs`, no puede reescribirlo. Solo escribe en `/app/.next/cache`, en `/home/nextjs` y en `/tmp`. El paso «El código de la imagen es de solo lectura para el proceso» lo comprueba.

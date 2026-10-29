@@ -23,6 +23,7 @@ export const MENSAJE_CUENTA_TOTAL =
 export const MENSAJE_NOMBRE_COMPARTIDO =
   "Ese nombre de usuario también tiene una cuenta en el otro sistema. Una cuenta de Gerencia o Soporte sirve en los dos, así que no puede compartir el nombre.";
 export const MENSAJE_PROPIA_CUENTA = "No puede eliminar su propia cuenta.";
+export const MENSAJE_DESACTIVAR_PROPIA_CUENTA = "No puede desactivar su propia cuenta.";
 
 export type ContextoUsuario = {
   actorId: string;
@@ -235,6 +236,8 @@ export async function crearUsuario(entrada: EntradaCrearUsuario, contexto: Conte
 
 export async function editarUsuario(entrada: EntradaEditarUsuario, contexto: ContextoUsuario): Promise<UsuarioVisible> {
   exigirAdmin(contexto);
+  // D-04 (specs/11): como eliminarla, desactivar la propia cuenta dejaría a Gerencia o Soporte sin acceso.
+  if (entrada.id === contexto.actorId && !entrada.activo) throw new ErrorNegocio(MENSAJE_DESACTIVAR_PROPIA_CUENTA);
   const total = esAccesoTotal(entrada.rol);
   if (!total && contexto.sistema === "picking" && entrada.sedesIds.length === 0) throw new ErrorNegocio(MENSAJE_SEDE);
   try {
@@ -371,7 +374,7 @@ export async function restablecerClave(
 export async function eliminarUsuario(
   entrada: EntradaEliminarUsuario,
   contexto: ContextoUsuario,
-): Promise<{ id: string }> {
+): Promise<{ id: string; sedesConCambios: number[] }> {
   exigirAdmin(contexto);
   if (entrada.id === contexto.actorId) throw new ErrorNegocio(MENSAJE_PROPIA_CUENTA);
   return prisma.$transaction(async (tx) => {
@@ -382,6 +385,13 @@ export async function eliminarUsuario(
     });
     if (cambio.count !== 1) throw new ErrorAcceso();
     await revocarSesiones(actual.id, tx);
+    // Como `eliminarUsuario()` del prototipo: el piloto deja de estar elegido en «Envío por camión» (specs/11).
+    const opciones = await tx.opcionEnvio.findMany({
+      where: { pilotoId: actual.id },
+      orderBy: { sedeId: "asc" },
+      select: { sedeId: true },
+    });
+    await tx.opcionEnvio.updateMany({ where: { pilotoId: actual.id }, data: { pilotoId: null } });
     await registrarBitacora(tx, {
       sistema: contexto.sistema,
       operacion: "Eliminación de usuario",
@@ -395,6 +405,6 @@ export async function eliminarUsuario(
         rol: actual.rol,
       },
     });
-    return { id: actual.id };
+    return { id: actual.id, sedesConCambios: opciones.map((opcion) => opcion.sedeId) };
   });
 }

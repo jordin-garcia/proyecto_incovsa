@@ -13,9 +13,12 @@ function secreto(sistema: Sistema) {
   const b = process.env.BETTER_AUTH_SECRET_PICKING;
   if (a && b && a === b) throw new Error("Las claves de firma de los dos sistemas deben ser distintas.");
   const valor = sistema === "sitio" ? a : b;
+  const produccion = process.env.NODE_ENV === "production";
+  // Los valores de .env.example y .env.produccion.example («cambie-esto-por…») pasan de 32 caracteres (RNF-10).
+  if (produccion && valor && /^cambie-est/i.test(valor))
+    throw new Error("La clave de autenticación es la de ejemplo: cámbiela.");
   if (valor && valor.length >= 32) return valor;
-  if (process.env.NODE_ENV === "production")
-    throw new Error("Falta una clave de autenticación de al menos 32 caracteres.");
+  if (produccion) throw new Error("Falta una clave de autenticación de al menos 32 caracteres.");
   globalAuth.clavesAuthDesarrollo ??= {
     sitio: randomBytes(48).toString("base64"),
     picking: randomBytes(48).toString("base64"),

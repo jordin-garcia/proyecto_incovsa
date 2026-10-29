@@ -8,9 +8,16 @@
 // Una revisión completa de un commit no se repite con rerun, reabriendo el PR ni editándolo: solo se revisa otra vez
 // si cambia la tarea del título. Un commit nuevo (aunque sea vacío) sí produce otra revisión; eso queda en el
 // historial del PR y lo revisa la auditoría del coordinador.
-// Uso en la CI:
-//   node scripts/veredicto-revision.mjs --decidir <comentarios.jsonl> <sha> <id>   → imprime true o false
-//   node scripts/veredicto-revision.mjs <comentarios.jsonl> <sha> <id>              → veredicto; sale con 0 o 1
+// Solo cuenta el comentario que publicó una ejecución del flujo revision-claude (auditoría del 22/10, H-40): cualquier
+// flujo con `pull-requests: write` publica como github-actions[bot]. La segunda línea del comentario cita la ejecución
+// ("Commit revisado: <sha> · Ejecución: <id>"), y el comentario vale solo si esa ejecución es de revision-claude.yml
+// para ese commit y se publicó después de que empezara. La cita no prueba la autoría (otro flujo podría copiarla):
+// la protección de fondo sigue siendo archivos-protegidos, que impide agregar o cambiar flujos de `.github/**`.
+// Uso en la CI (<ejecuciones.jsonl>: un {id, creado} por línea, las ejecuciones de revision-claude.yml del commit):
+//   node scripts/veredicto-revision.mjs --decidir <comentarios.jsonl> <sha> <id> --ejecuciones <ejecuciones.jsonl>
+//       → imprime true o false
+//   node scripts/veredicto-revision.mjs <comentarios.jsonl> <sha> <id> --ejecuciones <ejecuciones.jsonl>
+//       → veredicto; sale con 0 o 1
 // En la CI, además, escribe `estado=aprobada|corregir|sin_revision` en $GITHUB_OUTPUT: con él, revision-claude.yml
 // deja la revisión formal (aprobar o solicitar cambios).
 import { readFileSync, appendFileSync } from "node:fs";
@@ -120,13 +127,17 @@ function analizar(cuerpo) {
   };
 }
 
-/** ¿El comentario es una revisión de este commit? El SHA tiene que estar en la línea "Commit revisado". */
-function esRevisionDe(c, sha) {
-  return (
-    c.usuario === BOT &&
-    c.body?.trimStart().startsWith(MARCA) &&
-    new RegExp(String.raw`commit revisado:?\s*${sha}\b`, "i").test(c.body)
-  );
+/**
+ * ¿El comentario es una revisión de este commit? El SHA tiene que estar en la línea "Commit revisado". Con la lista de
+ * ejecuciones de revision-claude (la CI siempre la pasa), además debe citar una de ellas y ser posterior a su inicio.
+ */
+function esRevisionDe(c, sha, ejecuciones) {
+  const linea = c.body?.match(new RegExp(String.raw`commit revisado:?\s*${sha}\b[^\n]*`, "i"))?.[0];
+  if (c.usuario !== BOT || !c.body?.trimStart().startsWith(MARCA) || !linea) return false;
+  if (!ejecuciones) return true;
+  const citada = linea.match(/Ejecuci[óo]n:?\s*(\d+)\b/)?.[1];
+  const ejecucion = ejecuciones.find((e) => String(e.id) === citada);
+  return Boolean(ejecucion) && String(c.fecha) >= String(ejecucion.creado);
 }
 
 /**
@@ -134,9 +145,9 @@ function esRevisionDe(c, sha) {
  * editada después de publicarse queda marcada como alterada: quien tiene permiso de escritura puede editar
  * comentarios ajenos, y así podría cambiar CORREGIR por LISTO.
  */
-function revisionesCompletas(comentarios, sha) {
+function revisionesCompletas(comentarios, sha, ejecuciones) {
   return comentarios
-    .filter((c) => esRevisionDe(c, sha))
+    .filter((c) => esRevisionDe(c, sha, ejecuciones))
     .sort((a, b) => String(a.fecha).localeCompare(String(b.fecha)))
     .map((c) => {
       const analisis = analizar(c.body);
@@ -146,14 +157,14 @@ function revisionesCompletas(comentarios, sha) {
 }
 
 /** ¿Hace falta revisar este commit? Solo si no tiene una revisión completa o si cambió la tarea del título. */
-export function decidirRevision(comentarios, sha, tarea) {
-  const ultima = revisionesCompletas(comentarios, sha).at(-1);
+export function decidirRevision(comentarios, sha, tarea, ejecuciones) {
+  const ultima = revisionesCompletas(comentarios, sha, ejecuciones).at(-1);
   if (ultima?.alterada) return false;
   return !ultima || ultima.tarea !== (tarea ?? "");
 }
 
-export function evaluarVeredicto(comentarios, sha, tarea = "") {
-  const ultima = revisionesCompletas(comentarios, sha).at(-1);
+export function evaluarVeredicto(comentarios, sha, tarea = "", ejecuciones) {
+  const ultima = revisionesCompletas(comentarios, sha, ejecuciones).at(-1);
   // Una revisión de otra tarea (el título cambió después) no cuenta: la del título actual no se completó.
   if (!ultima || (!ultima.alterada && ultima.tarea !== tarea)) {
     return {
@@ -187,19 +198,25 @@ export function evaluarVeredicto(comentarios, sha, tarea = "") {
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const args = process.argv.slice(2);
   const decidir = args[0] === "--decidir";
-  const [archivo, sha, tarea = ""] = decidir ? args.slice(1) : args;
-  if (!archivo || !/^[0-9a-f]{40}$/.test(sha ?? "")) {
+  const opcion = args.indexOf("--ejecuciones");
+  const archivoEjecuciones = opcion >= 0 ? args[opcion + 1] : undefined;
+  const posicionales = opcion >= 0 ? [...args.slice(0, opcion), ...args.slice(opcion + 2)] : args;
+  const [archivo, sha, tarea = ""] = decidir ? posicionales.slice(1) : posicionales;
+  if (!archivo || !archivoEjecuciones || !/^[0-9a-f]{40}$/.test(sha ?? "")) {
     console.error(
-      "Uso: node scripts/veredicto-revision.mjs [--decidir] <comentarios.jsonl> <sha de 40 caracteres> [id]",
+      "Uso: node scripts/veredicto-revision.mjs [--decidir] <comentarios.jsonl> <sha de 40 caracteres> [id] " +
+        "--ejecuciones <ejecuciones.jsonl>",
     );
     process.exit(2);
   }
   const comentarios = leerComentarios(readFileSync(archivo, "utf8"));
+  // Las ejecuciones de revision-claude.yml del commit, también un JSON por línea.
+  const ejecuciones = leerComentarios(readFileSync(archivoEjecuciones, "utf8"));
   if (decidir) {
-    console.log(String(decidirRevision(comentarios, sha, tarea)));
+    console.log(String(decidirRevision(comentarios, sha, tarea, ejecuciones)));
     process.exit(0);
   }
-  const resultado = evaluarVeredicto(comentarios, sha, tarea);
+  const resultado = evaluarVeredicto(comentarios, sha, tarea, ejecuciones);
   console.log(resultado.mensaje);
   if (process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT, `estado=${resultado.estado}\n`);
   if (process.env.GITHUB_STEP_SUMMARY) {

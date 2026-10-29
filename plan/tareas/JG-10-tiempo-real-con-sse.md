@@ -79,3 +79,9 @@ Archivos principales: `src/app/api/tiempo-real/route.ts`, `src/modulos/tiempo-re
 `npm run verificar`: formato, lint, tipos y 302 pruebas aprobados (33 archivos). `npm run build`: compilación aprobada. Los nueve E2E de tiempo real pasaron de forma dirigida y dentro de la batería completa: **204 pruebas aprobadas**, sin fallos ni omisiones, con axe. Los nueve avisos SSE medidos tardaron entre 515 y 1831 ms desde `avisarCambio` al DOM remoto; el respaldo tardó entre 4782 y 4951 ms. El plan contiene 63 tareas válidas y `git diff --check` no tiene errores.
 
 El recorrido con Playwright y next-devtools no encontró errores de compilación ni ejecución en la navegación normal. Hay once capturas comparativas y de estados en los tres tamaños y revisión independiente sin hallazgos de corrección. Evidencia, mediciones, correcciones y revisión: [JG-10](../evidencias/JG-10/README.md).
+
+### Correcciones de la auditoría (2026-10-26)
+
+La corrigió el coordinador en JG-25.
+
+- **H-84:** el primer arranque en frío del servidor de producción de `pruebas-e2e/flujo/servidor-produccion.ts` superaba a menudo los 20 s en Windows. Ahora espera el servidor en `127.0.0.1`, donde escucha (en Windows `localhost` puede resolver primero a `::1`), con 10 s por intento y hasta 90 s en total, y el arranque tiene su propio límite de 120 s, aparte del de cada prueba. Las direcciones que usan las pruebas no cambian. `pruebas-e2e/flujo` pasó dos veces seguidas, sin reintentos, después de `npm run build` (evidencia en `plan/evidencias/JG-25/README.md`).

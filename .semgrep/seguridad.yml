@@ -38,12 +38,41 @@ rules:
       exclude:
         # RF-SW-06: única recepción pública (sin sesión); la limita incovsa-recepcion-publica.
         - /src/modulos/solicitudes/recepcion-publica.ts
+        # specs/03: la administración de usuarios exige el acceso total; la limita incovsa-usuarios-acceso-total.
+        - /src/modulos/usuarios/acciones.ts
     patterns:
       # El span abarca el módulo completo y se intersecta con cada exportación AST.
       # No confunde una cadena de prueba con la directiva inicial del módulo.
       - pattern-regex: >-
           (?s)\A(?:\s|//[^\n]*(?:\n|$)|/\*.*?\*/)*["']use server["']\s*;?.*
       - patterns: *operaciones-protegidas
+  - id: incovsa-usuarios-acceso-total
+    message: "specs/03 / RNF-04: cada acción de usuarios debe llamar a exigirAccesoTotal (solo Gerencia y Soporte) antes de acceder a datos."
+    severity: ERROR
+    languages: [typescript]
+    paths:
+      include: [/src/modulos/usuarios/acciones.ts]
+    patterns:
+      - pattern-regex: >-
+          (?s)\A(?:\s|//[^\n]*(?:\n|$)|/\*.*?\*/)*["']use server["']\s*;?.*
+      - patterns:
+          - pattern-either:
+              - pattern: |
+                  export async function $FUNC(...) { ... }
+              - pattern: |
+                  export function $FUNC(...) { ... }
+              - pattern: |
+                  export const $FUNC = (...) => { ... };
+              - pattern: |
+                  export const $FUNC = async (...) => { ... };
+          - pattern-not: |
+              export async function $FUNC(...) { ... exigirAccesoTotal(...); ... }
+          - pattern-not: |
+              export function $FUNC(...) { ... exigirAccesoTotal(...); ... }
+          - pattern-not: |
+              export const $FUNC = (...) => { ... exigirAccesoTotal(...); ... };
+          - pattern-not: |
+              export const $FUNC = async (...) => { ... exigirAccesoTotal(...); ... };
   - id: incovsa-recepcion-publica
     message: "RF-SW-06 / RNF-04: la recepción pública solo exporta la función enviarSolicitud; cualquier otra operación va en un archivo que exija permisos."
     severity: ERROR

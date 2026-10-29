@@ -35,8 +35,15 @@ async function principal() {
     };
     const clave = await preguntarClave("Contraseña (mínimo 8 caracteres): ");
     const confirmarClave = await preguntarClave("Repita la contraseña: ");
-    const { crearAdministrador } = await import("./administrador");
-    await crearAdministrador({ nombre, usuario, rol, clave, confirmarClave });
+    const { crearAdministrador, mensajeDeError } = await import("./administrador");
+    try {
+      await crearAdministrador({ nombre, usuario, rol, clave, confirmarClave });
+    } catch (error) {
+      // Nunca imprimir el objeto de error: puede contener entradas de validación o detalles de conexión.
+      console.error(mensajeDeError(error));
+      process.exitCode = 1;
+      return;
+    }
     console.log("Cuenta administradora creada para los dos sistemas.");
   } finally {
     terminal.close();
@@ -47,6 +54,7 @@ async function principal() {
 
 void principal().catch(() => {
   // Nunca imprimir el objeto de error: puede contener entradas de validación o detalles de conexión.
+  // Mismo texto que MENSAJE_ERROR_CREAR_ADMIN: administrador.ts se importa después de leer el .env.
   console.error("No se pudo crear la cuenta. Revise los datos, la conexión y que el usuario no exista.");
   process.exitCode = 1;
 });

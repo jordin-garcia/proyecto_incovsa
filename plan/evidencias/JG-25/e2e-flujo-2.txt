@@ -1,0 +1,68 @@
+
+Running 12 tests using 1 worker
+
+[1/12] [telefono] › pruebas-e2e\flujo\flujo-completo.spec.ts:193:5 › RN-11 / RN-52 / RN-29 / RF-SL-16 / RF-SL-24 / RF-SL-29 / RF-SL-37 / RF-SL-38 / RNF-06: flujo completo de un pedido facturado hasta el reporte
+[telefono] › pruebas-e2e\flujo\flujo-completo.spec.ts:193:5 › RN-11 / RN-52 / RN-29 / RF-SL-16 / RF-SL-24 / RF-SL-29 / RF-SL-37 / RF-SL-38 / RNF-06: flujo completo de un pedido facturado hasta el reporte
+▲ Next.js 16.4.2
+
+
+- Local:         http://127.0.0.1:3100
+- Network:       http://127.0.0.1:3100
+✓ Ready in 0ms
+
+
+✓ Running next.config took 75ms
+
+
+(node:17228) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[2/12] [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:85:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión
+[3/12] [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:116:7 › RNF-13: avisos de cambios por sede › RNF-13: al cortar SSE consulta cada 5 segundos, apaga En vivo y se reconecta sola
+[4/12] [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:147:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede
+[5/12] [tableta] › pruebas-e2e\flujo\flujo-completo.spec.ts:193:5 › RN-11 / RN-52 / RN-29 / RF-SL-16 / RF-SL-24 / RF-SL-29 / RF-SL-37 / RF-SL-38 / RNF-06: flujo completo de un pedido facturado hasta el reporte
+[tableta] › pruebas-e2e\flujo\flujo-completo.spec.ts:193:5 › RN-11 / RN-52 / RN-29 / RF-SL-16 / RF-SL-24 / RF-SL-29 / RF-SL-37 / RF-SL-38 / RNF-06: flujo completo de un pedido facturado hasta el reporte
+▲ Next.js 16.4.2
+
+
+- Local:         http://127.0.0.1:3101
+- Network:       http://127.0.0.1:3101
+
+
+✓ Ready in 0ms
+
+
+✓ Running next.config took 34ms
+
+
+(node:15948) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[6/12] [tableta] › pruebas-e2e\flujo\tiempo-real.spec.ts:85:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión
+[7/12] [tableta] › pruebas-e2e\flujo\tiempo-real.spec.ts:116:7 › RNF-13: avisos de cambios por sede › RNF-13: al cortar SSE consulta cada 5 segundos, apaga En vivo y se reconecta sola
+[8/12] [tableta] › pruebas-e2e\flujo\tiempo-real.spec.ts:147:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede
+[9/12] [escritorio] › pruebas-e2e\flujo\flujo-completo.spec.ts:193:5 › RN-11 / RN-52 / RN-29 / RF-SL-16 / RF-SL-24 / RF-SL-29 / RF-SL-37 / RF-SL-38 / RNF-06: flujo completo de un pedido facturado hasta el reporte
+[escritorio] › pruebas-e2e\flujo\flujo-completo.spec.ts:193:5 › RN-11 / RN-52 / RN-29 / RF-SL-16 / RF-SL-24 / RF-SL-29 / RF-SL-37 / RF-SL-38 / RNF-06: flujo completo de un pedido facturado hasta el reporte
+▲ Next.js 16.4.2
+
+
+- Local:         http://127.0.0.1:3102
+- Network:       http://127.0.0.1:3102
+
+
+✓ Ready in 0ms
+
+
+✓ Running next.config took 30ms
+
+
+(node:16624) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[10/12] [escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:85:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión
+[11/12] [escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:116:7 › RNF-13: avisos de cambios por sede › RNF-13: al cortar SSE consulta cada 5 segundos, apaga En vivo y se reconecta sola
+[12/12] [escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:147:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede
+  12 passed (2.9m)
