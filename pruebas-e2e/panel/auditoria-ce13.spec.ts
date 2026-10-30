@@ -41,6 +41,7 @@ async function asegurarImagen(galeria: Locator, archivo: Buffer) {
       .setInputFiles({ name: "ce13.png", mimeType: "image/png", buffer: archivo });
   }
   await expect(galeria.locator("figure").first()).toBeVisible();
+  await expect(galeria.locator('input[type="file"]')).toBeEnabled();
 }
 
 async function medirGaleria(galeria: Locator) {
@@ -77,6 +78,12 @@ async function medirGaleria(galeria: Locator) {
 }
 
 async function axe(page: Page, nombre: string) {
+  const galeria = page.locator(`[data-galeria="${nombre}"]`);
+  await galeria.scrollIntoViewIfNeeded();
+  await galeria.evaluate(async (el) => {
+    await Promise.all(el.getAnimations({ subtree: true }).map((animacion) => animacion.finished.catch(() => {})));
+  });
+
   expect(
     (
       await new AxeBuilder({ page })

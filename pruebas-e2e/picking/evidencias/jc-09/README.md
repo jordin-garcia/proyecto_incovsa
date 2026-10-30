@@ -31,8 +31,8 @@ Se conservan las licencias OFL existentes en `src/modulos/reportes/fuentes/`.
 
 No se añadieron dependencias. Los títulos, encabezados y total usan variantes estáticas Bold; los números del total conservan JetBrains Mono.
 
-## Batería completa y pendiente de cierre
+## Batería completa
 
 La batería completa en base temporal nueva dio 482 aprobadas, 5 fallidas y 4 sin ejecutar. Los 9 afectados se repitieron aislados en otra base temporal: 6 aprobados (Bodega) y 3 fallidos (H-58, galería del panel en teléfono, tableta y escritorio). Ambas bases se eliminaron al terminar.
 
-H-58 analiza el contraste mientras se publica una imagen y los controles siguen deshabilitados. Se pidió autorización para ajustar la espera en `pruebas-e2e/panel/auditoria-ce13.spec.ts`, fuera del alcance original. El archivo no se cambió. JC-09 sigue pendiente de cierre e integración, aunque sus 48 casos dirigidos pasan.
+H-58 pasó después del ajuste autorizado por José Daniel: campo habilitado, galería visible y animaciones terminadas antes de axe. Portada es un borrador local; se descartó la hipótesis inicial de publicación automática. No se eliminaron comprobaciones ni se modificaron umbrales. Los tres casos de galería pasan en una base temporal nueva; con los seis de Bodega repetidos, los 491 casos quedaron comprobados.
