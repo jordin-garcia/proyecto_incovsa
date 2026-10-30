@@ -5,7 +5,7 @@ persona: josue
 responsable: Josué Menéndez
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JG-15]
 programada: 2026-10-30
 requisitos: [RNF-05, RNF-06]
@@ -50,3 +50,21 @@ npm run build
 
 ## Fuera de alcance
 - Cambiar la pantalla de Bodega.
+
+## Resultado
+
+Se corrigió el hallazgo de seguridad R-P02 (severidad baja) para prevenir identificadores duplicados al reordenar líneas de preparación o la cola de envíos en Bodega:
+
+1. **Esquemas de validación Zod (`src/modulos/bodega/esquemas.ts`):**
+   - En `esquemaReordenarLineas`, se añadió límite superior `.max(1000)` y refinamiento de unicidad `.refine((ids) => new Set(ids).size === ids.length, { message: "Los IDs de línea no deben contener duplicados" })`, siguiendo el patrón de `src/modulos/ruta/esquemas.ts`.
+   - En `esquemaReordenarCola`, se aplicó el mismo control con `.max(1000)` y `.refine((ids) => new Set(ids).size === ids.length)`.
+
+2. **Servicio (`src/modulos/bodega/servicio.ts`):**
+   - En `reordenarLineasPreparacion`, se reforzó la comprobación de conjunto en profundidad verificando que `idsEntrada.size === entrada.lineaIds.length`, `entrada.lineaIds.length === envio.lineas.length` y que cada identificador pertenezca a las líneas del envío. Si hay duplicados o elementos faltantes, se lanza `ErrorAcceso()` antes de ejecutar cualquier transacción.
+   - En `reordenarColaBodega`, se validó que `new Set(entrada.envioIds).size === entrada.envioIds.length`, rechazando duplicados con `ErrorAcceso()`.
+
+3. **Pruebas automatizadas:**
+   - Pruebas unitarias de esquema y servicio con criterio `RNF-05:` en `src/modulos/bodega/servicio.test.ts` y en `src/modulos/bodega/acciones.test.ts`, confirmando que listas con identificadores duplicados son rechazadas sin alterar posiciones en BD, y que listas completas sin duplicados se aceptan correctamente.
+
+4. **Informe de seguridad:**
+   - Se marcó el hallazgo R-P02 como corregido en `plan/seguridad/asvs-nivel-2.md`.
