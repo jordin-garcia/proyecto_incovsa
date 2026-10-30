@@ -683,6 +683,16 @@ Daniela autorizó un margen temporal de **10 ms** para comparar las medianas del
 - **`crear-admin` (H-36):** acepta el rol escrito de cualquier forma, como `normalizarRol` (decisión 8), y dice si la contraseña es corta, si no coincide o si el usuario ya existe.
 - D-03 y D-04 se aplicaron tal como están en [11](11-picking-configuracion.md). Las correcciones son de JG-25 (`plan/auditorias/2026-10-22.md` y `plan/auditorias/2026-10-26.md`).
 
+## Revisión de seguridad con ASVS 5.0 y ZAP (29/10/2026, JG-15)
+
+Decisiones del coordinador al revisar la aplicación contra OWASP ASVS 5.0, nivel 2 (`plan/seguridad/asvs-nivel-2.md`), y con OWASP ZAP (`plan/seguridad/zap-2026-10-29.md`):
+
+- **P-98 se resuelve:** Contacto acepta hasta 5 solicitudes por hora desde una misma IP, contadas en la base con la IP que se guarda con cada solicitud, y tiene un campo trampa para robots que responde como un envío correcto sin guardar nada ([05](05-sitio-web.md), "Contacto").
+- **Contraseñas:** se rechazan las contraseñas comunes de una lista local, las que contienen una palabra de la empresa y las que contienen el nombre de usuario. Restablecer la contraseña de una cuenta de Gerencia o Soporte pide además la contraseña de quien lo hace, que respeta el límite de intentos de RNF-15 ([03](03-roles-y-accesos.md)).
+- **Topes:** los textos largos del panel admiten hasta 10 000 caracteres ([05](05-sitio-web.md), "Panel administrativo"). El .xlsx de Odoo se rechaza con más de 100 archivos internos o más de 50 MB descomprimido, se rechaza con más de 20 000 filas y cada columna tiene el largo de la base ([06](06-picking-facturacion.md)).
+- **Riesgos aceptados:** no se implementan antes de la entrega MFA, el cambio de la contraseña propia, ver y cerrar las sesiones propias, que un administrador cierre sesiones sin desactivar la cuenta, una vida máxima absoluta de la sesión, un límite de sesiones simultáneas, la contraseña inicial que obliga a cambiarla, la consulta de contraseñas filtradas, ni los cambios de la infraestructura del VPS (TLS interno, cuentas de base de datos separadas, lista blanca de salida, gestor de secretos y envío de los registros a otro sistema). Tampoco la retención de las solicitudes y las IP de la bitácora, ni los límites de conexiones de tiempo real y exportaciones simultáneas. JG-27 documenta en [16](16-arquitectura-y-tecnologia.md) la justificación y los controles que compensan cada uno.
+- Las correcciones quedan en JC-10, JG-26, DM-14, CE-14, JM-10 y JG-27, todas P1 y antes del 02/11.
+
 ## Documentos no alineados con las reuniones 4 y 5
 
 Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los cambios del 29/09, del 11/10 ni del 13/10:

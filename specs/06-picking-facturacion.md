@@ -47,7 +47,10 @@ Usuarios del picking con permiso sobre Facturación, en las sedes que tengan asi
 6. Si una línea de una referencia "Hecho" trae una **cantidad** vacía, no numérica o menor o igual a 0, ese pedido facturado **no se carga** y se avisa en el resumen de la carga (12/10).
 7. Si una línea de una referencia "Hecho" trae un **Peso de Conversión** vacío, no numérico o menor o igual a 0, ese pedido facturado **no se carga** y se avisa en el resumen de la carga (decisión del coordinador del 14/10, RN-50). En el archivo de ejemplo, 82 de las 205 líneas de referencias "Hecho" traen el peso en 0, en 46 de los 79 pedidos facturados.
 8. El archivo se rechaza si pesa más de 2 MB (12/10). La librería y las medidas de seguridad están en [16](16-arquitectura-y-tecnologia.md).
-9. **No se valida nada más** (13/10): el producto, el lote, el cliente y el sector se toman tal como vienen. No hay ventanas para agregar productos o clientes que falten, porque el sistema ya no tiene esos catálogos.
+   - **(29/10, JG-15, ASVS V5.2.3)** Como el .xlsx es un ZIP, antes de leerlo con SheetJS también se rechaza si tiene más de **100 archivos internos** o si, descomprimido, pasa de **50 MB** en total. Si la primera hoja tiene más de **20 000 filas**, también se rechaza. Así, un archivo pequeño y muy comprimido no puede llenar la memoria del servidor. El archivo de ejemplo tiene 10 archivos internos y 80 KB descomprimido.
+   - **(29/10, JG-15, RNF-05)** Los textos de cada columna se validan con el mismo largo máximo que tienen en la base de datos: referencia 40, número 20, cliente, sector y producto 200, y lote 40.
+   - En los dos casos se muestra el mensaje que ya existe: «No se pudo leer el archivo. Verifique que sea el .xlsx exportado de Odoo.»
+9. **No se valida nada más** (13/10): el producto, el lote, el cliente y el sector se toman tal como vienen, aparte de los largos máximos del paso 8 (29/10). No hay ventanas para agregar productos o clientes que falten, porque el sistema ya no tiene esos catálogos.
 
 ### Columnas que se usan
 

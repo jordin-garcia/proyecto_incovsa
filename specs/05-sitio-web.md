@@ -181,6 +181,8 @@ La página muestra el formulario y los datos de Quetzaltenango y Guatemala. Escu
 - **(13/10)** La solicitud **solo se guarda en el sistema** y se consulta en la bandeja del panel. **No se envía a ningún correo.** Por eso el sistema no necesita una cuenta de correo (P-09 se cierra) y de P-22 queda solo el horario de las sedes.
 - **(15/10)** Al enviar el mensaje, la página **se desplaza hasta el aviso "Solicitud recibida"**, para que se vea sin buscarlo.
 - **(24/10, DM-08)** El aviso muestra el **folio** de la solicitud con el formato del prototipo: `SOL-` + año (hora de Guatemala) + `-` + consecutivo de al menos 4 dígitos, por ejemplo `SOL-2026-0001`. Como el contador del prototipo, el consecutivo es uno solo y **no se reinicia al cambiar de año**; se calcula en la misma transacción que guarda la solicitud, así que dos envíos simultáneos nunca reciben el mismo folio. El envío es público, sin sesión, y la respuesta no revela nada más que el folio ([16](16-arquitectura-y-tecnologia.md), "Seguridad").
+- **(29/10, JG-15, P-98)** **Límite de envíos:** desde una misma dirección IP se aceptan hasta **5 solicitudes por hora** (los últimos 60 minutos). La IP es la que agrega Caddy (decisión 29) y se guarda con cada solicitud, para contarlas en la base de datos. A partir de la sexta, el formulario muestra «Recibimos varias solicitudes desde su conexión. Inténtelo de nuevo en una hora.» y no guarda nada.
+- **(29/10, JG-15, P-98)** **Campo trampa:** el formulario tiene un campo que las personas no ven, que no se alcanza con el teclado y que los lectores de pantalla ignoran. Si llega con texto, el envío lo hizo un robot: la respuesta es igual a la de un envío correcto, con un folio con el formato normal, pero no se guarda nada ni se usa un número del consecutivo. Así el robot no aprende a evitarlo.
 
 ### Textos que se reemplazan (RF-SW-27)
 
@@ -220,6 +222,8 @@ Entran los usuarios del sitio según sus permisos ([03-roles-y-accesos.md](03-ro
 | Usuarios | Usuarios del sitio. Los administran Gerencia y Soporte, con contraseña, rol y permisos ([03-roles-y-accesos.md](03-roles-y-accesos.md)) |
 
 Las imágenes se suben desde la computadora, eligiéndolas o arrastrándolas. En cada galería se pueden agregar, quitar y reordenar imágenes, hasta 5.
+
+**(29/10, JG-15, RNF-05)** Los textos largos del panel admiten hasta **10 000 caracteres**: el texto de las noticias, la historia, la misión y la visión, y las descripciones de las industrias y de los productos públicos. Al salir del campo, el panel muestra «El texto admite hasta 10 000 caracteres.» y no guarda; el servidor rechaza lo que exceda el tope. Los textos ya guardados no se modifican.
 
 Cada sección muestra su **instrucción, lo más breve posible, a la par del título**, como en Facturación, para aprovechar el espacio de la pantalla (15/10).
 
