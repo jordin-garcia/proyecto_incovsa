@@ -331,6 +331,7 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
 
   test("RF-SL-20: el arrastre funciona con teclado, mouse y touch (dedo con pulsación de 380 ms)", async ({
     browser,
+    browserName,
     context,
     page,
     produccion,
@@ -453,20 +454,37 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
         (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
       );
 
-      const sesionCdp = await ctxTouch.newCDPSession(pageTouch);
-      await sesionCdp.send("Input.dispatchTouchEvent", {
-        type: "touchStart",
-        touchPoints: [{ x: boxTouch1.x + boxTouch1.width / 2, y: boxTouch1.y + boxTouch1.height / 2 }],
-      });
-      // Esperar 420 ms para superar el umbral de 380 ms de pulsación larga del sensor táctil
-      await pageTouch.waitForTimeout(420);
-      await sesionCdp.send("Input.dispatchTouchEvent", {
-        type: "touchMove",
-        touchPoints: [{ x: boxTouch2.x + boxTouch2.width / 2, y: boxTouch2.y + boxTouch2.height / 2 + 10 }],
-      });
-      await pageTouch.waitForTimeout(100);
-      await sesionCdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
-      await sesionCdp.detach();
+      const inicio = { x: boxTouch1.x + boxTouch1.width / 2, y: boxTouch1.y + boxTouch1.height / 2 };
+      const destino = { x: boxTouch2.x + boxTouch2.width / 2, y: boxTouch2.y + boxTouch2.height / 2 + 10 };
+      if (browserName === "chromium") {
+        const sesionCdp = await ctxTouch.newCDPSession(pageTouch);
+        await sesionCdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [inicio] });
+        // Esperar 420 ms para superar el umbral de 380 ms de pulsación larga del sensor táctil
+        await pageTouch.waitForTimeout(420);
+        await sesionCdp.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [destino] });
+        await pageTouch.waitForTimeout(100);
+        await sesionCdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+        await sesionCdp.detach();
+      } else {
+        // Firefox y WebKit no tienen CDP (JG-16): el mismo gesto con TouchEvent sobre el asa, que es donde el sensor
+        // táctil escucha (https://playwright.dev/docs/touch-events).
+        const toque = (punto: { x: number; y: number }) => [{ identifier: 0, clientX: punto.x, clientY: punto.y }];
+        const enInicio = toque(inicio);
+        await asaTouch1.dispatchEvent("touchstart", {
+          touches: enInicio,
+          changedTouches: enInicio,
+          targetTouches: enInicio,
+        });
+        await pageTouch.waitForTimeout(420);
+        const enDestino = toque(destino);
+        await asaTouch1.dispatchEvent("touchmove", {
+          touches: enDestino,
+          changedTouches: enDestino,
+          targetTouches: enDestino,
+        });
+        await pageTouch.waitForTimeout(100);
+        await asaTouch1.dispatchEvent("touchend", { touches: [], changedTouches: enDestino, targetTouches: [] });
+      }
       await respTouch;
 
       // Comprobar que cambió en pantalla
