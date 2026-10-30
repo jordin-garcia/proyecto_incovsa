@@ -33,7 +33,7 @@ Corregir lo que encontró la revisión de seguridad (JG-15) en el sitio y el pan
 ## Qué hacer
 1. **Límite de envíos:**
    - en `crearSolicitud`, obtener la IP con `obtenerIp` y guardarla en la columna `ip` de la solicitud (JG-26);
-   - dentro de la misma transacción y del mismo bloqueo que calcula el folio, contar las solicitudes de esa IP de los últimos 60 minutos;
+   - contar las solicitudes de esa IP de los últimos 60 minutos antes de tomar el bloqueo del folio: si ya hay 5, se rechaza sin bloquear `configuracion_sitio`, para que un envío masivo no frene las publicaciones del panel. Si no, volver a contar dentro de la misma transacción y del mismo bloqueo que calcula el folio, para que dos envíos simultáneos no pasen juntos el límite;
    - si ya hay 5, no guardar y responder «Recibimos varias solicitudes desde su conexión. Inténtelo de nuevo en una hora.».
 2. **Campo trampa:**
    - agregar al formulario un campo que no se vea (sin `display:none`, que algunos robots detectan), con `tabIndex={-1}`, `autoComplete="off"` y `aria-hidden`;
@@ -45,6 +45,7 @@ Corregir lo que encontró la revisión de seguridad (JG-15) en el sitio y el pan
    - en los esquemas de `src/modulos/contenido/` (cliente y servidor) y en los editores del panel, al salir del campo.
 5. **Mensajes de Zod en inglés** (`src/modulos/contenido/contacto.ts:30` y `src/modulos/documentos/servicio.ts:79`): mostrar el mensaje de cada campo que define el esquema, o «Revise los datos del formulario.», nunca el mensaje por omisión de Zod. Agregar `maxLength` en los campos de Información de contacto que tienen tope en el esquema.
 6. **Formulario de Contacto sin datos en la URL:** con `method="post"`, si se envía antes de hidratarse, los datos no aparecen en la dirección.
+7. **Informe:** en `plan/seguridad/asvs-nivel-2.md`, cambiar a "Cumple" las filas V2.4.1 y V2.2.1 (la parte del panel), con su evidencia y marcar R-S01 y R-S02 como corregido.
 
 ## Archivos que creas o modificas
 - `src/modulos/solicitudes/servicio.ts`, `src/modulos/solicitudes/esquemas.ts` y sus pruebas (modificar)
@@ -53,6 +54,7 @@ Corregir lo que encontró la revisión de seguridad (JG-15) en el sitio y el pan
 - `src/modulos/documentos/servicio.ts` y sus pruebas (modificar)
 - Los editores del panel afectados en `src/componentes/panel/` (modificar)
 - `pruebas-e2e/sitio/contacto.spec.ts` y las pruebas del panel afectadas (modificar)
+- `plan/seguridad/asvs-nivel-2.md` (solo sus filas; autorizado por el coordinador)
 
 ## Criterios de aceptación
 1. **RF-SW-06 / P-98:** la sexta solicitud de una misma IP en 60 minutos no se guarda y muestra el mensaje del límite. Otra IP sí puede enviar, y la misma IP vuelve a poder hacerlo pasados los 60 minutos.

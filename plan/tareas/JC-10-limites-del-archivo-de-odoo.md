@@ -33,10 +33,12 @@ Corregir la brecha más grave de la revisión de seguridad (JG-15, ASVS V5.2.3, 
 2. Leer la hoja con `sheetRows` y rechazar el archivo si la primera hoja tiene **más de 20 000 filas**. No lo cortes en silencio, porque se perderían pedidos.
 3. En `esquemaFilaOdoo`, agregar `.max()` iguales a las columnas de la base (`prisma/schema.prisma`): referencia 40, número 20, cliente, sector y producto 200, y lote 40.
 4. En los tres casos se muestra el mensaje que ya existe: «No se pudo leer el archivo. Verifique que sea el .xlsx exportado de Odoo.»
+5. **Informe:** en `plan/seguridad/asvs-nivel-2.md`, cambiar a "Cumple" las filas V5.2.3 y V2.2.1 (la parte de Odoo), con su evidencia.
 
 ## Archivos que creas o modificas
 - `src/modulos/odoo/servicio.ts`, `src/modulos/odoo/esquemas.ts` (modificar)
 - `src/modulos/odoo/servicio.test.ts` (modificar)
+- `plan/seguridad/asvs-nivel-2.md` (solo sus filas; autorizado por el coordinador)
 
 ## Criterios de aceptación
 1. **ASVS V5.2.3:** un .xlsx de menos de 2 MB con una entrada que descomprimida pasa de 50 MB se rechaza sin pasar a SheetJS, y la memoria del proceso no crece más que el tope.

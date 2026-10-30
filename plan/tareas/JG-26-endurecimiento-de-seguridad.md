@@ -39,6 +39,7 @@ Corregir las brechas de la revisión de seguridad (JG-15) que están en el códi
    - una función común para cifrar y verificar contraseñas, con parámetros que cumplan el mínimo de OWASP (por ejemplo, N=2^14, r=8, p=5), en `src/lib/`;
    - configurarla en las dos configuraciones de Better Auth y usarla en `src/modulos/usuarios/servicio.ts`, `scripts/administrador.ts` y las semillas;
    - `verify` sigue aceptando las contraseñas cifradas con el formato anterior.
+   - **Para CE-14:** exportar de `src/app/acceso/servicio.ts` una función que, dentro del mismo bloqueo transaccional del inicio de sesión, revise si el usuario está bloqueado por RNF-15, verifique su contraseña y, si falla, registre el intento fallido (y el bloqueo, si corresponde) en la bitácora. Con un bloqueo vigente devuelve «incorrecta» aunque la contraseña sea correcta.
 5. **Sesiones:**
    - al iniciar sesión, se cierra la sesión anterior del mismo sistema en ese navegador (V7.2.4);
    - al cerrar sesión, la página se recarga por completo para que no quede contenido autenticado en la memoria del navegador, y se envía `Clear-Site-Data: "cache"` (V14.3.1). **No** se borran las cookies del otro sistema (una sesión por sistema, `specs/03`).
@@ -47,7 +48,9 @@ Corregir las brechas de la revisión de seguridad (JG-15) que están en el códi
    - la ruta `api/auth` registra sus errores;
    - las rutas multipart del panel registran sus rechazos por origen.
 7. **Imagen de producción (V15.2.3):** la imagen final solo lleva las dependencias de producción, más `prisma` y `tsx`, que se ejecutan en producción (`migrate deploy` y `crear-admin`). No lleva `prisma/semilla-demo.ts` ni los scripts que no se usan en producción. Si hace falta, mover `prisma` y `tsx` a `dependencies` en `package.json` y `package-lock.json`, sin cambiar sus versiones.
-8. **Base de datos (DM-14):**
+8. **Registro de la decisión:** precisar en `specs/16` ("Seguridad") y en `specs/18` las cookies `__Host-`, la CSP, los parámetros de scrypt, `Permissions-Policy`, COOP y los registros del servidor.
+9. **Informe:** cambiar a "Cumple" las filas de `plan/seguridad/asvs-nivel-2.md` que corrige esta tarea, con su evidencia, y marcar R-P01 como corregido. Lo mismo en `plan/seguridad/zap-2026-10-29.md` para las alertas 10037, 10063 y 90004, después de repetir ZAP.
+10. **Base de datos (DM-14):**
    - columna `ip` (`VarChar(45)`, opcional) en `solicitud_contacto`, con un índice por `ip` y `creado_en`, y su migración;
    - actualizar `specs/14`.
 
@@ -55,7 +58,9 @@ Corregir las brechas de la revisión de seguridad (JG-15) que están en el códi
 - `src/lib/**` (configuraciones de Better Auth, cabeceras, sesión, errores, contraseñas), `src/proxy.ts`, `next.config.ts`, `src/app/acceso/**`, `src/app/api/auth/**`, `src/modulos/permisos/**` (modificar)
 - `src/modulos/usuarios/servicio.ts` (solo la llamada a la función común; de Carlos, §E1), `src/app/panel/*/publicar/route.ts` (solo el registro del rechazo; de Daniela, §E1)
 - `Dockerfile` (de Carlos, §E1), `package.json`, `package-lock.json`
-- `prisma/schema.prisma`, `prisma/migrations/**`, `prisma/seed.ts`, `prisma/semilla-demo.ts`, `scripts/administrador.ts`, `specs/14-modelo-de-datos.md`
+- `prisma/schema.prisma`, `prisma/migrations/**`, `prisma/seed.ts`, `prisma/semilla-demo.ts`, `scripts/administrador.ts`, `specs/14-modelo-de-datos.md`, `specs/16-arquitectura-y-tecnologia.md`, `specs/18-historial-de-decisiones.md`
+- `.github/workflows/produccion-imagen.yml` (de Carlos, §E1: comprobar el criterio 7)
+- `plan/seguridad/asvs-nivel-2.md` y `plan/seguridad/zap-2026-10-29.md` (solo las filas que corrige)
 - Pruebas: `src/**/*.test.ts` afectadas, `pruebas-e2e/seguridad/cabeceras.spec.ts`, `pruebas-e2e/acceso/**`, `pruebas-e2e/picking/reportes-exportacion.spec.ts` y las ayudas de las pruebas que crean cookies
 
 ## Criterios de aceptación
@@ -66,7 +71,8 @@ Corregir las brechas de la revisión de seguridad (JG-15) que están en el códi
 5. **V14.3.1:** después de cerrar sesión, volver atrás en el navegador no muestra contenido autenticado.
 6. **V16.3.2:** un rechazo por permiso o por sede deja una línea en el registro del servidor con la operación, el sistema y el usuario.
 7. **V15.2.3:** la imagen de producción no contiene `vitest`, `@playwright/test` ni `prisma/semilla-demo.ts`, y `migrate deploy` y `crear-admin` siguen funcionando (`produccion-imagen.yml`).
-8. La migración aplica sobre una base vacía y sobre una con datos, y la CI que compara el esquema con las migraciones pasa.
+8. **RNF-15:** la función de reautenticación rechaza la contraseña correcta mientras el usuario está bloqueado, y cada fallo cuenta en el límite y queda en la bitácora.
+9. La migración aplica sobre una base vacía y sobre una con datos, y la CI que compara el esquema con las migraciones pasa.
 
 ## Pruebas obligatorias
 - Vitest y Playwright, con nombres que empiecen por el requisito (`RNF-04:`, `RNF-16:`, `RNF-03:`, `RF-SL-01:`) o por el código de ASVS (`ASVS V14.3.1:`).
@@ -85,4 +91,4 @@ gh workflow run zap.yml --ref develop
 
 ## Notas
 - Las cookies con `__Host-` exigen HTTPS. Comprueba que WebKit (JG-16) sigue iniciando sesión en local.
-- Avisa en tu bitácora a Carlos (`Dockerfile`, `usuarios/servicio.ts`) y a Daniela (rutas multipart, columna `ip` para DM-14).
+- Avisa en tu bitácora a Carlos (`Dockerfile`, `usuarios/servicio.ts`, `produccion-imagen.yml` y la función de reautenticación para CE-14), a Daniela (rutas multipart y columna `ip` para DM-14) y a José Daniel (`pruebas-e2e/picking/reportes-exportacion.spec.ts`).

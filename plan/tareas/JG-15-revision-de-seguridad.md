@@ -55,7 +55,7 @@ npm audit --audit-level=high
 
 ## Resultado
 
-La aplicación se revisó contra los 253 requisitos de los niveles 1 y 2 de OWASP ASVS 5.0.0 y con un escaneo básico de OWASP ZAP. **113 se cumplen, 86 no aplican y 54 no se cumplen.** Cada uno de los 54 tiene su tarea, P1 y con fecha antes del 02/11. ZAP no reportó alertas altas, y ninguna dependencia tiene avisos.
+La aplicación se revisó contra los 253 requisitos de los niveles 1 y 2 de OWASP ASVS 5.0.0 y con un escaneo básico de OWASP ZAP. **112 se cumplen, 86 no aplican y 55 no se cumplen.** Cada uno de los 55 tiene su tarea, P1 y con fecha antes del 02/11. ZAP no reportó alertas altas, y ninguna dependencia tiene avisos.
 
 ### Qué se hizo
 
@@ -79,7 +79,7 @@ La aplicación se revisó contra los 253 requisitos de los niveles 1 y 2 de OWAS
 | JC-10 | José Daniel | 30/10 | **Alta:** el .xlsx se descomprime sin tope y puede tumbar el servidor (V5.2.3) |
 | JG-26 | Jordin | 30/10 | **Media:** la exportación de reportes usa la primera sede (R-P01); cookies `__Host-`, CSP, nonce, scrypt, sesiones, registros, imagen de Docker y la columna `ip` para DM-14 |
 | DM-14 | Daniela | 30/10 | **Media:** límite y campo trampa de Contacto (P-98); topes del panel; mensajes de Zod |
-| CE-14 | Carlos | 31/10 | **Media:** reautenticación (V7.5.1); contraseñas fáciles de adivinar; mensajes de Zod; `charset` en Caddy |
+| CE-14 | Carlos | 31/10 | **Media:** reautenticación (V7.5.1); contraseñas fáciles de adivinar; mensajes de Zod; `charset` y TRACE en Caddy |
 | JM-10 | Josué | 30/10 | **Baja:** identificadores repetidos al reordenar líneas (R-P02) |
 | JG-27 | Jordin | 31/10 | Documentación de seguridad de `specs/16` y riesgos aceptados |
 

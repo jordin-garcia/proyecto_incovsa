@@ -27,10 +27,12 @@ Corregir el hallazgo R-P02 de la revisión de seguridad (JG-15, severidad baja).
 ## Qué hacer
 1. Exigir en `esquemaReordenarLineas` que los identificadores sean únicos, como en `esquemaReordenarRecorrido`.
 2. Revisar que el servicio compare el conjunto de identificadores con todas las líneas del envío, no solo el largo de la lista.
+3. **Informe:** en `plan/seguridad/asvs-nivel-2.md`, marcar R-P02 como corregido.
 
 ## Archivos que creas o modificas
 - `src/modulos/bodega/esquemas.ts`, `src/modulos/bodega/servicio.ts` (modificar, si hace falta)
 - `src/modulos/bodega/servicio.test.ts` o `esquemas.test.ts` (modificar)
+- `plan/seguridad/asvs-nivel-2.md` (solo sus filas; autorizado por el coordinador)
 
 ## Criterios de aceptación
 1. **RNF-05:** una lista con un identificador repetido se rechaza y no cambia ninguna posición.
