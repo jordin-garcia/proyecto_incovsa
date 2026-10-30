@@ -65,22 +65,19 @@ function certificadoDePrueba(carpeta: string) {
   mkdirSync(carpeta, { recursive: true });
   const clave = join(carpeta, "clave.pem");
   const certificado = join(carpeta, "certificado.pem");
-  if (!existsSync(certificado)) {
-    const resultado = spawnSync(
-      "openssl",
-      ["req", "-x509", "-newkey", "rsa:2048", "-nodes", "-days", "1", "-keyout", clave, "-out", certificado].concat([
-        "-subj",
-        "/CN=localhost",
-        "-addext",
-        "subjectAltName=DNS:localhost",
-      ]),
-      { encoding: "utf8" },
-    );
-    if (resultado.status !== 0)
-      throw new Error(
-        `WebKit necesita openssl para el HTTPS de prueba: ${resultado.error?.message ?? resultado.stderr}`,
-      );
-  }
+  // Uno nuevo en cada arranque del servidor, para que nunca se use vencido.
+  const resultado = spawnSync(
+    "openssl",
+    ["req", "-x509", "-newkey", "rsa:2048", "-nodes", "-days", "1", "-keyout", clave, "-out", certificado].concat([
+      "-subj",
+      "/CN=localhost",
+      "-addext",
+      "subjectAltName=DNS:localhost",
+    ]),
+    { encoding: "utf8" },
+  );
+  if (resultado.status !== 0)
+    throw new Error(`WebKit necesita openssl para el HTTPS de prueba: ${resultado.error?.message ?? resultado.stderr}`);
   return { key: readFileSync(clave), cert: readFileSync(certificado) };
 }
 
@@ -164,8 +161,9 @@ export const test = base.extend<{ esperarPublicacion: EsperarPublicacion }, { pr
     { scope: "worker", timeout: 120000 },
   ],
   baseURL: async ({ produccion }, usar) => usar(produccion.url),
-  // El certificado del HTTPS de prueba es autofirmado. Los contextos que una prueba crea aparte también lo indican.
-  ignoreHTTPSErrors: true,
+  // El certificado del HTTPS de prueba es autofirmado; Chromium y Firefox siguen estrictos. Los contextos que una prueba
+  // crea aparte lo indican siempre: con http no tiene efecto.
+  ignoreHTTPSErrors: async ({ browserName }, usar) => usar(browserName === "webkit"),
   esperarPublicacion: async ({ produccion }, usar) =>
     usar(async (sede) => {
       const [instante] = await once(produccion.avisos, `sede-${sede}`, { signal: AbortSignal.timeout(10000) });

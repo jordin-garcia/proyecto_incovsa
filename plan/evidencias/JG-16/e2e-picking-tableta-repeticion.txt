@@ -1,0 +1,11 @@
+
+Running 1 test using 1 worker
+
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3100
+- Network:       http://127.0.0.1:3100
+✓ Ready in 0ms
+✓ Running next.config took 34ms
+  ok 1 [tableta] › pruebas-e2e\picking\facturacion-dos-facturadores.spec.ts:38:5 › RN-48 / RNF-13 / decisiones 39 y 41: dos facturadores, edición, arrastre y envío simultáneos (18.4s)
+
+  1 passed (34.4s)

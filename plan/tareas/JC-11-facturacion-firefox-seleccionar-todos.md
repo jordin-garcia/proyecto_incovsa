@@ -29,7 +29,7 @@ La matriz de navegadores de JG-16 encontró que, en Firefox y en el teléfono, l
 - Chromium conserva el `scrollTop`. Firefox lo cambia con su anclaje de desplazamiento (*scroll anchoring*), que intenta dejar quieto lo que se ve, así que puede que la tarjeta visible no se mueva aunque el número cambie.
 
 ## Qué hacer
-1. Reproducirlo: `NAVEGADOR=firefox npx playwright install firefox` y `NAVEGADOR=firefox npm run e2e -- pruebas-e2e/picking/facturacion-carga.spec.ts --project=telefono --workers=1`.
+1. Reproducirlo: `npx playwright install firefox` y `NAVEGADOR=firefox npm run e2e -- pruebas-e2e/picking/facturacion-carga.spec.ts --project=telefono --workers=1`.
 2. Comprobar en Firefox, con Playwright, si la tarjeta que se veía antes de seleccionar todos sigue en el mismo lugar de la lista.
 3. Si la lista salta a la vista, corregir el tablero para que conserve la posición en los tres navegadores. Si no salta, cambiar la comprobación de la prueba para que mida la posición de la tarjeta visible en lugar del `scrollTop`, con un comentario que lo explique. En los dos casos, la prueba debe seguir detectando un salto real.
 4. Correr la prueba en Chromium, Firefox y WebKit, en los tres tamaños.

@@ -51,6 +51,8 @@ export function resumirReporte(reporte) {
     inestables: contar("flaky"),
     omitidas: contar("skipped"),
     minutos: Math.round((reporte.stats?.duration ?? 0) / 60_000),
+    // Errores fuera de las pruebas: el servidor no arrancó o un archivo de pruebas no cargó.
+    errores: (reporte.errors ?? []).length,
     fallos: lista("unexpected"),
     repetidas: lista("flaky"),
   };
@@ -82,6 +84,16 @@ export function informeMatriz(resumenes) {
   return lineas.join("\n") + "\n";
 }
 
+/** Hay problemas si falta alguna combinación, alguna prueba falló o Playwright reportó errores fuera de las pruebas. */
+export function hayProblemas(resumenes) {
+  const completas = Object.keys(NAVEGADORES).every((navegador) =>
+    Object.keys(TAMANOS).every((proyecto) =>
+      resumenes.some((r) => r.navegador === navegador && r.proyecto === proyecto),
+    ),
+  );
+  return !completas || resumenes.some((r) => r.fallidas > 0 || r.errores > 0);
+}
+
 // Busca los resultados*.json dentro de la carpeta (las descargas de artefactos crean una subcarpeta por artefacto).
 function reportesEn(carpeta) {
   const archivos = [];
@@ -104,7 +116,6 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   process.stdout.write(texto);
   if (process.env.GITHUB_STEP_SUMMARY)
     appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## Matriz de navegadores\n\n${texto}`);
-  // Falla si alguna combinación falló o no dejó resultado, para que la ejecución se vea en rojo.
-  const faltan = Object.keys(NAVEGADORES).length * Object.keys(TAMANOS).length - resumenes.length;
-  if (faltan > 0 || resumenes.some((r) => r.fallidas > 0)) process.exit(1);
+  // Falla si hay problemas, para que la ejecución se vea en rojo.
+  if (hayProblemas(resumenes)) process.exit(1);
 }

@@ -10,7 +10,11 @@ type VentanaConAvisos = Window & { __avisosE2E?: string[] };
 export async function anotarAvisos(page: Page) {
   await page.evaluate(() => {
     const ventana = window as VentanaConAvisos;
-    if (ventana.__avisosE2E) return;
+    // Si ya se anotaban en esta página, se empieza de cero para no aceptar un aviso anterior.
+    if (ventana.__avisosE2E) {
+      ventana.__avisosE2E.length = 0;
+      return;
+    }
     const avisos: string[] = [];
     ventana.__avisosE2E = avisos;
     const anotar = () => {

@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { resumirReporte, informeMatriz } from "./resumen-matriz.mjs";
+import { resumirReporte, informeMatriz, hayProblemas } from "./resumen-matriz.mjs";
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..");
 const leer = (...ruta) => readFileSync(join(RAIZ, ...ruta), "utf8").replace(/\r\n/g, "\n");
@@ -136,6 +136,7 @@ test("RNF-11: el resumen cuenta las pruebas por estado y lista las que fallaron 
     inestables: 1,
     omitidas: 0,
     minutos: 1,
+    errores: 0,
     fallos: [{ prueba: "sitio/inicio.spec.ts:20 › RF-SW-02: galería", estado: "fallida" }],
     repetidas: [{ prueba: "sitio/inicio.spec.ts:30 › RF-SW-03: menú", estado: "inestable" }],
   });
@@ -153,4 +154,22 @@ test("RNF-11: el informe tiene una fila por navegador y tamaño, y marca los que
   // Las 10 combinaciones sin resultado aparecen como "sin resultado" para que no pasen desapercibidas.
   assert.equal(texto.match(/sin resultado/g)?.length, 10);
   assert.match(texto, /sitio\/inicio\.spec\.ts:2 › B/);
+});
+
+test("RNF-11: la matriz tiene problemas si falta una combinación, falla una prueba o el servidor no arrancó", () => {
+  const completas = [];
+  for (const navegador of ["chromium", "firefox", "webkit"])
+    for (const proyecto of ["telefono", "tableta", "escritorio", "tv"])
+      completas.push(resumirReporte(reporte({ navegador, proyecto, specs: [["A", "expected", 1]] })));
+  assert.equal(hayProblemas(completas), false);
+  assert.equal(hayProblemas(completas.slice(1)), true);
+  // Un reporte repetido no compensa uno que falta.
+  assert.equal(hayProblemas([...completas.slice(1), completas[1]]), true);
+  const conFallo = resumirReporte(reporte({ navegador: "webkit", proyecto: "tv", specs: [["B", "unexpected", 2]] }));
+  assert.equal(hayProblemas([...completas.slice(0, -1), conFallo]), true);
+  const sinServidor = {
+    ...reporte({ navegador: "webkit", proyecto: "tv", specs: [["A", "expected", 1]] }),
+    errors: [{ message: "webServer" }],
+  };
+  assert.equal(hayProblemas([...completas.slice(0, -1), resumirReporte(sinServidor)]), true);
 });
