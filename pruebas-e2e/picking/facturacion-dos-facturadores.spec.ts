@@ -45,7 +45,7 @@ test("RN-48 / RNF-13 / decisiones 39 y 41: dos facturadores, edición, arrastre 
   const bd = new Client({ connectionString: process.env.DATABASE_URL });
   await bd.connect();
   await bd.query("SELECT pg_advisory_lock(hashtext($1))", ["e2e:facturacion-envio"]);
-  const otro = await browser.newContext({ baseURL, viewport: info.project.use.viewport });
+  const otro = await browser.newContext({ ignoreHTTPSErrors: true, baseURL, viewport: info.project.use.viewport });
   const ids: number[] = [];
   try {
     const {

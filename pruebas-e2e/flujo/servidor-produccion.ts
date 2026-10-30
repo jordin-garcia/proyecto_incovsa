@@ -1,8 +1,21 @@
 import { test as base } from "@playwright/test";
-import { fork } from "node:child_process";
+import { fork, spawnSync } from "node:child_process";
 import { EventEmitter, once } from "node:events";
-import { closeSync, cpSync, existsSync, openSync, readFileSync, readdirSync, unlinkSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import {
+  closeSync,
+  cpSync,
+  existsSync,
+  mkdirSync,
+  openSync,
+  readFileSync,
+  readdirSync,
+  unlinkSync,
+  writeFileSync,
+} from "node:fs";
+import { request as pedirHttp } from "node:http";
+import { createServer as crearServidorHttps, type Server } from "node:https";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import { setTimeout as esperar } from "node:timers/promises";
 import { pathToFileURL } from "node:url";
 
@@ -44,15 +57,68 @@ async function prepararActivos() {
   }
 }
 
+// HTTPS de prueba para WebKit (JG-16, decisión de Jordin del 30/10). En producción, las cookies de sesión llevan
+// Secure y el prefijo __Secure-, y el WebKit de Playwright no las guarda en http://localhost (Chromium y Firefox sí).
+// Como Caddy en producción, un proxy HTTPS local con un certificado autofirmado de un día va delante del servidor.
+// No cambia la aplicación. Necesita openssl, que traen Ubuntu (GitHub Actions), macOS y Git para Windows.
+function certificadoDePrueba(carpeta: string) {
+  mkdirSync(carpeta, { recursive: true });
+  const clave = join(carpeta, "clave.pem");
+  const certificado = join(carpeta, "certificado.pem");
+  if (!existsSync(certificado)) {
+    const resultado = spawnSync(
+      "openssl",
+      ["req", "-x509", "-newkey", "rsa:2048", "-nodes", "-days", "1", "-keyout", clave, "-out", certificado].concat([
+        "-subj",
+        "/CN=localhost",
+        "-addext",
+        "subjectAltName=DNS:localhost",
+      ]),
+      { encoding: "utf8" },
+    );
+    if (resultado.status !== 0)
+      throw new Error(
+        `WebKit necesita openssl para el HTTPS de prueba: ${resultado.error?.message ?? resultado.stderr}`,
+      );
+  }
+  return { key: readFileSync(clave), cert: readFileSync(certificado) };
+}
+
+async function proxyHttps(puerto: number, destino: number, tls: { key: Buffer; cert: Buffer }) {
+  const servidor = crearServidorHttps(tls, (entrada, salida) => {
+    const reenvio = pedirHttp(
+      {
+        host: "127.0.0.1",
+        port: destino,
+        method: entrada.method,
+        path: entrada.url,
+        headers: { ...entrada.headers, "x-forwarded-proto": "https" },
+      },
+      (respuesta) => {
+        salida.writeHead(respuesta.statusCode ?? 502, respuesta.rawHeaders);
+        respuesta.pipe(salida);
+      },
+    );
+    reenvio.on("error", () => salida.destroy());
+    // Al cerrarse la página, también se cierra la conexión de tiempo real con el servidor.
+    salida.on("close", () => reenvio.destroy());
+    entrada.pipe(reenvio);
+  });
+  await new Promise<void>((listo) => servidor.listen(puerto, "127.0.0.1", listo));
+  return servidor;
+}
+
 export type EsperarPublicacion = (sede: number) => Promise<number>;
 type Produccion = { url: string; avisos: EventEmitter };
 
 export const test = base.extend<{ esperarPublicacion: EsperarPublicacion }, { produccion: Produccion }>({
   produccion: [
-    async ({}, usar, informacion) => {
+    async ({ browserName }, usar, informacion) => {
       await prepararActivos();
       const puerto = 3100 + informacion.workerIndex;
-      const url = `http://localhost:${puerto}`;
+      const conHttps = browserName === "webkit";
+      const puertoHttps = 3300 + informacion.workerIndex;
+      const url = conHttps ? `https://localhost:${puertoHttps}` : `http://localhost:${puerto}`;
       const servidor = fork(resolve(".next/standalone/server.js"), [], {
         execArgv: ["--import", pathToFileURL(resolve("pruebas-e2e/flujo/observar-publicacion.mjs")).href],
         env: { ...process.env, PORT: String(puerto), HOSTNAME: "127.0.0.1", BETTER_AUTH_URL: url },
@@ -78,7 +144,17 @@ export const test = base.extend<{ esperarPublicacion: EsperarPublicacion }, { pr
           if (Date.now() >= limite) throw new Error("No inició el servidor de producción de JG-10.");
           await esperar(100);
         }
-        await usar({ url, avisos });
+        let proxy: Server | null = null;
+        if (conHttps) {
+          const tls = certificadoDePrueba(join(tmpdir(), `incovsa-e2e-tls-${informacion.workerIndex}`));
+          proxy = await proxyHttps(puertoHttps, puerto, tls);
+        }
+        try {
+          await usar({ url, avisos });
+        } finally {
+          proxy?.closeAllConnections();
+          proxy?.close();
+        }
       } finally {
         servidor.kill();
         await salida;
@@ -88,6 +164,8 @@ export const test = base.extend<{ esperarPublicacion: EsperarPublicacion }, { pr
     { scope: "worker", timeout: 120000 },
   ],
   baseURL: async ({ produccion }, usar) => usar(produccion.url),
+  // El certificado del HTTPS de prueba es autofirmado. Los contextos que una prueba crea aparte también lo indican.
+  ignoreHTTPSErrors: true,
   esperarPublicacion: async ({ produccion }, usar) =>
     usar(async (sede) => {
       const [instante] = await once(produccion.avisos, `sede-${sede}`, { signal: AbortSignal.timeout(10000) });

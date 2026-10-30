@@ -89,7 +89,7 @@ test.describe("RNF-13: avisos de cambios por sede", () => {
     baseURL,
     esperarPublicacion,
   }) => {
-    const segundo = await browser.newContext({ baseURL });
+    const segundo = await browser.newContext({ ignoreHTTPSErrors: true, baseURL });
     try {
       await entrar(context, baseURL);
       await entrar(segundo, baseURL);
@@ -120,7 +120,7 @@ test.describe("RNF-13: avisos de cambios por sede", () => {
     baseURL,
     esperarPublicacion,
   }) => {
-    const segundo = await browser.newContext({ baseURL });
+    const segundo = await browser.newContext({ ignoreHTTPSErrors: true, baseURL });
     try {
       await entrar(context, baseURL);
       await entrar(segundo, baseURL);
@@ -149,7 +149,7 @@ test.describe("RNF-13: avisos de cambios por sede", () => {
     context,
     baseURL,
   }) => {
-    const anonimo = await playwright.request.newContext({ baseURL });
+    const anonimo = await playwright.request.newContext({ ignoreHTTPSErrors: true, baseURL });
     try {
       expect((await anonimo.get("/api/tiempo-real?sede=1&modulo=bodega")).status()).toBe(403);
       await entrar(context, baseURL);

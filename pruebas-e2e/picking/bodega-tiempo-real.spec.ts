@@ -104,7 +104,7 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
   }, testInfo) => {
     await entrar(context, produccion.url);
 
-    const context2 = await browser.newContext({ baseURL: produccion.url });
+    const context2 = await browser.newContext({ ignoreHTTPSErrors: true, baseURL: produccion.url });
     await entrar(context2, produccion.url);
     const page2 = await context2.newPage();
 
@@ -208,7 +208,7 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
   }) => {
     await entrar(context, produccion.url);
 
-    const context2 = await browser.newContext({ baseURL: produccion.url });
+    const context2 = await browser.newContext({ ignoreHTTPSErrors: true, baseURL: produccion.url });
     await entrar(context2, produccion.url);
     const page2 = await context2.newPage();
 
@@ -428,6 +428,7 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
 
     if (!testInfo.project.use.hasTouch) {
       ctxTouch = await browser.newContext({
+        ignoreHTTPSErrors: true,
         baseURL: produccion.url,
         hasTouch: true,
         viewport: { width: 390, height: 844 },

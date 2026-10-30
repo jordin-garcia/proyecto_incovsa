@@ -140,7 +140,7 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
     await expect(page.locator(".tb")).toHaveAttribute("data-tema", "oscuro");
 
     // Al reiniciar el navegador (un contexto nuevo, sin la sesión del navegador anterior) vuelve al modo claro.
-    const reiniciado = await browser.newContext({ baseURL });
+    const reiniciado = await browser.newContext({ ignoreHTTPSErrors: true, baseURL });
     try {
       await entrar(reiniciado, baseURL);
       const nueva = await reiniciado.newPage();
@@ -302,7 +302,7 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
     baseURL,
     esperarPublicacion,
   }) => {
-    const segundo = await browser.newContext({ baseURL });
+    const segundo = await browser.newContext({ ignoreHTTPSErrors: true, baseURL });
     try {
       await entrar(context, baseURL);
       await entrar(segundo, baseURL);

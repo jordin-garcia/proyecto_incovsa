@@ -11,7 +11,7 @@ try {
 
 async function medir(browser: Browser, viewport: { width: number; height: number }, baseURL: string) {
   // Cada muestra usa caché vacía; las imágenes se descargan del servidor real.
-  const contexto = await browser.newContext({ viewport, baseURL });
+  const contexto = await browser.newContext({ ignoreHTTPSErrors: true, viewport, baseURL });
   try {
     const page = await contexto.newPage();
     const solicitudes: Request[] = [];
