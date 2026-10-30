@@ -3,6 +3,7 @@ import { writeFile } from "node:fs/promises";
 import { expect, type BrowserContext, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { test } from "../flujo/servidor-produccion";
+import { irA, recargar } from "../comunes/navegacion";
 
 try {
   process.loadEnvFile();
@@ -33,7 +34,7 @@ async function entrar(contexto: BrowserContext, url: string | undefined) {
 
 /** Abre el tablero y muestra la ruta o el pedido indicado, que se elige en la cola como en el prototipo. */
 async function abrirTablero(page: Page, envioId: number) {
-  await page.goto("/picking/tablero");
+  await irA(page, "/picking/tablero");
   await expect(page.locator(".tb")).toHaveAttribute("data-hidratado", "true");
   await expect(page.locator(".tb-pill[data-vivo]")).toHaveAttribute("data-conectado", "true", { timeout: 15_000 });
   await page.evaluate(() => document.fonts.ready.then(() => undefined));
@@ -119,7 +120,7 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
     await expect(oscuro).toHaveAttribute("aria-pressed", "true");
     await expect(page.locator(".tb-sup img")).toHaveAttribute("src", /incovsa-quimicos-blanco\.webp/);
 
-    await page.reload();
+    await recargar(page);
     await expect(page.locator(".tb")).toHaveAttribute("data-hidratado", "true");
     await expect(page.locator(".tb")).toHaveAttribute("data-tema", "oscuro");
 
@@ -134,12 +135,12 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
     } finally {
       await otra.close();
     }
-    await page.reload();
+    await recargar(page);
     await expect(page.locator(".tb")).toHaveAttribute("data-hidratado", "true");
     await expect(page.locator(".tb")).toHaveAttribute("data-tema", "oscuro");
 
     // Al reiniciar el navegador (un contexto nuevo, sin la sesión del navegador anterior) vuelve al modo claro.
-    const reiniciado = await browser.newContext({ baseURL });
+    const reiniciado = await browser.newContext({ ignoreHTTPSErrors: true, baseURL });
     try {
       await entrar(reiniciado, baseURL);
       const nueva = await reiniciado.newPage();
@@ -273,9 +274,10 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
       expect(await page.locator(".tb-lineas").evaluate((el) => el.scrollTop)).toBeGreaterThan(0);
       expect(await page.locator(".tb-actual").evaluate((el) => el.scrollTop)).toBe(0);
       expect(await page.locator(".tb").evaluate((el) => el.scrollTop)).toBe(0);
-      await expect(page.locator(".tb-cab")).toBeInViewport({ ratio: 1 });
-      await expect(page.locator(".tb-herr")).toBeInViewport({ ratio: 1 });
-      await expect(page.getByRole("button", { name: "Ruta Despachada" })).toBeInViewport({ ratio: 1 });
+      // 0.99 y no 1: en 768 px, WebKit deja la cabecera a menos de un píxel del borde por redondeo (0.9994, JG-16).
+      await expect(page.locator(".tb-cab")).toBeInViewport({ ratio: 0.99 });
+      await expect(page.locator(".tb-herr")).toBeInViewport({ ratio: 0.99 });
+      await expect(page.getByRole("button", { name: "Ruta Despachada" })).toBeInViewport({ ratio: 0.99 });
     } else {
       await expect(page.getByRole("button", { name: "Ruta Despachada" })).toBeVisible();
     }
@@ -301,13 +303,13 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
     baseURL,
     esperarPublicacion,
   }) => {
-    const segundo = await browser.newContext({ baseURL });
+    const segundo = await browser.newContext({ ignoreHTTPSErrors: true, baseURL });
     try {
       await entrar(context, baseURL);
       await entrar(segundo, baseURL);
       const tablero = await segundo.newPage();
       await abrirTablero(tablero, ruta.envioId);
-      await page.goto("/picking/bodega");
+      await irA(page, "/picking/bodega");
       await expect(page.locator(".vivo")).toHaveAttribute("data-conectado", "true", { timeout: 15_000 });
 
       const fila = page.locator(`article.ped[data-id="${ruta.envioId}"] tbody tr`).first();
@@ -381,7 +383,7 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
     await respuesta;
     await expect(lineas.nth(1)).toHaveClass(/\blista\b/);
     await expect(page.locator(".tb-pie .txt")).toContainText("Faltan 2.");
-    await page.reload();
+    await recargar(page);
     await verEnvio(page, pedido.envioId);
     await expect(lineas.nth(1)).toHaveClass(/\blista\b/);
 
@@ -433,7 +435,7 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
     baseURL,
   }) => {
     await entrar(context, baseURL);
-    await page.goto("/picking/tablero");
+    await irA(page, "/picking/tablero");
     await expect(page.locator(".tb")).toHaveAttribute("data-hidratado", "true");
     await expect(page.locator(".tb-pill[data-vivo]")).toHaveAttribute("data-conectado", "true", { timeout: 15_000 });
     // Sin tocar la cola, muestra la primera; al bajarla con el teclado en la cola, la sigue mostrando.
@@ -457,7 +459,7 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
     await expect(page.locator(".tb-sig").nth(1)).toHaveAttribute("data-id", primera);
     await expect(page.locator(".tb-actual")).toHaveAttribute("data-id", primera);
     await expect(page.locator(".tb-cab h2")).toContainText(/Prioridad 2 de \d+/);
-    await page.reload();
+    await recargar(page);
     await expect(page.locator(".tb")).toHaveAttribute("data-hidratado", "true");
     await reordenar("ArrowUp");
     await expect(page.locator(".tb-sig").first()).toHaveAttribute("data-id", primera);
@@ -568,7 +570,7 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
     });
     expect(respuesta.ok()).toBe(true);
 
-    await page.goto("/picking/tablero");
+    await irA(page, "/picking/tablero");
     await expect(page).toHaveURL(/\/picking\/ruta/);
   });
 });

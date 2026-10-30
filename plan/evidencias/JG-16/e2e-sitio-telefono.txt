@@ -1,0 +1,69 @@
+
+Running 34 tests using 1 worker
+
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok  1 [telefono] › pruebas-e2e\sitio\auditoria-ce13.spec.ts:10:5 › RF-SW-06 / H-60: el formulario recorta los topes y no muestra mensajes de Zod en inglés (8.3s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok  2 [telefono] › pruebas-e2e\sitio\auditoria-ce13.spec.ts:60:5 › RF-SW-06 / H-61: al salir del campo solo se validan el correo y el teléfono (2.7s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok  3 [telefono] › pruebas-e2e\sitio\contacto.spec.ts:66:1 › RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible (5.1s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok  4 [telefono] › pruebas-e2e\sitio\contacto.spec.ts:116:1 › RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito (3.9s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok  5 [telefono] › pruebas-e2e\sitio\contacto.spec.ts:150:1 › RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos (11.7s)
+  ok  6 [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:61:5 › RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y relaciones actuales (8.3s)
+  ok  7 [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:108:5 › RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos, vacío y tarjetas sin lote (4.6s)
+  ok  8 [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:131:5 › RF-SW-05 / RF-SW-17 / RF-SW-15: detalle público, galería, recomendados y enlaces (5.9s)
+  ok  9 [telefono] › pruebas-e2e\sitio\inicio.spec.ts:5:5 › RF-SW-01 / RF-SW-27: Inicio informativo conserva secciones, cifras y textos aprobados (2.7s)
+  ok 10 [telefono] › pruebas-e2e\sitio\inicio.spec.ts:29:5 › RF-SW-15 / RF-SW-22 / RF-SW-24: pie público y mapas solo de las dos oficinas (2.2s)
+  ok 11 [telefono] › pruebas-e2e\sitio\inicio.spec.ts:63:5 › RF-SW-08 / RNF-08: menú responsivo, ausencia de desbordamiento y accesibilidad (3.1s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 12 [telefono] › pruebas-e2e\sitio\inicio.spec.ts:80:5 › RF-SW-16: tarjetas aparecen al entrar en pantalla y desaparecen al salir (2.3s)
+  ok 13 [telefono] › pruebas-e2e\sitio\inicio.spec.ts:109:5 › RN-56 / RNF-17: cinco imágenes rotan cada 5 s, una queda fija y las secundarias cargan después (4.4s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 14 [telefono] › pruebas-e2e\sitio\nosotros.spec.ts:21:5 › RF-SW-02 / CAM-79 / RNF-08: secciones, fondos, pie y accesibilidad de Quiénes somos (2.9s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 15 [telefono] › pruebas-e2e\sitio\nosotros.spec.ts:54:5 › RF-SW-02 / CAM-80: ambos bloques alternan y quitar Inquiserca desde el panel deja solo INCOVSA (18.7s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 16 [telefono] › pruebas-e2e\sitio\nosotros.spec.ts:101:5 › RF-SW-29 / RF-SW-16: cinco valores pendientes y presentación dinámica (1.5s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 17 [telefono] › pruebas-e2e\sitio\nosotros.spec.ts:116:5 › RF-SW-02 / RF-SW-29 / RN-56: historia y cinco imágenes publicadas conservan orden, fila y ausencia de textos (5.7s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 18 [telefono] › pruebas-e2e\sitio\noticias.spec.ts:92:1 › RF-SW-18 / RF-SW-15 / RNF-08: estados vacíos y formulario accesibles sin opción de ocultar (6.8s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 19 [telefono] › pruebas-e2e\sitio\noticias.spec.ts:122:1 › RF-SW-18 / RN-56 / RN-39: crea, edita y elimina con confirmación; texto completo y sin desbordamiento (17.0s)
+  ok 20 [telefono] › pruebas-e2e\sitio\noticias.spec.ts:203:1 › RF-SW-25 / RNF-08: sin permiso de Noticias ofrece volver al módulo propio (4.1s)
+  ok 21 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:85:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública / (5.2s)
+  ok 22 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:85:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /nosotros (2.8s)
+  ok 23 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:85:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /industrias (2.4s)
+  ok 24 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:85:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /productos (4.9s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 25 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:85:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /noticias (2.3s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 26 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:85:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /contacto (4.7s)
+  ok 27 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:85:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /acceso (3.1s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 28 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:100:5 › RF-SW-16 / RNF-08: aparición, desaparición y navegación pública completa con teclado (1.2m)
+  ok 29 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:134:5 › RF-SW-05 / RNF-08: detalle del producto y regreso al catálogo con teclado (8.0s)
+  ok 30 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:151:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.08 (28.4s)
+  ok 31 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:151:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.09 (3.9s)
+  ok 32 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:151:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.10 (3.5s)
+  ok 33 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:220:5 › RNF-01 / RNF-08: revisión de Usuarios del sitio con Gerencia (5.2s)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3101
+- Network:       http://127.0.0.1:3101
+✓ Ready in 0ms
+✓ Running next.config took 45ms
+  ok 34 [telefono] › pruebas-e2e\sitio\rendimiento-galerias.spec.ts:73:5 › RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respecto de una (26.5s)
+
+  34 passed (5.3m)

@@ -1,9 +1,10 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { conGaleriasDePrueba } from "./galerias";
+import { irA, recargar } from "../comunes/navegacion";
 
 test("RF-SW-01 / RF-SW-27: Inicio informativo conserva secciones, cifras y textos aprobados", async ({ page }) => {
-  await page.goto("/");
+  await irA(page, "/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Química que sostiene a la industria guatemalteca");
   await expect(
     page.getByText(
@@ -27,7 +28,7 @@ test("RF-SW-01 / RF-SW-27: Inicio informativo conserva secciones, cifras y texto
 });
 
 test("RF-SW-15 / RF-SW-22 / RF-SW-24: pie público y mapas solo de las dos oficinas", async ({ page }) => {
-  await page.goto("/");
+  await irA(page, "/");
   await expect(page.getByRole("contentinfo")).toBeAttached();
   // Sin logotipo subido: a color en la cabecera y blanco, sin placa, sobre el verde del pie (sitio.js › logoOscuro()).
   await expect(page.locator("header img")).toHaveAttribute("src", "/marca/incovsa-quimicos.webp");
@@ -61,7 +62,7 @@ test("RF-SW-15 / RF-SW-22 / RF-SW-24: pie público y mapas solo de las dos ofici
 });
 
 test("RF-SW-08 / RNF-08: menú responsivo, ausencia de desbordamiento y accesibilidad", async ({ page }) => {
-  await page.goto("/");
+  await irA(page, "/");
   const menu = page.getByRole("button", { name: "Abrir menú" });
   if (await menu.isVisible()) {
     await menu.click();
@@ -78,7 +79,7 @@ test("RF-SW-08 / RNF-08: menú responsivo, ausencia de desbordamiento y accesibi
 });
 
 test("RF-SW-16: tarjetas aparecen al entrar en pantalla y desaparecen al salir", async ({ page }) => {
-  await page.goto("/");
+  await irA(page, "/");
   const portada = page.locator(".hero-foto");
   await expect(portada).toHaveClass(/visible/);
   const tarjeta = page.locator(".ind-rejilla > a").first();
@@ -91,6 +92,20 @@ test("RF-SW-16: tarjetas aparecen al entrar en pantalla y desaparecen al salir",
   await expect(tarjeta).toHaveCSS("opacity", "1");
   await expect(portada).toHaveCSS("opacity", "1");
 });
+
+// WebKit actualiza las media queries que la página ya tenía (como la de la galería) en el siguiente repintado, no al
+// instante como Chromium y Firefox; con el reloj de prueba, la galería veía la preferencia anterior (JG-16). Se cambia
+// la preferencia y se espera a que una consulta creada antes, igual que la de la galería, ya la refleje.
+async function cambiarMovimiento(page: Page, reducedMotion: "reduce" | "no-preference") {
+  type Ventana = Window & { __movimientoE2E?: MediaQueryList };
+  await page.evaluate(() => {
+    (window as Ventana).__movimientoE2E ??= window.matchMedia("(prefers-reduced-motion: reduce)");
+  });
+  await page.emulateMedia({ reducedMotion });
+  await expect
+    .poll(() => page.evaluate(() => (window as Ventana).__movimientoE2E!.matches))
+    .toBe(reducedMotion === "reduce");
+}
 
 test("RN-56 / RNF-17: cinco imágenes rotan cada 5 s, una queda fija y las secundarias cargan después", async ({
   page,
@@ -111,7 +126,7 @@ test("RN-56 / RNF-17: cinco imágenes rotan cada 5 s, una queda fija y las secun
       await ruta.continue();
     });
     try {
-      await page.goto("/", { waitUntil: "domcontentloaded" });
+      await irA(page, "/", { waitUntil: "domcontentloaded" });
       await expect(page.locator("header button")).toBeAttached();
       await expect.poll(() => peticiones.some((url) => url.endsWith("dm02=1"))).toBe(true);
       expect(peticiones.filter((url) => /dm02=[2-5]$/.test(url))).toEqual([]);
@@ -131,7 +146,7 @@ test("RN-56 / RNF-17: cinco imágenes rotan cada 5 s, una queda fija y las secun
     await expect(page.locator(".mv-sin")).toHaveCount(1);
     // Un reloj controlado elimina esperas de 25 segundos para recorrer el ciclo completo.
     await page.clock.install();
-    await page.reload();
+    await recargar(page);
     await expect(portada.locator("img")).toHaveCount(5);
     await page.clock.pauseAt(new Date(Date.now() + 1000));
     const inicial = Number(await portada.getAttribute("data-actual"));
@@ -140,11 +155,11 @@ test("RN-56 / RNF-17: cinco imágenes rotan cada 5 s, una queda fija y las secun
       await expect(portada).toHaveAttribute("data-actual", String((inicial + paso) % 5));
       await expect(mision).toHaveAttribute("data-actual", "0");
     }
-    await page.emulateMedia({ reducedMotion: "reduce" });
+    await cambiarMovimiento(page, "reduce");
     const detenida = await portada.getAttribute("data-actual");
     await page.clock.runFor(10_000);
     await expect(portada).toHaveAttribute("data-actual", detenida!);
-    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await cambiarMovimiento(page, "no-preference");
     await page.clock.runFor(5000);
     await expect(portada).not.toHaveAttribute("data-actual", detenida!);
   });

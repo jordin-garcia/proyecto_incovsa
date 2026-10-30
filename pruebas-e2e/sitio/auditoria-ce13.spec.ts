@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { irA } from "../comunes/navegacion";
 
 try {
   process.loadEnvFile();
@@ -11,7 +12,7 @@ test("RF-SW-06 / H-60: el formulario recorta los topes y no muestra mensajes de 
   page,
 }, info) => {
   test.setTimeout(60_000);
-  await page.goto("/contacto");
+  await irA(page, "/contacto");
   // Antes de hidratar, React repite tarde el foco y la salida de los campos: se espera a que tome el formulario.
   await expect(page.locator("form.contacto-form")).toHaveAttribute("data-hidratado", "true");
   await expect(page.getByRole("heading", { name: "Envíenos su mensaje" })).toBeVisible();
@@ -58,7 +59,7 @@ test("RF-SW-06 / H-60: el formulario recorta los topes y no muestra mensajes de 
 });
 
 test("RF-SW-06 / H-61: al salir del campo solo se validan el correo y el teléfono", async ({ page }, info) => {
-  await page.goto("/contacto");
+  await irA(page, "/contacto");
   // Antes de hidratar, React repite tarde el foco y la salida de los campos: se espera a que tome el formulario.
   await expect(page.locator("form.contacto-form")).toHaveAttribute("data-hidratado", "true");
   const nombre = page.getByLabel("Nombre completo *", { exact: true });

@@ -3,6 +3,7 @@ import { Client } from "pg";
 import AxeBuilder from "@axe-core/playwright";
 import { archivoEvidencia, capturaEvidencia } from "../comunes/evidencia";
 import { test } from "../flujo/servidor-produccion";
+import { irA } from "../comunes/navegacion";
 
 const aviso =
   "Otro facturador modificó estos pedidos. La pantalla se actualizará; revisa los cambios e inténtalo de nuevo";
@@ -17,7 +18,7 @@ async function entrar(contexto: BrowserContext, baseURL: string, usuario: string
   expect(respuesta.ok()).toBe(true);
 }
 async function abrir(page: Page) {
-  await page.goto("/picking/facturacion");
+  await irA(page, "/picking/facturacion");
   await expect(page.locator(".vivo")).toHaveAttribute("data-conectado", "true");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 }
@@ -45,7 +46,7 @@ test("RN-48 / RNF-13 / decisiones 39 y 41: dos facturadores, edición, arrastre 
   const bd = new Client({ connectionString: process.env.DATABASE_URL });
   await bd.connect();
   await bd.query("SELECT pg_advisory_lock(hashtext($1))", ["e2e:facturacion-envio"]);
-  const otro = await browser.newContext({ baseURL, viewport: info.project.use.viewport });
+  const otro = await browser.newContext({ ignoreHTTPSErrors: true, baseURL, viewport: info.project.use.viewport });
   const ids: number[] = [];
   try {
     const {

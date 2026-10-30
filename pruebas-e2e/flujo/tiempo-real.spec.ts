@@ -2,6 +2,7 @@ import { expect, type BrowserContext, type Locator, type Page } from "@playwrigh
 import { execFileSync } from "node:child_process";
 import { writeFile } from "node:fs/promises";
 import { test, type EsperarPublicacion } from "./servidor-produccion";
+import { irA } from "../comunes/navegacion";
 
 function preparar(...argumentos: string[]) {
   return execFileSync(
@@ -23,7 +24,7 @@ async function entrar(contexto: BrowserContext, url: string | undefined) {
 }
 
 async function abrirBodega(page: Page) {
-  await page.goto("/picking/bodega");
+  await irA(page, "/picking/bodega");
   await expect(page.locator(".vivo")).toHaveAttribute("data-conectado", "true");
   await page.evaluate(() => document.fonts.ready.then(() => undefined));
 }
@@ -89,7 +90,7 @@ test.describe("RNF-13: avisos de cambios por sede", () => {
     baseURL,
     esperarPublicacion,
   }) => {
-    const segundo = await browser.newContext({ baseURL });
+    const segundo = await browser.newContext({ ignoreHTTPSErrors: true, baseURL });
     try {
       await entrar(context, baseURL);
       await entrar(segundo, baseURL);
@@ -120,7 +121,7 @@ test.describe("RNF-13: avisos de cambios por sede", () => {
     baseURL,
     esperarPublicacion,
   }) => {
-    const segundo = await browser.newContext({ baseURL });
+    const segundo = await browser.newContext({ ignoreHTTPSErrors: true, baseURL });
     try {
       await entrar(context, baseURL);
       await entrar(segundo, baseURL);
@@ -149,7 +150,7 @@ test.describe("RNF-13: avisos de cambios por sede", () => {
     context,
     baseURL,
   }) => {
-    const anonimo = await playwright.request.newContext({ baseURL });
+    const anonimo = await playwright.request.newContext({ ignoreHTTPSErrors: true, baseURL });
     try {
       expect((await anonimo.get("/api/tiempo-real?sede=1&modulo=bodega")).status()).toBe(403);
       await entrar(context, baseURL);

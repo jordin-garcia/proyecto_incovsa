@@ -4,6 +4,7 @@ import { Client } from "pg";
 import { readFile, unlink } from "node:fs/promises";
 import { capturaEvidencia } from "../comunes/evidencia";
 import { join } from "node:path";
+import { irA } from "../comunes/navegacion";
 try {
   process.loadEnvFile();
 } catch {
@@ -92,14 +93,14 @@ test("RF-SW-18 / RF-SW-15 / RNF-08: estados vacíos y formulario accesibles sin 
   page,
   context,
 }) => {
-  await page.goto("/noticias");
+  await irA(page, "/noticias");
   await expect(page.getByRole("heading", { name: "Novedades de la empresa", exact: true })).toBeVisible();
   await expect(page.getByText("Todavía no hay noticias publicadas", { exact: true })).toBeVisible();
   await expect(page.getByRole("contentinfo")).toBeAttached();
   await comprobarAxe(page);
   await captura(page, "publico-vacio");
   await entrar(context);
-  await page.goto("/panel/noticias");
+  await irA(page, "/panel/noticias");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   await expect(page.getByText("No hay noticias", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: /Ocultar/ })).toHaveCount(0);
@@ -125,7 +126,7 @@ test("RF-SW-18 / RN-56 / RN-39: crea, edita y elimina con confirmación; texto c
   await entrar(context);
   const titulo = `Noticia de prueba DM-07 ${info.project.name} ${Date.now()}`;
   const texto = `Primera línea de la noticia.\nSegunda línea completa.\n${"a".repeat(80)}`;
-  await page.goto("/panel/noticias");
+  await irA(page, "/panel/noticias");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   await page.getByRole("button", { name: "Nueva noticia", exact: true }).click();
   const dialogo = page.getByRole("dialog");
@@ -151,7 +152,7 @@ test("RF-SW-18 / RN-56 / RN-39: crea, edita y elimina con confirmación; texto c
   await dialogo.getByLabel("Título", { exact: true }).fill(`${titulo} editada`);
   await dialogo.getByRole("button", { name: "Guardar", exact: true }).click();
   await expect(dialogo).toHaveCount(0);
-  await page.goto("/noticias");
+  await irA(page, "/noticias");
   const articulo = page.getByRole("article").filter({ hasText: titulo });
   await expect(articulo.getByRole("heading")).toHaveText(`${titulo} editada`);
   await expect(articulo.locator("p")).toHaveText(texto);
@@ -169,7 +170,7 @@ test("RF-SW-18 / RN-56 / RN-39: crea, edita y elimina con confirmación; texto c
   else expect(contenido!.x).toBeGreaterThanOrEqual(foto!.x + foto!.width - 1);
   await comprobarAxe(page);
   await captura(page, "publico-publicada");
-  await page.goto("/panel/noticias");
+  await irA(page, "/panel/noticias");
   await fila.getByRole("button", { name: "Eliminar", exact: true }).click();
   await expect(dialogo).toContainText("Deja de mostrarse en el sitio.");
   await comprobarAxe(page);
@@ -181,7 +182,7 @@ test("RF-SW-18 / RN-56 / RN-39: crea, edita y elimina con confirmación; texto c
   await expect(dialogo).toHaveCount(0);
   await expect(page.getByText("Noticia eliminada.", { exact: true })).toBeVisible();
   await expect(fila).toHaveCount(0);
-  await page.goto("/noticias");
+  await irA(page, "/noticias");
   await expect(page.getByRole("heading", { name: `${titulo} editada`, exact: true })).toHaveCount(0);
   const bd = new Client({ connectionString: process.env.DATABASE_URL });
   await bd.connect();
@@ -201,7 +202,7 @@ test("RF-SW-18 / RN-56 / RN-39: crea, edita y elimina con confirmación; texto c
 
 test("RF-SW-25 / RNF-08: sin permiso de Noticias ofrece volver al módulo propio", async ({ page, context }) => {
   await entrar(context, "ejemplo.09");
-  await page.goto("/panel/noticias");
+  await irA(page, "/panel/noticias");
   await expect(page.getByRole("heading", { name: "Sin acceso a este módulo", exact: true })).toBeVisible();
   const volver = page.getByRole("link", { name: "Ir a mi módulo", exact: true });
   await expect(volver).toHaveAttribute("href", "/panel/documentos");

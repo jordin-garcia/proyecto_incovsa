@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
 import { Client } from "pg";
 import AxeBuilder from "@axe-core/playwright";
+import { arrastrarConDedo } from "../comunes/tactil";
+import { irA, recargar } from "../comunes/navegacion";
 
 let primerPedidoCreado: number | null = null;
 let bloqueo: Client | null = null;
@@ -52,14 +54,17 @@ test("RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bo
 }, info) => {
   const erroresHidratacion: string[] = [];
   page.on("console", (mensaje) => {
-    if (/hydrated|hydration/i.test(mensaje.text())) erroresHidratacion.push(mensaje.text());
+    // React avisa de los errores de hidratación con console.error. Firefox, además, muestra como mensajes de consola
+    // las marcas de rendimiento de React 19 («Hydrated»), que no son errores (JG-16).
+    if (["error", "warning"].includes(mensaje.type()) && /hydrated|hydration/i.test(mensaje.text()))
+      erroresHidratacion.push(mensaje.text());
   });
   const respuesta = await context.request.post("/api/auth/picking/sign-in/username", {
     headers: { origin: "http://localhost:3000" },
     data: { usuario: "ejemplo.03", clave: process.env.CLAVE_DEMO },
   });
   expect(respuesta.ok()).toBe(true);
-  await page.goto("/picking/facturacion");
+  await irA(page, "/picking/facturacion");
   const tablero = page.getByTestId("tablero-pedidos");
   const camion = page.getByRole("region", { name: "Envío por camión", exact: true });
   const recoge = page.getByRole("region", { name: "Cliente recoge en bodega", exact: true });
@@ -68,10 +73,10 @@ test("RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bo
       await opcion.getByRole("button", { name: "Cancelar", exact: true }).click();
       await page.getByRole("dialog").getByRole("button", { name: "Regresar al tablero", exact: true }).click();
       await expect(opcion.locator("article")).toHaveCount(0);
-      await page.reload();
+      await recargar(page);
     }
   }
-  await page.reload();
+  await recargar(page);
   if (await tablero.locator("article").count()) {
     await page.getByLabel("Seleccionar todos").check();
     await page.getByRole("button", { name: "Eliminar", exact: true }).click();
@@ -128,7 +133,7 @@ test("RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bo
     await page.mouse.up();
     await expect(tarjetas).toHaveCount(33);
     await expect(camion.locator("article")).toHaveCount(0);
-    await page.reload();
+    await recargar(page);
     await expect(tarjetas).toHaveCount(33);
     await tarjetas.first().click();
     await tarjetas.nth(1).click();
@@ -149,7 +154,7 @@ test("RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bo
   }
   await teclado(filas.first(), "ArrowDown", "Envío por camión");
   await expect(filas.first()).toContainText("03546");
-  await page.reload();
+  await recargar(page);
   await expect(filas.first()).toContainText("03546");
   // RNF-08: las instrucciones de arrastre deben seguir enlazadas después de hidratar otra petición SSR.
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
@@ -167,20 +172,14 @@ test("RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bo
     await filas.last().scrollIntoViewIfNeeded();
     const desde = await filas.last().boundingBox(),
       hasta = await filas.first().boundingBox();
-    const tactil = await context.newCDPSession(page);
-    await tactil.send("Input.dispatchTouchEvent", {
-      type: "touchStart",
-      touchPoints: [{ x: desde!.x + 30, y: desde!.y + desde!.height / 2 }],
-    });
-    // La espera corresponde al umbral de 380 ms de pulsación larga (prototipo) del sensor.
-    await page.waitForTimeout(420);
-    await tactil.send("Input.dispatchTouchEvent", {
-      type: "touchMove",
-      touchPoints: [{ x: hasta!.x + 30, y: hasta!.y + hasta!.height / 2 }],
-    });
-    await expect(page.getByRole("status").filter({ hasText: "Destino: Envío por camión." })).toBeAttached();
-    await tactil.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
-    await tactil.detach();
+    // La pulsación larga de 420 ms corresponde al umbral de 380 ms (prototipo) del sensor.
+    await arrastrarConDedo(
+      page,
+      filas.last(),
+      { x: desde!.x + 30, y: desde!.y + desde!.height / 2 },
+      { x: hasta!.x + 30, y: hasta!.y + hasta!.height / 2 },
+      () => expect(page.getByRole("status").filter({ hasText: "Destino: Envío por camión." })).toBeAttached(),
+    );
     await expect(filas.first()).toContainText("03543");
   }
   await teclado(filas.first(), "ArrowRight", "Cliente recoge en bodega");
@@ -189,7 +188,7 @@ test("RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bo
   await expect(filas).toHaveCount(2);
   await teclado(filas.first(), "ArrowLeft", "Tablero de pedidos facturados");
   await expect(filas).toHaveCount(1);
-  await page.reload();
+  await recargar(page);
   await expect(tablero.locator("article")).toHaveCount(32);
   await arrastrar(tablero.locator("article").last(), camion.getByTestId("zona-camion"));
   await expect(filas).toHaveCount(2);
@@ -199,7 +198,7 @@ test("RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bo
   await camion.getByLabel("Fecha programada de envío *", { exact: true }).fill("20102026");
   await camion.getByLabel("Hora programada *", { exact: true }).fill("1330");
   await expect(camion.getByRole("button", { name: "Enviar a Bodega", exact: true })).toBeEnabled();
-  await page.reload();
+  await recargar(page);
   await expect(camion.locator("article")).toHaveCount(2);
   await expect(camion.getByLabel("Fecha programada de envío *", { exact: true })).toHaveValue("20/10/2026");
   await expect(camion.getByLabel("Hora programada *", { exact: true })).toHaveValue("13:30");

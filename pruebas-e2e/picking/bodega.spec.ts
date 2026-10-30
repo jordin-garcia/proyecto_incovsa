@@ -2,6 +2,7 @@ import { execSync } from "node:child_process";
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { comprobarEncabezadoModulo } from "../comunes/encabezado";
+import { irA, recargar } from "../comunes/navegacion";
 
 try {
   process.loadEnvFile();
@@ -84,7 +85,7 @@ test.describe("Módulo de Bodega E2E", () => {
     context,
   }) => {
     await entrar(context);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     await expect(page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`)).toBeVisible();
@@ -98,7 +99,7 @@ test.describe("Módulo de Bodega E2E", () => {
     baseURL,
   }) => {
     await entrarEnSede(context, baseURL, 2);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     const tarjeta = page.locator(`article.ped[data-id="${datosPedido.envioId}"]`);
@@ -115,7 +116,7 @@ test.describe("Módulo de Bodega E2E", () => {
 
   test("RNF-08: líneas marcadas sin violaciones serias de axe, contraste incluido", async ({ page, context }) => {
     await entrar(context);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     const tarjeta = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
@@ -136,14 +137,14 @@ test.describe("Módulo de Bodega E2E", () => {
     await tarjeta.getByRole("button", { name: "Desmarcar todo" }).click();
     await expect(tarjeta.locator("tr.lista")).toHaveCount(0, { timeout: 15_000 });
     expect((await respuestaDesmarcarTodo).ok()).toBe(true);
-    await page.reload();
+    await recargar(page);
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     await expect(tarjeta.locator("tr.lista")).toHaveCount(0);
   });
 
   test("RNF-08: Detalle de Ruta sin violaciones serias de axe, contraste incluido", async ({ page, context }) => {
     await entrar(context);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     await page
@@ -158,7 +159,7 @@ test.describe("Módulo de Bodega E2E", () => {
   test("RNF-08: Bodega vacía sin violaciones serias de axe, contraste incluido", async ({ page, context, baseURL }) => {
     // Gerencia trabaja en todas las sedes; en Escuintla las pruebas no crean envíos.
     await entrarEnSede(context, baseURL, 3);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     await expect(page.locator(".tarjeta.vacio")).toBeVisible();
 
@@ -170,7 +171,7 @@ test.describe("Módulo de Bodega E2E", () => {
     context,
   }) => {
     await entrar(context);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     const tarjeta = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
@@ -201,7 +202,7 @@ test.describe("Módulo de Bodega E2E", () => {
     context,
   }) => {
     await entrar(context);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     const tarjeta = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
@@ -229,7 +230,7 @@ test.describe("Módulo de Bodega E2E", () => {
 
   test("RF-SL-23 / RN-20: marcar línea persiste al recargar y marcar todo marca todas", async ({ page, context }) => {
     await entrar(context);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     const tarjeta = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
@@ -246,7 +247,7 @@ test.describe("Módulo de Bodega E2E", () => {
 
     // Recargar y confirmar persistencia
     expect((await respuestaMarcado).ok()).toBe(true);
-    await page.reload();
+    await recargar(page);
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     const tarjetaRecargada = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
     const filaRecargada = tarjetaRecargada.locator("tr", { hasText: "Lote 5287" });
@@ -271,7 +272,7 @@ test.describe("Módulo de Bodega E2E", () => {
     await botonDesmarcarTodo.click();
     await expect(tarjetaRecargada.locator("tr.lista")).toHaveCount(0);
     expect((await respuestaDesmarcarTodo).ok()).toBe(true);
-    await page.reload();
+    await recargar(page);
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     await expect(tarjetaRecargada.locator("tr.lista")).toHaveCount(0);
   });
@@ -281,7 +282,7 @@ test.describe("Módulo de Bodega E2E", () => {
     context,
   }) => {
     await entrar(context);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     await comprobarEncabezadoModulo(page, {
       eyebrow: "Módulo de bodega · tablero de preparación",
@@ -298,7 +299,7 @@ test.describe("Módulo de Bodega E2E", () => {
     context,
   }) => {
     await entrar(context);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     const tarjeta = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
 
@@ -344,7 +345,7 @@ test.describe("Módulo de Bodega E2E", () => {
     await entrar(context);
     // Una ventana baja obliga a desplazar el Detalle de Ruta, que tiene tres pedidos facturados.
     await page.setViewportSize({ width: page.viewportSize()!.width, height: 560 });
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     await page
       .locator(`article.ped[data-id="${datosEnvio.envioId}"]`)
@@ -376,7 +377,7 @@ test.describe("Módulo de Bodega E2E", () => {
     context,
   }) => {
     await entrar(context);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     const tarjeta = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
     const fila = tarjeta.locator("tbody tr").first();
@@ -418,7 +419,7 @@ test.describe("Módulo de Bodega E2E", () => {
     context,
   }) => {
     await entrar(context);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     const tarjeta = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
@@ -453,7 +454,7 @@ test.describe("Módulo de Bodega E2E", () => {
 
     // Ya no aparece en Bodega
     await expect(page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`)).toHaveCount(0);
-    await page.reload();
+    await recargar(page);
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     await expect(page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`)).toHaveCount(0);
   });
@@ -463,7 +464,7 @@ test.describe("Módulo de Bodega E2E", () => {
     context,
   }) => {
     await entrar(context, "ejemplo.04");
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     const sinAcceso = page.locator(".sin-acceso");

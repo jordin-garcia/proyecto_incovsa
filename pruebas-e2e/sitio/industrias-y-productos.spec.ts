@@ -1,6 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 import { Client } from "pg";
+import { irA, recargar } from "../comunes/navegacion";
 
 try {
   process.loadEnvFile();
@@ -62,7 +63,7 @@ test("RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y
   page,
 }) => {
   await conCatalogo(async ({ conexion, ids, cuero, textil }) => {
-    await page.goto("/industrias");
+    await irA(page, "/industrias");
     const barra = page.getByRole("navigation", { name: "Industrias", exact: true });
     await expect(barra.getByRole("link")).toHaveCount(9);
     const enlace = barra.getByRole("link", { name: "Textil", exact: true });
@@ -92,9 +93,9 @@ test("RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y
       ids[0],
       textil,
     ]);
-    await page.reload();
+    await recargar(page);
     await expect(page.locator(".lista-prod")).toContainText("DM03 Ácido");
-    await page.goto("/industrias/cuero");
+    await irA(page, "/industrias/cuero");
     await expect(page.locator(".lista-prod")).not.toContainText("DM03 Ácido");
     await expect(page.locator(".ind-img-vacia")).toContainText("Imagen de la industria");
     // IntersectionObserver inicia la transición después de montar la página.
@@ -109,7 +110,7 @@ test("RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos,
   page,
 }) => {
   await conCatalogo(async () => {
-    await page.goto("/productos?industria=cuero");
+    await irA(page, "/productos?industria=cuero");
     await expect(page.locator(".cat-lay")).toHaveAttribute("data-hidratado", "true");
     const buscar = page.getByRole("textbox", { name: "Buscar producto" });
     await buscar.fill("dm03 acido");
@@ -130,7 +131,7 @@ test("RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos,
 
 test("RF-SW-05 / RF-SW-17 / RF-SW-15: detalle público, galería, recomendados y enlaces", async ({ page }) => {
   await conCatalogo(async ({ ids }) => {
-    await page.goto(`/productos/${ids[0]}`);
+    await irA(page, `/productos/${ids[0]}`);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("DM03 Ácido");
     await expect(page.locator(".fichas")).toContainText("Descripción de prueba");
     await expect(page.locator(".fichas")).toContainText("Saco de prueba");

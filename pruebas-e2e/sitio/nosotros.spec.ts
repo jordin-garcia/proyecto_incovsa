@@ -3,6 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { test } from "../panel/datos";
 import { readFile } from "node:fs/promises";
 import { capturaEvidencia } from "../comunes/evidencia";
+import { irA } from "../comunes/navegacion";
 
 async function cargarImagenes(page: import("@playwright/test").Page) {
   await page.evaluate(() => window.scrollTo(0, 0));
@@ -18,7 +19,7 @@ async function cargarImagenes(page: import("@playwright/test").Page) {
 }
 
 test("RF-SW-02 / CAM-79 / RNF-08: secciones, fondos, pie y accesibilidad de Quiénes somos", async ({ page }, info) => {
-  await page.goto("/nosotros");
+  await irA(page, "/nosotros");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "Más de treinta años abasteciendo de químicos a la industria del país",
   );
@@ -54,7 +55,7 @@ test("RF-SW-02 / CAM-80: ambos bloques alternan y quitar Inquiserca desde el pan
   page,
   context,
 }, info) => {
-  await page.goto("/nosotros");
+  await irA(page, "/nosotros");
   await expect(page.locator(".banner-logos")).toHaveCount(2);
   for (const bloque of await page.locator(".banner-logos").all()) {
     await expect(bloque.locator("img")).toHaveCount(2);
@@ -81,12 +82,12 @@ test("RF-SW-02 / CAM-80: ambos bloques alternan y quitar Inquiserca desde el pan
     data: { usuario: "ejemplo.08", clave: process.env.CLAVE_DEMO },
   });
   expect(acceso.ok()).toBe(true);
-  await page.goto("/panel/contenido");
+  await irA(page, "/panel/contenido");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   const inquiserca = page.getByRole("region", { name: "Logotipo de Inquiserca", exact: true });
   await inquiserca.getByRole("button", { name: /Quitar/ }).click();
   await expect(inquiserca.getByRole("img")).toHaveCount(0);
-  await page.goto("/nosotros");
+  await irA(page, "/nosotros");
   for (const bloque of await page.locator(".banner-logos").all()) {
     await expect(bloque.locator("img")).toHaveCount(1);
     await expect(bloque.locator("img")).toHaveAttribute("alt", "INCOVSA Químicos");
@@ -98,7 +99,7 @@ test("RF-SW-02 / CAM-80: ambos bloques alternan y quitar Inquiserca desde el pan
 });
 
 test("RF-SW-29 / RF-SW-16: cinco valores pendientes y presentación dinámica", async ({ page }) => {
-  await page.goto("/nosotros");
+  await irA(page, "/nosotros");
   await expect(page.locator(".valor-t")).toHaveCount(5);
   await expect(page.locator(".valor-t.vacio-v")).toHaveCount(5);
   await expect(page.locator(".valores-fila")).toContainText("Imagen del valor pendiente de INCOVSA");
@@ -136,7 +137,7 @@ test("RF-SW-02 / RF-SW-29 / RN-56: historia y cinco imágenes publicadas conserv
   };
   const urls = await publicar("valores", "", 5);
   await publicar("historia", "Historia de prueba DM-06\nSegunda línea <script>texto escapado</script>", 2);
-  await page.goto("/nosotros");
+  await irA(page, "/nosotros");
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect(page.locator(".historia-texto")).toHaveText(
     "Historia de prueba DM-06\nSegunda línea <script>texto escapado</script>",

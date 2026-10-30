@@ -3,6 +3,7 @@ import { execFileSync } from "node:child_process";
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { fechaGuatemala, formatoFecha, semanaLunesADomingo } from "../../src/lib/fechas";
+import { irA } from "../comunes/navegacion";
 
 function fechaFixture(proyecto: string) {
   const aniosAtras: Record<string, number> = { telefono: 2, tableta: 1, escritorio: 0 };
@@ -27,7 +28,7 @@ test("RF-SL-59 / CP-64: periodos y fechas inválidas en Reportes", async ({ page
     data: { usuario: "ejemplo.02", clave: process.env.CLAVE_DEMO },
   });
   expect(respuesta.ok()).toBe(true);
-  await page.goto("/picking/reportes");
+  await irA(page, "/picking/reportes");
   await expect(page.getByRole("heading", { name: "Reportes y bitácora" })).toBeVisible();
   await expect(page.locator(".reportes")).toHaveAttribute("data-hidratado", "true");
   // RF-SL-61 / H-81
@@ -122,7 +123,7 @@ for (const [tab, titulo] of [
       data: { usuario: "ejemplo.02", clave: process.env.CLAVE_DEMO },
     });
     expect(respuesta.ok()).toBe(true);
-    await page.goto("/picking/reportes?tipo=rango&desde=2026-10-19&hasta=2026-10-25");
+    await irA(page, "/picking/reportes?tipo=rango&desde=2026-10-19&hasta=2026-10-25");
     await expect(page.getByRole("heading", { name: "Reportes y bitácora" })).toBeVisible();
     await expect(page.locator(".reportes")).toHaveAttribute("data-hidratado", "true");
     await expect(page.getByText("Quetzaltenango · Del 19/10/2026 al 25/10/2026", { exact: true })).toBeVisible();
@@ -167,7 +168,7 @@ test("RF-SL-38 / RF-SL-37 / RN-39: datos de demostración, conversiones y recorr
       ).ok(),
     ).toBe(true);
     const anio = referencia.slice(0, 4);
-    await page.goto(`/picking/reportes?tipo=anio&anio=${anio}`);
+    await irA(page, `/picking/reportes?tipo=anio&anio=${anio}`);
     await expect(page.getByRole("heading", { name: "Reportes y bitácora" })).toBeVisible();
     await expect(page.locator(".reportes")).toHaveAttribute("data-hidratado", "true");
     await expect(page.getByText(`Quetzaltenango · Año ${anio}`, { exact: true })).toBeVisible();

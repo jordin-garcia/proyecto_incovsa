@@ -6,6 +6,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { Client } from "pg";
 import { fechaGuatemala, formatoFecha, inicioDelDiaGuatemala } from "../../src/lib/fechas";
 import { test } from "./servidor-produccion";
+import { irA } from "../comunes/navegacion";
 
 try {
   process.loadEnvFile();
@@ -157,7 +158,7 @@ async function entrar(page: Page, baseURL: string, usuario: string) {
 }
 
 async function abrir(page: Page, ruta: string, hidratado = ".app") {
-  await page.goto(ruta);
+  await irA(page, ruta);
   await expect(page.locator(hidratado).first()).toHaveAttribute("data-hidratado", "true");
 }
 

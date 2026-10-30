@@ -2,6 +2,7 @@ import { expect, type Browser, type Request } from "@playwright/test";
 import { test } from "../flujo/servidor-produccion";
 import { Client } from "pg";
 import { archivoEvidencia } from "../comunes/evidencia";
+import { irA } from "../comunes/navegacion";
 
 try {
   process.loadEnvFile();
@@ -11,7 +12,7 @@ try {
 
 async function medir(browser: Browser, viewport: { width: number; height: number }, baseURL: string) {
   // Cada muestra usa caché vacía; las imágenes se descargan del servidor real.
-  const contexto = await browser.newContext({ viewport, baseURL });
+  const contexto = await browser.newContext({ ignoreHTTPSErrors: true, viewport, baseURL });
   try {
     const page = await contexto.newPage();
     const solicitudes: Request[] = [];
@@ -41,7 +42,7 @@ async function medir(browser: Browser, viewport: { width: number; height: number
         { once: true },
       );
     });
-    await page.goto("/", { waitUntil: "load" });
+    await irA(page, "/", { waitUntil: "load" });
     const medicion = await page.evaluate(
       () =>
         (
