@@ -5,7 +5,7 @@ persona: jose-daniel
 responsable: José Daniel Cifuentes
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JC-07, JG-24]
 programada: 2026-10-27
 requisitos: [RF-SL-07, RF-SL-36, RF-SL-38, RF-SL-61, RN-39]
@@ -46,10 +46,12 @@ Corregir los hallazgos H-75 a H-81 del paso 3 de la auditoría del 26/10, en la 
 ## Archivos que creas o modificas
 - `src/modulos/reportes/exportacion.ts`, `exportacion.test.ts`; `src/app/api/reportes/exportar/route.ts` (si hace falta para H-77)
 - `src/componentes/picking/reportes/Reportes.tsx`
-- `src/app/acceso/[sistema]/page.tsx`, `src/app/acceso/servicio.ts` y sus pruebas (H-78)
+- `src/app/acceso/page.tsx` (ampliación autorizada por José Daniel el 29/10), `src/app/acceso/[sistema]/page.tsx`, `src/app/acceso/servicio.ts` y sus pruebas (H-78)
 - `src/modulos/bitacora/detalle.ts` (solo si una prueba lo exige) y su prueba
 - `pruebas-e2e/picking/facturacion-carga.spec.ts`, `pruebas-e2e/picking/reportes.spec.ts`, `pruebas-e2e/picking/reportes-exportacion.spec.ts`, `pruebas-e2e/acceso/**`
 - `plan/tareas/JC-07-*.md`, `plan/tareas/JC-03-*.md`, `plan/tareas/JG-24-*.md` (solo la sección de correcciones); `plan/bitacora/jose-daniel.md`
+
+- `pruebas-e2e/panel/auditoria-ce13.spec.ts` (ampliación autorizada por José Daniel el 29/10: estabilizar la galería antes de medir accesibilidad).
 
 ## Criterios de aceptación
 1. **RF-SL-38 (H-75, H-76, D-10):** las pruebas comprueban el contenido de `specs/10` en Excel y PDF, el nombre con rango y el logotipo fijo; el título, los encabezados y el total del PDF salen en negrita.
@@ -77,3 +79,14 @@ npm run e2e -- pruebas-e2e/picking pruebas-e2e/acceso
 ## Notas
 - Rama `jose-daniel/JC-09-correcciones-auditoria`. Tarea creada en la convergencia 2 (JG-13), por decisión de Jordin del 26/10.
 - CE-13 cambia cómo las pruebas de navegador guardan la evidencia (`EVIDENCIA=1`, `plan/convenciones.md` §6) y toca `pruebas-e2e/acceso/auditoria-jg24.spec.ts`. Si integra antes que tú, actualiza tu rama desde `develop` y conserva los dos cambios.
+
+## Resultado
+
+- Hecho: corregidos H-75 a H-81 y probada D-10. Excel comprueba periodo y cuatro indicadores; PDF comprueba sede, periodo, tabla, logotipo fijo y variantes estáticas Bold de Figtree y JetBrains Mono, con OFL. Los nombres con rango están cubiertos.
+- Descargas: se usa `fetch` y un Blob, se conserva el nombre enviado por el servidor y, ante 400, 403 o 500, se muestra el aviso general autorizado, sin exponer el contenido de error del servidor.
+- Acceso: `consultarSistemasSoloLectura()` valida con Zod y consulta sistemas activos y bloqueo de IP sin escribir. Ambos GET de acceso la usan; las acciones explícitas conservan sus controles y su registro. Las pruebas recargan 21 veces con cuentas desactivadas y eliminadas sin sumar registros.
+- Bitácora: se prueban resumen histórico como arreglo, eliminación sin resumen y bloqueos con detalle vacío. Facturación comprueba su rejilla y tarjetas sin asa ni «x»; Facturación y Reportes comprueban el encabezado común en los tres tamaños.
+- Decisiones: José Daniel autorizó el mensaje «No se pudo completar la operación. Inténtelo de nuevo.», corregir también `src/app/acceso/page.tsx` y ajustar la espera en la prueba H-58 de CE-13. La galería es un borrador local: antes de axe se espera el campo habilitado, se lleva la galería a la vista y se espera el fin de sus animaciones. No se retiran comprobaciones ni se cambian umbrales.
+- Archivos principales: `src/modulos/reportes/exportacion.ts`, `Reportes.tsx`, `src/app/acceso/servicio.ts`, ambas páginas de acceso, pruebas de Bitácora y las pruebas de navegador enumeradas arriba. Se añadieron las secciones de corrección a JC-03, JC-07 y JG-24.
+- Uso: Reportes conserva sus botones Excel/PDF y periodo; las descargas fallidas ahora avisan en pantalla. Abrir o recargar Acceso no cuenta como un intento fallido. Para replicar capturas: `EVIDENCIA=1 npm run e2e -- pruebas-e2e/picking/reportes-exportacion.spec.ts pruebas-e2e/picking/facturacion-carga.spec.ts --workers=1`.
+- Verificación: `npm run verificar`, 55 archivos y 456 pruebas aprobadas; build correcto; plan válido, 69 tareas; 48 pruebas dirigidas de navegador aprobadas. Batería completa en base temporal: 482 aprobadas, 5 fallidas y 4 sin ejecutar; repetición aislada de los afectados: 6 aprobados de Bodega; tras estabilizar la galería, sus 3 casos pasan en los tres tamaños. Los 491 casos quedaron comprobados. Las bases temporales se eliminaron al terminar. Capturas y resumen en `pruebas-e2e/picking/evidencias/jc-09/`. Revisión independiente: LISTO, sin hallazgos de corrección.

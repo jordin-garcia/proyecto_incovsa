@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cookies, headers } from "next/headers";
 import { AccesoPersonal } from "./AccesoPersonal";
-import { consultarSistemas } from "./servicio";
+import { consultarSistemasSoloLectura } from "./servicio";
 
 export const metadata: Metadata = { title: "Acceso personal" };
 export default async function PaginaAcceso() {
@@ -13,7 +13,7 @@ export default async function PaginaAcceso() {
     if (url.protocol === "https:") urlOdoo = url.href;
   }
   const usuario = (await cookies()).get("incovsa-acceso-usuario")?.value;
-  const sistemas = usuario ? await consultarSistemas({ usuario }, await headers()) : null;
+  const sistemas = usuario ? await consultarSistemasSoloLectura({ usuario }, await headers()) : null;
   return (
     <AccesoPersonal
       urlOdoo={urlOdoo}

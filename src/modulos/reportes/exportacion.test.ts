@@ -1,3 +1,6 @@
+import pdfmake from "pdfmake";
+import { readFile } from "node:fs/promises";
+import sharp from "sharp";
 import { beforeEach, expect, it, vi } from "vitest";
 import * as XLSX from "xlsx";
 import { prisma } from "@/lib/prisma";
@@ -135,6 +138,11 @@ it("RF-SL-38 / CAM-96: descarga los seis archivos con una sola hoja o un PDF tit
         expect(filas[0]!.slice(encabezado.length).every((celda) => celda === "")).toBe(true);
 
         if (pestana === "despacho") {
+          expect(filas).toContainEqual(["Periodo", "25/10/2026", ""]);
+          expect(filas).toContainEqual(["Kilogramos despachados", "50.375", "rutas y pedidos cerrados en Bodega"]);
+          expect(filas).toContainEqual(["Unidades completas", "2", "más 0.375 kg sueltos"]);
+          expect(filas).toContainEqual(["Rutas y pedidos cerrados", "1", "1 rutas · 0 pedidos"]);
+          expect(filas).toContainEqual(["Rutas entregadas", "0", "en el periodo"]);
           expect(filas).toContainEqual(["Producto", "Cantidad (kg)", "Unidades"]);
           expect(filas).toContainEqual(["PRODUCTO DE PRUEBA", "50.375", "2 unidades + 0.375 kg ÷ 25"]);
           expect(filas).toContainEqual(["Total del periodo", "50.375", "2 unidades + 0.375 kg"]);
@@ -214,4 +222,48 @@ it("RF-SL-38 / RNF-08: la ruta rechaza sesiones, permisos y sedes no autorizadas
   expect(deOtraSede.headers.get("Content-Disposition")).toBeNull();
   sedeSeleccionada = sede;
   expect((await GET(solicitud("despacho", "csv"))).status).toBe(400);
+});
+
+it("RF-SL-38 / H-75: el nombre conserva las fechas del rango", async () => {
+  for (const formato of ["xlsx", "pdf"]) {
+    const respuesta = await GET(
+      solicitud("despacho", formato, { tipo: "rango", desde: "2026-10-01", hasta: "2026-10-31" }),
+    );
+    expect(respuesta.status).toBe(200);
+    expect(respuesta.headers.get("Content-Disposition")).toContain(
+      `despacho-quetzaltenango-del-01-10-2026-al-31-10-2026.${formato}`,
+    );
+  }
+});
+it("RF-SL-38 / H-75 / H-76 / D-10: PDF con sede, periodo, tabla, logotipo fijo y fuente negrita real", async () => {
+  const crear = vi.spyOn(pdfmake, "createPdf");
+  try {
+    const respuesta = await GET(solicitud("despacho", "pdf"));
+    expect(respuesta.status).toBe(200);
+    const archivo = Buffer.from(await respuesta.arrayBuffer());
+    expect(archivo.toString("latin1")).toContain("Figtree-Bold");
+    expect(archivo.toString("latin1")).toContain("JetBrainsMono-Bold");
+    const documento = crear.mock.calls[0]![0];
+    const texto = JSON.stringify(documento);
+    for (const valor of [
+      "Quetzaltenango",
+      "Periodo: 25/10/2026",
+      "PRODUCTO DE PRUEBA",
+      "Cantidad (kg)",
+      "Total del periodo",
+    ])
+      expect(texto).toContain(valor);
+    const logo = await sharp(await readFile("public/marca/incovsa-quimicos.webp"))
+      .png()
+      .toBuffer();
+    expect(texto).toContain(`data:image/png;base64,${logo.toString("base64")}`);
+    expect((documento as { styles: unknown }).styles).toMatchObject({
+      titulo: { bold: true },
+      cabeceraTabla: { bold: true },
+      total: { bold: true },
+      totalMono: { bold: true, font: "JetBrainsMono" },
+    });
+  } finally {
+    crear.mockRestore();
+  }
 });

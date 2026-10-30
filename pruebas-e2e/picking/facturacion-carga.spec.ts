@@ -1,3 +1,5 @@
+import { capturaEvidencia } from "../comunes/evidencia";
+import { comprobarEncabezadoModulo } from "../comunes/encabezado";
 import { expect, test as base } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { writeFile } from "node:fs/promises";
@@ -52,6 +54,8 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
   expect(respuesta.ok()).toBe(true);
   await page.goto("/picking/facturacion");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
+  // RF-SL-61 / H-81
+  await comprobarEncabezadoModulo(page);
   await expect(page.getByRole("heading", { name: "Pedidos facturados", exact: true })).toBeVisible();
 
   await expect(page.getByTestId("tablero-pedidos").locator("article")).toHaveCount(0);
@@ -97,6 +101,24 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
   const tablero = page.locator("[data-testid='tablero-pedidos']");
   const tarjetas = tablero.getByRole("button");
   await expect(tarjetas).toHaveCount(33);
+  // RF-SL-07 / H-80: rejilla de D-06 y tarjeta sin controles extra.
+  const rejilla = tarjetas.first().locator("..");
+  await expect(rejilla).toHaveCSS("display", "grid");
+  const medidas = await rejilla.evaluate((el) => {
+    const estilo = getComputedStyle(el);
+    return {
+      ancho: el.clientWidth - parseFloat(estilo.paddingLeft) - parseFloat(estilo.paddingRight),
+      columnas: estilo.gridTemplateColumns.split(" ").map(Number.parseFloat),
+      gap: parseFloat(estilo.columnGap),
+    };
+  });
+  expect(medidas.gap).toBe(10);
+  expect(medidas.columnas.length).toBe(Math.max(1, Math.floor((medidas.ancho + 10) / 220)));
+  expect(medidas.columnas.every((ancho) => ancho >= 210)).toBe(true);
+  await expect(tarjetas.first().getByRole("button")).toHaveCount(0);
+  await expect(tarjetas.first().getByText("×", { exact: true })).toHaveCount(0);
+  await expect(tarjetas.first().locator("svg")).toHaveCount(1); // Solo la marca de selección; sin asa ni x.
+
   await expect(tarjetas.first()).toContainText("03543");
   await expect(tarjetas.first()).toHaveAttribute(
     "title",
@@ -117,6 +139,10 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
       ),
     ).toEqual([]);
     await capturar(`facturacion-${width}`);
+    await capturaEvidencia(
+      page,
+      `pruebas-e2e/picking/evidencias/jc-09/aplicacion-facturacion-${info.project.name}.png`,
+    );
   }
 
   const lista = page.locator("[data-testid='tablero-pedidos']");

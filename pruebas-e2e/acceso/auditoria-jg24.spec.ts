@@ -112,3 +112,34 @@ test("RF-SW-25 / H-07 / H-13 / H-39: acceso denegado ofrece el módulo propio y 
   await expect(page.locator(".app")).toBeVisible();
   await evidencia(page, "modulo-inexistente");
 });
+
+for (const estado of ["desactivada", "eliminada"]) {
+  test(`RN-39 / H-78: GET con cookie de cuenta ${estado} no registra intentos ni bloqueos`, async ({
+    page,
+    context,
+  }, info) => {
+    const db = new Client({ connectionString: process.env.DATABASE_URL });
+    await db.connect();
+    const usuario = `jc09.${estado}.${info.project.name}`;
+    const id = `jc09-${estado}-${info.project.name}`;
+    const ip = `198.18.${estado === "desactivada" ? 21 : 22}.${["telefono", "tableta", "escritorio"].indexOf(info.project.name) + 1}`;
+    try {
+      await db.query(
+        `INSERT INTO usuario (id, name, username, display_username, email, sistema, rol, activo, eliminado_en, created_at, updated_at) VALUES ($1, $2, $2, $2, $3, 'picking', 'Consulta', $4, $5, NOW(), NOW())`,
+        [id, usuario, `${usuario}@example.test`, estado !== "desactivada", estado === "eliminada" ? new Date() : null],
+      );
+      await context.addCookies([{ name: "incovsa-acceso-usuario", value: usuario, domain: "localhost", path: "/" }]);
+      await page.setExtraHTTPHeaders({ "X-Real-IP": ip });
+      const antes = await db.query("SELECT count(*)::int AS n FROM bitacora WHERE ip = $1", [ip]);
+      for (let i = 0; i < 21; i++) {
+        await page.goto("/acceso/picking");
+        await expect(page).toHaveURL(/\/acceso$/);
+      }
+      const registros = await db.query("SELECT count(*)::int AS n FROM bitacora WHERE ip = $1", [ip]);
+      expect(registros.rows[0].n).toBe(antes.rows[0].n);
+    } finally {
+      await db.query("DELETE FROM usuario WHERE id = $1", [id]);
+      await db.end();
+    }
+  });
+}

@@ -1,3 +1,4 @@
+import { comprobarEncabezadoModulo } from "../comunes/encabezado";
 import { execFileSync } from "node:child_process";
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
@@ -29,6 +30,8 @@ test("RF-SL-59 / CP-64: periodos y fechas inválidas en Reportes", async ({ page
   await page.goto("/picking/reportes");
   await expect(page.getByRole("heading", { name: "Reportes y bitácora" })).toBeVisible();
   await expect(page.locator(".reportes")).toHaveAttribute("data-hidratado", "true");
+  // RF-SL-61 / H-81
+  await comprobarEncabezadoModulo(page);
   const hoy = fechaGuatemala(new Date());
   const campo = page.getByRole("textbox", { name: "Fecha del periodo", exact: true });
   const controlPeriodo = page.locator(".periodo");

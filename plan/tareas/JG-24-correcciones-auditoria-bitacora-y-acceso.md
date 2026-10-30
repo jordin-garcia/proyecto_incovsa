@@ -101,3 +101,7 @@ npm run e2e -- pruebas-e2e/acceso pruebas-e2e/comunes pruebas-e2e/picking/report
 
 ### Verificación
 Evidencia en [`plan/evidencias/JG-24/`](../evidencias/JG-24/README.md): `npm run verificar` y `npm run build` pasaron; batería E2E completa sobre una base local limpia, 297 aprobadas y 3 fallos que se corrigieron (2) o son el intermitente conocido de RN-54 en este equipo (1); después de las correcciones, las 216 pruebas de la sección Verificación pasaron. Revisión en contexto limpio: 3 hallazgos de corrección, todos corregidos.
+
+### Correcciones de la auditoría (2026-10-26)
+
+H-78 a H-81: ambos GET de acceso (`/acceso` y `/acceso/[sistema]`) usan `consultarSistemasSoloLectura()`, validada con Zod. Las acciones explícitas conservan su registro y control de intentos; abrir o recargar las páginas con cuentas desactivadas o eliminadas no escribe en la Bitácora. Se agregan pruebas de resúmenes históricos como arreglo, eliminación de pedidos sin resumen y bloqueos con `{}`. Facturación y Reportes verifican el encabezado común; Facturación verifica su rejilla y tarjetas. José Daniel autorizó expresamente ampliar el alcance a `src/app/acceso/page.tsx`, necesario para que la redirección tampoco registre un fallo. Correcciones realizadas en JC-09; los 48 casos dirigidos de navegador y las 456 pruebas generales pasan.
