@@ -24,12 +24,24 @@ export const esquemaDetalleEnvio = z.object({
 });
 
 export const esquemaReordenarCola = z.object({
-  envioIds: z.array(z.number().int().positive()).min(1),
+  envioIds: z
+    .array(z.number().int().positive())
+    .min(1)
+    .max(1000)
+    .refine((ids) => new Set(ids).size === ids.length, {
+      message: "Los IDs de envío no deben contener duplicados",
+    }),
 });
 
 export const esquemaReordenarLineas = z.object({
   envioId: z.number().int().positive(),
-  lineaIds: z.array(z.number().int().positive()).min(1),
+  lineaIds: z
+    .array(z.number().int().positive())
+    .min(1)
+    .max(1000)
+    .refine((ids) => new Set(ids).size === ids.length, {
+      message: "Los IDs de línea no deben contener duplicados",
+    }),
 });
 
 export type EntradaMarcarLinea = z.infer<typeof esquemaMarcarLinea>;

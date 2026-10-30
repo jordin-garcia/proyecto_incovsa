@@ -208,5 +208,21 @@ describe("Módulo de Bodega - Acciones del servidor", () => {
 
     const res7 = await reordenarLineasAccion({ envioId: 1, lineaIds: [] });
     expect(res7.ok).toBe(false);
+
+    const res8 = await reordenarLineasAccion({ envioId: 1, lineaIds: [10, 10] });
+    expect(res8.ok).toBe(false);
+
+    const res9 = await reordenarColaAccion({ envioIds: [1, 1] });
+    expect(res9.ok).toBe(false);
+  });
+
+  it("RNF-05: reordenarLineasAccion rechaza una lista con identificadores repetidos", async () => {
+    const res = await reordenarLineasAccion({ envioId: 1, lineaIds: [10, 10] });
+    expect(res.ok).toBe(false);
+  });
+
+  it("RNF-05: reordenarColaAccion rechaza una lista con identificadores repetidos", async () => {
+    const res = await reordenarColaAccion({ envioIds: [1, 1] });
+    expect(res.ok).toBe(false);
   });
 });

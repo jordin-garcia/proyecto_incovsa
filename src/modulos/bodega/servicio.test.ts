@@ -14,6 +14,7 @@ import {
   reordenarColaBodega,
   reordenarLineasPreparacion,
 } from "./servicio";
+import { esquemaReordenarCola, esquemaReordenarLineas } from "./esquemas";
 
 describe("Módulo de Bodega - Servicio", () => {
   const clave = "Demo-12345";
@@ -614,6 +615,76 @@ describe("Módulo de Bodega - Servicio", () => {
       where: { registroId: String(envio.id) },
     });
     expect(bitacoras).toHaveLength(0);
+  });
+
+  it("RNF-05: una lista con un identificador repetido se rechaza y no cambia ninguna posición", async () => {
+    const envio = await crearEnvioDePrueba({
+      sedeId: 1,
+      tipo: "ruta",
+      numero: 901,
+      posicionCola: 1,
+      lineas: [
+        { producto: "Prod A", lote: "L1", pesoConversionKg: 25, cantidadKg: 10, posicion: 1 },
+        { producto: "Prod B", lote: "L2", pesoConversionKg: 25, cantidadKg: 20, posicion: 2 },
+        { producto: "Prod C", lote: "L3", pesoConversionKg: 25, cantidadKg: 30, posicion: 3 },
+      ],
+    });
+
+    const l1 = envio.lineas[0].id;
+    const l2 = envio.lineas[1].id;
+    const l3 = envio.lineas[2].id;
+    const contexto = { usuarioId: usuarioBodegaId, sedeId: 1 };
+
+    // Lista con identificador repetido (l1 repetido dos veces, longitud igual a 3)
+    await expect(reordenarLineasPreparacion({ envioId: envio.id, lineaIds: [l1, l1, l3] }, contexto)).rejects.toThrow();
+
+    // Comprobar que no cambió ninguna posición
+    const lineasSinCambio = await prisma.lineaPreparacion.findMany({
+      where: { envioId: envio.id },
+      orderBy: { id: "asc" },
+    });
+    expect(lineasSinCambio.find((l) => l.id === l1)?.posicion).toBe(1);
+    expect(lineasSinCambio.find((l) => l.id === l2)?.posicion).toBe(2);
+    expect(lineasSinCambio.find((l) => l.id === l3)?.posicion).toBe(3);
+  });
+
+  it("RNF-05: una lista con todas las líneas del envío, cada una una vez, se sigue aceptando", async () => {
+    const envio = await crearEnvioDePrueba({
+      sedeId: 1,
+      tipo: "ruta",
+      numero: 902,
+      posicionCola: 1,
+      lineas: [
+        { producto: "Prod A", lote: "L1", pesoConversionKg: 25, cantidadKg: 10, posicion: 1 },
+        { producto: "Prod B", lote: "L2", pesoConversionKg: 25, cantidadKg: 20, posicion: 2 },
+        { producto: "Prod C", lote: "L3", pesoConversionKg: 25, cantidadKg: 30, posicion: 3 },
+      ],
+    });
+
+    const l1 = envio.lineas[0].id;
+    const l2 = envio.lineas[1].id;
+    const l3 = envio.lineas[2].id;
+    const contexto = { usuarioId: usuarioBodegaId, sedeId: 1 };
+
+    const res = await reordenarLineasPreparacion({ envioId: envio.id, lineaIds: [l3, l1, l2] }, contexto);
+    expect(res.lineaIds).toEqual([l3, l1, l2]);
+
+    const lineasActualizadas = await prisma.lineaPreparacion.findMany({
+      where: { envioId: envio.id },
+      orderBy: { posicion: "asc" },
+    });
+    expect(lineasActualizadas.map((l) => l.id)).toEqual([l3, l1, l2]);
+    expect(lineasActualizadas.map((l) => l.posicion)).toEqual([1, 2, 3]);
+  });
+
+  it("RNF-05: esquemaReordenarLineas rechaza una lista con identificadores repetidos", () => {
+    const res = esquemaReordenarLineas.safeParse({ envioId: 1, lineaIds: [10, 10] });
+    expect(res.success).toBe(false);
+  });
+
+  it("RNF-05: esquemaReordenarCola rechaza una lista con identificadores repetidos", () => {
+    const res = esquemaReordenarCola.safeParse({ envioIds: [1, 1] });
+    expect(res.success).toBe(false);
   });
 
   it.each([

@@ -357,6 +357,11 @@ export async function despacharEnvio(entrada: EntradaDespachar, contexto: Contex
 }
 
 export async function reordenarColaBodega(entrada: EntradaReordenarCola, contexto: ContextoOperacion) {
+  const idsEntrada = new Set(entrada.envioIds);
+  if (idsEntrada.size !== entrada.envioIds.length) {
+    throw new ErrorAcceso();
+  }
+
   // Todos los envíos deben ser de la sede (RN-17) y seguir En Preparación (H-22).
   const envios = await prisma.envio.findMany({
     where: { id: { in: entrada.envioIds }, sedeId: contexto.sedeId },
@@ -401,8 +406,11 @@ export async function reordenarLineasPreparacion(entrada: EntradaReordenarLineas
   });
 
   const idsExistentes = new Set(envio.lineas.map((l) => l.id));
+  const idsEntrada = new Set(entrada.lineaIds);
   const todosPertenecen =
-    entrada.lineaIds.length === envio.lineas.length && entrada.lineaIds.every((id) => idsExistentes.has(id));
+    idsEntrada.size === entrada.lineaIds.length &&
+    entrada.lineaIds.length === envio.lineas.length &&
+    entrada.lineaIds.every((id) => idsExistentes.has(id));
   if (!todosPertenecen) {
     throw new ErrorAcceso();
   }

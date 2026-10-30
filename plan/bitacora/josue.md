@@ -63,3 +63,10 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Pendiente o aviso para otros:
 **Jordin (JG-23) / Bodega:** En `pruebas-e2e/picking/preparar-envio.ts`, la acción `crear-tablero` crea ahora un envío de prueba adicional (`sinCamion`, con `camionId: null`) para verificar que el tablero muestra la ruta con camión «—» (H-71).
 **Todos:** Quedan subsanados todos los hallazgos del paso 2 de la auditoría en Bodega, Tablero y Ruta.
+
+## 2026-10-30 · JM-10 · Identificadores únicos al reordenar las líneas en Bodega
+- Hecho: Se corrigió el hallazgo R-P02 de seguridad (ASVS nivel 2). En `src/modulos/bodega/esquemas.ts` se actualizó `esquemaReordenarLineas` y `esquemaReordenarCola` con límite superior de 1000 elementos y validación `.refine()` de unicidad estricta para IDs. En `src/modulos/bodega/servicio.ts`, `reordenarLineasPreparacion` y `reordenarColaBodega` validan la cardinalidad del conjunto de identificadores y su correspondencia exacta con las líneas del envío antes de realizar modificaciones. Se agregaron pruebas unitarias con criterio `RNF-05:` en `servicio.test.ts` y en `acciones.test.ts` verificando que listas con IDs duplicados son rechazadas sin mutar posiciones ni registrar bitácora, y que listas válidas completas siguen aceptándose. Se actualizó el estado de R-P02 a corregido en `plan/seguridad/asvs-nivel-2.md`.
+- Decisiones: Se adoptó el mismo estándar de unicidad con Set que utiliza `esquemaReordenarRecorrido` en Ruta (`specs/16`); se reforzó la validación defensiva en el servicio para que, aun invocándolo directamente, no se admitan listas de IDs con duplicados.
+- Pendiente o aviso para otros:
+**Jordin (JG-19):** El hallazgo R-P02 de seguridad en Bodega está completamente subsanado y verificado con pruebas RNF-05.
+**Todos:** Queda garantizada la unicidad de identificadores al reordenar líneas y cola en Bodega.
