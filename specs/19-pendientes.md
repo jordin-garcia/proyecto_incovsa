@@ -4,7 +4,7 @@ Al resolver un pendiente: se actualiza el archivo afectado, se registra en [18-h
 
 **Prioridad:** P1 = bloquea el diseño de la base de datos o el desarrollo; P2 = antes del Entregable 3 (04/11) y necesario para desarrollar; P3 = antes del Entregable 3 (04/11).
 
-Las dudas sobre los cambios de la reunión 5 (13/10/2026) las resolvió el coordinador el 14/10/2026 ([18-historial-de-decisiones.md](18-historial-de-decisiones.md)). El 16/10/2026 se resolvió P-58, se agregaron P-93 a P-96 y se resolvieron P-95 y P-96. Con el plan de desarrollo (`plan/`) se resolvió P-40 y se agregó P-97, que se resolvió el 17/10. El 24/10 se agregó P-98 (DM-08).
+Las dudas sobre los cambios de la reunión 5 (13/10/2026) las resolvió el coordinador el 14/10/2026 ([18-historial-de-decisiones.md](18-historial-de-decisiones.md)). El 16/10/2026 se resolvió P-58, se agregaron P-93 a P-96 y se resolvieron P-95 y P-96. Con el plan de desarrollo (`plan/`) se resolvió P-40 y se agregó P-97, que se resolvió el 17/10. El 24/10 se agregó P-98 (DM-08), que se resolvió el 29/10 (JG-15).
 
 ## Con INCOVSA
 
@@ -42,5 +42,4 @@ Las dudas sobre los cambios de la reunión 5 (13/10/2026) las resolvió el coord
 | Id | Pendiente | Prioridad |
 |---|---|---|
 | P-04 | Archivar la evidencia (correos o WhatsApp) del cuestionario del 09–11/09, la reunión del 18/09, las aclaraciones del 19–20/09 y las respuestas del 23–24/09 | P1 |
-| P-98 | **Límite de envíos del formulario de Contacto:** la recepción pública (RF-SW-06) no limita cuántas solicitudes envía una misma dirección IP. Decidir si se agrega un límite antispam y cuál, a más tardar en la revisión de seguridad (JG-15) ([16](16-arquitectura-y-tecnologia.md), "Seguridad") | P3 |
 | P-77 | Actualizar el Documento 1 y los diagramas con los cambios de las reuniones 4 y 5, y archivar las actas en Markdown de las reuniones 4 y 5 como las de las reuniones 1 a 3. Las notas de la reunión 5 dicen "Fecha: 14 de octubre de 2026", pero la reunión fue el 13/10/2026 (lo confirman la captura de la reunión y el coordinador): corregirlo en el acta | P2 |

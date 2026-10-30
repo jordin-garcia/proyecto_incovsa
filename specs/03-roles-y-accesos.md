@@ -59,6 +59,15 @@ Gerencia y Soporte pueden:
 - **agregar, editar o revocar** permisos puntuales con casillas;
 - en el picking, marcar las **sedes** a las que el usuario tiene acceso;
 - **restablecer la contraseña** de un usuario que lo solicite, escribiendo una nueva (13/10). El restablecimiento es **solo interno**, en la administración de usuarios: no se envía nada por correo.
+  - **(29/10, JG-15)** Para restablecer la contraseña de una cuenta de **Gerencia o Soporte**, incluida la propia, el diálogo «Restablecer contraseña» pide además **«Su contraseña»**, con la ayuda «Para restablecer la contraseña de una cuenta de acceso total, confirme la suya.». Si no es correcta, muestra «Su contraseña no es correcta.» y no cambia nada. Ese intento cuenta como fallido en el límite de intentos de quien lo hace (RNF-15) y queda en la bitácora.
+
+**Contraseñas fáciles de adivinar (29/10, JG-15).** Al crear un usuario, al restablecer una contraseña y en `crear-admin`, además del mínimo de 8 caracteres, se rechazan:
+
+- las de una **lista local de contraseñas comunes**: las 10 000 más usadas de la lista pública SecLists (licencia MIT) que tienen 8 o más caracteres. No se consulta ningún servicio externo;
+- las que contienen una **palabra de la empresa**: incovsa, covadonga, inquiserca, quetzaltenango, guatemala o escuintla;
+- las que contienen el **nombre de usuario** de la cuenta.
+
+Se comparan sin distinguir mayúsculas ni acentos. El mensaje, bajo el campo de la contraseña, es «Esa contraseña es muy fácil de adivinar. Elija otra.».
 
 ## Modelo de permisos (RN-38)
 
