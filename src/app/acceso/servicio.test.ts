@@ -4,7 +4,7 @@ import { parseSetCookieHeader } from "better-auth/cookies";
 import { prisma } from "@/lib/prisma";
 import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import { sembrarDemo } from "../../../prisma/semillas/demo";
-import { consultarSistemas, iniciarSesion, cerrarSesion } from "./servicio";
+import { consultarSistemasSoloLectura, consultarSistemas, iniciarSesion, cerrarSesion } from "./servicio";
 import { obtenerSesion, leerSesion, revocarSesiones } from "@/lib/sesion";
 import { crearAdministrador } from "../../../scripts/administrador";
 import { registrarBitacora } from "@/modulos/bitacora/servicio";
@@ -277,4 +277,19 @@ it("RNF-15 / RNF-03: la API aplica los mismos límites, omite secretos y valida 
   expect(await prisma.bitacora.count({ where: { operacion: "Bloqueo de usuario" } })).toBe(1);
   expect(obtenerIp(new Headers({ "x-forwarded-for": "203.0.113.99" }))).toBe("127.0.0.1");
   expect(obtenerIp(new Headers({ "x-real-ip": "192.0.2.44", "x-forwarded-for": "203.0.113.99" }))).toBe("192.0.2.44");
+});
+
+it("RN-39 / H-78: consultar sistemas al cargar acceso no registra fallos de cuentas desactivadas o eliminadas", async () => {
+  for (const cambio of [{ activo: false }, { activo: true, eliminadoEn: new Date() }]) {
+    await prisma.usuario.updateMany({ where: { displayUsername: "ejemplo.03" }, data: cambio });
+    const antes = await prisma.bitacora.count();
+    for (let i = 0; i < 21; i++) {
+      expect(await consultarSistemasSoloLectura({ usuario: "ejemplo.03" }, cabeceras())).toEqual({
+        ok: false,
+        error:
+          "No tiene permisos para acceder a los sistemas de INCOVSA. Si cree que es un error, comuníquese con Gerencia o con Soporte.",
+      });
+    }
+    expect(await prisma.bitacora.count()).toBe(antes);
+  }
 });

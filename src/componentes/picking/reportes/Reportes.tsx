@@ -1,5 +1,7 @@
 "use client";
 
+import { Aviso } from "@/componentes/comunes/Aviso";
+
 import { useState, useTransition, useSyncExternalStore, type ReactNode, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { CampoFecha } from "@/componentes/comunes/CampoFecha";
@@ -60,26 +62,52 @@ function FechaPeriodo({
   );
 }
 function Exportar({ pestana, filtro }: { pestana: "despacho" | "rutas" | "bitacora"; filtro: FiltroPeriodo }) {
-  function descargar(formato: "xlsx" | "pdf") {
-    const parametros = new URLSearchParams({ pestana, formato });
-    for (const [nombre, valor] of Object.entries(filtro)) if (typeof valor === "string") parametros.set(nombre, valor);
-    const enlace = document.createElement("a");
-    enlace.href = `/api/reportes/exportar?${parametros}`;
-    enlace.download = "";
-    document.body.append(enlace);
-    enlace.click();
-    enlace.remove();
+  const [error, cambiarError] = useState("");
+  const [descargando, cambiarDescargando] = useState(false);
+  async function descargar(formato: "xlsx" | "pdf") {
+    cambiarError("");
+    cambiarDescargando(true);
+    try {
+      const parametros = new URLSearchParams({ pestana, formato });
+      for (const [nombre, valor] of Object.entries(filtro))
+        if (typeof valor === "string") parametros.set(nombre, valor);
+      const respuesta = await fetch(`/api/reportes/exportar?${parametros}`);
+      if (!respuesta.ok) throw new Error("Exportación rechazada");
+      const archivo = await respuesta.blob();
+      const direccion = URL.createObjectURL(archivo);
+      const enlace = document.createElement("a");
+      enlace.href = direccion;
+      enlace.download =
+        respuesta.headers.get("Content-Disposition")?.match(/filename="([^"\r\n]+)"/)?.[1] ?? `reporte.${formato}`;
+      document.body.append(enlace);
+      enlace.click();
+      enlace.remove();
+      setTimeout(() => URL.revokeObjectURL(direccion), 1000);
+    } catch {
+      cambiarError("No se pudo completar la operación. Inténtelo de nuevo.");
+    } finally {
+      cambiarDescargando(false);
+    }
   }
 
   return (
-    <div className="reportes-exportar">
-      {(["xlsx", "pdf"] as const).map((formato) => (
-        <Button key={formato} variant="secundario" size="pequeno" onClick={() => descargar(formato)}>
-          <Icono nombre="descargar" className="ico-s" />
-          {formato === "xlsx" ? "Excel" : "PDF"}
-        </Button>
-      ))}
-    </div>
+    <>
+      {error && <Aviso tipo="rojo">{error}</Aviso>}
+      <div className="reportes-exportar">
+        {(["xlsx", "pdf"] as const).map((formato) => (
+          <Button
+            disabled={descargando}
+            key={formato}
+            variant="secundario"
+            size="pequeno"
+            onClick={() => descargar(formato)}
+          >
+            <Icono nombre="descargar" className="ico-s" />
+            {formato === "xlsx" ? "Excel" : "PDF"}
+          </Button>
+        ))}
+      </div>
+    </>
   );
 }
 function Bloque({

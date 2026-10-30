@@ -1,3 +1,4 @@
+import { capturaEvidencia } from "../comunes/evidencia";
 import { execFileSync } from "node:child_process";
 import { expect, test } from "@playwright/test";
 import { fechaGuatemala, formatoFecha } from "../../src/lib/fechas";
@@ -43,6 +44,10 @@ test("RF-SL-38 / CAM-96: descarga Excel y PDF desde las tres pestañas de Report
     ];
     for (const { pestana, prefijo } of descargas) {
       await page.getByRole("tab", { name: pestana, exact: true }).click();
+      await capturaEvidencia(
+        page,
+        `pruebas-e2e/picking/evidencias/jc-09/aplicacion-${prefijo}-${info.project.name}.png`,
+      );
       for (const extension of ["xlsx", "pdf"]) {
         const descargaLista = page.waitForEvent("download");
         await page.getByRole("button", { name: extension === "xlsx" ? "Excel" : "PDF", exact: true }).click();
@@ -56,3 +61,26 @@ test("RF-SL-38 / CAM-96: descarga Excel y PDF desde las tres pestañas de Report
     ejecutar("limpiar", JSON.stringify(ids));
   }
 });
+
+for (const estado of [400, 403, 500]) {
+  test(`RF-SL-38 / H-77: avisa cuando la exportación responde ${estado}`, async ({ page, context }, info) => {
+    const inicio = await context.request.post("/api/auth/picking/sign-in/username", {
+      headers: { origin: "http://localhost:3000", "x-real-ip": ipFixture(info.project.name) },
+      data: { usuario: "ejemplo.02", clave: process.env.CLAVE_DEMO },
+    });
+    expect(inicio.ok()).toBe(true);
+    await page.goto("/picking/reportes");
+    await expect(page.locator(".reportes")).toHaveAttribute("data-hidratado", "true");
+    await page.route("**/api/reportes/exportar?**", (ruta) =>
+      ruta.fulfill({ status: estado, body: "Error interno que no debe mostrarse" }),
+    );
+    await page.getByRole("button", { name: "Excel", exact: true }).click();
+    await expect(page.getByRole("tabpanel").getByRole("alert")).toHaveText(
+      "No se pudo completar la operación. Inténtelo de nuevo.",
+    );
+    await capturaEvidencia(
+      page,
+      `pruebas-e2e/picking/evidencias/jc-09/aplicacion-error-${estado}-${info.project.name}.png`,
+    );
+  });
+}

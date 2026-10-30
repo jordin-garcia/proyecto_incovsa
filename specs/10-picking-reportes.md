@@ -106,6 +106,8 @@ La columna "Pedido" se quitó el 13/10: la ruta ya no tiene un pedido aparte.
 - Los dos se generan **en el servidor**, que verifica el permiso de Reportes y la sede antes de entregar el archivo ([16](16-arquitectura-y-tecnologia.md)).
 - **Nombre del archivo:** la pestaña, la sede (salvo en la Bitácora) y el periodo, con las fechas en dd-mm-aaaa. Por ejemplo, `despacho-quetzaltenango-16-10-2026.xlsx`, `rutas-realizadas-quetzaltenango-del-01-10-2026-al-31-10-2026.pdf` o `bitacora-16-10-2026.xlsx`.
 
+- **Error de descarga (29/10, JC-09; texto autorizado por José Daniel):** si no se puede descargar el archivo, la pantalla muestra «No se pudo completar la operación. Inténtelo de nuevo.» con el aviso de error del sistema.
+
 ## Lo que se quitó
 
 - Las referencias a devoluciones y a la marca "Con devolución" ([09-picking-inventario.md](09-picking-inventario.md)).

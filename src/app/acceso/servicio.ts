@@ -108,6 +108,22 @@ export async function consultarSistemas(entrada: unknown, cabeceras: Headers) {
   );
 }
 
+/** Consulta del paso de contraseña: un GET nunca registra ni acumula intentos fallidos. */
+export async function consultarSistemasSoloLectura(entrada: unknown, cabeceras: Headers) {
+  const datos = esquemaUsuario.safeParse(entrada);
+  if (!datos.success) return { ok: false as const, error: ERROR_ACCESO };
+  if (await bloqueoVigente(prisma, obtenerIp(cabeceras))) return { ok: false as const, error: ERROR_ACCESO };
+  const cuentas = await prisma.usuario.findMany({
+    where: { displayUsername: { equals: datos.data.usuario, mode: "insensitive" }, activo: true, eliminadoEn: null },
+    select: { sistema: true },
+  });
+  const sitio = cuentas.some((c) => ["sitio", "ambos"].includes(c.sistema));
+  const picking = cuentas.some((c) => ["picking", "ambos"].includes(c.sistema));
+  return sitio || picking
+    ? { ok: true as const, datos: { sitio, picking } }
+    : { ok: false as const, error: ERROR_ACCESO };
+}
+
 export function destinoInicial(sesion: Pick<SesionActual, "sistema" | "usuario" | "permisos">): string {
   const tiene = (p: string) => esAccesoTotal(sesion.usuario.rol) || sesion.permisos.includes(p);
   if (sesion.sistema === "sitio") {

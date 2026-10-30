@@ -23,14 +23,16 @@ type TablaReporte = { encabezados: string[]; filas: string[][]; columnasMono: nu
 
 const directorioFuentes = path.resolve(process.cwd(), "src/modulos/reportes/fuentes");
 const fuenteFigtree = path.join(directorioFuentes, "figtree-latin.ttf");
+const fuenteFigtreeBold = path.join(directorioFuentes, "figtree-bold.ttf");
 const fuenteMono = path.join(directorioFuentes, "jetbrains-mono-regular.ttf");
-const fuentesPermitidas = new Set([fuenteFigtree, fuenteMono]);
+const fuenteMonoBold = path.join(directorioFuentes, "jetbrains-mono-bold.ttf");
+const fuentesPermitidas = new Set([fuenteFigtree, fuenteFigtreeBold, fuenteMono, fuenteMonoBold]);
 
 pdfmake.setUrlAccessPolicy(() => false);
 pdfmake.setLocalAccessPolicy((ruta) => fuentesPermitidas.has(path.resolve(ruta)));
 pdfmake.addFonts({
-  Figtree: { normal: fuenteFigtree, bold: fuenteFigtree, italics: fuenteFigtree, bolditalics: fuenteFigtree },
-  JetBrainsMono: { normal: fuenteMono, bold: fuenteMono, italics: fuenteMono, bolditalics: fuenteMono },
+  Figtree: { normal: fuenteFigtree, bold: fuenteFigtreeBold, italics: fuenteFigtree, bolditalics: fuenteFigtreeBold },
+  JetBrainsMono: { normal: fuenteMono, bold: fuenteMonoBold, italics: fuenteMono, bolditalics: fuenteMonoBold },
 });
 
 function textoFechaHora(fecha: string) {
