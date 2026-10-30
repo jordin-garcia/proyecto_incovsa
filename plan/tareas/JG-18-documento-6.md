@@ -6,7 +6,7 @@ responsable: Jordin García
 hito: entrega
 prioridad: P1
 estado: pendiente
-depende_de: [JG-17]
+depende_de: [JG-17, JG-27]
 programada: 2026-11-01
 requisitos: []
 pantallas: []
@@ -14,7 +14,7 @@ pantallas: []
 
 # JG-18 · Documento 6, plan y evidencias de pruebas (Anexos F y G)
 
-**Responsable:** Jordin García · **Hito:** entrega · **Prioridad:** P1 · **Programada:** dom 01/11 · **Depende de:** JG-17
+**Responsable:** Jordin García · **Hito:** entrega · **Prioridad:** P1 · **Programada:** dom 01/11 · **Depende de:** JG-17, JG-27
 
 ## Objetivo
 Redactar el **Documento 6** con las 13 secciones de los lineamientos y sus anexos F (casos de prueba) y G (evidencias), a partir de las pruebas reales del proyecto.

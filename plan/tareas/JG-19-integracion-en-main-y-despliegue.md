@@ -6,7 +6,7 @@ responsable: Jordin García
 hito: entrega
 prioridad: P1
 estado: pendiente
-depende_de: [JG-17, CE-06, CE-07, CE-08]
+depende_de: [JG-17, CE-06, CE-07, CE-08, JC-10, JG-26, DM-14, CE-14, JM-10, JG-27]
 programada: 2026-11-02
 requisitos: [RNF-12]
 pantallas: []
@@ -14,7 +14,7 @@ pantallas: []
 
 # JG-19 · Integración de develop en main y primer despliegue a producción
 
-**Responsable:** Jordin García · **Hito:** entrega · **Prioridad:** P1 · **Programada:** lun 02/11 · **Depende de:** JG-17, CE-06, CE-07, CE-08
+**Responsable:** Jordin García · **Hito:** entrega · **Prioridad:** P1 · **Programada:** lun 02/11 · **Depende de:** JG-17, CE-06, CE-07, CE-08, JC-10, JG-26, DM-14, CE-14, JM-10, JG-27
 
 ## Objetivo
 El lunes 02/11, con el desarrollo completo, integrar `develop` en `main`, lo que dispara el **primer despliegue automático** a producción (specs/16, decisiones 31 y 75), y verificar con Carlos que la aplicación funciona en `incovsa.com` con HTTPS.
