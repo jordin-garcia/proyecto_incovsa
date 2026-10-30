@@ -2,6 +2,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { comprobarEncabezadoModulo } from "./encabezado";
 import { abrirMuestra } from "./preparar";
+import { recargar } from "../comunes/navegacion";
 
 for (const sistema of ["panel", "picking"]) {
   test(`RF-SW-26 / RF-SL-60: armazón de ${sistema}, navegación y preferencia`, async ({ page }, info) => {
@@ -41,7 +42,7 @@ for (const sistema of ["panel", "picking"]) {
         sistema === "panel" ? 1 : 0,
       );
       await info.attach(`${sistema}-reducido`, { body: await page.screenshot(), contentType: "image/png" });
-      await page.reload();
+      await recargar(page);
       await expect(lado).toHaveCSS("width", "76px");
       await page.getByRole("button", { name: "Expandir el menú" }).click();
       await expect(lado).toHaveCSS("width", "264px");

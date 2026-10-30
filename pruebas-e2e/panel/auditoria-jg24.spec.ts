@@ -3,6 +3,7 @@ import { test } from "./datos";
 import AxeBuilder from "@axe-core/playwright";
 import { capturaEvidencia } from "../comunes/evidencia";
 import { imagenWebp } from "../comunes/archivos";
+import { irA } from "../comunes/navegacion";
 
 try {
   process.loadEnvFile();
@@ -19,7 +20,7 @@ test("RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recup
     data: { usuario: "ejemplo.08", clave: process.env.CLAVE_DEMO },
   });
   expect(respuesta.ok()).toBe(true);
-  await page.goto("/panel/contenido");
+  await irA(page, "/panel/contenido");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   for (const [nombre, individual] of [
     ["Portada", false],
@@ -59,7 +60,7 @@ test("RF-SW-29 / RN-39 / H-04: publicar y quitar un valor muestra el número del
     data: { usuario: "ejemplo.08", clave: process.env.CLAVE_DEMO },
   });
   expect(respuesta.ok()).toBe(true);
-  await page.goto("/panel/contenido");
+  await irA(page, "/panel/contenido");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   const valores = page.getByRole("region", { name: "Valores", exact: true });
   await expect(valores.locator('[data-galeria="Valor 3"] [data-aviso]')).toHaveCSS("font-size", "14px");

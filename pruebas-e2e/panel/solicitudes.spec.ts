@@ -2,6 +2,7 @@ import { test as base, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { Client } from "pg";
 import { capturaEvidencia } from "../comunes/evidencia";
+import { irA, recargar } from "../comunes/navegacion";
 try {
   process.loadEnvFile();
 } catch {
@@ -70,7 +71,7 @@ test("RF-SW-20 / CP-63 / RNF-08: filtros, estados libres, responsable y edición
   solicitudes,
 }) => {
   await entrar(page);
-  await page.goto("/panel/solicitudes");
+  await irA(page, "/panel/solicitudes");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   await expect(page.getByRole("heading", { name: "Solicitudes recibidas" })).toBeVisible();
   await page.getByRole("tab", { name: /^Reclamos/ }).click();
@@ -113,7 +114,7 @@ test("RF-SW-20 / CP-63 / RNF-08: filtros, estados libres, responsable y edición
   await expect(page.getByRole("heading", { name: "Persona DM09 1" })).toBeVisible();
   await captura(page, "queja");
   await solicitudes.query("DELETE FROM solicitud_contacto WHERE correo=$1", ["dm09-e2e-1@prueba.invalid"]);
-  await page.reload();
+  await recargar(page);
   await page.getByRole("tab", { name: /^Quejas/ }).click();
   await expect(page.getByRole("heading", { name: "Sin solicitudes", exact: true })).toBeVisible();
   await expect(page.getByText("Sin solicitudes de este motivo.", { exact: true })).toBeVisible();
@@ -126,7 +127,7 @@ test("RF-SW-20 / CP-63 / RNF-08: filtros, estados libres, responsable y edición
 });
 test("RF-SW-31 / CP-59: indicador normal y reducido baja al abrir una solicitud", async ({ page }) => {
   await entrar(page);
-  await page.goto("/panel/resumen");
+  await irA(page, "/panel/resumen");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   const enlace = page.getByRole("link", { name: "Solicitudes 3", exact: true });
   if (page.viewportSize()!.width <= 1024) await page.getByRole("button", { name: "Menú", exact: true }).click();
@@ -158,7 +159,7 @@ test("RNF-04 / RF-SW-20: solo lectura sin gestionar y sección ausente sin permi
       [usuario],
     );
     await entrar(page, "ejemplo.09");
-    await page.goto("/panel/solicitudes");
+    await irA(page, "/panel/solicitudes");
     await expect(page.getByRole("heading", { name: "Sin acceso a este módulo" })).toBeVisible();
     await expect(
       page.getByRole("navigation", { name: "Módulos" }).getByRole("link", { name: /^Solicitudes/ }),
@@ -167,7 +168,7 @@ test("RNF-04 / RF-SW-20: solo lectura sin gestionar y sección ausente sin permi
       "INSERT INTO usuario_permiso (usuario_id,permiso_id) SELECT $1,id FROM permiso WHERE codigo='sit.sol.ver'",
       [usuario],
     );
-    await page.reload();
+    await recargar(page);
     await expect(page.getByRole("heading", { name: "Solicitudes recibidas" })).toBeVisible();
     for (const estado of ["Asignado", "En proceso", "Solucionado"])
       await expect(page.getByRole("button", { name: estado, exact: true })).toBeDisabled();

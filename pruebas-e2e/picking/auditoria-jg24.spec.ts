@@ -2,6 +2,7 @@ import { expect, test as base } from "@playwright/test";
 import { Client } from "pg";
 import AxeBuilder from "@axe-core/playwright";
 import { capturaEvidencia } from "../comunes/evidencia";
+import { irA } from "../comunes/navegacion";
 
 try {
   process.loadEnvFile();
@@ -72,7 +73,7 @@ test("RN-49 / D-01: la confirmación de Facturación cuenta un cliente aunque va
     data: { usuario: "ejemplo.03", clave: process.env.CLAVE_DEMO },
   });
   expect(respuesta.ok()).toBe(true);
-  await page.goto("/picking/facturacion");
+  await irA(page, "/picking/facturacion");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   await page
     .getByRole("region", { name: "Cliente recoge en bodega", exact: true })

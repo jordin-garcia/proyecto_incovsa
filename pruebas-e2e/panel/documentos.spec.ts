@@ -2,6 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { Client } from "pg";
 import { capturaEvidencia } from "../comunes/evidencia";
+import { irA } from "../comunes/navegacion";
 try {
   process.loadEnvFile();
 } catch {
@@ -53,7 +54,7 @@ test("RF-SW-14 / RN-41 / RNF-08: crear, buscar, editar y eliminar productos docu
   await bd.connect();
   try {
     await entrar(page, "ejemplo.08");
-    await page.goto("/panel/documentos");
+    await irA(page, "/panel/documentos");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     await captura(page, "tabla");
     await page.getByRole("button", { name: "Nuevo producto documentado" }).click();
@@ -112,7 +113,7 @@ test("RN-19 / RF-SW-21 / RNF-08: solo ver y ver-descargar reciben opciones y dir
     for (const usuario of ["ejemplo.10", "ejemplo.09"]) {
       await page.context().clearCookies();
       await entrar(page, usuario);
-      const respuesta = await page.goto("/panel/documentos");
+      const respuesta = await irA(page, "/panel/documentos");
       const html = await respuesta!.text();
       expect(html.includes("export=download")).toBe(usuario === "ejemplo.09");
       const marcos = respuesta!

@@ -2,6 +2,7 @@ import { capturaEvidencia } from "../comunes/evidencia";
 import { execFileSync } from "node:child_process";
 import { expect, test } from "@playwright/test";
 import { fechaGuatemala, formatoFecha } from "../../src/lib/fechas";
+import { irA } from "../comunes/navegacion";
 
 function fechaFixture(proyecto: string) {
   const aniosAtras: Record<string, number> = { telefono: 2, tableta: 1, escritorio: 0 };
@@ -33,7 +34,7 @@ test("RF-SL-38 / CAM-96: descarga Excel y PDF desde las tres pestañas de Report
       data: { usuario: "ejemplo.02", clave: process.env.CLAVE_DEMO },
     });
     expect(inicio.ok()).toBe(true);
-    await page.goto(`/picking/reportes?tipo=dia&referencia=${referencia}`);
+    await irA(page, `/picking/reportes?tipo=dia&referencia=${referencia}`);
     await expect(page.getByRole("heading", { name: "Reportes y bitácora" })).toBeVisible();
 
     const fechaNombre = formatoFecha(referencia).replaceAll("/", "-");
@@ -69,7 +70,7 @@ for (const estado of [400, 403, 500]) {
       data: { usuario: "ejemplo.02", clave: process.env.CLAVE_DEMO },
     });
     expect(inicio.ok()).toBe(true);
-    await page.goto("/picking/reportes");
+    await irA(page, "/picking/reportes");
     await expect(page.locator(".reportes")).toHaveAttribute("data-hidratado", "true");
     await page.route("**/api/reportes/exportar?**", (ruta) =>
       ruta.fulfill({ status: estado, body: "Error interno que no debe mostrarse" }),

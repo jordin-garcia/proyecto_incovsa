@@ -2,6 +2,7 @@ import { expect, type BrowserContext, type Locator, type Page } from "@playwrigh
 import { execFileSync } from "node:child_process";
 import { writeFile } from "node:fs/promises";
 import { test, type EsperarPublicacion } from "./servidor-produccion";
+import { irA } from "../comunes/navegacion";
 
 function preparar(...argumentos: string[]) {
   return execFileSync(
@@ -23,7 +24,7 @@ async function entrar(contexto: BrowserContext, url: string | undefined) {
 }
 
 async function abrirBodega(page: Page) {
-  await page.goto("/picking/bodega");
+  await irA(page, "/picking/bodega");
   await expect(page.locator(".vivo")).toHaveAttribute("data-conectado", "true");
   await page.evaluate(() => document.fonts.ready.then(() => undefined));
 }

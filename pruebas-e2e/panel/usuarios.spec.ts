@@ -1,5 +1,6 @@
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { irA } from "../comunes/navegacion";
 
 try {
   process.loadEnvFile();
@@ -19,7 +20,7 @@ async function entrar(context: BrowserContext, usuario: string, clave = process.
 }
 
 async function abrirUsuarios(page: Page) {
-  await page.goto("/panel/usuarios");
+  await irA(page, "/panel/usuarios");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 }
 
@@ -63,7 +64,7 @@ test.describe("Panel: usuarios del sitio", () => {
 
     await context.clearCookies();
     await entrar(context, usuario, CLAVE_NUEVA);
-    await page.goto("/panel/documentos");
+    await irA(page, "/panel/documentos");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     await expect(page.getByRole("heading", { name: "Documentación interna" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Documentación interna" })).toHaveCount(1);
@@ -72,7 +73,7 @@ test.describe("Panel: usuarios del sitio", () => {
     await expect(page.getByRole("link", { name: "Resumen" })).toHaveCount(0);
     await expect(page.getByRole("button", { name: /Descargar/ })).toHaveCount(0);
 
-    await page.goto("/panel/usuarios");
+    await irA(page, "/panel/usuarios");
     await expect(page.getByRole("heading", { name: "Sin acceso a este módulo" })).toBeVisible();
     await expect(page.getByText("Solo Gerencia y Soporte administran los usuarios del sitio.")).toBeVisible();
   });
@@ -109,12 +110,12 @@ test.describe("Panel: usuarios del sitio", () => {
 
     await context.clearCookies();
     await entrar(context, usuario, claveNueva);
-    await page.goto("/panel/documentos");
+    await irA(page, "/panel/documentos");
     await expect(page.getByRole("heading", { name: "Documentación interna" })).toBeVisible();
   });
 
   test("RF-SW-11: ¿Olvidó su contraseña? del sitio pide a Gerencia o a Soporte", async ({ page }) => {
-    await page.goto("/acceso");
+    await irA(page, "/acceso");
     await expect(page.locator(".acc-lay")).toHaveAttribute("data-hidratado", "true");
     const otro = page.getByRole("button", { name: "Usar otro usuario" });
     if (await otro.isVisible()) await otro.click();

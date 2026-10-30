@@ -2,6 +2,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 import { Client } from "pg";
 import { archivoEvidencia, capturaEvidencia } from "../comunes/evidencia";
+import { irA } from "../comunes/navegacion";
 
 try {
   process.loadEnvFile();
@@ -64,8 +65,9 @@ async function revisar(page: Page, nombre: string) {
 
 async function enfocarConTab(page: Page, selector: string) {
   if (await page.locator(selector).evaluate((elemento) => elemento === document.activeElement)) return;
-  // Si el destino está antes del foco, se retrocede con Shift+Tab: Firefox no vuelve al inicio de la página después
-  // del último elemento, como Chromium (JG-16).
+  // Si el destino está antes del foco, se retrocede con Shift+Tab. Firefox no vuelve al inicio de la página después
+  // del último elemento, como Chromium, y si el elemento con foco desapareció (un enlace del menú que se cerró), sigue
+  // desde donde estaba: si avanzando no se llega, se intenta retrocediendo (JG-16).
   const atras = await page
     .locator(selector)
     .evaluate(
@@ -74,9 +76,11 @@ async function enfocarConTab(page: Page, selector: string) {
         document.activeElement !== document.body &&
         !!(elemento.compareDocumentPosition(document.activeElement) & Node.DOCUMENT_POSITION_FOLLOWING),
     );
-  for (let intento = 0; intento < 200; intento++) {
-    await page.keyboard.press(atras ? "Shift+Tab" : "Tab");
-    if (await page.locator(selector).evaluate((elemento) => elemento === document.activeElement)) return;
+  for (const tecla of atras ? ["Shift+Tab", "Tab"] : ["Tab", "Shift+Tab"]) {
+    for (let intento = 0; intento < 150; intento++) {
+      await page.keyboard.press(tecla);
+      if (await page.locator(selector).evaluate((elemento) => elemento === document.activeElement)) return;
+    }
   }
   throw new Error(`No se puede alcanzar con Tab: ${selector}`);
 }
@@ -84,7 +88,7 @@ async function enfocarConTab(page: Page, selector: string) {
 for (const ruta of PUBLICAS) {
   test(`RNF-01 / RNF-08 / RF-SW-16: revisión integral pública ${ruta}`, async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.goto(ruta);
+    await irA(page, ruta);
     await revisar(page, ruta.slice(1) || "inicio");
     if (ruta !== "/acceso") {
       const animadas = page.locator("main .revelar");
@@ -101,7 +105,7 @@ test("RF-SW-16 / RNF-08: aparición, desaparición y navegación pública comple
   test.setTimeout(120_000);
   await page.emulateMedia({ reducedMotion: "no-preference" });
   for (const ruta of PUBLICAS.filter((r) => r !== "/acceso")) {
-    await page.goto(ruta);
+    await irA(page, ruta);
     const primera = page.locator("main .revelar").first();
     await expect(primera).toBeAttached();
     await primera.scrollIntoViewIfNeeded();
@@ -113,7 +117,7 @@ test("RF-SW-16 / RNF-08: aparición, desaparición y navegación pública comple
     await expect(primera).toHaveCSS("opacity", "1");
     await page.emulateMedia({ reducedMotion: "no-preference" });
   }
-  await page.goto("/");
+  await irA(page, "/");
   for (const ruta of PUBLICAS.slice(1)) {
     const menu = page.getByRole("button", { name: "Abrir menú" });
     if (await menu.isVisible()) {
@@ -133,7 +137,7 @@ test("RF-SW-16 / RNF-08: aparición, desaparición y navegación pública comple
 
 test("RF-SW-05 / RNF-08: detalle del producto y regreso al catálogo con teclado", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/productos");
+  await irA(page, "/productos");
   await enfocarConTab(page, ".prod-t:first-child");
   await page.keyboard.press("Enter");
   await expect(page.locator(".det-lay")).toBeVisible();
@@ -155,7 +159,7 @@ for (const usuario of ["ejemplo.08", "ejemplo.09", "ejemplo.10"]) {
       data: { usuario, clave: process.env.CLAVE_DEMO },
     });
     expect(respuesta.ok()).toBe(true);
-    await page.goto(usuario === "ejemplo.08" ? "/panel/resumen" : "/panel/documentos");
+    await irA(page, usuario === "ejemplo.08" ? "/panel/resumen" : "/panel/documentos");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     for (const seccion of usuario === "ejemplo.08" ? SECCIONES : ["documentos"]) {
       if (new URL(page.url()).pathname !== `/panel/${seccion}`) {
@@ -223,6 +227,6 @@ test("RNF-01 / RNF-08: revisión de Usuarios del sitio con Gerencia", async ({ p
     data: { usuario: "ejemplo.01", clave: process.env.CLAVE_DEMO },
   });
   expect(respuesta.ok()).toBe(true);
-  await page.goto("/panel/usuarios");
+  await irA(page, "/panel/usuarios");
   await revisar(page, "usuarios");
 });

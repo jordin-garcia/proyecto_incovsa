@@ -2,6 +2,7 @@
 // de su módulo; esta completa las que faltaban sin repetirlas.
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { irA } from "../comunes/navegacion";
 
 try {
   process.loadEnvFile();
@@ -32,7 +33,7 @@ test.beforeEach(async ({ page }, info) => {
 test("RNF-08: el paso de la contraseña de Administración del sitio no tiene violaciones serias ni críticas", async ({
   page,
 }) => {
-  await page.goto("/acceso");
+  await irA(page, "/acceso");
   await expect(page.locator(".acc-lay")).toHaveAttribute("data-hidratado", "true");
   const otro = page.getByRole("button", { name: "Usar otro usuario" });
   if (await otro.isVisible()) await otro.click();
@@ -50,7 +51,7 @@ test("RNF-08: Reportes con el periodo por defecto no tiene violaciones serias ni
   context,
 }) => {
   await entrar(context, "ejemplo.01");
-  await page.goto("/picking/reportes");
+  await irA(page, "/picking/reportes");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   await expect(page.getByRole("heading", { name: "Reportes y bitácora" })).toBeVisible();
   expect(await violacionesGraves(page)).toEqual([]);
@@ -58,7 +59,7 @@ test("RNF-08: Reportes con el periodo por defecto no tiene violaciones serias ni
 
 test("RNF-08: Facturación al entrar no tiene violaciones serias ni críticas", async ({ page, context }) => {
   await entrar(context, "ejemplo.03");
-  await page.goto("/picking/facturacion");
+  await irA(page, "/picking/facturacion");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   await expect(page.getByRole("heading", { name: "Pedidos facturados", exact: true })).toBeVisible();
   expect(await violacionesGraves(page)).toEqual([]);

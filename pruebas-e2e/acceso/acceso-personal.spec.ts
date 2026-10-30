@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { irA } from "../comunes/navegacion";
 
 const clave = process.env.CLAVE_DEMO;
 test.beforeEach(async ({ page }, info) => {
@@ -8,7 +9,7 @@ test.beforeEach(async ({ page }, info) => {
   await page.setExtraHTTPHeaders({ "X-Real-IP": `198.18.${red}.${info.workerIndex + 1}` });
 });
 async function abrirAcceso(page: Page) {
-  await page.goto("/acceso");
+  await irA(page, "/acceso");
   await expect(page.locator(".acc-lay")).toHaveAttribute("data-hidratado", "true");
   const otro = page.getByRole("button", { name: "Usar otro usuario" });
   if (await otro.isVisible()) await otro.click();
@@ -112,7 +113,7 @@ test("RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio 
   expect(await (await context.request.get("/api/auth/sitio/get-session")).json()).toBeNull();
   expect(await (await context.request.get("/api/auth/picking/get-session")).json()).not.toBeNull();
   // El resto de la conexión del armazón a sesión/permisos/sedes corresponde a JG-07.
-  await page.goto("/picking");
+  await irA(page, "/picking");
   if (await page.getByRole("button", { name: "Menú", exact: true }).isVisible())
     await page.getByRole("button", { name: "Menú", exact: true }).click();
   await page.getByRole("button", { name: "Cerrar sesión" }).click();

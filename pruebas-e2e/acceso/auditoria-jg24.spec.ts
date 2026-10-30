@@ -2,6 +2,7 @@ import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { Client } from "pg";
 import { capturaEvidencia } from "../comunes/evidencia";
+import { irA } from "../comunes/navegacion";
 
 try {
   process.loadEnvFile();
@@ -41,7 +42,7 @@ test("RF-SW-09 / RF-SL-02 / H-33: el sistema no autorizado vuelve al paso 2 sin 
         )
       ).rows[0].n;
     const antes = await contar();
-    await page.goto("/acceso");
+    await irA(page, "/acceso");
     await expect(page.locator(".acc-lay")).toHaveAttribute("data-hidratado", "true");
     await expect(page.getByRole("combobox")).toHaveCount(0);
     await expect(page.getByLabel("Sede", { exact: true })).toHaveCount(0);
@@ -50,7 +51,7 @@ test("RF-SW-09 / RF-SL-02 / H-33: el sistema no autorizado vuelve al paso 2 sin 
     await expect(page.getByRole("heading", { name: "¿A dónde desea ingresar?" })).toBeVisible();
     await expect(page.locator(".acc-op:not(.deshabilitada) p").first()).toHaveCSS("color", "rgb(114, 115, 114)");
     await expect(page.getByRole("combobox")).toHaveCount(0);
-    await page.goto("/acceso/picking");
+    await irA(page, "/acceso/picking");
     await expect(page).toHaveURL(/\/acceso$/);
     await expect(page.getByRole("heading", { name: "¿A dónde desea ingresar?" })).toBeVisible();
     expect(await contar()).toBe(antes);
@@ -67,7 +68,7 @@ test("RF-SW-09 / RF-SL-02 / H-33: el sistema no autorizado vuelve al paso 2 sin 
 for (const sistema of ["sitio", "picking"] as const) {
   test(`RF-SW-30 / H-34: cerrar ${sistema} muestra Sesión cerrada en Inicio`, async ({ page, context }) => {
     await entrar(context, sistema, "ejemplo.01");
-    await page.goto(sistema === "sitio" ? "/panel" : "/picking");
+    await irA(page, sistema === "sitio" ? "/panel" : "/picking");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     if (await page.getByRole("button", { name: "Menú", exact: true }).isVisible())
       await page.getByRole("button", { name: "Menú", exact: true }).click();
@@ -77,7 +78,7 @@ for (const sistema of ["sitio", "picking"] as const) {
     expect(await (await context.request.get(`/api/auth/${sistema}/get-session`)).json()).toBeNull();
     await evidencia(page, `salida-${sistema}`);
     await expect(page.getByText("Sesión cerrada.", { exact: true })).toHaveCount(0, { timeout: 6000 });
-    await page.goto("/acceso");
+    await irA(page, "/acceso");
     await page.goBack();
     await expect(page).toHaveURL("/");
     await expect(page.getByText("Sesión cerrada.", { exact: true })).toHaveCount(0);
@@ -90,24 +91,24 @@ test("RF-SW-25 / H-07 / H-13 / H-39: acceso denegado ofrece el módulo propio y 
 }) => {
   await entrar(context, "sitio", "ejemplo.09");
   for (const modulo of ["industrias", "catalogo"]) {
-    await page.goto(`/panel/${modulo}`);
+    await irA(page, `/panel/${modulo}`);
     await expect(page.getByRole("heading", { name: "Sin acceso a este módulo" })).toBeVisible();
     const volver = page.getByRole("link", { name: "Ir a mi módulo", exact: true });
     await expect(volver).toHaveAttribute("href", "/panel/documentos");
     await evidencia(page, `sin-acceso-${modulo}`);
   }
   // En el panel, el prototipo dice «Sección no encontrada» (panel.js › ruta); «Módulo» es solo del picking.
-  await page.goto("/panel/no-existe");
+  await irA(page, "/panel/no-existe");
   await expect(page.getByRole("heading", { name: "Sección no encontrada", exact: true })).toBeVisible();
   await expect(page.locator(".app")).toBeVisible();
   await evidencia(page, "seccion-inexistente");
   await entrar(context, "picking", "ejemplo.03");
-  await page.goto("/picking/reportes");
+  await irA(page, "/picking/reportes");
   await expect(
     page.getByText("Sus permisos no incluyen Reportes. Los asignan Gerencia o Soporte.", { exact: true }),
   ).toBeVisible();
   await evidencia(page, "sin-acceso-reportes");
-  await page.goto("/picking/no-existe");
+  await irA(page, "/picking/no-existe");
   await expect(page.getByRole("heading", { name: "Módulo no encontrado", exact: true })).toBeVisible();
   await expect(page.locator(".app")).toBeVisible();
   await evidencia(page, "modulo-inexistente");
@@ -132,7 +133,7 @@ for (const estado of ["desactivada", "eliminada"]) {
       await page.setExtraHTTPHeaders({ "X-Real-IP": ip });
       const antes = await db.query("SELECT count(*)::int AS n FROM bitacora WHERE ip = $1", [ip]);
       for (let i = 0; i < 21; i++) {
-        await page.goto("/acceso/picking");
+        await irA(page, "/acceso/picking");
         await expect(page).toHaveURL(/\/acceso$/);
       }
       const registros = await db.query("SELECT count(*)::int AS n FROM bitacora WHERE ip = $1", [ip]);

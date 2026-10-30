@@ -3,6 +3,7 @@ import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { comprobarEncabezadoModulo } from "../comunes/encabezado";
 import { arrastrarConDedo } from "../comunes/tactil";
+import { irA, recargar } from "../comunes/navegacion";
 
 try {
   process.loadEnvFile();
@@ -85,7 +86,7 @@ test.describe("Módulo de Ruta E2E (JM-06)", () => {
   test("Criterio 1: RF-SL-26 / RN-46 - Visibilidad de rutas por rol y permiso", async ({ page, context, baseURL }) => {
     // 1. ejemplo.06 solo ve sus rutas asignadas
     await entrarEnSede(context, baseURL, "ejemplo.06", 1);
-    await page.goto("/picking/ruta");
+    await irA(page, "/picking/ruta");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     await expect(page.locator(`button[data-r="${rutaPiloto06.id}"]`)).toBeVisible();
@@ -102,7 +103,7 @@ test.describe("Módulo de Ruta E2E (JM-06)", () => {
 
     // 2. ejemplo.07 solo ve su ruta asignada
     await entrarEnSede(context, baseURL, "ejemplo.07", 1);
-    await page.goto("/picking/ruta");
+    await irA(page, "/picking/ruta");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     await expect(page.locator(`button[data-r="${rutaPiloto07.id}"]`)).toBeVisible();
@@ -110,7 +111,7 @@ test.describe("Módulo de Ruta E2E (JM-06)", () => {
 
     // 3. ejemplo.01 (Gerencia) ve todas las rutas de la sede
     await entrarEnSede(context, baseURL, "ejemplo.01", 1);
-    await page.goto("/picking/ruta");
+    await irA(page, "/picking/ruta");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     await expect(page.locator(`button[data-r="${rutaPiloto06.id}"]`)).toBeVisible();
@@ -126,13 +127,13 @@ test.describe("Módulo de Ruta E2E (JM-06)", () => {
 
     // 4. ejemplo.05 (Bodega) no tiene permisos para el módulo de ruta -> SinAcceso
     await entrarEnSede(context, baseURL, "ejemplo.05", 1);
-    await page.goto("/picking/ruta");
+    await irA(page, "/picking/ruta");
     await expect(page.getByText("Sus permisos no incluyen Ruta.")).toBeVisible();
   });
 
   test("Criterio 2: RF-SL-78 - Orden de la más reciente a la más antigua", async ({ page, context, baseURL }) => {
     await entrarEnSede(context, baseURL, "ejemplo.06", 1);
-    await page.goto("/picking/ruta");
+    await irA(page, "/picking/ruta");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     // Los botones de ruta deben estar ordenados: r3 (2026-10-25) antes que r1 (2026-10-24)
@@ -157,7 +158,7 @@ test.describe("Módulo de Ruta E2E (JM-06)", () => {
     baseURL,
   }) => {
     await entrarEnSede(context, baseURL, "ejemplo.06", 1);
-    await page.goto("/picking/ruta");
+    await irA(page, "/picking/ruta");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     // Seleccionar ruta 1
@@ -188,7 +189,7 @@ test.describe("Módulo de Ruta E2E (JM-06)", () => {
     baseURL,
   }) => {
     await entrarEnSede(context, baseURL, "ejemplo.06", 1);
-    await page.goto("/picking/ruta");
+    await irA(page, "/picking/ruta");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     // Seleccionar ruta 1 (tiene 3 entregas)
@@ -256,7 +257,7 @@ test.describe("Módulo de Ruta E2E (JM-06)", () => {
     baseURL,
   }) => {
     await entrarEnSede(context, baseURL, "ejemplo.06", 1);
-    await page.goto("/picking/ruta");
+    await irA(page, "/picking/ruta");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     await expect(page.locator(`button[data-r="${rutaSecundaria.id}"]`)).toBeVisible();
@@ -300,7 +301,7 @@ test.describe("Módulo de Ruta E2E (JM-06)", () => {
     }
 
     try {
-      await pageTouch.goto("/picking/ruta");
+      await irA(pageTouch, "/picking/ruta");
       await expect(pageTouch.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
       // Seleccionar la ruta secundaria que tiene dos paradas
@@ -340,7 +341,7 @@ test.describe("Módulo de Ruta E2E (JM-06)", () => {
       await expect(tabla.locator("tr").nth(1).locator("b")).toHaveText("Química Industrial");
 
       // Comprobar persistencia tras recargar
-      await pageTouch.reload();
+      await recargar(pageTouch);
       await expect(pageTouch.locator(".app")).toHaveAttribute("data-hidratado", "true");
       await pageTouch.locator(`button[data-r="${rutaSecundaria.id}"]`).click();
       await expect(pageTouch.locator("tbody[data-paradas] tr").first().locator("b")).toHaveText("Curtidos del Norte");

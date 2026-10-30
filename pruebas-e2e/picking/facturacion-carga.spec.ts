@@ -4,6 +4,7 @@ import { expect, test as base } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { writeFile } from "node:fs/promises";
 import { Client } from "pg";
+import { irA } from "../comunes/navegacion";
 
 const test = base.extend<{ datosDeCarga: void }>({
   datosDeCarga: [
@@ -52,7 +53,7 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
     data: { usuario: "ejemplo.03", clave: process.env.CLAVE_DEMO },
   });
   expect(respuesta.ok()).toBe(true);
-  await page.goto("/picking/facturacion");
+  await irA(page, "/picking/facturacion");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   // RF-SL-61 / H-81
   await comprobarEncabezadoModulo(page);
@@ -95,7 +96,7 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
     data: { usuario: "ejemplo.04", clave: process.env.CLAVE_DEMO },
   });
   expect(segundaSesion.ok()).toBe(true);
-  await page.goto("/picking/facturacion");
+  await irA(page, "/picking/facturacion");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
   const tablero = page.locator("[data-testid='tablero-pedidos']");

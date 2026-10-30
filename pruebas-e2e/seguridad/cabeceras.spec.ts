@@ -1,5 +1,6 @@
 import { expect } from "@playwright/test";
 import { test } from "../flujo/servidor-produccion";
+import { irA } from "../comunes/navegacion";
 
 test("RNF-16: páginas, errores, redirecciones, API y recursos envían las cabeceras de seguridad", async ({
   request,
@@ -27,7 +28,7 @@ test("RNF-16: el navegador admite Google Maps y Drive, y rechaza marcos de otros
   await page.route("https://drive.google.com/file/d/jg11/preview", (ruta) =>
     ruta.fulfill({ contentType: "text/html", body: "Vista previa permitida" }),
   );
-  await page.goto(`${produccion.url}/acceso`);
+  await irA(page, `${produccion.url}/acceso`);
   await page.evaluate(() => {
     for (const direccion of [
       "https://www.google.com/maps/embed?pb=jg11",
@@ -58,7 +59,7 @@ test("RNF-16: otro sitio no puede insertar la aplicación dentro de un marco", a
     ruta.fulfill({ contentType: "text/html", body: `<iframe src="${aplicacion}"></iframe>` }),
   );
   const rechazo = page.waitForEvent("console", { predicate: (mensaje) => mensaje.text().includes("frame-ancestors") });
-  await page.goto(origenAjeno, { waitUntil: "domcontentloaded" });
+  await irA(page, origenAjeno, { waitUntil: "domcontentloaded" });
   await rechazo;
   expect(page.frames().some((marco) => marco.url() === aplicacion)).toBe(false);
 });
@@ -74,7 +75,7 @@ test("RNF-16: cada respuesta tiene su nonce y los scripts en línea ajenos queda
   expect(nonce).toBeTruthy();
   expect(await primera.text()).toContain(`nonce="${nonce}"`);
   expect(segunda.headers()["content-security-policy"]).not.toContain(`'nonce-${nonce}'`);
-  await page.goto(`${produccion.url}/acceso`);
+  await irA(page, `${produccion.url}/acceso`);
   await expect(page.addScriptTag({ content: "window.__scriptAjenoJg11 = true;" })).rejects.toThrow();
   expect(await page.evaluate(() => "__scriptAjenoJg11" in window)).toBe(false);
 });

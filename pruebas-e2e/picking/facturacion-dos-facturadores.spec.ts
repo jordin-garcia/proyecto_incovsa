@@ -3,6 +3,7 @@ import { Client } from "pg";
 import AxeBuilder from "@axe-core/playwright";
 import { archivoEvidencia, capturaEvidencia } from "../comunes/evidencia";
 import { test } from "../flujo/servidor-produccion";
+import { irA } from "../comunes/navegacion";
 
 const aviso =
   "Otro facturador modificó estos pedidos. La pantalla se actualizará; revisa los cambios e inténtalo de nuevo";
@@ -17,7 +18,7 @@ async function entrar(contexto: BrowserContext, baseURL: string, usuario: string
   expect(respuesta.ok()).toBe(true);
 }
 async function abrir(page: Page) {
-  await page.goto("/picking/facturacion");
+  await irA(page, "/picking/facturacion");
   await expect(page.locator(".vivo")).toHaveAttribute("data-conectado", "true");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 }

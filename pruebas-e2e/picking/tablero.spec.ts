@@ -274,9 +274,10 @@ test.describe("Tablero de Bodega en pantalla completa (JM-05)", () => {
       expect(await page.locator(".tb-lineas").evaluate((el) => el.scrollTop)).toBeGreaterThan(0);
       expect(await page.locator(".tb-actual").evaluate((el) => el.scrollTop)).toBe(0);
       expect(await page.locator(".tb").evaluate((el) => el.scrollTop)).toBe(0);
-      await expect(page.locator(".tb-cab")).toBeInViewport({ ratio: 1 });
-      await expect(page.locator(".tb-herr")).toBeInViewport({ ratio: 1 });
-      await expect(page.getByRole("button", { name: "Ruta Despachada" })).toBeInViewport({ ratio: 1 });
+      // 0.99 y no 1: en 768 px, WebKit deja la cabecera a menos de un píxel del borde por redondeo (0.9994, JG-16).
+      await expect(page.locator(".tb-cab")).toBeInViewport({ ratio: 0.99 });
+      await expect(page.locator(".tb-herr")).toBeInViewport({ ratio: 0.99 });
+      await expect(page.getByRole("button", { name: "Ruta Despachada" })).toBeInViewport({ ratio: 0.99 });
     } else {
       await expect(page.getByRole("button", { name: "Ruta Despachada" })).toBeVisible();
     }
