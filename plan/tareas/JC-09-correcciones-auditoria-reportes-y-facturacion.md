@@ -77,3 +77,12 @@ npm run e2e -- pruebas-e2e/picking pruebas-e2e/acceso
 ## Notas
 - Rama `jose-daniel/JC-09-correcciones-auditoria`. Tarea creada en la convergencia 2 (JG-13), por decisión de Jordin del 26/10.
 - CE-13 cambia cómo las pruebas de navegador guardan la evidencia (`EVIDENCIA=1`, `plan/convenciones.md` §6) y toca `pruebas-e2e/acceso/auditoria-jg24.spec.ts`. Si integra antes que tú, actualiza tu rama desde `develop` y conserva los dos cambios.
+
+## Avance (29/10/2026)
+
+- Implementados H-75 a H-81 y la prueba de D-10 en la rama `jose-daniel/JC-09-correcciones-auditoria`.
+- José Daniel autorizó el mensaje general de descarga y ampliar el alcance a `src/app/acceso/page.tsx`, para que tampoco escriba el GET al que redirige el paso de contraseña.
+- `npm run verificar`: 55 archivos y 456 pruebas aprobadas; formato, lint y tipos correctos. `npm run build` correcto. Plan válido, 69 tareas. Las 48 pruebas dirigidas de navegador pasan en teléfono, tableta y escritorio. Revisión independiente: LISTO, sin hallazgos de corrección. Capturas en `pruebas-e2e/picking/evidencias/jc-09/`.
+- Batería completa sobre una base temporal nueva: 482 aprobadas, 5 fallidas y 4 sin ejecutar. Repetición aislada en otra base temporal de los 9 casos afectados: 6 aprobados (Bodega, incluidos los antes no ejecutados), 3 fallidos (H-58, galería del panel, en los tres tamaños).
+- H-58 mide el contraste mientras la imagen de Portada se está publicando, con controles deshabilitados. Se solicitó autorización para esperar a que termine la publicación en `pruebas-e2e/panel/auditoria-ce13.spec.ts`, archivo ajeno al alcance de JC-09 (protocolo §C). Esa autorización sigue pendiente; el archivo no se modificó.
+- La tarea conserva `estado: pendiente`: todavía no se abrió ni integró el PR. Se retoma desde esta rama para resolver la comprobación general y completar B9 a B11.
