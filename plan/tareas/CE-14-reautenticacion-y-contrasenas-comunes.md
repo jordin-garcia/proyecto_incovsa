@@ -57,7 +57,7 @@ Corregir lo que encontró la revisión de seguridad (JG-15) en la administració
 ## Criterios de aceptación
 1. **RF-SL-48 / RF-SW-11 (ASVS V7.5.1):** restablecer la contraseña de una cuenta de Gerencia o Soporte sin «Su contraseña», o con una incorrecta, no cambia nada y muestra el mensaje de `specs/03`. Con la correcta, la restablece. El campo no aparece para las demás cuentas.
 2. **RNF-15:** cada «Su contraseña» incorrecta cuenta en el límite de intentos de quien lo hace y queda en la bitácora. Si quien lo hace está bloqueado, se rechaza aunque la contraseña sea correcta.
-3. **RNF-03 (ASVS V6.2.4 y V6.2.11):** se rechazan una contraseña de la lista, una que contiene «Incovsa» o «Quetzaltenango» y una que contiene el nombre de usuario, al crear, al restablecer y en `crear-admin`, con el mensaje de `specs/03`.
+3. **RNF-03 (ASVS V6.2.4 y V6.2.11):** se rechazan una contraseña de la lista, una que contiene «Incovsa» o «Quetzaltenango» y una que contiene el nombre de usuario, al crear, al restablecer y en `crear-admin`, con el mensaje de `specs/03`. Una contraseña que contiene un nombre de usuario de 3 caracteres sí se acepta.
 4. **RNF-05:** ningún error de validación de usuarios ni de camiones muestra texto en inglés.
 5. **ASVS V4.1.1 y V13.4.4:** a través de Caddy, las respuestas `text/x-component` llevan `charset=utf-8` y una petición TRACE recibe 405.
 
