@@ -2,6 +2,7 @@ import { test as base, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { Client } from "pg";
 import { capturaEvidencia } from "../comunes/evidencia";
+import { irA } from "../comunes/navegacion";
 try {
   process.loadEnvFile();
 } catch {
@@ -66,7 +67,7 @@ test("RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserv
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/contacto");
+  await irA(page, "/contacto");
   await expect(page.getByRole("heading", { name: "Envíenos su mensaje" })).toBeVisible();
   // Sin EVIDENCIA=1 la captura no espera nada: se interactúa solo cuando React ya tomó el formulario.
   await expect(page.locator("form.contacto-form")).toHaveAttribute("data-hidratado", "true");
@@ -114,7 +115,7 @@ test("RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserv
 
 test("RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito", async ({ page, contactoDePrueba }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/contacto");
+  await irA(page, "/contacto");
   await expect(page.locator("form.contacto-form")).toHaveAttribute("data-hidratado", "true");
   const correo = `dm08-e2e-${Date.now()}@prueba.invalid`;
   await page.getByLabel("Nombre completo *", { exact: true }).fill("Persona de prueba");
@@ -156,7 +157,7 @@ test("RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas
   });
   expect(respuesta.ok()).toBe(true);
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/panel/contacto");
+  await irA(page, "/panel/contacto");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   const sede = page.getByRole("region", { name: "Quetzaltenango", exact: true });
   await captura(page, "aplicacion-panel");
@@ -187,10 +188,10 @@ test("RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas
   await sede.getByRole("button", { name: "Guardar", exact: true }).click();
   await expect(page.getByText("Datos de Quetzaltenango publicados.", { exact: true })).toBeVisible();
   for (const ruta of ["/contacto", "/"]) {
-    await page.goto(ruta);
+    await irA(page, ruta);
     await expect(page.locator("main")).toContainText("Dirección de prueba DM-08");
     await expect(page.locator("footer")).toContainText("dm08-e2e-contacto@prueba.invalid");
   }
-  await page.goto("/panel/contacto");
+  await irA(page, "/panel/contacto");
   await expect(sede.getByLabel("Dirección", { exact: true })).toHaveValue("Dirección de prueba DM-08");
 });

@@ -4,6 +4,8 @@ import { expect, type BrowserContext, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { Client } from "pg";
 import { test } from "../flujo/servidor-produccion";
+import { arrastrarConDedo } from "../comunes/tactil";
+import { irA, recargar } from "../comunes/navegacion";
 
 try {
   process.loadEnvFile();
@@ -62,7 +64,7 @@ async function violacionesGraves(page: Page) {
 }
 
 async function abrirBodega(page: Page) {
-  await page.goto("/picking/bodega");
+  await irA(page, "/picking/bodega");
   await expect(page.locator(".vivo")).toHaveAttribute("data-conectado", "true", { timeout: 15_000 });
   await page.evaluate(() => document.fonts.ready.then(() => undefined));
 }
@@ -331,7 +333,6 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
 
   test("RF-SL-20: el arrastre funciona con teclado, mouse y touch (dedo con pulsación de 380 ms)", async ({
     browser,
-    browserName,
     context,
     page,
     produccion,
@@ -374,7 +375,7 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
       .toBe(true);
 
     // Comprobar que persiste al recargar
-    await page.reload();
+    await recargar(page);
     await expect(page.locator(".vivo")).toHaveAttribute("data-conectado", "true", { timeout: 15_000 });
     const tarjetaRecargada1 = page.locator(`article.ped[data-id="${idPrimera}"]`);
     const tarjetaRecargada2 = page.locator(`article.ped[data-id="${idSegunda}"]`);
@@ -413,7 +414,7 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
     await expect(tarjetaActual.locator("tbody tr").nth(1).locator(".kg")).toHaveText(fila1TextAntes);
 
     // Comprobar persistencia al recargar
-    await page.reload();
+    await recargar(page);
     await expect(page.locator(".vivo")).toHaveAttribute("data-conectado", "true", { timeout: 15_000 });
     const tarjetaRecargada = page.locator(`article.ped[data-id="${envioA.envioId}"]`);
     await expect(tarjetaRecargada.locator("tbody tr").first().locator(".kg")).toHaveText(fila2TextAntes);
@@ -454,37 +455,12 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
         (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
       );
 
-      const inicio = { x: boxTouch1.x + boxTouch1.width / 2, y: boxTouch1.y + boxTouch1.height / 2 };
-      const destino = { x: boxTouch2.x + boxTouch2.width / 2, y: boxTouch2.y + boxTouch2.height / 2 + 10 };
-      if (browserName === "chromium") {
-        const sesionCdp = await ctxTouch.newCDPSession(pageTouch);
-        await sesionCdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [inicio] });
-        // Esperar 420 ms para superar el umbral de 380 ms de pulsación larga del sensor táctil
-        await pageTouch.waitForTimeout(420);
-        await sesionCdp.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [destino] });
-        await pageTouch.waitForTimeout(100);
-        await sesionCdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
-        await sesionCdp.detach();
-      } else {
-        // Firefox y WebKit no tienen CDP (JG-16): el mismo gesto con TouchEvent sobre el asa, que es donde el sensor
-        // táctil escucha (https://playwright.dev/docs/touch-events).
-        const toque = (punto: { x: number; y: number }) => [{ identifier: 0, clientX: punto.x, clientY: punto.y }];
-        const enInicio = toque(inicio);
-        await asaTouch1.dispatchEvent("touchstart", {
-          touches: enInicio,
-          changedTouches: enInicio,
-          targetTouches: enInicio,
-        });
-        await pageTouch.waitForTimeout(420);
-        const enDestino = toque(destino);
-        await asaTouch1.dispatchEvent("touchmove", {
-          touches: enDestino,
-          changedTouches: enDestino,
-          targetTouches: enDestino,
-        });
-        await pageTouch.waitForTimeout(100);
-        await asaTouch1.dispatchEvent("touchend", { touches: [], changedTouches: enDestino, targetTouches: [] });
-      }
+      await arrastrarConDedo(
+        pageTouch,
+        asaTouch1,
+        { x: boxTouch1.x + boxTouch1.width / 2, y: boxTouch1.y + boxTouch1.height / 2 },
+        { x: boxTouch2.x + boxTouch2.width / 2, y: boxTouch2.y + boxTouch2.height / 2 + 10 },
+      );
       await respTouch;
 
       // Comprobar que cambió en pantalla
@@ -492,7 +468,7 @@ test.describe("Bodega - Prioridad compartida y tiempo real (JM-04)", () => {
       await expect(tarjetaTouch.locator("tbody tr").nth(1).locator(".kg")).toHaveText(filaTouch1Antes);
 
       // Comprobar persistencia al recargar
-      await pageTouch.reload();
+      await recargar(pageTouch);
       await expect(pageTouch.locator(".vivo")).toHaveAttribute("data-conectado", "true", { timeout: 15_000 });
       const tarjetaTouchRecargada = pageTouch.locator(`article.ped[data-id="${envioA.envioId}"]`);
       await expect(tarjetaTouchRecargada.locator("tbody tr").first().locator(".kg")).toHaveText(filaTouch2Antes);

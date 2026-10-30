@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { conGaleriasDePrueba } from "./galerias";
 
 test("RF-SW-01 / RF-SW-27: Inicio informativo conserva secciones, cifras y textos aprobados", async ({ page }) => {
@@ -92,6 +92,20 @@ test("RF-SW-16: tarjetas aparecen al entrar en pantalla y desaparecen al salir",
   await expect(portada).toHaveCSS("opacity", "1");
 });
 
+// WebKit actualiza las media queries que la página ya tenía (como la de la galería) en el siguiente repintado, no al
+// instante como Chromium y Firefox; con el reloj de prueba, la galería veía la preferencia anterior (JG-16). Se cambia
+// la preferencia y se espera a que una consulta creada antes, igual que la de la galería, ya la refleje.
+async function cambiarMovimiento(page: Page, reducedMotion: "reduce" | "no-preference") {
+  type Ventana = Window & { __movimientoE2E?: MediaQueryList };
+  await page.evaluate(() => {
+    (window as Ventana).__movimientoE2E ??= window.matchMedia("(prefers-reduced-motion: reduce)");
+  });
+  await page.emulateMedia({ reducedMotion });
+  await expect
+    .poll(() => page.evaluate(() => (window as Ventana).__movimientoE2E!.matches))
+    .toBe(reducedMotion === "reduce");
+}
+
 test("RN-56 / RNF-17: cinco imágenes rotan cada 5 s, una queda fija y las secundarias cargan después", async ({
   page,
 }) => {
@@ -140,11 +154,11 @@ test("RN-56 / RNF-17: cinco imágenes rotan cada 5 s, una queda fija y las secun
       await expect(portada).toHaveAttribute("data-actual", String((inicial + paso) % 5));
       await expect(mision).toHaveAttribute("data-actual", "0");
     }
-    await page.emulateMedia({ reducedMotion: "reduce" });
+    await cambiarMovimiento(page, "reduce");
     const detenida = await portada.getAttribute("data-actual");
     await page.clock.runFor(10_000);
     await expect(portada).toHaveAttribute("data-actual", detenida!);
-    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await cambiarMovimiento(page, "no-preference");
     await page.clock.runFor(5000);
     await expect(portada).not.toHaveAttribute("data-actual", detenida!);
   });

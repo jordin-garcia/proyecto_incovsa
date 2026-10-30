@@ -1,5 +1,6 @@
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { irA, recargar } from "../comunes/navegacion";
 
 async function entrar(context: BrowserContext, usuario: string, sistema: "sitio" | "picking") {
   expect(process.env.CLAVE_DEMO, "Se requiere la semilla de demostración").toBeTruthy();
@@ -55,7 +56,7 @@ for (const caso of [
 ] as const) {
   test(`RN-38: ${caso.usuario} en ${caso.sistema} solo ve sus módulos`, async ({ page, context }, info) => {
     await entrar(context, caso.usuario, caso.sistema);
-    await page.goto(caso.sistema === "sitio" ? "/panel" : "/picking");
+    await irA(page, caso.sistema === "sitio" ? "/panel" : "/picking");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     await abrirMenu(page);
     await expect(page.getByRole("navigation", { name: "Módulos" }).getByRole("link")).toHaveText([...caso.opciones]);
@@ -71,13 +72,13 @@ for (const caso of [
   });
 }
 test("RNF-04: primera barrera por sistema y rechazo de acceso directo en el servidor", async ({ page, context }) => {
-  await page.goto("/picking/bodega");
+  await irA(page, "/picking/bodega");
   await expect(page).toHaveURL(/\/acceso$/);
   await entrar(context, "ejemplo.03", "sitio");
-  await page.goto("/picking/bodega");
+  await irA(page, "/picking/bodega");
   await expect(page).toHaveURL(/\/acceso$/);
   await entrar(context, "ejemplo.03", "picking");
-  await page.goto("/picking/bodega");
+  await irA(page, "/picking/bodega");
   await expect(page.getByRole("heading", { name: "Sin acceso a este módulo" })).toBeVisible();
   await expect(page.getByText("Sus permisos no incluyen Bodega. Los asignan Gerencia o Soporte.")).toBeVisible();
   await page.getByRole("link", { name: "Ir a mi módulo" }).click();
@@ -86,11 +87,11 @@ test("RNF-04: primera barrera por sistema y rechazo de acceso directo en el serv
 test("RN-17 / RF-SL-66: cookie ajena se ignora y la sede autorizada persiste", async ({ page, context }) => {
   await entrar(context, "ejemplo.03", "picking");
   await context.addCookies([{ name: "incovsa-sede", value: "2", domain: "localhost", path: "/picking" }]);
-  await page.goto("/picking/facturacion");
+  await irA(page, "/picking/facturacion");
   await expect(page.getByRole("banner")).toContainText("Quetzaltenango");
   await expect(page.getByRole("combobox", { name: "Sede", exact: true })).toHaveCount(0);
   await entrar(context, "ejemplo.01", "picking");
-  await page.goto("/picking/facturacion");
+  await irA(page, "/picking/facturacion");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   const sede = page.getByRole("combobox", { name: "Sede", exact: true });
   await expect(sede.getByRole("option")).toHaveText(["Quetzaltenango", "Guatemala", "Escuintla"]);
@@ -110,8 +111,8 @@ test("RN-17 / RF-SL-66: cookie ajena se ignora y la sede autorizada persiste", a
   }
   await expect(sede).toHaveValue("3");
   await expect(sede).toBeEnabled();
-  await page.reload();
+  await recargar(page);
   await expect(sede).toHaveValue("3");
-  await page.goto("/picking/bodega");
+  await irA(page, "/picking/bodega");
   await expect(sede).toHaveValue("3");
 });

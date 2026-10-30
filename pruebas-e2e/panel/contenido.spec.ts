@@ -3,6 +3,8 @@ import { test, MISION } from "./datos";
 import AxeBuilder from "@axe-core/playwright";
 import sharp from "sharp";
 import { capturaEvidencia } from "../comunes/evidencia";
+import { irA, recargar } from "../comunes/navegacion";
+import { imagenWebp } from "../comunes/archivos";
 
 try {
   process.loadEnvFile();
@@ -20,7 +22,7 @@ test.beforeEach(async ({ context }) => {
 test("RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y accesibilidad", async ({
   page,
 }, info) => {
-  await page.goto("/panel/contenido");
+  await irA(page, "/panel/contenido");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   await expect(page.getByRole("heading", { name: "Inicio y Quiénes somos" })).toBeVisible();
   for (const bloque of [
@@ -87,7 +89,7 @@ test("RF-SW-25: el permiso se exige también al abrir la sección directamente",
     data: { usuario: "ejemplo.09", clave: process.env.CLAVE_DEMO },
   });
   expect(respuesta.ok()).toBe(true);
-  await page.goto("/panel/contenido");
+  await irA(page, "/panel/contenido");
   await expect(page.getByRole("heading", { name: "Sin acceso a este módulo" })).toBeVisible();
   if (await page.getByRole("button", { name: "Menú", exact: true }).isVisible())
     await page.getByRole("button", { name: "Menú", exact: true }).click();
@@ -109,7 +111,7 @@ test("RF-SW-25: el permiso se exige también al abrir la sección directamente",
 test("RF-SW-23 / RNF-05: publica una imagen de 5 MB y limpia la imagen retirada", async ({ page }, info) => {
   const bloques = { telefono: "Misión", tableta: "Visión", escritorio: "Historia" };
   const nombre = bloques[info.project.name as keyof typeof bloques];
-  await page.goto("/panel/contenido");
+  await irA(page, "/panel/contenido");
   const bloque = page.getByRole("region", { name: nombre, exact: true });
   const original = await bloque.getByLabel("Texto", { exact: true }).inputValue();
   const total = await bloque.getByRole("img").count();
@@ -128,7 +130,7 @@ test("RF-SW-23 / RNF-05: publica una imagen de 5 MB y limpia la imagen retirada"
   await bloque.getByRole("button", { name: "Guardar y publicar", exact: true }).click();
   expect((await respuesta).ok()).toBe(true);
   await expect(bloque).toHaveAttribute("aria-busy", "false");
-  await page.reload();
+  await recargar(page);
   await expect(bloque.getByLabel("Texto", { exact: true })).toHaveValue(
     `${original}\nPrueba de publicación DM-04`.trim(),
   );
@@ -146,7 +148,7 @@ test("RF-SW-23 / RNF-05: publica una imagen de 5 MB y limpia la imagen retirada"
 });
 
 test("RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas", async ({ page }, info) => {
-  await page.goto("/panel/resumen");
+  await irA(page, "/panel/resumen");
   await expect(page.getByRole("heading", { name: "Hola, Usuario de ejemplo 08" })).toBeVisible();
   const tarjetas = page.locator("main .mod-t");
   await expect(tarjetas).toHaveCount(6);
@@ -163,7 +165,7 @@ test("RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas
 });
 
 test("RF-SW-23: un borrador de portada o historia no cambia la etiqueta publicada", async ({ page }) => {
-  await page.goto("/panel/contenido");
+  await irA(page, "/panel/contenido");
   for (const [nombre, inicial] of [
     ["Portada", "Fotografía de la empresa"],
     ["Historia", "Sin contenido"],
@@ -171,7 +173,7 @@ test("RF-SW-23: un borrador de portada o historia no cambia la etiqueta publicad
     const bloque = page.getByRole("region", { name: nombre, exact: true });
     await expect(bloque.locator(".chip")).toHaveText(inicial!);
     const color = await bloque.locator(".chip").getAttribute("class");
-    await bloque.getByLabel(`${nombre}: elegir imágenes`).setInputFiles("public/marca/foto-reunion.webp");
+    await bloque.getByLabel(`${nombre}: elegir imágenes`).setInputFiles(imagenWebp("public/marca/foto-reunion.webp"));
     await expect(bloque.getByRole("img")).toHaveCount(1);
     await expect(bloque.locator(".chip")).toHaveText(inicial!);
     await expect(bloque.locator(".chip")).toHaveAttribute("class", color!);
@@ -184,7 +186,9 @@ test("RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visi
 }, info) => {
   // Hasta cinco imágenes a intervalos de 5 s: se permite recorrer el ciclo para ver la recién publicada.
   test.setTimeout(60_000);
-  await page.goto("/panel/contenido");
+  await irA(page, "/panel/contenido");
+  // Sin esperar la hidratación, WebKit pierde lo escrito y publica el texto anterior (JG-16).
+  await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   const bloque = page.getByRole("region", { name: "Misión", exact: true });
   const textoAnterior = await bloque.getByLabel("Texto", { exact: true }).inputValue();
   const imagenesAnteriores = await bloque
@@ -193,7 +197,7 @@ test("RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visi
   const contextoPublico = await browser.newContext({ viewport: page.viewportSize()! });
   try {
     await bloque.getByLabel("Texto", { exact: true }).fill("Misión publicada desde el panel · DM-04");
-    await bloque.getByLabel("Misión: elegir imágenes").setInputFiles("public/marca/foto-reunion.webp");
+    await bloque.getByLabel("Misión: elegir imágenes").setInputFiles(imagenWebp("public/marca/foto-reunion.webp"));
     const respuesta = page.waitForResponse(
       (r) => r.url().endsWith("/api/imagenes/publicar") && r.request().method() === "POST",
     );
@@ -204,7 +208,7 @@ test("RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visi
     const publico = await contextoPublico.newPage();
     const errores: string[] = [];
     publico.on("pageerror", (error) => errores.push(error.message));
-    await publico.goto("/");
+    await irA(publico, "/");
     const mision = publico.locator(".mv-fila").first();
     await expect(mision.locator(".mv-txt")).toContainText("Misión publicada desde el panel · DM-04");
     await expect(mision.locator(`img[src="${imagen}"]`)).toBeAttached();
@@ -241,7 +245,7 @@ test("RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visi
 });
 
 test("RF-SW-23 / RF-SW-24: reemplazar INCOVSA actualiza cabecera y pie públicos", async ({ page, browser }, info) => {
-  await page.goto("/panel/contenido");
+  await irA(page, "/panel/contenido");
   const bloque = page.getByRole("region", { name: "Logotipo de INCOVSA", exact: true });
   const original = (await bloque.getByRole("img").getAttribute("src"))!;
   const copiaAnterior = original.startsWith("/marca/") ? null : await (await page.request.get(original)).body();
@@ -250,13 +254,15 @@ test("RF-SW-23 / RF-SW-24: reemplazar INCOVSA actualiza cabecera y pie públicos
     const respuesta = page.waitForResponse(
       (r) => r.url().endsWith("/api/imagenes/publicar") && r.request().method() === "POST",
     );
-    await bloque.getByLabel("Logotipo de INCOVSA: elegir imágenes").setInputFiles("public/marca/incovsa-quimicos.webp");
+    await bloque
+      .getByLabel("Logotipo de INCOVSA: elegir imágenes")
+      .setInputFiles(imagenWebp("public/marca/incovsa-quimicos.webp"));
     expect((await respuesta).ok()).toBe(true);
     await expect(bloque).toHaveAttribute("aria-busy", "false");
     const imagen = await bloque.getByRole("img").getAttribute("src");
     expect(imagen).toMatch(/^\/api\/imagenes\/[a-f0-9-]+\.webp$/);
     const publico = await contextoPublico.newPage();
-    await publico.goto("/");
+    await irA(publico, "/");
     await expect(publico.locator("header img")).toHaveAttribute("src", imagen!);
     await expect(publico.locator("footer img")).toHaveAttribute("src", imagen!);
     await expect(publico.locator("footer .logo-placa")).toHaveCount(1);

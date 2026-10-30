@@ -3,6 +3,8 @@ import AxeBuilder from "@axe-core/playwright";
 import { Client } from "pg";
 import sharp from "sharp";
 import { capturaEvidencia } from "../comunes/evidencia";
+import { irA } from "../comunes/navegacion";
+import { anotarAvisos, avisosMostrados } from "../comunes/avisos";
 try {
   process.loadEnvFile();
 } catch {
@@ -31,7 +33,7 @@ test("RF-SW-07 / RN-56: guardar descripción y galería publica la industria sin
     // Las imágenes originales se retiran de la vista de prueba para que el editor no las borre físicamente.
     await conexion.query("DELETE FROM imagen WHERE industria_id = $1", [original.id]);
     try {
-      await page.goto("/panel/industrias");
+      await irA(page, "/panel/industrias");
       await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
       const tarjeta = page.getByRole("region", { name: "Cuero", exact: true });
       const texto = "Descripción publicada desde el panel DM-05";
@@ -42,9 +44,10 @@ test("RF-SW-07 / RN-56: guardar descripción y galería publica la industria sin
       await tarjeta
         .locator('input[type="file"]')
         .setInputFiles({ name: "industria.png", mimeType: "image/png", buffer: png });
+      await anotarAvisos(page);
       await tarjeta.getByRole("button", { name: "Guardar", exact: true }).click();
-      await expect(page.getByRole("status")).toContainText("Cuero publicada.");
-      await page.goto("/industrias/cuero");
+      await expect.poll(() => avisosMostrados(page)).toContainEqual(expect.stringContaining("Cuero publicada."));
+      await irA(page, "/industrias/cuero");
       await expect(page.getByText(texto, { exact: true })).toBeVisible();
       await capturaEvidencia(
         page,
@@ -61,10 +64,11 @@ test("RF-SW-07 / RN-56: guardar descripción y galería publica la industria sin
         ).rowCount,
       ).toBeGreaterThan(0);
       // Retirar por la interfaz también verifica la limpieza del almacenamiento.
-      await page.goto("/panel/industrias");
+      await irA(page, "/panel/industrias");
       await tarjeta.getByRole("button", { name: /Quitar/ }).click();
+      await anotarAvisos(page);
       await tarjeta.getByRole("button", { name: "Guardar", exact: true }).click();
-      await expect(page.getByRole("status")).toContainText("Cuero publicada.");
+      await expect.poll(() => avisosMostrados(page)).toContainEqual(expect.stringContaining("Cuero publicada."));
     } finally {
       await conexion.query("UPDATE industria SET descripcion=$1, actualizado_en=$2 WHERE id=$3", [
         original.descripcion,
@@ -85,7 +89,7 @@ test("RF-SW-07 / RNF-08: industrias y catálogo conservan estructura y accesibil
     ["industrias", "Industrias atendidas"],
     ["catalogo", "Catálogo de productos públicos"],
   ]) {
-    await page.goto(`/panel/${ruta}`);
+    await irA(page, `/panel/${ruta}`);
     await expect(page.getByRole("heading", { name: titulo, exact: true })).toBeVisible();
     if (ruta === "industrias") await expect(page.getByRole("button", { name: "Guardar", exact: true })).toHaveCount(9);
     expect(
@@ -116,7 +120,7 @@ test("RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes 
   page,
 }, info) => {
   const nombre = `Prueba DM-05 ${info.project.name} ${Date.now()}`;
-  await page.goto("/panel/catalogo");
+  await irA(page, "/panel/catalogo");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   await page.getByRole("button", { name: "Nuevo producto", exact: true }).click();
   const ventana = page.getByRole("dialog");
@@ -134,10 +138,10 @@ test("RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes 
   await ventana.getByRole("button", { name: "Guardar", exact: true }).click();
   await expect(ventana).toHaveCount(0);
   for (const industria of ["cuero", "textil"]) {
-    await page.goto(`/productos?industria=${industria}`);
+    await irA(page, `/productos?industria=${industria}`);
     await expect(page.getByRole("heading", { name: nombre, exact: true })).toBeVisible();
   }
-  await page.goto("/panel/catalogo");
+  await irA(page, "/panel/catalogo");
   fila = page.getByRole("row").filter({ hasText: nombre });
   await expect(fila).toContainText("Saco de prueba");
   await fila.getByRole("button", { name: "Eliminar", exact: true }).click();
@@ -152,7 +156,7 @@ test("RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes 
 });
 
 test("RF-SW-23: impide cerrar el editor mientras se publica y conserva el borrador si falla", async ({ page }) => {
-  await page.goto("/panel/catalogo");
+  await irA(page, "/panel/catalogo");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   await page.getByRole("button", { name: "Nuevo producto", exact: true }).click();
   const ventana = page.getByRole("dialog");

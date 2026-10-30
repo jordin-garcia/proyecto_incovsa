@@ -2,6 +2,7 @@ import { execFileSync } from "node:child_process";
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { comprobarEncabezadoModulo } from "../comunes/encabezado";
+import { arrastrarConDedo } from "../comunes/tactil";
 
 try {
   process.loadEnvFile();
@@ -325,20 +326,13 @@ test.describe("Módulo de Ruta E2E (JM-06)", () => {
         (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
       );
 
-      const sesionCdp = await ctxTouch.newCDPSession(pageTouch);
-      await sesionCdp.send("Input.dispatchTouchEvent", {
-        type: "touchStart",
-        touchPoints: [{ x: box1.x + box1.width / 2, y: box1.y + box1.height / 2 }],
-      });
-      // Esperar 420 ms para superar el umbral de 380 ms de pulsación larga del sensor táctil
-      await pageTouch.waitForTimeout(420);
-      await sesionCdp.send("Input.dispatchTouchEvent", {
-        type: "touchMove",
-        touchPoints: [{ x: box2.x + box2.width / 2, y: box2.y + box2.height / 2 + 10 }],
-      });
-      await pageTouch.waitForTimeout(100);
-      await sesionCdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
-      await sesionCdp.detach();
+      // Pulsación larga de 420 ms, sobre el umbral de 380 ms del sensor táctil.
+      await arrastrarConDedo(
+        pageTouch,
+        asa1,
+        { x: box1.x + box1.width / 2, y: box1.y + box1.height / 2 },
+        { x: box2.x + box2.width / 2, y: box2.y + box2.height / 2 + 10 },
+      );
       await respTouch;
 
       // Comprobar que en el DOM se reordenaron las paradas

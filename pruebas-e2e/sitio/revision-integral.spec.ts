@@ -64,8 +64,18 @@ async function revisar(page: Page, nombre: string) {
 
 async function enfocarConTab(page: Page, selector: string) {
   if (await page.locator(selector).evaluate((elemento) => elemento === document.activeElement)) return;
+  // Si el destino está antes del foco, se retrocede con Shift+Tab: Firefox no vuelve al inicio de la página después
+  // del último elemento, como Chromium (JG-16).
+  const atras = await page
+    .locator(selector)
+    .evaluate(
+      (elemento) =>
+        !!document.activeElement &&
+        document.activeElement !== document.body &&
+        !!(elemento.compareDocumentPosition(document.activeElement) & Node.DOCUMENT_POSITION_FOLLOWING),
+    );
   for (let intento = 0; intento < 200; intento++) {
-    await page.keyboard.press("Tab");
+    await page.keyboard.press(atras ? "Shift+Tab" : "Tab");
     if (await page.locator(selector).evaluate((elemento) => elemento === document.activeElement)) return;
   }
   throw new Error(`No se puede alcanzar con Tab: ${selector}`);

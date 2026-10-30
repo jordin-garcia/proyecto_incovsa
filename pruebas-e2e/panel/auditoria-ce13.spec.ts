@@ -2,6 +2,7 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { Client } from "pg";
 import sharp from "sharp";
+import { irA } from "../comunes/navegacion";
 
 try {
   process.loadEnvFile();
@@ -98,7 +99,7 @@ test("RF-SW-07 / RF-SW-23 / H-58: la galería compartida mide como el prototipo"
   test.setTimeout(90_000);
   await entrar(page, "sitio", "ejemplo.08");
   const archivo = await png();
-  await page.goto("/panel/catalogo");
+  await irA(page, "/panel/catalogo");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   await page.getByRole("button", { name: "Editar", exact: true }).first().click();
   const producto = page.getByRole("dialog");
@@ -113,7 +114,7 @@ test("RF-SW-07 / RF-SW-23 / H-58: la galería compartida mide como el prototipo"
   });
   await producto.getByRole("button", { name: "Cancelar", exact: true }).click();
 
-  await page.goto("/panel/contenido");
+  await irA(page, "/panel/contenido");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   const portada = page.getByRole("region", { name: "Portada", exact: true }).locator("[data-galeria]");
   await asegurarImagen(portada, archivo);
@@ -124,7 +125,7 @@ test("RF-SW-07 / RF-SW-23 / H-58: la galería compartida mide como el prototipo"
     contentType: "image/png",
   });
 
-  await page.goto("/panel/industrias");
+  await irA(page, "/panel/industrias");
   const cuero = page.getByRole("region", { name: "Cuero", exact: true }).locator("[data-galeria]");
   await asegurarImagen(cuero, archivo);
   await medirGaleria(cuero);
@@ -134,7 +135,7 @@ test("RF-SW-07 / RF-SW-23 / H-58: la galería compartida mide como el prototipo"
     contentType: "image/png",
   });
 
-  await page.goto("/panel/noticias");
+  await irA(page, "/panel/noticias");
   await page.getByRole("button", { name: "Nueva noticia", exact: true }).click();
   const noticia = page.getByRole("dialog");
   const galeriaNoticia = noticia.locator('[data-galeria="Noticia"]');
@@ -152,7 +153,7 @@ test("RF-SL-36 / RN-39 / H-56: Reportes › Bitácora muestra el título de la n
   const titulo = `CE13 ${info.project.name} ${Date.now()}`;
   const editado = `${titulo} editada`;
   await entrar(page, "sitio", "ejemplo.08");
-  await page.goto("/panel/noticias");
+  await irA(page, "/panel/noticias");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   await page.getByRole("button", { name: "Nueva noticia", exact: true }).click();
   const dialogo = page.getByRole("dialog");
@@ -169,32 +170,35 @@ test("RF-SL-36 / RN-39 / H-56: Reportes › Bitácora muestra el título de la n
   await expect(fila).toBeVisible();
 
   await entrar(page, "picking", "ejemplo.02");
-  await page.goto("/picking/reportes");
+  await irA(page, "/picking/reportes");
   await expect(page.getByRole("heading", { name: "Reportes y bitácora" })).toBeVisible();
   await page.getByRole("tab", { name: "Bitácora", exact: true }).click();
   const creacion = page.getByRole("row").filter({ hasText: "Creación de noticia" }).filter({ hasText: titulo });
   await expect(creacion.getByRole("cell", { name: titulo, exact: true })).toBeVisible();
   await expect(creacion).not.toContainText("—");
 
-  await page.goto("/panel/noticias");
+  await irA(page, "/panel/noticias");
   await fila.getByRole("button", { name: "Editar", exact: true }).click();
   await dialogo.getByLabel("Título", { exact: true }).fill(editado);
   await dialogo.getByRole("button", { name: "Guardar", exact: true }).click();
   await expect(page.getByRole("row").filter({ hasText: editado })).toBeVisible();
-  await page.goto("/picking/reportes");
+  await irA(page, "/picking/reportes");
   await page.getByRole("tab", { name: "Bitácora", exact: true }).click();
   const edicion = page.getByRole("row").filter({ hasText: "Edición de noticia" }).filter({ hasText: editado });
   await expect(edicion.getByRole("cell", { name: editado, exact: true })).toBeVisible();
 
-  await page.goto("/panel/noticias");
+  await irA(page, "/panel/noticias");
   await page
     .getByRole("row")
     .filter({ hasText: editado })
     .getByRole("button", { name: "Eliminar", exact: true })
     .click();
   await page.getByRole("dialog").getByRole("button", { name: "Eliminar", exact: true }).click();
+  // Mientras la confirmación está abierta, la tabla queda fuera del árbol de accesibilidad y la fila no se encuentra
+  // aunque no se haya eliminado: primero se espera a que la ventana se cierre (JG-16, WebKit).
+  await expect(page.getByRole("dialog")).toHaveCount(0);
   await expect(page.getByRole("row").filter({ hasText: editado })).toHaveCount(0);
-  await page.goto("/picking/reportes");
+  await irA(page, "/picking/reportes");
   await page.getByRole("tab", { name: "Bitácora", exact: true }).click();
   const baja = page.getByRole("row").filter({ hasText: "Eliminación de noticia" }).filter({ hasText: editado });
   await expect(baja.getByRole("cell", { name: editado, exact: true })).toBeVisible();
@@ -221,7 +225,7 @@ test("RF-SL-36 / RN-39 / H-57 / RNF-05 / H-63: la bitácora de solicitudes usa l
       [folio, `Persona CE13 ${info.project.name}`, correo],
     );
     await entrar(page, "sitio", "ejemplo.08");
-    await page.goto("/panel/solicitudes");
+    await irA(page, "/panel/solicitudes");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     await page.getByRole("button", { name: new RegExp(`Persona CE13 ${info.project.name}`) }).click();
     const comentario = page.getByLabel("Comentario del responsable", { exact: true });
@@ -237,7 +241,7 @@ test("RF-SL-36 / RN-39 / H-57 / RNF-05 / H-63: la bitácora de solicitudes usa l
     await expect(comentario).toHaveValue("Nota de la bandeja");
 
     await entrar(page, "picking", "ejemplo.02");
-    await page.goto("/picking/reportes");
+    await irA(page, "/picking/reportes");
     await page.getByRole("tab", { name: "Bitácora", exact: true }).click();
     for (const texto of [`${folio} · En proceso`, `${folio} · Usuario de ejemplo 08`, `${folio} · sin responsable`]) {
       const fila = page.getByRole("row").filter({ hasText: texto });
@@ -289,7 +293,7 @@ const testContacto = test.extend<{ contactoDePrueba: void }>({
 
 testContacto("H-62: el mapa inválido avisa con el texto del prototipo", async ({ page }, info) => {
   await entrar(page, "sitio", "ejemplo.08");
-  await page.goto("/panel/contacto");
+  await irA(page, "/panel/contacto");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   const sede = page.getByRole("region", { name: "Guatemala", exact: true });
   const mapa = sede.getByLabel("Mapa (dirección del mapa insertado de Google Maps)", { exact: true });
@@ -310,7 +314,7 @@ testContacto("H-62: el mapa inválido avisa con el texto del prototipo", async (
 const MENSAJE_CORREO = "Indique un correo válido.";
 
 async function correoDeGuatemala(page: Page) {
-  await page.goto("/panel/contacto");
+  await irA(page, "/panel/contacto");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   const sede = page.getByRole("region", { name: "Guatemala", exact: true });
   const correo = sede.getByLabel("Correo", { exact: true });

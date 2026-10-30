@@ -2,6 +2,7 @@ import { expect } from "@playwright/test";
 import { test } from "./datos";
 import AxeBuilder from "@axe-core/playwright";
 import { capturaEvidencia } from "../comunes/evidencia";
+import { imagenWebp } from "../comunes/archivos";
 
 try {
   process.loadEnvFile();
@@ -30,7 +31,8 @@ test("RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recup
     if (!individual) {
       await expect(subir).toHaveCSS("padding", "16px");
       await expect(subir).toHaveCSS("font-size", "13.5px");
-      await expect(subir).toHaveCSS("line-height", "20.925px");
+      // 13.5 px × 1.55. Firefox y WebKit redondean el subpíxel distinto que Chromium (20.9333 y 20.924999, JG-16).
+      expect(Number.parseFloat(await subir.evaluate((e) => getComputedStyle(e).lineHeight))).toBeCloseTo(20.925, 1);
     }
     await subir.hover();
     await expect(subir).toHaveCSS("background-color", "rgb(241, 248, 242)");
@@ -61,7 +63,7 @@ test("RF-SW-29 / RN-39 / H-04: publicar y quitar un valor muestra el número del
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   const valores = page.getByRole("region", { name: "Valores", exact: true });
   await expect(valores.locator('[data-galeria="Valor 3"] [data-aviso]')).toHaveCSS("font-size", "14px");
-  await valores.getByLabel("Valor 3: elegir imágenes").setInputFiles("public/marca/foto-reunion.webp");
+  await valores.getByLabel("Valor 3: elegir imágenes").setInputFiles(imagenWebp("public/marca/foto-reunion.webp"));
   await expect(page.getByText("Imagen del valor 3 publicado en el sitio.", { exact: true })).toBeVisible();
   await expect(valores.getByRole("img")).toHaveCount(1);
   await capturaEvidencia(page, `plan/evidencias/JG-24/aplicacion-valor-publicado-${page.viewportSize()!.width}.png`);

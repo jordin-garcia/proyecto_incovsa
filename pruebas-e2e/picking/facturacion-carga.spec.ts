@@ -160,9 +160,13 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
   });
   expect(indiceVisible).toBeGreaterThanOrEqual(0);
   const tarjetaVisible = tarjetas.nth(indiceVisible);
+  // Antes de hacer clic, Playwright desplaza la tarjeta para que quede dentro de la ventana; Firefox también mueve la
+  // lista al hacerlo (JG-16). Se desplaza primero, para medir solo lo que hace la aplicación al seleccionar.
+  await tarjetaVisible.scrollIntoViewIfNeeded();
+  const scrollSeleccion = await lista.evaluate((element) => element.scrollTop);
   await tarjetaVisible.click();
   await expect(tarjetaVisible).toHaveAttribute("aria-pressed", "true");
-  expect(await lista.evaluate((element) => element.scrollTop)).toBe(scrollAntes);
+  expect(await lista.evaluate((element) => element.scrollTop)).toBe(scrollSeleccion);
   await page.getByRole("button", { name: "Eliminar", exact: true }).click();
   const confirmacionIndividual = page.getByRole("dialog");
   await expect(confirmacionIndividual).toContainText(/pedido facturado \d{5} de Cliente de ejemplo \d{3} \(.* kg\)/);
@@ -177,7 +181,7 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
       ["serious", "critical"].includes(v.impact ?? ""),
     ),
   ).toEqual([]);
-  expect(await lista.evaluate((element) => element.scrollTop)).toBe(scrollAntes);
+  expect(await lista.evaluate((element) => element.scrollTop)).toBe(scrollSeleccion);
   {
     expect(
       (await new AxeBuilder({ page }).analyze()).violations.filter((v) =>
