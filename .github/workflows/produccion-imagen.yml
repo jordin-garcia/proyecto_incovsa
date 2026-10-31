@@ -21,6 +21,9 @@ on:
       - next.config.ts
       - src/lib/cabeceras.ts
       - src/proxy.ts
+      # Nombres __Host- de las cookies de producción (JG-26).
+      - src/lib/cookies.ts
+      - src/lib/auth-configuracion.ts
       - src/app/api/tiempo-real/**
       - src/modulos/tiempo-real/**
       - scripts/administrador.ts
@@ -42,6 +45,23 @@ jobs:
 
       - name: Confirmar que la imagen no lleva secretos
         run: docker run --rm --entrypoint sh incovsa-app:ci -c 'test ! -e .env && test ! -e .env.produccion.example'
+
+      - name: "V15.2.3: la imagen no lleva herramientas de desarrollo ni la semilla de demostración"
+        # JG-26: solo las dependencias de producción, más prisma y tsx, que se ejecutan en producción.
+        run: |
+          docker run --rm --entrypoint sh incovsa-app:ci -c '
+            set -eu
+            for ruta in node_modules/vitest node_modules/@playwright/test node_modules/playwright \
+              node_modules/@stryker-mutator node_modules/eslint node_modules/typescript \
+              prisma/semilla-demo.ts prisma/semillas/demo.ts scripts/respaldo.sh scripts/tareas.mjs; do
+              if [ -e "/app/$ruta" ]; then echo "V15.2.3: la imagen contiene $ruta"; exit 1; fi
+            done
+            test -x /app/node_modules/.bin/prisma
+            test -x /app/node_modules/.bin/tsx
+            test -f /app/scripts/crear-admin.ts
+            test -f /app/prisma/seed.ts
+            echo "V15.2.3: la imagen solo lleva lo que se usa en producción."
+          '
 
       - name: El código de la imagen es de solo lectura para el proceso
         # H-51: el proceso corre como nextjs y no puede reescribir su propio código. Solo escribe en la caché de
@@ -117,6 +137,12 @@ jobs:
             if grep -q "^content-security-policy: .*'unsafe-eval'" /tmp/cabeceras.txt; then fallo "CSP con unsafe-eval"; fi
             grep -q '^x-content-type-options: nosniff$' /tmp/cabeceras.txt || fallo "sin nosniff"
             grep -q '^referrer-policy: strict-origin-when-cross-origin$' /tmp/cabeceras.txt || fallo "sin Referrer-Policy"
+            # JG-26: V3.4.3 y alertas 10037, 10063 y 90004 de ZAP.
+            grep -q "^content-security-policy: .*base-uri 'none'" /tmp/cabeceras.txt || fallo "CSP sin base-uri 'none'"
+            grep -q "^content-security-policy: .*object-src 'none'" /tmp/cabeceras.txt || fallo "CSP sin object-src 'none'"
+            grep -q '^permissions-policy: camera=(), microphone=(), geolocation=(), payment=()$' /tmp/cabeceras.txt || fallo "sin Permissions-Policy"
+            grep -q '^cross-origin-opener-policy: same-origin$' /tmp/cabeceras.txt || fallo "sin Cross-Origin-Opener-Policy"
+            if grep -q '^x-powered-by:' /tmp/cabeceras.txt; then fallo "con X-Powered-By"; fi
             echo "RNF-16 en ${ruta}: cabeceras completas."
           done
 
@@ -239,6 +265,12 @@ jobs:
             -H 'Content-Type: application/json' \
             --data '{"usuario":"admin.ci","clave":"Clave-ci-1234"}')"
           test "$codigo" = "200"
+          # V3.3.3 (JG-26): por HTTPS, la cookie de sesión de producción lleva __Host-, Secure y path=/.
+          grep -q $'\t/\tTRUE\t[0-9]*\t__Host-incovsa-picking.session_token\t' "$sesion" || {
+            echo "V3.3.3: la cookie de sesión no lleva __Host- con Secure y path=/"
+            cat "$sesion"
+            exit 1
+          }
           estado=0
           curl -ksSN --max-time 5 -b "$sesion" -D /tmp/sse-cabeceras.txt -o /tmp/sse.txt \
             -w 'primer byte en %{time_starttransfer} s\n' \

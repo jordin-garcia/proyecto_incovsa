@@ -529,6 +529,8 @@ model SolicitudContacto {
   estado         String?  @db.VarChar(12)
   responsableId  String?  @map("responsable_id")
   comentario     String?
+  /// IP que agrega Caddy (decisión 29), para el límite de envíos por IP (P-98, DM-14). 45 caracteres caben en IPv6.
+  ip             String?  @db.VarChar(45)
   creadoEn       DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
   actualizadoEn  DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
 
@@ -538,6 +540,8 @@ model SolicitudContacto {
   sede         Sede          @relation(fields: [sedeId], references: [id])
   responsable  Usuario?      @relation(fields: [responsableId], references: [id], onDelete: Restrict)
 
+  /// Cuenta las solicitudes de una IP en los últimos 60 minutos (P-98).
+  @@index([ip, creadoEn])
   @@map("solicitud_contacto")
 }
 
