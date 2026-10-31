@@ -22,7 +22,7 @@ RUN npm ci
 FROM dependencias AS dependencias-produccion
 RUN npm prune --omit=dev \
   && cd node_modules \
-  && rm -rf vitest @vitest vite rolldown @rolldown typescript playwright playwright-core @playwright \
+  && rm -rf vitest @vitest vite rolldown @rolldown typescript playwright playwright-core @playwright @stryker-mutator \
     .bin/vitest .bin/vite .bin/rolldown .bin/tsc .bin/tsserver .bin/playwright
 
 FROM dependencias AS compilacion
