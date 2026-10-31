@@ -1,0 +1,68 @@
+
+> incovsa@0.1.0 build
+> next build
+
+▲ Next.js 16.4.2 (Turbopack)
+- Environments: .env
+✓ Running next.config.ts took 94ms
+- Experiments (use with caution):
+  · serverActions
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 7.8s
+  Running TypeScript ...
+  Finished TypeScript in 23.3s ...
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/5) ...
+  Generating static pages using 3 workers (1/5) 
+  Generating static pages using 3 workers (2/5) 
+  Generating static pages using 3 workers (3/5) 
+✓ Generating static pages using 3 workers (5/5) in 203ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /acceso
+├ ƒ /acceso/[sistema]
+├ ƒ /api/auth/[sistema]/[...ruta]
+├ ƒ /api/imagenes/[...clave]
+├ ƒ /api/imagenes/publicar
+├ ƒ /api/reportes/exportar
+├ ƒ /api/tiempo-real
+├ ƒ /contacto
+├ ƒ /industrias
+├ ƒ /industrias/[id]
+├ ƒ /muestras/[sistema]
+├ ƒ /nosotros
+├ ƒ /noticias
+├ ƒ /panel
+├ ƒ /panel/[...seccion]
+├ ƒ /panel/catalogo
+├ ƒ /panel/catalogo/publicar
+├ ƒ /panel/contacto
+├ ƒ /panel/contenido
+├ ƒ /panel/documentos
+├ ƒ /panel/industrias
+├ ƒ /panel/industrias/publicar
+├ ƒ /panel/noticias
+├ ƒ /panel/noticias/publicar
+├ ƒ /panel/resumen
+├ ƒ /panel/solicitudes
+├ ƒ /panel/usuarios
+├ ƒ /picking
+├ ƒ /picking/[...seccion]
+├ ƒ /picking/bodega
+├ ƒ /picking/configuracion
+├ ƒ /picking/facturacion
+├ ƒ /picking/reportes
+├ ƒ /picking/ruta
+├ ƒ /picking/tablero
+├ ƒ /productos
+└ ƒ /productos/[id]
+
+
+ƒ Proxy (Middleware)
+
+ƒ  (Dynamic)  server-rendered on demand
+
