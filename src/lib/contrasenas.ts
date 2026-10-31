@@ -34,8 +34,10 @@ function leerHash(hash: string): { sal: string; clave: string; parametros: Param
     const valores = /^N=(\d+),r=(\d+),p=(\d+)$/.exec(parametros ?? "");
     if (!valores || !sal || !clave) return null;
     const [N, r, p] = valores.slice(1).map(Number) as [number, number, number];
-    // Un hash alterado no puede pedir parámetros por debajo de los anteriores ni que agoten la memoria.
-    if (N < 2 ** 14 || N > 2 ** 20 || (N & (N - 1)) !== 0 || r < 8 || r > 32 || p < 1 || p > 16) return null;
+    // Un hash alterado no puede pedir un costo menor que el actual ni más de 256 MB de memoria (128·N·r).
+    const costoMinimo = PARAMETROS_SCRYPT.N * PARAMETROS_SCRYPT.r * PARAMETROS_SCRYPT.p;
+    if (N < 2 ** 14 || N > 2 ** 17 || (N & (N - 1)) !== 0 || r < 8 || r > 16 || p < 1 || p > 16) return null;
+    if (N * r * p < costoMinimo) return null;
     return { sal, clave, parametros: { N, r, p } };
   }
   const [sal, clave, sobra] = hash.split(":");

@@ -4,9 +4,15 @@ import { esAccesoTotal, normalizarRol } from "@/lib/roles";
 import { prisma } from "@/lib/prisma";
 import { fijarContextoRegistro, registrarEnServidor } from "@/lib/registro";
 
+/**
+ * Rechazo de autorización. ASVS V16.3.2 (JG-26): todo rechazo deja una línea en el registro del servidor. Los que
+ * lanzan los servicios directamente (registro de otra sede, sede distinta de la de trabajo…) se registran aquí, con
+ * el contexto que fijó `exigirPermiso`; `rechazarAcceso` ya los registra con su motivo y no los repite.
+ */
 export class ErrorAcceso extends ErrorNegocio {
-  constructor() {
+  constructor({ registrado = false }: { registrado?: boolean } = {}) {
     super("No tiene permisos para acceder a este módulo.");
+    if (!registrado) registrarEnServidor("aviso", "autorizacion_rechazada", { motivo: "regla_de_acceso" });
   }
 }
 
@@ -27,7 +33,7 @@ export function rechazarAcceso(
   datos: { sistema?: string; usuarioId?: string; operacion?: string; sede?: number } = {},
 ): never {
   registrarEnServidor("aviso", "autorizacion_rechazada", { motivo, ...datos });
-  throw new ErrorAcceso();
+  throw new ErrorAcceso({ registrado: true });
 }
 
 const sistemaDelPermiso = (permiso: string) =>

@@ -172,6 +172,8 @@ it("RNF-03 / decisión 36: revocar invalida en la petición siguiente; cuentas e
   expect((await iniciarSesion({ sistema: "picking", usuario: "ejemplo.05", clave }, cabeceras())).ok).toBe(false);
   const cuenta = await prisma.cuenta.findFirstOrThrow({ where: { userId: sesion!.usuario.id } });
   expect(cuenta.password).not.toContain(clave);
+  // RNF-03 (V11.4.2): cifrada con la función común, no con el formato anterior de Better Auth.
+  expect(cuenta.password!).toMatch(/^\$scrypt\$N=16384,r=8,p=5\$/);
   expect(await verificarContrasena({ hash: cuenta.password!, password: clave })).toBe(true);
 });
 
@@ -187,6 +189,9 @@ it("Decisión 37: crear-admin crea ambos y rechaza contraseñas cortas o distint
   await expect(crearAdministrador({ ...datos, confirmarClave: "distinta" })).rejects.toThrow();
   expect(await prisma.usuario.count({ where: { displayUsername: "admin.prueba" } })).toBe(0);
   await crearAdministrador(datos);
+  // RNF-03 (V11.4.2, JG-26): crear-admin cifra con la función común.
+  const admin = await prisma.cuenta.findFirstOrThrow({ where: { usuario: { displayUsername: "admin.prueba" } } });
+  expect(admin.password).toMatch(/^\$scrypt\$N=16384,r=8,p=5\$/);
   for (const sistema of ["sitio", "picking"] as const)
     expect((await iniciarSesion({ sistema, usuario: datos.usuario, clave }, cabeceras())).ok).toBe(true);
 });
@@ -427,4 +432,19 @@ it("ASVS V16.3.3: una entrada que la pantalla no habría enviado queda en el reg
   } finally {
     vi.restoreAllMocks();
   }
+});
+
+it("RF-SL-01 (ASVS V7.2.4): una petición que todavía lleva la sesión anterior no borra la cookie de la nueva", async () => {
+  const anterior = await iniciarSesion({ sistema: "picking", usuario: "ejemplo.03", clave }, cabeceras());
+  if (!anterior.ok) throw new Error("Sin sesión");
+  const conAnterior = conCookies(anterior.cabeceras);
+  const nueva = await iniciarSesion(
+    { sistema: "picking", usuario: "ejemplo.01", clave },
+    new Headers({ ...Object.fromEntries(cabeceras()), cookie: conAnterior.get("cookie")! }),
+  );
+  expect(nueva.ok).toBe(true);
+  // Por ejemplo, la actualización en curso de otra pestaña: el proxy la manda al acceso sin tocar las cookies.
+  const { sesion, cabeceras: respuesta } = await leerSesion("picking", conAnterior);
+  expect(sesion).toBeNull();
+  expect(respuesta.getSetCookie()).toEqual([]);
 });

@@ -129,3 +129,37 @@ describe("Autorización central", () => {
     ).toEqual(["Resumen", "Contenido institucional"]);
   });
 });
+
+describe("ASVS V16.3.2: rechazos lanzados por los servicios", () => {
+  it("ASVS V16.3.2: un ErrorAcceso lanzado por un servicio queda registrado con el contexto de la operación", async () => {
+    const registro = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      const { crearCamion } = await import("@/modulos/camiones/servicio");
+      const sedes = await prisma.sede.findMany({ orderBy: { id: "asc" }, select: { id: true } });
+      // Como en la acción: se exige el permiso del módulo y luego el servicio rechaza la sede ajena (exigirSede).
+      async function accion() {
+        await Promise.resolve();
+        exigirPermiso(sesionDePrueba({ permisos: ["pk.cfg.camiones"] }), "pk.cfg.camiones");
+        await crearCamion(
+          { identificacion: "Intruso V16", capacidadKg: "1000", sedeId: sedes[1]!.id },
+          { usuarioId: "prueba", sedesIds: [sedes[0]!.id] },
+        );
+      }
+      await expect(accion()).rejects.toBeInstanceOf(ErrorAcceso);
+      expect(registro).toHaveBeenCalledTimes(1);
+      expect(JSON.parse(registro.mock.calls[0]![0] as string)).toMatchObject({
+        evento: "autorizacion_rechazada",
+        motivo: "regla_de_acceso",
+        sistema: "picking",
+        usuarioId: "prueba",
+        operacion: "pk.cfg.camiones",
+      });
+      // rechazarAcceso registra su propio motivo y el error no lo repite.
+      registro.mockClear();
+      expect(() => exigirPermiso(null, "pk.bodega")).toThrow(ErrorAcceso);
+      expect(registro).toHaveBeenCalledTimes(1);
+    } finally {
+      registro.mockRestore();
+    }
+  });
+});

@@ -661,6 +661,8 @@ describe("semillas", () => {
       const credencial = await prisma.cuenta.findFirstOrThrow({ where: { usuario: { username: "ambos.ejemplo.01" } } });
       expect(credencial.providerId).toBe("credential");
       expect(credencial.password).not.toContain(CLAVE_DEMO);
+      // RNF-03 (V11.4.2): cifrada con la función común, no con el formato anterior de Better Auth.
+      expect(credencial.password!).toMatch(/^\$scrypt\$N=16384,r=8,p=5\$/);
       expect(await verificarContrasena({ hash: credencial.password!, password: CLAVE_DEMO })).toBe(true);
     },
   );

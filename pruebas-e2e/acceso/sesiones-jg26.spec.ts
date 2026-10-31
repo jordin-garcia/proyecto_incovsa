@@ -78,6 +78,7 @@ for (const sistema of ["sitio", "picking"] as const) {
     // Si la página vuelve de la caché de páginas del navegador, el enrutador de Next.js pide sus datos y sigue la
     // redirección del servidor, que puede conservar su parámetro interno _rsc.
     await expect(page).toHaveURL(/\/acceso(\?_rsc=[^&]+)?$/);
+    await expect(page.getByRole("region", { name: "Acceso para personal" })).toBeVisible();
     await expect(page.locator(".app")).toHaveCount(0);
     // La sesión del otro sistema sigue abierta.
     expect(await (await context.request.get(`/api/auth/${otro}/get-session`)).json()).toMatchObject({

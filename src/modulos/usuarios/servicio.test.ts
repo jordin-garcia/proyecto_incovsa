@@ -136,6 +136,8 @@ describe("usuarios del picking", () => {
     expect(fila.username).toBe("picking.ana.bodega");
     expect(fila.email).toBe(correoInterno("picking.ana.bodega"));
     expect(fila.cuentas[0]?.password).not.toBe(CLAVE);
+    // RNF-03 (V11.4.2): cifrada con la función común, no con el formato anterior de Better Auth.
+    expect(fila.cuentas[0]!.password!).toMatch(/^\$scrypt\$N=16384,r=8,p=5\$/);
     expect(await verificarContrasena({ hash: fila.cuentas[0]!.password!, password: CLAVE })).toBe(true);
     expect(fila.permisos.map((permiso) => permiso.permiso.codigo)).toEqual(["pk.bodega"]);
     expect(fila.sedes.map((sede) => sede.sedeId)).toEqual([quetzaltenango]);
@@ -250,6 +252,8 @@ describe("usuarios del picking", () => {
     expect(await prisma.sesion.count({ where: { userId: creado.id } })).toBe(0);
     const hash = (await prisma.cuenta.findFirstOrThrow({ where: { userId: creado.id } })).password!;
     expect(hash).not.toBe(CLAVE_NUEVA);
+    // RNF-03 (V11.4.2): cifrada con la función común, no con el formato anterior de Better Auth.
+    expect(hash).toMatch(/^\$scrypt\$N=16384,r=8,p=5\$/);
     expect(await verificarContrasena({ hash, password: CLAVE_NUEVA })).toBe(true);
     expect(JSON.stringify((await bitacora("Restablecimiento de contraseña")).detalle)).not.toContain(CLAVE_NUEVA);
     expect((await bitacora("Restablecimiento de contraseña")).operacion).toBe("Restablecimiento de contraseña");
@@ -585,6 +589,8 @@ describe("usuarios del picking", () => {
     });
     await restablecerClave({ id: creado.id, clave: CLAVE_NUEVA, confirmarClave: CLAVE_NUEVA }, sitio);
     const fila = await prisma.usuario.findUniqueOrThrow({ where: { id: creado.id }, include: { cuentas: true } });
+    // RNF-03 (V11.4.2): cifrada con la función común, no con el formato anterior de Better Auth.
+    expect(fila.cuentas[0]!.password!).toMatch(/^\$scrypt\$N=16384,r=8,p=5\$/);
     expect(await verificarContrasena({ hash: fila.cuentas[0]!.password!, password: CLAVE_NUEVA })).toBe(true);
     expect(await prisma.sesion.count({ where: { userId: creado.id } })).toBe(0);
     const detalle = JSON.stringify((await bitacora("Restablecimiento de contraseña")).detalle);

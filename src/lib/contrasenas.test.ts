@@ -36,6 +36,10 @@ describe("RNF-03 (ASVS V11.4.2): contraseñas con scrypt", () => {
       `$scrypt$N=16384,r=1,p=1$${sal}$${clave}`,
       `$scrypt$N=16385,r=8,p=5$${sal}$${clave}`,
       `$scrypt$N=2097152,r=8,p=5$${sal}$${clave}`,
+      // Más memoria de la permitida, o un costo menor que el actual.
+      `$scrypt$N=262144,r=8,p=1$${sal}$${clave}`,
+      `$scrypt$N=16384,r=32,p=5$${sal}$${clave}`,
+      `$scrypt$N=16384,r=8,p=1$${sal}$${clave}`,
       `$scrypt$N=16384,r=8,p=5$${sal}$${clave!.slice(2)}`,
       `$scrypt$N=16384,r=8,p=5$${sal}`,
       "texto",
