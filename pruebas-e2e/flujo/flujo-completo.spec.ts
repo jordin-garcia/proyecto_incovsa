@@ -6,6 +6,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { Client } from "pg";
 import { fechaGuatemala, formatoFecha, inicioDelDiaGuatemala } from "../../src/lib/fechas";
 import { test } from "./servidor-produccion";
+import { cookieDeSede } from "../comunes/cookies";
 import { irA } from "../comunes/navegacion";
 
 try {
@@ -456,7 +457,7 @@ test("RN-11 / RN-52 / RN-29 / RF-SL-16 / RF-SL-24 / RF-SL-29 / RF-SL-37 / RF-SL-
   // ---------- 4. Reportes: despacho, rutas realizadas y bitácora del día ----------
   await test.step("RF-SL-37 / RN-11 / RN-39: Gerencia ve el despacho, la ruta entregada y la bitácora de hoy", async () => {
     await entrar(page, baseURL!, "ejemplo.01");
-    await page.context().addCookies([{ name: "incovsa-sede", value: String(sedeId), url: baseURL! }]);
+    await page.context().addCookies([cookieDeSede(sedeId, baseURL!, { produccion: true })]);
     await abrir(page, "/picking/reportes", ".reportes");
     await expect(page.locator(".periodo")).toHaveAttribute("aria-busy", "false");
     await expect(page.getByRole("textbox", { name: "Fecha del periodo", exact: true })).toHaveValue(hoyTexto);

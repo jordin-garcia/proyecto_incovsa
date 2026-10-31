@@ -26,12 +26,14 @@ comprobarRechazosDeAccion({
   entrada: { sede: 1, modulo: "facturacion" },
   entradaOtraSede: { sede: 2, modulo: "facturacion" },
 });
-it("RN-17: guarda solo una sede autorizada y valida toda entrada", async () => {
+it("RN-17 / RNF-04 (R-P01): guarda solo una sede autorizada, en todo el sitio, y valida toda entrada", async () => {
+  vi.spyOn(console, "warn").mockImplementation(() => {});
   expect(await cambiarSede({ sede: 1, modulo: "facturacion" })).toEqual({ ok: true, datos: { sede: 1 } });
+  // path=/ para que /api/reportes/exportar reciba la sede elegida (R-P01, JG-26).
   expect(estado.set).toHaveBeenCalledWith(
     "incovsa-sede",
     "1",
-    expect.objectContaining({ httpOnly: true, sameSite: "lax", path: "/picking" }),
+    expect.objectContaining({ httpOnly: true, sameSite: "lax", path: "/" }),
   );
   estado.set.mockClear();
   for (const entrada of [

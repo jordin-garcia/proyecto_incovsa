@@ -86,7 +86,9 @@ test("RNF-04: primera barrera por sistema y rechazo de acceso directo en el serv
 });
 test("RN-17 / RF-SL-66: cookie ajena se ignora y la sede autorizada persiste", async ({ page, context }) => {
   await entrar(context, "ejemplo.03", "picking");
-  await context.addCookies([{ name: "incovsa-sede", value: "2", domain: "localhost", path: "/picking" }]);
+  // La cookie de la sede se envía en todo el sitio (path=/, R-P01, JG-26); en producción lleva __Host-.
+  // Cookie solo del host, como la que escribe el servidor (con domain sería otra cookie distinta).
+  await context.addCookies([{ name: "incovsa-sede", value: "2", url: "http://localhost:3000" }]);
   await irA(page, "/picking/facturacion");
   await expect(page.getByRole("banner")).toContainText("Quetzaltenango");
   await expect(page.getByRole("combobox", { name: "Sede", exact: true })).toHaveCount(0);

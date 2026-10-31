@@ -1,0 +1,64 @@
+
+Running 23 tests using 1 worker
+
+  ok  1 [escritorio] › pruebas-e2e\acceso\acceso-personal.spec.ts:18:5 › RF-SW-09 / CAM-83: los tres pasos, sistemas habilitados, ayuda, contraseña y accesibilidad (29.3s)
+  ok  2 [escritorio] › pruebas-e2e\acceso\acceso-personal.spec.ts:60:5 › RF-SW-09: restringe opciones según la cuenta y rechaza usuarios inexistentes (25.1s)
+  x   3 [escritorio] › pruebas-e2e\acceso\acceso-personal.spec.ts:84:5 › RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio y conserva la otra (26.8s)
+  ok  4 [escritorio] › pruebas-e2e\acceso\acceso-personal.spec.ts:124:5 › RNF-05: no expone altas, cambios de contraseña ni accesos que evadan límites; verifica origen (609ms)
+  ok  5 [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:29:5 › RF-SW-09 / RF-SL-02 / H-33: el sistema no autorizado vuelve al paso 2 sin registrar un fallo ni pedir sede (5.3s)
+  ok  6 [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:69:7 › RF-SW-30 / H-34: cerrar sitio muestra Sesión cerrada en Inicio (13.2s)
+  ok  7 [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:69:7 › RF-SW-30 / H-34: cerrar picking muestra Sesión cerrada en Inicio (13.9s)
+  ok  8 [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:88:5 › RF-SW-25 / H-07 / H-13 / H-39: acceso denegado ofrece el módulo propio y un módulo inexistente conserva el armazón (11.4s)
+  ok  9 [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:118:7 › RN-39 / H-78: GET con cookie de cuenta desactivada no registra intentos ni bloqueos (21.9s)
+  ok 10 [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:118:7 › RN-39 / H-78: GET con cookie de cuenta eliminada no registra intentos ni bloqueos (21.4s)
+  ok 11 [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:57:7 › RN-38: ejemplo.03 en picking solo ve sus módulos (5.0s)
+  ok 12 [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:57:7 › RN-38: ejemplo.03 en sitio solo ve sus módulos (3.9s)
+  ok 13 [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:57:7 › RN-38: ejemplo.05 en picking solo ve sus módulos (4.9s)
+  ok 14 [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:57:7 › RN-38: ejemplo.06 en picking solo ve sus módulos (4.5s)
+  ok 15 [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:57:7 › RN-38: ejemplo.08 en sitio solo ve sus módulos (4.1s)
+  ok 16 [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:57:7 › RN-38: ejemplo.09 en sitio solo ve sus módulos (3.7s)
+  ok 17 [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:57:7 › RN-38: ejemplo.01 en picking solo ve sus módulos (5.0s)
+  ok 18 [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:57:7 › RN-38: ejemplo.01 en sitio solo ve sus módulos (4.4s)
+  ok 19 [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:74:5 › RNF-04: primera barrera por sistema y rechazo de acceso directo en el servidor (5.0s)
+  ok 20 [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:87:5 › RN-17 / RF-SL-66: cookie ajena se ignora y la sede autorizada persiste (7.8s)
+  ok 21 [escritorio] › pruebas-e2e\acceso\sesiones-jg26.spec.ts:31:5 › RF-SL-01 (ASVS V7.2.4): volver a iniciar sesión en el mismo navegador invalida la sesión anterior (1.3s)
+  ok 22 [escritorio] › pruebas-e2e\acceso\sesiones-jg26.spec.ts:56:7 › ASVS V14.3.1: después de cerrar sitio, Atrás no muestra contenido autenticado (6.9s)
+  ok 23 [escritorio] › pruebas-e2e\acceso\sesiones-jg26.spec.ts:56:7 › ASVS V14.3.1: después de cerrar picking, Atrás no muestra contenido autenticado (8.2s)
+
+
+  1) [escritorio] › pruebas-e2e\acceso\acceso-personal.spec.ts:84:5 › RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio y conserva la otra 
+
+    Error: expect(page).toHaveURL(expected) failed
+
+    Expected: "http://localhost:3000/"
+    Received: "http://localhost:3000/?sesion=cerrada"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveURL" with timeout 5000ms
+        3 × locator resolved to <html lang="es" class="poppins_cd2ce963-module__hjxOSa__variable figtree_527e9546-module__wU0iba__variable jetbrains_mono_2f862659-module__huMRsa__variable">…</html>
+          - unexpected value "http://localhost:3000/picking/facturacion"
+        - waiting for "http://localhost:3000/?sesion=cerrada" navigation to finish...
+        - navigated to "http://localhost:3000/?sesion=cerrada"
+        3 × locator resolved to <html lang="es" class="poppins_cd2ce963-module__hjxOSa__variable figtree_527e9546-module__wU0iba__variable jetbrains_mono_2f862659-module__huMRsa__variable">…</html>
+          - unexpected value "http://localhost:3000/?sesion=cerrada"
+
+
+      118 |     await page.getByRole("button", { name: "Menú", exact: true }).click();
+      119 |   await page.getByRole("button", { name: "Cerrar sesión" }).click();
+    > 120 |   await expect(page).toHaveURL("/");
+          |                      ^
+      121 |   expect(await (await context.request.get("/api/auth/picking/get-session")).json()).toBeNull();
+      122 | });
+      123 |
+        at C:\Users\Hecto\Documents\proyecto_incovsa\pruebas-e2e\acceso\acceso-personal.spec.ts:120:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\acceso-acceso-personal-RN--d28ae-l-inicio-y-conserva-la-otra-escritorio\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\acceso-acceso-personal-RN--d28ae-l-inicio-y-conserva-la-otra-escritorio\error-context.md
+
+  1 failed
+    [escritorio] › pruebas-e2e\acceso\acceso-personal.spec.ts:84:5 › RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio y conserva la otra 
+  22 passed (4.3m)

@@ -5,7 +5,7 @@ persona: jordin
 responsable: Jordin García
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JG-15]
 programada: 2026-10-30
 requisitos: [RNF-03, RNF-04, RNF-16, RF-SL-01]
@@ -92,3 +92,44 @@ gh workflow run zap.yml --ref develop
 ## Notas
 - Las cookies con `__Host-` exigen HTTPS. Comprueba que WebKit (JG-16) sigue iniciando sesión en local.
 - Avisa en tu bitácora a Carlos (`Dockerfile`, `usuarios/servicio.ts`, `produccion-imagen.yml` y la función de reautenticación para CE-14), a Daniela (rutas multipart y columna `ip` para DM-14) y a José Daniel (`pruebas-e2e/picking/reportes-exportacion.spec.ts`).
+
+## Resultado
+
+Se corrigieron las brechas de la revisión de seguridad que estaban en el código del coordinador. En `plan/seguridad/asvs-nivel-2.md` pasan a "Cumple" 12 filas (V3.3.1, V3.3.3, V3.4.3, V7.2.4, V11.4.2, V11.5.1, V14.3.1, V15.2.3, V16.2.1, V16.3.2, V16.3.3 y V16.3.4) y R-P01 queda corregido: el total pasa de 112 a 124 requisitos que cumplen. Las decisiones quedaron en `specs/16` ("Seguridad") y `specs/18`.
+
+### Qué se hizo
+- **Sede (R-P01):** la cookie de la sede se guarda con `path=/`, así que `/api/reportes/exportar` usa la sede que se ve en pantalla. Prueba de extremo a extremo «RNF-04 (R-P01)» en `pruebas-e2e/picking/reportes-exportacion.spec.ts`: elige Guatemala y exporta Excel y PDF con su nombre y sin los datos de Quetzaltenango.
+- **Cookies `__Host-`:** en producción, las de sesión de los dos sistemas, la de la sede y la del acceso personal se llaman `__Host-…`, con `Secure`, `path=/` y sin `Domain`. En desarrollo y en las pruebas, por HTTP, no llevan prefijo. Better Auth usa `useSecureCookies: false` (solo sabía anteponer `__Secure-`) y un nombre propio para cada una de sus cuatro cookies.
+- **Cabeceras:** `base-uri 'none'`, nonce de 16 bytes de `crypto.getRandomValues`, `poweredByHeader: false`, `Permissions-Policy` y `Cross-Origin-Opener-Policy: same-origin`. Los mapas de Google y la vista previa de Drive siguen funcionando (prueba existente de `cabeceras.spec.ts`).
+- **scrypt:** `src/lib/contrasenas.ts`, con N=2^14, r=8, p=5 escritos en el hash. Lo usan las dos configuraciones de Better Auth, `usuarios/servicio.ts`, `scripts/administrador.ts` y `prisma/semillas/demo.ts`. Las contraseñas anteriores siguen sirviendo.
+- **Sesiones:** volver a iniciar sesión cierra la sesión anterior de ese sistema en ese navegador. Cerrar sesión llama a la ruta `sign-out`, que responde con `Clear-Site-Data: "cache"`, y recarga la página completa; una página restaurada con Atrás se vuelve a pedir. La sesión del otro sistema sigue abierta. `leerSesion` ya no reenvía el `Set-Cookie` con que Better Auth borra una cookie de sesión inválida: si otra pestaña tenía en curso una petición con la sesión anterior, esa respuesta borraba la cookie de la sesión recién iniciada (lo encontró la prueba RN-17 de `permisos.spec.ts`).
+- **Registro del servidor:** líneas JSON para los rechazos de autorización, por origen y de entradas, la cookie de sede ajena y los errores inesperados (también en `api/auth`), con fecha, evento, sistema, usuario y operación, sin datos personales ni el mensaje del error.
+- **Imagen de producción:** etapa `dependencias-produccion` con `npm prune --omit=dev`; `prisma` y `tsx` pasan a `dependencies` con las mismas versiones; la imagen solo copia `crear-admin`, el esquema, las migraciones y la semilla base. `produccion-imagen.yml` lo comprueba, junto con las cabeceras nuevas y la cookie `__Host-` a través de Caddy.
+- **Base de datos:** migración `20261031034121_solicitud_contacto_ip`: columna `ip` (`VarChar(45)`, opcional) en `solicitud_contacto` y el índice `solicitud_contacto_ip_creado_en_idx`. Se aplicó sobre una base vacía y sobre la base local con datos.
+
+### Decisiones tomadas
+- **Contexto del registro:** `exigirPermiso` y `exigirAccesoTotal` fijan con `AsyncLocalStorage.enterWith` el sistema, el usuario y la operación (el código del permiso) para el resto de la operación, y `aResultadoDeError` los agrega a su línea. Así no hubo que cambiar las acciones de cada módulo. `src/lib/errores.ts` no importa módulos de Node, porque lo usan componentes del navegador: `src/lib/registro.ts` le entrega el contexto al cargarse.
+- **Sin el mensaje del error:** el registro guarda el tipo, el código (por ejemplo, `P2002`) y las primeras líneas de la pila, no el mensaje, porque los errores de Prisma y de validación pueden traer datos escritos por el usuario o la cadena de conexión.
+- **La reautenticación no reinicia el conteo:** un acierto no borra los fallos anteriores; solo los reinicia un inicio de sesión correcto, como en RNF-15.
+- **Todo `ErrorAcceso` se registra:** el constructor escribe la línea (motivo `regla_de_acceso`) para los rechazos que los servicios y las rutas lanzan directamente; `rechazarAcceso` registra el suyo con el motivo exacto y crea el error sin repetirlo.
+- **Las páginas «Sin acceso»** no registran nada: solo deciden qué mostrar y no leen datos; cada operación vuelve a exigir el permiso y ese rechazo sí queda registrado.
+- **Hash alterado:** solo se aceptan N entre 2^14 y 2^17, r entre 8 y 16 y un costo N·r·p no menor que el actual, para que un hash modificado no pida 4 GB de memoria ni parámetros débiles.
+- **minimatch (31/10, decisión del coordinador):** OSV-Scanner falló por GHSA-g3hv-75wg-m249, publicada el 30/10 (minimatch < 11.0.1, solo en ESLint y Stryker). Se aceptó el riesgo hasta el 15/11/2026 en `osv-scanner.toml`, registrado en `specs/16` y `specs/18`.
+- **Imagen de producción:** `npm prune --omit=dev` conserva `vitest`, `typescript` y `playwright` porque paquetes de producción los declaran como peer opcionales (por ejemplo, `better-auth` declara `vitest`); el `Dockerfile` los quita aparte, y `produccion-imagen.yml` lo comprueba.
+- **Parámetros de scrypt:** de las equivalencias de OWASP, N=2^14, r=8, p=5 es la más rápida en este equipo (unos 255 ms por contraseña, frente a 480 ms de N=2^17). Por eso la semilla de demostración cifra sus 11 cuentas en paralelo, cada una con su sal.
+
+### Cómo usar lo que se creó
+- **Cookies propias nuevas:** usa `nombreCookie("incovsa-…")` y `atributosCookie(maxAge?)` de `src/lib/cookies.ts`. No escribas los nombres a mano: en producción llevan `__Host-`. En las pruebas con el servidor de producción, `cookieDeSede` de `pruebas-e2e/comunes/cookies.ts` crea la cookie de la sede con el nombre correcto.
+- **Contraseñas:** `cifrarContrasena(clave)` y `verificarContrasena({ hash, password })` de `src/lib/contrasenas.ts`. No uses `hashPassword` de `better-auth/crypto`.
+- **Reautenticación (CE-14):** `reautenticar(sesion, clave, cabeceras)` de `src/app/acceso/servicio.ts` devuelve `true` o `false`. Abre su propia transacción, toma el bloqueo del inicio de sesión, devuelve `false` con un bloqueo vigente de RNF-15 aunque la contraseña sea correcta, y registra cada fallo (y el bloqueo, si corresponde) en la bitácora. Llámala antes de cambiar nada y responde «Su contraseña no es correcta.» si devuelve `false`.
+- **Registro del servidor:** `registrarEnServidor("aviso" | "error", evento, datos)` de `src/lib/registro.ts`, solo con identificadores y códigos. Para un rechazo de autorización propio, `rechazarAcceso(motivo, datos?)` de `src/modulos/permisos/servicio.ts`, que registra y lanza `ErrorAcceso`.
+- **Origen:** `esMismoOrigen(peticion)` de `src/lib/origen.ts` para las rutas de la API que cambian datos.
+- **IP de Contacto (DM-14):** la columna es `ip` en Prisma (`SolicitudContacto.ip`), opcional, con el índice `@@index([ip, creadoEn])` para contar las solicitudes de los últimos 60 minutos.
+
+### Evidencia
+- `npm run verificar`: todas las pruebas de Vitest aprobadas (`plan/evidencias/JG-26/verificar.txt`); `npm run build` correcto.
+- ZAP repetido en la rama ([41172622744](https://github.com/jordin-garcia/proyecto_incovsa/actions/runs/41172622744)): aprobado, y ya no aparecen las alertas 10037, 10063 ni la de COOP (90004). Detalle en `plan/seguridad/zap-2026-10-29.md`.
+- Batería completa de `pruebas-e2e/` con Chromium, por partes y con un proceso, con el código final y en una base local nueva (salidas en `plan/evidencias/JG-26/`): 518 pruebas aprobadas. Hubo que repetir tres cosas, y pasaron:
+  - la parte de acceso en escritorio: con el equipo lento, tres pruebas pasaron de 30 s y la corrida se cortó por su límite de tiempo (final de `e2e-acceso-telefono-tableta.txt`); repetida aparte, pasó (`e2e-acceso-escritorio.txt`);
+  - «RN-54 / RF-SW-30» de `acceso-personal.spec.ts`, un fallo conocido de este equipo que también ocurre en `develop` (la página de inicio tardó más de 5 s en quitar `?sesion=cerrada`): 3 de 3 al repetirla (`e2e-acceso-escritorio-rn54.txt`);
+  - «RNF-17 / CP-52» de `rendimiento-galerias.spec.ts` en el teléfono, por el ruido de la medición de tiempo ya anotado en `specs/18` (437 ms contra un tope de 435,6 ms) (`e2e-sitio-telefono-galerias.txt`).

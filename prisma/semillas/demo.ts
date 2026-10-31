@@ -4,7 +4,7 @@
 import { copyFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { generateId } from "better-auth";
-import { hashPassword } from "better-auth/crypto";
+import { cifrarContrasena } from "../../src/lib/contrasenas";
 import type { PrismaClient } from "../../src/generated/prisma/client";
 import { claveAccesoInterna, correoInterno, type SistemaCuenta } from "../../src/lib/cuentas";
 import { PERMISOS } from "./base";
@@ -181,7 +181,10 @@ export async function sembrarDemo(prisma: PrismaClient, opciones: OpcionesDemo):
     throw new ErrorSemillaDemo("Falta la semilla base: ejecute primero `npm run db:semilla`.");
   }
 
-  for (const cuenta of CUENTAS_DEMO) await sembrarCuenta(prisma, cuenta, claveDemo, sedes, permisos);
+  // scrypt es costoso a propósito (JG-26): las contraseñas, cada una con su sal, se cifran en paralelo.
+  const contrasenas = await Promise.all(CUENTAS_DEMO.map(() => cifrarContrasena(claveDemo)));
+  for (const [indice, cuenta] of CUENTAS_DEMO.entries())
+    await sembrarCuenta(prisma, cuenta, contrasenas[indice]!, sedes, permisos);
 
   const quetzaltenango = sedes.get("XE")!;
   for (const camion of CAMIONES_DEMO) {
@@ -201,7 +204,7 @@ export async function sembrarDemo(prisma: PrismaClient, opciones: OpcionesDemo):
 async function sembrarCuenta(
   prisma: PrismaClient,
   cuenta: CuentaDemo,
-  claveDemo: string,
+  password: string,
   sedes: Map<string, number>,
   permisos: Map<string, number>,
 ): Promise<void> {
@@ -221,8 +224,7 @@ async function sembrarCuenta(
     update: datos,
   });
 
-  // Contraseña cifrada con la función de Better Auth (scrypt, RNF-03). Se actualiza si CLAVE_DEMO cambió.
-  const password = await hashPassword(claveDemo);
+  // Contraseña cifrada con la función común de scrypt (RNF-03, JG-26). Se actualiza si CLAVE_DEMO cambió.
   const credencial = await prisma.cuenta.findFirst({ where: { userId: usuario.id, providerId: "credential" } });
   if (credencial) {
     await prisma.cuenta.update({ where: { id: credencial.id }, data: { password } });

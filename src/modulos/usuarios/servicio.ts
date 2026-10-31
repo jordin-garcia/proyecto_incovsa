@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { hashPassword } from "better-auth/crypto";
+import { cifrarContrasena } from "@/lib/contrasenas";
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { claveAccesoInterna, correoInterno, type SistemaCuenta } from "@/lib/cuentas";
@@ -180,7 +180,7 @@ export async function crearUsuario(entrada: EntradaCrearUsuario, contexto: Conte
   exigirClave(entrada.clave, entrada.confirmarClave);
   const total = esAccesoTotal(entrada.rol);
   if (!total && contexto.sistema === "picking" && entrada.sedesIds.length === 0) throw new ErrorNegocio(MENSAJE_SEDE);
-  const hash = await hashPassword(entrada.clave);
+  const hash = await cifrarContrasena(entrada.clave);
   try {
     return await prisma.$transaction(async (tx) => {
       await bloquearNombre(tx, entrada.usuario);
@@ -342,7 +342,7 @@ export async function restablecerClave(
 ): Promise<{ id: string }> {
   exigirAdmin(contexto);
   exigirClave(entrada.clave, entrada.confirmarClave);
-  const hash = await hashPassword(entrada.clave);
+  const hash = await cifrarContrasena(entrada.clave);
   return prisma.$transaction(async (tx) => {
     const actual = await cuentaActiva(tx, entrada.id, contexto.sistema);
     const cambio = await tx.cuenta.updateMany({

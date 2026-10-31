@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { obtenerSesion } from "@/lib/sesion";
 import { aResultadoDeError, MENSAJE_ERROR_GENERAL } from "@/lib/errores";
+import { registrarEnServidor } from "@/lib/registro";
 import { ErrorAcceso, exigirPermiso } from "@/modulos/permisos/servicio";
 import { obtenerSedeDeTrabajo } from "@/modulos/permisos/sede";
 import { consultarDespacho, consultarOperaciones, consultarRutas } from "@/modulos/reportes/servicio";
@@ -58,6 +59,9 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     const estado = error instanceof ErrorAcceso ? 403 : error instanceof z.ZodError ? 400 : 500;
+    // V16.3.3 (JG-26): la pantalla nunca arma una consulta inválida; se registra la operación, no lo recibido.
+    if (error instanceof z.ZodError)
+      registrarEnServidor("aviso", "entrada_rechazada", { operacion: "reportes.exportar" });
     const resultado =
       error instanceof z.ZodError ? { ok: false, error: MENSAJE_ERROR_GENERAL } : aResultadoDeError(error);
     return Response.json(resultado, {
