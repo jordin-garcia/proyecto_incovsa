@@ -58,7 +58,7 @@ async function prepararActivos() {
 }
 
 // HTTPS de prueba para WebKit (JG-16, decisión de Jordin del 30/10). En producción, las cookies de sesión llevan
-// Secure y el prefijo __Secure-, y el WebKit de Playwright no las guarda en http://localhost (Chromium y Firefox sí).
+// Secure y el prefijo __Host- (JG-26), y el WebKit de Playwright no las guarda en http://localhost (Chromium y Firefox sí).
 // Como Caddy en producción, un proxy HTTPS local con un certificado autofirmado de un día va delante del servidor.
 // No cambia la aplicación. Necesita openssl, que traen Ubuntu (GitHub Actions), macOS y Git para Windows.
 function certificadoDePrueba(carpeta: string) {

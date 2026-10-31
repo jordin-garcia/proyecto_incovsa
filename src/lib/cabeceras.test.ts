@@ -26,6 +26,25 @@ describe("RNF-16: cabeceras de seguridad", () => {
       ]),
     );
   });
+  it("RNF-16 (ASVS V3.4.3): la CSP prohíbe <base> y los objetos incrustados", () => {
+    for (const produccion of [true, false]) {
+      const directivas = crearCsp({ produccion }).split("; ");
+      expect(directivas).toContain("base-uri 'none'");
+      expect(directivas).toContain("object-src 'none'");
+    }
+  });
+  it("RNF-16 (ZAP 10063 y 90004): Permissions-Policy sin cámara, micrófono, ubicación ni pagos, y COOP same-origin", () => {
+    for (const produccion of [true, false]) {
+      const cabeceras = cabecerasDeSeguridad(produccion);
+      expect(cabeceras).toContainEqual({
+        key: "Permissions-Policy",
+        value: "camera=(), microphone=(), geolocation=(), payment=()",
+      });
+      expect(cabeceras).toContainEqual({ key: "Cross-Origin-Opener-Policy", value: "same-origin" });
+      // COEP bloquearía los mapas de Google y la vista previa de Drive (specs/05).
+      expect(cabeceras.some((c) => c.key === "Cross-Origin-Embedder-Policy")).toBe(false);
+    }
+  });
   for (const urlImagenes of [
     "http://imagenes.incovsa.com",
     "https://usuario:clave@imagenes.incovsa.com",

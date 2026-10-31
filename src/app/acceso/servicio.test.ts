@@ -1,10 +1,11 @@
-import { beforeEach, expect, it } from "vitest";
-import { hashPassword, verifyPassword } from "better-auth/crypto";
+import { beforeEach, expect, it, vi } from "vitest";
+import { hashPassword } from "better-auth/crypto";
+import { verificarContrasena } from "@/lib/contrasenas";
 import { parseSetCookieHeader } from "better-auth/cookies";
 import { prisma } from "@/lib/prisma";
 import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import { sembrarDemo } from "../../../prisma/semillas/demo";
-import { consultarSistemasSoloLectura, consultarSistemas, iniciarSesion, cerrarSesion } from "./servicio";
+import { consultarSistemasSoloLectura, consultarSistemas, iniciarSesion, cerrarSesion, reautenticar } from "./servicio";
 import { obtenerSesion, leerSesion, revocarSesiones } from "@/lib/sesion";
 import { crearAdministrador } from "../../../scripts/administrador";
 import { registrarBitacora } from "@/modulos/bitacora/servicio";
@@ -171,7 +172,7 @@ it("RNF-03 / decisión 36: revocar invalida en la petición siguiente; cuentas e
   expect((await iniciarSesion({ sistema: "picking", usuario: "ejemplo.05", clave }, cabeceras())).ok).toBe(false);
   const cuenta = await prisma.cuenta.findFirstOrThrow({ where: { userId: sesion!.usuario.id } });
   expect(cuenta.password).not.toContain(clave);
-  expect(await verifyPassword({ hash: cuenta.password!, password: clave })).toBe(true);
+  expect(await verificarContrasena({ hash: cuenta.password!, password: clave })).toBe(true);
 });
 
 it("Decisión 37: crear-admin crea ambos y rechaza contraseñas cortas o distintas sin escribir datos", async () => {
@@ -291,5 +292,139 @@ it("RN-39 / H-78: consultar sistemas al cargar acceso no registra fallos de cuen
       });
     }
     expect(await prisma.bitacora.count()).toBe(antes);
+  }
+});
+
+it("RF-SL-01 (ASVS V7.2.4): volver a iniciar sesión en el mismo navegador cierra la sesión anterior de ese sistema", async () => {
+  const primera = await iniciarSesion({ sistema: "picking", usuario: "ejemplo.01", clave }, cabeceras());
+  const sitio = await iniciarSesion({ sistema: "sitio", usuario: "ejemplo.01", clave }, cabeceras());
+  if (!primera.ok || !sitio.ok) throw new Error("No se iniciaron las sesiones");
+  // El navegador envía las cookies de los dos sistemas al volver a entrar al picking.
+  const navegador = conCookies(
+    new Headers({ "set-cookie": `${primera.cabeceras.get("set-cookie")}, ${sitio.cabeceras.get("set-cookie")}` }),
+  );
+  expect(await obtenerSesion("picking", navegador)).not.toBeNull();
+  const segunda = await iniciarSesion(
+    { sistema: "picking", usuario: "ejemplo.02", clave },
+    new Headers({ ...Object.fromEntries(cabeceras()), cookie: navegador.get("cookie")! }),
+  );
+  if (!segunda.ok) throw new Error("No se inició la segunda sesión");
+  // La sesión anterior del picking ya no sirve; la nueva sí, y la del sitio sigue abierta.
+  expect(await obtenerSesion("picking", navegador)).toBeNull();
+  expect(await obtenerSesion("picking", conCookies(segunda.cabeceras))).toMatchObject({
+    usuario: { usuario: "ejemplo.02" },
+  });
+  expect(await obtenerSesion("sitio", navegador)).not.toBeNull();
+  // Un intento fallido no cierra la sesión que el navegador ya tenía.
+  const otra = await iniciarSesion({ sistema: "picking", usuario: "ejemplo.03", clave }, cabeceras());
+  if (!otra.ok) throw new Error("Sin sesión");
+  const conOtra = conCookies(otra.cabeceras);
+  const fallido = await iniciarSesion(
+    { sistema: "picking", usuario: "ejemplo.03", clave: "incorrecta" },
+    new Headers({ ...Object.fromEntries(cabeceras()), cookie: conOtra.get("cookie")! }),
+  );
+  expect(fallido.ok).toBe(false);
+  expect(await obtenerSesion("picking", conOtra)).not.toBeNull();
+});
+
+it("RNF-15 (CE-14): la reautenticación cuenta cada fallo en el límite, lo registra y rechaza la clave correcta bloqueada", async () => {
+  const r = await iniciarSesion({ sistema: "picking", usuario: "ejemplo.01", clave }, cabeceras());
+  if (!r.ok) throw new Error("Sin sesión");
+  const sesion = (await obtenerSesion("picking", conCookies(r.cabeceras)))!;
+  expect(await reautenticar(sesion, clave, cabeceras())).toBe(true);
+  for (const incorrecta of ["incorrecta", "", 123, "x".repeat(129)])
+    expect(await reautenticar(sesion, incorrecta, cabeceras())).toBe(false);
+  expect(
+    await prisma.bitacora.count({
+      where: {
+        operacion: "Intento fallido de inicio de sesión",
+        usuarioEscrito: "ejemplo.01",
+        usuarioId: sesion.usuario.id,
+      },
+    }),
+  ).toBe(4);
+  // El quinto fallo bloquea al usuario 15 minutos: la contraseña correcta deja de aceptarse, desde cualquier IP.
+  expect(await reautenticar(sesion, "incorrecta", cabeceras())).toBe(false);
+  expect(
+    await prisma.bitacora.count({ where: { operacion: "Bloqueo de usuario", usuarioEscrito: "ejemplo.01" } }),
+  ).toBe(1);
+  expect(await reautenticar(sesion, clave, cabeceras("192.0.2.9"))).toBe(false);
+  expect((await iniciarSesion({ sistema: "picking", usuario: "ejemplo.01", clave }, cabeceras())).ok).toBe(false);
+});
+
+it("ASVS V14.3.1: cerrar sesión por la API borra la caché del navegador y conserva la cookie del otro sistema", async () => {
+  const picking = await iniciarSesion({ sistema: "picking", usuario: "ejemplo.01", clave }, cabeceras());
+  if (!picking.ok) throw new Error("Sin sesión");
+  const contexto = { params: Promise.resolve({ sistema: "picking", ruta: ["sign-out"] }) };
+  const respuesta = await POST(
+    new Request("http://localhost:3000/api/auth/picking/sign-out", {
+      method: "POST",
+      headers: { ...Object.fromEntries(conCookies(picking.cabeceras)), origin: "http://localhost:3000" },
+    }),
+    contexto,
+  );
+  expect(respuesta.status).toBe(200);
+  expect(respuesta.headers.get("clear-site-data")).toBe('"cache"');
+  const borradas = respuesta.headers.getSetCookie();
+  expect(borradas.some((c) => c.startsWith("incovsa-picking.session_token=;"))).toBe(true);
+  expect(borradas.some((c) => c.includes("incovsa-sitio"))).toBe(false);
+  expect(await obtenerSesion("picking", conCookies(picking.cabeceras))).toBeNull();
+});
+
+it("ASVS V16.3.3 / V16.3.4: la ruta de autenticación registra los rechazos por origen y sus errores sin datos", async () => {
+  const aviso = vi.spyOn(console, "warn").mockImplementation(() => {});
+  const error = vi.spyOn(console, "error").mockImplementation(() => {});
+  try {
+    const contexto = { params: Promise.resolve({ sistema: "sitio", ruta: ["sign-in", "username"] }) };
+    const respuesta = await POST(
+      new Request("http://localhost:3000/api/auth/sitio/sign-in/username", {
+        method: "POST",
+        headers: { origin: "https://ajeno.invalid", "content-type": "application/json" },
+        body: JSON.stringify({ usuario: "ejemplo.01", clave: "Secreta-26" }),
+      }),
+      contexto,
+    );
+    expect(respuesta.status).toBe(403);
+    expect(JSON.parse(aviso.mock.calls[0]![0] as string)).toMatchObject({
+      evento: "autorizacion_rechazada",
+      motivo: "origen_ajeno",
+      sistema: "sitio",
+      operacion: "auth.sign-in/username",
+    });
+    // Sin X-Real-IP fuera de desarrollo, iniciarSesion falla: el error se registra sin la contraseña.
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("BETTER_AUTH_URL", "http://localhost:3000");
+    const fallida = await POST(
+      new Request("http://localhost:3000/api/auth/sitio/sign-in/username", {
+        method: "POST",
+        headers: { origin: "http://localhost:3000", "content-type": "application/json" },
+        body: JSON.stringify({ usuario: "ejemplo.01", clave: "Secreta-26" }),
+      }),
+      contexto,
+    );
+    expect(fallida.status).toBe(500);
+    const linea = error.mock.calls[0]![0] as string;
+    expect(JSON.parse(linea)).toMatchObject({ evento: "error_inesperado", sistema: "sitio", tipo: "Error" });
+    expect(linea).not.toContain("Secreta-26");
+    expect(linea).not.toContain("ejemplo.01");
+  } finally {
+    vi.unstubAllEnvs();
+    vi.restoreAllMocks();
+  }
+});
+
+it("ASVS V16.3.3: una entrada que la pantalla no habría enviado queda en el registro del servidor, sin lo escrito", async () => {
+  const aviso = vi.spyOn(console, "warn").mockImplementation(() => {});
+  try {
+    expect((await iniciarSesion({ sistema: "picking", usuario: "ejemplo.01", clave: "" }, cabeceras())).ok).toBe(false);
+    expect((await consultarSistemas({ usuario: "x".repeat(61) }, cabeceras())).ok).toBe(false);
+    const lineas = aviso.mock.calls.map((llamada) => JSON.parse(llamada[0] as string));
+    expect(lineas).toEqual([
+      expect.objectContaining({ evento: "entrada_rechazada", operacion: "acceso.iniciar_sesion" }),
+      expect.objectContaining({ evento: "entrada_rechazada", operacion: "acceso.consultar_usuario" }),
+    ]);
+    expect(JSON.stringify(lineas)).not.toContain("ejemplo.01");
+  } finally {
+    vi.restoreAllMocks();
   }
 });

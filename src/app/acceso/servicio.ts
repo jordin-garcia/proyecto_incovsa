@@ -8,6 +8,8 @@ import { esAccesoTotal } from "@/lib/roles";
 import { claveAccesoInterna } from "@/lib/cuentas";
 import type { SesionActual } from "@/lib/sesion";
 import { MENSAJE_ERROR_GENERAL } from "@/lib/errores";
+import { verificarContrasena } from "@/lib/contrasenas";
+import { registrarEnServidor } from "@/lib/registro";
 import { esquemaIngreso, esquemaSistema, esquemaUsuario, type Sistema } from "./esquemas";
 
 export const ERROR_CREDENCIALES = "Usuario o contraseña incorrectos.";
@@ -80,9 +82,17 @@ async function registrarFallo(
     });
 }
 
+/** V16.3.3 (JG-26): la pantalla ya valida lo mismo; solo se registra la operación, nunca lo escrito. */
+function entradaRechazada(operacion: string) {
+  registrarEnServidor("aviso", "entrada_rechazada", { operacion });
+}
+
 export async function consultarSistemas(entrada: unknown, cabeceras: Headers) {
   const datos = esquemaUsuario.safeParse(entrada);
-  if (!datos.success) return { ok: false as const, error: datos.error.issues[0]?.message ?? ERROR_ACCESO };
+  if (!datos.success) {
+    entradaRechazada("acceso.consultar_usuario");
+    return { ok: false as const, error: datos.error.issues[0]?.message ?? ERROR_ACCESO };
+  }
   const ip = obtenerIp(cabeceras);
   return prisma.$transaction(
     async (tx) => {
@@ -147,7 +157,10 @@ export function destinoInicial(sesion: Pick<SesionActual, "sistema" | "usuario" 
 
 export async function iniciarSesion(entrada: unknown, cabeceras: Headers) {
   const datos = esquemaIngreso.safeParse(entrada);
-  if (!datos.success) return { ok: false as const, error: ERROR_CREDENCIALES };
+  if (!datos.success) {
+    entradaRechazada("acceso.iniciar_sesion");
+    return { ok: false as const, error: ERROR_CREDENCIALES };
+  }
   const { sistema, usuario, clave } = datos.data;
   const ip = obtenerIp(cabeceras);
   return prisma.$transaction(
@@ -164,6 +177,9 @@ export async function iniciarSesion(entrada: unknown, cabeceras: Headers) {
         include: { permisos: { include: { permiso: true } } },
       });
       const auth = crearAuth(sistema, tx);
+      // V7.2.4 (JG-26): la sesión que este navegador ya tenía en este sistema (cookie firmada y vigente). Se cierra si el
+      // nuevo inicio de sesión es correcto. La del otro sistema no se toca (una sesión por sistema, specs/03).
+      const anterior = await auth.api.getSession({ headers: cabeceras, query: { disableRefresh: true } });
       // Incluso sin cuenta, Better Auth verifica un hash ficticio para evitar diferencias de tiempo evidentes.
       const h = new Headers(cabeceras);
       h.set("x-real-ip", ip);
@@ -181,6 +197,7 @@ export async function iniciarSesion(entrada: unknown, cabeceras: Headers) {
         await registrarFallo(tx, sistema, usuario, ip, u?.id ?? null, false);
         return { ok: false as const, error: ERROR_CREDENCIALES };
       }
+      if (anterior) await tx.sesion.deleteMany({ where: { id: anterior.session.id } });
       await registrarBitacora(tx, {
         sistema,
         operacion: "Inicio de sesión",
@@ -200,6 +217,37 @@ export async function iniciarSesion(entrada: unknown, cabeceras: Headers) {
           permisos: u.permisos.map((p) => p.permiso.codigo),
         }),
       };
+    },
+    { timeout: 30000, maxWait: 30000 },
+  );
+}
+
+/**
+ * Reautenticación (CE-14, V7.5.1): confirma la contraseña del usuario de la sesión antes de una operación sensible.
+ * Toma el mismo bloqueo transaccional que el inicio de sesión. Con un bloqueo vigente de RNF-15 (del usuario o de la
+ * IP) devuelve `false` aunque la contraseña sea correcta. Cada contraseña incorrecta cuenta en el límite de intentos
+ * y queda en la bitácora como un intento fallido de inicio de sesión, con el bloqueo si corresponde. Un acierto no
+ * reinicia el conteo: solo lo reinicia un inicio de sesión correcto.
+ * Abre su propia transacción, para que el intento fallido quede guardado aunque la operación que la llama no siga.
+ */
+export async function reautenticar(sesion: SesionActual, clave: unknown, cabeceras: Headers): Promise<boolean> {
+  const entrada = esquemaIngreso.shape.clave.safeParse(clave);
+  const ip = obtenerIp(cabeceras);
+  const usuario = sesion.usuario.usuario.trim().toLowerCase();
+  return prisma.$transaction(
+    async (tx) => {
+      await bloquear(tx, ip, usuario);
+      if (await bloqueoVigente(tx, ip, usuario)) return false;
+      const cuenta = await tx.cuenta.findFirst({
+        where: { userId: sesion.usuario.id, providerId: "credential" },
+        select: { password: true },
+      });
+      const correcta =
+        entrada.success &&
+        !!cuenta?.password &&
+        (await verificarContrasena({ hash: cuenta.password, password: entrada.data }));
+      if (!correcta) await registrarFallo(tx, sesion.sistema, usuario, ip, sesion.usuario.id, false);
+      return correcta;
     },
     { timeout: 30000, maxWait: 30000 },
   );

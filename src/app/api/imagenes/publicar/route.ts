@@ -1,5 +1,6 @@
 import { obtenerSesion } from "@/lib/sesion";
-import { exigirPermiso, ErrorAcceso } from "@/modulos/permisos/servicio";
+import { exigirPermiso, ErrorAcceso, rechazarAcceso } from "@/modulos/permisos/servicio";
+import { esMismoOrigen } from "@/lib/origen";
 import { MAXIMO_BYTES } from "@/modulos/almacenamiento/servicio";
 import { publicarContenido } from "@/modulos/contenido/acciones";
 import { ErrorNegocio, aResultadoDeError } from "@/lib/errores";
@@ -8,8 +9,8 @@ import { ErrorNegocio, aResultadoDeError } from "@/lib/errores";
 export async function POST(request: Request) {
   try {
     exigirPermiso(await obtenerSesion("sitio", request.headers), "sit.contenido");
-    if (request.headers.get("origin") !== new URL(process.env.BETTER_AUTH_URL ?? request.url).origin)
-      throw new ErrorAcceso();
+    // V16.3.3 (JG-26): el rechazo por origen queda en el registro del servidor.
+    if (!esMismoOrigen(request)) rechazarAcceso("origen_ajeno");
     const tipo = request.headers.get("content-type") ?? "";
     if (!tipo.startsWith("multipart/form-data;")) throw new ErrorNegocio("El contenido enviado no es válido.");
     const lector = request.body?.getReader();

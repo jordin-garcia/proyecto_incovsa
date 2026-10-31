@@ -1,5 +1,6 @@
 import { obtenerSesion } from "@/lib/sesion";
-import { exigirPermiso, ErrorAcceso } from "@/modulos/permisos/servicio";
+import { exigirPermiso, ErrorAcceso, rechazarAcceso } from "@/modulos/permisos/servicio";
+import { esMismoOrigen } from "@/lib/origen";
 import { MAXIMO_BYTES } from "@/modulos/almacenamiento/servicio";
 import { ErrorNegocio, aResultadoDeError } from "@/lib/errores";
 import { publicarIndustria, publicarProducto } from "./acciones-catalogo";
@@ -9,8 +10,8 @@ export async function recibirGaleria(request: Request, tipo: "industria" | "prod
       await obtenerSesion("sitio", request.headers),
       tipo === "industria" ? "sit.industrias" : "sit.catalogo",
     );
-    if (request.headers.get("origin") !== new URL(process.env.BETTER_AUTH_URL ?? request.url).origin)
-      throw new ErrorAcceso();
+    // V16.3.3 (JG-26): el rechazo por origen queda en el registro del servidor.
+    if (!esMismoOrigen(request)) rechazarAcceso("origen_ajeno");
     const contenido = request.headers.get("content-type") ?? "";
     if (!contenido.startsWith("multipart/form-data;")) throw new ErrorNegocio("El contenido enviado no es válido.");
     const lector = request.body?.getReader();

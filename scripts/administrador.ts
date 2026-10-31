@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
-import { hashPassword } from "better-auth/crypto";
+import { cifrarContrasena } from "../src/lib/contrasenas";
 import { prisma } from "../src/lib/prisma";
 import { claveAccesoInterna, correoInterno } from "../src/lib/cuentas";
 import { ErrorNegocio } from "../src/lib/errores";
@@ -49,7 +49,7 @@ export function mensajeDeError(error: unknown): string {
 
 export async function crearAdministrador(entrada: unknown) {
   const datos = esquema.parse(entrada);
-  const password = await hashPassword(datos.clave);
+  const password = await cifrarContrasena(datos.clave);
   return prisma.$transaction(async (tx) => {
     await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${"crear-admin:" + datos.usuario}, 0))`;
     if (await tx.usuario.findFirst({ where: { displayUsername: { equals: datos.usuario, mode: "insensitive" } } }))

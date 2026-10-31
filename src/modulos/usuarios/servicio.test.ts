@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { verifyPassword } from "better-auth/crypto";
+import { verificarContrasena } from "@/lib/contrasenas";
 import { prisma } from "@/lib/prisma";
 import { claveAccesoInterna, correoInterno } from "@/lib/cuentas";
 import { ErrorNegocio } from "@/lib/errores";
@@ -136,7 +136,7 @@ describe("usuarios del picking", () => {
     expect(fila.username).toBe("picking.ana.bodega");
     expect(fila.email).toBe(correoInterno("picking.ana.bodega"));
     expect(fila.cuentas[0]?.password).not.toBe(CLAVE);
-    expect(await verifyPassword({ hash: fila.cuentas[0]!.password!, password: CLAVE })).toBe(true);
+    expect(await verificarContrasena({ hash: fila.cuentas[0]!.password!, password: CLAVE })).toBe(true);
     expect(fila.permisos.map((permiso) => permiso.permiso.codigo)).toEqual(["pk.bodega"]);
     expect(fila.sedes.map((sede) => sede.sedeId)).toEqual([quetzaltenango]);
 
@@ -250,7 +250,7 @@ describe("usuarios del picking", () => {
     expect(await prisma.sesion.count({ where: { userId: creado.id } })).toBe(0);
     const hash = (await prisma.cuenta.findFirstOrThrow({ where: { userId: creado.id } })).password!;
     expect(hash).not.toBe(CLAVE_NUEVA);
-    expect(await verifyPassword({ hash, password: CLAVE_NUEVA })).toBe(true);
+    expect(await verificarContrasena({ hash, password: CLAVE_NUEVA })).toBe(true);
     expect(JSON.stringify((await bitacora("Restablecimiento de contraseña")).detalle)).not.toContain(CLAVE_NUEVA);
     expect((await bitacora("Restablecimiento de contraseña")).operacion).toBe("Restablecimiento de contraseña");
 
@@ -585,7 +585,7 @@ describe("usuarios del picking", () => {
     });
     await restablecerClave({ id: creado.id, clave: CLAVE_NUEVA, confirmarClave: CLAVE_NUEVA }, sitio);
     const fila = await prisma.usuario.findUniqueOrThrow({ where: { id: creado.id }, include: { cuentas: true } });
-    expect(await verifyPassword({ hash: fila.cuentas[0]!.password!, password: CLAVE_NUEVA })).toBe(true);
+    expect(await verificarContrasena({ hash: fila.cuentas[0]!.password!, password: CLAVE_NUEVA })).toBe(true);
     expect(await prisma.sesion.count({ where: { userId: creado.id } })).toBe(0);
     const detalle = JSON.stringify((await bitacora("Restablecimiento de contraseña")).detalle);
     expect(detalle).not.toContain(CLAVE_NUEVA);

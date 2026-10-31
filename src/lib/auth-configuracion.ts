@@ -4,7 +4,12 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { username } from "better-auth/plugins";
 import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "./prisma";
+import { atributosCookie, nombreCookie } from "./cookies";
+import { cifrarContrasena, verificarContrasena } from "./contrasenas";
 import type { Sistema } from "@/app/acceso/esquemas";
+
+/** Todas las cookies que Better Auth 1.7 puede escribir (`getCookies` de better-auth/cookies). */
+const COOKIES_BETTER_AUTH = ["session_token", "session_data", "account_data", "dont_remember"] as const;
 
 // Solo desarrollo: claves efímeras por sistema, conservadas durante las recargas. Producción exige las variables.
 const globalAuth = globalThis as typeof globalThis & { clavesAuthDesarrollo?: Record<Sistema, string> };
@@ -36,7 +41,13 @@ export function crearAuth(sistema: Sistema, cliente: Prisma.TransactionClient = 
     basePath: `/api/auth/${sistema}`,
     secret: secreto(sistema),
     database: prismaAdapter(cliente, { provider: "postgresql" }),
-    emailAndPassword: { enabled: true, disableSignUp: true, minPasswordLength: 8 },
+    emailAndPassword: {
+      enabled: true,
+      disableSignUp: true,
+      minPasswordLength: 8,
+      // V11.4.2 (JG-26): la misma función que la administración de usuarios, crear-admin y las semillas.
+      password: { hash: cifrarContrasena, verify: verificarContrasena },
+    },
     user: {
       modelName: "usuario",
       additionalFields: {
@@ -57,13 +68,13 @@ export function crearAuth(sistema: Sistema, cliente: Prisma.TransactionClient = 
     },
     advanced: {
       cookiePrefix: `incovsa-${sistema}`,
-      useSecureCookies: process.env.NODE_ENV === "production",
-      defaultCookieAttributes: {
-        httpOnly: true,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
-        path: "/",
-      },
+      // V3.3.1 y V3.3.3 (JG-26): Better Auth solo sabe anteponer __Secure-. Se desactiva ese prefijo y cada cookie
+      // recibe su nombre con __Host- en producción; `secure` y `path=/` (sin Domain) los fijan los atributos comunes.
+      useSecureCookies: false,
+      cookies: Object.fromEntries(
+        COOKIES_BETTER_AUTH.map((cookie) => [cookie, { name: nombreCookie(`incovsa-${sistema}.${cookie}`) }]),
+      ),
+      defaultCookieAttributes: atributosCookie(),
       ipAddress: { ipAddressHeaders: ["x-real-ip"] },
     },
     // El control persistente RNF-15 vive en el servicio; nunca se expone directamente el handler de Better Auth.
