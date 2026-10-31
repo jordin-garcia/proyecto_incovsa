@@ -33,8 +33,57 @@ describe("aResultadoDeError", () => {
     expect(resultado).toEqual({ ok: false, error: MENSAJE_ERROR_GENERAL });
     expect(JSON.stringify(resultado)).not.toContain("postgresql");
     expect(JSON.stringify(resultado)).not.toContain("usuario");
-    // El detalle queda solo en el registro del servidor.
-    expect(registro).toHaveBeenCalledWith(expect.any(String), tecnico);
+    // El detalle queda solo en el registro del servidor: tipo y ubicación, sin el mensaje (V16.3.4, JG-26).
+    expect(registro).toHaveBeenCalledTimes(1);
+    const linea = JSON.parse(registro.mock.calls[0]![0] as string);
+    expect(linea).toMatchObject({ nivel: "error", evento: "error_inesperado", tipo: "Error" });
+    expect(linea.ubicacion.length).toBeGreaterThan(0);
+    expect(registro.mock.calls[0]![0]).not.toContain("postgresql");
+  });
+
+  it("ASVS V16.2.1: el error inesperado lleva la fecha, la operación, el sistema y el usuario, sin datos personales", async () => {
+    const { fijarContextoRegistro } = await import("./registro");
+    const registro = vi.spyOn(console, "error").mockImplementation(() => {});
+    async function operacion() {
+      await Promise.resolve();
+      fijarContextoRegistro({ sistema: "picking", usuarioId: "id-usuario-1", operacion: "pk.bodega" });
+      await Promise.resolve();
+      try {
+        throw Object.assign(new Error("Juan Pérez, clave Secreta-1"), { code: "P2002" });
+      } catch (error) {
+        return aResultadoDeError(error);
+      }
+    }
+    expect(await operacion()).toEqual({ ok: false, error: MENSAJE_ERROR_GENERAL });
+    const texto = registro.mock.calls[0]![0] as string;
+    expect(JSON.parse(texto)).toMatchObject({
+      nivel: "error",
+      evento: "error_inesperado",
+      sistema: "picking",
+      usuarioId: "id-usuario-1",
+      operacion: "pk.bodega",
+      codigo: "P2002",
+      fecha: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T/),
+    });
+    expect(texto).not.toContain("Juan");
+    expect(texto).not.toContain("Secreta");
+  });
+
+  it("ASVS V16.2.1: el contexto de una operación no pasa a otra que corre al mismo tiempo", async () => {
+    const { fijarContextoRegistro } = await import("./registro");
+    const registro = vi.spyOn(console, "error").mockImplementation(() => {});
+    // Como en las acciones: exigirPermiso se llama después de leer la sesión (`await obtenerSesion(...)`).
+    const conContexto = async () => {
+      await Promise.resolve();
+      fijarContextoRegistro({ usuarioId: "con-contexto" });
+      await Promise.resolve();
+    };
+    const sinContexto = async () => {
+      await Promise.resolve();
+      aResultadoDeError(new Error("x"));
+    };
+    await Promise.all([conContexto(), sinContexto()]);
+    expect(JSON.parse(registro.mock.calls[0]![0] as string).usuarioId).toBeUndefined();
   });
 
   it("specs/16 (Cabeceras y transporte): lo que no es un Error tampoco se revela", () => {

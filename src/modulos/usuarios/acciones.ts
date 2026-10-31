@@ -2,6 +2,7 @@
 
 import { obtenerSesion, type SesionActual } from "@/lib/sesion";
 import { ErrorNegocio, MENSAJE_ERROR_GENERAL, aResultadoDeError } from "@/lib/errores";
+import { registrarEnServidor } from "@/lib/registro";
 import { exigirAccesoTotal } from "@/modulos/permisos/servicio";
 import { avisarCambio } from "@/modulos/tiempo-real/servidor";
 import {
@@ -22,12 +23,18 @@ function leer<T>(
   esquema: {
     safeParse: (
       entrada: unknown,
-    ) => { success: true; data: T } | { success: false; error: { issues: { message: string }[] } };
+    ) => { success: true; data: T } | { success: false; error: { issues: { message: string; path: PropertyKey[] }[] } };
   },
   entrada: unknown,
 ): T {
   const resultado = esquema.safeParse(entrada);
-  if (!resultado.success) throw new ErrorNegocio(resultado.error.issues[0]?.message ?? MENSAJE_ERROR_GENERAL);
+  if (!resultado.success) {
+    // V16.3.3 (JG-26): la pantalla ya valida lo mismo; un rechazo aquí queda en el registro del servidor.
+    registrarEnServidor("aviso", "entrada_rechazada", {
+      campos: resultado.error.issues.map((problema) => problema.path.map(String).join(".")),
+    });
+    throw new ErrorNegocio(resultado.error.issues[0]?.message ?? MENSAJE_ERROR_GENERAL);
+  }
   return resultado.data;
 }
 

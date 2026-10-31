@@ -1,0 +1,85 @@
+
+Running 65 tests using 1 worker
+
+  ok  1 [escritorio] › pruebas-e2e\picking\auditoria-jg24.spec.ts:67:1 › RN-49 / D-01: la confirmación de Facturación cuenta un cliente aunque varíen mayúsculas, tildes y espacios exteriores (5.3s)
+  ok  2 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:83:7 › Módulo de Bodega E2E › Criterio 8 / RNF-08: Bodega con datos sin violaciones serias de axe, contraste incluido (4.6s)
+  ok  3 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:96:7 › Módulo de Bodega E2E › RNF-08: pedido que recoge el cliente, con «Sin lote», y su Detalle sin violaciones serias de axe (6.6s)
+  ok  4 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:117:7 › Módulo de Bodega E2E › RNF-08: líneas marcadas sin violaciones serias de axe, contraste incluido (7.6s)
+  ok  5 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:145:7 › Módulo de Bodega E2E › RNF-08: Detalle de Ruta sin violaciones serias de axe, contraste incluido (5.2s)
+  ok  6 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:159:7 › Módulo de Bodega E2E › RNF-08: Bodega vacía sin violaciones serias de axe, contraste incluido (3.7s)
+  ok  7 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:169:7 › Módulo de Bodega E2E › RF-SL-21 / RN-51 (CP-19): el envío muestra dos filas con lote resaltado y unidades correctas (2.5s)
+  ok  8 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:200:7 › Módulo de Bodega E2E › RF-SL-74 / RF-SL-75 (CP-36): fecha y hora programadas y Detalle de Ruta completo (3.9s)
+  ok  9 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:231:7 › Módulo de Bodega E2E › RF-SL-23 / RN-20: marcar línea persiste al recargar y marcar todo marca todas (6.5s)
+  ok 10 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:280:7 › Módulo de Bodega E2E › RF-SL-61 (auditoría H-17): el encabezado de Bodega tiene la estructura de cab() con la instrucción a la par del título (2.7s)
+  ok 11 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:297:7 › Módulo de Bodega E2E › RF-SL-75 / RNF-01 (auditoría H-18, H-19 y H-20): «Programada» en verde y negrita, avance y herramientas como el prototipo (2.5s)
+  ok 12 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:341:7 › Módulo de Bodega E2E › RF-SL-74 (auditoría H-21): en el Detalle se desplaza la ventana, no una zona interna (5.5s)
+  ok 13 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:375:7 › Módulo de Bodega E2E › RF-SL-23 (auditoría H-24): sin red, la marca vuelve atrás con un mensaje y la pantalla sigue en uso (4.9s)
+  ok 14 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:417:7 › Módulo de Bodega E2E › RF-SL-24 / RN-11 (CP-38): despacho solo habilitado con todo marcado y pasa a En Ruta (5.7s)
+  ok 15 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:462:7 › Módulo de Bodega E2E › Criterio 7: usuario sin pk.bodega ve pantalla sin acceso con textos del prototipo (2.1s)
+  ok 16 [escritorio] › pruebas-e2e\picking\camiones.spec.ts:28:7 › Configuración: camiones › RF-SL-04: se crea, edita y elimina un camión (9.0s)
+  ok 17 [escritorio] › pruebas-e2e\picking\camiones.spec.ts:74:7 › Configuración: camiones › criterio 6: sin violaciones serias de axe (4.1s)
+  ok 18 [escritorio] › pruebas-e2e\picking\camiones.spec.ts:83:7 › Configuración: camiones › RNF-04: sin pk.cfg.camiones la pantalla rechaza el acceso (2.2s)
+  ok 19 [escritorio] › pruebas-e2e\picking\facturacion-carga.spec.ts:40:1 › RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos facturados (18.4s)
+  ok 20 [escritorio] › pruebas-e2e\picking\facturacion-envio.spec.ts:51:5 › RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bodega (38.9s)
+  ok 21 [escritorio] › pruebas-e2e\picking\reportes-exportacion.spec.ts:26:5 › RF-SL-38 / CAM-96: descarga Excel y PDF desde las tres pestañas de Reportes (10.0s)
+  ok 22 [escritorio] › pruebas-e2e\picking\reportes-exportacion.spec.ts:69:7 › RF-SL-38 / H-77: avisa cuando la exportación responde 400 (3.5s)
+  ok 23 [escritorio] › pruebas-e2e\picking\reportes-exportacion.spec.ts:69:7 › RF-SL-38 / H-77: avisa cuando la exportación responde 403 (3.3s)
+  ok 24 [escritorio] › pruebas-e2e\picking\reportes-exportacion.spec.ts:69:7 › RF-SL-38 / H-77: avisa cuando la exportación responde 500 (3.5s)
+  ok 25 [escritorio] › pruebas-e2e\picking\reportes-exportacion.spec.ts:91:5 › RNF-04 (R-P01): al elegir la segunda sede en Reportes, Excel y PDF traen sus datos y su nombre (9.5s)
+  ok 26 [escritorio] › pruebas-e2e\picking\reportes.spec.ts:25:5 › RF-SL-59 / CP-64: periodos y fechas inválidas en Reportes (15.8s)
+  ok 27 [escritorio] › pruebas-e2e\picking\reportes.spec.ts:120:7 › RF-SL-59 / RNF-08: Despacho del periodo conserva el rango y es accesible (4.7s)
+  ok 28 [escritorio] › pruebas-e2e\picking\reportes.spec.ts:120:7 › RF-SL-59 / RNF-08: Rutas realizadas conserva el rango y es accesible (5.2s)
+  ok 29 [escritorio] › pruebas-e2e\picking\reportes.spec.ts:120:7 › RF-SL-59 / RNF-08: Bitácora conserva el rango y es accesible (5.3s)
+  ok 30 [escritorio] › pruebas-e2e\picking\reportes.spec.ts:151:5 › RF-SL-38 / RF-SL-37 / RN-39: datos de demostración, conversiones y recorrido en las tres pestañas (16.9s)
+  ok 31 [escritorio] › pruebas-e2e\picking\ruta.spec.ts:86:7 › Módulo de Ruta E2E (JM-06) › Criterio 1: RF-SL-26 / RN-46 - Visibilidad de rutas por rol y permiso (8.6s)
+  ok 32 [escritorio] › pruebas-e2e\picking\ruta.spec.ts:134:7 › Módulo de Ruta E2E (JM-06) › Criterio 2: RF-SL-78 - Orden de la más reciente a la más antigua (2.1s)
+  ok 33 [escritorio] › pruebas-e2e\picking\ruta.spec.ts:155:7 › Módulo de Ruta E2E (JM-06) › Criterio 3: RF-SL-27 / RN-49 - Detalle de ruta con Cliente, Sector y Total (kg) (2.5s)
+  ok 34 [escritorio] › pruebas-e2e\picking\ruta.spec.ts:186:7 › Módulo de Ruta E2E (JM-06) › Criterio 4 y 5: RF-SL-28, RF-SL-29, RN-29, RN-11 - Cierre de ruta y entrega con recorrido reordenado (9.3s)
+  ok 35 [escritorio] › pruebas-e2e\picking\ruta.spec.ts:254:7 › Módulo de Ruta E2E (JM-06) › Criterio 6 y 7 / RNF-08 / RNF-14: Accesibilidad con axe y responsividad (4.1s)
+  ok 36 [escritorio] › pruebas-e2e\picking\ruta.spec.ts:280:7 › Módulo de Ruta E2E (JM-06) › H-69 / RNF-14: el piloto reordena los clientes con el arrastre táctil (hasTouch) en el teléfono (4.9s)
+  ok 37 [escritorio] › pruebas-e2e\picking\usuarios.spec.ts:31:7 › Configuración: usuarios del picking › RF-SL-03: Gerencia crea un usuario de Bodega que solo ve Quetzaltenango (9.0s)
+  ok 38 [escritorio] › pruebas-e2e\picking\usuarios.spec.ts:77:7 › Configuración: usuarios del picking › criterio 6: con pk.cfg.camiones sin Gerencia no ve la pestaña Usuarios (6.9s)
+  ok 39 [escritorio] › pruebas-e2e\picking\usuarios.spec.ts:106:7 › Configuración: usuarios del picking › criterio 8: la pestaña Usuarios no tiene violaciones serias de axe (6.5s)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3101
+- Network:       http://127.0.0.1:3101
+✓ Ready in 0ms
+✓ Running next.config took 30ms
+[escritorio] TIEMPO REAL SSE: 686 ms
+  ok 40 [escritorio] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:98:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RNF-13 / RF-SL-23 (CP-37): el marcado aparece de inmediato en quien marca (optimista), revierte ante fallo y sincroniza en < 2s (7.3s)
+  ok 41 [escritorio] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:203:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RF-SL-20 / RN-28 / RNF-13: reordenar filas y cola se refleja en tiempo real en otra pantalla en < 2s sin historial (5.8s)
+  ok 42 [escritorio] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:334:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RF-SL-20: el arrastre funciona con teclado, mouse y touch (dedo con pulsación de 380 ms) (9.3s)
+  ok 43 [escritorio] › pruebas-e2e\picking\facturacion-dos-facturadores.spec.ts:38:5 › RN-48 / RNF-13 / decisiones 39 y 41: dos facturadores, edición, arrastre y envío simultáneos (16.5s)
+  ok 44 [escritorio] › pruebas-e2e\picking\tablero.spec.ts:100:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-58: cambia entre modo claro y modo oscuro y el modo se conserva al recargar esa pantalla sin afectar a otras (5.4s)
+  ok 45 [escritorio] › pruebas-e2e\picking\tablero.spec.ts:154:7 › Tablero de Bodega en pantalla completa (JM-05) › CAM-93 / CAM-94: colores del lote y del cuadro del pedido en cada modo, y la silueta del camión grande en todas las rutas (2.3s)
+  ok 46 [escritorio] › pruebas-e2e\picking\tablero.spec.ts:201:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-77 (CP-40): con más líneas de las que caben en una columna, se numeran de arriba hacia abajo, primero la izquierda (1.7s)
+  ok 47 [escritorio] › pruebas-e2e\picking\tablero.spec.ts:238:7 › Tablero de Bodega en pantalla completa (JM-05) › RNF-02: en una ruta que no cabe en la pantalla se pueden ver y tocar todas las líneas (2.2s)
+  ok 48 [escritorio] › pruebas-e2e\picking\tablero.spec.ts:299:7 › Tablero de Bodega en pantalla completa (JM-05) › RNF-13 / RF-SL-23: marcar una línea en Bodega se ve en el tablero en menos de 2 segundos, resaltada (4.7s)
+  ok 49 [escritorio] › pruebas-e2e\picking\tablero.spec.ts:368:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-23 / RF-SL-20 / RF-SL-74: en el tablero se marca con un toque, se marca todo, se ordena por peso y se ve el detalle (4.4s)
+  ok 50 [escritorio] › pruebas-e2e\picking\tablero.spec.ts:432:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-25: la pantalla se queda en la ruta que muestra aunque cambie la prioridad de la cola (3.5s)
+(node:9812) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+  ok 51 [escritorio] › pruebas-e2e\picking\tablero.spec.ts:468:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-24: con todo marcado, Pedido Despachado confirma, avisa y saca el pedido del tablero (4.3s)
+  ok 52 [escritorio] › pruebas-e2e\picking\tablero.spec.ts:491:7 › Tablero de Bodega en pantalla completa (JM-05) › RNF-02 / RNF-08: coincide con el prototipo en los dos modos y no tiene violaciones serias de accesibilidad (8.5s)
+  ok 53 [escritorio] › pruebas-e2e\picking\tablero.spec.ts:547:7 › Tablero de Bodega en pantalla completa (JM-05) › H-71: si la ruta no tiene camión asignado se muestra con camión «—» y no como recogida en bodega (1.5s)
+  ok 54 [escritorio] › pruebas-e2e\picking\tablero.spec.ts:561:7 › Tablero de Bodega en pantalla completa (JM-05) › H-73: un usuario sin permiso de Bodega (ejemplo.06) es redirigido a su módulo inicial (/picking/ruta) (1.1s)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3102
+- Network:       http://127.0.0.1:3102
+✓ Ready in 0ms
+✓ Running next.config took 42ms
+  ok 55 [tv] › pruebas-e2e\picking\tablero.spec.ts:100:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-58: cambia entre modo claro y modo oscuro y el modo se conserva al recargar esa pantalla sin afectar a otras (7.7s)
+  ok 56 [tv] › pruebas-e2e\picking\tablero.spec.ts:154:7 › Tablero de Bodega en pantalla completa (JM-05) › CAM-93 / CAM-94: colores del lote y del cuadro del pedido en cada modo, y la silueta del camión grande en todas las rutas (2.5s)
+  ok 57 [tv] › pruebas-e2e\picking\tablero.spec.ts:201:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-77 (CP-40): con más líneas de las que caben en una columna, se numeran de arriba hacia abajo, primero la izquierda (1.8s)
+  ok 58 [tv] › pruebas-e2e\picking\tablero.spec.ts:238:7 › Tablero de Bodega en pantalla completa (JM-05) › RNF-02: en una ruta que no cabe en la pantalla se pueden ver y tocar todas las líneas (2.4s)
+  ok 59 [tv] › pruebas-e2e\picking\tablero.spec.ts:299:7 › Tablero de Bodega en pantalla completa (JM-05) › RNF-13 / RF-SL-23: marcar una línea en Bodega se ve en el tablero en menos de 2 segundos, resaltada (5.5s)
+  ok 60 [tv] › pruebas-e2e\picking\tablero.spec.ts:368:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-23 / RF-SL-20 / RF-SL-74: en el tablero se marca con un toque, se marca todo, se ordena por peso y se ve el detalle (5.2s)
+  ok 61 [tv] › pruebas-e2e\picking\tablero.spec.ts:432:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-25: la pantalla se queda en la ruta que muestra aunque cambie la prioridad de la cola (3.6s)
+(node:15240) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+  ok 62 [tv] › pruebas-e2e\picking\tablero.spec.ts:468:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-24: con todo marcado, Pedido Despachado confirma, avisa y saca el pedido del tablero (4.7s)
+  ok 63 [tv] › pruebas-e2e\picking\tablero.spec.ts:491:7 › Tablero de Bodega en pantalla completa (JM-05) › RNF-02 / RNF-08: coincide con el prototipo en los dos modos y no tiene violaciones serias de accesibilidad (8.6s)
+  ok 64 [tv] › pruebas-e2e\picking\tablero.spec.ts:547:7 › Tablero de Bodega en pantalla completa (JM-05) › H-71: si la ruta no tiene camión asignado se muestra con camión «—» y no como recogida en bodega (1.6s)
+  ok 65 [tv] › pruebas-e2e\picking\tablero.spec.ts:561:7 › Tablero de Bodega en pantalla completa (JM-05) › H-73: un usuario sin permiso de Bodega (ejemplo.06) es redirigido a su módulo inicial (/picking/ruta) (1.1s)
+
+  65 passed (7.4m)

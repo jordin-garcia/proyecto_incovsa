@@ -4,6 +4,8 @@ import { cabecerasDeSeguridad, crearCsp } from "./src/lib/cabeceras";
 const nextConfig: NextConfig = {
   // Imagen de producción autocontenida para Docker (specs/16, "Despliegue").
   output: "standalone",
+  // ZAP 10037 (JG-26): sin X-Powered-By, que revela la tecnología.
+  poweredByHeader: false,
   async headers() {
     const produccion = process.env.NODE_ENV === "production";
     return [

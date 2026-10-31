@@ -2,10 +2,17 @@ import type { SesionActual } from "@/lib/sesion";
 import { ErrorNegocio } from "@/lib/errores";
 import { esAccesoTotal, normalizarRol } from "@/lib/roles";
 import { prisma } from "@/lib/prisma";
+import { fijarContextoRegistro, registrarEnServidor } from "@/lib/registro";
 
+/**
+ * Rechazo de autorización. ASVS V16.3.2 (JG-26): todo rechazo deja una línea en el registro del servidor. Los que
+ * lanzan los servicios directamente (registro de otra sede, sede distinta de la de trabajo…) se registran aquí, con
+ * el contexto que fijó `exigirPermiso`; `rechazarAcceso` ya los registra con su motivo y no los repite.
+ */
 export class ErrorAcceso extends ErrorNegocio {
-  constructor() {
+  constructor({ registrado = false }: { registrado?: boolean } = {}) {
     super("No tiene permisos para acceder a este módulo.");
+    if (!registrado) registrarEnServidor("aviso", "autorizacion_rechazada", { motivo: "regla_de_acceso" });
   }
 }
 
@@ -15,20 +22,47 @@ export function tienePermiso(sesion: SesionActual | null, permiso: string): bool
   return esAccesoTotal(sesion.usuario.rol) || sesion.permisos.includes(permiso);
 }
 
-/** Recibe exclusivamente una sesión obtenida en el servidor, nunca datos del navegador. */
+type MotivoRechazo = "sin_sesion" | "sin_permiso" | "sede_ajena" | "origen_ajeno" | "entrada_invalida";
+
+/**
+ * Rechazo de autorización (ASVS V16.3.2 y V16.3.3): deja una línea en el registro del servidor con el motivo, la
+ * operación, el sistema y el usuario, sin datos personales, y lanza ErrorAcceso. La bitácora de Reportes no lo guarda.
+ */
+export function rechazarAcceso(
+  motivo: MotivoRechazo,
+  datos: { sistema?: string; usuarioId?: string; operacion?: string; sede?: number } = {},
+): never {
+  registrarEnServidor("aviso", "autorizacion_rechazada", { motivo, ...datos });
+  throw new ErrorAcceso({ registrado: true });
+}
+
+const sistemaDelPermiso = (permiso: string) =>
+  permiso.startsWith("pk.") ? "picking" : permiso.startsWith("sit.") ? "sitio" : undefined;
+
+/**
+ * Recibe exclusivamente una sesión obtenida en el servidor, nunca datos del navegador. Fija además el contexto del
+ * registro del servidor (sistema, usuario y operación) para el resto de la operación (`src/lib/registro.ts`).
+ */
 export function exigirPermiso(
   sesion: SesionActual | null,
   permiso: string,
   sede?: number,
 ): asserts sesion is SesionActual {
-  if (!sesion || !tienePermiso(sesion, permiso)) throw new ErrorAcceso();
+  const contexto = {
+    sistema: sesion?.sistema ?? sistemaDelPermiso(permiso),
+    usuarioId: sesion?.usuario.id,
+    operacion: permiso,
+  };
+  fijarContextoRegistro(contexto);
+  if (!sesion) rechazarAcceso("sin_sesion", contexto);
+  if (!tienePermiso(sesion, permiso)) rechazarAcceso("sin_permiso", contexto);
   if (
     sede !== undefined &&
     (!Number.isSafeInteger(sede) ||
       sede < 1 ||
       (!esAccesoTotal(sesion.usuario.rol) && !sesion.sedes.some((s) => s.id === sede)))
   )
-    throw new ErrorAcceso();
+    rechazarAcceso("sede_ajena", { ...contexto, sede: Number.isSafeInteger(sede) ? sede : undefined });
 }
 
 /**
@@ -39,7 +73,10 @@ export function exigirAccesoTotal(
   sesion: SesionActual | null,
   sistema: SesionActual["sistema"],
 ): asserts sesion is SesionActual {
-  if (!sesion || sesion.sistema !== sistema || !esAccesoTotal(sesion.usuario.rol)) throw new ErrorAcceso();
+  const contexto = { sistema, usuarioId: sesion?.usuario.id, operacion: "acceso_total" };
+  fijarContextoRegistro(contexto);
+  if (!sesion) rechazarAcceso("sin_sesion", contexto);
+  if (sesion.sistema !== sistema || !esAccesoTotal(sesion.usuario.rol)) rechazarAcceso("sin_permiso", contexto);
 }
 
 export async function sedesDelUsuario(sesion: SesionActual | null) {

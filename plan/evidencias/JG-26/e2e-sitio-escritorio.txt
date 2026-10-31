@@ -1,0 +1,44 @@
+
+Running 34 tests using 1 worker
+
+  ok  1 [escritorio] › pruebas-e2e\sitio\auditoria-ce13.spec.ts:11:5 › RF-SW-06 / H-60: el formulario recorta los topes y no muestra mensajes de Zod en inglés (8.2s)
+  ok  2 [escritorio] › pruebas-e2e\sitio\auditoria-ce13.spec.ts:61:5 › RF-SW-06 / H-61: al salir del campo solo se validan el correo y el teléfono (3.3s)
+  ok  3 [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:66:1 › RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible (5.5s)
+  ok  4 [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:116:1 › RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito (3.9s)
+  ok  5 [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:150:1 › RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos (9.6s)
+  ok  6 [escritorio] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:62:5 › RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y relaciones actuales (6.3s)
+  ok  7 [escritorio] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:109:5 › RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos, vacío y tarjetas sin lote (3.7s)
+  ok  8 [escritorio] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:132:5 › RF-SW-05 / RF-SW-17 / RF-SW-15: detalle público, galería, recomendados y enlaces (5.6s)
+  ok  9 [escritorio] › pruebas-e2e\sitio\inicio.spec.ts:6:5 › RF-SW-01 / RF-SW-27: Inicio informativo conserva secciones, cifras y textos aprobados (3.2s)
+  ok 10 [escritorio] › pruebas-e2e\sitio\inicio.spec.ts:30:5 › RF-SW-15 / RF-SW-22 / RF-SW-24: pie público y mapas solo de las dos oficinas (2.7s)
+  ok 11 [escritorio] › pruebas-e2e\sitio\inicio.spec.ts:64:5 › RF-SW-08 / RNF-08: menú responsivo, ausencia de desbordamiento y accesibilidad (3.9s)
+  ok 12 [escritorio] › pruebas-e2e\sitio\inicio.spec.ts:81:5 › RF-SW-16: tarjetas aparecen al entrar en pantalla y desaparecen al salir (3.0s)
+  ok 13 [escritorio] › pruebas-e2e\sitio\inicio.spec.ts:110:5 › RN-56 / RNF-17: cinco imágenes rotan cada 5 s, una queda fija y las secundarias cargan después (5.5s)
+  ok 14 [escritorio] › pruebas-e2e\sitio\nosotros.spec.ts:21:5 › RF-SW-02 / CAM-79 / RNF-08: secciones, fondos, pie y accesibilidad de Quiénes somos (3.1s)
+  ok 15 [escritorio] › pruebas-e2e\sitio\nosotros.spec.ts:54:5 › RF-SW-02 / CAM-80: ambos bloques alternan y quitar Inquiserca desde el panel deja solo INCOVSA (18.5s)
+  ok 16 [escritorio] › pruebas-e2e\sitio\nosotros.spec.ts:101:5 › RF-SW-29 / RF-SW-16: cinco valores pendientes y presentación dinámica (1.8s)
+  ok 17 [escritorio] › pruebas-e2e\sitio\nosotros.spec.ts:116:5 › RF-SW-02 / RF-SW-29 / RN-56: historia y cinco imágenes publicadas conservan orden, fila y ausencia de textos (6.3s)
+  ok 18 [escritorio] › pruebas-e2e\sitio\noticias.spec.ts:92:1 › RF-SW-18 / RF-SW-15 / RNF-08: estados vacíos y formulario accesibles sin opción de ocultar (6.9s)
+  ok 19 [escritorio] › pruebas-e2e\sitio\noticias.spec.ts:122:1 › RF-SW-18 / RN-56 / RN-39: crea, edita y elimina con confirmación; texto completo y sin desbordamiento (13.4s)
+  ok 20 [escritorio] › pruebas-e2e\sitio\noticias.spec.ts:203:1 › RF-SW-25 / RNF-08: sin permiso de Noticias ofrece volver al módulo propio (3.7s)
+  ok 21 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:89:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública / (4.5s)
+  ok 22 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:89:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /nosotros (2.9s)
+  ok 23 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:89:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /industrias (2.7s)
+  ok 24 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:89:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /productos (5.3s)
+  ok 25 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:89:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /noticias (2.7s)
+  ok 26 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:89:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /contacto (4.1s)
+  ok 27 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:89:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /acceso (2.4s)
+  ok 28 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:104:5 › RF-SW-16 / RNF-08: aparición, desaparición y navegación pública completa con teclado (14.9s)
+  ok 29 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:138:5 › RF-SW-05 / RNF-08: detalle del producto y regreso al catálogo con teclado (6.9s)
+  ok 30 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:155:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.08 (23.7s)
+  ok 31 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:155:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.09 (4.3s)
+  ok 32 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:155:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.10 (4.2s)
+  ok 33 [escritorio] › pruebas-e2e\sitio\revision-integral.spec.ts:224:5 › RNF-01 / RNF-08: revisión de Usuarios del sitio con Gerencia (4.6s)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3101
+- Network:       http://127.0.0.1:3101
+✓ Ready in 0ms
+✓ Running next.config took 30ms
+  ok 34 [escritorio] › pruebas-e2e\sitio\rendimiento-galerias.spec.ts:74:5 › RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respecto de una (33.6s)
+
+  34 passed (4.1m)

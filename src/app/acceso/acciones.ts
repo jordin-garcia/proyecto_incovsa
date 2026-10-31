@@ -2,16 +2,19 @@
 
 import { cookies, headers } from "next/headers";
 import { redirect, unstable_rethrow } from "next/navigation";
-import { ErrorNegocio, MENSAJE_ERROR_GENERAL } from "@/lib/errores";
+import { ErrorNegocio, MENSAJE_ERROR_GENERAL, describirError } from "@/lib/errores";
+import { registrarEnServidor } from "@/lib/registro";
 import { aplicarCookiesAuth } from "@/lib/cookies-auth";
-import { esquemaSistema, esquemaUsuario } from "./esquemas";
-import { consultarSistemas, iniciarSesion, cerrarSesion } from "./servicio";
+import { atributosCookie, cookieAccesoUsuario } from "@/lib/cookies";
+import { esquemaUsuario } from "./esquemas";
+import { consultarSistemas, iniciarSesion } from "./servicio";
 
-function errorSeguro(error: unknown) {
+function errorSeguro(error: unknown, operacion: string) {
   unstable_rethrow(error);
   if (error instanceof ErrorNegocio) return { ok: false as const, error: error.message };
-  // Un error de Prisma o validación puede contener datos de entrada: nunca registrar el objeto recibido.
-  console.error("Error inesperado en una operación de autenticación.");
+  // Un error de Prisma o validación puede contener datos de entrada: se registra su tipo y ubicación, nunca su
+  // mensaje ni el objeto recibido (V16.3.4, JG-26).
+  registrarEnServidor("error", "error_inesperado", { operacion, ...describirError(error) });
   return { ok: false as const, error: MENSAJE_ERROR_GENERAL };
 }
 
@@ -21,17 +24,12 @@ export async function consultarUsuario(entrada: unknown) {
     const r = await consultarSistemas(entrada, await headers());
     if (r.ok) {
       const { usuario } = esquemaUsuario.parse(entrada);
-      (await cookies()).set("incovsa-acceso-usuario", usuario, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/acceso",
-        maxAge: 900,
-      });
+      // __Host- en producción (V3.3.3, JG-26): por eso path=/ en lugar de /acceso.
+      (await cookies()).set(cookieAccesoUsuario(), usuario, atributosCookie(900));
     }
     return r;
   } catch (error) {
-    return errorSeguro(error);
+    return errorSeguro(error, "acceso.consultar_usuario");
   }
 }
 
@@ -40,19 +38,9 @@ export async function ingresar(entrada: unknown) {
     const r = await iniciarSesion(entrada, await headers());
     if (!r.ok) return r;
     await aplicarCookiesAuth(r.cabeceras);
-    (await cookies()).set("incovsa-acceso-usuario", "", { path: "/acceso", maxAge: 0 });
+    (await cookies()).set(cookieAccesoUsuario(), "", atributosCookie(0));
     redirect(r.destino);
   } catch (error) {
-    return errorSeguro(error);
-  }
-}
-
-export async function salir(sistema: unknown) {
-  try {
-    const respuesta = await cerrarSesion(esquemaSistema.parse(sistema), await headers());
-    await aplicarCookiesAuth(respuesta.headers);
-    redirect("/?sesion=cerrada");
-  } catch (error) {
-    return errorSeguro(error);
+    return errorSeguro(error, "acceso.iniciar_sesion");
   }
 }
