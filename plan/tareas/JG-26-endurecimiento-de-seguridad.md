@@ -114,6 +114,8 @@ Se corrigieron las brechas de la revisión de seguridad que estaban en el códig
 - **Todo `ErrorAcceso` se registra:** el constructor escribe la línea (motivo `regla_de_acceso`) para los rechazos que los servicios y las rutas lanzan directamente; `rechazarAcceso` registra el suyo con el motivo exacto y crea el error sin repetirlo.
 - **Las páginas «Sin acceso»** no registran nada: solo deciden qué mostrar y no leen datos; cada operación vuelve a exigir el permiso y ese rechazo sí queda registrado.
 - **Hash alterado:** solo se aceptan N entre 2^14 y 2^17, r entre 8 y 16 y un costo N·r·p no menor que el actual, para que un hash modificado no pida 4 GB de memoria ni parámetros débiles.
+- **minimatch (31/10, decisión del coordinador):** OSV-Scanner falló por GHSA-g3hv-75wg-m249, publicada el 30/10 (minimatch < 11.0.1, solo en ESLint y Stryker). Se aceptó el riesgo hasta el 15/11/2026 en `osv-scanner.toml`, registrado en `specs/16` y `specs/18`.
+- **Imagen de producción:** `npm prune --omit=dev` conserva `vitest`, `typescript` y `playwright` porque paquetes de producción los declaran como peer opcionales (por ejemplo, `better-auth` declara `vitest`); el `Dockerfile` los quita aparte, y `produccion-imagen.yml` lo comprueba.
 - **Parámetros de scrypt:** de las equivalencias de OWASP, N=2^14, r=8, p=5 es la más rápida en este equipo (unos 255 ms por contraseña, frente a 480 ms de N=2^17). Por eso la semilla de demostración cifra sus 11 cuentas en paralelo, cada una con su sal.
 
 ### Cómo usar lo que se creó
