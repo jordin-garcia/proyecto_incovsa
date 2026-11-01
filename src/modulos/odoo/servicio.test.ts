@@ -1,3 +1,5 @@
+import { spawnSync } from "node:child_process";
+import { deflateRawSync } from "node:zlib";
 import { readFileSync } from "node:fs";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import * as XLSX from "xlsx";
@@ -415,4 +417,189 @@ describe("Lectura del archivo de Odoo (JC-02)", () => {
       }).success,
     ).toBe(false);
   });
+});
+
+describe("Límites de Odoo (JC-10)", () => {
+  const mensaje = "No se pudo leer el archivo. Verifique que sea el .xlsx exportado de Odoo.";
+
+  // ZIP mínimo generado en memoria: permite falsear tamaños sin archivos peligrosos en disco.
+  function zip(tamanos: number[], declarado?: number): Buffer {
+    const locales: Buffer[] = [];
+    const centrales: Buffer[] = [];
+    let offset = 0;
+    for (const tamano of tamanos) {
+      const nombre = Buffer.from(`xl/entrada-${offset}`);
+      const datos = deflateRawSync(Buffer.alloc(tamano));
+      const local = Buffer.alloc(30);
+      local.writeUInt32LE(0x04034b50);
+      local.writeUInt16LE(8, 8);
+      local.writeUInt32LE(datos.length, 18);
+      local.writeUInt32LE(declarado ?? tamano, 22);
+      local.writeUInt16LE(nombre.length, 26);
+      const central = Buffer.alloc(46);
+      central.writeUInt32LE(0x02014b50);
+      central.writeUInt16LE(8, 10);
+      central.writeUInt32LE(datos.length, 20);
+      central.writeUInt32LE(declarado ?? tamano, 24);
+      central.writeUInt16LE(nombre.length, 28);
+      central.writeUInt32LE(offset, 42);
+      locales.push(local, nombre, datos);
+      centrales.push(central, nombre);
+      offset += local.length + nombre.length + datos.length;
+    }
+    const directorio = Buffer.concat(centrales);
+    const fin = Buffer.alloc(22);
+    fin.writeUInt32LE(0x06054b50);
+    fin.writeUInt16LE(tamanos.length, 8);
+    fin.writeUInt16LE(tamanos.length, 10);
+    fin.writeUInt32LE(directorio.length, 12);
+    fin.writeUInt32LE(offset, 16);
+    return Buffer.concat([...locales, directorio, fin]);
+  }
+
+  it.each([
+    [[50 * 1024 * 1024 + 1], undefined],
+    [[26 * 1024 * 1024, 26 * 1024 * 1024], undefined],
+    [Array(101).fill(1), undefined],
+    [[1000], 1],
+    [[50 * 1024 * 1024 + 1], 1],
+  ] as [number[], number | undefined][])(
+    "ASVS V5.2.3: rechaza ZIP peligroso antes de SheetJS (%#)",
+    async (tamanos, declarado) => {
+      const bytes = zip(tamanos, declarado);
+      expect(bytes.length).toBeLessThan(2 * 1024 * 1024);
+      vi.mocked(tiposArchivo.fileTypeFromBuffer).mockResolvedValueOnce({
+        ext: "xlsx",
+        mime: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      await expect(leerArchivoOdoo(bytes, "XE")).rejects.toThrow(new ErrorNegocio(mensaje));
+      expect(XLSX.read).not.toHaveBeenCalled();
+    },
+  );
+
+  it("ASVS V5.2.3: la bomba con tamaño falseado no aumenta la memoria en más de 50 MB", async () => {
+    const bomba = zip([50 * 1024 * 1024 + 1], 1);
+    const finOriginal = original.lastIndexOf(Buffer.from([0x50, 0x4b, 0x05, 0x06]));
+    const inicioOriginal = original.readUInt32LE(finOriginal + 16);
+    const finBomba = bomba.length - 22;
+    const inicioBomba = bomba.readUInt32LE(finBomba + 16);
+    const centralBomba = Buffer.from(bomba.subarray(inicioBomba, finBomba));
+    centralBomba.writeUInt32LE(inicioOriginal, 42);
+    const fin = Buffer.from(original.subarray(finOriginal, finOriginal + 22));
+    const cantidad = original.readUInt16LE(finOriginal + 10) + 1;
+    fin.writeUInt16LE(cantidad, 8);
+    fin.writeUInt16LE(cantidad, 10);
+    fin.writeUInt32LE(finOriginal - inicioOriginal + centralBomba.length, 12);
+    fin.writeUInt32LE(inicioOriginal + inicioBomba, 16);
+    const bytes = Buffer.concat([
+      original.subarray(0, inicioOriginal),
+      bomba.subarray(0, inicioBomba),
+      original.subarray(inicioOriginal, finOriginal),
+      centralBomba,
+      fin,
+    ]);
+    expect((await tiposArchivo.fileTypeFromBuffer(bytes))?.ext).toBe("xlsx");
+    const codigo = `
+      import { leerArchivoOdoo } from ${JSON.stringify(new URL("./servicio.ts", import.meta.url).href)};
+      const partes = [];
+      for await (const bloque of process.stdin) partes.push(bloque);
+      const bytes = Buffer.concat(partes);
+      global.gc();
+      const inicial = process.memoryUsage().rss;
+      let pico = inicial;
+      const medir = () => { pico = Math.max(pico, process.memoryUsage().rss); };
+      const intervalo = setInterval(medir, 1);
+      let mensaje;
+      try { await leerArchivoOdoo(bytes, "XE"); } catch (error) { mensaje = error.message; }
+      medir(); clearInterval(intervalo);
+      console.log(JSON.stringify({ incremento: pico - inicial, mensaje }));
+    `;
+    const proceso = spawnSync(
+      process.execPath,
+      ["--expose-gc", "--import", "tsx", "--input-type=module", "-e", codigo],
+      { input: bytes, encoding: "utf8", timeout: 30000 },
+    );
+    expect(proceso.status, proceso.stderr).toBe(0);
+    const resultado = JSON.parse(proceso.stdout);
+    expect(resultado.mensaje).toBe(mensaje);
+    expect(resultado.incremento).toBeLessThanOrEqual(50 * 1024 * 1024);
+  }, 30000);
+
+  it("RNF-05: lee completas 20 000 filas y rechaza 20 001", async () => {
+    const datos = [
+      encabezado,
+      fila(),
+      ...Array.from({ length: 19998 }, () =>
+        fila({
+          referencia: null,
+          cliente: null,
+          sector: null,
+          estado: null,
+          producto: "P",
+          lote: "",
+          cantidadKg: 1,
+          pesoConversionKg: 1,
+        }),
+      ),
+    ];
+    expect((await leerArchivoOdoo(escribir(datos), "XE")).pedidos[0].lineas).toHaveLength(19999);
+    await expect(leerArchivoOdoo(escribir([...datos, fila()]), "XE")).rejects.toThrow(new ErrorNegocio(mensaje));
+  }, 30000);
+
+  it.each([
+    ["referencia", "XE-IN/SALIDA/" + "1".repeat(29)],
+    ["referencia", "XE-IN/SALIDA/" + "1".repeat(21)],
+    ["cliente", "a".repeat(201)],
+    ["sector", "a".repeat(201)],
+    ["producto", "a".repeat(201)],
+    ["lote", "a".repeat(41)],
+  ] as [Campo, string][])("RNF-05: rechaza largo excesivo en %s (%#)", async (campo, valor) => {
+    await expect(leerArchivoOdoo(escribir([encabezado, fila({ [campo]: valor })]), "XE")).rejects.toThrow(
+      new ErrorNegocio(mensaje),
+    );
+  });
+});
+
+it("RNF-05: ignora agrupaciones de hasta 40 caracteres sin tratarlas como número", async () => {
+  const resultado = await leerArchivoOdoo(
+    escribir([encabezado, fila({ referencia: "a".repeat(40), cliente: null, producto: null }), fila()]),
+    "XE",
+  );
+  expect(resultado.filasDeAgrupacion).toBe(1);
+  expect(resultado.pedidos).toHaveLength(1);
+});
+
+it("RNF-05: rechaza filas excesivas aunque la dimensión declarada sea menor", async () => {
+  const datos = [encabezado, fila(), ...Array.from({ length: 19999 }, () => ["x"])];
+  const zip = XLSX.CFB.read(escribir(datos), { type: "buffer" });
+  const hoja = zip.FileIndex.find(
+    (entrada: { name: string; content: Uint8Array; size: number }) => entrada.name === "sheet1.xml",
+  )!;
+  const xml = Buffer.from(hoja.content as Uint8Array)
+    .toString()
+    .replace(/<dimension ref="[^"]*"\/>/, '<dimension ref="A1:A2"/>');
+  hoja.content = Buffer.from(xml);
+  hoja.size = hoja.content.length;
+  const bytes = XLSX.CFB.write(zip, { type: "buffer", fileType: "zip", compression: true });
+  await expect(leerArchivoOdoo(bytes, "XE")).rejects.toThrow(
+    new ErrorNegocio("No se pudo leer el archivo. Verifique que sea el .xlsx exportado de Odoo."),
+  );
+}, 30000);
+
+it("RNF-05: rechaza una celda aislada después del límite con dimensión falseada", async () => {
+  const datos = [encabezado, fila()];
+  const zip = XLSX.CFB.read(escribir(datos), { type: "buffer" });
+  const hoja = zip.FileIndex.find(
+    (entrada: { name: string; content: Uint8Array; size: number }) => entrada.name === "sheet1.xml",
+  )!;
+  const xml = Buffer.from(hoja.content as Uint8Array)
+    .toString()
+    .replace(/<dimension ref="[^"]*"\/>/, '<dimension ref="A1:A2"/>')
+    .replace("</sheetData>", '<row r="20002"><c r="A20002" t="str"><v>producto</v></c></row></sheetData>');
+  hoja.content = Buffer.from(xml);
+  hoja.size = hoja.content.length;
+  const bytes = XLSX.CFB.write(zip, { type: "buffer", fileType: "zip", compression: true });
+  await expect(leerArchivoOdoo(bytes, "XE")).rejects.toThrow(
+    new ErrorNegocio("No se pudo leer el archivo. Verifique que sea el .xlsx exportado de Odoo."),
+  );
 });
