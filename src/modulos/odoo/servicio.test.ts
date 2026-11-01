@@ -603,3 +603,17 @@ it("RNF-05: rechaza una celda aislada después del límite con dimensión falsea
     new ErrorNegocio("No se pudo leer el archivo. Verifique que sea el .xlsx exportado de Odoo."),
   );
 });
+
+it("RNF-05: no cuenta etiquetas de filas dentro de comentarios XML", async () => {
+  const zip = XLSX.CFB.read(escribir([encabezado, fila()]), { type: "buffer" });
+  const hoja = zip.FileIndex.find(
+    (entrada: { name: string; content: Uint8Array; size: number }) => entrada.name === "sheet1.xml",
+  )!;
+  const xml = Buffer.from(hoja.content as Uint8Array)
+    .toString()
+    .replace("</sheetData>", '<!-- <row r="99999"><c r="A99999"/></row> --></sheetData>');
+  hoja.content = Buffer.from(xml);
+  hoja.size = hoja.content.length;
+  const bytes = XLSX.CFB.write(zip, { type: "buffer", fileType: "zip", compression: true });
+  expect((await leerArchivoOdoo(bytes, "XE")).pedidos).toHaveLength(1);
+});

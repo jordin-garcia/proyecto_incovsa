@@ -159,6 +159,27 @@ async function comprobarArchivo(bytes: Uint8Array): Promise<void> {
   await comprobarZip(bytes);
 }
 
+/** Recorre etiquetas sin búsquedas repetidas sobre XML mal formado. */
+function* etiquetasXml(xml: string): Generator<string> {
+  let cursor = 0;
+  while (cursor < xml.length) {
+    const inicio = xml.indexOf("<", cursor);
+    if (inicio < 0) return;
+    const cierreEspecial = xml.startsWith("<!--", inicio) ? "-->" : xml.startsWith("<![CDATA[", inicio) ? "]]>" : null;
+    if (cierreEspecial) {
+      const fin = xml.indexOf(cierreEspecial, inicio + 4);
+      if (fin < 0) throw new Error("XML incompleto");
+      cursor = fin + cierreEspecial.length;
+      continue;
+    }
+    const fin = xml.indexOf(">", inicio + 1);
+    const siguiente = xml.indexOf("<", inicio + 1);
+    if (fin < 0 || (siguiente >= 0 && siguiente < fin)) throw new Error("Etiqueta incompleta");
+    yield xml.slice(inicio, fin + 1);
+    cursor = fin + 1;
+  }
+}
+
 /** bookFiles conserva el XML completo aunque sheetRows omita celdas alejadas. */
 function comprobarFilasReales(libro: WorkBook): void {
   const crudo = libro as WorkBook & {
@@ -184,21 +205,24 @@ function comprobarFilasReales(libro: WorkBook): void {
     });
   };
   const libroRuta = crudo.Directory.workbooks[0].replace(/^\//, "");
-  const relaciones = texto(posix.join(posix.dirname(libroRuta), "_rels", posix.basename(libroRuta) + ".rels")).replace(
-    /<!--[\s\S]*?-->|<!\[CDATA\[[\s\S]*?\]\]>/g,
-    "",
-  );
+  const relaciones = texto(posix.join(posix.dirname(libroRuta), "_rels", posix.basename(libroRuta) + ".rels"));
   const primera = crudo.Workbook.Sheets[0];
-  const coincidencias = [...relaciones.matchAll(/<(?:[\w]+:)?Relationship\b[^>]*>/g)].filter(
-    ([etiqueta]) => atributo(etiqueta, "Id") === (primera.id ?? primera.strRelID),
-  );
+  const coincidencias: string[] = [];
+  for (const etiqueta of etiquetasXml(relaciones)) {
+    if (/^<(?:[\w]+:)?Relationship\b/.test(etiqueta) && atributo(etiqueta, "Id") === (primera.id ?? primera.strRelID)) {
+      coincidencias.push(etiqueta);
+      if (coincidencias.length > 1) throw new Error("Relación de hoja ambigua");
+    }
+  }
   if (coincidencias.length !== 1) throw new Error("Relación de hoja ambigua");
-  const destino = atributo(coincidencias[0][0], "Target");
+  const destino = atributo(coincidencias[0], "Target");
   if (!destino) throw new Error("Sin primera hoja");
   const ruta = destino.startsWith("/") ? destino : posix.join(posix.dirname(libroRuta), destino);
-  const xml = texto(ruta).replace(/<!--[\s\S]*?-->|<!\[CDATA\[[\s\S]*?\]\]>/g, "");
+  const xml = texto(ruta);
   let fila = 0;
-  for (const [etiqueta, tipo] of xml.matchAll(/<(?:[\w]+:)?(row|c)\b[^>]*>/g)) {
+  for (const etiqueta of etiquetasXml(xml)) {
+    const tipo = /^<(?:[\w]+:)?(row|c)\b/.exec(etiqueta)?.[1];
+    if (!tipo) continue;
     const referencia = atributo(etiqueta, "r");
     if (tipo === "row") fila = referencia ? parseInt(referencia, 10) : fila + 1;
     const numero = tipo === "row" ? fila : parseInt(referencia?.replace(/^[A-Z]+/i, "") ?? String(fila), 10);
