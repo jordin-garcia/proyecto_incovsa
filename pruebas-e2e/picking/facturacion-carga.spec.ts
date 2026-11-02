@@ -150,6 +150,7 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
   await lista.evaluate((element) => {
     element.scrollTop = 360;
   });
+  const rellenoSuperiorBase = await lista.evaluate((elemento) => getComputedStyle(elemento).paddingTop);
   const scrollAntes = await lista.evaluate((element) => element.scrollTop);
   expect(scrollAntes).toBeGreaterThan(0);
   const indiceVisible = await lista.evaluate((element) => {
@@ -172,6 +173,12 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
   const confirmacionIndividual = page.getByRole("dialog");
   await expect(confirmacionIndividual).toContainText(/pedido facturado \d{5} de Cliente de ejemplo \d{3} \(.* kg\)/);
   await confirmacionIndividual.getByRole("button", { name: "Volver" }).click();
+  await expect(confirmacionIndividual).toBeHidden();
+  // JC-11: medir la tarjeta que la persona está viendo. Un scrollTop estable por sí solo
+  // no detecta que las filas anteriores se encogieron y desplazaron el contenido visible.
+  const posicionAntesDeTodos = await tarjetaVisible.boundingBox();
+  expect(posicionAntesDeTodos).not.toBeNull();
+  await capturar(`facturacion-antes-de-todos-${width}`);
   await page.getByLabel("Seleccionar todos").check();
   await expect(page.getByRole("button", { name: "Eliminar" })).toBeVisible();
   await expect(tarjetas).toHaveCount(33);
@@ -182,7 +189,14 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
       ["serious", "critical"].includes(v.impact ?? ""),
     ),
   ).toEqual([]);
-  expect(await lista.evaluate((element) => element.scrollTop)).toBe(scrollSeleccion);
+  // Dejar pasar el repintado: Firefox puede aplicar su anclaje después del efecto de React.
+  await page.evaluate(
+    () => new Promise<void>((resolver) => requestAnimationFrame(() => requestAnimationFrame(() => resolver()))),
+  );
+  const posicionDespuesDeTodos = await tarjetaVisible.boundingBox();
+  expect(posicionDespuesDeTodos).not.toBeNull();
+  expect(Math.abs(posicionDespuesDeTodos!.y - posicionAntesDeTodos!.y)).toBeLessThanOrEqual(1);
+  expect(Math.abs(posicionDespuesDeTodos!.x - posicionAntesDeTodos!.x)).toBeLessThanOrEqual(1);
   {
     expect(
       (await new AxeBuilder({ page }).analyze()).violations.filter((v) =>
@@ -191,6 +205,92 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
     ).toEqual([]);
     await capturar(`facturacion-seleccionado-${width}`);
   }
+  // RNF-11 / JC-11: sin tarjetas completas en la ventana también debe conservar el ancla.
+  // Una ventana de 30 px reproduce el caso de un pedido más alto que el espacio disponible.
+  const seleccionarTodos = page.getByLabel("Seleccionar todos");
+  await seleccionarTodos.focus();
+  await seleccionarTodos.press("Space");
+  await expect(seleccionarTodos).not.toBeChecked();
+  const estiloLista = await lista.getAttribute("style");
+  await lista.evaluate((elemento) => {
+    elemento.style.minHeight = "0";
+    elemento.style.height = "30px";
+    elemento.style.flex = "none";
+  });
+  await tarjetaVisible.evaluate((tarjeta) => {
+    const lista = tarjeta.closest<HTMLElement>("[data-testid='tablero-pedidos']")!;
+    lista.scrollTop += tarjeta.getBoundingClientRect().top - lista.getBoundingClientRect().top + 10;
+  });
+  expect(
+    await lista.evaluate((elemento) => {
+      const marco = elemento.getBoundingClientRect();
+      return [...elemento.querySelectorAll("[role='button']")].some((tarjeta) => {
+        const posicion = tarjeta.getBoundingClientRect();
+        return posicion.top >= marco.top && posicion.bottom <= marco.bottom;
+      });
+    }),
+  ).toBe(false);
+  const posicionParcial = await tarjetaVisible.boundingBox();
+  expect(posicionParcial).not.toBeNull();
+  await seleccionarTodos.press("Space");
+  await expect(seleccionarTodos).toBeChecked();
+  await page.evaluate(
+    () => new Promise<void>((resolver) => requestAnimationFrame(() => requestAnimationFrame(() => resolver()))),
+  );
+  const posicionParcialSeleccionada = await tarjetaVisible.boundingBox();
+  expect(posicionParcialSeleccionada).not.toBeNull();
+  expect(Math.abs(posicionParcialSeleccionada!.y - posicionParcial!.y)).toBeLessThanOrEqual(1);
+  await lista.evaluate((elemento, estilo) => {
+    if (estilo === null) elemento.removeAttribute("style");
+    else elemento.setAttribute("style", estilo);
+  }, estiloLista);
+  // Dos tarjetas parciales: conservar el encabezado que sí se ve, no el que quedó por encima.
+  await seleccionarTodos.uncheck();
+  const alturas = await page.addStyleTag({
+    content: "[data-testid='tablero-pedidos'] [role='button'][aria-pressed='false'] { min-height: 300px; }",
+  });
+  await lista.evaluate((elemento) => {
+    elemento.style.minHeight = "0";
+    elemento.style.height = "300px";
+    elemento.style.flex = "none";
+    elemento.scrollTop = 100;
+  });
+  const encabezadoVisible = await tarjetas.evaluateAll((elementos) => {
+    const marco = elementos[0]!.parentElement!.getBoundingClientRect();
+    return elementos.findIndex((tarjeta) => {
+      const posicion = tarjeta.getBoundingClientRect();
+      return posicion.top >= marco.top && posicion.top < marco.bottom;
+    });
+  });
+  expect(encabezadoVisible).toBeGreaterThan(0);
+  const tarjetaConEncabezado = tarjetas.nth(encabezadoVisible);
+  const antesEncabezado = await tarjetaConEncabezado.boundingBox();
+  expect(antesEncabezado).not.toBeNull();
+  await seleccionarTodos.check();
+  await page.evaluate(
+    () => new Promise<void>((resolver) => requestAnimationFrame(() => requestAnimationFrame(() => resolver()))),
+  );
+  const despuesEncabezado = await tarjetaConEncabezado.boundingBox();
+  expect(despuesEncabezado).not.toBeNull();
+  expect(Math.abs(despuesEncabezado!.y - antesEncabezado!.y)).toBeLessThanOrEqual(1);
+  expect(await lista.evaluate((elemento) => parseFloat(getComputedStyle(elemento).paddingTop))).toBeGreaterThan(
+    parseFloat(rellenoSuperiorBase),
+  );
+  await alturas.evaluate((elemento) => elemento.parentNode?.removeChild(elemento));
+  await lista.evaluate((elemento, estilo) => {
+    const relleno = elemento.style.paddingTop;
+    if (estilo === null) elemento.removeAttribute("style");
+    else elemento.setAttribute("style", estilo);
+    elemento.style.paddingTop = relleno;
+  }, estiloLista);
+  // JC-11: el espacio añadido para un destino negativo también se limpia al vaciar
+  // la selección mediante clics individuales, sin volver a usar «Seleccionar todos».
+  for (const tarjeta of await tarjetas.all()) {
+    await tarjeta.click();
+    await expect(tarjeta).toHaveAttribute("aria-pressed", "false");
+  }
+  expect(await lista.evaluate((elemento) => getComputedStyle(elemento).paddingTop)).toBe(rellenoSuperiorBase);
+  await seleccionarTodos.check();
   await page.getByRole("button", { name: "Eliminar", exact: true }).click();
   const confirmacionMultiple = page.getByRole("dialog");
   await expect(confirmacionMultiple).toContainText("33 pedidos facturados seleccionados (10,920 kg)");
