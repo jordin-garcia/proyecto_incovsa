@@ -178,6 +178,10 @@ function TableroInteractivo({
         }) ??
         tarjetas.find((tarjeta) => {
           const posicion = tarjeta.getBoundingClientRect();
+          return posicion.top >= marco.top && posicion.top < marco.bottom;
+        }) ??
+        tarjetas.find((tarjeta) => {
+          const posicion = tarjeta.getBoundingClientRect();
           return posicion.bottom > marco.top && posicion.top < marco.bottom;
         });
       tarjetaAncla.current = visible ? { elemento: visible, arriba: visible.getBoundingClientRect().top } : null;

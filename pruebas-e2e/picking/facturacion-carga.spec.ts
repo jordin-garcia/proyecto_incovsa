@@ -243,6 +243,40 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
     if (estilo === null) elemento.removeAttribute("style");
     else elemento.setAttribute("style", estilo);
   }, estiloLista);
+  // Dos tarjetas parciales: conservar el encabezado que sí se ve, no el que quedó por encima.
+  await seleccionarTodos.uncheck();
+  const alturas = await page.addStyleTag({
+    content: "[data-testid='tablero-pedidos'] [role='button'][aria-pressed='false'] { min-height: 300px; }",
+  });
+  await lista.evaluate((elemento) => {
+    elemento.style.minHeight = "0";
+    elemento.style.height = "300px";
+    elemento.style.flex = "none";
+    elemento.scrollTop = 100;
+  });
+  const encabezadoVisible = await tarjetas.evaluateAll((elementos) => {
+    const marco = elementos[0]!.parentElement!.getBoundingClientRect();
+    return elementos.findIndex((tarjeta) => {
+      const posicion = tarjeta.getBoundingClientRect();
+      return posicion.top >= marco.top && posicion.top < marco.bottom;
+    });
+  });
+  expect(encabezadoVisible).toBeGreaterThan(0);
+  const tarjetaConEncabezado = tarjetas.nth(encabezadoVisible);
+  const antesEncabezado = await tarjetaConEncabezado.boundingBox();
+  expect(antesEncabezado).not.toBeNull();
+  await seleccionarTodos.check();
+  await page.evaluate(
+    () => new Promise<void>((resolver) => requestAnimationFrame(() => requestAnimationFrame(() => resolver()))),
+  );
+  const despuesEncabezado = await tarjetaConEncabezado.boundingBox();
+  expect(despuesEncabezado).not.toBeNull();
+  expect(Math.abs(despuesEncabezado!.y - antesEncabezado!.y)).toBeLessThanOrEqual(1);
+  await alturas.evaluate((elemento) => elemento.parentNode?.removeChild(elemento));
+  await lista.evaluate((elemento, estilo) => {
+    if (estilo === null) elemento.removeAttribute("style");
+    else elemento.setAttribute("style", estilo);
+  }, estiloLista);
   await page.getByRole("button", { name: "Eliminar", exact: true }).click();
   const confirmacionMultiple = page.getByRole("dialog");
   await expect(confirmacionMultiple).toContainText("33 pedidos facturados seleccionados (10,920 kg)");
