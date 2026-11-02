@@ -99,6 +99,7 @@ function TableroInteractivo({
   const lista = useRef<HTMLDivElement>(null);
   const archivo = useRef<HTMLInputElement>(null);
   const restaurarDesplazamiento = useRef<number | null>(null);
+  const tarjetaAncla = useRef<{ elemento: HTMLElement; arriba: number } | null>(null);
   const seleccionadosEnTablero = pedidos.filter((pedido) => seleccionados.has(pedido.id));
   const idsSeleccionados = seleccionadosEnTablero.map((pedido) => pedido.id);
   const todos = pedidos.length > 0 && seleccionadosEnTablero.length === pedidos.length;
@@ -118,7 +119,10 @@ function TableroInteractivo({
     const scrollTop = restaurarDesplazamiento.current;
     if (!elemento) return;
     if (scrollTop === null) {
-      if (!seleccionados.size) elemento.style.paddingBottom = "";
+      if (!seleccionados.size) {
+        elemento.style.paddingBottom = "";
+        elemento.style.paddingTop = "";
+      }
       return;
     }
     if (!seleccionados.size) {
@@ -128,7 +132,27 @@ function TableroInteractivo({
       const espacioNecesario = Math.max(0, scrollTop + elemento.clientHeight - elemento.scrollHeight);
       elemento.style.paddingBottom = `${rellenoActual + espacioNecesario}px`;
     }
-    elemento.scrollTop = scrollTop;
+    const ancla = tarjetaAncla.current;
+    if (ancla?.elemento.isConnected) {
+      // Las filas anteriores cambian de altura. Conservar el mismo scrollTop no conserva
+      // el pedido que se estaba leyendo; corregimos su posición antes del repintado.
+      elemento.style.paddingTop = "";
+      const destino = elemento.scrollTop + ancla.elemento.getBoundingClientRect().top - ancla.arriba;
+      if (destino < 0) {
+        const relleno = Number.parseFloat(getComputedStyle(elemento).paddingTop) || 0;
+        elemento.style.paddingTop = `${relleno - destino}px`;
+      }
+      const desplazamiento = Math.max(0, destino);
+      const faltante = Math.max(0, desplazamiento + elemento.clientHeight - elemento.scrollHeight);
+      if (faltante) {
+        const relleno = Number.parseFloat(getComputedStyle(elemento).paddingBottom) || 0;
+        elemento.style.paddingBottom = `${relleno + faltante}px`;
+      }
+      elemento.scrollTop = desplazamiento;
+      tarjetaAncla.current = null;
+    } else {
+      elemento.scrollTop = scrollTop;
+    }
     restaurarDesplazamiento.current = null;
   }, [seleccionados]);
 
@@ -143,6 +167,15 @@ function TableroInteractivo({
   }
 
   function seleccionarTodos(marcada: boolean) {
+    const elemento = lista.current;
+    if (elemento) {
+      const marco = elemento.getBoundingClientRect();
+      const visible = [...elemento.querySelectorAll<HTMLElement>("[role='button']")].find((tarjeta) => {
+        const posicion = tarjeta.getBoundingClientRect();
+        return posicion.top >= marco.top && posicion.bottom <= marco.bottom;
+      });
+      tarjetaAncla.current = visible ? { elemento: visible, arriba: visible.getBoundingClientRect().top } : null;
+    }
     restaurarDesplazamiento.current = lista.current?.scrollTop ?? 0;
     seleccionar(marcada ? new Set(pedidos.map((pedido) => pedido.id)) : new Set());
   }

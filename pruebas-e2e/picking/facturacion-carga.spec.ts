@@ -172,6 +172,12 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
   const confirmacionIndividual = page.getByRole("dialog");
   await expect(confirmacionIndividual).toContainText(/pedido facturado \d{5} de Cliente de ejemplo \d{3} \(.* kg\)/);
   await confirmacionIndividual.getByRole("button", { name: "Volver" }).click();
+  await expect(confirmacionIndividual).toBeHidden();
+  // JC-11: medir la tarjeta que la persona está viendo. Un scrollTop estable por sí solo
+  // no detecta que las filas anteriores se encogieron y desplazaron el contenido visible.
+  const posicionAntesDeTodos = await tarjetaVisible.boundingBox();
+  expect(posicionAntesDeTodos).not.toBeNull();
+  await capturar(`facturacion-antes-de-todos-${width}`);
   await page.getByLabel("Seleccionar todos").check();
   await expect(page.getByRole("button", { name: "Eliminar" })).toBeVisible();
   await expect(tarjetas).toHaveCount(33);
@@ -182,7 +188,14 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
       ["serious", "critical"].includes(v.impact ?? ""),
     ),
   ).toEqual([]);
-  expect(await lista.evaluate((element) => element.scrollTop)).toBe(scrollSeleccion);
+  // Dejar pasar el repintado: Firefox puede aplicar su anclaje después del efecto de React.
+  await page.evaluate(
+    () => new Promise<void>((resolver) => requestAnimationFrame(() => requestAnimationFrame(() => resolver()))),
+  );
+  const posicionDespuesDeTodos = await tarjetaVisible.boundingBox();
+  expect(posicionDespuesDeTodos).not.toBeNull();
+  expect(Math.abs(posicionDespuesDeTodos!.y - posicionAntesDeTodos!.y)).toBeLessThanOrEqual(1);
+  expect(Math.abs(posicionDespuesDeTodos!.x - posicionAntesDeTodos!.x)).toBeLessThanOrEqual(1);
   {
     expect(
       (await new AxeBuilder({ page }).analyze()).violations.filter((v) =>
