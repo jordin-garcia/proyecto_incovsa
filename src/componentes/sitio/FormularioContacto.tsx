@@ -46,6 +46,7 @@ export function FormularioContacto({ opciones }: { opciones: Awaited<ReturnType<
       municipioId: "",
       sedeId: "",
       mensaje: "",
+      sitioWeb: "",
     },
   });
   const [pais, departamento, motivo, telefonoPais, municipio, sede] = useWatch({
@@ -157,6 +158,7 @@ export function FormularioContacto({ opciones }: { opciones: Awaited<ReturnType<
           <form
             className="rejilla contacto-form"
             data-hidratado={hidratado}
+            method="post"
             noValidate
             onSubmit={(evento) => {
               void handleSubmit(async (datos) => {
@@ -183,6 +185,24 @@ export function FormularioContacto({ opciones }: { opciones: Awaited<ReturnType<
               })(evento);
             }}
           >
+            <input
+              aria-hidden="true"
+              autoComplete="off"
+              tabIndex={-1}
+              type="text"
+              style={{
+                position: "absolute",
+                width: 1,
+                height: 1,
+                padding: 0,
+                margin: -1,
+                overflow: "hidden",
+                clipPath: "inset(50%)",
+                whiteSpace: "nowrap",
+                border: 0,
+              }}
+              {...register("sitioWeb")}
+            />
             <div className="campo">
               <span id="tipo-mensaje">Tipo de mensaje *</span>
               <div className="seg" role="group" aria-labelledby="tipo-mensaje">

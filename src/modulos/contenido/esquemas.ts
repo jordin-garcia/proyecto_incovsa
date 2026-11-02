@@ -1,5 +1,6 @@
 import { z } from "zod";
-export const esquemaTexto = z.object({ texto: z.string().trim() });
+const textoLargo = z.string().trim().max(10_000, "El texto admite hasta 10 000 caracteres.");
+export const esquemaTexto = z.object({ texto: textoLargo });
 export const nombresBloques = {
   portada: "Portada",
   mision: "Misión",
@@ -16,6 +17,15 @@ export const esquemaPublicacion = z
     imagenes: z.array(z.union([z.string().max(2048), z.number().int().min(0).max(4), z.null()])).max(5),
   })
   .superRefine((d, ctx) => {
+    if (["mision", "vision", "historia"].includes(d.bloque) && d.texto.length > 10_000)
+      ctx.addIssue({
+        code: "too_big",
+        origin: "string",
+        maximum: 10_000,
+        inclusive: true,
+        path: ["texto"],
+        message: "El texto admite hasta 10 000 caracteres.",
+      });
     if (
       d.bloque === "valores"
         ? d.imagenes.length !== 5

@@ -47,6 +47,7 @@ function FormularioProducto({
       presentacion: producto?.presentacion ?? "",
       paisesOrigen: producto?.paisesOrigen ?? "",
     },
+    mode: "onBlur",
   });
   return (
     <form
@@ -104,7 +105,17 @@ function FormularioProducto({
           </div>
           <label className="campo">
             <span>Descripción</span>
-            <Textarea {...register("descripcion")} rows={4} />
+            <Textarea
+              {...register("descripcion")}
+              rows={4}
+              aria-invalid={!!errors.descripcion}
+              aria-describedby={errors.descripcion ? "error-descripcion-producto" : undefined}
+            />
+            {errors.descripcion?.message && (
+              <small className="msg-error" id="error-descripcion-producto">
+                {errors.descripcion.message}
+              </small>
+            )}
           </label>
           <div className="campo">
             <span>Industrias (una o varias)</span>

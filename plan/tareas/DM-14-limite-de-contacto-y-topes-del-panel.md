@@ -5,7 +5,7 @@ persona: daniela
 responsable: Daniela Marín
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JG-15, JG-26]
 programada: 2026-10-30
 requisitos: [RF-SW-06, RF-SW-07, RNF-05]
@@ -79,3 +79,11 @@ npm run e2e -- pruebas-e2e/sitio pruebas-e2e/panel --workers=1
 ## Fuera de alcance
 - Captcha o servicios externos contra robots.
 - Borrar solicitudes antiguas o sus IP (riesgo aceptado, JG-27).
+
+## Resultado
+- Contacto guarda la IP de confianza con cada solicitud y limita a cinco envíos por IP en 60 minutos. Comprueba antes del bloqueo del folio y vuelve a comprobar dentro de la transacción para cubrir envíos simultáneos; el sexto muestra el mensaje especificado sin guardar. La trampa devuelve una respuesta de éxito con folio simulado, sin insertar ni consumir consecutivo. El formulario usa POST desde el primer render.
+- Misión, Visión, Historia, texto de Noticias y descripciones de Industrias y Productos rechazan más de 10 000 caracteres tanto en cliente como en servidor y muestran el error al salir del campo. Contacto, Información de contacto y Documentación interna usan mensajes seguros en español; los campos de Información de contacto recortan su longitud según el esquema.
+- Para usarlo, envíe el formulario público de Contacto normalmente. El límite y la trampa son automáticos. En el panel, edite los textos en sus secciones habituales; los campos largos muestran el error al perder el foco y no publican mientras el valor supere el tope.
+- Archivos principales: `src/modulos/solicitudes/servicio.ts`, `src/modulos/contenido/esquemas*.ts`, `src/modulos/documentos/servicio.ts`, editores del panel, pruebas Vitest/E2E y `plan/seguridad/asvs-nivel-2.md`.
+- Verificación: formato, lint y tipos aprobados; 509 pruebas Vitest aprobadas; `npm run build` aprobado; los 66 E2E dirigidos de Contacto y los editores afectados aprobaron en teléfono, tableta y escritorio. La suite global reportó 460 aprobados, fallos en pruebas preexistentes de Flujo, Tablero de Bodega y cabeceras de seguridad, y 55 casos dependientes sin ejecutar por esos fallos; se registran sin modificar esas pruebas. El caso H-61 de Contacto que falló una vez en tableta pasó al repetirse aislado.
+- Decisiones: no se añadieron dependencias, migraciones ni cambios a la regla de Semgrep. Daniela autorizó modificar `src/modulos/contenido/esquemas-contacto.ts` y sus pruebas para que los topes y mensajes de Información de contacto coincidan con los esquemas. No se precisó comportamiento nuevo en `specs/`.

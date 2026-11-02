@@ -1,6 +1,9 @@
+import { randomInt } from "node:crypto";
+import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { fechaGuatemala } from "@/lib/fechas";
 import { ErrorNegocio } from "@/lib/errores";
+import { obtenerIp } from "@/lib/ip";
 import { getCountryCallingCode, type CountryCode } from "libphonenumber-js";
 import { esquemaSolicitud } from "./esquemas";
 
@@ -20,6 +23,15 @@ export async function crearSolicitud(entrada: unknown) {
   const validado = esquemaSolicitud.safeParse(entrada);
   if (!validado.success) throw new ErrorNegocio("Revise los datos del formulario.");
   const d = validado.data;
+  if (d.sitioWeb) {
+    const folioFalso = `SOL-${fechaGuatemala(new Date()).slice(0, 4)}-${String(randomInt(1000, 1_000_000)).padStart(4, "0")}`;
+    return { folio: folioFalso };
+  }
+  const ip = obtenerIp(await headers());
+  const desde = new Date(Date.now() - 60 * 60 * 1000);
+  const limite = { ip, creadoEn: { gte: desde } };
+  if ((await prisma.solicitudContacto.count({ where: limite })) >= 5)
+    throw new ErrorNegocio("Recibimos varias solicitudes desde su conexión. Inténtelo de nuevo en una hora.");
   return prisma.$transaction(async (tx) => {
     const pais = await tx.pais.findUnique({ where: { codigo: d.pais }, select: { id: true } });
     const sede = await tx.sede.findFirst({ where: { ...oficinas, id: Number(d.sedeId) }, select: { id: true } });
@@ -34,6 +46,8 @@ export async function crearSolicitud(entrada: unknown) {
       throw new ErrorNegocio("Revise el departamento y el municipio seleccionados.");
     // El bloqueo de la fila estable serializa el cálculo y la inserción, incluso entre procesos.
     await tx.$queryRaw`SELECT id FROM configuracion_sitio WHERE id = 1 FOR UPDATE`;
+    if ((await tx.solicitudContacto.count({ where: limite })) >= 5)
+      throw new ErrorNegocio("Recibimos varias solicitudes desde su conexión. Inténtelo de nuevo en una hora.");
     const [contador] = await tx.$queryRaw<
       { ultimo: string }[]
     >`SELECT COALESCE(MAX(CAST(split_part(folio, '-', 3) AS bigint)),0)::text AS ultimo FROM solicitud_contacto WHERE folio ~ '^SOL-[0-9]{4}-[0-9]+$'`;
@@ -52,6 +66,7 @@ export async function crearSolicitud(entrada: unknown) {
         departamentoId: d.pais === "GT" ? Number(d.departamentoId) : null,
         municipioId: d.pais === "GT" ? Number(d.municipioId) : null,
         mensaje: d.mensaje,
+        ip,
       },
       select: { id: true },
     });

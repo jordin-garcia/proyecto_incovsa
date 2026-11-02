@@ -101,6 +101,15 @@ it("RN-56 / H-59: el sexto elemento único falla por el límite de 5 y cinco ref
     expect.objectContaining({ code: "too_big", path: ["imagenes"], maximum: 5 }),
   ]);
 });
+it("RNF-05: rechaza el texto de noticias que supera 10 000 caracteres en el esquema del servidor", () => {
+  expect(esquemaNoticia.safeParse({ ...campos, texto: "a".repeat(10_000), imagenes: [0] }).success).toBe(true);
+  const resultado = esquemaNoticia.safeParse({ ...campos, texto: "a".repeat(10_001), imagenes: [0] });
+  expect(resultado.success).toBe(false);
+  if (!resultado.success)
+    expect(resultado.error.issues).toContainEqual(
+      expect.objectContaining({ path: ["texto"], message: "El texto admite hasta 10 000 caracteres." }),
+    );
+});
 it("RN-56 / RF-SW-18: rechaza cero imágenes, referencias ajenas, índices repetidos, textos vacíos y archivos inválidos sin publicar", async () => {
   for (const datos of [
     { ...campos, imagenes: [] },

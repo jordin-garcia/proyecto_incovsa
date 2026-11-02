@@ -10,6 +10,19 @@ import { EncabezadoModulo } from "@/componentes/comunes/EncabezadoModulo";
 import { useMensajes } from "@/componentes/comunes/Mensajes";
 import estilos from "./contacto.module.css";
 type Fila = Awaited<ReturnType<typeof leerContactoPanel>>[number];
+const mensajesValidacionContacto = new Set([
+  "Elija la sede.",
+  "La dirección admite hasta 250 caracteres.",
+  "El teléfono admite hasta 60 caracteres.",
+  "El correo admite hasta 120 caracteres.",
+  "WhatsApp admite hasta 30 caracteres.",
+  "El horario admite hasta 120 caracteres.",
+  "Indique un correo válido.",
+  "El mapa debe ser la dirección del mapa insertado de Google Maps (https://www.google.com/maps/embed?…).",
+]);
+function mensajeContacto(mensaje: string | undefined) {
+  return mensaje && mensajesValidacionContacto.has(mensaje) ? mensaje : "Revise los datos del formulario.";
+}
 function FormularioSede({ sede }: { sede: Fila }) {
   const { nombre, ...datos } = sede;
   const [publicado, publicar] = useState(datos);
@@ -28,6 +41,13 @@ function FormularioSede({ sede }: { sede: Fila }) {
     ["horario", "Horario"],
     ["mapaUrl", "Mapa (dirección del mapa insertado de Google Maps)"],
   ] as const;
+  const maximos: Partial<Record<(typeof campos)[number][0], number>> = {
+    direccion: 250,
+    telefono: 60,
+    correo: 120,
+    whatsapp: 30,
+    horario: 120,
+  };
   return (
     <section className="tarjeta" aria-label={nombre}>
       <div className="bloque-cab">
@@ -67,12 +87,13 @@ function FormularioSede({ sede }: { sede: Fila }) {
               aria-label={texto}
               className={`inp${campo === "mapaUrl" ? ` mono ${estilos.mapaDireccion}` : ""}${errors[campo] ? " error" : ""}`}
               placeholder={campo === "mapaUrl" ? "https://www.google.com/maps/embed?pb=…" : undefined}
+              maxLength={maximos[campo]}
               aria-invalid={!!errors[campo]}
               aria-describedby={errors[campo] && campo !== "mapaUrl" ? `error-${datos.sedeId}-${campo}` : undefined}
             />
             {errors[campo] && campo !== "mapaUrl" && (
               <small className="msg-error" id={`error-${datos.sedeId}-${campo}`}>
-                {errors[campo].message}
+                {mensajeContacto(errors[campo].message)}
               </small>
             )}
           </label>
