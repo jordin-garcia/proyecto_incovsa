@@ -204,6 +204,45 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
     ).toEqual([]);
     await capturar(`facturacion-seleccionado-${width}`);
   }
+  // RNF-11 / JC-11: sin tarjetas completas en la ventana también debe conservar el ancla.
+  // Una ventana de 30 px reproduce el caso de un pedido más alto que el espacio disponible.
+  const seleccionarTodos = page.getByLabel("Seleccionar todos");
+  await seleccionarTodos.focus();
+  await seleccionarTodos.press("Space");
+  await expect(seleccionarTodos).not.toBeChecked();
+  const estiloLista = await lista.getAttribute("style");
+  await lista.evaluate((elemento) => {
+    elemento.style.minHeight = "0";
+    elemento.style.height = "30px";
+    elemento.style.flex = "none";
+  });
+  await tarjetaVisible.evaluate((tarjeta) => {
+    const lista = tarjeta.closest<HTMLElement>("[data-testid='tablero-pedidos']")!;
+    lista.scrollTop += tarjeta.getBoundingClientRect().top - lista.getBoundingClientRect().top + 10;
+  });
+  expect(
+    await lista.evaluate((elemento) => {
+      const marco = elemento.getBoundingClientRect();
+      return [...elemento.querySelectorAll("[role='button']")].some((tarjeta) => {
+        const posicion = tarjeta.getBoundingClientRect();
+        return posicion.top >= marco.top && posicion.bottom <= marco.bottom;
+      });
+    }),
+  ).toBe(false);
+  const posicionParcial = await tarjetaVisible.boundingBox();
+  expect(posicionParcial).not.toBeNull();
+  await seleccionarTodos.press("Space");
+  await expect(seleccionarTodos).toBeChecked();
+  await page.evaluate(
+    () => new Promise<void>((resolver) => requestAnimationFrame(() => requestAnimationFrame(() => resolver()))),
+  );
+  const posicionParcialSeleccionada = await tarjetaVisible.boundingBox();
+  expect(posicionParcialSeleccionada).not.toBeNull();
+  expect(Math.abs(posicionParcialSeleccionada!.y - posicionParcial!.y)).toBeLessThanOrEqual(1);
+  await lista.evaluate((elemento, estilo) => {
+    if (estilo === null) elemento.removeAttribute("style");
+    else elemento.setAttribute("style", estilo);
+  }, estiloLista);
   await page.getByRole("button", { name: "Eliminar", exact: true }).click();
   const confirmacionMultiple = page.getByRole("dialog");
   await expect(confirmacionMultiple).toContainText("33 pedidos facturados seleccionados (10,920 kg)");

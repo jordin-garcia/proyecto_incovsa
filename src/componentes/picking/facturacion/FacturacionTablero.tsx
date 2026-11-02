@@ -170,10 +170,16 @@ function TableroInteractivo({
     const elemento = lista.current;
     if (elemento) {
       const marco = elemento.getBoundingClientRect();
-      const visible = [...elemento.querySelectorAll<HTMLElement>("[role='button']")].find((tarjeta) => {
-        const posicion = tarjeta.getBoundingClientRect();
-        return posicion.top >= marco.top && posicion.bottom <= marco.bottom;
-      });
+      const tarjetas = [...elemento.querySelectorAll<HTMLElement>("[role='button']")];
+      const visible =
+        tarjetas.find((tarjeta) => {
+          const posicion = tarjeta.getBoundingClientRect();
+          return posicion.top >= marco.top && posicion.bottom <= marco.bottom;
+        }) ??
+        tarjetas.find((tarjeta) => {
+          const posicion = tarjeta.getBoundingClientRect();
+          return posicion.bottom > marco.top && posicion.top < marco.bottom;
+        });
       tarjetaAncla.current = visible ? { elemento: visible, arriba: visible.getBoundingClientRect().top } : null;
     }
     restaurarDesplazamiento.current = lista.current?.scrollTop ?? 0;
