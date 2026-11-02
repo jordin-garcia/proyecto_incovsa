@@ -70,6 +70,7 @@ Se confirmó un salto visible: en la traza de Firefox de la matriz original, el 
 - Regresión corregida en Chromium: 3/3, incluidos los casos adicionales de tarjetas parciales y teclado.
 - [Matriz final 41390020826](https://github.com/jordin-garcia/proyecto_incovsa/actions/runs/41390020826): 1 554 casos aprobados, ninguna prueba omitida ni fallo definitivo. Facturación pasa en las nueve combinaciones de navegador y tamaño. Dos pruebas de arrastre de Bodega en WebKit pasaron al repetirse.
 - `npm run verificar`: formato, lint, tipos y 501 pruebas en 57 archivos aprobados; `npm run build` correcto.
+- Batería E2E local: 514 aprobadas, 2 tiempos de espera agotados y 2 casos posteriores sin ejecutar. Repetición de Contacto: 3/3; repetición de Bodega y flujo completo en tableta: 4/4. Los 518 casos distintos quedaron comprobados.
 - Revisión independiente en contexto limpio: LISTO tras corregir y cubrir los dos hallazgos sobre tarjetas parciales.
 
 ### Cómo usarlo
