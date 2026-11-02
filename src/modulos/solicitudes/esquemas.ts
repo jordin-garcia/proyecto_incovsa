@@ -4,6 +4,7 @@ const paises = new Set<string>(getCountries());
 export const esquemaSolicitud = z
   .strictObject({
     motivo: z.enum(["solicitud", "queja", "reclamo"]),
+    sitioWeb: z.string().max(1000).optional(),
     nombre: z.string().trim().min(2, "Indique su nombre.").max(150, "El nombre admite hasta 150 caracteres."),
     empresa: z.string().trim().max(150, "La empresa admite hasta 150 caracteres."),
     correo: z

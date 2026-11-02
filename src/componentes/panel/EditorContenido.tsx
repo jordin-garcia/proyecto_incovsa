@@ -31,9 +31,15 @@ function BloqueEditor({
   const bloqueo = useRef(false);
   const router = useRouter();
   const mensaje = useMensajes();
-  const { register, handleSubmit, getValues } = useForm({
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(esquemaTexto),
     defaultValues: { texto: textoInicial },
+    mode: "onBlur",
   });
   const esTexto = ["mision", "vision", "historia"].includes(bloque);
   const individual = bloque === "logo" || bloque === "inquiserca";
@@ -120,7 +126,14 @@ function BloqueEditor({
                 defaultValue={textoInicial}
                 rows={bloque === "historia" ? 6 : 5}
                 placeholder="Texto pendiente de INCOVSA"
+                aria-invalid={!!errors.texto}
+                aria-describedby={errors.texto ? `error-texto-${bloque}` : undefined}
               />
+              {errors.texto?.message && (
+                <small className="msg-error" id={`error-texto-${bloque}`}>
+                  {errors.texto.message}
+                </small>
+              )}
             </div>
           )}
           {bloque === "valores" ? (

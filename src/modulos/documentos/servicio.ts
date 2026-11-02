@@ -16,6 +16,16 @@ const normalizar = (texto: string) =>
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .trim();
+const mensajesValidacion = new Set([
+  "Escriba el nombre del producto.",
+  "Elija el país de origen.",
+  "Escriba el lote: es obligatorio.",
+  "El lote solo admite letras y números.",
+  "El enlace debe ser de Google Drive (https://drive.google.com/…).",
+]);
+function mensajeValidacionProducto(issues: { message: string }[]) {
+  return issues.find((issue) => mensajesValidacion.has(issue.message))?.message ?? "Revise los datos del formulario.";
+}
 export async function leerDocumentos(sesion: SesionActual | null, busqueda = "") {
   const permiso =
     ["sit.doc.ver", "sit.doc.descargar", "sit.doc.gestionar"].find((p) => tienePermiso(sesion, p)) ?? "sit.doc.ver";
@@ -76,7 +86,7 @@ export type ProductoDocumentado = Awaited<ReturnType<typeof leerDocumentos>>["pr
 export async function guardarProducto(entrada: unknown, sesion: SesionActual | null) {
   exigirPermiso(sesion, "sit.doc.gestionar");
   const r = esquemaProducto.safeParse(entrada);
-  if (!r.success) throw new ErrorNegocio(r.error.issues[0].message);
+  if (!r.success) throw new ErrorNegocio(mensajeValidacionProducto(r.error.issues));
   const { id, ...d } = r.data;
   try {
     return await prisma.$transaction(async (tx) => {

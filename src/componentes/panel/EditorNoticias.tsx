@@ -45,6 +45,7 @@ function FormularioNoticia({
   } = useForm({
     resolver: zodResolver(esquemaCamposNoticia),
     defaultValues: { titulo: noticia?.titulo ?? "", texto: noticia?.texto ?? "" },
+    mode: "onBlur",
   });
   return (
     <form
@@ -99,7 +100,17 @@ function FormularioNoticia({
           </label>
           <label className="campo">
             <span>Texto</span>
-            <Textarea {...register("texto")} rows={7} aria-invalid={!!errors.texto} />
+            <Textarea
+              {...register("texto")}
+              rows={7}
+              aria-invalid={!!errors.texto}
+              aria-describedby={errors.texto ? "error-texto-noticia" : undefined}
+            />
+            {errors.texto?.message && (
+              <small className="msg-error" id="error-texto-noticia">
+                {errors.texto.message}
+              </small>
+            )}
           </label>
         </fieldset>
       </div>

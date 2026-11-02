@@ -11,7 +11,7 @@ vi.mock("@/lib/sesion", () => ({ obtenerSesion: async () => estado.sesion }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 import { publicarIndustria, publicarProducto, eliminarProducto } from "./acciones-catalogo";
 import { recibirGaleria } from "./multipart-catalogo";
-import { esquemaProductoPanel } from "./esquemas-catalogo";
+import { esquemaCamposProducto, esquemaIndustriaPanel, esquemaProductoPanel } from "./esquemas-catalogo";
 const sesion: SesionActual = {
   sistema: "sitio",
   usuario: { id: "catalogo-prueba", usuario: "catalogo", nombre: "Prueba", rol: "Editor" },
@@ -41,6 +41,21 @@ it("RN-56 / H-08: el sexto elemento único falla por el límite y cinco referenc
   expect(resultado.error.issues).toEqual([
     expect.objectContaining({ code: "too_big", path: ["imagenes"], maximum: 5 }),
   ]);
+});
+it("RNF-05: rechaza descripciones largas de industrias y productos con el mensaje del panel", () => {
+  const industria = esquemaIndustriaPanel.safeParse({ id: 1, descripcion: "a".repeat(10_001), imagenes: [] });
+  expect(industria.success).toBe(false);
+  if (!industria.success)
+    expect(industria.error.issues).toContainEqual(
+      expect.objectContaining({ path: ["descripcion"], message: "El texto admite hasta 10 000 caracteres." }),
+    );
+  expect(esquemaCamposProducto.safeParse({ ...producto, descripcion: "a".repeat(10_000) }).success).toBe(true);
+  const productoLargo = esquemaProductoPanel.safeParse({ ...producto, descripcion: "a".repeat(10_001) });
+  expect(productoLargo.success).toBe(false);
+  if (!productoLargo.success)
+    expect(productoLargo.error.issues).toContainEqual(
+      expect.objectContaining({ path: ["descripcion"], message: "El texto admite hasta 10 000 caracteres." }),
+    );
 });
 beforeEach(async () => {
   await limpiarTablasDeNegocio();

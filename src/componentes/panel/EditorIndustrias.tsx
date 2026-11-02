@@ -20,9 +20,14 @@ function TarjetaIndustria({ industria, indice }: { industria: CatalogoSitio["ind
   const bloqueo = useRef(false);
   const mensaje = useMensajes();
   const router = useRouter();
-  const { register, handleSubmit } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(esquemaTexto),
     defaultValues: { texto: industria.descripcion },
+    mode: "onBlur",
   });
   return (
     <section className={`tarjeta tarjeta-p ${estilos.industria}`} aria-label={industria.nombre}>
@@ -64,7 +69,18 @@ function TarjetaIndustria({ industria, indice }: { industria: CatalogoSitio["ind
           <label className="sr-only" htmlFor={`industria-${industria.id}`}>
             Descripción de {industria.nombre}
           </label>
-          <Textarea id={`industria-${industria.id}`} rows={6} {...register("texto")} />
+          <Textarea
+            id={`industria-${industria.id}`}
+            rows={6}
+            {...register("texto")}
+            aria-invalid={!!errors.texto}
+            aria-describedby={errors.texto ? `error-industria-${industria.id}` : undefined}
+          />
+          {errors.texto?.message && (
+            <small className="msg-error" id={`error-industria-${industria.id}`}>
+              {errors.texto.message}
+            </small>
+          )}
           <div>
             <Button type="submit" variant="secundario" size="pequeno">
               Guardar

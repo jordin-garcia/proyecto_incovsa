@@ -4,10 +4,11 @@ const imagenes = z
   .array(z.union([z.string().max(2048), z.int().min(0).max(4)]))
   .max(5)
   .refine((v) => new Set(v).size === v.length, "Las imágenes no se pueden repetir.");
-export const esquemaIndustriaPanel = z.object({ id: esquemaIdCatalogo, descripcion: z.string().trim(), imagenes });
+const descripcionLarga = z.string().trim().max(10_000, "El texto admite hasta 10 000 caracteres.");
+export const esquemaIndustriaPanel = z.object({ id: esquemaIdCatalogo, descripcion: descripcionLarga, imagenes });
 export const esquemaCamposProducto = z.object({
   nombre: z.string().trim().min(1, "Escriba el nombre.").max(150),
-  descripcion: z.string().trim(),
+  descripcion: descripcionLarga,
   presentacion: z.string().trim().max(150),
   paisesOrigen: z.string().trim().max(200),
 });

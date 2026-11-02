@@ -1,15 +1,15 @@
 import { z } from "zod";
 export const esquemaContacto = z.strictObject({
-  sedeId: z.number().int().positive(),
-  direccion: z.string().trim().max(250),
-  telefono: z.string().trim().max(60),
+  sedeId: z.number({ error: "Elija la sede." }).int("Elija la sede.").positive("Elija la sede."),
+  direccion: z.string().trim().max(250, "La dirección admite hasta 250 caracteres."),
+  telefono: z.string().trim().max(60, "El teléfono admite hasta 60 caracteres."),
   correo: z
     .string()
     .trim()
-    .max(120)
+    .max(120, "El correo admite hasta 120 caracteres.")
     .refine((v) => !v || z.email().safeParse(v).success, "Indique un correo válido."),
-  whatsapp: z.string().trim().max(30),
-  horario: z.string().trim().max(120),
+  whatsapp: z.string().trim().max(30, "WhatsApp admite hasta 30 caracteres."),
+  horario: z.string().trim().max(120, "El horario admite hasta 120 caracteres."),
   mapaUrl: z
     .string()
     .trim()
