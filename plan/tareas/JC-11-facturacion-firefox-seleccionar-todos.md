@@ -5,7 +5,7 @@ persona: jose-daniel
 responsable: José Daniel Cifuentes
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JG-16]
 programada: 2026-11-01
 requisitos: [RF-SL-69, RNF-11]
@@ -51,3 +51,27 @@ NAVEGADOR=webkit npm run e2e -- pruebas-e2e/picking/facturacion-carga.spec.ts --
 
 ## Fuera de alcance
 - Las demás pruebas de la matriz: JG-16 ya las dejó pasando.
+
+
+## Resultado
+
+Se confirmó un salto visible: en la traza de Firefox de la matriz original, el pedido 03553 subía aproximadamente 110 px al seleccionar todos. La corrección conserva la posición de una tarjeta visible antes de repintar, priorizando una tarjeta completa o un encabezado visible; contempla también tarjetas parciales. Se desactiva el segundo ajuste automático de anclaje del navegador en esa lista. Se mantiene la compactación aprobada de las tarjetas seleccionadas, sin textos, controles, dependencias ni operaciones del servidor nuevas.
+
+### Archivos principales
+
+- `FacturacionTablero.tsx`: captura y restauración del ancla visible; compensación del espacio cuando el nuevo desplazamiento quedaría fuera del rango.
+- `FacturacionTablero.module.css`: `overflow-anchor: none` en la lista que restaura su propia posición.
+- `pruebas-e2e/picking/facturacion-carga.spec.ts`: conserva las comprobaciones de selección individual y verifica la posición real de la tarjeta tras seleccionar todos (tolerancia de 1 px y espera de dos repintados). Incluye selección con teclado, una ventana sin tarjetas completas y dos tarjetas parcialmente visibles.
+- Capturas de aplicación y prototipo en los tres tamaños: `pruebas-e2e/picking/evidencias/jc-11/`.
+
+### Verificación
+
+- Fase roja: la nueva regresión falló en los tres tamaños de Chromium, con saltos de 368, 367,125 y 302,125 px.
+- Regresión corregida en Chromium: 3/3, incluidos los casos adicionales de tarjetas parciales y teclado.
+- [Matriz final 41390020826](https://github.com/jordin-garcia/proyecto_incovsa/actions/runs/41390020826): 1 554 casos aprobados, ninguna prueba omitida ni fallo definitivo. Facturación pasa en las nueve combinaciones de navegador y tamaño. Dos pruebas de arrastre de Bodega en WebKit pasaron al repetirse.
+- `npm run verificar`: formato, lint, tipos y 501 pruebas en 57 archivos aprobados; `npm run build` correcto.
+- Revisión independiente en contexto limpio: LISTO tras corregir y cubrir los dos hallazgos sobre tarjetas parciales.
+
+### Cómo usarlo
+
+No requiere configuración nueva. En Facturación, desplazar la lista y marcar «Seleccionar todos» con ratón, toque o teclado conserva el pedido visible. Repetir con los tres comandos de la sección Verificación. La matriz completa se ejecuta con `gh workflow run matriz-navegadores.yml --ref <rama>` y conserva reportes y trazas en sus artefactos.

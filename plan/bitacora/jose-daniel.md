@@ -71,3 +71,11 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Verificación: formato, lint, tipos, 501 pruebas en 57 archivos y compilación correctos; 57 pruebas del lector, incluida medición de memoria aislada. Los 518 casos E2E distintos quedaron comprobados entre la batería completa y las repeticiones; refuerzo final de 15/15 en carga, flujo y Bodega en los tres tamaños. Las claves de producción fueron temporales y las bases, propias de la tarea. Revisión independiente en contexto limpio: LISTO.
 - Pendiente o aviso para otros:
 **Jordin:** JC-10 corrige V5.2.3 y la parte de Odoo de V2.2.1. `leerArchivoOdoo` conserva su contrato y los mensajes existentes; actualiza desde `develop` al integrarse. La parte de textos del panel de V2.2.1 sigue en DM-14.
+
+
+## 2026-11-02 · JC-11 · Facturación en Firefox, la lista al seleccionar todos
+- Hecho: confirmado el salto visible y corregida la conservación del pedido visible al seleccionar todos. Regresión por coordenadas de la tarjeta, teclado y dos casos sin tarjetas completas. Capturas propias de aplicación y prototipo en `pruebas-e2e/picking/evidencias/jc-11/`.
+- Decisiones: conservar la posición visible, no exigir un `scrollTop` constante cuando cambian las alturas. Desactivado el anclaje automático de la lista para que no compita con su restauración. Sin dependencias, migraciones, secretos ni operaciones del servidor nuevas.
+- Verificación: 501 pruebas unitarias y compilación aprobadas; regresión Chromium 3/3; matriz 41390020826 aprobada con 1 554 casos, incluido JC-11 en las nueve combinaciones. Revisión independiente LISTO después de corregir dos hallazgos con sus regresiones.
+- Pendiente o aviso para otros:
+**Jordin:** JC-11 elimina el fallo definitivo de Firefox en teléfono. La matriz final está en https://github.com/jordin-garcia/proyecto_incovsa/actions/runs/41390020826 ; las dos pruebas de arrastre de Bodega en WebKit pasaron al repetirse. Actualiza desde `develop` después de integrar el PR.
