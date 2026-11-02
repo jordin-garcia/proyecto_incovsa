@@ -82,6 +82,20 @@ test("RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y 
   });
   await capturaEvidencia(page, `pruebas-e2e/panel/evidencias/aplicacion-contenido-${page.viewportSize()!.width}.png`);
 });
+test("RNF-05: al salir de Misión rechaza más de 10 000 caracteres sin publicar", async ({ page }) => {
+  await irA(page, "/panel/contenido");
+  const mision = page.getByRole("region", { name: "Misión", exact: true });
+  const campo = mision.getByLabel("Texto", { exact: true });
+  let publicaciones = 0;
+  page.on("request", (solicitud) => {
+    if (solicitud.url().endsWith("/api/imagenes/publicar")) publicaciones++;
+  });
+  await campo.fill("a".repeat(10_001));
+  await campo.blur();
+  await expect(mision.getByText("El texto admite hasta 10 000 caracteres.", { exact: true })).toBeVisible();
+  await mision.getByRole("button", { name: "Guardar y publicar", exact: true }).click();
+  expect(publicaciones).toBe(0);
+});
 test("RF-SW-25: el permiso se exige también al abrir la sección directamente", async ({ page, context }) => {
   await context.clearCookies();
   const respuesta = await context.request.post("/api/auth/sitio/sign-in/username", {

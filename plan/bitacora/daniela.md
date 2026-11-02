@@ -129,3 +129,11 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
   - **Jordin y Josué:** la repetición general detectó un timeout intermitente en `pruebas-e2e/picking/bodega-tiempo-real.spec.ts:179`: el botón se retiró del DOM antes del clic al simular el pedido ya despachado. El grupo íntegro pasó al repetir (SSE 320 ms); no se cambió código ajeno ni se debilitaron pruebas.
 - Revisión independiente final: LISTO, sin hallazgos de corrección ni opcionales; comprobados código, especificaciones, evidencias y cierre.
 - Revisión automática del PR #147: se quitaron solo las copias antiguas de DM-09/JG-23 del final de specs/18, conservando las versiones canónicas y D-07; DM-11 quedó en orden cronológico. Sin cambios de código ni pruebas.
+
+## 2026-11-01 · DM-14 · Límite de envíos de Contacto, campo trampa y topes de texto del panel
+
+- Hecho: Contacto limita cinco envíos por IP en 60 minutos con recuento concurrente transaccional, trampa con éxito simulado y método POST. Se agregaron topes de 10 000 caracteres a textos de Contenido, Noticias, Industrias y Catálogo; mensajes de validación seguros en español y límites visibles en Información de contacto. R-S01, R-S02 y ASVS V2.2.1/V2.4.1 se actualizaron con evidencia.
+- Verificación: formato, lint, tipos, 509 pruebas Vitest y build de producción aprobados. Pasaron los 66 E2E dirigidos de las pantallas afectadas en teléfono, tableta y escritorio. La suite global de 542 escenarios reportó 460 aprobados, varios fallos en pruebas preexistentes de Flujo, Tablero de Bodega y Cabeceras, y 55 casos dependientes no ejecutados por esos fallos. El fallo H-61 de Contacto en tableta pasó al repetir el caso aislado. Los fallos restantes se detallan en el PR; no se modificaron ni omitieron pruebas ajenas.
+- Decisiones: Daniela autorizó modificar `src/modulos/contenido/esquemas-contacto.ts` y sus pruebas, que definen los límites y mensajes de Información de contacto. No se agregaron dependencias ni migraciones y no hizo falta cambiar `specs/`.
+- Pendiente o aviso para otros:
+  - **Jordin y responsables de Picking/Flujo/Seguridad:** la suite global tuvo fallos preexistentes fuera del alcance de DM-14; consultar el registro Playwright del PR para revisar Tablero de Bodega, Flujo completo y cabeceras de seguridad.

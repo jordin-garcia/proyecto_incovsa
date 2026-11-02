@@ -5,6 +5,16 @@ import { exigirPermiso } from "@/modulos/permisos/servicio";
 import { registrarBitacora } from "@/modulos/bitacora/servicio";
 import { esquemaContacto } from "./esquemas-contacto";
 const oficinas = { tieneOficina: true, nombre: { in: ["Quetzaltenango", "Guatemala"] } };
+const mensajesValidacionContacto = new Set([
+  "Elija la sede.",
+  "La dirección admite hasta 250 caracteres.",
+  "El teléfono admite hasta 60 caracteres.",
+  "El correo admite hasta 120 caracteres.",
+  "WhatsApp admite hasta 30 caracteres.",
+  "El horario admite hasta 120 caracteres.",
+  "Indique un correo válido.",
+  "El mapa debe ser la dirección del mapa insertado de Google Maps (https://www.google.com/maps/embed?…).",
+]);
 export async function leerContactoPanel(sesion: SesionActual | null) {
   exigirPermiso(sesion, "sit.contacto");
   const sedes = await prisma.sede.findMany({
@@ -27,7 +37,10 @@ export async function leerContactoPanel(sesion: SesionActual | null) {
 export async function guardarContacto(entrada: unknown, sesion: SesionActual | null) {
   exigirPermiso(sesion, "sit.contacto");
   const r = esquemaContacto.safeParse(entrada);
-  if (!r.success) throw new ErrorNegocio(r.error.issues[0].message);
+  if (!r.success) {
+    const mensaje = r.error.issues.find((issue) => mensajesValidacionContacto.has(issue.message))?.message;
+    throw new ErrorNegocio(mensaje ?? "Revise los datos del formulario.");
+  }
   const { sedeId, ...datos } = r.data;
   return prisma.$transaction(async (tx) => {
     const sede = await tx.sede.findFirst({ where: { ...oficinas, id: sedeId }, select: { nombre: true } });

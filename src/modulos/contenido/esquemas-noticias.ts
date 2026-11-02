@@ -2,7 +2,7 @@ import { z } from "zod";
 export const esquemaIdNoticia = z.int().positive().max(2147483647);
 export const esquemaCamposNoticia = z.object({
   titulo: z.string().trim().min(1, "Escriba el título.").max(200),
-  texto: z.string().trim().min(1, "Escriba el texto."),
+  texto: z.string().trim().min(1, "Escriba el texto.").max(10_000, "El texto admite hasta 10 000 caracteres."),
 });
 export const esquemaNoticia = esquemaCamposNoticia.extend({
   id: esquemaIdNoticia.optional(),

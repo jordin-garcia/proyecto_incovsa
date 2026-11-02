@@ -25,7 +25,9 @@ const test = base.extend<{ contactoDePrueba: Client }>({
             "UPDATE informacion_contacto c SET direccion=o.direccion, telefono=o.telefono, correo=o.correo, whatsapp=o.whatsapp, horario=o.horario, mapa_url=o.mapa_url FROM json_populate_recordset(NULL::informacion_contacto,$1::json) o WHERE c.id=o.id",
             [JSON.stringify(contactos)],
           );
-          await bd.query("DELETE FROM solicitud_contacto WHERE correo LIKE 'dm08-e2e-%@prueba.invalid'");
+          await bd.query(
+            "DELETE FROM solicitud_contacto WHERE correo LIKE 'dm08-e2e-%@prueba.invalid' OR correo LIKE 'dm14-e2e-%@prueba.invalid'",
+          );
         }
       } finally {
         await bd.end();
@@ -145,6 +147,105 @@ test("RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito
   await captura(page, "aplicacion-exito");
   await page.getByRole("button", { name: "Enviar otro mensaje" }).click();
   await expect(page.getByLabel("Nombre completo *", { exact: true })).toHaveValue("");
+});
+
+test("RF-SW-06 / P-98: el sexto envío de la IP muestra el límite y no se registra", async ({
+  page,
+  contactoDePrueba,
+}) => {
+  await page.setExtraHTTPHeaders({ "x-real-ip": "203.0.113.14" });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await irA(page, "/contacto");
+  await expect(page.locator("form.contacto-form")).toHaveAttribute("data-hidratado", "true");
+
+  for (let numero = 1; numero <= 6; numero++) {
+    await page.getByLabel("Nombre completo *", { exact: true }).fill("Persona de prueba");
+    await page
+      .getByLabel("Correo electrónico *", { exact: true })
+      .fill(`dm14-e2e-${numero}-${Date.now()}@prueba.invalid`);
+    await page.getByLabel("País *", { exact: true }).selectOption("MX");
+    await page
+      .getByLabel("Sede a la que dirige su mensaje *", { exact: true })
+      .selectOption({ label: "Quetzaltenango" });
+    await page.getByLabel("Mensaje *", { exact: true }).fill("Solicitud de información de prueba");
+    await page.getByRole("button", { name: "Enviar mensaje", exact: true }).click();
+    if (numero < 5) {
+      await expect(page.getByRole("heading", { name: "Solicitud recibida", exact: true })).toBeVisible();
+      await page.getByRole("button", { name: "Enviar otro mensaje" }).click();
+    } else if (numero === 5) {
+      await expect(page.getByRole("heading", { name: "Solicitud recibida", exact: true })).toBeVisible();
+      await page.getByRole("button", { name: "Enviar otro mensaje" }).click();
+    } else {
+      await expect(page.locator(".contacto-form [role=alert]")).toContainText(
+        "Recibimos varias solicitudes desde su conexión. Inténtelo de nuevo en una hora.",
+      );
+    }
+  }
+  expect((await contactoDePrueba.query("SELECT id FROM solicitud_contacto WHERE ip='203.0.113.14'")).rows).toHaveLength(
+    5,
+  );
+});
+
+test("RF-SW-06 / RNF-08: la trampa queda fuera del teclado y Contacto pasa axe", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await irA(page, "/contacto");
+  await expect(page.locator("form.contacto-form")).toHaveAttribute("data-hidratado", "true");
+  const trampa = page.locator('[name="sitioWeb"]');
+  await expect(trampa).toHaveAttribute("tabindex", "-1");
+  await expect(trampa).toHaveAttribute("autocomplete", "off");
+  await expect(trampa).toHaveAttribute("aria-hidden", "true");
+  for (let i = 0; i < 40; i++) {
+    await page.keyboard.press("Tab");
+    expect(await trampa.evaluate((elemento) => elemento === document.activeElement)).toBe(false);
+  }
+  await axe(page);
+});
+
+test("RF-SW-06: enviar Contacto sin JavaScript usa POST y no deja datos en la URL", async ({ browser }) => {
+  const contexto = await browser.newContext({ baseURL: "http://localhost:3000", javaScriptEnabled: false });
+  try {
+    const pagina = await contexto.newPage();
+    await irA(pagina, "/contacto");
+    const formulario = pagina.locator("form.contacto-form");
+    await expect(formulario).toHaveAttribute("method", "post");
+    await pagina.getByLabel("Correo electrónico *", { exact: true }).fill("sin-js@prueba.invalid");
+    const envio = pagina.waitForRequest(
+      (solicitud) => new URL(solicitud.url()).pathname === "/contacto" && solicitud.method() === "POST",
+    );
+    await pagina.getByRole("button", { name: "Enviar mensaje", exact: true }).click();
+    const solicitud = await envio;
+    expect(new URL(solicitud.url()).search).toBe("");
+    expect(solicitud.postData()).toContain("sin-js%40prueba.invalid");
+    expect(new URL(pagina.url()).search).toBe("");
+  } finally {
+    await contexto.close();
+  }
+});
+
+test("RNF-05: Información de contacto limita los campos del panel y muestra errores en español", async ({
+  page,
+  context,
+}) => {
+  const respuesta = await context.request.post("/api/auth/sitio/sign-in/username", {
+    headers: { origin: "http://localhost:3000" },
+    data: { usuario: "ejemplo.08", clave: process.env.CLAVE_DEMO },
+  });
+  expect(respuesta.ok()).toBe(true);
+  await irA(page, "/panel/contacto");
+  await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
+  const sede = page.getByRole("region", { name: "Quetzaltenango", exact: true });
+  for (const [nombre, maximo] of [
+    ["Dirección", "250"],
+    ["Teléfono", "60"],
+    ["Correo", "120"],
+    ["WhatsApp", "30"],
+    ["Horario", "120"],
+  ])
+    await expect(sede.getByLabel(nombre, { exact: true })).toHaveAttribute("maxLength", maximo);
+  const correo = sede.getByLabel("Correo", { exact: true });
+  await correo.fill("invalido");
+  await correo.blur();
+  await expect(sede.getByText("Indique un correo válido.", { exact: true })).toBeVisible();
 });
 
 test("RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos", async ({

@@ -6,6 +6,7 @@ import { crearSolicitud, leerOpcionesContacto } from "./servicio";
 import { leerBandeja, contarSolicitudesNuevas, abrirSolicitud, gestionarSolicitud } from "./bandeja";
 import { esquemaGestion } from "./esquemas-bandeja";
 const contexto = vi.hoisted(() => ({ sesion: null as SesionActual | null }));
+vi.mock("next/headers", () => ({ headers: async () => new Headers({ "x-real-ip": "198.51.100.50" }) }));
 vi.mock("@/lib/sesion", () => ({ obtenerSesion: async () => contexto.sesion }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 import { abrir, gestionar } from "./acciones";

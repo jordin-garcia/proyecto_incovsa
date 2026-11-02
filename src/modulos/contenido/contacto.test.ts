@@ -106,3 +106,23 @@ it("H-62 / CE-13b: el servidor no guarda un correo mal formado y sí guarda uno 
   await guardarContacto({ ...datos, correo: "oficina@ejemplo.com" }, sesion);
   expect((await leerContactoPanel(sesion)).find((s) => s.sedeId === sedeId)?.correo).toBe("oficina@ejemplo.com");
 });
+it("RNF-05: Información de contacto devuelve mensajes de esquema conocidos o el error general en español", async () => {
+  const [actual] = await leerContactoPanel(sesion);
+  const datos = { ...actual, horario: actual.horario ?? "" };
+  for (const [campo, valor, mensaje] of [
+    ["direccion", "a".repeat(251), "La dirección admite hasta 250 caracteres."],
+    ["telefono", "1".repeat(61), "El teléfono admite hasta 60 caracteres."],
+    ["correo", "a".repeat(111) + "@ejemplo.com", "El correo admite hasta 120 caracteres."],
+    ["whatsapp", "1".repeat(31), "WhatsApp admite hasta 30 caracteres."],
+    ["horario", "a".repeat(121), "El horario admite hasta 120 caracteres."],
+    ["sedeId", "no es número", "Elija la sede."],
+  ] as const)
+    await expect(guardarContacto({ ...datos, [campo]: valor }, sesion)).rejects.toThrow(mensaje);
+  await expect(guardarContacto({ ...datos, campoExtra: "dato" }, sesion)).rejects.toThrow(
+    "Revise los datos del formulario.",
+  );
+  await expect(guardarContacto({ ...datos, correo: "invalido" }, sesion)).rejects.toThrow("Indique un correo válido.");
+  await expect(guardarContacto({ ...datos, mapaUrl: "https://example.com/mapa" }, sesion)).rejects.toThrow(
+    "El mapa debe ser la dirección del mapa insertado de Google Maps (https://www.google.com/maps/embed?…).",
+  );
+});

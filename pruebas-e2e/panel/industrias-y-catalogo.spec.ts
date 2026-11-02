@@ -84,6 +84,35 @@ test("RF-SW-07 / RN-56: guardar descripción y galería publica la industria sin
     await conexion.end();
   }
 });
+test("RNF-05: al salir de la descripción de industria rechaza más de 10 000 caracteres", async ({ page }) => {
+  await irA(page, "/panel/industrias");
+  const tarjeta = page.getByRole("region", { name: "Cuero", exact: true });
+  const campo = tarjeta.getByLabel("Descripción de Cuero");
+  let publicaciones = 0;
+  page.on("request", (solicitud) => {
+    if (solicitud.url().endsWith("/api/imagenes/publicar")) publicaciones++;
+  });
+  await campo.fill("a".repeat(10_001));
+  await campo.blur();
+  await expect(tarjeta.getByText("El texto admite hasta 10 000 caracteres.", { exact: true })).toBeVisible();
+  await tarjeta.getByRole("button", { name: "Guardar", exact: true }).click();
+  expect(publicaciones).toBe(0);
+});
+test("RNF-05: al salir de la descripción de producto rechaza más de 10 000 caracteres", async ({ page }) => {
+  await irA(page, "/panel/catalogo");
+  await page.getByRole("button", { name: "Nuevo producto", exact: true }).click();
+  const dialogo = page.getByRole("dialog", { name: "Nuevo producto público" });
+  const campo = dialogo.getByLabel("Descripción", { exact: true });
+  let publicaciones = 0;
+  page.on("request", (solicitud) => {
+    if (solicitud.url().endsWith("/panel/catalogo/publicar")) publicaciones++;
+  });
+  await campo.fill("a".repeat(10_001));
+  await campo.blur();
+  await expect(dialogo.getByText("El texto admite hasta 10 000 caracteres.", { exact: true })).toBeVisible();
+  await dialogo.getByRole("button", { name: "Guardar", exact: true }).click();
+  expect(publicaciones).toBe(0);
+});
 test("RF-SW-07 / RNF-08: industrias y catálogo conservan estructura y accesibilidad", async ({ page }, info) => {
   for (const [ruta, titulo] of [
     ["industrias", "Industrias atendidas"],

@@ -55,6 +55,18 @@ it("RN-41 / RF-SW-14: exige lote alfanumérico, país y enlaces válidos de Driv
   await guardarProducto(datos(), sesion);
   expect(await prisma.productoDocumentado.count()).toBe(1);
 });
+it("RNF-05: no muestra mensajes predeterminados de Zod al validar documentación interna", async () => {
+  for (const entrada of [
+    { ...datos(), lote: "x".repeat(41) },
+    { ...datos(), enlaceFt: "x".repeat(2049) },
+    { ...datos(), paisId: "no es número" },
+    { ...datos(), campoExtra: "dato" },
+  ]) {
+    await expect(guardarProducto(entrada, sesion)).rejects.toThrow(
+      /Revise los datos del formulario\.|El lote admite hasta 40 caracteres\.|El enlace admite hasta 2048 caracteres\.|El enlace debe ser de Google Drive/,
+    );
+  }
+});
 it("RN-55 / RN-39: crea, edita, evita duplicados y elimina con bitácora", async () => {
   const { id } = await guardarProducto(datos(), sesion);
   await expect(guardarProducto(datos(), sesion)).rejects.toThrow("Ya existe");
