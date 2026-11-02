@@ -76,3 +76,8 @@ Se confirmó un salto visible: en la traza de Firefox de la matriz original, el 
 ### Cómo usarlo
 
 No requiere configuración nueva. En Facturación, desplazar la lista y marcar «Seleccionar todos» con ratón, toque o teclado conserva el pedido visible. Repetir con los tres comandos de la sección Verificación. La matriz completa se ejecuta con `gh workflow run matriz-navegadores.yml --ref <rama>` y conserva reportes y trazas en sus artefactos.
+
+
+### Corrección de la revisión automática (2026-11-02)
+
+Se limpia también el relleno superior cuando la selección se vacía mediante clics individuales. La regresión provoca primero un destino negativo y confirma que hay relleno adicional; después desmarca individualmente los 33 pedidos y exige el relleno base de 14 px. Antes de corregir, falló en los tres tamaños (121,141/123,203 px residuales). No se aplicó la optimización opcional de las mediciones, por no afectar al resultado.

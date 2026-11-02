@@ -150,6 +150,7 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
   await lista.evaluate((element) => {
     element.scrollTop = 360;
   });
+  const rellenoSuperiorBase = await lista.evaluate((elemento) => getComputedStyle(elemento).paddingTop);
   const scrollAntes = await lista.evaluate((element) => element.scrollTop);
   expect(scrollAntes).toBeGreaterThan(0);
   const indiceVisible = await lista.evaluate((element) => {
@@ -272,11 +273,24 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
   const despuesEncabezado = await tarjetaConEncabezado.boundingBox();
   expect(despuesEncabezado).not.toBeNull();
   expect(Math.abs(despuesEncabezado!.y - antesEncabezado!.y)).toBeLessThanOrEqual(1);
+  expect(await lista.evaluate((elemento) => parseFloat(getComputedStyle(elemento).paddingTop))).toBeGreaterThan(
+    parseFloat(rellenoSuperiorBase),
+  );
   await alturas.evaluate((elemento) => elemento.parentNode?.removeChild(elemento));
   await lista.evaluate((elemento, estilo) => {
+    const relleno = elemento.style.paddingTop;
     if (estilo === null) elemento.removeAttribute("style");
     else elemento.setAttribute("style", estilo);
+    elemento.style.paddingTop = relleno;
   }, estiloLista);
+  // JC-11: el espacio añadido para un destino negativo también se limpia al vaciar
+  // la selección mediante clics individuales, sin volver a usar «Seleccionar todos».
+  for (const tarjeta of await tarjetas.all()) {
+    await tarjeta.click();
+    await expect(tarjeta).toHaveAttribute("aria-pressed", "false");
+  }
+  expect(await lista.evaluate((elemento) => getComputedStyle(elemento).paddingTop)).toBe(rellenoSuperiorBase);
+  await seleccionarTodos.check();
   await page.getByRole("button", { name: "Eliminar", exact: true }).click();
   const confirmacionMultiple = page.getByRole("dialog");
   await expect(confirmacionMultiple).toContainText("33 pedidos facturados seleccionados (10,920 kg)");

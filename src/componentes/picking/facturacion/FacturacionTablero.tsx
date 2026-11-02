@@ -127,6 +127,7 @@ function TableroInteractivo({
     }
     if (!seleccionados.size) {
       elemento.style.paddingBottom = "";
+      elemento.style.paddingTop = "";
     } else {
       const rellenoActual = Number.parseFloat(getComputedStyle(elemento).paddingBottom) || 0;
       const espacioNecesario = Math.max(0, scrollTop + elemento.clientHeight - elemento.scrollHeight);

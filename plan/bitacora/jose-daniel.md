@@ -79,3 +79,5 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Verificación: 501 pruebas unitarias y compilación aprobadas; regresión Chromium 3/3; matriz 41390020826 aprobada con 1 554 casos, incluido JC-11 en las nueve combinaciones. Revisión independiente LISTO después de corregir dos hallazgos con sus regresiones. Batería local: 514 aprobadas, dos tiempos de espera agotados y dos casos posteriores sin ejecutar; Contacto 3/3 y Bodega/flujo en tableta 4/4 al repetirse. Los 518 casos distintos quedaron comprobados.
 - Pendiente o aviso para otros:
 **Jordin:** JC-11 elimina el fallo definitivo de Firefox en teléfono. La matriz final está en https://github.com/jordin-garcia/proyecto_incovsa/actions/runs/41390020826 ; las dos pruebas de arrastre de Bodega en WebKit pasaron al repetirse. Actualiza desde `develop` después de integrar el PR.
+
+- Corrección del bot (02/11): limpieza del relleno superior al desmarcar el último pedido con clic individual. Regresión primero roja en los tres tamaños y luego corregida; conserva las comprobaciones anteriores. La optimización opcional de las mediciones queda sin aplicar.
