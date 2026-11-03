@@ -25,10 +25,10 @@ Registrar la **capacitación** (antes del 12/11; specs/16, decisión 90) y su ev
 
 ## Qué hacer
 1. La capacitación la dan las personas del equipo; el agente **no la inventa**: pídele a Jordin la lista de asistencia, las capturas o fotos, los temas cubiertos y el resultado de la prueba del panel, y regístralos.
-2. Escribir `entregable-3/capacitacion/evidencia.md` (Anexo H) y completar la sección 12 del Documento 6.
+2. Completar `entregable-3/anexos/anexo-h-capacitacion.md` (Anexo H; la versión 1.0 la creó JG-30 con el plan de la capacitación) con la evidencia, y la sección 12 del Documento 6.
 
 ## Archivos que creas o modificas
-- `entregable-3/capacitacion/evidencia.md` (crear), `entregable-3/documento-6/**` (sección 12)
+- `entregable-3/anexos/anexo-h-capacitacion.md` (modificar), `entregable-3/documento-6/**` (sección 12)
 
 ## Criterios de aceptación
 1. El Anexo H tiene fecha, asistentes, temas, evidencia y la prueba del panel sin ayuda.

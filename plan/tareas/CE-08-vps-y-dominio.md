@@ -67,4 +67,4 @@ Dejar el VPS de INCOVSA, el DNS de `incovsa.com` en Cloudflare y los buckets de 
 
 **Excepción de alcance (§C).** El protocolo pide un PR de bloqueo solo con la tarea y la bitácora. La asignación del coordinador del proyecto pidió dejar guía y scripts en `evidencia/CE-08/` y el comentario `IMAGEN_APP` en este mismo PR. Tras la CORRECCIÓN de `revision-claude` (2026-10-20): drop-in SSH `00-incovsa.conf` (gana a cloud-init), aborto si no hay llave antes de tocar SSH, UFW solo `22/80/443`, `verificar-vps.sh` como root y sin aceptar login root.
 
-**Fuera de este cierre:** JG-19 (primer despliegue oficial 02/11).
+**Fuera de este cierre:** JG-19 (primer despliegue oficial, desde el 07/11).

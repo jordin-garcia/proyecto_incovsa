@@ -6,7 +6,7 @@ responsable: Jordin García
 hito: entrega
 prioridad: P1
 estado: pendiente
-depende_de: [JG-22]
+depende_de: [JG-22, CE-15]
 programada: 2026-11-11
 requisitos: []
 pantallas: []
@@ -14,7 +14,7 @@ pantallas: []
 
 # JG-31 · Presentación final a la empresa (12/11)
 
-**Responsable:** Jordin García · **Hito:** entrega · **Prioridad:** P1 · **Programada:** mié 11/11 · **Depende de:** JG-22
+**Responsable:** Jordin García · **Hito:** entrega · **Prioridad:** P1 · **Programada:** mié 11/11 · **Depende de:** JG-22, CE-15
 
 > **Replanificación del 02/11 (JG-32, `specs/16` decisión 90):** la entrega final a INCOVSA es el **jueves 12/11** y vale 10 puntos.
 
@@ -44,6 +44,11 @@ Preparar la presentación a INCOVSA del 12/11: 8 minutos por grupo, con el siste
 1. El guion tiene las cinco partes con su tiempo y dura 8 minutos en total.
 2. La entrega de manuales y accesos está preparada con el Anexo J de la versión 1.1 (CE-15), sin credenciales en las diapositivas.
 3. Hay capturas de respaldo de la demostración.
+
+## Verificación
+```
+node scripts/tareas.mjs --validar
+```
 
 ## Fuera de alcance
 - La transferencia del repositorio y de los accesos (CE-15).

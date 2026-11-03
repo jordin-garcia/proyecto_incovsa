@@ -12,7 +12,7 @@ Trabajamos **todos los días**, del sábado 17/10/2026 al jueves 12/11/2026 (spe
 | Mié 21/10 | Convergencia 1 | JG-12 |
 | Dom 25/10 | Convergencia 2 | JG-13 |
 | Mié 28/10 | Accesos de INCOVSA | VPS (P-10), DNS de incovsa.com en Cloudflare (P-93) y cuentas de los servicios (P-94), pedidos al Ing. William para esta fecha (decisión 73) |
-| Vie 30/10 | Convergencia final | JG-17: todo `specs/` y el prototipo en `develop`; solo quedan correcciones |
+| Vie 30/10 | Convergencia final | Pasó al 05/11 con la replanificación del 02/11 (JG-17, JG-32) |
 | Lun 02/11 | Cambios del docente | JG-28 (meta: integrada el 03/11 a las 10:00); hasta el 04/11 solo ese código entra a `develop` |
 | Mar 03/11, 18:00 | Documentos, versión 1.0 | Documentos 1 a 6, README y anexos integrados en `develop`; guía de estudio (JG-29); en la noche, armado (JG-30) |
 | **Mié 04/11, antes de 9:50** | **Entrega académica** | Documentación subida al portal del curso (JG-30) y prueba individual de conocimientos |

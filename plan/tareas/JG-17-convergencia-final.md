@@ -31,7 +31,7 @@ pantallas: []
 4. Confirmar que el recorrido diario (JG-14), la matriz de navegadores (JG-16) y la revisión de seguridad (JG-15) están en verde o con sus correcciones programadas.
 
 ## Archivos que creas o modificas
-- `plan/convergencia/2026-10-30.md`, `plan/auditorias/2026-10-30.md` (crear)
+- `plan/convergencia/2026-11-05.md`, `plan/auditorias/2026-11-05.md` (crear)
 - Tareas nuevas y fechas reprogramadas; `plan/calendario.md` (generado)
 
 ## Criterios de aceptación

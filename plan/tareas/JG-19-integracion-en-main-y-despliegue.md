@@ -22,7 +22,7 @@ Después de la entrega académica del 04/11 y en cuanto INCOVSA entregue los acc
 ## Contexto que debes leer
 - `specs/16` "Despliegue" y decisiones 27 a 34, 37 y 75
 - `## Resultado` de CE-05, CE-06, CE-07 y CE-08
-- `plan/convergencia/2026-10-30.md`
+- `plan/convergencia/2026-11-05.md` (JG-17)
 
 ## Qué hacer
 1. Confirmar que `develop` tiene todas las verificaciones en verde, que el recorrido diario del día pasó y que no quedan tareas del hito E3 pendientes.

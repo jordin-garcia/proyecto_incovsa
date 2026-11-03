@@ -29,7 +29,7 @@ Juntar, revisar y entregar la **versión 1.0** de toda la documentación del Ent
 ## Qué hacer
 1. **Anexo H, versión 1.0:** `entregable-3/anexos/anexo-h-capacitacion.md` con el plan de la capacitación: a quién va (por cargo, sin nombres), los temas por rol tomados de los Documentos 3 y 4, la duración y que la fecha se acuerda con INCOVSA antes del 12/11. La evidencia completa la agrega JG-21 en la versión 1.1.
 2. `entregable-3/LEEME.md`: qué se entrega, la versión de cada documento y anexo, y qué se completa en la versión 1.1 del 12/11 (despliegue, accesos, transferencia del repositorio y capacitación).
-3. Armar con `entregable-2/herramientas/armar_documento.py` el `.docx` y el `.pdf` de cada documento (o recibirlos de su responsable) y revisar el formato de `specs/17`: carta, márgenes de 2.54 cm, Arial 11 o 12, interlineado 1.5, texto justificado, títulos numerados con estilos e índices automáticos, figuras y tablas identificadas, tabla de control de versiones y citas en APA 7.
+3. Armar con `entregable-2/herramientas/armar_documento.py` el `.docx` de cada documento (o recibirlo de su responsable) y exportar el `.pdf` desde Word, porque el script no genera PDF, y revisar el formato de `specs/17`: carta, márgenes de 2.54 cm, Arial 11 o 12, interlineado 1.5, texto justificado, títulos numerados con estilos e índices automáticos, figuras y tablas identificadas, tabla de control de versiones y citas en APA 7.
 4. Reunir los anexos A a J en el orden de `specs/17`.
 5. Pedirle a cada responsable que revise el PDF de su documento la noche del 03/11.
 6. **La subida al portal la hace Jordin**, no el agente: dejarle la lista de archivos y el orden. Guardar la constancia de la subida (captura) para el Anexo I de la versión 1.1 (CE-15).
