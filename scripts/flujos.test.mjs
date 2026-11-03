@@ -215,11 +215,14 @@ test("decisión 60: revision-claude siempre decide el veredicto y deja la revisi
   // Las herramientas del bot son las mínimas, todas de solo lectura salvo publicar el comentario.
   assert.match(
     accion,
-    /--allowedTools "Read,Grep,Glob,Bash\(git diff:\*\),Bash\(git log:\*\),Bash\(git show:\*\),Bash\(ls:\*\),Bash\(gh pr view:\*\),Bash\(gh pr diff:\*\),Bash\(gh pr comment:\*\)"/,
+    /--allowedTools "Read,Grep,Glob,Bash\(git diff:\*\),Bash\(git log:\*\),Bash\(git show:\*\),Bash\(ls:\*\),Bash\(gh pr view:\*\),Bash\(gh pr diff:\*\),Bash\(gh pr comment:\*\),Edit\(\/\/tmp\/revision-claude-comentario\.md\)"/,
   );
   // Aunque le nieguen un comando, el bot publica su comentario; si no, el check falla sin veredicto (03/11).
   assert.match(accion, /Termina SIEMPRE publicando el comentario del punto 4/);
   assert.match(accion, /no lo repitas ni busques otra forma/);
+  // El comentario se publica desde un archivo de /tmp, el único que el bot puede escribir.
+  assert.match(accion, /--body-file \/tmp\/revision-claude-comentario\.md/);
+  assert.doesNotMatch(accion, /Edit\((?!\/\/tmp\/revision-claude-comentario\.md\))|Write\(/);
   // Nada que ejecute código de la rama del PR: el bot corre con el token del coordinador.
   assert.doesNotMatch(accion, /Bash\(node|Bash\(npm|Bash\(npx|Bash\(python/);
   assert.match(trabajo, /^ {6}pull-requests: write$/m);

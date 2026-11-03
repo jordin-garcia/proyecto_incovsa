@@ -747,3 +747,4 @@ Correcciones del coordinador a las brechas de la revisión de seguridad (JG-15) 
 ## Revisión automática de PR de documentos (03/11/2026, JG-08)
 
 - `revision-claude` tiene también `git log`, `git show` y `ls`, sin nada que ejecute código de la rama del PR (no se le da `node scripts/tareas.mjs`, porque ejecutaría el código del PR con el token del coordinador). No se activa `show_full_output`, porque el repositorio es público, y el prompt le pide publicar siempre su comentario aunque le nieguen un comando. Motivo: en los PR de documentos (#165 y #168) el bot terminaba sin veredicto.
+- **(03/11, segundo ajuste)** El bot escribe su comentario en `/tmp/revision-claude-comentario.md`, el único archivo que puede escribir, y lo publica con `gh pr comment --body-file`. Una revisión larga dentro de `--body '<texto>'` hacía que se negara el comando (#168).
