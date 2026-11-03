@@ -29,6 +29,9 @@ pantallas: []
 2. Auditar lo integrado desde la última auditoría (protocolo §E2).
 3. Crear las tareas de corrección con fecha anterior a JG-19, con P1.
 4. Confirmar que el recorrido diario (JG-14), la matriz de navegadores (JG-16) y la revisión de seguridad (JG-15) están en verde o con sus correcciones programadas.
+5. Programar, con tareas antes de JG-19, lo que el Documento 6 (JG-18) dejó pendiente:
+    - las pruebas directas de los casos aprobados en parte: CP-20 (RN-33, cargar otro archivo después del envío), CP-32 (aviso de qué falta, en Facturación), CP-42 (dirección de Facturación sin permiso), CP-51 (misión en Quiénes somos) y CP-64 («01102026» en Reportes);
+    - la revisión de las fallas intermitentes INC-43 e INC-44 y de los 4 casos de WebKit que fallaron en la matriz del 03/11 (ejecución 41706509553): INC-47 (`panel/contenido.spec.ts:85` en teléfono, tableta y escritorio) e INC-48 (`picking/facturacion-carga.spec.ts:40` en la tableta).
 
 ## Archivos que creas o modificas
 - `plan/convergencia/2026-11-05.md`, `plan/auditorias/2026-11-05.md` (crear)

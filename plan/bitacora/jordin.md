@@ -331,3 +331,38 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Pendiente o aviso para otros:
 **Daniela:** la corrección cambió `src/componentes/sitio/` (`sitio.css`, `Industrias.tsx`, `CatalogoCliente.tsx`) y `pruebas-e2e/sitio/industrias-y-productos.spec.ts`. Si ya tomaste las capturas de Industrias o Productos para DM-13, vuelve a tomarlas. Actualiza tu rama desde `develop`.
 **Josué:** si ya tomaste capturas de Industrias o Productos para JM-07, vuelve a tomarlas con la barra de solo íconos.
+
+## 2026-11-03 · JG-18 · Documento 6, plan y evidencias de pruebas (Anexos F y G)
+- Hecho: Documento 6 v1.0 en `entregable-3/documento-6/` (13 secciones, Anexo F con 111 casos y Anexo G con las evidencias). Lancé la matriz de navegadores (41706509553) y ZAP (41706521296) sobre `develop`: 1 676 de 1 680 casos y 0 alertas altas. Registré el ZAP del 03/11 en `plan/seguridad/zap-2026-10-29.md` y agregué a JG-17 (paso 5) lo que el documento dejó pendiente.
+- Decisiones: los casos sin prueba directa quedan «aprobados en parte» y no aprobados: CP-20, CP-32, CP-42, CP-51, CP-61, CP-64 y CP-89. La alerta 10202 de ZAP (falta el *token* anti-CSRF en Contacto) queda justificada, porque el formulario es público y no usa sesión. La sección 12 (CMS) queda programada para JG-21.
+- Pendiente o aviso para otros:
+**Daniela:** la prueba de DM-14 `pruebas-e2e/panel/contenido.spec.ts:85` (RNF-05, más de 10 000 caracteres en Misión) falla en WebKit en teléfono, tableta y escritorio. No aparece el aviso al salir del campo (matriz 41706509553, INC-47). En Chromium y Firefox pasa. Lo reviso en JG-17; si sabes la causa, avísame.
+**José Daniel:** `pruebas-e2e/picking/facturacion-carga.spec.ts:40` agotó su tiempo de 30 s en WebKit en la tableta, al seleccionar las tarjetas una por una (INC-48). Lo reviso en JG-17.
+**Carlos:** CE-14 cierra CP-111 del Documento 6 (contraseñas comunes y reautenticación): agrega su prueba con ese código.
+**JG-21:** la sección 12 del Documento 6 tiene la tabla de la prueba del CMS (CMS-01 a CMS-07) lista para el resultado.
+
+## 2026-11-03 · JG-29 · Guía de estudio para la prueba individual del 04/11
+- Hecho: `plan/guia-de-estudio-entregable-3.md`, con los diez temas de la prueba (cada uno con su referencia a `specs/`) y 25 preguntas de práctica con su respuesta.
+- Decisiones: todo sale de `specs/` y del código de `develop`. Donde `specs/` no da el porqué de una elección, la guía da solo los hechos. Sin nombres de los integrantes ni credenciales.
+- Pendiente o aviso para otros:
+**Todos:** la guía de estudio para la prueba individual del 04/11 está en `plan/guia-de-estudio-entregable-3.md`. Léanla hoy; también sirve para las preguntas individuales del 09/11.
+
+## 2026-11-03 · CE-09 · Documento 1 v1.0 (terminado por el coordinador)
+- Hecho: terminé CE-09 desde la rama de Carlos (PR #98, que cierro). Documento 1 v1.0 en `entregable-3/documento-1/`, al día con `specs/` y con `develop` del 03/11: ocho capítulos, actas de las cinco reuniones (anexo A), evidencias sin fotografías (anexo B), nota de los cambios del Ing. Manuel Rojas (anexo C), matriz de 121 requisitos vigentes con sus tareas y pruebas (anexo D) y conversión (anexo E). Regeneré las figuras 5 a 8. Redacté las actas 4 y 5 en `docs/Reuniones/` (la 5 con fecha 13/10/2026).
+- Decisiones: P-77 resuelto (`specs/18`, `specs/19`). Corregí en `specs/16` que HSTS lo envía Next.js y no Caddy (decisión 29). El despliegue se documenta como previsto, no como hecho. Los documentos no nombran `docs/Reuniones/`.
+- Pendiente o aviso para otros:
+**Carlos:** terminé tu CE-09 (protocolo §E4) y cerré tu PR #98. Cambié `entregable-3/documento-1/**` y `entregable-1/diagramas/` (figura 5 y modelos entidad-relación 6 a 8). Actualiza tu rama desde `develop`. CE-11 y CE-12 también las termino yo hoy, desde tus PR #96 y #97.
+**CE-15:** las actas 4 y 5 en Markdown también están en `docs/Reuniones/`; se quitan con esa carpeta. Su contenido ya está en el anexo A del Documento 1.
+**JG-17:** el anexo D del Documento 1 muestra 35 requisitos vigentes sin una prueba con su código (la lista está en el anexo). RF-SL-80 no lo nombra ninguna tarea; sus pruebas llevan el código RN-57.
+
+## 2026-11-03 · JG-08 · Revisión automática de PR de documentos
+- Hecho: `revision-claude` falló tres veces en #168 (CE-09) sin publicar su comentario, después de 11 comandos negados. Le agregué `git log`, `git show` y `ls` (nada que ejecute código del PR), y el prompt le pide no repetir lo negado, no revisar binarios por dentro y publicar siempre el comentario. Prueba en `scripts/flujos.test.mjs`.
+- Decisiones: no activé `show_full_output` (repositorio público). Registrado en `specs/18` y en el `## Resultado` de JG-08.
+- Pendiente o aviso para otros:
+**Josué:** tu PR #165 (JM-07) tenía la misma falla del bot. Cuando esto entre a `develop`, actualiza tu rama (`gh pr update-branch 165`) para que se revise otra vez.
+
+## 2026-11-03 · JG-08 · Comentario del bot desde un archivo
+- Hecho: #168 siguió sin comentario del bot aun con las herramientas nuevas. El bot ahora escribe la revisión en `/tmp/revision-claude-comentario.md` (único archivo que puede escribir) y la publica con `gh pr comment --body-file`. Prueba en `scripts/flujos.test.mjs`.
+- Decisiones: `--body` queda como respaldo. Registrado en `specs/18` y en el `## Resultado` de JG-08.
+- Pendiente o aviso para otros:
+**Josué:** cuando esto entre a `develop`, actualiza la rama de tu PR #165 (`gh pr update-branch 165`) para que el bot lo revise otra vez.
