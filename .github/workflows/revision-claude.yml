@@ -133,22 +133,32 @@ jobs:
       # el repositorio es público.
       - name: Registro de la revisión
         if: ${{ !cancelled() && steps.claude.outputs.execution_file != '' }}
+        # Solo diagnostica: nunca cambia el resultado del check.
+        continue-on-error: true
         env:
           EJECUCION: ${{ steps.claude.outputs.execution_file }}
         run: |
           node --input-type=module -e '
             import { readFileSync } from "node:fs";
             const recortar = (texto, n) => { const s = String(texto ?? "").replace(/\s+/g, " "); return s.length > n ? s.slice(0, n) + "…" : s; };
-            const mensajes = JSON.parse(readFileSync(process.env.EJECUCION, "utf8"));
-            for (const m of mensajes) {
-              if (m.type !== "assistant") continue;
-              for (const b of m.message?.content ?? []) {
-                if (b.type === "tool_use") console.log(`Herramienta: ${b.name} ${recortar(b.input?.command ?? b.input?.file_path ?? b.input?.pattern ?? "", 200)}`);
+            const leerLinea = (l) => { try { return JSON.parse(l); } catch { return {}; } };
+            try {
+              const texto = readFileSync(process.env.EJECUCION, "utf8");
+              let mensajes;
+              try { mensajes = JSON.parse(texto); } catch { mensajes = texto.split(/\r?\n/).filter((l) => l.trim()).map(leerLinea); }
+              if (!Array.isArray(mensajes)) mensajes = [];
+              for (const m of mensajes) {
+                if (m?.type !== "assistant") continue;
+                for (const b of m.message?.content ?? []) {
+                  if (b.type === "tool_use") console.log(`Herramienta: ${b.name} ${recortar(b.input?.command ?? b.input?.file_path ?? b.input?.pattern ?? "", 200)}`);
+                }
               }
+              const final = mensajes.findLast((m) => m?.type === "result");
+              for (const d of final?.permission_denials ?? []) console.log(`NEGADO: ${d.tool_name} ${recortar(d.tool_input?.command ?? JSON.stringify(d.tool_input), 300)}`);
+              console.log(`Turnos: ${final?.num_turns}. Fin: ${final?.subtype}. Mensaje final: ${recortar(final?.result, 1500)}`);
+            } catch (error) {
+              console.log(`No se pudo leer el registro de la revisión: ${error.message}`);
             }
-            const final = mensajes.findLast((m) => m.type === "result");
-            for (const d of final?.permission_denials ?? []) console.log(`NEGADO: ${d.tool_name} ${recortar(d.tool_input?.command ?? JSON.stringify(d.tool_input), 300)}`);
-            console.log(`Turnos: ${final?.num_turns}. Fin: ${final?.subtype}. Mensaje final: ${recortar(final?.result, 1500)}`);
           '
 
       - name: Veredicto de la revisión
