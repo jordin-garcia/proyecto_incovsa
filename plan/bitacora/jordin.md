@@ -366,3 +366,8 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Decisiones: `--body` queda como respaldo. Registrado en `specs/18` y en el `## Resultado` de JG-08.
 - Pendiente o aviso para otros:
 **Josué:** cuando esto entre a `develop`, actualiza la rama de tu PR #165 (`gh pr update-branch 165`) para que el bot lo revise otra vez.
+
+## 2026-11-03 · JG-08 · Registro de los comandos negados al bot
+- Hecho: el PR #171 (JM-07) siguió sin veredicto del bot con los dos ajustes anteriores (46 turnos, 4 comandos negados). Agregué el paso «Registro de la revisión», que imprime las herramientas usadas, los comandos negados y el mensaje final del bot, para encontrar la causa. Prueba en `scripts/flujos.test.mjs`.
+- Decisiones: sin `show_full_output` ni resultados de comandos en el registro (repositorio público).
+- Pendiente o aviso para otros: ninguno.
