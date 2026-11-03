@@ -27,7 +27,17 @@ Tabla: Tamaños de pantalla probados {#tab:tamanos}
 
 ## Resultado por tamaño
 
-MATRIZ_TAMANOS
+Tabla: Resultado por tamaño de pantalla (03/11/2026, los tres navegadores) {#tab:resultado-tamanos}
+
+| Tamaño | Casos | Aprobados | Aprobados al repetirse | Fallidos |
+|---|---|---|---|---|
+| Teléfono (390 × 844) | 549 | 546 | 2 | 1 (WebKit) |
+| Tableta (768 × 1024) | 549 | 546 | 1 | 2 (WebKit) |
+| Escritorio (1440 × 900) | 549 | 545 | 3 | 1 (WebKit) |
+| TV (1920 × 1080) | 33 | 33 | 0 | 0 |
+| **Total** | **1 680** | **1 670** | **6** | **4** |
+
+Los cuatro casos fallidos son de WebKit y se explican en la sección 7 (INC-47 e INC-48). En Chromium y Firefox, todos los casos pasan en todos los tamaños.
 
 ## Accesibilidad
 
@@ -37,4 +47,4 @@ Las capturas de Bodega en el teléfono, la tableta y la TV están en el Anexo G 
 
 ## Resultado
 
-MATRIZ_CONCLUSION_TAMANOS
+**Aprobado en parte.** La aplicación funciona en los cuatro tamaños: 1 676 de 1 680 casos pasan (EV-04). Los cuatro que fallan son de WebKit, en el teléfono, la tableta y el escritorio, y están en análisis (INC-47 e INC-48, sección 7). Las pantallas se compararon con el prototipo aprobado en 390, 768 y 1440 px al construirlas, y las diferencias que encontraron las auditorías se corrigieron.

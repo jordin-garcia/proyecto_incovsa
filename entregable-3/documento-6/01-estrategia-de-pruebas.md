@@ -60,7 +60,7 @@ Tabla: Resultado de las pruebas automatizadas sobre develop {#tab:resultado-gene
 | npm audit | 41611123183 | 0 vulnerabilidades altas; 19 moderadas en herramientas de desarrollo (ESLint y Stryker), con el riesgo aceptado hasta el 15/11/2026 |
 | Prueba integral del flujo | 41698054254, 03/11/2026, commit 37a5c44 | **3 de 3 aprobadas** (teléfono, tableta y escritorio) |
 | Pruebas de mutación | 41317332051, 01/11/2026 | **67.90 %** (1 189 de 1 751 mutantes válidos detectados; umbral: 60 %) |
-| Matriz de navegadores | Ver la sección 7 | Ver las secciones 6 y 7 |
+| Matriz de navegadores (Chromium, Firefox y WebKit en 4 tamaños) | 41706509553, 03/11/2026, commit 37a5c44 | **1 676 de 1 680 casos aprobados** (6 al repetirse); los 4 fallidos son de WebKit y están en análisis (secciones 6 y 7) |
 | Pruebas unitarias y de integración en el equipo del coordinador | 03/11/2026, rama de esta tarea sobre 37a5c44 | **509 de 509 aprobadas** en 57 archivos (630.5 s) |
 | OWASP ZAP | 41706521296, 03/11/2026, commit 37a5c44 | Sin alertas de riesgo alto: 2 medias y 2 bajas, todas justificadas (sección 8) |
 

@@ -20,7 +20,7 @@ Tabla: Pruebas de validación {#tab:pruebas-validacion}
 | Archivos de Odoo | Archivo que no es .xlsx aunque tenga esa extensión; .xlsx de más de 2 MB; archivo de otra bodega, con un prefijo desconocido o con dos bodegas; .xlsx manipulado (bomba ZIP, más de 20 000 filas) | CP-28, CP-29, CP-98 | Aprobado |
 | Imágenes | SVG, GIF, texto renombrado como .jpg, archivo de más de 5 MB, sexta imagen de una galería | CP-52, CP-97 | Aprobado |
 | Enlaces | Enlaces de documentos que no son de Google Drive | CP-56 | Aprobado |
-| Topes de texto | Más de 10 000 caracteres en los textos del panel; más de 2000 en el comentario de una solicitud; textos de Contacto más largos que su tope; correo mal formado | CP-86, CP-89 a CP-91 | Aprobado |
+| Topes de texto | Más de 10 000 caracteres en los textos del panel; más de 2000 en el comentario de una solicitud; textos de Contacto más largos que su tope; correo mal formado | CP-86, CP-89 a CP-91 | Aprobado; CP-89 en parte: en WebKit no aparece el aviso al salir del campo, aunque el servidor sí rechaza el texto (INC-47) |
 | Contraseñas | Contraseña de menos de 8 caracteres | CP-48 | Aprobado |
 | Contraseñas | Contraseñas comunes o con el nombre de la empresa | CP-111 | Pendiente (CE-14) |
 | Envíos repetidos | Más de 5 envíos de Contacto por hora desde la misma dirección IP; campo trampa lleno por un robot | CP-87, CP-88 | Aprobado |
@@ -35,4 +35,4 @@ Tabla: Pruebas de validación {#tab:pruebas-validacion}
 
 ## Resultado
 
-**Aprobado.** Ningún dato inválido se guardó. Quedan pendientes el rechazo de las contraseñas comunes (CP-111) y los mensajes en inglés de INC-37; los dos se corrigen en CE-14.
+**Aprobado.** Ningún dato inválido se guardó, en ningún navegador. Queda en análisis el aviso de CP-89 en WebKit (INC-47). Quedan pendientes el rechazo de las contraseñas comunes (CP-111) y los mensajes en inglés de INC-37; los dos se corrigen en CE-14.

@@ -152,7 +152,7 @@ Tabla: Casos de prueba de los ajustes del 15/10/2026 {#tab:f-ajustes}
 | Id | Requerimiento | Entrada | Procedimiento | Resultado esperado | Resultado obtenido | Estado |
 |---|---|---|---|---|---|---|
 | CP-60 | RF-SL-70, RN-53 | Opción «Envío por camión» vacía | Escribir «20102026» en la fecha y «1330» en la hora; después «31/02/2026» y «25:90». `e2e/comunes/campos-fecha-hora.spec.ts:8, 31`, `facturacion-envio.spec.ts:51`, OPC:210 | Las primeras quedan como «20/10/2026» y «13:30» y se guardan; las segundas no se guardan y el campo se marca en rojo | Igual al esperado; además, el servidor rechaza la fecha y la hora inexistentes (EV-01, EV-04) | Aprobado |
-| CP-61 | RF-SL-61 | Tablero de pedidos facturados desplazado hacia abajo | Seleccionar una tarjeta. `facturacion-carga.spec.ts:40` | El tablero no se mueve; la tarjeta seleccionada muestra solo su número y su peso total | Igual al esperado en los tres navegadores, incluido Firefox en el teléfono desde JC-11 (EV-04) | Aprobado |
+| CP-61 | RF-SL-61 | Tablero de pedidos facturados desplazado hacia abajo | Seleccionar una tarjeta. `facturacion-carga.spec.ts:40` | El tablero no se mueve; la tarjeta seleccionada muestra solo su número y su peso total | Igual al esperado en los tres navegadores, incluido Firefox en el teléfono desde JC-11, salvo en WebKit en la tableta, donde la prueba agotó su tiempo al seleccionar las tarjetas una por una (EV-04, INC-48) | Aprobado en parte |
 | CP-62 | RF-SW-18 | Noticia publicada | Pulsar el botón del basurero en el panel y confirmar. `e2e/sitio/noticias.spec.ts:92, 124`, `m/contenido/noticias.test.ts:50, 74` | La noticia deja de mostrarse en el sitio y la eliminación queda en la bitácora. No existe la opción de ocultar | Igual al esperado (EV-01, EV-04) | Aprobado |
 | CP-63 | RF-SW-20 | Solicitud sin comentario | Escribir un comentario y pulsar «Guardar comentario»; después pulsar «Editar comentario». `e2e/panel/solicitudes.spec.ts:69`, `bandeja.test.ts:107` | Se guarda y el botón pasa a «Editar comentario» con el cuadro de solo lectura; al pulsarlo, el cuadro se habilita y el botón vuelve a «Guardar comentario» | Igual al esperado (EV-01, EV-04) | Aprobado |
 | CP-64 | RF-SL-59 | Reportes con el periodo Rango | Escribir «01102026» en la fecha de inicio y pulsar Enter. `e2e/picking/reportes.spec.ts:25`, `src/lib/fechas.test.ts:131`, `campos-fecha-hora.spec.ts:8` | La fecha queda como «01/10/2026» y el periodo se actualiza | En Reportes se prueba la fecha escrita con barras y Enter; la conversión de «01102026» se prueba en el campo común de fecha que usa Reportes (EV-01, EV-04) | Aprobado en parte |
@@ -201,7 +201,7 @@ Tabla: Casos de prueba de validación {#tab:f-validacion}
 | CP-86 | RF-SW-06 | Textos de Contacto más largos que sus topes | Escribir y enviar. `m/solicitudes/servicio.test.ts:38`, `e2e/sitio/auditoria-ce13.spec.ts:11` | Se recortan al tope; los avisos salen en español | Igual al esperado (corrección INC-21) (EV-01, EV-04) | Aprobado |
 | CP-87 | RF-SW-06 | 6 envíos de Contacto desde la misma dirección IP en 60 minutos | Enviar. `e2e/sitio/contacto.spec.ts:152`, `m/solicitudes/servicio.test.ts:93, 115` | Se guardan 5; el sexto muestra «Recibimos varias solicitudes desde su conexión. Inténtelo de nuevo en una hora.»; los envíos simultáneos no pasan el límite | Igual al esperado; la IP se libera al vencer el plazo (EV-01, EV-04) | Aprobado |
 | CP-88 | RF-SW-06 | Campo trampa lleno (envío de un robot) | Enviar. `m/solicitudes/servicio.test.ts:124`, `contacto.spec.ts:189` | Responde con un folio, pero no guarda la solicitud ni consume el consecutivo | Igual al esperado; el campo trampa no se alcanza con el teclado (EV-01, EV-04) | Aprobado |
-| CP-89 | RNF-05 | Más de 10 000 caracteres en la misión, en la descripción de una industria o un producto y en el texto de una noticia | Salir del campo o guardar. `e2e/panel/contenido.spec.ts:85`, `industrias-y-catalogo.spec.ts:87, 101`, `e2e/panel/noticias.spec.ts:18`, `m/contenido/servicio.test.ts:9`, `m/contenido/noticias.test.ts:104` | Se rechaza sin publicar | Igual al esperado (EV-01, EV-04) | Aprobado |
+| CP-89 | RNF-05 | Más de 10 000 caracteres en la misión, en la descripción de una industria o un producto y en el texto de una noticia | Salir del campo o guardar. `e2e/panel/contenido.spec.ts:85`, `industrias-y-catalogo.spec.ts:87, 101`, `e2e/panel/noticias.spec.ts:18`, `m/contenido/servicio.test.ts:9`, `m/contenido/noticias.test.ts:104` | Se rechaza sin publicar | El servidor lo rechaza en todos los casos (EV-01). En Chromium y Firefox aparece el aviso al salir del campo; en WebKit no aparece (EV-04, INC-47) | Aprobado en parte |
 | CP-90 | RNF-05 | Comentario de una solicitud con 2001 caracteres | Guardar. `bandeja.test.ts:87`, `e2e/panel/auditoria-ce13.spec.ts:212` | El servidor lo rechaza; acepta 2000 | Igual al esperado (EV-01, EV-04) | Aprobado |
 | CP-91 | RNF-05 | Correo de la información de contacto mal formado o vacío; lista de reordenamiento de Bodega con una línea repetida | Guardar. `m/contenido/contacto.test.ts:79, 96`, `contacto.spec.ts:225`, BOD:620 | Rechaza el correo mal formado y acepta el vacío o válido; rechaza la lista repetida sin cambiar las posiciones | Igual al esperado (EV-01, EV-04) | Aprobado |
 
@@ -247,12 +247,12 @@ Tabla: Resumen de los casos de prueba {#tab:f-resumen}
 | Flujo de picking y despacho | 12 | 11 | 1 (CP-32) | 0 |
 | Seguridad y acceso | 9 | 8 | 1 (CP-42) | 0 |
 | Sitio web y panel | 9 | 8 | 1 (CP-51) | 0 |
-| Ajustes del 15/10/2026 | 5 | 4 | 1 (CP-64) | 0 |
+| Ajustes del 15/10/2026 | 5 | 3 | 2 (CP-61 y CP-64) | 0 |
 | Funciones del Entregable No. 3 | 15 | 15 | 0 | 0 |
 | Roles y permisos | 5 | 5 | 0 | 0 |
-| Validación | 7 | 7 | 0 | 0 |
+| Validación | 7 | 6 | 1 (CP-89) | 0 |
 | Seguridad básica | 10 | 9 | 0 | 1 (CP-111) |
 | Flujo completo, tiempo real y accesibilidad | 6 | 6 | 0 | 0 |
-| **Total** | **111** | **105** | **5** | **1** |
+| **Total** | **111** | **103** | **7** | **1** |
 
 \vertical

@@ -12,7 +12,7 @@ Tabla: Pruebas funcionales del sistema de picking {#tab:funcionales-picking}
 | Módulo | Función | Casos | Resultado |
 |---|---|---|---|
 | Facturación | Cargar el archivo de Odoo, con el resumen de pedidos cargados y no cargados | CP-22 a CP-29 | Aprobado |
-| Facturación | Seleccionar, mover, ordenar y eliminar pedidos facturados en el tablero; conservar el orden al recargar | CP-30, CP-31, CP-61 | Aprobado |
+| Facturación | Seleccionar, mover, ordenar y eliminar pedidos facturados en el tablero; conservar el orden al recargar | CP-30, CP-31, CP-61 | Aprobado; CP-61 en parte (WebKit en la tableta, INC-48) |
 | Facturación | Elegir camión, piloto, fecha y hora programadas; alerta de sobrepeso; enviar a Bodega con la numeración diaria por sede | CP-32 a CP-35, CP-60, CP-68 | Aprobado; CP-32 en parte |
 | Facturación | Dos facturadores trabajando al mismo tiempo en la misma sede | CP-108 | Aprobado |
 | Bodega | Ver rutas y pedidos En Preparación, con la conversión agrupada por producto, lote y Peso de Conversión | CP-19, CP-36 | Aprobado |
@@ -47,6 +47,6 @@ Además de cada función, se verificó que:
 
 ## Resultado
 
-Las 509 pruebas de Vitest pasan en la CI y en el equipo del coordinador (EV-01 y EV-08). MATRIZ_FUNCIONALES
+Las 509 pruebas de Vitest pasan en la CI y en el equipo del coordinador (EV-01 y EV-08). En la matriz de navegadores pasan 1 676 de 1 680 casos de extremo a extremo; todos los de Chromium y Firefox (EV-04, secciones 6 y 7). Los cuatro que fallan son de WebKit (INC-47 e INC-48).
 
-Ninguna función principal falla. Tres casos se comprueban en parte (CP-32, CP-51 y CP-64). Las diferencias funcionales y visuales que encontraron las auditorías se corrigieron (sección 13).
+Ninguna función principal falla en Chromium ni en Firefox. Cuatro casos funcionales se comprueban en parte (CP-32, CP-51, CP-61 y CP-64). Las diferencias funcionales y visuales que encontraron las auditorías se corrigieron (sección 13).

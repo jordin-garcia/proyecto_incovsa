@@ -68,6 +68,8 @@ Tabla: Registro de incidencias {#tab:incidencias}
 | INC-43 | Falla intermitente por tiempo en una prueba de Bodega en tiempo real: el botón sale de la pantalla antes del clic | s/e | Pendiente | Pasó al repetirse (SSE en 320 ms); se revisa en la convergencia final (JG-17) |
 | INC-44 | Otras fallas intermitentes en la suite completa (acceso personal en un equipo de 8 GB; flujo, tablero y cabeceras) | s/e | Pendiente | Pasaron al repetirse; se revisan en la convergencia final (JG-17) |
 | INC-45 | Sin Cloudflare R2 configurado no se pueden servir imágenes en producción | s/e | Pendiente | Se configura con el VPS (CE-08), que espera los accesos de INCOVSA (P-10, P-93 y P-94) |
+| INC-47 | En WebKit (Safari), el aviso «El texto admite hasta 10 000 caracteres.» no aparece al salir del campo Misión con 10 001 caracteres (CP-89); en Chromium y Firefox sí. El servidor rechaza el texto en todos los navegadores | s/e | Pendiente | En análisis: puede ser la prueba, que no espera a que la página termine de hidratarse, o el aviso en WebKit. Se corrige o se justifica en la convergencia final (JG-17), antes de JG-19 |
+| INC-48 | En WebKit, en la tableta, la prueba de carga y selección de Facturación agota su tiempo de 30 s al seleccionar las tarjetas una por una (CP-61) | s/e | Pendiente | En análisis; pasa en los otros 11 navegadores y tamaños. Se revisa en la convergencia final (JG-17) |
 | INC-46 | ZAP (03/11/2026) señala que el formulario público de Contacto no tiene *token* anti-CSRF; apareció cuando DM-14 lo pasó a POST | Media | Justificada | El formulario es público y no usa sesión, así que un sitio ajeno no puede hacer nada en nombre de otra persona; el envío tiene límite por IP y campo trampa (CP-87 y CP-88). Las acciones con sesión usan cookies `SameSite=Lax`, y Next.js compara el origen cuando el navegador lo envía (observación OC-3 de ASVS). Decisión registrada en `plan/seguridad/zap-2026-10-29.md` |
 
 ## Resumen {-}
@@ -79,6 +81,6 @@ Tabla: Registro de incidencias {#tab:incidencias}
     - Revisión manual: de 5 hallazgos, 4 están corregidos y el último se corrige en CE-14.
     - La única incidencia Alta (INC-28) está corregida.
 - **OWASP ZAP:** ninguna alerta Alta en ninguna ejecución. En la primera (29/10/2026) hubo 6 alertas Medias o Bajas: 3 se corrigieron y 3 están justificadas. La del 03/11/2026, sobre `develop`, agregó una Media justificada (INC-46) y confirmó corregida la del correo en la URL (INC-30).
-- **Pendientes al 03/11/2026:** INC-35 a INC-38 (CE-14 y JG-27, programadas para el 05/11), INC-43 e INC-44 (convergencia final, JG-17) e INC-45 (CE-08). Su estado se actualiza en la versión 1.1 de este documento.
+- **Pendientes al 03/11/2026:** INC-35 a INC-38 (CE-14 y JG-27, programadas para el 05/11), INC-43, INC-44, INC-47 e INC-48 (convergencia final, JG-17) e INC-45 (CE-08). Su estado se actualiza en la versión 1.1 de este documento.
 
 \vertical
