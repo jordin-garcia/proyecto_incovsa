@@ -1,7 +1,17 @@
 # Anexo B. Evidencias del levantamiento {-}
 
-Este anexo no incluye fotografías de personas.
+Este anexo enumera la evidencia de las reuniones con INCOVSA. No reproduce fotografías ni capturas de las reuniones, porque muestran a personas. Los archivos originales se guardan en la carpeta del equipo en Drive.
 
-`entregable-1/LEEME.md` dice que las evidencias del Documento 1 son las figuras 9 a 19, copiadas en `entregable-1/figuras/evidencias/`, y que vienen de `docs/Reuniones/`.
+Tabla: Evidencia de cada reunión {#tab:evidencias}
 
-TODO(CE-09): no está la carpeta `entregable-1/figuras/evidencias/`. En esta copia no hay ninguna imagen de reuniones ni de la visita. Tampoco está `docs/Reuniones/`. No se inventan fotografías ni se describe una escena que no está en el repositorio. Si esas evidencias no existen, el coordinador lo decide y lo registra en `specs/19`. Este anexo no modifica esa carpeta.
+| Reunión | Fecha | Modalidad | Evidencia que se conserva |
+|---|---|---|---|
+| 1 | 27/08/2026 | Virtual | Notas de la reunión y captura de la videollamada |
+| 2 | 04/09/2026 | Virtual | Notas de la reunión y captura de la videollamada |
+| 3 | 17/09/2026 | Presencial, en las instalaciones de la empresa | Notas de la reunión, fotografía del grupo y ocho fotografías de la visita a la bodega |
+| 4 | 29/09/2026 | Virtual | Documento de cambios solicitados y captura de la videollamada |
+| 5 | 13/10/2026 | Virtual | Notas de la reunión y captura de la videollamada |
+
+El contenido de cada reunión está en las actas del Anexo A. Las notas de la reunión 5 dicen «14 de octubre de 2026» por error. La captura de la videollamada confirma que la reunión fue el 13 de octubre de 2026 (P-77).
+
+La evidencia del cuestionario del 9 al 11 de septiembre de 2026, de la reunión del 18 de septiembre de 2026 y de las aclaraciones del 19 y 20 de septiembre de 2026 todavía no está archivada (P-04).
