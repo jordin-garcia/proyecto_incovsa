@@ -331,3 +331,13 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Pendiente o aviso para otros:
 **Daniela:** la corrección cambió `src/componentes/sitio/` (`sitio.css`, `Industrias.tsx`, `CatalogoCliente.tsx`) y `pruebas-e2e/sitio/industrias-y-productos.spec.ts`. Si ya tomaste las capturas de Industrias o Productos para DM-13, vuelve a tomarlas. Actualiza tu rama desde `develop`.
 **Josué:** si ya tomaste capturas de Industrias o Productos para JM-07, vuelve a tomarlas con la barra de solo íconos.
+
+## 2026-11-03 · JG-18 · Documento 6, plan y evidencias de pruebas (Anexos F y G)
+- Hecho: Documento 6 v1.0 en `entregable-3/documento-6/` (13 secciones, Anexo F con 111 casos y Anexo G con las evidencias). Lancé la matriz de navegadores (41706509553) y ZAP (41706521296) sobre `develop`: 1 676 de 1 680 casos y 0 alertas altas. Registré el ZAP del 03/11 en `plan/seguridad/zap-2026-10-29.md` y agregué a JG-17 (paso 5) lo que el documento dejó pendiente.
+- Decisiones: los casos sin prueba directa quedan «aprobados en parte» y no aprobados: CP-20, CP-32, CP-42, CP-51, CP-61, CP-64 y CP-89. La alerta 10202 de ZAP (falta el *token* anti-CSRF en Contacto) queda justificada, porque el formulario es público y no usa sesión. La sección 12 (CMS) queda programada para JG-21.
+- Pendiente o aviso para otros:
+**Daniela:** la prueba de DM-14 `pruebas-e2e/panel/contenido.spec.ts:85` (RNF-05, más de 10 000 caracteres en Misión) falla en WebKit en teléfono, tableta y escritorio. No aparece el aviso al salir del campo (matriz 41706509553, INC-47). En Chromium y Firefox pasa. Lo reviso en JG-17; si sabes la causa, avísame.
+**José Daniel:** `pruebas-e2e/picking/facturacion-carga.spec.ts:40` agotó su tiempo de 30 s en WebKit en la tableta, al seleccionar las tarjetas una por una (INC-48). Lo reviso en JG-17.
+**Carlos:** CE-14 cierra CP-111 del Documento 6 (contraseñas comunes y reautenticación): agrega su prueba con ese código.
+**JG-21:** la sección 12 del Documento 6 tiene la tabla de la prueba del CMS (CMS-01 a CMS-07) lista para el resultado.
+
