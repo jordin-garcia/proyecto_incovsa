@@ -163,3 +163,9 @@ No corresponde a una auditoría: es un ajuste del coordinador después de la ron
 
 - **H-82:** la sección anterior se llamaba «Correcciones de la auditoría (2026-10-24)», pero esa auditoría no existe, y decía que #117, #119 y #120 seguían abiertas. Se corrigió el título y el texto, y el agrupamiento de Dependabot quedó también en `specs/16`, «Dependencias al día». Lo prueba `scripts/auditoria-jg25.test.mjs` («H-82»).
 - **H-83:** `despliegue.yml` corrió en modo prueba con las versiones mayores nuevas de las acciones de Docker (login v4.6.0, setup-buildx v4.4.1 y build-push v7.4.0). La evidencia está en `plan/evidencias/JG-25/README.md`.
+
+### Revisión de PR de documentos (03/11/2026, decisión del coordinador)
+
+- Tres revisiones de `revision-claude` sobre el PR de CE-09 (#168, solo documentos) terminaron sin comentario y sin veredicto: el bot intentó 11 comandos no permitidos y se detuvo sin publicar. Lo mismo pasó en #165 (JM-07).
+- Se agregaron `git log`, `git show` y `ls`. No se agregó `node scripts/tareas.mjs`: ejecutaría el código de la rama del PR con el token del coordinador. Lo prueba `scripts/flujos.test.mjs`, que rechaza `node`, `npm`, `npx` y `python` en las herramientas del bot. El prompt le dice que no repita un comando negado, que no revise por dentro los binarios (.docx, .pdf, .png), que anote como opcional lo que no pudo comprobar y que termine siempre publicando el comentario.
+- Lo prueba `scripts/flujos.test.mjs` («decisión 60…»). No se activó `show_full_output` para depurar: el repositorio es público y esa salida puede mostrar datos sensibles.

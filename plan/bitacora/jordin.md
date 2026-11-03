@@ -346,3 +346,9 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Decisiones: todo sale de `specs/` y del código de `develop`. Donde `specs/` no da el porqué de una elección, la guía da solo los hechos. Sin nombres de los integrantes ni credenciales.
 - Pendiente o aviso para otros:
 **Todos:** la guía de estudio para la prueba individual del 04/11 está en `plan/guia-de-estudio-entregable-3.md`. Léanla hoy; también sirve para las preguntas individuales del 09/11.
+
+## 2026-11-03 · JG-08 · Revisión automática de PR de documentos
+- Hecho: `revision-claude` falló tres veces en #168 (CE-09) sin publicar su comentario, después de 11 comandos negados. Le agregué `git log`, `git show` y `ls` (nada que ejecute código del PR), y el prompt le pide no repetir lo negado, no revisar binarios por dentro y publicar siempre el comentario. Prueba en `scripts/flujos.test.mjs`.
+- Decisiones: no activé `show_full_output` (repositorio público). Registrado en `specs/18` y en el `## Resultado` de JG-08.
+- Pendiente o aviso para otros:
+**Josué:** tu PR #165 (JM-07) tenía la misma falla del bot. Cuando esto entre a `develop`, actualiza tu rama (`gh pr update-branch 165`) para que se revise otra vez.
