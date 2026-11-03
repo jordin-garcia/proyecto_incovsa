@@ -1,23 +1,36 @@
-plan/evidencias/JG-28/correccion-industrias-1440.png
-plan/evidencias/JG-28/correccion-industrias-390.png
-plan/evidencias/JG-28/correccion-industrias-768.png
-plan/evidencias/JG-28/correccion-productos-1440.png
-plan/evidencias/JG-28/correccion-productos-390.png
-plan/evidencias/JG-28/correccion-productos-768.png
+
+> incovsa@0.1.0 verificar
+> npm run formato && npm run lint && npm run tipos && npm test
+
+
+> incovsa@0.1.0 formato
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> incovsa@0.1.0 lint
+> eslint .
+
+
+> incovsa@0.1.0 tipos
+> tsc --noEmit
+
+
+> incovsa@0.1.0 test
+> vitest run
 
 
  RUN  v5.0.5 C:/Users/Hecto/Documents/proyecto_incovsa
 
-(node:2832) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(node:8416) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
 (Use `node --trace-deprecation ...` to show where the warning was created)
 
  Test Files  57 passed (57)
       Tests  509 passed (509)
-   Start at  01:02:25
-   Duration  486.61s (tests 76%, import 23%)
+   Start at  03:10:20
+   Duration  442.21s (tests 76%, import 23%)
 
-    Isolate  57 workers spawned · ~306ms startup each (spawn + environment, per file)
-             at least ~17.13s faster with isolate: false — reuses workers across files instead of one per file
+    Isolate  57 workers spawned · ~289ms startup each (spawn + environment, per file)
+             at least ~16.20s faster with isolate: false — reuses workers across files instead of one per file
 
-
-[exited with code 0]

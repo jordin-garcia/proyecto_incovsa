@@ -1036,14 +1036,11 @@
     .ind-det {
       padding: 22px;
     }
+    /* JG-28 (03/11): también el catálogo, que junto a la barra de íconos no cabe en 3 columnas. */
     .prod-rejilla,
     .recomendados .prod-rejilla {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
-    }
-    /* JG-28 (03/11): junto a la barra de íconos, tres columnas no caben en teléfono. */
-    .catalogo-rejilla {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     .fichas {
       grid-template-columns: 1fr;

@@ -137,8 +137,13 @@ test("JG-28 / RF-SW-03 / RF-SW-04: Productos usa la barra de solo íconos de Ind
     const textil = filtros.getByRole("button", { name: "Textil", exact: true });
     await expect(textil).toHaveAttribute("aria-pressed", "true");
     await expect(filtros.locator('[aria-pressed="true"]')).toHaveCount(1);
-    // El nombre aparece en un globo al llegar a la opción.
+    // El nombre está oculto y aparece en un globo al pasar el cursor o al llegar con el teclado.
     const todas = filtros.getByRole("button", { name: "Todas las industrias", exact: true });
+    await expect(todas.locator(".ind-nombre")).toHaveCSS("opacity", "0");
+    await todas.hover();
+    await expect(todas.locator(".ind-nombre")).toHaveCSS("opacity", "1");
+    await page.mouse.move(0, 0);
+    await expect(todas.locator(".ind-nombre")).toHaveCSS("opacity", "0");
     await todas.focus();
     await expect(todas.locator(".ind-nombre")).toHaveCSS("opacity", "1");
     // Junto a la barra, la rejilla tiene dos columnas en teléfono y tres en tableta y escritorio.
@@ -163,8 +168,14 @@ test("RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y
     const enlace = barra.getByRole("link", { name: /^Textil/ });
     await expect(enlace).toHaveAttribute("href", "/industrias/textil");
     await expect(enlace).not.toHaveAttribute("aria-current");
+    // El nombre está oculto y aparece en un globo al pasar el cursor o al llegar con el teclado.
+    await expect(enlace.locator(".ind-nombre")).toHaveCSS("opacity", "0");
+    await enlace.hover();
+    await expect(enlace.locator(".ind-nombre")).toHaveCSS("opacity", "1");
+    await page.mouse.move(0, 0);
     await enlace.focus();
     await expect(enlace).toBeFocused();
+    await expect(enlace.locator(".ind-nombre")).toHaveCSS("opacity", "1");
     await expect(page.locator(".lista-prod")).toContainText("DM03 Ácido");
     await expect(page.locator(".lista-prod a")).toHaveCount(0);
     const nombres = await page.locator(".lista-prod span").allTextContents();
