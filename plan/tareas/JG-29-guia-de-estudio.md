@@ -5,7 +5,7 @@ persona: jordin
 responsable: Jordin García
 hito: entrega
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: []
 programada: 2026-11-03
 requisitos: []
@@ -56,3 +56,10 @@ node scripts/tareas.mjs --validar
 
 ## Fuera de alcance
 - Las diapositivas y el guion de las presentaciones (JG-22 y JG-31).
+
+## Resultado
+
+- **Hecho:** `plan/guia-de-estudio-entregable-3.md`, con los diez temas pedidos (problemática, solución, arquitectura, tecnologías, base de datos, seguridad, despliegue y respaldos, flujo completo con la conversión, módulos y exclusiones). Cada uno lleva su referencia a `specs/`. Al final hay 25 preguntas de práctica con su respuesta corta.
+- **Fuentes:** `specs/00`, `01`, `03`, `05` a `12`, `14` a `17`, y del código: `prisma/schema.prisma` (32 modelos), `src/modulos/conversion/servicio.ts` (`convertir()` en gramos enteros), `src/modulos/permisos/servicio.ts` (`exigirPermiso`), `scripts/respaldo.sh` y `scripts/restaurar.sh`, y el `## Resultado` de CE-07 (prueba de restauración en GitHub Actions).
+- **Decisiones:** la guía no nombra a los integrantes ni trae credenciales. Donde `specs/` no explica el porqué de una elección, la guía da solo los hechos (por ejemplo, que los dos sistemas comparten usuarios, sesiones, permisos y bitácora), sin agregar razones. El ejemplo de la conversión es el de `specs/12` y `specs/07` (60 kg con Peso de Conversión 25 → «2 unidades + 10 kg»).
+- **Cómo usarla:** cada integrante la lee antes de la prueba del 04/11 y la repasa para las preguntas del 09/11. Si `specs/` cambia antes del 09/11, se actualiza la sección que corresponda; si no coinciden, vale `specs/`.

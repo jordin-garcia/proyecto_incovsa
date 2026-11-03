@@ -341,3 +341,8 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 **Carlos:** CE-14 cierra CP-111 del Documento 6 (contraseñas comunes y reautenticación): agrega su prueba con ese código.
 **JG-21:** la sección 12 del Documento 6 tiene la tabla de la prueba del CMS (CMS-01 a CMS-07) lista para el resultado.
 
+## 2026-11-03 · JG-29 · Guía de estudio para la prueba individual del 04/11
+- Hecho: `plan/guia-de-estudio-entregable-3.md`, con los diez temas de la prueba (cada uno con su referencia a `specs/`) y 25 preguntas de práctica con su respuesta.
+- Decisiones: todo sale de `specs/` y del código de `develop`. Donde `specs/` no da el porqué de una elección, la guía da solo los hechos. Sin nombres de los integrantes ni credenciales.
+- Pendiente o aviso para otros:
+**Todos:** la guía de estudio para la prueba individual del 04/11 está en `plan/guia-de-estudio-entregable-3.md`. Léanla hoy; también sirve para las preguntas individuales del 09/11.
