@@ -10,7 +10,7 @@ const SELECTOR =
 export function PresentacionDinamica() {
   const ruta = usePathname();
   useEffect(() => {
-    const elementos = Array.from(document.querySelectorAll<HTMLElement>(SELECTOR)).filter(
+    let elementos = Array.from(document.querySelectorAll<HTMLElement>(SELECTOR)).filter(
       (elemento) => !elemento.parentElement?.closest(SELECTOR),
     );
     const preferencia = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -39,8 +39,22 @@ export function PresentacionDinamica() {
       });
     };
     observar();
+    // El catálogo sustituye tarjetas al filtrar sin cambiar la ruta.
+    // Solo se observan inserciones y eliminaciones, nunca los cambios de clase del propio observador.
+    const cambios = new MutationObserver(() => {
+      const actuales = Array.from(document.querySelectorAll<HTMLElement>(SELECTOR)).filter(
+        (elemento) => !elemento.parentElement?.closest(SELECTOR),
+      );
+      if (actuales.length === elementos.length && actuales.every((elemento, indice) => elemento === elementos[indice]))
+        return;
+      elementos.filter((elemento) => !elemento.isConnected).forEach((elemento) => observador?.unobserve(elemento));
+      elementos = actuales;
+      observar();
+    });
+    cambios.observe(document.querySelector("main") ?? document.body, { childList: true, subtree: true });
     preferencia.addEventListener("change", observar);
     return () => {
+      cambios.disconnect();
       observador?.disconnect();
       preferencia.removeEventListener("change", observar);
       elementos.forEach((elemento) => elemento.classList.remove("revelar", "visible"));

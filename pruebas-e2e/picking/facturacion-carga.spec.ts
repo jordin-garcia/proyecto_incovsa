@@ -1,15 +1,47 @@
-import { expect, test } from "@playwright/test";
+import { capturaEvidencia } from "../comunes/evidencia";
+import { comprobarEncabezadoModulo } from "../comunes/encabezado";
+import { expect, test as base } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { writeFile } from "node:fs/promises";
+import { Client } from "pg";
+import { irA } from "../comunes/navegacion";
+
+const test = base.extend<{ datosDeCarga: void }>({
+  datosDeCarga: [
+    async ({}, usar) => {
+      expect(process.env.DATABASE_URL, "Se requiere una base local de demostración").toBeTruthy();
+      const bloqueo = new Client({ connectionString: process.env.DATABASE_URL });
+      await bloqueo.connect();
+      try {
+        // Comparte exclusión con facturacion-envio; la espera no consume los 30 s del flujo.
+        await bloqueo.query("SELECT pg_advisory_lock(hashtext($1))", ["e2e:facturacion-envio"]);
+        const anterior = await bloqueo.query<{ ultimo: number }>(
+          "SELECT COALESCE(MAX(id), 0) AS ultimo FROM pedido_facturado",
+        );
+        try {
+          await usar();
+        } finally {
+          // Solo pedidos nuevos de este importador de demostración; los detalles tienen CASCADE.
+          await bloqueo.query(
+            `DELETE FROM pedido_facturado WHERE id > $1 AND envio_id IS NULL
+             AND cargado_por = (SELECT id FROM usuario WHERE username = $2)`,
+            [anterior.rows[0].ultimo, "picking.ejemplo.03"],
+          );
+        }
+      } finally {
+        // Cerrar la conexión libera también el bloqueo si falla la preparación o la limpieza.
+        await bloqueo.end();
+      }
+    },
+    { auto: true, timeout: 180_000 },
+  ],
+});
 
 test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos facturados", async ({
   page,
   context,
 }, info) => {
-  test.skip(
-    info.project.name !== "escritorio",
-    "Una ejecución controla los datos compartidos y recorre los tres tamaños.",
-  );
+  const width = page.viewportSize()!.width;
   expect(process.env.CLAVE_DEMO, "Se requiere la semilla de demostración").toBeTruthy();
   async function capturar(nombre: string) {
     const imagen = await page.screenshot();
@@ -21,16 +53,31 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
     data: { usuario: "ejemplo.03", clave: process.env.CLAVE_DEMO },
   });
   expect(respuesta.ok()).toBe(true);
-  await page.goto("/picking/facturacion");
+  await irA(page, "/picking/facturacion");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
+  // RF-SL-61 / H-81
+  await comprobarEncabezadoModulo(page);
   await expect(page.getByRole("heading", { name: "Pedidos facturados", exact: true })).toBeVisible();
 
-  for (const width of [390, 768, 1440]) {
-    await page.setViewportSize({ width, height: width === 390 ? 844 : width === 768 ? 1024 : 900 });
-    await capturar(`facturacion-vacio-${width}`);
-  }
+  await expect(page.getByTestId("tablero-pedidos").locator("article")).toHaveCount(0);
+  await capturar(`facturacion-vacio-${width}`);
 
-  await page.getByLabel("Cargar archivo .xlsx").setInputFiles("pruebas/fixtures/odoo/odoo-ejemplo-anonimizado.xlsx");
+  let liberarCarga = () => {};
+  const cargaPendiente = new Promise<void>((resolver) => {
+    liberarCarga = resolver;
+  });
+  await page.route("**/picking/facturacion", async (ruta) => {
+    if (ruta.request().method() === "POST" && ruta.request().headers()["next-action"]) await cargaPendiente;
+    await ruta.continue();
+  });
+  try {
+    await page.getByLabel("Cargar archivo .xlsx").setInputFiles("pruebas/fixtures/odoo/odoo-ejemplo-anonimizado.xlsx");
+    const cargar = page.getByRole("button", { name: "Cargar archivo .xlsx", exact: true });
+    await expect(cargar).toBeDisabled();
+    await expect(cargar).toHaveText("Cargar archivo .xlsx");
+  } finally {
+    liberarCarga();
+  }
   await expect(page.getByRole("dialog")).toContainText(
     "33 pedido(s) facturado(s) de Quetzaltenango se agregaron al tablero",
   );
@@ -39,12 +86,9 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
   );
   await expect(page.getByRole("dialog")).toContainText("Se ignoraron 1 referencia(s) que no están en estado «Hecho».");
   await expect(page.getByRole("dialog")).toContainText(
-    "Los datos de esos pedidos facturados deben corregirse en Odoo y volver a exportarse (P-91).",
+    "Los datos de esos pedidos facturados deben corregirse en Odoo y volver a exportarse.",
   );
-  for (const width of [390, 768, 1440]) {
-    await page.setViewportSize({ width, height: width === 390 ? 844 : width === 768 ? 1024 : 900 });
-    await capturar(`facturacion-resumen-${width}`);
-  }
+  await capturar(`facturacion-resumen-${width}`);
   await page.getByRole("button", { name: "Listo" }).click();
 
   const segundaSesion = await context.request.post("/api/auth/picking/sign-in/username", {
@@ -52,13 +96,36 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
     data: { usuario: "ejemplo.04", clave: process.env.CLAVE_DEMO },
   });
   expect(segundaSesion.ok()).toBe(true);
-  await page.goto("/picking/facturacion");
+  await irA(page, "/picking/facturacion");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
   const tablero = page.locator("[data-testid='tablero-pedidos']");
   const tarjetas = tablero.getByRole("button");
   await expect(tarjetas).toHaveCount(33);
+  // RF-SL-07 / H-80: rejilla de D-06 y tarjeta sin controles extra.
+  const rejilla = tarjetas.first().locator("..");
+  await expect(rejilla).toHaveCSS("display", "grid");
+  const medidas = await rejilla.evaluate((el) => {
+    const estilo = getComputedStyle(el);
+    return {
+      ancho: el.clientWidth - parseFloat(estilo.paddingLeft) - parseFloat(estilo.paddingRight),
+      columnas: estilo.gridTemplateColumns.split(" ").map(Number.parseFloat),
+      gap: parseFloat(estilo.columnGap),
+    };
+  });
+  expect(medidas.gap).toBe(10);
+  expect(medidas.columnas.length).toBe(Math.max(1, Math.floor((medidas.ancho + 10) / 220)));
+  expect(medidas.columnas.every((ancho) => ancho >= 210)).toBe(true);
+  await expect(tarjetas.first().getByRole("button")).toHaveCount(0);
+  await expect(tarjetas.first().getByText("×", { exact: true })).toHaveCount(0);
+  await expect(tarjetas.first().locator("svg")).toHaveCount(1); // Solo la marca de selección; sin asa ni x.
+
   await expect(tarjetas.first()).toContainText("03543");
+  await expect(tarjetas.first()).toHaveAttribute(
+    "title",
+    "Clic para seleccionar; arrastre para llevarlo a una opción de envío",
+  );
+  await expect(page.getByRole("button", { name: "Cargar archivo .xlsx", exact: true })).toBeVisible();
   await expect(tarjetas.first()).toContainText("Cliente de ejemplo 003");
   await expect(tarjetas.first()).toContainText("San Fransisco el Alto, Totonicapan");
   await expect(tarjetas.first()).toContainText("495 kg");
@@ -66,20 +133,24 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
   await expect(tarjetas.first().getByText("120 kg", { exact: true })).toBeVisible();
   await expect(page.getByText("Seleccionar todos")).toBeVisible();
 
-  for (const width of [390, 768, 1440]) {
-    await page.setViewportSize({ width, height: width === 390 ? 844 : width === 768 ? 1024 : 900 });
+  {
     expect(
       (await new AxeBuilder({ page }).analyze()).violations.filter((v) =>
         ["serious", "critical"].includes(v.impact ?? ""),
       ),
     ).toEqual([]);
     await capturar(`facturacion-${width}`);
+    await capturaEvidencia(
+      page,
+      `pruebas-e2e/picking/evidencias/jc-09/aplicacion-facturacion-${info.project.name}.png`,
+    );
   }
 
   const lista = page.locator("[data-testid='tablero-pedidos']");
   await lista.evaluate((element) => {
     element.scrollTop = 360;
   });
+  const rellenoSuperiorBase = await lista.evaluate((elemento) => getComputedStyle(elemento).paddingTop);
   const scrollAntes = await lista.evaluate((element) => element.scrollTop);
   expect(scrollAntes).toBeGreaterThan(0);
   const indiceVisible = await lista.evaluate((element) => {
@@ -91,13 +162,23 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
   });
   expect(indiceVisible).toBeGreaterThanOrEqual(0);
   const tarjetaVisible = tarjetas.nth(indiceVisible);
+  // Antes de hacer clic, Playwright desplaza la tarjeta para que quede dentro de la ventana; Firefox también mueve la
+  // lista al hacerlo (JG-16). Se desplaza primero, para medir solo lo que hace la aplicación al seleccionar.
+  await tarjetaVisible.scrollIntoViewIfNeeded();
+  const scrollSeleccion = await lista.evaluate((element) => element.scrollTop);
   await tarjetaVisible.click();
   await expect(tarjetaVisible).toHaveAttribute("aria-pressed", "true");
-  expect(await lista.evaluate((element) => element.scrollTop)).toBe(scrollAntes);
+  expect(await lista.evaluate((element) => element.scrollTop)).toBe(scrollSeleccion);
   await page.getByRole("button", { name: "Eliminar", exact: true }).click();
   const confirmacionIndividual = page.getByRole("dialog");
   await expect(confirmacionIndividual).toContainText(/pedido facturado \d{5} de Cliente de ejemplo \d{3} \(.* kg\)/);
   await confirmacionIndividual.getByRole("button", { name: "Volver" }).click();
+  await expect(confirmacionIndividual).toBeHidden();
+  // JC-11: medir la tarjeta que la persona está viendo. Un scrollTop estable por sí solo
+  // no detecta que las filas anteriores se encogieron y desplazaron el contenido visible.
+  const posicionAntesDeTodos = await tarjetaVisible.boundingBox();
+  expect(posicionAntesDeTodos).not.toBeNull();
+  await capturar(`facturacion-antes-de-todos-${width}`);
   await page.getByLabel("Seleccionar todos").check();
   await expect(page.getByRole("button", { name: "Eliminar" })).toBeVisible();
   await expect(tarjetas).toHaveCount(33);
@@ -108,9 +189,15 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
       ["serious", "critical"].includes(v.impact ?? ""),
     ),
   ).toEqual([]);
-  expect(await lista.evaluate((element) => element.scrollTop)).toBe(scrollAntes);
-  for (const width of [390, 768, 1440]) {
-    await page.setViewportSize({ width, height: width === 390 ? 844 : width === 768 ? 1024 : 900 });
+  // Dejar pasar el repintado: Firefox puede aplicar su anclaje después del efecto de React.
+  await page.evaluate(
+    () => new Promise<void>((resolver) => requestAnimationFrame(() => requestAnimationFrame(() => resolver()))),
+  );
+  const posicionDespuesDeTodos = await tarjetaVisible.boundingBox();
+  expect(posicionDespuesDeTodos).not.toBeNull();
+  expect(Math.abs(posicionDespuesDeTodos!.y - posicionAntesDeTodos!.y)).toBeLessThanOrEqual(1);
+  expect(Math.abs(posicionDespuesDeTodos!.x - posicionAntesDeTodos!.x)).toBeLessThanOrEqual(1);
+  {
     expect(
       (await new AxeBuilder({ page }).analyze()).violations.filter((v) =>
         ["serious", "critical"].includes(v.impact ?? ""),
@@ -118,13 +205,96 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
     ).toEqual([]);
     await capturar(`facturacion-seleccionado-${width}`);
   }
+  // RNF-11 / JC-11: sin tarjetas completas en la ventana también debe conservar el ancla.
+  // Una ventana de 30 px reproduce el caso de un pedido más alto que el espacio disponible.
+  const seleccionarTodos = page.getByLabel("Seleccionar todos");
+  await seleccionarTodos.focus();
+  await seleccionarTodos.press("Space");
+  await expect(seleccionarTodos).not.toBeChecked();
+  const estiloLista = await lista.getAttribute("style");
+  await lista.evaluate((elemento) => {
+    elemento.style.minHeight = "0";
+    elemento.style.height = "30px";
+    elemento.style.flex = "none";
+  });
+  await tarjetaVisible.evaluate((tarjeta) => {
+    const lista = tarjeta.closest<HTMLElement>("[data-testid='tablero-pedidos']")!;
+    lista.scrollTop += tarjeta.getBoundingClientRect().top - lista.getBoundingClientRect().top + 10;
+  });
+  expect(
+    await lista.evaluate((elemento) => {
+      const marco = elemento.getBoundingClientRect();
+      return [...elemento.querySelectorAll("[role='button']")].some((tarjeta) => {
+        const posicion = tarjeta.getBoundingClientRect();
+        return posicion.top >= marco.top && posicion.bottom <= marco.bottom;
+      });
+    }),
+  ).toBe(false);
+  const posicionParcial = await tarjetaVisible.boundingBox();
+  expect(posicionParcial).not.toBeNull();
+  await seleccionarTodos.press("Space");
+  await expect(seleccionarTodos).toBeChecked();
+  await page.evaluate(
+    () => new Promise<void>((resolver) => requestAnimationFrame(() => requestAnimationFrame(() => resolver()))),
+  );
+  const posicionParcialSeleccionada = await tarjetaVisible.boundingBox();
+  expect(posicionParcialSeleccionada).not.toBeNull();
+  expect(Math.abs(posicionParcialSeleccionada!.y - posicionParcial!.y)).toBeLessThanOrEqual(1);
+  await lista.evaluate((elemento, estilo) => {
+    if (estilo === null) elemento.removeAttribute("style");
+    else elemento.setAttribute("style", estilo);
+  }, estiloLista);
+  // Dos tarjetas parciales: conservar el encabezado que sí se ve, no el que quedó por encima.
+  await seleccionarTodos.uncheck();
+  const alturas = await page.addStyleTag({
+    content: "[data-testid='tablero-pedidos'] [role='button'][aria-pressed='false'] { min-height: 300px; }",
+  });
+  await lista.evaluate((elemento) => {
+    elemento.style.minHeight = "0";
+    elemento.style.height = "300px";
+    elemento.style.flex = "none";
+    elemento.scrollTop = 100;
+  });
+  const encabezadoVisible = await tarjetas.evaluateAll((elementos) => {
+    const marco = elementos[0]!.parentElement!.getBoundingClientRect();
+    return elementos.findIndex((tarjeta) => {
+      const posicion = tarjeta.getBoundingClientRect();
+      return posicion.top >= marco.top && posicion.top < marco.bottom;
+    });
+  });
+  expect(encabezadoVisible).toBeGreaterThan(0);
+  const tarjetaConEncabezado = tarjetas.nth(encabezadoVisible);
+  const antesEncabezado = await tarjetaConEncabezado.boundingBox();
+  expect(antesEncabezado).not.toBeNull();
+  await seleccionarTodos.check();
+  await page.evaluate(
+    () => new Promise<void>((resolver) => requestAnimationFrame(() => requestAnimationFrame(() => resolver()))),
+  );
+  const despuesEncabezado = await tarjetaConEncabezado.boundingBox();
+  expect(despuesEncabezado).not.toBeNull();
+  expect(Math.abs(despuesEncabezado!.y - antesEncabezado!.y)).toBeLessThanOrEqual(1);
+  expect(await lista.evaluate((elemento) => parseFloat(getComputedStyle(elemento).paddingTop))).toBeGreaterThan(
+    parseFloat(rellenoSuperiorBase),
+  );
+  await alturas.evaluate((elemento) => elemento.parentNode?.removeChild(elemento));
+  await lista.evaluate((elemento, estilo) => {
+    const relleno = elemento.style.paddingTop;
+    if (estilo === null) elemento.removeAttribute("style");
+    else elemento.setAttribute("style", estilo);
+    elemento.style.paddingTop = relleno;
+  }, estiloLista);
+  // JC-11: el espacio añadido para un destino negativo también se limpia al vaciar
+  // la selección mediante clics individuales, sin volver a usar «Seleccionar todos».
+  for (const tarjeta of await tarjetas.all()) {
+    await tarjeta.click();
+    await expect(tarjeta).toHaveAttribute("aria-pressed", "false");
+  }
+  expect(await lista.evaluate((elemento) => getComputedStyle(elemento).paddingTop)).toBe(rellenoSuperiorBase);
+  await seleccionarTodos.check();
   await page.getByRole("button", { name: "Eliminar", exact: true }).click();
   const confirmacionMultiple = page.getByRole("dialog");
   await expect(confirmacionMultiple).toContainText("33 pedidos facturados seleccionados (10,920 kg)");
-  for (const width of [390, 768, 1440]) {
-    await page.setViewportSize({ width, height: width === 390 ? 844 : width === 768 ? 1024 : 900 });
-    await capturar(`facturacion-confirmacion-eliminar-${width}`);
-  }
+  await capturar(`facturacion-confirmacion-eliminar-${width}`);
   await page.getByRole("dialog").getByRole("button", { name: "Eliminar", exact: true }).click();
   await expect(tarjetas).toHaveCount(0);
 });

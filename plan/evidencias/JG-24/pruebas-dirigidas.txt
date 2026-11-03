@@ -1,0 +1,46 @@
+
+> incovsa@0.1.0 test
+> vitest run src/modulos/envios/cliente.test.ts src/componentes/comunes/armazon/iniciales.test.ts src/modulos/envios/servicio.test.ts src/modulos/envios/opciones.test.ts src/app/acceso/servicio.test.ts src/modulos/reportes/servicio.test.ts src/modulos/bitacora/servicio.test.ts src/modulos/contenido/acciones.test.ts src/modulos/contenido/panel-catalogo.test.ts
+
+
+ RUN  v5.0.5 C:/Users/Hecto/Documents/proyecto_incovsa
+
+ ❯ src/app/acceso/servicio.test.ts (15 tests | 1 failed) 87149ms
+   × RNF-15: los bloqueos vencen a los quince minutos y no se reutilizan los fallos previos 10009ms
+ ❯ src/modulos/envios/servicio.test.ts (7 tests | 1 failed) 33841ms
+   × RN-17 / RNF-04: rechaza listar el tablero sin sesión, permiso o sede autorizada 10041ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/app/acceso/servicio.test.ts > RNF-15: los bloqueos vencen a los quince minutos y no se reutilizan los fallos previos
+Error: Hook timed out in 10000ms.
+If this is a long-running hook, pass a timeout value as the last argument or configure it globally with "hookTimeout".
+ ❯ src/app/acceso/servicio.test.ts:21:1
+     19|   });
+     20| }
+     21| beforeEach(async () => {
+       | ^
+     22|   await limpiarTablasDeNegocio();
+     23|   await sembrarDemo(prisma, { claveDemo: clave });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/modulos/envios/servicio.test.ts > RN-17 / RNF-04: rechaza listar el tablero sin sesión, permiso o sede autorizada
+Error: Hook timed out in 10000ms.
+If this is a long-running hook, pass a timeout value as the last argument or configure it globally with "hookTimeout".
+ ❯ src/modulos/envios/servicio.test.ts:19:1
+     17| };
+     18|
+     19| beforeEach(async () => {
+       | ^
+     20|   await limpiarTablasDeNegocio();
+     21|   await sembrarDemo(prisma, { claveDemo });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 7 passed (9)
+      Tests  2 failed | 65 passed (67)
+   Start at  18:15:53
+   Duration  250.89s (tests 80%, import 19%, transform 1%)
+

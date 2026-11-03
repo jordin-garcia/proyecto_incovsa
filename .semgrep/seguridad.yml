@@ -1,0 +1,120 @@
+rules:
+  - id: incovsa-operacion-sin-permiso
+    message: "RNF-04: cada operación exportada debe llamar a exigirPermiso antes de acceder a datos."
+    severity: ERROR
+    languages: [typescript]
+    paths:
+      include:
+        - /src/app/**/route.ts
+      exclude:
+        # Better Auth aplica su autenticación y límites (JG-06).
+        - /src/app/api/auth/**
+        # Decisión 78: imágenes PÚBLICAS de disco, solo fuera de producción.
+        - /src/app/api/imagenes/\[...clave\]/route.ts
+    patterns: &operaciones-protegidas
+      - pattern-either:
+          - pattern: |
+              export async function $FUNC(...) { ... }
+          - pattern: |
+              export function $FUNC(...) { ... }
+          - pattern: |
+              export const $FUNC = (...) => { ... };
+          - pattern: |
+              export const $FUNC = async (...) => { ... };
+      - pattern-not: |
+          export async function $FUNC(...) { ... exigirPermiso(...); ... }
+      - pattern-not: |
+          export function $FUNC(...) { ... exigirPermiso(...); ... }
+      - pattern-not: |
+          export const $FUNC = (...) => { ... exigirPermiso(...); ... };
+      - pattern-not: |
+          export const $FUNC = async (...) => { ... exigirPermiso(...); ... };
+  - id: incovsa-accion-sin-permiso
+    message: "RNF-04: cada acción del servidor exportada debe llamar a exigirPermiso antes de acceder a datos."
+    severity: ERROR
+    languages: [typescript]
+    paths:
+      include: [/src/modulos/**/*.ts]
+      exclude:
+        # RF-SW-06: única recepción pública (sin sesión); la limita incovsa-recepcion-publica.
+        - /src/modulos/solicitudes/recepcion-publica.ts
+        # specs/03: la administración de usuarios exige el acceso total; la limita incovsa-usuarios-acceso-total.
+        - /src/modulos/usuarios/acciones.ts
+    patterns:
+      # El span abarca el módulo completo y se intersecta con cada exportación AST.
+      # No confunde una cadena de prueba con la directiva inicial del módulo.
+      - pattern-regex: >-
+          (?s)\A(?:\s|//[^\n]*(?:\n|$)|/\*.*?\*/)*["']use server["']\s*;?.*
+      - patterns: *operaciones-protegidas
+  - id: incovsa-usuarios-acceso-total
+    message: "specs/03 / RNF-04: cada acción de usuarios debe llamar a exigirAccesoTotal (solo Gerencia y Soporte) antes de acceder a datos."
+    severity: ERROR
+    languages: [typescript]
+    paths:
+      include: [/src/modulos/usuarios/acciones.ts]
+    patterns:
+      - pattern-regex: >-
+          (?s)\A(?:\s|//[^\n]*(?:\n|$)|/\*.*?\*/)*["']use server["']\s*;?.*
+      - patterns:
+          - pattern-either:
+              - pattern: |
+                  export async function $FUNC(...) { ... }
+              - pattern: |
+                  export function $FUNC(...) { ... }
+              - pattern: |
+                  export const $FUNC = (...) => { ... };
+              - pattern: |
+                  export const $FUNC = async (...) => { ... };
+          - pattern-not: |
+              export async function $FUNC(...) { ... exigirAccesoTotal(...); ... }
+          - pattern-not: |
+              export function $FUNC(...) { ... exigirAccesoTotal(...); ... }
+          - pattern-not: |
+              export const $FUNC = (...) => { ... exigirAccesoTotal(...); ... };
+          - pattern-not: |
+              export const $FUNC = async (...) => { ... exigirAccesoTotal(...); ... };
+  - id: incovsa-recepcion-publica
+    message: "RF-SW-06 / RNF-04: la recepción pública solo exporta la función enviarSolicitud; cualquier otra operación va en un archivo que exija permisos."
+    severity: ERROR
+    languages: [typescript]
+    paths:
+      include: [/src/modulos/solicitudes/recepcion-publica.ts]
+    patterns:
+      - pattern-either:
+          - pattern: export function $FUNC(...) { ... }
+          - pattern: export async function $FUNC(...) { ... }
+          - pattern: export const $FUNC = $VALOR;
+          - pattern: export let $FUNC = $VALOR;
+          - pattern: export var $FUNC = $VALOR;
+          - pattern: export class $CLASE { ... }
+          # Reexportaciones y exportación por defecto: no tienen nombre que comprobar.
+          - pattern-regex: \bexport\s*(?:\*|\{|default\b)
+          # Solo las dos importaciones reales y ninguna declaración propia, para que los nombres del cuerpo fijo
+          # no puedan ser un alias ni una función local.
+          - pattern-regex: >-
+              (?m)^[ \t]*import\b(?![ \t]*\{[ \t]*aResultadoDeError[ \t]*\}[ \t]*from[ \t]*"@/lib/errores";?[ \t]*$)(?![ \t]*\{[ \t]*crearSolicitud[ \t]*\}[ \t]*from[ \t]*"\./servicio";?[ \t]*$).*$
+          - pattern-regex: (?m)^[ \t]*(?:const|let|var|function|async[ \t]+function|class)\b
+      # Cuerpo fijo: solo crea la solicitud (validada en el servicio) y devuelve el folio o el error genérico.
+      - pattern-not: |
+          export async function enviarSolicitud($ENTRADA: unknown) {
+            try {
+              return { ok: true as const, datos: await crearSolicitud($ENTRADA) };
+            } catch ($ERROR) {
+              return aResultadoDeError($ERROR);
+            }
+          }
+  - id: incovsa-api-insegura
+    message: "RNF-05: no se permite SQL inseguro, eval ni HTML sin escapar."
+    severity: ERROR
+    languages: [typescript, javascript]
+    paths:
+      include: [/src/**]
+      exclude: [/src/generated/**, "**/*.test.ts"]
+    pattern-either:
+      - pattern: $OBJ.$queryRawUnsafe(...)
+      - pattern: $OBJ.$executeRawUnsafe(...)
+      - pattern: eval(...)
+      - pattern: $OBJ.eval(...)
+      - pattern: <$EL ... dangerouslySetInnerHTML={$VALOR} ... />
+      - pattern: $OBJ.dangerouslySetInnerHTML
+      - pattern: "{ dangerouslySetInnerHTML: $VALOR }"

@@ -1,0 +1,133 @@
+# Matriz de navegadores y tamaños (JG-16, specs/16 decisiones 46 y 47; RNF-01, RNF-02, RNF-08, RNF-11 y RNF-14).
+# Corre todas las pruebas de pruebas-e2e/ (con axe) en Chromium, Firefox y WebKit, en los proyectos telefono, tableta,
+# escritorio y tv (solo el tablero). Cada combinación usa su propia base PostgreSQL 18 vacía, porque las pruebas
+# separan sus datos por proyecto. Se ejecuta a mano antes de cada versión (decisión 47), no en cada PR:
+#   gh workflow run matriz-navegadores.yml --ref develop
+# También corre en los PR que cambian este flujo o la configuración de Playwright, para verificarlos antes de integrarlos.
+# El trabajo final junta los resultados en una tabla por navegador y tamaño (evidencia del Documento 6 §6 y §7).
+name: Matriz de navegadores
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [develop]
+    paths:
+      - .github/workflows/matriz-navegadores.yml
+      - playwright.config.ts
+      - scripts/resumen-matriz.mjs
+
+concurrency:
+  group: matriz-navegadores-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  pruebas:
+    name: ${{ matrix.navegador }}-${{ matrix.proyecto }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    strategy:
+      fail-fast: false
+      matrix:
+        navegador: [chromium, firefox, webkit]
+        proyecto: [telefono, tableta, escritorio, tv]
+    # Base vacía en cada combinación. La contraseña es solo de este contenedor temporal.
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: incovsa
+          POSTGRES_PASSWORD: incovsa
+          POSTGRES_DB: incovsa_matriz
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U incovsa -d incovsa_matriz"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://incovsa:incovsa@localhost:5432/incovsa_matriz
+      ALMACENAMIENTO: disco
+      NAVEGADOR: ${{ matrix.navegador }}
+      PROYECTO: ${{ matrix.proyecto }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+
+      # Claves aleatorias de cada ejecución: no hay secretos en el repositorio y no sirven fuera de este entorno.
+      - name: Generar las claves temporales
+        run: |
+          for variable in BETTER_AUTH_SECRET_SITIO BETTER_AUTH_SECRET_PICKING CLAVE_DEMO; do
+            valor="$(openssl rand -hex 32)"
+            echo "::add-mask::$valor"
+            echo "$variable=$valor" >> "$GITHUB_ENV"
+          done
+
+      - name: Aplicar las migraciones y las semillas
+        run: |
+          npm run db:aplicar
+          npm run db:semilla
+          npm run semilla:demo
+
+      - name: Instalar el navegador
+        run: npx playwright install --with-deps "$NAVEGADOR"
+
+      # Las pruebas de tiempo real y del flujo completo arrancan el servidor de producción standalone.
+      - run: npm run build
+
+      # Un trabajador, como en los equipos del equipo: varias pruebas comparten datos de la semilla dentro del proyecto.
+      - name: Correr todas las pruebas
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_NAME: resultados-${{ matrix.navegador }}-${{ matrix.proyecto }}.json
+        run: |
+          npm run e2e -- --project="$PROYECTO" --workers=1 --reporter=list,html,json
+
+      - name: Conservar el reporte y las capturas
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: matriz-${{ matrix.navegador }}-${{ matrix.proyecto }}-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Conservar el resultado para el resumen
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: resultados-${{ matrix.navegador }}-${{ matrix.proyecto }}
+          path: resultados-${{ matrix.navegador }}-${{ matrix.proyecto }}.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  resumen:
+    name: resumen
+    needs: pruebas
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: resultados-*
+          path: resultados
+      # Tabla por navegador y tamaño en el resumen de la ejecución; falla si alguna combinación falló o no terminó.
+      - name: Resumir la matriz
+        run: node scripts/resumen-matriz.mjs resultados

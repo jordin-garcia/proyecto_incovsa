@@ -1,0 +1,31 @@
+{
+  "titulo_documento": "DOCUMENTO 6: PLAN Y EVIDENCIAS DE PRUEBAS",
+  "archivo_salida": "Documento 6 - Plan y evidencias de pruebas v1.0.docx",
+  "lugar_fecha": "Quetzaltenango, 3 de noviembre de 2026",
+  "portada": true,
+  "control_versiones": true,
+  "indices": true,
+  "numerar": true,
+  "versiones": [
+    ["1.0", "03/11/2026", "Héctor Jordin Adolfo García Coyoy", "Versión para el Entregable No. 3 (04/11/2026): estrategia de pruebas, casos de prueba con su resultado obtenido, pruebas funcionales, de roles y permisos, de validación, responsive, de compatibilidad, de seguridad básica y de conversión, prueba integral del flujo completo, prueba de inventario (no aplica), prueba del CMS programada para la capacitación, registro de incidencias, Anexo F (casos de prueba) y Anexo G (evidencias)"]
+  ],
+  "secciones": [
+    "00-introduccion.md",
+    "01-estrategia-de-pruebas.md",
+    "02-casos-de-prueba.md",
+    "03-pruebas-funcionales.md",
+    "04-pruebas-de-roles-y-permisos.md",
+    "05-pruebas-de-validacion.md",
+    "06-pruebas-responsive.md",
+    "07-pruebas-de-compatibilidad.md",
+    "08-pruebas-de-seguridad.md",
+    "09-pruebas-de-conversion.md",
+    "10-prueba-del-flujo-completo.md",
+    "11-prueba-de-inventario.md",
+    "12-prueba-del-cms.md",
+    "13-registro-de-incidencias.md",
+    "90-anexo-f-casos-de-prueba.md",
+    "91-anexo-g-evidencias.md",
+    "99-referencias.md"
+  ]
+}

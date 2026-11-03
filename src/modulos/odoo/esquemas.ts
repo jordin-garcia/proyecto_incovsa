@@ -10,6 +10,8 @@ export const esquemaEntradaLecturaOdoo = z.object({
   sedeDeTrabajo: esquemaBodegaOdoo,
 });
 
+const textoLimitado = (maximo: number) => z.preprocess((valor) => String(valor ?? "").trim(), z.string().max(maximo));
+
 const textoOdoo = z.preprocess((valor) => String(valor ?? "").trim(), z.string());
 
 /** RN-37: normaliza sin aritmética de punto flotante; null conserva el defecto de la línea para RN-50. */
@@ -34,12 +36,12 @@ function decimalDeCelda(valor: unknown): string | null {
 
 /** Una fila puede tener un defecto numérico: se rechaza su pedido completo, no el archivo. */
 export const esquemaFilaOdoo = z.object({
-  referencia: textoOdoo,
-  cliente: textoOdoo,
-  sector: textoOdoo,
+  referencia: textoLimitado(40),
+  cliente: textoLimitado(200),
+  sector: textoLimitado(200),
   estado: textoOdoo,
-  producto: textoOdoo,
-  lote: textoOdoo,
+  producto: textoLimitado(200),
+  lote: textoLimitado(40),
   pesoConversionKg: z.unknown().transform(decimalDeCelda),
   cantidadKg: z.unknown().transform(decimalDeCelda),
 });

@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { salir } from "@/app/acceso/acciones";
+import { cerrarSesionDelSistema } from "./cerrar-sesion";
 import { Armazon, type OpcionNavegacion } from "./Armazon";
 
 export const SEDES_EJEMPLO = [
@@ -66,7 +66,7 @@ export function ArmazonEjemplo({ sistema, children }: { sistema: "sitio" | "pick
         sede={sede}
         alCambiarSede={cambiarSede}
         alSalir={async () => {
-          await salir(sistema);
+          await cerrarSesionDelSistema(sistema);
         }}
       >
         {children}

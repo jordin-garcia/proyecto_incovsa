@@ -28,6 +28,14 @@ Archivos recibidos (`docs_incovsa/PAGINA WEB/INFORMACION EMPRESA/`): los logotip
 - **Diseño responsivo:** la arquitectura visual se adapta correctamente a teléfono y escritorio (RF-SW-08).
 - **Datos validados por INCOVSA:** las industrias y las proporciones y tamaños de las imágenes de productos son correctos.
 
+### Cambios del Ing. Manuel Rojas (02/11/2026, JG-28)
+
+> Pedido del docente antes de la entrega del 04/11. Se aparta del prototipo aprobado (decisión 89 de [16](16-arquitectura-y-tecnologia.md)); en lo demás, el prototipo sigue mandando en diseño.
+
+- **Banners de la misma altura:** el banner de Quiénes somos, Industrias, Productos, Noticias y Contacto mide lo mismo en cada tamaño de pantalla, sin importar el largo del título o del texto, con el contenido centrado verticalmente: **440 px** en escritorio (más de 1024 px), **380 px** en tableta (721 a 1024 px), **480 px** de 481 a 720 px y **560 px** en teléfono (hasta 480 px). La altura alcanza para el banner más alto, el de Quiénes somos, desde 360 px de ancho; en pantallas más angostas ese banner crece lo necesario para no recortar su contenido. Quiénes somos conserva sus logotipos alternados dentro de esa altura: en tableta van a la par del texto (200 × 100 px) y en teléfono debajo (180 × 90 px).
+- **Barras laterales de Productos e Industrias:** ver [Industrias](#industrias-rf-sw-03) y [Catálogo de productos](#catálogo-de-productos-rf-sw-04).
+- **Sin restos del prototipo:** ninguna pantalla del sitio, del panel ni del picking muestra avisos de datos pendientes («pendiente de INCOVSA», «por confirmar», «Imagen de la industria») ni los códigos internos de los pendientes (P-xx). En el sitio público, **si falta un dato, el elemento no se muestra** (sin aviso y sin espacio vacío). En el panel, la celda sin dato queda vacía. Se conservan, por decisión del coordinador, el recuadro vacío de misión y visión sin imagen y la tarjeta de cada valor sin imagen, que muestra solo su número.
+
 ### Pie de página (RF-SW-15)
 
 | Páginas | Pie de página |
@@ -55,7 +63,7 @@ Las imágenes y las tarjetas del contenido de las páginas públicas tienen una 
 
 - **No rotan:** los logotipos, que son una sola imagen cada uno, y los **valores**, que son 5 imágenes fijas, una por valor (RF-SW-29).
 - En el banner de Quiénes somos se alternan los logotipos de INCOVSA e Inquiserca (RF-SW-02).
-- **Rendimiento (RNF-17):** la galería no puede hacer más lenta la carga de la página. Al abrir la página solo se descarga la primera imagen de cada galería; las demás se descargan después, mientras se ve la primera. Se comprueba con pruebas de rendimiento (Documento 6) que la carga inicial de una página con galerías de 5 imágenes no tarda más que con galerías de una.
+- **Rendimiento (RNF-17):** la galería no puede hacer más lenta la carga de la página. Al abrir la página solo se descarga la primera imagen de cada galería; las demás se descargan después, mientras se ve la primera. Se comprueba con pruebas de rendimiento (Documento 6) que la carga inicial de una página con galerías de 5 imágenes no tarda más que con galerías de una. **(26/10, DM-11; autorizado por Daniela)** Para el ruido de medición se admite un margen temporal de **10 ms** al comparar las medianas del tiempo hasta la primera imagen de portada y hasta `load`, en producción, con calentamiento equilibrado, muestras alternadas y caché vacía. La igualdad de bytes iniciales es estricta y ninguna imagen secundaria puede iniciar su solicitud antes de `load`, aunque no haya terminado de descargarse.
 
 ## Sedes que se muestran en el sitio
 
@@ -106,7 +114,7 @@ La imagen original de la visión dice "tranparente"; el texto del sitio dice "tr
 - **Banner principal** con una **transición dinámica entre el logotipo de INCOVSA y el de Inquiserca**, que se alternan en el mismo lugar. Si se quita el logotipo de Inquiserca desde el panel, el banner muestra solo el de INCOVSA.
 - **Historia:** texto pendiente de INCOVSA (P-19) y galería opcional de hasta 5 imágenes.
 - **Misión y visión** como se describe arriba (13/10).
-- **Valores (RF-SW-29, 13/10):** **solo 5 imágenes, una por cada valor**, en **una sola fila**, como las tarjetas de valores del prototipo. **Sin texto.** Se suben desde el panel. Mientras falte la imagen de un valor, su lugar muestra la tarjeta de pendiente del prototipo. En teléfono, la fila se acomoda al ancho de la pantalla.
+- **Valores (RF-SW-29, 13/10):** **solo 5 imágenes, una por cada valor**, en **una sola fila**, como las tarjetas de valores del prototipo. **Sin texto.** Se suben desde el panel. Mientras falte la imagen de un valor, su lugar muestra una tarjeta vacía con el número del valor, **sin texto** (02/11, JG-28: ya no dice «Imagen del valor pendiente de INCOVSA»). En teléfono, la fila se acomoda al ancho de la pantalla.
 - **A quién servimos:** mercado industrial y mercado artesanal, como en el prototipo.
 - **INCOVSA e Inquiserca (15/10):** el bloque muestra los **logotipos de INCOVSA e Inquiserca alternándose**, de la misma manera que el banner principal. Si no hay logotipo de Inquiserca, muestra solo el de INCOVSA.
 - **Fondos (15/10):** las secciones que eran blancas, **"Misión y visión"** y **"A quién servimos"**, van con el **verde del pie de página** (`--v950`). Historia, Valores e "INCOVSA e Inquiserca" conservan el fondo claro, de modo que se alternan claro y verde.
@@ -125,8 +133,8 @@ Son 9 industrias, en este orden:
 8. Tratamiento de agua
 9. Lavandería
 
-- **Menú (13/10):** una **barra lateral alineada a la izquierda** que muestra **solo el ícono** de cada industria, parecida a la barra lateral reducida del panel y del picking. Al pasar el cursor (o el foco del teclado) sobre un ícono, se muestra el **nombre de la industria**. Así se amplía el espacio para la imagen y el contenido de la industria elegida. **No** se usa una barra superior horizontal.
-- Cada industria muestra **solo su descripción, su galería de imágenes y sus productos como texto**. No se muestran imágenes de productos.
+- **Menú (13/10; confirmado el 03/11, JG-28):** una **barra lateral izquierda solo con íconos**, como la del prototipo: oscura, con el ícono de cada industria, la elegida marcada en lima y su nombre en un globo al pasar el cursor o llegar con el teclado. No muestra nombres ni números de productos. Sigue siendo navegación: cada ícono es un enlace a su industria y la elegida se anuncia como la página actual. En teléfono sigue a la izquierda del contenido, más angosta. **No** se usa una barra superior horizontal. Es la misma barra que la de [Productos](#catálogo-de-productos-rf-sw-04), sin «Todas las industrias». (El 02/11 se había cambiado por una lista con nombres y números; el coordinador lo corrigió el 03/11.)
+- Cada industria muestra **solo su descripción, su galería de imágenes y sus productos como texto**. No se muestran imágenes de productos. Si la industria no tiene imágenes, no se muestra la galería ni un recuadro en su lugar (02/11, JG-28).
 - **Sin pie de página.**
 - La descripción y los productos de cada industria vienen del sitio de Google de la empresa y necesitan revisión. Las descripciones definitivas y las imágenes están pendientes (P-21).
 - **Productos de cada industria (17/10, P-97):** son los **productos públicos del catálogo que tienen esa industria** (la relación N:M de PRODUCTO_INDUSTRIA), en orden alfabético por nombre, como los Productos Recomendados. Se administran desde el Catálogo del panel, al asignarle industrias a cada producto. La lista fija del prototipo (`base.js` › `INDUSTRIAS`, tomada de Google Sites) no se usa.
@@ -135,6 +143,7 @@ Son 9 industrias, en este orden:
 
 - Es solo informativo: sin precios y sin comercio electrónico.
 - Se filtra por industria. Un producto puede pertenecer a **varias** industrias.
+- **Barra de filtros (03/11, JG-28):** es la **misma barra lateral de solo íconos de [Industrias](#industrias-rf-sw-03)** (mismo ancho, colores, tamaño de cada ícono y globo con el nombre), con una opción más al principio: **«Todas las industrias», con un ícono de cuadrícula**. Las demás opciones son las 9 industrias con su ícono, en el mismo orden. No muestra nombres ni números de productos; el total filtrado se lee arriba de la rejilla («4 de 28 productos»). Junto a la barra, la rejilla tiene **3 columnas** en tableta y escritorio y **2 en teléfono** (hasta 720 px). **No** hay filtro «Industria por confirmar»: un producto sin industria solo aparece en «Todas las industrias», y su tarjeta no muestra etiquetas de industria. (El 02/11 se había hecho una lista con ícono, nombre y número; el coordinador lo corrigió el 03/11.)
 - En las tarjetas se muestran la galería de imágenes, el nombre, los países de origen y la presentación. **Nunca** el lote.
 - **La búsqueda de productos está aprobada** tal como está en el prototipo.
 - **Sin pie de página.**
@@ -143,7 +152,7 @@ Son 9 industrias, en este orden:
 
 ### Detalle de producto (RF-SW-05)
 
-Muestra la **galería de imágenes**, el **nombre**, la **descripción**, la **presentación**, los **países de origen** y las industrias del producto.
+Muestra la **galería de imágenes**, el **nombre**, la **descripción**, la **presentación**, los **países de origen** y las industrias del producto. Si falta alguno de esos datos (o el producto no tiene industrias), no se muestra, sin aviso ni espacio vacío (02/11, JG-28).
 
 - **Sin pie de página.**
 - **No** muestra documentos técnicos.
@@ -160,6 +169,7 @@ Muestra la **galería de imágenes**, el **nombre**, la **descripción**, la **p
 - **(15/10)** Ya **no** hay opción de publicar u ocultar: toda noticia se publica al guardarla, y la que no debe mostrarse se elimina.
 - **Presentación (15/10):** cada noticia ocupa **todo el ancho** de la página, con su galería a la izquierda y la fecha, el título y el **texto completo** a la derecha (en teléfono, uno debajo del otro). El texto respeta sus saltos de línea y las palabras muy largas se parten para que nada quede oculto. Se ordenan de la más reciente a la más antigua.
 - El contenido inicial está pendiente (P-23).
+- **Sin noticias (02/11, JG-28):** la página muestra solo «Todavía no hay noticias publicadas» con su ícono, sin la instrucción interna del prototipo sobre cómo se publican.
 
 ### Contacto (RF-SW-06, RF-SW-19)
 
@@ -176,10 +186,13 @@ La página muestra el formulario y los datos de Quetzaltenango y Guatemala. Escu
 | Departamento | **Lista** de los departamentos de Guatemala. **Solo aparece si el país es Guatemala**, y entonces es **obligatorio** (13/10) |
 | Municipio | **Lista** de los municipios del departamento elegido. **Solo aparece si el país es Guatemala**, y entonces es **obligatorio** (13/10) |
 | Sede a la que dirige su mensaje | **Obligatorio.** Solo **Quetzaltenango** y **Guatemala** |
-| Mensaje | Obligatorio |
+| Mensaje | Obligatorio. **(24/10)** Hasta **2000 caracteres** |
 
 - **(13/10)** La solicitud **solo se guarda en el sistema** y se consulta en la bandeja del panel. **No se envía a ningún correo.** Por eso el sistema no necesita una cuenta de correo (P-09 se cierra) y de P-22 queda solo el horario de las sedes.
 - **(15/10)** Al enviar el mensaje, la página **se desplaza hasta el aviso "Solicitud recibida"**, para que se vea sin buscarlo.
+- **(24/10, DM-08)** El aviso muestra el **folio** de la solicitud con el formato del prototipo: `SOL-` + año (hora de Guatemala) + `-` + consecutivo de al menos 4 dígitos, por ejemplo `SOL-2026-0001`. Como el contador del prototipo, el consecutivo es uno solo y **no se reinicia al cambiar de año**; se calcula en la misma transacción que guarda la solicitud, así que dos envíos simultáneos nunca reciben el mismo folio. El envío es público, sin sesión, y la respuesta no revela nada más que el folio ([16](16-arquitectura-y-tecnologia.md), "Seguridad").
+- **(29/10, JG-15, P-98)** **Límite de envíos:** desde una misma dirección IP se aceptan hasta **5 solicitudes por hora** (los últimos 60 minutos). La IP es la que agrega Caddy (decisión 29) y se guarda con cada solicitud, para contarlas en la base de datos. A partir de la sexta, el formulario muestra «Recibimos varias solicitudes desde su conexión. Inténtelo de nuevo en una hora.» y no guarda nada.
+- **(29/10, JG-15, P-98)** **Campo trampa:** el formulario tiene un campo que las personas no ven, que no se alcanza con el teclado y que los lectores de pantalla ignoran. Si llega con texto, el envío lo hizo un robot: la respuesta es igual a la de un envío correcto, con un folio con el formato normal, pero no se guarda nada ni se usa un número del consecutivo. Así el robot no aprende a evitarlo.
 
 ### Textos que se reemplazan (RF-SW-27)
 
@@ -213,12 +226,14 @@ Entran los usuarios del sitio según sus permisos ([03-roles-y-accesos.md](03-ro
 | Industrias | Descripción y galería de hasta 5 imágenes de cada industria |
 | Catálogo | Productos públicos y sus industrias, con galería de hasta 5 imágenes. Se pueden eliminar |
 | Noticias | Título, texto y galería de hasta 5 imágenes de cada noticia. La lista muestra imagen, título, fecha y los botones **editar** (lápiz) y **eliminar** (basurero, con confirmación), como en el Catálogo. Sin columna de estado ni botón "Ocultar" (15/10) |
-| Información de contacto | Dirección, teléfono, correo, WhatsApp, horario y mapa de Google Maps de Quetzaltenango y Guatemala |
+| Información de contacto | Dirección, teléfono, correo, WhatsApp, horario y mapa de Google Maps de Quetzaltenango y Guatemala. **(27/10, CE-13)** El correo puede quedar vacío. Si se escribe, debe tener un formato válido: al salir del campo el panel muestra «Indique un correo válido.» y no guarda, y el servidor rechaza el mismo caso antes de guardar. Se conserva esta validación por decisión de Carlos, confirmada por Jordin el 27/10 (auditoría H-62, [18](18-historial-de-decisiones.md)) |
 | Solicitudes | Bandeja del formulario de contacto (abajo) |
 | Documentación interna | Productos documentados (abajo) |
 | Usuarios | Usuarios del sitio. Los administran Gerencia y Soporte, con contraseña, rol y permisos ([03-roles-y-accesos.md](03-roles-y-accesos.md)) |
 
 Las imágenes se suben desde la computadora, eligiéndolas o arrastrándolas. En cada galería se pueden agregar, quitar y reordenar imágenes, hasta 5.
+
+**(29/10, JG-15, RNF-05)** Los textos largos del panel admiten hasta **10 000 caracteres**: el texto de las noticias, la historia, la misión y la visión, y las descripciones de las industrias y de los productos públicos. Al salir del campo, el panel muestra «El texto admite hasta 10 000 caracteres.» y no guarda; el servidor rechaza lo que exceda el tope. Los textos ya guardados no se modifican.
 
 Cada sección muestra su **instrucción, lo más breve posible, a la par del título**, como en Facturación, para aprovechar el espacio de la pantalla (15/10).
 
@@ -238,11 +253,12 @@ Cada sección muestra su **instrucción, lo más breve posible, a la par del tí
 - Las solicitudes se **dividen por motivo**: **solicitud, queja y reclamo**. En la bandeja el motivo se muestra con **inicial mayúscula** ("Solicitud", "Queja", "Reclamo"), en verde, ámbar y rojo (15/10).
 - El **mensaje** se muestra **completo dentro de su cuadro**, con sus saltos de línea; las palabras muy largas se parten (15/10).
 - **Responsable:** se elige entre los **usuarios del sitio**.
-- **Comentario:** un solo comentario del responsable. **(15/10)** Mientras no hay comentario, el botón dice **"Guardar comentario"**. Una vez guardado, el cuadro queda de solo lectura y el botón pasa a **"Editar comentario"**; al pulsarlo, el cuadro se habilita y el botón vuelve a "Guardar comentario".
+- **Comentario:** un solo comentario del responsable. **(15/10)** Mientras no hay comentario, el botón dice **"Guardar comentario"**. Una vez guardado, el cuadro queda de solo lectura y el botón pasa a **"Editar comentario"**; al pulsarlo, el cuadro se habilita y el botón vuelve a "Guardar comentario". **(27/10, CE-13, RNF-05)** Admite hasta **2000 caracteres**, el mismo tope del mensaje de Contacto. El navegador lo limita y el servidor rechaza lo que lo exceda; los comentarios ya guardados no se modifican.
 - **Estados:** botones **Asignado**, **En proceso** y **Solucionado** (RN-42), sin estado inicial y sin restricción de orden.
 - **No** se avisa por correo al responsable.
 - **Aviso de solicitudes nuevas (13/10):** el ícono de Solicitudes del menú lateral muestra un **indicador de notificaciones** cuando hay solicitudes nuevas (sin leer), también cuando el menú está reducido a íconos.
 - Ver la bandeja y gestionarla dependen de los permisos del usuario.
+- **Accesibilidad (25/10, DM-09; autorizado por Daniela y ratificado por Jordin el 26/10, D-07):** las pestañas inactivas y el texto secundario de la fila seleccionada usan `--g600`. Con el `--g500` del prototipo producen 4.46:1 y 4.40:1, respectivamente, por debajo de RNF-08. La excepción solo cambia el color de esos textos; las pruebas de axe se conservan.
 
 ## Documentación interna (RF-SW-10, RF-SW-14, RF-SW-21)
 

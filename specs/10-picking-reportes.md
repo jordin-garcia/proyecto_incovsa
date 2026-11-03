@@ -79,7 +79,14 @@ La columna "Pedido" se quitó el 13/10: la ruta ya no tiene un pedido aparte.
 | Detalle | Datos de la operación |
 
 - Se ve con el permiso de Reportes.
+- **Sedes (22/10, JC-06, confirmado por Jordin):** Gerencia y Soporte ven todos los registros. A los demás se les muestran, de la **sede que consultan** en el selector (RN-17):
+  - todas las operaciones del sitio y las cinco de acceso: «Inicio de sesión», «Intento de acceso fallido», «Intento fallido de inicio de sesión», «Bloqueo de usuario» y «Bloqueo de IP»;
+  - del picking, solo los registros cuya sede es la consultada (los envíos y lo que guarda una sola sede);
+  - los cambios de un usuario del picking solo si todas las sedes relacionadas con ese usuario son la consultada; si mezclan esa sede con otra, se ocultan.
+  - El resto de los registros del picking no se muestra.
 - Se filtra con el mismo periodo que las otras pestañas.
+- **Detalle y límite (23/10, JG-24):** muestra texto legible de la operación, también para los registros históricos; nunca el JSON almacenado ni `{}`. En los intentos fallidos y bloqueos de un usuario inexistente, el usuario escrito lleva «(no existe)». Se muestran como máximo las 250 operaciones más recientes del periodo **después** del filtro por sede; los empates de fecha se ordenan por id descendente, como el orden inverso de inserción del prototipo.
+- **Bloqueos (23/10, JG-24, por decisión de Jordin):** el prototipo no tiene bloqueos (RNF-15). Su Detalle es «Sistema de picking · Bloqueo de usuario · *usuario*» (o «Sitio web · …») y «Acceso personal · Bloqueo de IP · *dirección IP*». La IP se muestra para que la fila diga qué se bloqueó; la Bitácora solo la ven quienes tienen `pk.reportes`.
 - Qué registra está en [12-reglas-de-negocio.md](12-reglas-de-negocio.md).
 - **(16/10)** Botones **Excel** y **PDF**, como en Despacho ("Exportación", abajo).
 
@@ -95,9 +102,11 @@ La columna "Pedido" se quitó el 13/10: la ruta ya no tiene un pedido aparte.
 
 - Cada archivo lleva las filas de la pestaña con el periodo elegido.
 - **Excel:** una sola hoja, sin colores ni formato, generada con SheetJS (la versión gratuita no permite formato).
-- **PDF:** generado con **pdfmake**, con el logotipo de INCOVSA, el título de la pestaña, la sede (salvo en la Bitácora), el periodo y la tabla.
+- **PDF:** generado con **pdfmake**, con el logotipo de INCOVSA, el título de la pestaña, la sede (salvo en la Bitácora), el periodo y la tabla. **(26/10, D-10)** El logotipo es siempre el del sistema (`public/marca/incovsa-quimicos.webp`), no el que se configura en el panel del sitio ([18](18-historial-de-decisiones.md)).
 - Los dos se generan **en el servidor**, que verifica el permiso de Reportes y la sede antes de entregar el archivo ([16](16-arquitectura-y-tecnologia.md)).
 - **Nombre del archivo:** la pestaña, la sede (salvo en la Bitácora) y el periodo, con las fechas en dd-mm-aaaa. Por ejemplo, `despacho-quetzaltenango-16-10-2026.xlsx`, `rutas-realizadas-quetzaltenango-del-01-10-2026-al-31-10-2026.pdf` o `bitacora-16-10-2026.xlsx`.
+
+- **Error de descarga (29/10, JC-09; texto autorizado por José Daniel):** si no se puede descargar el archivo, la pantalla muestra «No se pudo completar la operación. Inténtelo de nuevo.» con el aviso de error del sistema.
 
 ## Lo que se quitó
 

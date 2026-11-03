@@ -302,6 +302,15 @@ const ICONOS = {
       <path d="M4 6h.01M4 12h.01M4 18h.01" />
     </>
   ),
+  // JG-28 (03/11): «Todas las industrias» en la barra de Productos. No viene de base.js; usa el mismo trazo.
+  cuadricula: (
+    <>
+      <rect x="4" y="4" width="6.5" height="6.5" rx="1.5" />
+      <rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5" />
+      <rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5" />
+      <rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5" />
+    </>
+  ),
   escudo: (
     <>
       <path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z" />

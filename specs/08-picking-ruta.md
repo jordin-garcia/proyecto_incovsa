@@ -10,6 +10,7 @@ Muestra al piloto los clientes a los que debe ir en su ruta y registra que se en
 
 - Los usuarios con rol **"Piloto"** ven **solo sus rutas asignadas** (RF-SL-26). El rol "Piloto" es el que identifica a los pilotos ([03-roles-y-accesos.md](03-roles-y-accesos.md)).
 - Los usuarios con el permiso "Ver todas las rutas", y Gerencia y Soporte, ven todas las rutas de las sedes que tienen asignadas.
+- **(26/10, D-09 de la auditoría del 26/10, decisión de Jordin)** Como en los demás módulos (RN-17), la lista muestra solo las rutas de la **sede de trabajo** elegida en la barra superior. Un piloto con varias sedes cambia de sede para ver las rutas de otra. El prototipo le muestra al piloto las suyas de todas sus sedes; aquí manda `specs/` porque es comportamiento, no diseño ([18](18-historial-de-decisiones.md)).
 - El piloto lo usa desde un **teléfono o una tableta**, así que la pantalla tiene que ser responsiva (RNF-14).
 
 ## Cuándo se crea y cuándo aparece una ruta
@@ -44,7 +45,7 @@ Muestra al piloto los clientes a los que debe ir en su ruta y registra que se en
 | Sector | Sector del cliente, tal como viene en `Contacto/Ciudad` |
 | Total | Suma en kg de todos los productos de ese cliente en la ruta |
 
-Hay **una fila por cliente**. Si un cliente tiene dos o más pedidos facturados en la misma ruta, van en **una sola fila**, con la suma de sus kg. Como ya no hay base de clientes, dos pedidos facturados son del mismo cliente cuando tienen el mismo nombre y el mismo sector (RN-49).
+Hay **una fila por cliente**. Si un cliente tiene dos o más pedidos facturados en la misma ruta, van en **una sola fila**, con la suma de sus kg. Como ya no hay base de clientes, dos pedidos facturados son del mismo cliente cuando tienen el mismo nombre y el mismo sector (RN-49). **(22/10)** Se comparan sin distinguir mayúsculas ni tildes y sin espacios al inicio ni al final, como `norm()` y `claveRuta()` del prototipo (un nombre o un sector vacío cuenta como «Sin nombre» o «Sin sector»), y la fila muestra el nombre y el sector del primer pedido facturado.
 
 No se muestran la dirección ni el teléfono.
 

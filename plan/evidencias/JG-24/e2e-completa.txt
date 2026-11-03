@@ -1,0 +1,483 @@
+
+Running 300 tests using 1 worker
+
+  ok   1 [telefono] › pruebas-e2e\acceso\acceso-personal.spec.ts:17:5 › RF-SW-09 / CAM-83: los tres pasos, sistemas habilitados, ayuda, contraseña y accesibilidad (10.2s)
+  ok   2 [telefono] › pruebas-e2e\acceso\acceso-personal.spec.ts:59:5 › RF-SW-09: restringe opciones según la cuenta y rechaza usuarios inexistentes (5.3s)
+  x    3 [telefono] › pruebas-e2e\acceso\acceso-personal.spec.ts:83:5 › RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio y conserva la otra (7.6s)
+  ok   4 [telefono] › pruebas-e2e\acceso\acceso-personal.spec.ts:123:5 › RNF-05: no expone altas, cambios de contraseña ni accesos que evadan límites; verifica origen (3.3s)
+  ok   5 [telefono] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:30:5 › RF-SW-09 / RF-SL-02 / H-33: el sistema no autorizado vuelve al paso 2 sin registrar un fallo ni pedir sede (5.4s)
+  ok   6 [telefono] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:70:7 › RF-SW-30 / H-34: cerrar sitio muestra Sesión cerrada en Inicio (11.2s)
+  ok   7 [telefono] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:70:7 › RF-SW-30 / H-34: cerrar picking muestra Sesión cerrada en Inicio (11.5s)
+  ok   8 [telefono] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:89:5 › RF-SW-25 / H-07 / H-13 / H-39: acceso denegado ofrece el módulo propio y un módulo inexistente conserva el armazón (11.9s)
+  ok   9 [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.03 en picking solo ve sus módulos (3.9s)
+  ok  10 [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.03 en sitio solo ve sus módulos (4.2s)
+  ok  11 [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.05 en picking solo ve sus módulos (4.2s)
+  ok  12 [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.06 en picking solo ve sus módulos (4.3s)
+  ok  13 [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.08 en sitio solo ve sus módulos (3.4s)
+  ok  14 [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.09 en sitio solo ve sus módulos (4.1s)
+  ok  15 [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.01 en picking solo ve sus módulos (4.1s)
+  ok  16 [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.01 en sitio solo ve sus módulos (3.4s)
+  ok  17 [telefono] › pruebas-e2e\acceso\permisos.spec.ts:73:5 › RNF-04: primera barrera por sistema y rechazo de acceso directo en el servidor (4.3s)
+  ok  18 [telefono] › pruebas-e2e\acceso\permisos.spec.ts:86:5 › RN-17 / RF-SL-66: cookie ajena se ignora y la sede autorizada persiste (8.3s)
+  ok  19 [telefono] › pruebas-e2e\comunes\aplicacion.spec.ts:5:5 › RNF-07: la aplicación responde en / con el título de INCOVSA y en español (2.0s)
+  ok  20 [telefono] › pruebas-e2e\comunes\aplicacion.spec.ts:12:5 › RNF-08: la página de inicio no tiene violaciones serias ni críticas de accesibilidad (3.5s)
+  ok  21 [telefono] › pruebas-e2e\comunes\armazon.spec.ts:6:7 › RF-SW-26 / RF-SL-60: armazón de panel, navegación y preferencia (4.3s)
+  ok  22 [telefono] › pruebas-e2e\comunes\armazon.spec.ts:58:7 › RNF-08: panel accesible con menú abierto y cerrado (4.3s)
+  ok  23 [telefono] › pruebas-e2e\comunes\armazon.spec.ts:6:7 › RF-SW-26 / RF-SL-60: armazón de picking, navegación y preferencia (2.7s)
+  ok  24 [telefono] › pruebas-e2e\comunes\armazon.spec.ts:58:7 › RNF-08: picking accesible con menú abierto y cerrado (4.5s)
+  ok  25 [telefono] › pruebas-e2e\comunes\armazon.spec.ts:69:5 › RF-SL-60: sede solo en módulos aplicables y con varias sedes (4.2s)
+  ok  26 [telefono] › pruebas-e2e\comunes\armazon.spec.ts:92:5 › RNF-01: tipografías locales y paleta exclusiva del prototipo (1.6s)
+  ok  27 [telefono] › pruebas-e2e\comunes\campos-fecha-hora.spec.ts:8:5 › RF-SL-70: fecha con teclado, normalización, inexistente y valor ISO (2.5s)
+  ok  28 [telefono] › pruebas-e2e\comunes\campos-fecha-hora.spec.ts:31:5 › RF-SL-70: hora de 24 horas, normalización y rechazo de hora inválida (2.9s)
+  ok  29 [telefono] › pruebas-e2e\comunes\campos-fecha-hora.spec.ts:47:5 › RF-SL-70: selectores nativos anclados al campo y elección sincronizada (2.4s)
+  ok  30 [telefono] › pruebas-e2e\comunes\componentes.spec.ts:9:5 › RNF-08: pestañas, botones segmentados y lista desplegable con teclado (2.6s)
+  ok  31 [telefono] › pruebas-e2e\comunes\componentes.spec.ts:28:5 › RNF-08: la ventana de confirmación no tiene violaciones serias ni críticas (3.5s)
+  ok  32 [telefono] › pruebas-e2e\comunes\componentes.spec.ts:38:5 › RNF-08: Escape, volver, confirmar y retorno del foco (3.4s)
+  ok  33 [telefono] › pruebas-e2e\comunes\componentes.spec.ts:60:7 › RNF-08: mensaje de Guardar desaparece a los cuatro segundos (6.9s)
+  ok  34 [telefono] › pruebas-e2e\comunes\componentes.spec.ts:60:7 › RNF-08: mensaje de Enviar a Bodega desaparece a los cuatro segundos (7.0s)
+  ok  35 [telefono] › pruebas-e2e\comunes\componentes.spec.ts:60:7 › RNF-08: mensaje de Volver desaparece a los cuatro segundos (7.1s)
+  ok  36 [telefono] › pruebas-e2e\panel\auditoria-jg24.spec.ts:11:5 › RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recupera medidas y hover del prototipo (8.1s)
+  ok  37 [telefono] › pruebas-e2e\panel\auditoria-jg24.spec.ts:50:5 › RF-SW-29 / RN-39 / H-04: publicar y quitar un valor muestra el número del valor en el aviso (7.6s)
+  x   38 [telefono] › pruebas-e2e\panel\contenido.spec.ts:19:5 › RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y accesibilidad (9.2s)
+  ok  39 [telefono] › pruebas-e2e\panel\contenido.spec.ts:85:5 › RF-SW-25: el permiso se exige también al abrir la sección directamente (3.1s)
+  ok  40 [telefono] › pruebas-e2e\panel\contenido.spec.ts:111:5 › RF-SW-23 / RNF-05: publica una imagen de 5 MB y limpia la imagen retirada (7.4s)
+  ok  41 [telefono] › pruebas-e2e\panel\contenido.spec.ts:150:5 › RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas (4.1s)
+  ok  42 [telefono] › pruebas-e2e\panel\contenido.spec.ts:170:5 › RF-SW-23: un borrador de portada o historia no cambia la etiqueta publicada (2.6s)
+  ok  43 [telefono] › pruebas-e2e\panel\contenido.spec.ts:186:5 › RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visita sin sesión (6.7s)
+  ok  44 [telefono] › pruebas-e2e\panel\contenido.spec.ts:245:5 › RF-SW-23 / RF-SW-24: reemplazar INCOVSA actualiza cabecera y pie públicos (7.1s)
+  ok  45 [telefono] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:21:5 › RF-SW-07 / RN-56: guardar descripción y galería publica la industria sin perder los datos anteriores (10.9s)
+  ok  46 [telefono] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:82:5 › RF-SW-07 / RNF-08: industrias y catálogo conservan estructura y accesibilidad (13.6s)
+  ok  47 [telefono] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:114:5 › RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes de eliminar (14.4s)
+  ok  48 [telefono] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:159:5 › RF-SW-23: impide cerrar el editor mientras se publica y conserva el borrador si falla (5.4s)
+  ok  49 [telefono] › pruebas-e2e\panel\usuarios.spec.ts:30:7 › Panel: usuarios del sitio › RF-SW-13: Gerencia crea un usuario con solo sit.doc.ver y ese usuario solo ve la documentación (8.1s)
+  ok  50 [telefono] › pruebas-e2e\panel\usuarios.spec.ts:80:7 › Panel: usuarios del sitio › RF-SW-11 / RN-47: restablecer la contraseña no ofrece correo y la nueva clave entra (7.1s)
+  ok  51 [telefono] › pruebas-e2e\panel\usuarios.spec.ts:116:7 › Panel: usuarios del sitio › RF-SW-11: ¿Olvidó su contraseña? del sitio pide a Gerencia o a Soporte (2.6s)
+  ok  52 [telefono] › pruebas-e2e\panel\usuarios.spec.ts:131:7 › Panel: usuarios del sitio › criterio 5: la lista y el alta no tienen violaciones serias de axe (6.2s)
+  ok  53 [telefono] › pruebas-e2e\picking\auditoria-jg24.spec.ts:65:1 › RN-49 / D-01: la confirmación de Facturación cuenta un cliente aunque varíen mayúsculas, tildes y espacios exteriores (4.4s)
+  ok  54 [telefono] › pruebas-e2e\picking\bodega.spec.ts:81:7 › Módulo de Bodega E2E › Criterio 8 / RNF-08: Bodega con datos sin violaciones serias de axe, contraste incluido (3.7s)
+  ok  55 [telefono] › pruebas-e2e\picking\bodega.spec.ts:94:7 › Módulo de Bodega E2E › RNF-08: pedido que recoge el cliente, con «Sin lote», y su Detalle sin violaciones serias de axe (7.0s)
+  ok  56 [telefono] › pruebas-e2e\picking\bodega.spec.ts:115:7 › Módulo de Bodega E2E › RNF-08: líneas marcadas sin violaciones serias de axe, contraste incluido (6.1s)
+  ok  57 [telefono] › pruebas-e2e\picking\bodega.spec.ts:143:7 › Módulo de Bodega E2E › RNF-08: Detalle de Ruta sin violaciones serias de axe, contraste incluido (5.1s)
+  ok  58 [telefono] › pruebas-e2e\picking\bodega.spec.ts:157:7 › Módulo de Bodega E2E › RNF-08: Bodega vacía sin violaciones serias de axe, contraste incluido (3.3s)
+  ok  59 [telefono] › pruebas-e2e\picking\bodega.spec.ts:167:7 › Módulo de Bodega E2E › RF-SL-21 / RN-51 (CP-19): el envío muestra dos filas con lote resaltado y unidades correctas (2.3s)
+  ok  60 [telefono] › pruebas-e2e\picking\bodega.spec.ts:198:7 › Módulo de Bodega E2E › RF-SL-74 / RF-SL-75 (CP-36): fecha y hora programadas y Detalle de Ruta completo (3.3s)
+  ok  61 [telefono] › pruebas-e2e\picking\bodega.spec.ts:229:7 › Módulo de Bodega E2E › RF-SL-23 / RN-20: marcar línea persiste al recargar y marcar todo marca todas (6.8s)
+  ok  62 [telefono] › pruebas-e2e\picking\bodega.spec.ts:278:7 › Módulo de Bodega E2E › RF-SL-24 / RN-11 (CP-38): despacho solo habilitado con todo marcado y pasa a En Ruta (5.0s)
+  ok  63 [telefono] › pruebas-e2e\picking\bodega.spec.ts:323:7 › Módulo de Bodega E2E › Criterio 7: usuario sin pk.bodega ve pantalla sin acceso con textos del prototipo (1.9s)
+  ok  64 [telefono] › pruebas-e2e\picking\camiones.spec.ts:27:7 › Configuración: camiones › RF-SL-04: se crea, edita y elimina un camión (8.3s)
+  ok  65 [telefono] › pruebas-e2e\picking\camiones.spec.ts:73:7 › Configuración: camiones › criterio 6: sin violaciones serias de axe (3.5s)
+  ok  66 [telefono] › pruebas-e2e\picking\camiones.spec.ts:82:7 › Configuración: camiones › RNF-04: sin pk.cfg.camiones la pantalla rechaza el acceso (2.0s)
+  ok  67 [telefono] › pruebas-e2e\picking\facturacion-carga.spec.ts:37:1 › RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos facturados (15.7s)
+  ok  68 [telefono] › pruebas-e2e\picking\facturacion-envio.spec.ts:49:5 › RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bodega (30.5s)
+  ok  69 [telefono] › pruebas-e2e\picking\reportes-exportacion.spec.ts:22:5 › RF-SL-38 / CAM-96: descarga Excel y PDF desde las tres pestañas de Reportes (21.7s)
+  ok  70 [telefono] › pruebas-e2e\picking\reportes.spec.ts:23:5 › RF-SL-59 / CP-64: periodos y fechas inválidas en Reportes (14.7s)
+  ok  71 [telefono] › pruebas-e2e\picking\reportes.spec.ts:116:7 › RF-SL-59 / RNF-08: Despacho del periodo conserva el rango y es accesible (4.7s)
+  ok  72 [telefono] › pruebas-e2e\picking\reportes.spec.ts:116:7 › RF-SL-59 / RNF-08: Rutas realizadas conserva el rango y es accesible (4.4s)
+  ok  73 [telefono] › pruebas-e2e\picking\reportes.spec.ts:116:7 › RF-SL-59 / RNF-08: Bitácora conserva el rango y es accesible (6.1s)
+  ok  74 [telefono] › pruebas-e2e\picking\reportes.spec.ts:147:5 › RF-SL-38 / RF-SL-37 / RN-39: datos de demostración, conversiones y recorrido en las tres pestañas (13.2s)
+  ok  75 [telefono] › pruebas-e2e\picking\usuarios.spec.ts:30:7 › Configuración: usuarios del picking › RF-SL-03: Gerencia crea un usuario de Bodega que solo ve Quetzaltenango (8.3s)
+  ok  76 [telefono] › pruebas-e2e\picking\usuarios.spec.ts:76:7 › Configuración: usuarios del picking › criterio 6: con pk.cfg.camiones sin Gerencia no ve la pestaña Usuarios (5.5s)
+  ok  77 [telefono] › pruebas-e2e\picking\usuarios.spec.ts:105:7 › Configuración: usuarios del picking › criterio 8: la pestaña Usuarios no tiene violaciones serias de axe (5.3s)
+  ok  78 [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:61:5 › RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y relaciones actuales (6.8s)
+  ok  79 [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:108:5 › RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos, vacío y tarjetas sin lote (4.2s)
+  ok  80 [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:131:5 › RF-SW-05 / RF-SW-17 / RF-SW-15: detalle público, galería, recomendados y enlaces (7.6s)
+  ok  81 [telefono] › pruebas-e2e\sitio\inicio.spec.ts:5:5 › RF-SW-01 / RF-SW-27: Inicio informativo conserva secciones, cifras y textos aprobados (2.6s)
+  ok  82 [telefono] › pruebas-e2e\sitio\inicio.spec.ts:29:5 › RF-SW-15 / RF-SW-22 / RF-SW-24: pie público y mapas solo de las dos oficinas (2.5s)
+  ok  83 [telefono] › pruebas-e2e\sitio\inicio.spec.ts:63:5 › RF-SW-08 / RNF-08: menú responsivo, ausencia de desbordamiento y accesibilidad (3.0s)
+  ok  84 [telefono] › pruebas-e2e\sitio\inicio.spec.ts:80:5 › RF-SW-16: tarjetas aparecen al entrar en pantalla y desaparecen al salir (3.0s)
+  ok  85 [telefono] › pruebas-e2e\sitio\inicio.spec.ts:95:5 › RN-56 / RNF-17: cinco imágenes rotan cada 5 s, una queda fija y las secundarias cargan después (4.1s)
+  ok  86 [telefono] › pruebas-e2e\sitio\nosotros.spec.ts:19:5 › RF-SW-02 / CAM-79 / RNF-08: secciones, fondos, pie y accesibilidad de Quiénes somos (3.4s)
+  ok  87 [telefono] › pruebas-e2e\sitio\nosotros.spec.ts:55:5 › RF-SW-02 / CAM-80: ambos bloques alternan y quitar Inquiserca desde el panel deja solo INCOVSA (17.9s)
+  ok  88 [telefono] › pruebas-e2e\sitio\nosotros.spec.ts:105:5 › RF-SW-29 / RF-SW-16: cinco valores pendientes y presentación dinámica (1.4s)
+  ok  89 [telefono] › pruebas-e2e\sitio\nosotros.spec.ts:120:5 › RF-SW-02 / RF-SW-29 / RN-56: historia y cinco imágenes publicadas conservan orden, fila y ausencia de textos (5.4s)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3103
+- Network:       http://127.0.0.1:3103
+✓ Ready in 0ms
+✓ Running next.config took 46ms
+  ok  90 [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:85:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión (6.6s)
+  ok  91 [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:116:7 › RNF-13: avisos de cambios por sede › RNF-13: al cortar SSE consulta cada 5 segundos, apaga En vivo y se reconecta sola (13.0s)
+  ok  92 [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:147:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede (269ms)
+[telefono] TIEMPO REAL SSE: 700 ms
+
+  ok  93 [telefono] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:82:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RNF-13 / RF-SL-23 (CP-37): el marcado aparece de inmediato en quien marca (optimista), revierte ante fallo y sincroniza en < 2s (13.3s)
+  ok  94 [telefono] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:185:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RF-SL-20 / RN-28 / RNF-13: reordenar filas y cola se refleja en tiempo real en otra pantalla en < 2s sin historial (4.7s)
+  ok  95 [telefono] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:297:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RF-SL-20: el arrastre funciona con teclado, mouse y touch (dedo con pulsación de 380 ms) (6.4s)
+  ok  96 [telefono] › pruebas-e2e\picking\facturacion-dos-facturadores.spec.ts:37:5 › RN-48 / RNF-13 / decisiones 39 y 41: dos facturadores, edición, arrastre y envío simultáneos (14.5s)
+Error inesperado en una acción del servidor: Error [ZodError]: [
+  {
+    "expected": "string",
+    "code": "invalid_type",
+    "path": [
+      "sede"
+    ],
+    "message": "Invalid input: expected string, received undefined"
+  },
+  {
+    "code": "invalid_value",
+    "values": [
+      "facturacion",
+      "bodega",
+      "tablero",
+      "ruta",
+      "reportes",
+      "configuracion"
+    ],
+    "path": [
+      "modulo"
+    ],
+    "message": "Invalid option: expected one of \"facturacion\"|\"bodega\"|\"tablero\"|\"ruta\"|\"reportes\"|\"configuracion\""
+  }
+]
+    at c (C:\Users\Hecto\Documents\proyecto_incovsa\.next\standalone\.next\server\chunks\_1nbnlp2k2vxpk._.js:1:6504)
+  ok  97 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:4:5 › RNF-16: páginas, errores, redirecciones, API y recursos envían las cabeceras de seguridad (214ms)
+  ok  98 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:20:5 › RNF-16: el navegador admite Google Maps y Drive, y rechaza marcos de otros orígenes (765ms)
+  ok  99 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:49:5 › RNF-16: otro sitio no puede insertar la aplicación dentro de un marco (226ms)
+  ok 100 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:66:5 › RNF-16: cada respuesta tiene su nonce y los scripts en línea ajenos quedan bloqueados (617ms)
+  ok 101 [tableta] › pruebas-e2e\acceso\acceso-personal.spec.ts:17:5 › RF-SW-09 / CAM-83: los tres pasos, sistemas habilitados, ayuda, contraseña y accesibilidad (5.5s)
+  ok 102 [tableta] › pruebas-e2e\acceso\acceso-personal.spec.ts:59:5 › RF-SW-09: restringe opciones según la cuenta y rechaza usuarios inexistentes (4.4s)
+  ok 103 [tableta] › pruebas-e2e\acceso\acceso-personal.spec.ts:83:5 › RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio y conserva la otra (11.0s)
+  ok 104 [tableta] › pruebas-e2e\acceso\acceso-personal.spec.ts:123:5 › RNF-05: no expone altas, cambios de contraseña ni accesos que evadan límites; verifica origen (473ms)
+  ok 105 [tableta] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:30:5 › RF-SW-09 / RF-SL-02 / H-33: el sistema no autorizado vuelve al paso 2 sin registrar un fallo ni pedir sede (4.4s)
+  ok 106 [tableta] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:70:7 › RF-SW-30 / H-34: cerrar sitio muestra Sesión cerrada en Inicio (9.9s)
+  ok 107 [tableta] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:70:7 › RF-SW-30 / H-34: cerrar picking muestra Sesión cerrada en Inicio (10.7s)
+  ok 108 [tableta] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:89:5 › RF-SW-25 / H-07 / H-13 / H-39: acceso denegado ofrece el módulo propio y un módulo inexistente conserva el armazón (8.4s)
+  ok 109 [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.03 en picking solo ve sus módulos (3.9s)
+  ok 110 [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.03 en sitio solo ve sus módulos (3.6s)
+  ok 111 [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.05 en picking solo ve sus módulos (3.4s)
+  ok 112 [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.06 en picking solo ve sus módulos (3.8s)
+  ok 113 [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.08 en sitio solo ve sus módulos (3.9s)
+  ok 114 [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.09 en sitio solo ve sus módulos (3.4s)
+  ok 115 [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.01 en picking solo ve sus módulos (4.0s)
+  ok 116 [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.01 en sitio solo ve sus módulos (3.4s)
+  ok 117 [tableta] › pruebas-e2e\acceso\permisos.spec.ts:73:5 › RNF-04: primera barrera por sistema y rechazo de acceso directo en el servidor (4.0s)
+  ok 118 [tableta] › pruebas-e2e\acceso\permisos.spec.ts:86:5 › RN-17 / RF-SL-66: cookie ajena se ignora y la sede autorizada persiste (7.0s)
+  ok 119 [tableta] › pruebas-e2e\comunes\aplicacion.spec.ts:5:5 › RNF-07: la aplicación responde en / con el título de INCOVSA y en español (1.9s)
+  ok 120 [tableta] › pruebas-e2e\comunes\aplicacion.spec.ts:12:5 › RNF-08: la página de inicio no tiene violaciones serias ni críticas de accesibilidad (2.9s)
+  ok 121 [tableta] › pruebas-e2e\comunes\armazon.spec.ts:6:7 › RF-SW-26 / RF-SL-60: armazón de panel, navegación y preferencia (2.7s)
+  ok 122 [tableta] › pruebas-e2e\comunes\armazon.spec.ts:58:7 › RNF-08: panel accesible con menú abierto y cerrado (4.5s)
+  ok 123 [tableta] › pruebas-e2e\comunes\armazon.spec.ts:6:7 › RF-SW-26 / RF-SL-60: armazón de picking, navegación y preferencia (2.3s)
+  ok 124 [tableta] › pruebas-e2e\comunes\armazon.spec.ts:58:7 › RNF-08: picking accesible con menú abierto y cerrado (4.1s)
+  ok 125 [tableta] › pruebas-e2e\comunes\armazon.spec.ts:69:5 › RF-SL-60: sede solo en módulos aplicables y con varias sedes (3.8s)
+  ok 126 [tableta] › pruebas-e2e\comunes\armazon.spec.ts:92:5 › RNF-01: tipografías locales y paleta exclusiva del prototipo (1.8s)
+  ok 127 [tableta] › pruebas-e2e\comunes\campos-fecha-hora.spec.ts:8:5 › RF-SL-70: fecha con teclado, normalización, inexistente y valor ISO (2.8s)
+  ok 128 [tableta] › pruebas-e2e\comunes\campos-fecha-hora.spec.ts:31:5 › RF-SL-70: hora de 24 horas, normalización y rechazo de hora inválida (2.1s)
+  ok 129 [tableta] › pruebas-e2e\comunes\campos-fecha-hora.spec.ts:47:5 › RF-SL-70: selectores nativos anclados al campo y elección sincronizada (1.8s)
+  ok 130 [tableta] › pruebas-e2e\comunes\componentes.spec.ts:9:5 › RNF-08: pestañas, botones segmentados y lista desplegable con teclado (2.2s)
+  ok 131 [tableta] › pruebas-e2e\comunes\componentes.spec.ts:28:5 › RNF-08: la ventana de confirmación no tiene violaciones serias ni críticas (3.4s)
+  ok 132 [tableta] › pruebas-e2e\comunes\componentes.spec.ts:38:5 › RNF-08: Escape, volver, confirmar y retorno del foco (3.2s)
+  ok 133 [tableta] › pruebas-e2e\comunes\componentes.spec.ts:60:7 › RNF-08: mensaje de Guardar desaparece a los cuatro segundos (6.2s)
+  ok 134 [tableta] › pruebas-e2e\comunes\componentes.spec.ts:60:7 › RNF-08: mensaje de Enviar a Bodega desaparece a los cuatro segundos (6.6s)
+  ok 135 [tableta] › pruebas-e2e\comunes\componentes.spec.ts:60:7 › RNF-08: mensaje de Volver desaparece a los cuatro segundos (6.3s)
+  ok 136 [tableta] › pruebas-e2e\panel\auditoria-jg24.spec.ts:11:5 › RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recupera medidas y hover del prototipo (5.8s)
+  ok 137 [tableta] › pruebas-e2e\panel\auditoria-jg24.spec.ts:50:5 › RF-SW-29 / RN-39 / H-04: publicar y quitar un valor muestra el número del valor en el aviso (5.1s)
+  x  138 [tableta] › pruebas-e2e\panel\contenido.spec.ts:19:5 › RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y accesibilidad (8.1s)
+  ok 139 [tableta] › pruebas-e2e\panel\contenido.spec.ts:85:5 › RF-SW-25: el permiso se exige también al abrir la sección directamente (2.2s)
+  ok 140 [tableta] › pruebas-e2e\panel\contenido.spec.ts:111:5 › RF-SW-23 / RNF-05: publica una imagen de 5 MB y limpia la imagen retirada (5.2s)
+  ok 141 [tableta] › pruebas-e2e\panel\contenido.spec.ts:150:5 › RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas (3.2s)
+  ok 142 [tableta] › pruebas-e2e\panel\contenido.spec.ts:170:5 › RF-SW-23: un borrador de portada o historia no cambia la etiqueta publicada (2.0s)
+  ok 143 [tableta] › pruebas-e2e\panel\contenido.spec.ts:186:5 › RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visita sin sesión (5.4s)
+  ok 144 [tableta] › pruebas-e2e\panel\contenido.spec.ts:245:5 › RF-SW-23 / RF-SW-24: reemplazar INCOVSA actualiza cabecera y pie públicos (5.8s)
+  ok 145 [tableta] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:21:5 › RF-SW-07 / RN-56: guardar descripción y galería publica la industria sin perder los datos anteriores (6.8s)
+  ok 146 [tableta] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:82:5 › RF-SW-07 / RNF-08: industrias y catálogo conservan estructura y accesibilidad (10.9s)
+  ok 147 [tableta] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:114:5 › RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes de eliminar (10.9s)
+  ok 148 [tableta] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:159:5 › RF-SW-23: impide cerrar el editor mientras se publica y conserva el borrador si falla (5.4s)
+  ok 149 [tableta] › pruebas-e2e\panel\usuarios.spec.ts:30:7 › Panel: usuarios del sitio › RF-SW-13: Gerencia crea un usuario con solo sit.doc.ver y ese usuario solo ve la documentación (6.3s)
+  ok 150 [tableta] › pruebas-e2e\panel\usuarios.spec.ts:80:7 › Panel: usuarios del sitio › RF-SW-11 / RN-47: restablecer la contraseña no ofrece correo y la nueva clave entra (6.2s)
+  ok 151 [tableta] › pruebas-e2e\panel\usuarios.spec.ts:116:7 › Panel: usuarios del sitio › RF-SW-11: ¿Olvidó su contraseña? del sitio pide a Gerencia o a Soporte (2.7s)
+  ok 152 [tableta] › pruebas-e2e\panel\usuarios.spec.ts:131:7 › Panel: usuarios del sitio › criterio 5: la lista y el alta no tienen violaciones serias de axe (5.5s)
+  ok 153 [tableta] › pruebas-e2e\picking\auditoria-jg24.spec.ts:65:1 › RN-49 / D-01: la confirmación de Facturación cuenta un cliente aunque varíen mayúsculas, tildes y espacios exteriores (4.3s)
+  ok 154 [tableta] › pruebas-e2e\picking\bodega.spec.ts:81:7 › Módulo de Bodega E2E › Criterio 8 / RNF-08: Bodega con datos sin violaciones serias de axe, contraste incluido (3.6s)
+  ok 155 [tableta] › pruebas-e2e\picking\bodega.spec.ts:94:7 › Módulo de Bodega E2E › RNF-08: pedido que recoge el cliente, con «Sin lote», y su Detalle sin violaciones serias de axe (5.6s)
+  ok 156 [tableta] › pruebas-e2e\picking\bodega.spec.ts:115:7 › Módulo de Bodega E2E › RNF-08: líneas marcadas sin violaciones serias de axe, contraste incluido (5.9s)
+  ok 157 [tableta] › pruebas-e2e\picking\bodega.spec.ts:143:7 › Módulo de Bodega E2E › RNF-08: Detalle de Ruta sin violaciones serias de axe, contraste incluido (4.5s)
+  ok 158 [tableta] › pruebas-e2e\picking\bodega.spec.ts:157:7 › Módulo de Bodega E2E › RNF-08: Bodega vacía sin violaciones serias de axe, contraste incluido (3.1s)
+  ok 159 [tableta] › pruebas-e2e\picking\bodega.spec.ts:167:7 › Módulo de Bodega E2E › RF-SL-21 / RN-51 (CP-19): el envío muestra dos filas con lote resaltado y unidades correctas (2.0s)
+  ok 160 [tableta] › pruebas-e2e\picking\bodega.spec.ts:198:7 › Módulo de Bodega E2E › RF-SL-74 / RF-SL-75 (CP-36): fecha y hora programadas y Detalle de Ruta completo (2.6s)
+  ok 161 [tableta] › pruebas-e2e\picking\bodega.spec.ts:229:7 › Módulo de Bodega E2E › RF-SL-23 / RN-20: marcar línea persiste al recargar y marcar todo marca todas (6.1s)
+  ok 162 [tableta] › pruebas-e2e\picking\bodega.spec.ts:278:7 › Módulo de Bodega E2E › RF-SL-24 / RN-11 (CP-38): despacho solo habilitado con todo marcado y pasa a En Ruta (4.9s)
+  ok 163 [tableta] › pruebas-e2e\picking\bodega.spec.ts:323:7 › Módulo de Bodega E2E › Criterio 7: usuario sin pk.bodega ve pantalla sin acceso con textos del prototipo (1.5s)
+  ok 164 [tableta] › pruebas-e2e\picking\camiones.spec.ts:27:7 › Configuración: camiones › RF-SL-04: se crea, edita y elimina un camión (7.3s)
+  ok 165 [tableta] › pruebas-e2e\picking\camiones.spec.ts:73:7 › Configuración: camiones › criterio 6: sin violaciones serias de axe (3.4s)
+  ok 166 [tableta] › pruebas-e2e\picking\camiones.spec.ts:82:7 › Configuración: camiones › RNF-04: sin pk.cfg.camiones la pantalla rechaza el acceso (1.6s)
+  ok 167 [tableta] › pruebas-e2e\picking\facturacion-carga.spec.ts:37:1 › RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos facturados (15.2s)
+  ok 168 [tableta] › pruebas-e2e\picking\facturacion-envio.spec.ts:49:5 › RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bodega (29.8s)
+  ok 169 [tableta] › pruebas-e2e\picking\reportes-exportacion.spec.ts:22:5 › RF-SL-38 / CAM-96: descarga Excel y PDF desde las tres pestañas de Reportes (8.4s)
+  ok 170 [tableta] › pruebas-e2e\picking\reportes.spec.ts:23:5 › RF-SL-59 / CP-64: periodos y fechas inválidas en Reportes (14.0s)
+  ok 171 [tableta] › pruebas-e2e\picking\reportes.spec.ts:116:7 › RF-SL-59 / RNF-08: Despacho del periodo conserva el rango y es accesible (4.2s)
+  ok 172 [tableta] › pruebas-e2e\picking\reportes.spec.ts:116:7 › RF-SL-59 / RNF-08: Rutas realizadas conserva el rango y es accesible (4.5s)
+  ok 173 [tableta] › pruebas-e2e\picking\reportes.spec.ts:116:7 › RF-SL-59 / RNF-08: Bitácora conserva el rango y es accesible (7.5s)
+  ok 174 [tableta] › pruebas-e2e\picking\reportes.spec.ts:147:5 › RF-SL-38 / RF-SL-37 / RN-39: datos de demostración, conversiones y recorrido en las tres pestañas (12.3s)
+  ok 175 [tableta] › pruebas-e2e\picking\usuarios.spec.ts:30:7 › Configuración: usuarios del picking › RF-SL-03: Gerencia crea un usuario de Bodega que solo ve Quetzaltenango (6.9s)
+  ok 176 [tableta] › pruebas-e2e\picking\usuarios.spec.ts:76:7 › Configuración: usuarios del picking › criterio 6: con pk.cfg.camiones sin Gerencia no ve la pestaña Usuarios (5.7s)
+  ok 177 [tableta] › pruebas-e2e\picking\usuarios.spec.ts:105:7 › Configuración: usuarios del picking › criterio 8: la pestaña Usuarios no tiene violaciones serias de axe (5.6s)
+  ok 178 [tableta] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:61:5 › RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y relaciones actuales (5.6s)
+  ok 179 [tableta] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:108:5 › RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos, vacío y tarjetas sin lote (4.1s)
+  ok 180 [tableta] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:131:5 › RF-SW-05 / RF-SW-17 / RF-SW-15: detalle público, galería, recomendados y enlaces (5.0s)
+  ok 181 [tableta] › pruebas-e2e\sitio\inicio.spec.ts:5:5 › RF-SW-01 / RF-SW-27: Inicio informativo conserva secciones, cifras y textos aprobados (2.5s)
+  ok 182 [tableta] › pruebas-e2e\sitio\inicio.spec.ts:29:5 › RF-SW-15 / RF-SW-22 / RF-SW-24: pie público y mapas solo de las dos oficinas (2.1s)
+  ok 183 [tableta] › pruebas-e2e\sitio\inicio.spec.ts:63:5 › RF-SW-08 / RNF-08: menú responsivo, ausencia de desbordamiento y accesibilidad (3.2s)
+  ok 184 [tableta] › pruebas-e2e\sitio\inicio.spec.ts:80:5 › RF-SW-16: tarjetas aparecen al entrar en pantalla y desaparecen al salir (2.2s)
+  ok 185 [tableta] › pruebas-e2e\sitio\inicio.spec.ts:95:5 › RN-56 / RNF-17: cinco imágenes rotan cada 5 s, una queda fija y las secundarias cargan después (4.2s)
+  ok 186 [tableta] › pruebas-e2e\sitio\nosotros.spec.ts:19:5 › RF-SW-02 / CAM-79 / RNF-08: secciones, fondos, pie y accesibilidad de Quiénes somos (3.4s)
+  ok 187 [tableta] › pruebas-e2e\sitio\nosotros.spec.ts:55:5 › RF-SW-02 / CAM-80: ambos bloques alternan y quitar Inquiserca desde el panel deja solo INCOVSA (18.6s)
+  ok 188 [tableta] › pruebas-e2e\sitio\nosotros.spec.ts:105:5 › RF-SW-29 / RF-SW-16: cinco valores pendientes y presentación dinámica (1.4s)
+  ok 189 [tableta] › pruebas-e2e\sitio\nosotros.spec.ts:120:5 › RF-SW-02 / RF-SW-29 / RN-56: historia y cinco imágenes publicadas conservan orden, fila y ausencia de textos (5.3s)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3106
+- Network:       http://127.0.0.1:3106
+✓ Ready in 0ms
+✓ Running next.config took 51ms
+  ok 190 [tableta] › pruebas-e2e\flujo\tiempo-real.spec.ts:85:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión (5.8s)
+  ok 191 [tableta] › pruebas-e2e\flujo\tiempo-real.spec.ts:116:7 › RNF-13: avisos de cambios por sede › RNF-13: al cortar SSE consulta cada 5 segundos, apaga En vivo y se reconecta sola (13.0s)
+  ok 192 [tableta] › pruebas-e2e\flujo\tiempo-real.spec.ts:147:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede (230ms)
+[tableta] TIEMPO REAL SSE: 649 ms
+
+  ok 193 [tableta] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:82:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RNF-13 / RF-SL-23 (CP-37): el marcado aparece de inmediato en quien marca (optimista), revierte ante fallo y sincroniza en < 2s (15.8s)
+  ok 194 [tableta] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:185:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RF-SL-20 / RN-28 / RNF-13: reordenar filas y cola se refleja en tiempo real en otra pantalla en < 2s sin historial (5.1s)
+  ok 195 [tableta] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:297:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RF-SL-20: el arrastre funciona con teclado, mouse y touch (dedo con pulsación de 380 ms) (6.5s)
+  ok 196 [tableta] › pruebas-e2e\picking\facturacion-dos-facturadores.spec.ts:37:5 › RN-48 / RNF-13 / decisiones 39 y 41: dos facturadores, edición, arrastre y envío simultáneos (16.9s)
+Error inesperado en una acción del servidor: Error [ZodError]: [
+  {
+    "expected": "string",
+    "code": "invalid_type",
+    "path": [
+      "sede"
+    ],
+    "message": "Invalid input: expected string, received undefined"
+  },
+  {
+    "code": "invalid_value",
+    "values": [
+      "facturacion",
+      "bodega",
+      "tablero",
+      "ruta",
+      "reportes",
+      "configuracion"
+    ],
+    "path": [
+      "modulo"
+    ],
+    "message": "Invalid option: expected one of \"facturacion\"|\"bodega\"|\"tablero\"|\"ruta\"|\"reportes\"|\"configuracion\""
+  }
+]
+    at c (C:\Users\Hecto\Documents\proyecto_incovsa\.next\standalone\.next\server\chunks\_1nbnlp2k2vxpk._.js:1:6504)
+  ok 197 [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:4:5 › RNF-16: páginas, errores, redirecciones, API y recursos envían las cabeceras de seguridad (177ms)
+  ok 198 [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:20:5 › RNF-16: el navegador admite Google Maps y Drive, y rechaza marcos de otros orígenes (1.1s)
+  ok 199 [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:49:5 › RNF-16: otro sitio no puede insertar la aplicación dentro de un marco (331ms)
+  ok 200 [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:66:5 › RNF-16: cada respuesta tiene su nonce y los scripts en línea ajenos quedan bloqueados (761ms)
+  ok 201 [escritorio] › pruebas-e2e\acceso\acceso-personal.spec.ts:17:5 › RF-SW-09 / CAM-83: los tres pasos, sistemas habilitados, ayuda, contraseña y accesibilidad (5.9s)
+  ok 202 [escritorio] › pruebas-e2e\acceso\acceso-personal.spec.ts:59:5 › RF-SW-09: restringe opciones según la cuenta y rechaza usuarios inexistentes (4.4s)
+  ok 203 [escritorio] › pruebas-e2e\acceso\acceso-personal.spec.ts:83:5 › RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio y conserva la otra (11.5s)
+  ok 204 [escritorio] › pruebas-e2e\acceso\acceso-personal.spec.ts:123:5 › RNF-05: no expone altas, cambios de contraseña ni accesos que evadan límites; verifica origen (412ms)
+  ok 205 [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:30:5 › RF-SW-09 / RF-SL-02 / H-33: el sistema no autorizado vuelve al paso 2 sin registrar un fallo ni pedir sede (4.8s)
+  ok 206 [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:70:7 › RF-SW-30 / H-34: cerrar sitio muestra Sesión cerrada en Inicio (9.8s)
+  ok 207 [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:70:7 › RF-SW-30 / H-34: cerrar picking muestra Sesión cerrada en Inicio (9.8s)
+  ok 208 [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:89:5 › RF-SW-25 / H-07 / H-13 / H-39: acceso denegado ofrece el módulo propio y un módulo inexistente conserva el armazón (8.6s)
+  ok 209 [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.03 en picking solo ve sus módulos (4.2s)
+  ok 210 [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.03 en sitio solo ve sus módulos (3.5s)
+  ok 211 [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.05 en picking solo ve sus módulos (3.4s)
+  ok 212 [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.06 en picking solo ve sus módulos (3.8s)
+  ok 213 [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.08 en sitio solo ve sus módulos (3.3s)
+  ok 214 [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.09 en sitio solo ve sus módulos (3.5s)
+  ok 215 [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.01 en picking solo ve sus módulos (4.3s)
+  ok 216 [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.01 en sitio solo ve sus módulos (3.4s)
+  ok 217 [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:73:5 › RNF-04: primera barrera por sistema y rechazo de acceso directo en el servidor (5.1s)
+  ok 218 [escritorio] › pruebas-e2e\acceso\permisos.spec.ts:86:5 › RN-17 / RF-SL-66: cookie ajena se ignora y la sede autorizada persiste (6.9s)
+  ok 219 [escritorio] › pruebas-e2e\comunes\aplicacion.spec.ts:5:5 › RNF-07: la aplicación responde en / con el título de INCOVSA y en español (2.3s)
+  ok 220 [escritorio] › pruebas-e2e\comunes\aplicacion.spec.ts:12:5 › RNF-08: la página de inicio no tiene violaciones serias ni críticas de accesibilidad (3.2s)
+  ok 221 [escritorio] › pruebas-e2e\comunes\armazon.spec.ts:6:7 › RF-SW-26 / RF-SL-60: armazón de panel, navegación y preferencia (4.0s)
+  ok 222 [escritorio] › pruebas-e2e\comunes\armazon.spec.ts:58:7 › RNF-08: panel accesible con menú abierto y cerrado (3.6s)
+  ok 223 [escritorio] › pruebas-e2e\comunes\armazon.spec.ts:6:7 › RF-SW-26 / RF-SL-60: armazón de picking, navegación y preferencia (4.2s)
+  ok 224 [escritorio] › pruebas-e2e\comunes\armazon.spec.ts:58:7 › RNF-08: picking accesible con menú abierto y cerrado (5.2s)
+  ok 225 [escritorio] › pruebas-e2e\comunes\armazon.spec.ts:69:5 › RF-SL-60: sede solo en módulos aplicables y con varias sedes (4.4s)
+  ok 226 [escritorio] › pruebas-e2e\comunes\armazon.spec.ts:92:5 › RNF-01: tipografías locales y paleta exclusiva del prototipo (1.6s)
+  ok 227 [escritorio] › pruebas-e2e\comunes\campos-fecha-hora.spec.ts:8:5 › RF-SL-70: fecha con teclado, normalización, inexistente y valor ISO (2.7s)
+  ok 228 [escritorio] › pruebas-e2e\comunes\campos-fecha-hora.spec.ts:31:5 › RF-SL-70: hora de 24 horas, normalización y rechazo de hora inválida (2.2s)
+  ok 229 [escritorio] › pruebas-e2e\comunes\campos-fecha-hora.spec.ts:47:5 › RF-SL-70: selectores nativos anclados al campo y elección sincronizada (2.2s)
+  ok 230 [escritorio] › pruebas-e2e\comunes\componentes.spec.ts:9:5 › RNF-08: pestañas, botones segmentados y lista desplegable con teclado (2.4s)
+  ok 231 [escritorio] › pruebas-e2e\comunes\componentes.spec.ts:28:5 › RNF-08: la ventana de confirmación no tiene violaciones serias ni críticas (3.6s)
+  ok 232 [escritorio] › pruebas-e2e\comunes\componentes.spec.ts:38:5 › RNF-08: Escape, volver, confirmar y retorno del foco (3.6s)
+  ok 233 [escritorio] › pruebas-e2e\comunes\componentes.spec.ts:60:7 › RNF-08: mensaje de Guardar desaparece a los cuatro segundos (6.3s)
+  ok 234 [escritorio] › pruebas-e2e\comunes\componentes.spec.ts:60:7 › RNF-08: mensaje de Enviar a Bodega desaparece a los cuatro segundos (6.4s)
+  ok 235 [escritorio] › pruebas-e2e\comunes\componentes.spec.ts:60:7 › RNF-08: mensaje de Volver desaparece a los cuatro segundos (6.8s)
+  ok 236 [escritorio] › pruebas-e2e\panel\auditoria-jg24.spec.ts:11:5 › RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recupera medidas y hover del prototipo (6.2s)
+  ok 237 [escritorio] › pruebas-e2e\panel\auditoria-jg24.spec.ts:50:5 › RF-SW-29 / RN-39 / H-04: publicar y quitar un valor muestra el número del valor en el aviso (5.4s)
+  ok 238 [escritorio] › pruebas-e2e\panel\contenido.spec.ts:19:5 › RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y accesibilidad (10.1s)
+  ok 239 [escritorio] › pruebas-e2e\panel\contenido.spec.ts:85:5 › RF-SW-25: el permiso se exige también al abrir la sección directamente (2.0s)
+  ok 240 [escritorio] › pruebas-e2e\panel\contenido.spec.ts:111:5 › RF-SW-23 / RNF-05: publica una imagen de 5 MB y limpia la imagen retirada (5.8s)
+  ok 241 [escritorio] › pruebas-e2e\panel\contenido.spec.ts:150:5 › RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas (3.3s)
+  ok 242 [escritorio] › pruebas-e2e\panel\contenido.spec.ts:170:5 › RF-SW-23: un borrador de portada o historia no cambia la etiqueta publicada (2.0s)
+  ok 243 [escritorio] › pruebas-e2e\panel\contenido.spec.ts:186:5 › RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visita sin sesión (5.4s)
+  ok 244 [escritorio] › pruebas-e2e\panel\contenido.spec.ts:245:5 › RF-SW-23 / RF-SW-24: reemplazar INCOVSA actualiza cabecera y pie públicos (6.8s)
+  ok 245 [escritorio] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:21:5 › RF-SW-07 / RN-56: guardar descripción y galería publica la industria sin perder los datos anteriores (6.8s)
+  ok 246 [escritorio] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:82:5 › RF-SW-07 / RNF-08: industrias y catálogo conservan estructura y accesibilidad (11.5s)
+  ok 247 [escritorio] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:114:5 › RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes de eliminar (11.8s)
+  ok 248 [escritorio] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:159:5 › RF-SW-23: impide cerrar el editor mientras se publica y conserva el borrador si falla (5.3s)
+  ok 249 [escritorio] › pruebas-e2e\panel\usuarios.spec.ts:30:7 › Panel: usuarios del sitio › RF-SW-13: Gerencia crea un usuario con solo sit.doc.ver y ese usuario solo ve la documentación (6.7s)
+  ok 250 [escritorio] › pruebas-e2e\panel\usuarios.spec.ts:80:7 › Panel: usuarios del sitio › RF-SW-11 / RN-47: restablecer la contraseña no ofrece correo y la nueva clave entra (6.9s)
+  ok 251 [escritorio] › pruebas-e2e\panel\usuarios.spec.ts:116:7 › Panel: usuarios del sitio › RF-SW-11: ¿Olvidó su contraseña? del sitio pide a Gerencia o a Soporte (3.0s)
+  ok 252 [escritorio] › pruebas-e2e\panel\usuarios.spec.ts:131:7 › Panel: usuarios del sitio › criterio 5: la lista y el alta no tienen violaciones serias de axe (6.3s)
+  ok 253 [escritorio] › pruebas-e2e\picking\auditoria-jg24.spec.ts:65:1 › RN-49 / D-01: la confirmación de Facturación cuenta un cliente aunque varíen mayúsculas, tildes y espacios exteriores (4.5s)
+  ok 254 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:81:7 › Módulo de Bodega E2E › Criterio 8 / RNF-08: Bodega con datos sin violaciones serias de axe, contraste incluido (3.5s)
+  ok 255 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:94:7 › Módulo de Bodega E2E › RNF-08: pedido que recoge el cliente, con «Sin lote», y su Detalle sin violaciones serias de axe (5.8s)
+  ok 256 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:115:7 › Módulo de Bodega E2E › RNF-08: líneas marcadas sin violaciones serias de axe, contraste incluido (5.5s)
+  ok 257 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:143:7 › Módulo de Bodega E2E › RNF-08: Detalle de Ruta sin violaciones serias de axe, contraste incluido (4.9s)
+  ok 258 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:157:7 › Módulo de Bodega E2E › RNF-08: Bodega vacía sin violaciones serias de axe, contraste incluido (3.6s)
+  ok 259 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:167:7 › Módulo de Bodega E2E › RF-SL-21 / RN-51 (CP-19): el envío muestra dos filas con lote resaltado y unidades correctas (2.7s)
+  ok 260 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:198:7 › Módulo de Bodega E2E › RF-SL-74 / RF-SL-75 (CP-36): fecha y hora programadas y Detalle de Ruta completo (3.1s)
+  ok 261 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:229:7 › Módulo de Bodega E2E › RF-SL-23 / RN-20: marcar línea persiste al recargar y marcar todo marca todas (6.0s)
+  ok 262 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:278:7 › Módulo de Bodega E2E › RF-SL-24 / RN-11 (CP-38): despacho solo habilitado con todo marcado y pasa a En Ruta (5.0s)
+  ok 263 [escritorio] › pruebas-e2e\picking\bodega.spec.ts:323:7 › Módulo de Bodega E2E › Criterio 7: usuario sin pk.bodega ve pantalla sin acceso con textos del prototipo (1.6s)
+  ok 264 [escritorio] › pruebas-e2e\picking\camiones.spec.ts:27:7 › Configuración: camiones › RF-SL-04: se crea, edita y elimina un camión (7.5s)
+  ok 265 [escritorio] › pruebas-e2e\picking\camiones.spec.ts:73:7 › Configuración: camiones › criterio 6: sin violaciones serias de axe (3.6s)
+  ok 266 [escritorio] › pruebas-e2e\picking\camiones.spec.ts:82:7 › Configuración: camiones › RNF-04: sin pk.cfg.camiones la pantalla rechaza el acceso (1.6s)
+  ok 267 [escritorio] › pruebas-e2e\picking\facturacion-carga.spec.ts:37:1 › RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos facturados (18.0s)
+  ok 268 [escritorio] › pruebas-e2e\picking\facturacion-envio.spec.ts:49:5 › RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bodega (35.5s)
+  ok 269 [escritorio] › pruebas-e2e\picking\reportes-exportacion.spec.ts:22:5 › RF-SL-38 / CAM-96: descarga Excel y PDF desde las tres pestañas de Reportes (8.5s)
+  ok 270 [escritorio] › pruebas-e2e\picking\reportes.spec.ts:23:5 › RF-SL-59 / CP-64: periodos y fechas inválidas en Reportes (14.2s)
+  ok 271 [escritorio] › pruebas-e2e\picking\reportes.spec.ts:116:7 › RF-SL-59 / RNF-08: Despacho del periodo conserva el rango y es accesible (4.6s)
+  ok 272 [escritorio] › pruebas-e2e\picking\reportes.spec.ts:116:7 › RF-SL-59 / RNF-08: Rutas realizadas conserva el rango y es accesible (5.2s)
+  ok 273 [escritorio] › pruebas-e2e\picking\reportes.spec.ts:116:7 › RF-SL-59 / RNF-08: Bitácora conserva el rango y es accesible (8.9s)
+  ok 274 [escritorio] › pruebas-e2e\picking\reportes.spec.ts:147:5 › RF-SL-38 / RF-SL-37 / RN-39: datos de demostración, conversiones y recorrido en las tres pestañas (13.6s)
+  ok 275 [escritorio] › pruebas-e2e\picking\usuarios.spec.ts:30:7 › Configuración: usuarios del picking › RF-SL-03: Gerencia crea un usuario de Bodega que solo ve Quetzaltenango (8.1s)
+  ok 276 [escritorio] › pruebas-e2e\picking\usuarios.spec.ts:76:7 › Configuración: usuarios del picking › criterio 6: con pk.cfg.camiones sin Gerencia no ve la pestaña Usuarios (5.8s)
+  ok 277 [escritorio] › pruebas-e2e\picking\usuarios.spec.ts:105:7 › Configuración: usuarios del picking › criterio 8: la pestaña Usuarios no tiene violaciones serias de axe (6.0s)
+  ok 278 [escritorio] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:61:5 › RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y relaciones actuales (5.9s)
+  ok 279 [escritorio] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:108:5 › RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos, vacío y tarjetas sin lote (4.4s)
+  ok 280 [escritorio] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:131:5 › RF-SW-05 / RF-SW-17 / RF-SW-15: detalle público, galería, recomendados y enlaces (5.6s)
+  ok 281 [escritorio] › pruebas-e2e\sitio\inicio.spec.ts:5:5 › RF-SW-01 / RF-SW-27: Inicio informativo conserva secciones, cifras y textos aprobados (2.9s)
+  ok 282 [escritorio] › pruebas-e2e\sitio\inicio.spec.ts:29:5 › RF-SW-15 / RF-SW-22 / RF-SW-24: pie público y mapas solo de las dos oficinas (2.4s)
+  ok 283 [escritorio] › pruebas-e2e\sitio\inicio.spec.ts:63:5 › RF-SW-08 / RNF-08: menú responsivo, ausencia de desbordamiento y accesibilidad (3.4s)
+  ok 284 [escritorio] › pruebas-e2e\sitio\inicio.spec.ts:80:5 › RF-SW-16: tarjetas aparecen al entrar en pantalla y desaparecen al salir (2.9s)
+  ok 285 [escritorio] › pruebas-e2e\sitio\inicio.spec.ts:95:5 › RN-56 / RNF-17: cinco imágenes rotan cada 5 s, una queda fija y las secundarias cargan después (4.8s)
+  ok 286 [escritorio] › pruebas-e2e\sitio\nosotros.spec.ts:19:5 › RF-SW-02 / CAM-79 / RNF-08: secciones, fondos, pie y accesibilidad de Quiénes somos (3.7s)
+  ok 287 [escritorio] › pruebas-e2e\sitio\nosotros.spec.ts:55:5 › RF-SW-02 / CAM-80: ambos bloques alternan y quitar Inquiserca desde el panel deja solo INCOVSA (18.5s)
+  ok 288 [escritorio] › pruebas-e2e\sitio\nosotros.spec.ts:105:5 › RF-SW-29 / RF-SW-16: cinco valores pendientes y presentación dinámica (1.6s)
+  ok 289 [escritorio] › pruebas-e2e\sitio\nosotros.spec.ts:120:5 › RF-SW-02 / RF-SW-29 / RN-56: historia y cinco imágenes publicadas conservan orden, fila y ausencia de textos (5.8s)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3108
+- Network:       http://127.0.0.1:3108
+✓ Ready in 0ms
+✓ Running next.config took 41ms
+  ok 290 [escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:85:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión (6.3s)
+  ok 291 [escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:116:7 › RNF-13: avisos de cambios por sede › RNF-13: al cortar SSE consulta cada 5 segundos, apaga En vivo y se reconecta sola (13.3s)
+  ok 292 [escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:147:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede (238ms)
+[escritorio] TIEMPO REAL SSE: 518 ms
+
+  ok 293 [escritorio] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:82:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RNF-13 / RF-SL-23 (CP-37): el marcado aparece de inmediato en quien marca (optimista), revierte ante fallo y sincroniza en < 2s (18.3s)
+  ok 294 [escritorio] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:185:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RF-SL-20 / RN-28 / RNF-13: reordenar filas y cola se refleja en tiempo real en otra pantalla en < 2s sin historial (5.7s)
+  ok 295 [escritorio] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:297:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RF-SL-20: el arrastre funciona con teclado, mouse y touch (dedo con pulsación de 380 ms) (8.3s)
+  ok 296 [escritorio] › pruebas-e2e\picking\facturacion-dos-facturadores.spec.ts:37:5 › RN-48 / RNF-13 / decisiones 39 y 41: dos facturadores, edición, arrastre y envío simultáneos (16.6s)
+Error inesperado en una acción del servidor: Error [ZodError]: [
+  {
+    "expected": "string",
+    "code": "invalid_type",
+    "path": [
+      "sede"
+    ],
+    "message": "Invalid input: expected string, received undefined"
+  },
+  {
+    "code": "invalid_value",
+    "values": [
+      "facturacion",
+      "bodega",
+      "tablero",
+      "ruta",
+      "reportes",
+      "configuracion"
+    ],
+    "path": [
+      "modulo"
+    ],
+    "message": "Invalid option: expected one of \"facturacion\"|\"bodega\"|\"tablero\"|\"ruta\"|\"reportes\"|\"configuracion\""
+  }
+]
+    at c (C:\Users\Hecto\Documents\proyecto_incovsa\.next\standalone\.next\server\chunks\_1nbnlp2k2vxpk._.js:1:6504)
+  ok 297 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:4:5 › RNF-16: páginas, errores, redirecciones, API y recursos envían las cabeceras de seguridad (190ms)
+  ok 298 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:20:5 › RNF-16: el navegador admite Google Maps y Drive, y rechaza marcos de otros orígenes (888ms)
+  ok 299 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:49:5 › RNF-16: otro sitio no puede insertar la aplicación dentro de un marco (226ms)
+  ok 300 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:66:5 › RNF-16: cada respuesta tiene su nonce y los scripts en línea ajenos quedan bloqueados (752ms)
+
+
+  1) [telefono] › pruebas-e2e\acceso\acceso-personal.spec.ts:83:5 › RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio y conserva la otra 
+
+    Error: expect(page).toHaveURL(expected) failed
+
+    Expected pattern: /\/panel\/documentos$/
+    Received string:  "http://localhost:3000/acceso/sitio"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveURL" with timeout 5000ms
+        13 × locator resolved to <html lang="es" class="poppins_cd2ce963-module__hjxOSa__variable figtree_527e9546-module__wU0iba__variable jetbrains_mono_2f862659-module__huMRsa__variable">…</html>
+           - unexpected value "http://localhost:3000/acceso/sitio"
+
+
+       96 |     await page.getByLabel("Contraseña", { exact: true }).fill(clave!);
+       97 |     await page.getByRole("button", { name: "Ingresar" }).click();
+    >  98 |     await expect(page).toHaveURL(sistema === "sitio" ? /\/panel\/documentos$/ : /\/picking\/facturacion$/);
+          |                        ^
+       99 |   }
+      100 |   for (const sistema of ["sitio", "picking"]) {
+      101 |     const r = await context.request.get(`/api/auth/${sistema}/get-session`);
+        at C:\Users\Hecto\Documents\proyecto_incovsa\pruebas-e2e\acceso\acceso-personal.spec.ts:98:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\acceso-acceso-personal-RN--d28ae-l-inicio-y-conserva-la-otra-telefono\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\acceso-acceso-personal-RN--d28ae-l-inicio-y-conserva-la-otra-telefono\error-context.md
+
+  2) [telefono] › pruebas-e2e\panel\contenido.spec.ts:19:5 › RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y accesibilidad 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 45.546875
+    Received:    57.828125
+
+      59 |     expect(vista!.x + vista!.width).toBeLessThanOrEqual(limites!.x + limites!.width);
+      60 |     const aviso = await campo.locator("[data-aviso]").boundingBox();
+    > 61 |     expect(vista!.y + vista!.height).toBeLessThanOrEqual(aviso!.y);
+         |                                      ^
+      62 |     await expect(campo.locator("[data-aviso]")).toHaveCSS("font-size", "13px");
+      63 |     await expect(campo.locator("[data-aviso]")).toHaveCSS("border-radius", "10px");
+      64 |   }
+        at C:\Users\Hecto\Documents\proyecto_incovsa\pruebas-e2e\panel\contenido.spec.ts:61:38
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\panel-contenido-RF-SW-23-R-61912--borradores-y-accesibilidad-telefono\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\panel-contenido-RF-SW-23-R-61912--borradores-y-accesibilidad-telefono\error-context.md
+
+  3) [tableta] › pruebas-e2e\panel\contenido.spec.ts:19:5 › RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y accesibilidad 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 420.546875
+    Received:    432.828125
+
+      59 |     expect(vista!.x + vista!.width).toBeLessThanOrEqual(limites!.x + limites!.width);
+      60 |     const aviso = await campo.locator("[data-aviso]").boundingBox();
+    > 61 |     expect(vista!.y + vista!.height).toBeLessThanOrEqual(aviso!.y);
+         |                                      ^
+      62 |     await expect(campo.locator("[data-aviso]")).toHaveCSS("font-size", "13px");
+      63 |     await expect(campo.locator("[data-aviso]")).toHaveCSS("border-radius", "10px");
+      64 |   }
+        at C:\Users\Hecto\Documents\proyecto_incovsa\pruebas-e2e\panel\contenido.spec.ts:61:38
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\panel-contenido-RF-SW-23-R-61912--borradores-y-accesibilidad-tableta\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\panel-contenido-RF-SW-23-R-61912--borradores-y-accesibilidad-tableta\error-context.md
+
+  3 failed
+    [telefono] › pruebas-e2e\acceso\acceso-personal.spec.ts:83:5 › RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio y conserva la otra 
+    [telefono] › pruebas-e2e\panel\contenido.spec.ts:19:5 › RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y accesibilidad 
+    [tableta] › pruebas-e2e\panel\contenido.spec.ts:19:5 › RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y accesibilidad 
+  297 passed (31.3m)
+salida: 1

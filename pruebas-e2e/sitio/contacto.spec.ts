@@ -1,0 +1,298 @@
+import { test as base, expect, type Page } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+import { Client } from "pg";
+import { capturaEvidencia } from "../comunes/evidencia";
+import { irA } from "../comunes/navegacion";
+try {
+  process.loadEnvFile();
+} catch {
+  /* Variables proporcionadas por CI. */
+}
+const test = base.extend<{ contactoDePrueba: Client }>({
+  contactoDePrueba: [
+    async ({ baseURL }, usar) => {
+      if (!baseURL || !["localhost", "127.0.0.1"].includes(new URL(baseURL).hostname))
+        throw new Error("Las pruebas requieren una aplicación local.");
+      const bd = new Client({ connectionString: process.env.DATABASE_URL });
+      await bd.connect();
+      try {
+        await bd.query("SELECT pg_advisory_lock($1)", [2026102408]);
+        const contactos = (await bd.query("SELECT * FROM informacion_contacto")).rows;
+        try {
+          await usar(bd);
+        } finally {
+          await bd.query(
+            "UPDATE informacion_contacto c SET direccion=o.direccion, telefono=o.telefono, correo=o.correo, whatsapp=o.whatsapp, horario=o.horario, mapa_url=o.mapa_url FROM json_populate_recordset(NULL::informacion_contacto,$1::json) o WHERE c.id=o.id",
+            [JSON.stringify(contactos)],
+          );
+          await bd.query(
+            "DELETE FROM solicitud_contacto WHERE correo LIKE 'dm08-e2e-%@prueba.invalid' OR correo LIKE 'dm14-e2e-%@prueba.invalid'",
+          );
+        }
+      } finally {
+        await bd.end();
+      }
+    },
+    { auto: true, timeout: 60000 },
+  ],
+});
+// Contacto, Inicio y el panel muestran los mapas de Google de las sedes. Como en `seguridad/cabeceras.spec.ts`,
+// se responden en local para que la carga de la página no dependa de la red externa.
+test.beforeEach(async ({ page }) => {
+  await page.route("https://www.google.com/maps/embed**", (ruta) =>
+    ruta.fulfill({ contentType: "text/html", body: "Mapa de prueba" }),
+  );
+});
+async function captura(page: Page, estado: string) {
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  await page.locator("img").evaluateAll(async (elementos) => {
+    await Promise.all(
+      elementos.map(async (e) => {
+        if (!(e instanceof HTMLImageElement)) return;
+        e.loading = "eager";
+        await e.decode().catch(() => undefined);
+      }),
+    );
+  });
+  await page.evaluate(() => document.fonts.ready);
+  await capturaEvidencia(page, `pruebas-e2e/sitio/evidencias/DM-08/${estado}-${page.viewportSize()!.width}.png`);
+}
+async function axe(page: Page) {
+  expect(
+    (await new AxeBuilder({ page }).analyze()).violations.filter((v) =>
+      ["serious", "critical"].includes(v.impact ?? ""),
+    ),
+  ).toEqual([]);
+}
+
+test("RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await irA(page, "/contacto");
+  await expect(page.getByRole("heading", { name: "Envíenos su mensaje" })).toBeVisible();
+  // Sin EVIDENCIA=1 la captura no espera nada: se interactúa solo cuando React ya tomó el formulario.
+  await expect(page.locator("form.contacto-form")).toHaveAttribute("data-hidratado", "true");
+  await captura(page, "aplicacion-contacto");
+  await page.getByLabel("País *", { exact: true }).selectOption("GT");
+  await expect(page.getByLabel("Departamento *", { exact: true })).toBeVisible();
+  await captura(page, "aplicacion-guatemala");
+  await page.getByLabel("País *", { exact: true }).selectOption("");
+  // Sin ningún envío previo: el correo y el teléfono se marcan solo al salir del campo.
+  const correo = page.getByLabel("Correo electrónico *", { exact: true });
+  const telefono = page.getByLabel("Número de teléfono", { exact: true });
+  await correo.fill("incorrecto");
+  await expect(page.locator("#error-correo")).toHaveCount(0);
+  await expect(correo).toHaveAttribute("aria-invalid", "false");
+  await correo.blur();
+  await expect(page.locator("#error-correo")).toHaveText(
+    "Indique un correo con una estructura válida (nombre@dominio.com).",
+  );
+  await expect(correo).toHaveAttribute("aria-invalid", "true");
+  await telefono.fill("123");
+  await expect(page.locator("#error-telefono")).toHaveCount(0);
+  await telefono.blur();
+  await expect(page.locator("#error-telefono")).toHaveText("El teléfono no es válido para Guatemala.");
+  await expect(telefono).toHaveAttribute("aria-invalid", "true");
+  await page.getByRole("button", { name: "Enviar mensaje", exact: true }).click();
+  await expect(page.getByText("Elija el país.", { exact: true }).first()).toBeVisible();
+  await page.getByLabel("País *", { exact: true }).selectOption("GT");
+  await expect(page.getByLabel("Departamento *", { exact: true })).toBeVisible();
+  await expect(page.getByLabel("Municipio *", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Enviar mensaje", exact: true }).click();
+  await expect(page.getByText("Elija el departamento.", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Elija el municipio.", { exact: true }).first()).toBeVisible();
+  await captura(page, "aplicacion-error");
+  await page.getByLabel("País *", { exact: true }).selectOption("MX");
+  await expect(page.getByLabel("Departamento *", { exact: true })).toHaveCount(0);
+  await expect(page.getByLabel("Municipio *", { exact: true })).toHaveCount(0);
+  expect(
+    (await new AxeBuilder({ page }).analyze()).violations.filter((v) =>
+      ["serious", "critical"].includes(v.impact ?? ""),
+    ),
+  ).toEqual([]);
+  await expect(page.locator("footer")).toBeVisible();
+  await expect(page.locator("main")).not.toContainText("Escuintla");
+});
+
+test("RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito", async ({ page, contactoDePrueba }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await irA(page, "/contacto");
+  await expect(page.locator("form.contacto-form")).toHaveAttribute("data-hidratado", "true");
+  const correo = `dm08-e2e-${Date.now()}@prueba.invalid`;
+  await page.getByLabel("Nombre completo *", { exact: true }).fill("Persona de prueba");
+  await page.getByLabel("Correo electrónico *", { exact: true }).fill(correo);
+  await page.getByLabel("País *", { exact: true }).selectOption("MX");
+  await page.getByLabel("Sede a la que dirige su mensaje *", { exact: true }).selectOption({ label: "Quetzaltenango" });
+  await page.getByLabel("Mensaje *", { exact: true }).fill("Solicitud de información de prueba");
+  await page.getByRole("button", { name: "Enviar mensaje", exact: true }).click();
+  const aviso = page.getByRole("heading", { name: "Solicitud recibida", exact: true });
+  await expect(aviso).toBeInViewport();
+  const folio = await page.locator(".contacto-exito b").innerText();
+  expect(folio).toMatch(/^SOL-\d{4}-\d{4,}$/);
+  await expect
+    .poll(() =>
+      aviso.evaluate((e) => {
+        const r = e.getBoundingClientRect();
+        const cab = document.querySelector(".sh")!.getBoundingClientRect();
+        return r.top >= cab.bottom && r.bottom <= innerHeight;
+      }),
+    )
+    .toBe(true);
+  const fila = (
+    await contactoDePrueba.query("SELECT folio, estado, leida FROM solicitud_contacto WHERE correo=$1", [correo])
+  ).rows;
+  expect(fila).toEqual([{ folio, estado: null, leida: false }]);
+  await axe(page);
+  await captura(page, "aplicacion-exito");
+  await page.getByRole("button", { name: "Enviar otro mensaje" }).click();
+  await expect(page.getByLabel("Nombre completo *", { exact: true })).toHaveValue("");
+});
+
+test("RF-SW-06 / P-98: el sexto envío de la IP muestra el límite y no se registra", async ({
+  page,
+  contactoDePrueba,
+}) => {
+  await page.setExtraHTTPHeaders({ "x-real-ip": "203.0.113.14" });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await irA(page, "/contacto");
+  await expect(page.locator("form.contacto-form")).toHaveAttribute("data-hidratado", "true");
+
+  for (let numero = 1; numero <= 6; numero++) {
+    await page.getByLabel("Nombre completo *", { exact: true }).fill("Persona de prueba");
+    await page
+      .getByLabel("Correo electrónico *", { exact: true })
+      .fill(`dm14-e2e-${numero}-${Date.now()}@prueba.invalid`);
+    await page.getByLabel("País *", { exact: true }).selectOption("MX");
+    await page
+      .getByLabel("Sede a la que dirige su mensaje *", { exact: true })
+      .selectOption({ label: "Quetzaltenango" });
+    await page.getByLabel("Mensaje *", { exact: true }).fill("Solicitud de información de prueba");
+    await page.getByRole("button", { name: "Enviar mensaje", exact: true }).click();
+    if (numero < 5) {
+      await expect(page.getByRole("heading", { name: "Solicitud recibida", exact: true })).toBeVisible();
+      await page.getByRole("button", { name: "Enviar otro mensaje" }).click();
+    } else if (numero === 5) {
+      await expect(page.getByRole("heading", { name: "Solicitud recibida", exact: true })).toBeVisible();
+      await page.getByRole("button", { name: "Enviar otro mensaje" }).click();
+    } else {
+      await expect(page.locator(".contacto-form [role=alert]")).toContainText(
+        "Recibimos varias solicitudes desde su conexión. Inténtelo de nuevo en una hora.",
+      );
+    }
+  }
+  expect((await contactoDePrueba.query("SELECT id FROM solicitud_contacto WHERE ip='203.0.113.14'")).rows).toHaveLength(
+    5,
+  );
+});
+
+test("RF-SW-06 / RNF-08: la trampa queda fuera del teclado y Contacto pasa axe", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await irA(page, "/contacto");
+  await expect(page.locator("form.contacto-form")).toHaveAttribute("data-hidratado", "true");
+  const trampa = page.locator('[name="sitioWeb"]');
+  await expect(trampa).toHaveAttribute("tabindex", "-1");
+  await expect(trampa).toHaveAttribute("autocomplete", "off");
+  await expect(trampa).toHaveAttribute("aria-hidden", "true");
+  for (let i = 0; i < 40; i++) {
+    await page.keyboard.press("Tab");
+    expect(await trampa.evaluate((elemento) => elemento === document.activeElement)).toBe(false);
+  }
+  await axe(page);
+});
+
+test("RF-SW-06: enviar Contacto sin JavaScript usa POST y no deja datos en la URL", async ({ browser }) => {
+  const contexto = await browser.newContext({ baseURL: "http://localhost:3000", javaScriptEnabled: false });
+  try {
+    const pagina = await contexto.newPage();
+    await irA(pagina, "/contacto");
+    const formulario = pagina.locator("form.contacto-form");
+    await expect(formulario).toHaveAttribute("method", "post");
+    await pagina.getByLabel("Correo electrónico *", { exact: true }).fill("sin-js@prueba.invalid");
+    const envio = pagina.waitForRequest(
+      (solicitud) => new URL(solicitud.url()).pathname === "/contacto" && solicitud.method() === "POST",
+    );
+    await pagina.getByRole("button", { name: "Enviar mensaje", exact: true }).click();
+    const solicitud = await envio;
+    expect(new URL(solicitud.url()).search).toBe("");
+    expect(solicitud.postData()).toContain("sin-js%40prueba.invalid");
+    expect(new URL(pagina.url()).search).toBe("");
+  } finally {
+    await contexto.close();
+  }
+});
+
+test("RNF-05: Información de contacto limita los campos del panel y muestra errores en español", async ({
+  page,
+  context,
+}) => {
+  const respuesta = await context.request.post("/api/auth/sitio/sign-in/username", {
+    headers: { origin: "http://localhost:3000" },
+    data: { usuario: "ejemplo.08", clave: process.env.CLAVE_DEMO },
+  });
+  expect(respuesta.ok()).toBe(true);
+  await irA(page, "/panel/contacto");
+  await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
+  const sede = page.getByRole("region", { name: "Quetzaltenango", exact: true });
+  for (const [nombre, maximo] of [
+    ["Dirección", "250"],
+    ["Teléfono", "60"],
+    ["Correo", "120"],
+    ["WhatsApp", "30"],
+    ["Horario", "120"],
+  ])
+    await expect(sede.getByLabel(nombre, { exact: true })).toHaveAttribute("maxLength", maximo);
+  const correo = sede.getByLabel("Correo", { exact: true });
+  await correo.fill("invalido");
+  await correo.blur();
+  await expect(sede.getByText("Indique un correo válido.", { exact: true })).toBeVisible();
+});
+
+test("RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos", async ({
+  page,
+  context,
+}) => {
+  const respuesta = await context.request.post("/api/auth/sitio/sign-in/username", {
+    headers: { origin: "http://localhost:3000" },
+    data: { usuario: "ejemplo.08", clave: process.env.CLAVE_DEMO },
+  });
+  expect(respuesta.ok()).toBe(true);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await irA(page, "/panel/contacto");
+  await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
+  const sede = page.getByRole("region", { name: "Quetzaltenango", exact: true });
+  await captura(page, "aplicacion-panel");
+  await axe(page);
+  const mapa = sede.getByLabel("Mapa (dirección del mapa insertado de Google Maps)", { exact: true });
+  const original = await mapa.inputValue();
+  await mapa.fill("https://example.com/mapa");
+  await mapa.blur();
+  await expect(
+    sede.getByText(
+      "El mapa debe ser la dirección del mapa insertado de Google Maps (https://www.google.com/maps/embed?…).",
+      { exact: true },
+    ),
+  ).toHaveCount(0);
+  await sede.getByRole("button", { name: "Guardar", exact: true }).click();
+  await expect(
+    page
+      .locator(".toast")
+      .getByText(
+        "El mapa debe ser la dirección del mapa insertado de Google Maps (https://www.google.com/maps/embed?…).",
+        { exact: true },
+      ),
+  ).toBeVisible();
+  await captura(page, "aplicacion-panel-error");
+  await mapa.fill(original);
+  await sede.getByLabel("Dirección", { exact: true }).fill("Dirección de prueba DM-08");
+  await sede.getByLabel("Correo", { exact: true }).fill("dm08-e2e-contacto@prueba.invalid");
+  await sede.getByRole("button", { name: "Guardar", exact: true }).click();
+  await expect(page.getByText("Datos de Quetzaltenango publicados.", { exact: true })).toBeVisible();
+  for (const ruta of ["/contacto", "/"]) {
+    await irA(page, ruta);
+    await expect(page.locator("main")).toContainText("Dirección de prueba DM-08");
+    await expect(page.locator("footer")).toContainText("dm08-e2e-contacto@prueba.invalid");
+  }
+  await irA(page, "/panel/contacto");
+  await expect(sede.getByLabel("Dirección", { exact: true })).toHaveValue("Dirección de prueba DM-08");
+});

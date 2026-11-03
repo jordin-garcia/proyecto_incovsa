@@ -1,4 +1,5 @@
 import { Prisma } from "@/generated/prisma/client";
+import { claveCliente } from "./cliente";
 import { prisma } from "@/lib/prisma";
 import { ErrorNegocio } from "@/lib/errores";
 import { fechaGuatemala, formatoFecha, inicioDelDiaGuatemala } from "@/lib/fechas";
@@ -9,11 +10,13 @@ import { exigirPermiso } from "@/modulos/permisos/servicio";
 import { registrarBitacora } from "@/modulos/bitacora/servicio";
 import {
   esquemaCampoOpcion,
+  esquemaConfirmacionOpcion,
   esquemaMovimiento,
   esquemaOpcion,
   esquemaEntradaTablero,
   type TipoOpcion,
 } from "./esquemas";
+import { bloquearSede, exigirEstadoPedidos, AVISO_CONFLICTO } from "./concurrencia";
 import type { PedidoEnTablero } from "./servicio";
 
 type Tx = Prisma.TransactionClient;
@@ -39,9 +42,6 @@ function autorizar(sesion: SesionActual | null, entrada: unknown): asserts sesio
   exigirPermiso(sesion, "pk.facturacion");
   const { sedeId } = esquemaOpcion.pick({ sedeId: true }).parse(entrada);
   exigirPermiso(sesion, "pk.facturacion", sedeId);
-}
-async function bloquearSede(tx: Tx, sedeId: number) {
-  await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${`facturacion:sede:${sedeId}`}, 0))`;
 }
 async function bloquearOpcion(tx: Tx, sedeId: number, tipo: TipoOpcion) {
   const filas = await tx.$queryRaw<
@@ -113,6 +113,8 @@ export async function consultarOpciones(
             ),
             pedidos: o.pedidosFacturados.map((p) => ({
               id: p.id,
+              posicion: p.posicion,
+              actualizadoEn: p.actualizadoEn.toISOString(),
               numero: p.numeroOdoo,
               cliente: p.cliente || "Sin nombre",
               sector: p.sector || "Sin sector",
@@ -161,7 +163,7 @@ export async function guardarCampoOpcion(sesion: SesionActual | null, entrada: u
 
 export async function moverPedidos(sesion: SesionActual | null, entrada: unknown): Promise<void> {
   autorizar(sesion, entrada);
-  const { sedeId, ids, origen, destino, antesDe } = esquemaMovimiento.parse(entrada);
+  const { sedeId, ids, origen, destino, antesDe, estadoOrigen, estadoDestino } = esquemaMovimiento.parse(entrada);
   await prisma.$transaction(async (tx) => {
     await bloquearSede(tx, sedeId);
     const opciones = await tx.opcionEnvio.findMany({ where: { sedeId } });
@@ -173,31 +175,41 @@ export async function moverPedidos(sesion: SesionActual | null, entrada: unknown
     };
     const origenId = idDe(origen),
       destinoId = idDe(destino);
+    for (const [opcionEnvioId, estado] of [
+      [origenId, estadoOrigen],
+      [destinoId, estadoDestino],
+    ] as const) {
+      const actuales = await tx.pedidoFacturado.findMany({
+        where: { sedeId, opcionEnvioId, envioId: null },
+        orderBy: [{ posicion: "asc" }, { id: "asc" }],
+      });
+      exigirEstadoPedidos(actuales, estado);
+    }
     const pedidos = await tx.pedidoFacturado.findMany({
       where: { id: { in: ids }, sedeId, opcionEnvioId: origenId, envioId: null },
       orderBy: [{ posicion: "asc" }, { id: "asc" }],
     });
-    if (pedidos.length !== ids.length) throw new ErrorNegocio("Esos pedidos facturados ya no están disponibles.");
+    if (pedidos.length !== ids.length) throw new ErrorNegocio(AVISO_CONFLICTO);
     const otros = await tx.pedidoFacturado.findMany({
       where: { sedeId, opcionEnvioId: destinoId, envioId: null, id: { notIn: ids } },
       orderBy: [{ posicion: "asc" }, { id: "asc" }],
     });
     const indice = antesDe === null ? otros.length : otros.findIndex((p) => p.id === antesDe);
-    if (indice < 0) throw new ErrorNegocio("Esos pedidos facturados ya no están disponibles.");
+    if (indice < 0) throw new ErrorNegocio(AVISO_CONFLICTO);
     otros.splice(indice, 0, ...pedidos);
     for (const [posicion, pedido] of otros.entries()) {
       const actualizado = await tx.pedidoFacturado.updateMany({
         where: { id: pedido.id, sedeId, envioId: null, opcionEnvioId: ids.includes(pedido.id) ? origenId : destinoId },
         data: { opcionEnvioId: destinoId, posicion: posicion + 1 },
       });
-      if (actualizado.count !== 1) throw new ErrorNegocio("Esos pedidos facturados ya no están disponibles.");
+      if (actualizado.count !== 1) throw new ErrorNegocio(AVISO_CONFLICTO);
     }
   });
 }
 
 export async function cancelarOpcion(sesion: SesionActual | null, entrada: unknown): Promise<number> {
   autorizar(sesion, entrada);
-  const { sedeId, tipo } = esquemaOpcion.parse(entrada);
+  const { sedeId, tipo, estadoEsperado } = esquemaConfirmacionOpcion.parse(entrada);
   return prisma.$transaction(async (tx) => {
     await bloquearSede(tx, sedeId);
     const opcion = await bloquearOpcion(tx, sedeId, tipo);
@@ -205,6 +217,7 @@ export async function cancelarOpcion(sesion: SesionActual | null, entrada: unkno
       where: { sedeId, opcionEnvioId: opcion.id, envioId: null },
       orderBy: [{ posicion: "asc" }, { id: "asc" }],
     });
+    exigirEstadoPedidos(pedidos, estadoEsperado);
     if (!pedidos.length) return 0;
     const maximo = await tx.pedidoFacturado.aggregate({
       where: { sedeId, opcionEnvioId: null, envioId: null },
@@ -235,7 +248,7 @@ export async function cancelarOpcion(sesion: SesionActual | null, entrada: unkno
 
 export async function enviarOpcion(sesion: SesionActual | null, entrada: unknown): Promise<EnvioCreado | null> {
   autorizar(sesion, entrada);
-  const { sedeId, tipo: opcionTipo } = esquemaOpcion.parse(entrada);
+  const { sedeId, tipo: opcionTipo, estadoEsperado } = esquemaConfirmacionOpcion.parse(entrada);
   return prisma.$transaction(async (tx) => {
     await bloquearSede(tx, sedeId);
     const opcion = await bloquearOpcion(tx, sedeId, opcionTipo);
@@ -245,6 +258,7 @@ export async function enviarOpcion(sesion: SesionActual | null, entrada: unknown
       orderBy: [{ posicion: "asc" }, { id: "asc" }],
     });
     if (!pedidos.length) return null;
+    exigirEstadoPedidos(pedidos, estadoEsperado);
     const tipo = opcionTipo === "camion" ? "ruta" : "pedido";
     const camion = tipo === "ruta" && opcion.camionId ? await validarCamion(tx, sedeId, opcion.camionId) : null;
     const piloto = tipo === "ruta" && opcion.pilotoId ? await validarPiloto(tx, sedeId, opcion.pilotoId) : null;
@@ -284,11 +298,15 @@ export async function enviarOpcion(sesion: SesionActual | null, entrada: unknown
     const clientes = new Map<string, { cliente: string; sector: string; totalKg: Prisma.Decimal }>();
     let totalKg = new Prisma.Decimal(0);
     for (const pedido of pedidos) {
-      const claveCliente = JSON.stringify([pedido.cliente, pedido.sector]);
-      let cliente = clientes.get(claveCliente);
+      const clave = claveCliente(pedido);
+      let cliente = clientes.get(clave);
       if (!cliente) {
-        cliente = { cliente: pedido.cliente, sector: pedido.sector, totalKg: new Prisma.Decimal(0) };
-        clientes.set(claveCliente, cliente);
+        cliente = {
+          cliente: pedido.cliente || "Sin nombre",
+          sector: pedido.sector || "Sin sector",
+          totalKg: new Prisma.Decimal(0),
+        };
+        clientes.set(clave, cliente);
       }
       for (const detalle of pedido.detalles) {
         const clave = JSON.stringify([detalle.producto, detalle.lote, detalle.pesoConversionKg.toFixed(3)]);

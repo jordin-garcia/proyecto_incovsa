@@ -1,45 +1,70 @@
 .galeria {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
   min-width: 0;
+  border-radius: var(--radius-prototipo-3);
 }
 .lista {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 10px;
+}
+.lista:empty,
+.individual .lista:empty {
+  display: none;
 }
 .miniatura {
   position: relative;
-  width: 110px;
-  height: 100px;
+  width: auto;
+  height: auto;
+  margin: 0;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
-  border: 1px solid var(--g200);
-  border-radius: var(--r);
+  border: 1px solid var(--g150);
+  border-radius: var(--radius-prototipo-1);
+  background: var(--g50);
 }
 .miniatura img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 .numero {
   position: absolute;
-  top: 4px;
-  left: 4px;
-  background: var(--v950);
+  top: 6px;
+  left: 6px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: var(--radius-prototipo-5);
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--v950) 80%, transparent);
   color: var(--color-blanco);
-  border-radius: var(--r-s);
-  padding: 0 6px;
+  font: 700 11.5px/1 var(--f-mono);
 }
 .acciones {
   position: absolute;
-  bottom: 4px;
-  right: 4px;
+  right: 5px;
+  bottom: 5px;
   display: flex;
   gap: 4px;
 }
 .acciones button {
   width: 28px;
+  min-height: 28px;
   height: 28px;
+  padding: 0;
+}
+.acciones :global(.ico) {
+  width: 16px;
+  height: 16px;
+}
+.galeria > p {
+  font-size: 13.5px;
+  color: var(--g500);
 }
 .suelta {
   width: 100%;
@@ -57,7 +82,7 @@
 .subida {
   border: 2px dashed var(--g300);
   border-radius: var(--radius-prototipo-8);
-  padding: 22px;
+  padding: 16px;
   color: var(--g600);
   background: var(--g50);
   cursor: pointer;
@@ -65,8 +90,9 @@
   flex-direction: column;
   white-space: normal;
   height: auto;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 400;
+  line-height: 1.55;
 }
 .subida [data-aviso] {
   display: flex;
@@ -74,9 +100,10 @@
   align-items: center;
   gap: 6px;
 }
-.subida:hover {
+.galeria .subida:hover {
   border-color: var(--v400);
   background: var(--v50);
+  color: var(--g600);
 }
 .individual {
   position: relative;
@@ -101,6 +128,7 @@
 }
 .individual .subida [data-aviso] {
   padding: 16px;
+  font-size: 14px;
 }
 .individual:has(img) .subida [data-aviso] {
   position: absolute;
@@ -113,6 +141,8 @@
   border-radius: var(--radius-prototipo-1);
   padding: 6px 10px;
   font-size: 13px;
+  /* Interlineado anterior a JG-24: con 1.55, el aviso ocupa dos líneas en teléfono y tableta y tapa la imagen (DM-04). */
+  line-height: 1;
 }
 .cuerpoIndividual {
   max-width: 520px;
@@ -190,13 +220,9 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-@media (max-width: 1024px) {
-  .tres {
-    grid-template-columns: 1fr;
-  }
-}
 @media (max-width: 720px) {
   .dos,
+  .tres,
   .resumen {
     grid-template-columns: 1fr;
   }

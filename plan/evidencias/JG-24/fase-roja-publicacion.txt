@@ -1,0 +1,96 @@
+
+> incovsa@0.1.0 test
+> vitest run src/modulos/contenido/acciones.test.ts src/modulos/contenido/panel-catalogo.test.ts src/modulos/bitacora/servicio.test.ts src/modulos/envios/opciones.test.ts
+
+
+ RUN  v5.0.5 C:/Users/Hecto/Documents/proyecto_incovsa
+
+ ❯ src/modulos/contenido/panel-catalogo.test.ts (8 tests | 1 failed) 3930ms
+   × RNF-05 / H-05: multipart usa el origen público configurado detrás del proxy y rechaza un origen ajeno 233ms
+ ❯ src/modulos/contenido/acciones.test.ts (11 tests | 2 failed) 2410ms
+   × RF-SW-29 / RN-39: publica cinco imágenes en sus posiciones y elimina la sustituida 210ms
+   × RNF-05 / H-05: la publicación institucional acepta el origen público y no el origen interno del proxy 121ms
+ ❯ src/modulos/bitacora/servicio.test.ts (2 tests | 1 failed) 9031ms
+   × RF-SL-36 / H-14: cada consulta limita a 250 filas y ordena los empates por id 4392ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/modulos/bitacora/servicio.test.ts > RF-SL-36 / H-14: cada consulta limita a 250 filas y ordena los empates por id
+AssertionError: expected [ { id: 261n, …(9) }, …(260) ] to have a length of 250 but got 261
+
+- Expected
++ Received
+
+- 250
++ 261
+
+ ❯ src/modulos/bitacora/servicio.test.ts:52:17
+     50|   }))});
+     51|   const filas = await consultarBitacora(rango, gerencia);
+     52|   expect(filas).toHaveLength(250);
+       |                 ^
+     53|   expect(filas[0]?.detalle).toEqual({resumen:"Registro 259"});
+     54|   expect(filas.at(-1)?.detalle).toEqual({resumen:"Registro 10"});
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/modulos/contenido/acciones.test.ts > RF-SW-29 / RN-39: publica cinco imágenes en sus posiciones y elimina la sustituida
+AssertionError: expected { bloque: 'Valores' } to match object { bloque: 'Imagen del valor 3' }
+
+- Expected
++ Received
+
+  {
+-   "bloque": "Imagen del valor 3",
++   "bloque": "Valores",
+  }
+
+ ❯ src/modulos/contenido/acciones.test.ts:97:83
+     95|   expect(await leerImagenLocal(sustituida.replace("/api/imagenes/", ""…
+     96|   expect(await prisma.bitacora.count()).toBe(2);
+     97|   expect((await prisma.bitacora.findFirstOrThrow({orderBy:{id:"desc"}}…
+       |                                                                                   ^
+     98|   await Promise.all(siguientes.filter((v): v is string => v !== null).…
+     99| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/modulos/contenido/acciones.test.ts > RNF-05 / H-05: la publicación institucional acepta el origen público y no el origen interno del proxy
+AssertionError: expected 200 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 200
+
+ ❯ src/modulos/contenido/acciones.test.ts:105:172
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/modulos/contenido/panel-catalogo.test.ts > RNF-05 / H-05: multipart usa el origen público configurado detrás del proxy y rechaza un origen ajeno
+AssertionError: expected 200 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 200
+
+ ❯ src/modulos/contenido/panel-catalogo.test.ts:116:157
+    114|     for (const [tipo, datos] of [["industria", { id: industria.id, des…
+    115|       for (const origin of ["http://localhost:3000", "https://ajeno.in…
+    116|         expect((await recibirGaleria(new Request("http://localhost:300…
+       |                                                                                                                                                             ^
+    117|       }
+    118|       const respuesta = await recibirGaleria(new Request("http://local…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  3 failed | 1 passed (4)
+      Tests  4 failed | 30 passed (34)
+   Start at  18:12:45
+   Duration  136.54s (tests 71%, import 27%, transform 1%)
+

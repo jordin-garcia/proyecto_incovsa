@@ -5,7 +5,7 @@ persona: jose-daniel
 responsable: José Daniel Cifuentes
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JC-06]
 programada: 2026-10-25
 requisitos: [RF-SL-38, CU-14]
@@ -54,3 +54,15 @@ npm run e2e -- pruebas-e2e/picking/reportes-exportacion.spec.ts
 
 ## Fuera de alcance
 - Formato de colores en el Excel (la versión gratuita de SheetJS no lo permite, decisión 43).
+
+## Resultado
+
+- Hecho: habilité Excel y PDF en las tres pestañas de Reportes. La ruta del servidor valida sesión, `pk.reportes`, sede y parámetros; genera hojas XLSX y documentos PDF con las fuentes locales y el logotipo, sin peticiones externas. Los seis archivos usan el periodo visible y los nombres definidos en `specs/10`.
+- Decisiones tomadas: ninguna conducta nueva fuera de `specs/`. Apliqué las decisiones 43, 59 y 85 de `specs/16`; no añadí dependencias ni modifiqué el esquema o las migraciones.
+- Archivos principales: `src/app/api/reportes/exportar/route.ts`, `src/modulos/reportes/exportacion.ts`, `src/componentes/picking/reportes/Reportes.tsx` y `pruebas-e2e/picking/reportes-exportacion.spec.ts`. Las fuentes incluidas están en `src/modulos/reportes/fuentes/`.
+- Uso: en Picking → Reportes, selecciona una pestaña y periodo y pulsa Excel o PDF para descargar ese informe.
+- Verificación: `npm run verificar` (350 pruebas en 41 archivos), `node --test scripts/design-system.test.mjs`, `npm run build` y `npm run e2e -- pruebas-e2e/picking/reportes-exportacion.spec.ts` (3/3, teléfono, tableta y escritorio) pasan. Las capturas comparativas de las tres pestañas y tamaños están en `pruebas-e2e/picking/evidencias/jc-07/`. La suite E2E completa sobre la base local limpia quedó en 244 aprobadas, 12 fallidas y 2 no ejecutadas; una repetición de 33 casos ajenos a JC-07 dio 27 aprobados y 6 fallidos. Esos fallos son de otras áreas y se detallan en la bitácora. El bot pidió corregir el total cuando el resto era cero; ya se corrigió y cubrió con una prueba. La revisión independiente en contexto limpio quedó LISTO, sin hallazgos de corrección.
+
+### Correcciones de la auditoría (2026-10-26)
+
+H-75 a H-77 y D-10: se prueban los cuatro indicadores y el periodo en Excel; sede, periodo, tabla y logotipo fijo del sistema en PDF; nombres de archivo con rango. Figtree y JetBrains Mono registran variantes estáticas Bold con sus licencias OFL, también para el total. Las descargas usan `fetch` y un Blob, conservan el nombre del servidor y muestran el aviso general autorizado si fallan (400, 403 o 500), sin exponer respuestas internas. Correcciones realizadas en JC-09; los 48 casos dirigidos de navegador y las 456 pruebas generales pasan.

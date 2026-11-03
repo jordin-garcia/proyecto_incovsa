@@ -1,0 +1,11 @@
+
+Running 2 tests using 1 worker
+
+[1/2] [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:201:5 › RF-SL-36 / RN-39 / H-57 / RNF-05 / H-63: la bitácora de solicitudes usa los textos del prototipo y el comentario tiene tope
+[2/2] [escritorio] › pruebas-e2e\panel\usuarios.spec.ts:131:7 › Panel: usuarios del sitio › criterio 5: la lista y el alta no tienen violaciones serias de axe
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+  2 passed (44.9s)

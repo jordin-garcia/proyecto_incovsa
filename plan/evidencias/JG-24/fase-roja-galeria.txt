@@ -1,0 +1,41 @@
+
+Running 1 test using 1 worker
+
+(node:52856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [escritorio] › pruebas-e2e\panel\auditoria-jg24.spec.ts:6:5 › RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recupera medidas y hover del prototipo (13.4s)
+
+
+  1) [escritorio] › pruebas-e2e\panel\auditoria-jg24.spec.ts:6:5 › RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recupera medidas y hover del prototipo 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  getByRole('region', { name: 'Portada', exact: true }).locator('[data-galeria]').getByRole('button').filter({ has: locator('[data-aviso]') })
+    Expected: "rgb(86, 87, 85)"
+    Received: "rgb(84, 85, 84)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" getByRole('region', { name: 'Portada', exact: true }).locator('[data-galeria]').getByRole('button').filter({ has: locator('[data-aviso]') }) with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Portada', exact: true }).locator('[data-galeria]').getByRole('button').filter({ has: locator('[data-aviso]') })
+        13 × locator resolved to <button type="button" class="btn btn-g contenido-module__aNKBlG__subida">…</button>
+           - unexpected value "rgb(84, 85, 84)"
+
+
+      14 |     const campo = page.getByRole("region",{name:nombre,exact:true}).locator("[data-galeria]");
+      15 |     const subir = campo.getByRole("button").filter({has:page.locator("[data-aviso]")});
+    > 16 |     await expect(subir).toHaveCSS("color","rgb(84, 85, 84)");
+         |                         ^
+      17 |     if (!individual) {
+      18 |       await expect(subir).toHaveCSS("padding","16px");
+      19 |       await expect(subir).toHaveCSS("font-size","13.5px");
+        at C:\Users\Hecto\Documents\proyecto_incovsa\pruebas-e2e\panel\auditoria-jg24.spec.ts:16:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\panel-auditoria-jg24-RNF-0-49682-didas-y-hover-del-prototipo-escritorio\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\panel-auditoria-jg24-RNF-0-49682-didas-y-hover-del-prototipo-escritorio\error-context.md
+
+  1 failed
+    [escritorio] › pruebas-e2e\panel\auditoria-jg24.spec.ts:6:5 › RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recupera medidas y hover del prototipo 

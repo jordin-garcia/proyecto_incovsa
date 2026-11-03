@@ -1,0 +1,21 @@
+
+> incovsa@0.1.0 formato
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> incovsa@0.1.0 lint
+> eslint .
+
+
+> incovsa@0.1.0 tipos
+> tsc --noEmit
+
+Aviso: instale gitleaks (plan/instalacion.md §2) para comprobar secretos antes del commit.
+[jordin/JG-24-auditoria-bitacora-y-acceso 118d84b] fix(acceso): salida, permisos y armazón fieles al prototipo (JG-24)
+ 21 files changed, 238 insertions(+), 27 deletions(-)
+ create mode 100644 pruebas-e2e/acceso/auditoria-jg24.spec.ts
+ create mode 100644 src/componentes/comunes/AvisoDeSalida.tsx
+ create mode 100644 src/componentes/comunes/armazon/iniciales.test.ts
+ create mode 100644 src/componentes/comunes/armazon/iniciales.ts

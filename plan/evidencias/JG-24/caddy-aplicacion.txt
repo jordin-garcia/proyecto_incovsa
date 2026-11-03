@@ -1,0 +1,22 @@
+▲ Next.js 16.4.2 (Turbopack)
+- Local:         http://127.0.0.1:3100
+- Network:       http://127.0.0.1:3100
+- Environments: .env
+✓ Ready in 1831ms
+✓ Running next.config.ts took 138ms
+- Experiments (use with caution):
+  · serverActions
+
+○ Compiling /api/auth/[sistema]/[...ruta] ...
+ GET /api/auth/sitio/get-session 200 in 1601ms (proxy.ts: 16ms)
+ GET /api/auth/sitio/get-session 200 in 963ms (proxy.ts: 13ms)
+ GET /api/auth/sitio/get-session 200 in 118ms (next.js: 73ms, proxy.ts: 10ms, application-code: 36ms)
+ POST /api/auth/sitio/sign-in/username 200 in 971ms (next.js: 14ms, proxy.ts: 19ms, application-code: 937ms)
+ POST /api/imagenes/publicar 403 in 2.2s (next.js: 1453ms, proxy.ts: 17ms, application-code: 744ms)
+ POST /api/imagenes/publicar 200 in 307ms (next.js: 9ms, proxy.ts: 13ms, application-code: 286ms)
+ POST /panel/industrias/publicar 403 in 425ms (next.js: 304ms, proxy.ts: 65ms, application-code: 56ms)
+ POST /panel/industrias/publicar 200 in 232ms (next.js: 6ms, proxy.ts: 36ms, application-code: 190ms)
+ POST /panel/catalogo/publicar 403 in 322ms (next.js: 246ms, proxy.ts: 30ms, application-code: 46ms)
+ POST /panel/catalogo/publicar 200 in 345ms (next.js: 6ms, proxy.ts: 34ms, application-code: 304ms)
+ POST /api/imagenes/publicar 200 in 84ms (next.js: 8ms, proxy.ts: 14ms, application-code: 63ms)
+ POST /panel/industrias/publicar 200 in 110ms (next.js: 7ms, proxy.ts: 31ms, application-code: 72ms)

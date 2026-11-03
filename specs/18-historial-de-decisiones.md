@@ -576,7 +576,7 @@ Al trasladar el prototipo se comprobó con axe que `--g500` sobre `--g50` da un 
 ## Opciones de envío y envío a Bodega (19/10/2026, JC-04)
 
 - En las tarjetas del tablero de Facturación, **Enter** selecciona y **Espacio** levanta y suelta la tarjeta para moverla con las flechas, porque así el arrastre funciona con teclado (RF-SL-63). En el prototipo, las dos teclas seleccionan.
-- RN-49 agrupa las filas de entrega de una ruta solo si el nombre del cliente y el sector son exactamente iguales a los del archivo (`specs/12`). Falta que el coordinador confirme si deben compararse sin mayúsculas, tildes ni espacios sobrantes, como hace `claveRuta()` en el prototipo.
+- RN-49 agrupa las filas de entrega de una ruta solo si el nombre del cliente y el sector son exactamente iguales a los del archivo (`specs/12`). Falta que el coordinador confirme si deben compararse sin mayúsculas, tildes ni espacios sobrantes, como hace `claveRuta()` en el prototipo. **Resuelto el 22/10:** ver «Decisiones de la auditoría del 22/10».
 
 ## Agente en la nube de Cursor en la revisión con Claude (19/10/2026, JG-08)
 
@@ -586,6 +586,112 @@ Al trasladar el prototipo se comprobó con axe que `--g500` sobre `--g50` da un 
 
 - Se extiende la precisión de JG-05 a Bodega: el pie de las tarjetas, las líneas marcadas, la etiqueta «Sin lote» y el Detalle de Ruta usan `--g600` en sus textos secundarios, porque `--g500` sobre `--g50`, `--v50` y `--g100` queda debajo de 4.5:1 (RNF-08). La etiqueta «RUTA» del cuadro verde ya no lleva la opacidad 0.75 del prototipo (4.44:1 con ella, 6.55:1 sin ella).
 - **Excepción a RNF-08, por decisión del coordinador:** el cuadro del pedido que recoge el cliente conserva exactamente los colores del prototipo (fondo `--lima`, texto blanco y la etiqueta «PEDIDO» con opacidad 0.75), aunque esa etiqueta de 9 px queda en 2.76:1. Es el único nodo que la prueba de axe de Bodega excluye; el número del cuadro cumple como texto grande (3.65:1).
+
+## Facturación simultánea (21/10/2026, JC-05)
+
+- José Daniel confirmó con Jordin el texto del aviso de conflicto registrado en `specs/06`: «Otro facturador modificó estos pedidos. La pantalla se actualizará; revisa los cambios e inténtalo de nuevo». La vista conserva el arrastre y la edición de fecha u hora hasta finalizar la interacción y los guardados pendientes.
+
+## Controles automáticos de seguridad (22/10/2026, JG-11)
+
+- RNF-16 usa CSP con nonce por respuesta y renderizado dinámico para hidratar Next.js; scripts externos y scripts en línea ajenos quedan bloqueados. Solo los estilos dinámicos de los componentes necesitan `unsafe-inline`. Se conservan Maps, Drive y el origen HTTPS de imágenes configurado.
+- La regla de permisos respeta la ruta exacta de imágenes públicas de disco de la decisión 78, que nunca sirve archivos en producción. La publicación de imágenes sigue protegida.
+- Jordin autorizó agregar `@stryker-mutator/core`, `@stryker-mutator/vitest-runner` y `lockfile-lint` como dependencias de desarrollo. Se fija `qs` 6.16.1 únicamente bajo `typed-rest-client`, dependencia de Stryker, porque la versión 6.15.1 fija de ese paquete tiene tres avisos moderados publicados y corregidos. No cambia el código de producción.
+
+## Decisiones de la auditoría del 22/10 (22/10/2026, JG-12)
+
+- **En diseño manda el prototipo** (decisión 89 de `specs/16`), por decisión de Jordin: en cómo se ve la aplicación, el prototipo aprobado manda sobre `specs/`, sin excepciones. `AGENTS.md`, `plan/protocolo.md` §C, `plan/convenciones.md` §7 y `plan/prompts/revision.md` se actualizaron.
+- **D-01, RN-49:** el nombre y el sector se comparan sin distinguir mayúsculas ni tildes y sin espacios al inicio ni al final, como `norm()` y `claveRuta()` del prototipo (un nombre o un sector vacío cuenta como «Sin nombre» o «Sin sector»), en la tabla de Ruta y al contar los clientes en Facturación y en Bodega ([12](12-reglas-de-negocio.md), [08](08-picking-ruta.md)). Antes se comparaban exactos en la Ruta y en Facturación (JC-04) y sin quitar tildes en Bodega (JM-03).
+- **D-02, Bitácora:** se confirma el filtro por sede de JC-06, descrito tal como está implementado ([10](10-picking-reportes.md)).
+- **D-03 y D-04, Configuración:** no se puede cambiar de sede un camión elegido en «Envío por camión», y Gerencia y Soporte no pueden desactivar su propia cuenta ([11](11-picking-configuracion.md)).
+- **Precisión de H-43 (prototipo):** al eliminar un piloto, se quita de «Envío por camión» si estaba elegido, como en `panel.js` › `eliminarUsuario()` ([11](11-picking-configuracion.md)).
+- **D-05, RNF-09:** la configuración sin secretos se respalda en el repositorio, y la copia de respaldo de los secretos del VPS en el medio seguro de entrega de credenciales ([16](16-arquitectura-y-tecnologia.md), "Respaldos").
+- **D-06, RF-SL-07:** las tarjetas de Facturación van en la rejilla del prototipo ([04](04-requerimientos-funcionales.md), [06](06-picking-facturacion.md)).
+- Las precisiones de diseño anteriores que se apartan del prototipo, como el `--g600` de los textos secundarios (JG-05, JG-06 y JM-08) y la etiqueta «RUTA» sin opacidad, quedan sujetas a la decisión 89. JG-24 las revisa y le pregunta a Jordin antes de cualquier cambio que haga fallar axe (RNF-08). Mientras tanto, las tareas nuevas siguen el prototipo.
+- Las correcciones del código son de JG-23, JG-24 y JG-25 (`plan/auditorias/2026-10-22.md`).
+
+## Contraste del área de subida de las galerías (23/10/2026, DM-07)
+
+- **Excepción de contraste a la decisión 89, por decisión de Jordin:** el texto del área de subida de `CampoGaleria` («Arrastre aquí…» en las galerías, y también en los campos de una sola imagen, como el logotipo y el de Inquiserca) usa `--g600` y no el `--g500` del prototipo (`.subida`). Con `--g500` el contraste es 4.46:1 sobre `--g50` (en reposo) y 4.41:1 sobre `--v50` (al pasar el cursor), por debajo del 4.5:1 de RNF-08; con `--g600` es 7.02:1 y 6.94:1. Aplica a Noticias (DM-07) y a los campos de DM-04 y DM-05, que ya lo usaban. La excepción es **solo el color del texto**, y la prueba de axe no cambia ([20](20-prototipo-aprobado.md)).
+- Lo demás del área sigue el prototipo, y JG-24 (paso 7) corrige estas dos diferencias de `develop`: al pasar el cursor, la regla `.btn-g:hover` del botón fantasma deja el texto en `--g900` sobre `--g100`, y no el fondo `--v50` del prototipo con el texto en `--g600`; y el relleno y el tamaño de letra son 22 px y 14 px, y no los 16 px y 13.5 px de `.gc-subir` en las galerías.
+
+## Contrastes revisados en JG-24 (23/10/2026)
+
+- Jordin autorizó conservar los colores accesibles actuales como excepciones de contraste a la decisión 89, sin modificar las pruebas de axe: los textos secundarios que el prototipo muestra con contraste de 4.46:1, la etiqueta «RUTA» sin opacidad (con la opacidad del prototipo da 4.44:1) y el texto de las zonas vacías de Facturación (2.61:1 en el prototipo). RNF-08 exige 4.5:1. Se conserva `--g600` en esos textos y la opacidad completa de «RUTA». Evidencia reproducida con Playwright y axe en `plan/evidencias/JG-24/contraste-prototipo.json` y sus capturas.
+- Esta autorización se suma a la del área de subida de `CampoGaleria` del 23/10. Los demás atributos de diseño siguen el prototipo; no autoriza cambios de paleta, estructura, medidas ni estados. Se mantiene la excepción ya aprobada de «PEDIDO» de JM-08.
+- `CampoGaleria` recupera también el interlineado 1.55 del prototipo (el botón heredaba 1), y los campos individuales vacíos conservan sus 14 px; con imagen, la etiqueta conserva 13 px e interlineado 1: en el prototipo esa etiqueta se dibuja sobre la imagen, y en la aplicación (DM-04) va debajo; con 1.55 ocupa dos líneas en teléfono y tableta y la tapa. Las galerías usan 13.5 px y relleno de 16 px, con el hover aprobado.
+- Jordin aprobó los textos de los bloqueos en la Bitácora, que el prototipo no tiene: «*sistema* · Bloqueo de usuario · *usuario*» y «Acceso personal · Bloqueo de IP · *IP*», con la IP visible ([10](10-picking-reportes.md)). El cambio de una industria se presenta como «Industria *nombre*», como `bit()` del prototipo. En el panel, una sección inexistente muestra «Sección no encontrada» (panel.js) y en el picking, «Módulo no encontrado» (picking.js).
+- Los textos de las tarjetas de selección del sistema recuperan `--g500`: cumplen RNF-08 sin excepción. Las confirmaciones comunes conservan `--g600` y 15.5 px, tal como `confirmar()` del prototipo. El resumen de «Enviar a Bodega» de Facturación recupera el resultado visual del prototipo: `--g800` y 16 px (su rejilla queda fuera del párrafo por las reglas del parser HTML). El ajuste es local a ese resumen. La Bitácora presenta detalles históricos legibles y limita las operaciones visibles a las 250 más recientes después del filtro por sede, como precisa `specs/10`.
+
+## Tablero de Bodega en pantalla completa (24/10/2026, JM-05)
+
+- El tablero sigue `tablero.js` del prototipo aprobado. `specs/07` («Tablero en pantalla completa») precisa lo que no decía: la ruta o el pedido que muestra cada pantalla, el modo guardado en la sesión del navegador, el marcado tocando la línea completa con el resaltado de los cambios, los colores de la etiqueta del lote en el modo claro (`--v800`, como `.lote-tb`) y la vuelta al módulo inicial sin permiso o sin sede ([07](07-picking-bodega.md)).
+- El cuadro lima de «PEDIDO» del modo claro conserva los colores del prototipo, con la misma excepción de contraste aprobada para el módulo (JM-08, 19/10): la prueba de axe excluye solo su etiqueta pequeña «PEDIDO».
+- **Excepciones a la decisión 89, por decisión de Jordin (24/10):** el tablero abre en **modo claro** sin elección previa y al reiniciar el navegador (el prototipo abre en oscuro); y en una ruta que no cabe en la pantalla todas las líneas se pueden ver y tocar en cualquier tamaño: en tableta, escritorio y TV se desplaza el área de las líneas, en el teléfono se desplaza toda la pantalla y su barra superior pasa a otra línea, y el panel del camión no se ensancha con muchas líneas (en el prototipo, las líneas que no caben quedan ocultas y a 390 px el contenido se corta por la derecha) ([07](07-picking-bodega.md)).
+- Lo implementó el coordinador por la ausencia de Josué (protocolo §E4).
+
+## Dependabot agrupado (24/10/2026, JG-08)
+
+- Por decisión del coordinador, `.github/dependabot.yml` junta en un solo PR por ecosistema (npm y GitHub Actions) las versiones menores y los parches de las actualizaciones de versión; cada versión mayor llega en su propio PR, y las de seguridad, aparte, en cuanto salen ([16](16-arquitectura-y-tecnologia.md), "Dependencias al día"). En npm se ignoran las versiones mayores de `typescript`, que se queda en la 6.0 (ver "Versión de ESLint (JG-02)"; TypeScript 7 quitó la API de JavaScript que usa `scripts/integridad-pruebas.mjs`), y de `@types/node`, que sigue a Node.js 24.
+
+## Recepción pública de Contacto (24/10/2026, DM-08)
+
+- RF-SW-06 exige que el formulario de Contacto se envíe sin sesión, y la regla de Semgrep de JG-11 exigía `exigirPermiso` en toda acción. Por decisión del coordinador, la recepción vive sola en `src/modulos/solicitudes/recepcion-publica.ts`, excluida por su ruta exacta, y una regla nueva impide que ese archivo exporte otra cosa que `enviarSolicitud`; `scripts/probar-semgrep.mjs` lo comprueba con el escáner real ([16](16-arquitectura-y-tecnologia.md), "Seguridad").
+- El folio `SOL-AAAA-NNNN` sigue el contador único del prototipo, que no se reinicia al cambiar de año ([05](05-sitio-web.md), "Contacto").
+- Por decisión de Jordin, el mensaje admite hasta 2000 caracteres, para que la recepción pública no guarde textos de cualquier tamaño (RNF-05) ([05](05-sitio-web.md), "Contacto"). El límite de envíos por IP queda como P-98 ([19](19-pendientes.md)).
+- Lo terminó el coordinador a partir del avance de Daniela (protocolo §E4).
+
+## Contraste de la bandeja de solicitudes (25/10/2026, DM-09)
+
+Daniela autorizó usar `--g600` solo en las pestañas inactivas y el texto secundario de la fila seleccionada. Playwright y axe reprodujeron 4.46:1 y 4.40:1 con el `--g500` del prototipo. Se documenta esta excepción a la decisión 89 en `specs/05`, para cumplir RNF-08 sin cambiar las pruebas ni la paleta. El 26/10, Jordin la ratificó (auditoría del 26/10, D-07), y quedó también en [20](20-prototipo-aprobado.md).
+
+## Correcciones de la auditoría del 22/10 en Bodega (25/10/2026, JG-23)
+
+- Si una acción de Bodega no se guarda, la marca o el orden vuelven atrás y la pantalla sigue en uso. Un envío de la misma sede que otra pantalla ya despachó responde «El pedido ya no está en preparación.», el mismo mensaje del despacho, y «No tiene permisos» queda solo para otra sede (auditoría H-22). Una falla de red muestra el mensaje general «No se pudo completar la operación. Inténtelo de nuevo.» (H-24) ([07](07-picking-bodega.md), "Marcado de preparación").
+- La conversión solo recibe texto o `Decimal`, nunca `Number` (H-16, [16](16-arquitectura-y-tecnologia.md), decisión 1).
+
+## Decisiones de la auditoría del 26/10 (26/10/2026, JG-13)
+
+- **D-07, RNF-08:** Jordin ratifica la excepción de contraste de la bandeja de Solicitudes que había autorizado Daniela (DM-09): `--g600` en las pestañas inactivas y en el texto secundario de la fila seleccionada ([05](05-sitio-web.md), [20](20-prototipo-aprobado.md)).
+- **D-08, pruebas de navegador:** las pruebas que guardan capturas o archivos de evidencia dentro del repositorio solo los escriben con la variable `EVIDENCIA=1`. Así, una corrida normal de `npm run e2e` deja el árbol limpio (`plan/convenciones.md` §6). Lo aplicó CE-13 el 27/10, con una sola ayuda en `pruebas-e2e/comunes/evidencia.ts`.
+- **D-09, Ruta:** el piloto ve sus rutas solo de la sede de trabajo elegida, como los demás módulos (RN-17) y como la suscripción de tiempo real, que es por sede. El prototipo le muestra las de todas sus sedes ([08](08-picking-ruta.md), "Acceso"). JM-09 agrega la prueba con un piloto de dos sedes.
+- **D-10, Reportes:** el PDF usa siempre el logotipo de INCOVSA del sistema (`public/marca/incovsa-quimicos.webp`), no el que se configura en el panel del sitio ([10](10-picking-reportes.md), "Exportación").
+- Las correcciones del código son de CE-13 (sitio y panel), JM-09 (Bodega, tablero y Ruta), JC-09 (Reportes y Facturación) y JG-25 (CI y pruebas de JG-10) (`plan/auditorias/2026-10-26.md`).
+
+## Ruido temporal en la medición de galerías (26/10/2026, DM-11)
+
+Daniela autorizó un margen temporal de **10 ms** para comparar las medianas del tiempo hasta la primera imagen de portada y hasta `load` con una y cinco imágenes. Se mide el artefacto de producción con calentamiento equilibrado, muestras alternadas y contextos sin caché. La igualdad de bytes iniciales y la ausencia de solicitudes de imágenes secundarias antes de `load` permanecen estrictas. La precisión queda en `specs/05` y RNF-17 de `specs/15`; no cambia el comportamiento de las galerías ni los umbrales de axe.
+
+## Prueba integral y recorrido diario (27/10/2026, JG-14)
+
+- **Decisión 67:** el recorrido diario arranca el servidor de producción *standalone* (`node .next/standalone/server.js`, el mismo de la imagen de Docker) en lugar de `next start`, que no aplica con `output: "standalone"`. Lo decidió Jordin el 27/10 ([16](16-arquitectura-y-tecnologia.md)).
+- La prueba integral (`pruebas-e2e/flujo/flujo-completo.spec.ts`) exige una base sin rutas, pedidos ni cambios de estado de hoy en Quetzaltenango, para comprobar que la numeración diaria empieza en Ruta 1 y Pedido 1 (RN-52). Al terminar borra los envíos y los pedidos facturados que creó; la bitácora se conserva. Corre en teléfono, tableta y escritorio, una a la vez.
+- El flujo `recorrido-diario.yml` también corre en los PR que cambian la prueba o el flujo, sin avisar en el tablero.
+
+## Comentario de la bandeja y correo de Información de contacto (27/10/2026, CE-13)
+
+- El comentario del responsable admite hasta 2000 caracteres, el mismo tope del mensaje de Contacto (RNF-05, auditoría H-63). Se valida en el navegador (`maxLength`) y en el servidor. Los comentarios ya guardados no se reescriben y no hay migración ([05](05-sitio-web.md), "Gestión de solicitudes").
+- El correo de Información de contacto del panel puede quedar vacío; si se escribe, debe tener un formato válido. Al salir del campo el panel muestra «Indique un correo válido.» y no guarda, y el servidor rechaza el mismo caso antes de guardar. El prototipo (`panel.js` › `contacto()`) no lo valida: es una precisión de comportamiento, no de diseño. Lo decidió Carlos y lo confirmó Jordin el 27/10, en lugar de quitar el mensaje como proponía la auditoría (H-62) ([05](05-sitio-web.md), "Panel administrativo").
+
+## Correcciones de la auditoría del 22/10 en configuración, producción y CI (28/10/2026, JG-25)
+
+- **Límite del cuerpo en Caddy (H-50):** Caddy acepta cuerpos de hasta 27 MB, en MB de base 10. Es el tope de `/api/imagenes/publicar`, que recibe hasta 5 imágenes de 5 MB más el formato multipart (decisión 44). Las acciones del servidor siguen en 3 MB ([16](16-arquitectura-y-tecnologia.md), decisión 58).
+- **HSTS (H-48):** Next.js envía HSTS y las demás cabeceras de seguridad (JG-11). Caddy ya no agrega la suya: salían dos cabeceras HSTS. El flujo de la imagen de producción comprueba a través de Caddy que llegan todas, con una sola HSTS, y que el primer aviso de `/api/tiempo-real` llega en menos de 5 segundos (H-46, H-47) ([16](16-arquitectura-y-tecnologia.md), decisión 29).
+- **Administración de usuarios (H-44):** sus acciones exigen el acceso total con `exigirAccesoTotal`, no un permiso de otro módulo, y una regla propia de Semgrep lo comprueba ([16](16-arquitectura-y-tecnologia.md), "Seguridad").
+- **Veredicto de `revision-claude` (H-40):** solo cuenta el comentario que cita una ejecución de `revision-claude.yml` para ese commit y que se publicó después de que empezara. El comentario lleva en la segunda línea «Commit revisado: <sha> · Ejecución: <id>». La cita descarta los comentarios de otros flujos que no la imitan, pero no prueba la autoría: un flujo nuevo podría copiarla. La protección de fondo sigue siendo `archivos-protegidos`, que impide agregar o cambiar flujos en un PR.
+- **Producción (H-49, H-51, H-37):** Compose usa por omisión la etiqueta `produccion`; el código de la imagen es de root y el proceso solo escribe en la caché de Next.js; y en producción la aplicación rechaza las claves de ejemplo «cambie-esto…»: el sitio público responde, pero nadie puede iniciar sesión hasta cambiarlas.
+- **CI (H-28):** el trabajo `pruebas` compara la base recién migrada con `schema.prisma` (`prisma migrate diff --exit-code`).
+- **`crear-admin` (H-36):** acepta el rol escrito de cualquier forma, como `normalizarRol` (decisión 8), y dice si la contraseña es corta, si no coincide o si el usuario ya existe.
+- D-03 y D-04 se aplicaron tal como están en [11](11-picking-configuracion.md). Las correcciones son de JG-25 (`plan/auditorias/2026-10-22.md` y `plan/auditorias/2026-10-26.md`).
+
+## Revisión de seguridad con ASVS 5.0 y ZAP (29/10/2026, JG-15)
+
+Decisiones del coordinador al revisar la aplicación contra OWASP ASVS 5.0, nivel 2 (`plan/seguridad/asvs-nivel-2.md`), y con OWASP ZAP (`plan/seguridad/zap-2026-10-29.md`):
+
+- **P-98 se resuelve:** Contacto acepta hasta 5 solicitudes por hora desde una misma IP, contadas en la base con la IP que se guarda con cada solicitud, y tiene un campo trampa para robots que responde como un envío correcto sin guardar nada ([05](05-sitio-web.md), "Contacto").
+- **Contraseñas:** se rechazan las contraseñas comunes de una lista local, las que contienen una palabra de la empresa y las que contienen el nombre de usuario. Restablecer la contraseña de una cuenta de Gerencia o Soporte pide además la contraseña de quien lo hace, que respeta el límite de intentos de RNF-15 ([03](03-roles-y-accesos.md)).
+- **Topes:** los textos largos del panel admiten hasta 10 000 caracteres ([05](05-sitio-web.md), "Panel administrativo"). El .xlsx de Odoo se rechaza con más de 100 archivos internos o más de 50 MB descomprimido, se rechaza con más de 20 000 filas y cada columna tiene el largo de la base ([06](06-picking-facturacion.md)).
+- **Riesgos aceptados:** no se implementan antes de la entrega MFA, el cambio de la contraseña propia, ver y cerrar las sesiones propias, que un administrador cierre sesiones sin desactivar la cuenta, una vida máxima absoluta de la sesión, un límite de sesiones simultáneas, la contraseña inicial que obliga a cambiarla, la consulta de contraseñas filtradas, ni los cambios de la infraestructura del VPS (TLS interno, cuentas de base de datos separadas, lista blanca de salida, gestor de secretos y envío de los registros a otro sistema). Tampoco la retención de las solicitudes y las IP de la bitácora, ni los límites de conexiones de tiempo real y exportaciones simultáneas. JG-27 documenta en [16](16-arquitectura-y-tecnologia.md) la justificación y los controles que compensan cada uno.
+- Las correcciones quedan en JC-10, JG-26, DM-14, CE-14, JM-10 y JG-27, todas P1 y antes del 02/11.
 
 ## Documentos no alineados con las reuniones 4 y 5
 
@@ -597,3 +703,43 @@ Al 14/10/2026 todavía reflejan el estado del 24/09 y **no** incorporan los camb
 El prototipo de simulación se actualizó el 14/10/2026 con los cambios de la reunión 5 y el 15/10/2026 con los ajustes del coordinador ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)), y el Documento 2 pasó a la versión 0.2 (la entregada el 14/10) y el 15/10 a la versión 0.3, alineada con la especificación 1.3, y después a la versión 0.4, alineada con la especificación 1.4.
 
 El README del repositorio se actualizó el 16/10/2026 con la versión 1.5 de esta carpeta. El Documento 2 v0.4 **no** incorpora las decisiones del 16/10/2026 y, por decisión del coordinador del mismo día, **ya no se edita**: queda como la versión del Entregable 2, y para el Entregable 3 se crea una nueva versión del Documento 2 con todo actualizado. Mientras tanto vale lo que dice esta carpeta.
+
+## Error de descarga de Reportes (29/10/2026, JC-09)
+
+José Daniel autorizó reutilizar el mensaje general «No se pudo completar la operación. Inténtelo de nuevo.» cuando falla una descarga de Excel o PDF. Se precisa en `specs/10`. También autorizó corregir `src/app/acceso/page.tsx` para que el GET al que redirige el paso de contraseña consulte los sistemas sin escribir intentos fallidos.
+
+## Matriz de navegadores y tamaños (30/10/2026, JG-16)
+
+- Todas las pruebas de `pruebas-e2e/` corren en Chromium, Firefox y WebKit, en teléfono, tableta, escritorio y TV (solo el tablero). El navegador se elige con la variable `NAVEGADOR`; sin ella, `npm run e2e` sigue usando Chromium, así que la batería local de cada tarea no cambia. La matriz completa corre a mano en GitHub Actions (`.github/workflows/matriz-navegadores.yml`), antes de cada versión (decisión 47), y también en los PR que cambian ese flujo, `playwright.config.ts` o `scripts/resumen-matriz.mjs`, para probarlos antes de integrarlos. Se precisa en [16](16-arquitectura-y-tecnologia.md), decisión 46.
+- **HTTPS de prueba para WebKit (decisión del coordinador del 30/10):** WebKit no guarda en `http://localhost` las cookies de sesión de producción, que llevan `Secure` y el prefijo `__Secure-`. En lugar de quitarle `Secure` a la aplicación durante las pruebas, el fixture del servidor de producción pone delante, solo con WebKit, un proxy HTTPS local con un certificado autofirmado de un día, como hace Caddy en producción. La aplicación no cambia.
+- Las diferencias que encontró la matriz eran de las pruebas, no de la aplicación (navegaciones que Firefox y WebKit cancelan mientras la pantalla se actualiza, el arrastre táctil por CDP, la hidratación, avisos que se ocultan, el tipo de las imágenes WebP en WebKit, redondeos de subpíxel). Se corrigieron con funciones comunes en `pruebas-e2e/comunes/` ([convenciones](../plan/convenciones.md) §6). La única diferencia de la aplicación es la de Facturación en Firefox al seleccionar todos, que queda en JC-11 (01/11). El resultado está en `plan/pruebas/matriz-2026-10-30.md`.
+
+## Endurecimiento de cookies, cabeceras, sesiones, contraseñas y registros (30/10/2026, JG-26)
+
+Correcciones del coordinador a las brechas de la revisión de seguridad (JG-15) en su código. El detalle está en [16](16-arquitectura-y-tecnologia.md), "Seguridad":
+
+- **Sede de trabajo en todo el sitio (R-P01):** la cookie de la sede se envía con `path=/`, para que la exportación de Reportes use la sede que se ve en pantalla y no la primera del usuario.
+- **Cookies con `__Host-`:** en producción, las cookies de sesión de los dos sistemas, la de la sede y la del acceso personal se llaman `__Host-…` (`Secure`, `path=/`, sin `Domain`). En desarrollo y en las pruebas, por HTTP, conservan el nombre sin prefijo. El HTTPS de prueba de WebKit (JG-16) sigue siendo necesario.
+- **CSP y cabeceras:** `base-uri 'none'`, nonce de 128 bits, sin `X-Powered-By`, `Permissions-Policy` sin cámara, micrófono, ubicación ni pagos, y `Cross-Origin-Opener-Policy: same-origin`. No se envía `Cross-Origin-Embedder-Policy`, porque bloquearía los mapas de Google y la vista previa de Drive.
+- **Contraseñas:** scrypt con N=2^14, r=8 y p=5 (mínimo de OWASP), con los parámetros escritos en cada hash. Una sola función para el inicio de sesión, la administración de usuarios, `crear-admin` y las semillas. Las contraseñas cifradas antes siguen sirviendo.
+- **Sesiones:** volver a iniciar sesión en un sistema cierra la sesión que ese navegador tenía en ese sistema; la del otro sistema sigue abierta. Cerrar sesión recarga la página por completo y el servidor responde con `Clear-Site-Data: "cache"`, sin borrar las cookies del otro sistema. Una petición con una sesión que ya no es válida no borra la cookie, para no cerrar la sesión recién iniciada en otra pestaña.
+- **Reautenticación para CE-14:** `reautenticar` (`src/app/acceso/servicio.ts`) confirma la contraseña del usuario de la sesión con el mismo bloqueo y el mismo límite de intentos que el inicio de sesión (RNF-15).
+- **Registro del servidor:** los rechazos de autorización y por origen, una sede ajena en la cookie y los errores inesperados quedan en el registro del servidor (no en la bitácora de Reportes) como una línea JSON con la fecha, el evento, el sistema, el usuario y la operación, sin datos personales, contraseñas ni el mensaje del error.
+- **Imagen de producción:** solo las dependencias de producción, más `prisma` y `tsx`, que pasan a `dependencies` sin cambiar de versión; sin la semilla de demostración ni los scripts de desarrollo.
+- **Base de datos (para DM-14):** columna `ip` opcional en `solicitud_contacto`, con un índice por IP y fecha ([14](14-modelo-de-datos.md)).
+- **Riesgo aceptado en minimatch (31/10, decisión del coordinador):** OSV-Scanner ignora GHSA-g3hv-75wg-m249 hasta el 15/11/2026 (`osv-scanner.toml`). minimatch solo está en las herramientas de desarrollo (ESLint y Stryker), con patrones del repositorio, y no va en producción; el aviso se publicó el 30/10 y todavía no hay versión de ESLint que use la corregida.
+
+## Replanificación del Entregable 3 (02/11/2026, JG-32)
+
+- **Fechas de la fase final:** el Ing. Manuel Rojas fijó el 04/11 (entrega académica y prueba individual), el 09/11 (presentación previa con otro docente) y el 12/11 (entrega final a la empresa). Quedan en [16](16-arquitectura-y-tecnologia.md), decisión 90, y en [17](17-lineamientos-del-curso.md).
+- **Documentación sin depender de INCOVSA:** INCOVSA no entregó los accesos pedidos para el 28/10 (P-10, P-93 y P-94), y la reunión con el Ing. William del 03/11 no está confirmada. Por decisión del coordinador, la versión 1.0 de los documentos y anexos se arma con lo que el proyecto tiene hasta el 03/11, se integra a las 18:00 de ese día y se sube al portal el 04/11 antes de las 9:50. Lo que dependa de la reunión, del despliegue o de la capacitación va en la versión 1.1 del 12/11. Si no hay despliegue, la demostración es en local.
+- **Cambios pedidos por el docente:** banners de la misma altura en Quiénes somos, Industrias, Productos, Noticias y Contacto; la barra lateral de Productos igual a la de solo íconos de Industrias, con «Todas las industrias» (corregido el 03/11); y ningún texto ni elemento del prototipo que no deba ir en la aplicación final (JG-28). Se apartan del prototipo aprobado (decisión 89) por pedido del docente.
+- **Actas en el repositorio:** el coordinador subió `docs/Reuniones/` tal como está, con fotos y capturas de las reuniones, para que CE-09 complete el Documento 1. Se quita del repositorio antes de transferirlo a INCOVSA (CE-15); sigue en el historial de git, y el coordinador lo aceptó.
+
+## Cambios del Ing. Manuel Rojas en el sitio, el panel y el picking (02/11/2026, JG-28)
+
+- **Excepción a la decisión 89:** por pedido del docente, estos cambios se apartan del prototipo aprobado. Quedan en [05](05-sitio-web.md), «Cambios del Ing. Manuel Rojas».
+- **Banners:** los cinco banners de las secciones miden 440 px en escritorio, 380 px en tableta, 480 px de 481 a 720 px y 560 px en teléfono, con el contenido centrado. La altura la fija el banner más alto (Quiénes somos, con sus logotipos), que en tableta lleva los logotipos a la par del texto y más pequeños. Por debajo de 360 px de ancho, ese banner crece para no recortar su contenido.
+- **Barras laterales (corregido el 03/11):** la barra de Industrias se queda como la del prototipo, de solo íconos con el nombre en un globo (13/10), y la de **Productos pasa a ser esa misma barra**, con una opción más al principio, «Todas las industrias», con un ícono de cuadrícula. El globo muestra solo el nombre, sin número de productos. Junto a la barra, la rejilla del catálogo baja a 2 columnas en teléfono. Se quita el filtro «Industria por confirmar»: un producto sin industria solo aparece en «Todas las industrias». El 02/11 se había hecho al revés (Industrias igual a la lista de Productos, con ícono, nombre y número) por un error en las instrucciones; el coordinador lo corrigió el 03/11 y eligió el ícono de cuadrícula, el globo solo con el nombre y las 2 columnas en teléfono.
+- **Restos del prototipo:** se quitan «Imagen del valor pendiente de INCOVSA», «Industria por confirmar», «Por confirmar» (sitio y Catálogo del panel), «Imagen de la industria», el texto de ayuda «Texto pendiente de INCOVSA» del panel, los códigos «(P-92)» en Documentos y «(P-91)» en Facturación, y la instrucción «Las noticias se publican desde el panel del sitio…» de Noticias sin publicaciones. En el sitio, el dato que falta no se muestra; en el panel, la celda queda vacía.
+- **Se conservan (decisión del coordinador del 02/11):** el recuadro vacío de misión y visión sin imagen (decisión del 14/10) y las cinco tarjetas de los valores sin imagen, que ahora muestran solo su número.

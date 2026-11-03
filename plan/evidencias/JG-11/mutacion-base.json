@@ -1,0 +1,139 @@
+{
+  "ejecucion": "https://github.com/jordin-garcia/proyecto_incovsa/actions/runs/39737245993",
+  "commit": "35489875bfd092c01ffabd993fecb5003ffe8036",
+  "sha256Informe": "d3bd928aeb9e5e3a6be6ffc418896c03f397d56bf9a06e9b0caa5ba0f88c0a28",
+  "metricas": {
+    "pending": 0,
+    "killed": 918,
+    "timeout": 0,
+    "survived": 467,
+    "noCoverage": 129,
+    "runtimeErrors": 5,
+    "compileErrors": 0,
+    "ignored": 0,
+    "totalDetected": 918,
+    "totalUndetected": 596,
+    "totalCovered": 1385,
+    "totalValid": 1514,
+    "totalInvalid": 5,
+    "mutationScore": 60.634081902245704,
+    "totalMutants": 1519,
+    "mutationScoreBasedOnCoveredCode": 66.28158844765343
+  },
+  "umbral": 60,
+  "detectadosConPrueba": 918,
+  "archivos": [
+    {
+      "ruta": "src/modulos/bodega/acciones.ts",
+      "estados": {
+        "NoCoverage": 14,
+        "Killed": 20,
+        "Survived": 29
+      }
+    },
+    {
+      "ruta": "src/modulos/bodega/servicio.ts",
+      "estados": {
+        "NoCoverage": 10,
+        "Killed": 142,
+        "Survived": 89
+      }
+    },
+    {
+      "ruta": "src/modulos/conversion/servicio.ts",
+      "estados": {
+        "NoCoverage": 29,
+        "Killed": 131,
+        "Survived": 45
+      }
+    },
+    {
+      "ruta": "src/modulos/envios/acciones.ts",
+      "estados": {
+        "NoCoverage": 38,
+        "Killed": 32,
+        "Survived": 19
+      }
+    },
+    {
+      "ruta": "src/modulos/envios/estado-pedidos.ts",
+      "estados": {
+        "NoCoverage": 3
+      }
+    },
+    {
+      "ruta": "src/modulos/envios/opciones.ts",
+      "estados": {
+        "NoCoverage": 9,
+        "Survived": 129,
+        "Killed": 291
+      }
+    },
+    {
+      "ruta": "src/modulos/envios/servicio.ts",
+      "estados": {
+        "NoCoverage": 2,
+        "Killed": 77,
+        "Survived": 45
+      }
+    },
+    {
+      "ruta": "src/modulos/permisos/acciones.ts",
+      "estados": {
+        "NoCoverage": 1,
+        "Killed": 21,
+        "Survived": 12
+      }
+    },
+    {
+      "ruta": "src/modulos/permisos/navegacion.ts",
+      "estados": {
+        "NoCoverage": 23,
+        "Killed": 44,
+        "Survived": 56
+      }
+    },
+    {
+      "ruta": "src/modulos/envios/concurrencia.ts",
+      "estados": {
+        "Killed": 19,
+        "Survived": 8
+      }
+    },
+    {
+      "ruta": "src/modulos/envios/esquemas.ts",
+      "estados": {
+        "Survived": 12,
+        "Killed": 39,
+        "RuntimeError": 5
+      }
+    },
+    {
+      "ruta": "src/modulos/permisos/sede.ts",
+      "estados": {
+        "Killed": 9,
+        "Survived": 1
+      }
+    },
+    {
+      "ruta": "src/modulos/permisos/servicio.ts",
+      "estados": {
+        "Killed": 88,
+        "Survived": 9
+      }
+    },
+    {
+      "ruta": "src/modulos/bodega/esquemas.ts",
+      "estados": {
+        "Survived": 5
+      }
+    },
+    {
+      "ruta": "src/modulos/permisos/esquemas.ts",
+      "estados": {
+        "Survived": 8,
+        "Killed": 5
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 // Pruebas de integración del esquema, las migraciones y las semillas (JG-03), contra la base de pruebas.
 import { readFileSync } from "node:fs";
-import { verifyPassword } from "better-auth/crypto";
+import { verificarContrasena } from "../src/lib/contrasenas";
 import { beforeEach, describe, expect, it } from "vitest";
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -657,11 +657,13 @@ describe("semillas", () => {
       expect(administrativo.correo).toBe("ejemplo08@correo.com");
       expect(CUENTAS_DEMO).toHaveLength(11);
 
-      // La contraseña es la de CLAVE_DEMO, cifrada con la función de Better Auth
+      // La contraseña es la de CLAVE_DEMO, cifrada con la función común de scrypt (JG-26)
       const credencial = await prisma.cuenta.findFirstOrThrow({ where: { usuario: { username: "ambos.ejemplo.01" } } });
       expect(credencial.providerId).toBe("credential");
       expect(credencial.password).not.toContain(CLAVE_DEMO);
-      expect(await verifyPassword({ hash: credencial.password!, password: CLAVE_DEMO })).toBe(true);
+      // RNF-03 (V11.4.2): cifrada con la función común, no con el formato anterior de Better Auth.
+      expect(credencial.password!).toMatch(/^\$scrypt\$N=16384,r=8,p=5\$/);
+      expect(await verificarContrasena({ hash: credencial.password!, password: CLAVE_DEMO })).toBe(true);
     },
   );
 });

@@ -1,0 +1,16 @@
+{"level":"info","ts":1792802791.6607254,"msg":"maxprocs: Leaving GOMAXPROCS=4: CPU quota undefined"}
+{"level":"info","ts":1792802791.6607254,"msg":"GOMEMLIMIT is updated","GOMEMLIMIT":7652623564,"previous":9223372036854775807}
+{"level":"info","ts":1792802791.6607254,"msg":"using config from file","file":"C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\plan\\evidencias\\JG-24\\Caddyfile.pruebas"}
+{"level":"info","ts":1792802791.6612515,"msg":"adapted config to JSON","adapter":"caddyfile"}
+{"level":"warn","ts":1792802791.6620486,"logger":"admin","msg":"admin endpoint disabled"}
+{"level":"info","ts":1792802791.662583,"logger":"http.auto_https","msg":"automatic HTTPS is completely disabled for server","server_name":"srv0"}
+{"level":"info","ts":1792802791.6631284,"logger":"tls.cache.maintenance","msg":"started background certificate maintenance","cache":"0x4343afc7b80"}
+{"level":"warn","ts":1792802791.670448,"logger":"http","msg":"HTTP/2 skipped because it requires TLS","network":"tcp","addr":"127.0.0.1:3080"}
+{"level":"warn","ts":1792802791.670448,"logger":"http","msg":"HTTP/3 skipped because it requires TLS","network":"tcp","addr":"127.0.0.1:3080"}
+{"level":"info","ts":1792802791.670448,"logger":"http.log","msg":"server running","name":"srv0","protocols":["h1","h2","h3"]}
+{"level":"info","ts":1792802791.6776087,"msg":"autosaved config (load with --resume flag)","file":"C:\\Users\\Hecto\\AppData\\Roaming\\Caddy\\autosave.json"}
+{"level":"info","ts":1792802791.6776087,"msg":"serving initial configuration"}
+{"level":"info","ts":1792802791.6829972,"logger":"tls","msg":"cleaning storage unit","storage":"FileStorage:C:\\Users\\Hecto\\AppData\\Roaming\\Caddy"}
+{"level":"info","ts":1792802791.688237,"logger":"tls","msg":"finished cleaning storage units"}
+{"level":"error","ts":1792802792.4091253,"logger":"http.log.error","msg":"dial tcp 127.0.0.1:3100: connectex: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.","request":{"remote_ip":"127.0.0.1","remote_port":"53554","client_ip":"127.0.0.1","proto":"HTTP/1.1","method":"GET","host":"localhost:3080","uri":"/api/auth/sitio/get-session","headers":{"Accept":["*/*"],"Accept-Encoding":["gzip,deflate,br"],"Connection":["keep-alive"],"User-Agent":["Playwright/1.64.1 (x64; windows 10.0) node/24.13"]}},"duration":0.0211372,"status":502,"err_id":"axdni4dmn","err_trace":"reverseproxy.statusError (reverseproxy.go:1695)"}
+{"level":"error","ts":1792802793.4236994,"logger":"http.log.error","msg":"dial tcp 127.0.0.1:3100: connectex: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.","request":{"remote_ip":"127.0.0.1","remote_port":"53554","client_ip":"127.0.0.1","proto":"HTTP/1.1","method":"GET","host":"localhost:3080","uri":"/api/auth/sitio/get-session","headers":{"User-Agent":["Playwright/1.64.1 (x64; windows 10.0) node/24.13"],"Accept":["*/*"],"Accept-Encoding":["gzip,deflate,br"],"Connection":["keep-alive"]}},"duration":0.0023467,"status":502,"err_id":"jdyzn5682","err_trace":"reverseproxy.statusError (reverseproxy.go:1695)"}

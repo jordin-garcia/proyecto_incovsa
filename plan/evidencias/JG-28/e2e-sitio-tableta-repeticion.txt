@@ -1,0 +1,17 @@
+
+Running 1 test using 1 worker
+
+[1/1] [tableta] › pruebas-e2e\sitio\rendimiento-galerias.spec.ts:74:5 › RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respecto de una
+[tableta] › pruebas-e2e\sitio\rendimiento-galerias.spec.ts:74:5 › RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respecto de una
+▲ Next.js 16.4.3
+
+
+- Local:         http://127.0.0.1:3100
+- Network:       http://127.0.0.1:3100
+✓ Ready in 0ms
+
+
+✓ Running next.config took 45ms
+
+
+  1 passed (50.5s)

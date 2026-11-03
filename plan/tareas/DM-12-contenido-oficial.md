@@ -7,17 +7,17 @@ hito: entrega
 prioridad: P1
 estado: pendiente
 depende_de: [JG-19, DM-11]
-programada: 2026-11-02
+programada: 2026-11-08
 requisitos: [RF-SW-07]
 pantallas: []
 ---
 
 # DM-12 · Carga del contenido oficial de INCOVSA en producción
 
-**Responsable:** Daniela Marín · **Hito:** entrega · **Prioridad:** P1 · **Programada:** lun 02/11 · **Depende de:** JG-19, DM-11
+**Responsable:** Daniela Marín · **Hito:** entrega · **Prioridad:** P1 · **Programada:** dom 08/11 · **Depende de:** JG-19, DM-11
 
 ## Objetivo
-Cargar en producción, **desde el panel**, el contenido oficial que entregue INCOVSA, para la demostración final del 04/11 (specs/16, decisión 79).
+Cargar en producción, **desde el panel**, el contenido oficial que entregue INCOVSA, para las presentaciones del 09/11 y del 12/11 (specs/16, decisiones 79 y 90).
 
 ## Contexto que debes leer
 - `specs/19`: P-17 (productos públicos), P-18 (logotipo, colores y tipografía), P-19 (historia y valores), P-21 (industrias), P-22 (horarios), P-23 (noticias)

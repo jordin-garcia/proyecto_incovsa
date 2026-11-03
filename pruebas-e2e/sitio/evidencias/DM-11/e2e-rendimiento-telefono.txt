@@ -1,0 +1,28 @@
+
+> incovsa@0.1.0 e2e
+> playwright test pruebas-e2e/sitio/rendimiento-galerias.spec.ts --project telefono --workers 1
+
+[WebServer] (node:1820) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:35860) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] ⚠ Warning: Next.js ignored package-lock.json in C:\Users\danie because it is outside the current Git repository (C:\Users\danie\OneDrive\Escritorio\progra web\proyecto_incovsa).
+[WebServer]  To use this directory, set `turbopack.root` in your Next.js config.
+[WebServer] 
+[WebServer] (node:11748) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:19468) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:17152) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3100
+- Network:       http://127.0.0.1:3100
+✓ Ready in 0ms
+✓ Running next.config took 19ms
+  ok 1 [telefono] › pruebas-e2e\sitio\rendimiento-galerias.spec.ts:73:5 › RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respecto de una (10.6s)
+
+  1 passed (18.5s)

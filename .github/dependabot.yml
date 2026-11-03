@@ -3,7 +3,10 @@
 # .github/), y toda dependencia nueva o actualizada es una decisión suya (specs/16, decisión 66).
 # Esos PR fallan siempre en `titulo` (sin [ID]), `archivos-protegidos` (el autor es dependabot[bot]) y
 # `revision-claude` (los flujos de Dependabot no reciben CLAUDE_CODE_OAUTH_TOKEN): el coordinador los revisa y los
-# integra con `gh pr merge <n> --admin --squash`. Hasta JG-02 no hay package.json y el ecosistema npm da error.
+# integra con `gh pr merge <n> --admin --squash`.
+# (24/10) Las versiones menores y los parches llegan juntos en un solo PR por ecosistema; cada versión mayor, en su
+# propio PR. Se ignoran las mayores de `typescript` (TypeScript 7 quitó la API de JavaScript que usa
+# scripts/integridad-pruebas.mjs) y de `@types/node` (specs/16 fija Node.js 24, y sus tipos deben ser los de la 24).
 version: 2
 updates:
   - package-ecosystem: "npm"
@@ -13,6 +16,14 @@ updates:
       interval: "weekly"
       timezone: "America/Guatemala"
     open-pull-requests-limit: 5
+    groups:
+      menores-y-parches:
+        update-types: ["minor", "patch"]
+    ignore:
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: "github-actions"
     directory: "/"
     target-branch: "develop"
@@ -20,3 +31,6 @@ updates:
       interval: "weekly"
       timezone: "America/Guatemala"
     open-pull-requests-limit: 5
+    groups:
+      menores-y-parches:
+        update-types: ["minor", "patch"]

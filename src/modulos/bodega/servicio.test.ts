@@ -1,7 +1,9 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { prisma } from "@/lib/prisma";
 import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import { sembrarDemo } from "../../../prisma/semillas/demo";
+import { ErrorNegocio } from "@/lib/errores";
+import { ErrorAcceso } from "@/modulos/permisos/servicio";
 import {
   listarEnviosEnPreparacion,
   obtenerDetalleEnvio,
@@ -9,7 +11,10 @@ import {
   marcarTodasLineas,
   ordenarLineasPorPeso,
   despacharEnvio,
+  reordenarColaBodega,
+  reordenarLineasPreparacion,
 } from "./servicio";
+import { esquemaReordenarCola, esquemaReordenarLineas } from "./esquemas";
 
 describe("Módulo de Bodega - Servicio", () => {
   const clave = "Demo-12345";
@@ -464,5 +469,283 @@ describe("Módulo de Bodega - Servicio", () => {
     await expect(despacharEnvio({ envioId: envioSede2.id }, contextoSede1)).rejects.toThrow();
 
     await expect(obtenerDetalleEnvio(envioSede2.id, 1)).rejects.toThrow();
+
+    await expect(reordenarColaBodega({ envioIds: [envioSede2.id] }, contextoSede1)).rejects.toThrow();
+
+    await expect(
+      reordenarLineasPreparacion({ envioId: envioSede2.id, lineaIds: [envioSede2.lineas[0].id] }, contextoSede1),
+    ).rejects.toThrow();
   });
+
+  it("RN-17 / RF-SL-23 (auditoría H-22): un envío de la misma sede que ya salió de Bodega da un error de negocio, no de permisos", async () => {
+    const despachado = await crearEnvioDePrueba({
+      sedeId: 1,
+      tipo: "ruta",
+      numero: 7,
+      estadoNombre: "En Ruta",
+      lineas: [{ producto: "P1", lote: "L1", pesoConversionKg: 25, cantidadKg: 50, posicion: 1 }],
+    });
+    const envioSede2 = await crearEnvioDePrueba({
+      sedeId: 2,
+      tipo: "ruta",
+      numero: 8,
+      lineas: [{ producto: "P1", lote: "L1", pesoConversionKg: 25, cantidadKg: 50, posicion: 1 }],
+    });
+    const contexto = { usuarioId: usuarioBodegaId, sedeId: 1 };
+    const lineaId = despachado.lineas[0].id;
+    const operaciones = (envio: typeof despachado) => [
+      () => marcarLinea({ envioId: envio.id, lineaId: envio.lineas[0].id, marcado: true }, contexto),
+      () => marcarTodasLineas({ envioId: envio.id, marcado: true }, contexto),
+      () => ordenarLineasPorPeso({ envioId: envio.id }, contexto),
+      () => despacharEnvio({ envioId: envio.id }, contexto),
+      () => reordenarColaBodega({ envioIds: [envio.id] }, contexto),
+      () => reordenarLineasPreparacion({ envioId: envio.id, lineaIds: [envio.lineas[0].id] }, contexto),
+    ];
+
+    for (const operar of operaciones(despachado)) {
+      const error = await operar().catch((e: unknown) => e);
+      expect(error).toBeInstanceOf(ErrorNegocio);
+      expect(error).not.toBeInstanceOf(ErrorAcceso);
+      expect((error as Error).message).toBe("El pedido ya no está en preparación.");
+    }
+    // Otra sede sigue respondiendo como sin permiso, sin revelar el envío (RN-17).
+    for (const operar of operaciones(envioSede2)) {
+      await expect(operar()).rejects.toBeInstanceOf(ErrorAcceso);
+    }
+    // Nada cambió en el envío despachado.
+    const linea = await prisma.lineaPreparacion.findUniqueOrThrow({ where: { id: lineaId } });
+    expect(linea.marcado).toBe(false);
+  });
+
+  it("RN-01 (auditoría H-16): el Detalle entrega las cantidades como texto exacto, nunca como Number", async () => {
+    const envio = await crearEnvioDePrueba({
+      pedidosFacturados: [
+        {
+          numeroOdoo: "90021",
+          cliente: "Cliente 1",
+          sector: "Sector 1",
+          posicion: 1,
+          detalles: [{ producto: "P1", lote: "L1", pesoConversionKg: 25, cantidadKg: 60.125, orden: 1 }],
+        },
+      ],
+    });
+    const detalle = await obtenerDetalleEnvio(envio.id, 1);
+    const linea = detalle.pedidosFacturados[0].lineas[0];
+    expect(typeof linea.cantidadKg).toBe("string");
+    expect(typeof linea.pesoConversionKg).toBe("string");
+    expect(linea.cantidadKg).toBe("60.125");
+  });
+
+  it("RF-SL-20 / RN-28: reordenar la cola de rutas y pedidos guarda solo el orden actual sin historial ni bitácora", async () => {
+    const envio1 = await crearEnvioDePrueba({
+      sedeId: 1,
+      tipo: "ruta",
+      numero: 1,
+      posicionCola: 1,
+      lineas: [{ producto: "P1", lote: "L1", pesoConversionKg: 25, cantidadKg: 50, posicion: 1 }],
+    });
+    const envio2 = await crearEnvioDePrueba({
+      sedeId: 1,
+      tipo: "pedido",
+      numero: 2,
+      posicionCola: 2,
+      lineas: [{ producto: "P2", lote: "L2", pesoConversionKg: 25, cantidadKg: 30, posicion: 1 }],
+    });
+    const envio3 = await crearEnvioDePrueba({
+      sedeId: 1,
+      tipo: "ruta",
+      numero: 3,
+      posicionCola: 3,
+      lineas: [{ producto: "P3", lote: "L3", pesoConversionKg: 25, cantidadKg: 40, posicion: 1 }],
+    });
+
+    const contexto = { usuarioId: usuarioBodegaId, sedeId: 1 };
+
+    // Invertir orden: 3, 1, 2
+    const res = await reordenarColaBodega({ envioIds: [envio3.id, envio1.id, envio2.id] }, contexto);
+    expect(res.envioIds).toEqual([envio3.id, envio1.id, envio2.id]);
+
+    const lista = await listarEnviosEnPreparacion(1);
+    expect(lista.map((e) => e.id)).toEqual([envio3.id, envio1.id, envio2.id]);
+
+    // RN-28: No queda en historial ni en bitácora
+    const historiales = await prisma.historialEstado.findMany({
+      where: { envioId: { in: [envio1.id, envio2.id, envio3.id] } },
+    });
+    expect(historiales).toHaveLength(0);
+
+    const bitacoras = await prisma.bitacora.findMany({
+      where: { registroId: { in: [String(envio1.id), String(envio2.id), String(envio3.id)] } },
+    });
+    expect(bitacoras).toHaveLength(0);
+  });
+
+  it("RF-SL-20 / RN-28: reordenar las filas de un envío guarda solo el orden actual sin historial ni bitácora", async () => {
+    const envio = await crearEnvioDePrueba({
+      sedeId: 1,
+      tipo: "ruta",
+      numero: 1,
+      posicionCola: 1,
+      lineas: [
+        { producto: "A", lote: "L1", pesoConversionKg: 25, cantidadKg: 10, posicion: 1 },
+        { producto: "B", lote: "L2", pesoConversionKg: 25, cantidadKg: 20, posicion: 2 },
+        { producto: "C", lote: "L3", pesoConversionKg: 25, cantidadKg: 30, posicion: 3 },
+      ],
+    });
+
+    const l1 = envio.lineas[0].id;
+    const l2 = envio.lineas[1].id;
+    const l3 = envio.lineas[2].id;
+
+    const contexto = { usuarioId: usuarioBodegaId, sedeId: 1 };
+
+    // Reordenar a: l2, l3, l1
+    const res = await reordenarLineasPreparacion({ envioId: envio.id, lineaIds: [l2, l3, l1] }, contexto);
+    expect(res.lineaIds).toEqual([l2, l3, l1]);
+
+    const lineasActualizadas = await prisma.lineaPreparacion.findMany({
+      where: { envioId: envio.id },
+      orderBy: { posicion: "asc" },
+    });
+    expect(lineasActualizadas.map((l) => l.id)).toEqual([l2, l3, l1]);
+    expect(lineasActualizadas.map((l) => l.posicion)).toEqual([1, 2, 3]);
+
+    // RN-28: No genera bitácora ni historial
+    const bitacoras = await prisma.bitacora.findMany({
+      where: { registroId: String(envio.id) },
+    });
+    expect(bitacoras).toHaveLength(0);
+  });
+
+  it("RNF-05: una lista con un identificador repetido se rechaza y no cambia ninguna posición", async () => {
+    const envio = await crearEnvioDePrueba({
+      sedeId: 1,
+      tipo: "ruta",
+      numero: 901,
+      posicionCola: 1,
+      lineas: [
+        { producto: "Prod A", lote: "L1", pesoConversionKg: 25, cantidadKg: 10, posicion: 1 },
+        { producto: "Prod B", lote: "L2", pesoConversionKg: 25, cantidadKg: 20, posicion: 2 },
+        { producto: "Prod C", lote: "L3", pesoConversionKg: 25, cantidadKg: 30, posicion: 3 },
+      ],
+    });
+
+    const l1 = envio.lineas[0].id;
+    const l2 = envio.lineas[1].id;
+    const l3 = envio.lineas[2].id;
+    const contexto = { usuarioId: usuarioBodegaId, sedeId: 1 };
+
+    // Lista con identificador repetido (l1 repetido dos veces, longitud igual a 3)
+    await expect(reordenarLineasPreparacion({ envioId: envio.id, lineaIds: [l1, l1, l3] }, contexto)).rejects.toThrow();
+
+    // Comprobar que no cambió ninguna posición
+    const lineasSinCambio = await prisma.lineaPreparacion.findMany({
+      where: { envioId: envio.id },
+      orderBy: { id: "asc" },
+    });
+    expect(lineasSinCambio.find((l) => l.id === l1)?.posicion).toBe(1);
+    expect(lineasSinCambio.find((l) => l.id === l2)?.posicion).toBe(2);
+    expect(lineasSinCambio.find((l) => l.id === l3)?.posicion).toBe(3);
+  });
+
+  it("RNF-05: una lista con todas las líneas del envío, cada una una vez, se sigue aceptando", async () => {
+    const envio = await crearEnvioDePrueba({
+      sedeId: 1,
+      tipo: "ruta",
+      numero: 902,
+      posicionCola: 1,
+      lineas: [
+        { producto: "Prod A", lote: "L1", pesoConversionKg: 25, cantidadKg: 10, posicion: 1 },
+        { producto: "Prod B", lote: "L2", pesoConversionKg: 25, cantidadKg: 20, posicion: 2 },
+        { producto: "Prod C", lote: "L3", pesoConversionKg: 25, cantidadKg: 30, posicion: 3 },
+      ],
+    });
+
+    const l1 = envio.lineas[0].id;
+    const l2 = envio.lineas[1].id;
+    const l3 = envio.lineas[2].id;
+    const contexto = { usuarioId: usuarioBodegaId, sedeId: 1 };
+
+    const res = await reordenarLineasPreparacion({ envioId: envio.id, lineaIds: [l3, l1, l2] }, contexto);
+    expect(res.lineaIds).toEqual([l3, l1, l2]);
+
+    const lineasActualizadas = await prisma.lineaPreparacion.findMany({
+      where: { envioId: envio.id },
+      orderBy: { posicion: "asc" },
+    });
+    expect(lineasActualizadas.map((l) => l.id)).toEqual([l3, l1, l2]);
+    expect(lineasActualizadas.map((l) => l.posicion)).toEqual([1, 2, 3]);
+  });
+
+  it("RNF-05: esquemaReordenarLineas rechaza una lista con identificadores repetidos", () => {
+    const res = esquemaReordenarLineas.safeParse({ envioId: 1, lineaIds: [10, 10] });
+    expect(res.success).toBe(false);
+  });
+
+  it("RNF-05: esquemaReordenarCola rechaza una lista con identificadores repetidos", () => {
+    const res = esquemaReordenarCola.safeParse({ envioIds: [1, 1] });
+    expect(res.success).toBe(false);
+  });
+
+  it.each([
+    {
+      operacion: "ordenarLineasPorPeso",
+      ejecutar: (envioId: number, _lIds: number[], ctx: { usuarioId: string; sedeId: number }) =>
+        ordenarLineasPorPeso({ envioId }, ctx),
+    },
+    {
+      operacion: "reordenarLineasPreparacion",
+      ejecutar: (envioId: number, lIds: number[], ctx: { usuarioId: string; sedeId: number }) =>
+        reordenarLineasPreparacion({ envioId, lineaIds: [lIds[2], lIds[0], lIds[1]] }, ctx),
+    },
+  ])(
+    "H-74: en $operacion, si el envío deja de estar En Preparación durante la operación, la transacción interactiva revierte y no queda ningún cambio guardado",
+    async ({ ejecutar }) => {
+      const envio = await crearEnvioDePrueba({
+        sedeId: 1,
+        tipo: "ruta",
+        numero: Math.floor(Math.random() * 100000) + 100,
+        posicionCola: 1,
+        lineas: [
+          { producto: "Prod A", lote: "L1", pesoConversionKg: 25, cantidadKg: 10, posicion: 1 },
+          { producto: "Prod B", lote: "L2", pesoConversionKg: 25, cantidadKg: 20, posicion: 2 },
+          { producto: "Prod C", lote: "L3", pesoConversionKg: 25, cantidadKg: 30, posicion: 3 },
+        ],
+      });
+
+      const l1 = envio.lineas[0].id;
+      const l2 = envio.lineas[1].id;
+      const l3 = envio.lineas[2].id;
+      const contexto = { usuarioId: usuarioBodegaId, sedeId: 1 };
+      const estadoDespachado = await prisma.estadoEnvio.findUniqueOrThrow({ where: { nombre: "Despachado" } });
+
+      const txOriginal = prisma.$transaction.bind(prisma);
+      vi.spyOn(prisma, "$transaction").mockImplementationOnce(async (callback: unknown) => {
+        return txOriginal(async (tx) => {
+          // En la transacción interactiva modificamos una línea
+          await tx.lineaPreparacion.update({
+            where: { id: l1 },
+            data: { posicion: 99 },
+          });
+          // Otra pantalla despacha el envío en paralelo antes de completar los updates
+          await prisma.envio.update({
+            where: { id: envio.id },
+            data: { estadoId: estadoDespachado.id },
+          });
+          return (callback as (txClient: typeof tx) => Promise<unknown>)(tx);
+        });
+      });
+
+      await expect(ejecutar(envio.id, [l1, l2, l3], contexto)).rejects.toThrow("El pedido ya no está en preparación.");
+
+      // Comprobar que ninguna posición cambió y el cambio en la transacción (posicion: 99) revirtió:
+      const lineasDespues = await prisma.lineaPreparacion.findMany({
+        where: { envioId: envio.id },
+        orderBy: { id: "asc" },
+      });
+      expect(lineasDespues.find((l) => l.id === l1)?.posicion).toBe(1);
+      expect(lineasDespues.find((l) => l.id === l2)?.posicion).toBe(2);
+      expect(lineasDespues.find((l) => l.id === l3)?.posicion).toBe(3);
+    },
+  );
 });

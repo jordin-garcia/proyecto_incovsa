@@ -32,7 +32,10 @@ export async function leerSesion(
     query: { disableRefresh: !renovar },
     returnHeaders: true,
   });
-  const vacia = { sesion: null, cabeceras: respuesta };
+  // Sin sesión válida no se reenvía ningún Set-Cookie (JG-26). Better Auth borraría la cookie por su nombre, y si
+  // la petición llevaba la sesión anterior que se cerró al volver a entrar (V7.2.4), esa respuesta podría llegar
+  // después de la cookie nueva y cerrar la sesión recién iniciada. Una cookie vencida no da acceso a nada.
+  const vacia = { sesion: null, cabeceras: new Headers() };
   if (!sesion) return vacia;
   const u = await prisma.usuario.findUnique({
     where: { id: sesion.user.id },

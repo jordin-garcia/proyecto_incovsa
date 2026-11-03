@@ -73,6 +73,12 @@
   align-items: center;
 }
 
+/* «Programada …» en verde y negrita (estilos.css:959, auditoría H-18). */
+.ped-meta .prog {
+  color: var(--v700);
+  font-weight: 700;
+}
+
 .ped-avance {
   margin-left: auto;
   min-width: 190px;
@@ -84,12 +90,22 @@
   font-weight: 600;
 }
 
+/* En el teléfono, el avance de cada tarjeta ocupa todo el ancho (estilos.css:659, auditoría H-19). */
+@media (max-width: 720px) {
+  .ped-avance {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+/* Igual que estilos.css:960 (auditoría H-20). */
 .ped-herr {
   display: flex;
-  gap: 10px;
-  padding: 14px 22px;
-  border-bottom: 1px solid var(--g100);
+  gap: 8px;
   flex-wrap: wrap;
+  padding: 12px 22px;
+  border-bottom: 1px solid var(--g100);
+  background: var(--color-blanco);
 }
 
 .ped-pie {
@@ -190,12 +206,11 @@ tr.lista .kg {
   font-size: 15px;
 }
 
+/* Cada pedido facturado se ve completo; la ventana es la que se desplaza (specs/07, auditoría H-21). */
 .det-grupos {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  max-height: 60vh;
-  overflow-y: auto;
 }
 
 .det-g {

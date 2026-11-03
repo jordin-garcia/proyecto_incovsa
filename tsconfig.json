@@ -23,5 +23,13 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", ".next/dev/types/**/*.ts", "**/*.mts"],
-  "exclude": ["node_modules", "entregable-*", "docs", "docs_incovsa", "research_notes"]
+  "exclude": [
+    "node_modules",
+    "entregable-*",
+    "docs",
+    "docs_incovsa",
+    "research_notes",
+    ".stryker-tmp",
+    "reports/mutation"
+  ]
 }

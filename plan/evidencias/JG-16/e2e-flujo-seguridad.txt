@@ -1,0 +1,128 @@
+
+Running 24 tests using 1 worker
+
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3100
+- Network:       http://127.0.0.1:3100
+✓ Ready in 0ms
+✓ Running next.config took 33ms
+(node:15236) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+  ok  1 [telefono] › pruebas-e2e\flujo\flujo-completo.spec.ts:193:5 › RN-11 / RN-52 / RN-29 / RF-SL-16 / RF-SL-24 / RF-SL-29 / RF-SL-37 / RF-SL-38 / RNF-06: flujo completo de un pedido facturado hasta el reporte (18.2s)
+  ok  2 [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:85:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión (3.3s)
+  ok  3 [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:116:7 › RNF-13: avisos de cambios por sede › RNF-13: al cortar SSE consulta cada 5 segundos, apaga En vivo y se reconecta sola (12.8s)
+  ok  4 [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:147:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede (291ms)
+Error inesperado en una acción del servidor: Error [ZodError]: [
+  {
+    "expected": "string",
+    "code": "invalid_type",
+    "path": [
+      "sede"
+    ],
+    "message": "Invalid input: expected string, received undefined"
+  },
+  {
+    "code": "invalid_value",
+    "values": [
+      "facturacion",
+      "bodega",
+      "tablero",
+      "ruta",
+      "reportes",
+      "configuracion"
+    ],
+    "path": [
+      "modulo"
+    ],
+    "message": "Invalid option: expected one of \"facturacion\"|\"bodega\"|\"tablero\"|\"ruta\"|\"reportes\"|\"configuracion\""
+  }
+]
+    at c (<repo>\.next\standalone\.next\server\chunks\_1nbnlp2k2vxpk._.js:1:6504)
+  ok  5 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:4:5 › RNF-16: páginas, errores, redirecciones, API y recursos envían las cabeceras de seguridad (308ms)
+  ok  6 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:20:5 › RNF-16: el navegador admite Google Maps y Drive, y rechaza marcos de otros orígenes (764ms)
+  ok  7 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:49:5 › RNF-16: otro sitio no puede insertar la aplicación dentro de un marco (237ms)
+  ok  8 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:66:5 › RNF-16: cada respuesta tiene su nonce y los scripts en línea ajenos quedan bloqueados (656ms)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3101
+- Network:       http://127.0.0.1:3101
+✓ Ready in 0ms
+✓ Running next.config took 29ms
+(node:5000) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+  ok  9 [tableta] › pruebas-e2e\flujo\flujo-completo.spec.ts:193:5 › RN-11 / RN-52 / RN-29 / RF-SL-16 / RF-SL-24 / RF-SL-29 / RF-SL-37 / RF-SL-38 / RNF-06: flujo completo de un pedido facturado hasta el reporte (19.7s)
+  ok 10 [tableta] › pruebas-e2e\flujo\tiempo-real.spec.ts:85:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión (3.5s)
+  ok 11 [tableta] › pruebas-e2e\flujo\tiempo-real.spec.ts:116:7 › RNF-13: avisos de cambios por sede › RNF-13: al cortar SSE consulta cada 5 segundos, apaga En vivo y se reconecta sola (13.3s)
+  ok 12 [tableta] › pruebas-e2e\flujo\tiempo-real.spec.ts:147:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede (266ms)
+Error inesperado en una acción del servidor: Error [ZodError]: [
+  {
+    "expected": "string",
+    "code": "invalid_type",
+    "path": [
+      "sede"
+    ],
+    "message": "Invalid input: expected string, received undefined"
+  },
+  {
+    "code": "invalid_value",
+    "values": [
+      "facturacion",
+      "bodega",
+      "tablero",
+      "ruta",
+      "reportes",
+      "configuracion"
+    ],
+    "path": [
+      "modulo"
+    ],
+    "message": "Invalid option: expected one of \"facturacion\"|\"bodega\"|\"tablero\"|\"ruta\"|\"reportes\"|\"configuracion\""
+  }
+]
+    at c (<repo>\.next\standalone\.next\server\chunks\_1nbnlp2k2vxpk._.js:1:6504)
+  ok 13 [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:4:5 › RNF-16: páginas, errores, redirecciones, API y recursos envían las cabeceras de seguridad (205ms)
+  ok 14 [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:20:5 › RNF-16: el navegador admite Google Maps y Drive, y rechaza marcos de otros orígenes (870ms)
+  ok 15 [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:49:5 › RNF-16: otro sitio no puede insertar la aplicación dentro de un marco (270ms)
+  ok 16 [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:66:5 › RNF-16: cada respuesta tiene su nonce y los scripts en línea ajenos quedan bloqueados (707ms)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3102
+- Network:       http://127.0.0.1:3102
+✓ Ready in 0ms
+✓ Running next.config took 29ms
+(node:12268) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+  ok 17 [escritorio] › pruebas-e2e\flujo\flujo-completo.spec.ts:193:5 › RN-11 / RN-52 / RN-29 / RF-SL-16 / RF-SL-24 / RF-SL-29 / RF-SL-37 / RF-SL-38 / RNF-06: flujo completo de un pedido facturado hasta el reporte (22.7s)
+  ok 18 [escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:85:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión (3.5s)
+  ok 19 [escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:116:7 › RNF-13: avisos de cambios por sede › RNF-13: al cortar SSE consulta cada 5 segundos, apaga En vivo y se reconecta sola (13.2s)
+  ok 20 [escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:147:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede (318ms)
+Error inesperado en una acción del servidor: Error [ZodError]: [
+  {
+    "expected": "string",
+    "code": "invalid_type",
+    "path": [
+      "sede"
+    ],
+    "message": "Invalid input: expected string, received undefined"
+  },
+  {
+    "code": "invalid_value",
+    "values": [
+      "facturacion",
+      "bodega",
+      "tablero",
+      "ruta",
+      "reportes",
+      "configuracion"
+    ],
+    "path": [
+      "modulo"
+    ],
+    "message": "Invalid option: expected one of \"facturacion\"|\"bodega\"|\"tablero\"|\"ruta\"|\"reportes\"|\"configuracion\""
+  }
+]
+    at c (<repo>\.next\standalone\.next\server\chunks\_1nbnlp2k2vxpk._.js:1:6504)
+  ok 21 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:4:5 › RNF-16: páginas, errores, redirecciones, API y recursos envían las cabeceras de seguridad (177ms)
+  ok 22 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:20:5 › RNF-16: el navegador admite Google Maps y Drive, y rechaza marcos de otros orígenes (921ms)
+  ok 23 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:49:5 › RNF-16: otro sitio no puede insertar la aplicación dentro de un marco (230ms)
+  ok 24 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:66:5 › RNF-16: cada respuesta tiene su nonce y los scripts en línea ajenos quedan bloqueados (750ms)
+
+  24 passed (2.5m)

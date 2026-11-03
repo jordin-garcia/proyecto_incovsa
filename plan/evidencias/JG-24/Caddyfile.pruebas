@@ -1,0 +1,15 @@
+{
+	admin off
+	auto_https off
+}
+
+http://localhost:3080 {
+	bind 127.0.0.1
+	request_body {
+		max_size 27MB
+	}
+	reverse_proxy 127.0.0.1:3100 {
+		header_up X-Real-IP {remote_host}
+		flush_interval -1
+	}
+}

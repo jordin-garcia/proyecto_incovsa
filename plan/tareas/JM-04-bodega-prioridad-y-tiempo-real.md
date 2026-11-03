@@ -5,7 +5,7 @@ persona: josue
 responsable: Josué Menéndez
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JM-03, JG-10]
 programada: 2026-10-20
 requisitos: [RF-SL-20, RF-SL-23, RN-28, RNF-13, CU-03]
@@ -56,3 +56,21 @@ npm run e2e -- pruebas-e2e/picking/bodega-tiempo-real.spec.ts
 
 ## Fuera de alcance
 - El tablero en pantalla completa (JM-05).
+
+## Resultado
+- **Implementación**:
+  - `src/modulos/bodega/esquemas.ts`: Esquemas Zod `esquemaReordenarCola` y `esquemaReordenarLineas` para validar listas de IDs de envíos y filas.
+  - `src/modulos/bodega/servicio.ts`: Funciones `reordenarColaBodega` y `reordenarLineasPreparacion` que actualizan posiciones enteras (`posicionCola` y `posicion`, decisión 57) mediante transacciones de Prisma con verificación estricta de pertenencia a la sede y estado "En Preparación". Cumple RN-28: no registra historial ni entradas en la bitácora.
+  - `src/modulos/bodega/acciones.ts`: Server Actions `reordenarColaAccion` y `reordenarLineasAccion` protegidas con `exigirPermiso(sesion, "pk.bodega", sede.id)`, parseo Zod y notificación reactiva con `avisarCambio(sede.id)` para actualizar otras pantallas en tiempo real por SSE.
+  - `src/componentes/picking/bodega/BodegaCliente.tsx`: Integración de `useOptimistic` (React 19, decisión 40) para respuesta inmediata en la pantalla del operador al marcar líneas y reordenar cola/líneas. Implementación de `DndContext` y `SortableContext` para la lista de tarjetas con sensores de Mouse, Touch (`delay: 380, tolerance: 8`) y Keyboard (`sortableKeyboardCoordinates`).
+  - `src/componentes/picking/bodega/TarjetaEnvio.tsx`: Tarjeta sortable mediante `useSortable` con handle de arrastre accesible en `.asa-ped`. Tabla interna de preparación con sortable para filas (`FilaPreparacion`) y handle en `.asa`, con `DndContext` colocado externamente a la tabla para evitar anidación inválida en el DOM y garantizar accesibilidad.
+- **Verificación**:
+  - `npm run verificar` aprobado: formato con Prettier, lint con ESLint, tipos con TypeScript (`tsc --noEmit`) y 33 suites (310 pruebas) en Vitest con 100% de éxito.
+  - `npm run build` aprobado: generación estática y bundles optimizados de producción con Turbopack.
+  - `npm run e2e -- pruebas-e2e/picking/bodega-tiempo-real.spec.ts` aprobado: 9 pruebas en Playwright en teléfono, tableta y escritorio utilizando dos contextos de navegador independientes, validando actualización en tiempo real mediante SSE sin recarga, respuesta inmediata optimista, arrastre con mouse, dedo y teclado, y cero violaciones graves de accesibilidad con axe.
+
+### Correcciones de la auditoría (2026-10-22)
+
+H-24 (JG-23): las acciones de `BodegaCliente.tsx` pasan por `operar()`, que captura el rechazo del servidor y la falla de red, deja que `useOptimistic` vuelva atrás y muestra el mensaje; el Detalle y el despacho también capturan la falla de red. Lo prueba `bodega.spec.ts` con `route.abort()`.
+
+H-25 y H-26 (JG-23): CP-37 mide RNF-13 desde la publicación del aviso (`esperarPublicacion`), como JG-10; cambia el estado del envío con `pg.Client` en el mismo proceso, lo restaura solo si cambió, llama a tsx sin npx y ya no tiene el desfase fijo. Mismos escenarios y límite de 2 s. En el teléfono, la prueba de la cola reordena con el teclado porque la primera tarjeta mide más que la pantalla y el mouse no alcanza las dos asas.

@@ -4,7 +4,7 @@ Al resolver un pendiente: se actualiza el archivo afectado, se registra en [18-h
 
 **Prioridad:** P1 = bloquea el diseño de la base de datos o el desarrollo; P2 = antes del Entregable 3 (04/11) y necesario para desarrollar; P3 = antes del Entregable 3 (04/11).
 
-Las dudas sobre los cambios de la reunión 5 (13/10/2026) las resolvió el coordinador el 14/10/2026 ([18-historial-de-decisiones.md](18-historial-de-decisiones.md)). El 16/10/2026 se resolvió P-58, se agregaron P-93 a P-96 y se resolvieron P-95 y P-96. Con el plan de desarrollo (`plan/`) se resolvió P-40 y se agregó P-97, que se resolvió el 17/10.
+Las dudas sobre los cambios de la reunión 5 (13/10/2026) las resolvió el coordinador el 14/10/2026 ([18-historial-de-decisiones.md](18-historial-de-decisiones.md)). El 16/10/2026 se resolvió P-58, se agregaron P-93 a P-96 y se resolvieron P-95 y P-96. Con el plan de desarrollo (`plan/`) se resolvió P-40 y se agregó P-97, que se resolvió el 17/10. El 24/10 se agregó P-98 (DM-08), que se resolvió el 29/10 (JG-15).
 
 ## Con INCOVSA
 

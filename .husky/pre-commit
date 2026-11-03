@@ -1,3 +1,8 @@
 npm run formato
 npm run lint
 npm run tipos
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks git --staged --redact --no-banner
+else
+  echo "Aviso: instale gitleaks (plan/instalacion.md §2) para comprobar secretos antes del commit."
+fi

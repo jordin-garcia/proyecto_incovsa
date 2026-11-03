@@ -57,7 +57,7 @@ El sistema se implementa y se prueba **solo con Quetzaltenango** (ubicaciones de
 |---|---|---|
 | Lunes 21/09/2026 | **Entregable 1.** Definición, análisis y diseño inicial. Se presenta en clase | 10 puntos |
 | Miércoles 14/10/2026 | **Entregable 2.** Avance funcional y documentación técnica. Se presenta solo al Ing. Manuel Rojas, no en clase (12/10). **(16/10)** El avance funcional con la aplicación real se presenta el **lunes 19/10/2026**, y queda terminado el domingo 18/10 | 10 puntos |
-| Miércoles 04/11/2026 | **Entregable 3.** Entrega final con el sistema desplegado. Se presenta en clase. **(16/10)** El desarrollo queda completo y se despliega el lunes 02/11, y la capacitación es el martes 03/11 ([16](16-arquitectura-y-tecnologia.md), decisión 72) | 30 puntos |
+| 04/11, 09/11 y 12/11/2026 | **Entregable 3 (fase final).** **(02/11)** El miércoles 04/11, antes de las 9:50, entrega académica (sistema funcional y desplegado, repositorio actualizado y documentación también en el portal del curso) y prueba individual de conocimientos; el lunes 09/11, presentación previa de 8 minutos con otro docente; el jueves 12/11, entrega final a la empresa. Si INCOVSA no entrega los accesos a tiempo, la demostración es en local ([16](16-arquitectura-y-tecnologia.md), decisión 90) | 30 puntos (10 por fecha) |
 
 Lo que exige cada entregable está en [17-lineamientos-del-curso.md](17-lineamientos-del-curso.md).
 

@@ -1,0 +1,20 @@
+
+Running 11 tests using 1 worker
+
+  ok  1 [escritorio] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:24:5 › RF-SW-07 / RN-56: guardar descripción y galería publica la industria sin perder los datos anteriores (12.9s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+  ok  2 [escritorio] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:87:5 › RF-SW-07 / RNF-08: industrias y catálogo conservan estructura y accesibilidad (13.0s)
+  ok  3 [escritorio] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:119:5 › RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes de eliminar (12.3s)
+  ok  4 [escritorio] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:158:5 › RF-SW-23: impide cerrar el editor mientras se publica y conserva el borrador si falla (5.4s)
+  ok  5 [escritorio] › pruebas-e2e\panel\solicitudes.spec.ts:68:1 › RF-SW-20 / CP-63 / RNF-08: filtros, estados libres, responsable y edición del comentario accesibles (18.5s)
+  ok  6 [escritorio] › pruebas-e2e\panel\solicitudes.spec.ts:127:1 › RF-SW-31 / CP-59: indicador normal y reducido baja al abrir una solicitud (4.1s)
+  ok  7 [escritorio] › pruebas-e2e\panel\solicitudes.spec.ts:145:1 › RNF-04 / RF-SW-20: solo lectura sin gestionar y sección ausente sin permisos (4.6s)
+  ok  8 [escritorio] › pruebas-e2e\panel\usuarios.spec.ts:30:7 › Panel: usuarios del sitio › RF-SW-13: Gerencia crea un usuario con solo sit.doc.ver y ese usuario solo ve la documentación (7.3s)
+  ok  9 [escritorio] › pruebas-e2e\panel\usuarios.spec.ts:80:7 › Panel: usuarios del sitio › RF-SW-11 / RN-47: restablecer la contraseña no ofrece correo y la nueva clave entra (7.5s)
+  ok 10 [escritorio] › pruebas-e2e\panel\usuarios.spec.ts:116:7 › Panel: usuarios del sitio › RF-SW-11: ¿Olvidó su contraseña? del sitio pide a Gerencia o a Soporte (4.5s)
+  ok 11 [escritorio] › pruebas-e2e\panel\usuarios.spec.ts:131:7 › Panel: usuarios del sitio › criterio 5: la lista y el alta no tienen violaciones serias de axe (6.0s)
+
+  11 passed (1.8m)

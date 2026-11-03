@@ -47,7 +47,10 @@ Usuarios del picking con permiso sobre Facturación, en las sedes que tengan asi
 6. Si una línea de una referencia "Hecho" trae una **cantidad** vacía, no numérica o menor o igual a 0, ese pedido facturado **no se carga** y se avisa en el resumen de la carga (12/10).
 7. Si una línea de una referencia "Hecho" trae un **Peso de Conversión** vacío, no numérico o menor o igual a 0, ese pedido facturado **no se carga** y se avisa en el resumen de la carga (decisión del coordinador del 14/10, RN-50). En el archivo de ejemplo, 82 de las 205 líneas de referencias "Hecho" traen el peso en 0, en 46 de los 79 pedidos facturados.
 8. El archivo se rechaza si pesa más de 2 MB (12/10). La librería y las medidas de seguridad están en [16](16-arquitectura-y-tecnologia.md).
-9. **No se valida nada más** (13/10): el producto, el lote, el cliente y el sector se toman tal como vienen. No hay ventanas para agregar productos o clientes que falten, porque el sistema ya no tiene esos catálogos.
+   - **(29/10, JG-15, ASVS V5.2.3)** Como el .xlsx es un ZIP, antes de leerlo con SheetJS también se rechaza si tiene más de **100 archivos internos** o si, descomprimido, pasa de **50 MB** en total. Si la primera hoja tiene más de **20 000 filas**, también se rechaza. Así, un archivo pequeño y muy comprimido no puede llenar la memoria del servidor. El archivo de ejemplo tiene 10 archivos internos y 80 KB descomprimido.
+   - **(29/10, JG-15, RNF-05)** Los textos de cada columna se validan con el mismo largo máximo que tienen en la base de datos: referencia 40, número 20, cliente, sector y producto 200, y lote 40.
+   - En los dos casos se muestra el mensaje que ya existe: «No se pudo leer el archivo. Verifique que sea el .xlsx exportado de Odoo.»
+9. **No se valida nada más** (13/10): el producto, el lote, el cliente y el sector se toman tal como vienen, aparte de los largos máximos del paso 8 (29/10). No hay ventanas para agregar productos o clientes que falten, porque el sistema ya no tiene esos catálogos.
 
 ### Columnas que se usan
 
@@ -90,7 +93,8 @@ No se valida si una referencia ya se cargó antes: no puede pasar, porque los da
 - Muestra los pedidos facturados que **todavía no están en ninguna opción de envío**.
 - **Se guarda en la base de datos**: si el facturador cierra la sesión, o entra otro facturador de la misma sede, el tablero sigue igual.
 - **Dos facturadores en la misma sede (16/10):** el servidor valida cada movimiento contra el estado guardado; si otro facturador ya movió, envió o eliminó un pedido facturado, el cambio se rechaza con un aviso y la pantalla se actualiza. Además, Facturación recibe el mismo aviso en tiempo real que Bodega, para que cada facturador vea al instante los cambios del otro ([16](16-arquitectura-y-tecnologia.md)).
-- Una tarjeta por pedido facturado, que usa **todo el ancho** (sin el asa de arrastre ni la "x" de eliminar, 13/10), con:
+- **Aviso de conflicto (21/10/2026, JC-05; texto confirmado con Jordin):** «Otro facturador modificó estos pedidos. La pantalla se actualizará; revisa los cambios e inténtalo de nuevo». La comprobación incluye la ubicación, la posición y la fecha de modificación de los pedidos vistos por el facturador. Mientras arrastra o edita fecha u hora se conserva la vista; los cambios recibidos se aplican al soltar o salir del campo, después de terminar el guardado pendiente.
+- Una tarjeta por pedido facturado, sin el asa de arrastre ni la "x" de eliminar (13/10). **(22/10)** Las tarjetas van en la rejilla de varias columnas del prototipo (`.fx-lista`), que manda en diseño (decisión 89). Cada tarjeta lleva:
 
 | Dato | Origen |
 |---|---|

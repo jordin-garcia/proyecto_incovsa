@@ -1,0 +1,22 @@
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+Datasource "db": PostgreSQL database "incovsa_e2e_jg24", schema "public" at "localhost:5432"
+
+2 migrations found in prisma/migrations
+
+Applying migration `20261017120000_inicial`
+Applying migration `20261017120100_restricciones`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261017120000_inicial/
+    └─ migration.sql
+  └─ 20261017120100_restricciones/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+Semilla base cargada.
+Datos de demostración cargados: 11 cuentas de ejemplo (ejemplo.01 a ejemplo.10, y ejemplo.03 también en el sitio), 3 camiones y 28 productos públicos.
+Base local incovsa_e2e_jg24 preparada; no se alteró la base de desarrollo.

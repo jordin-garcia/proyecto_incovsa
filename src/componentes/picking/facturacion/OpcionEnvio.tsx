@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
@@ -8,6 +8,7 @@ import { CampoHora } from "@/componentes/comunes/CampoHora";
 import { Medidor } from "@/componentes/comunes/Medidor";
 import { Icono } from "@/componentes/comunes/iconos";
 import { formatoKg } from "@/componentes/comunes/formato";
+import { claveCliente } from "@/modulos/envios/cliente";
 import { formatoFecha } from "@/lib/fechas";
 import { ErrorNegocio } from "@/lib/errores";
 import { Button } from "@/componentes/ui/button";
@@ -16,6 +17,8 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/compone
 import { VentanaConfirmacion } from "@/componentes/comunes/VentanaConfirmacion";
 import { useMensajes } from "@/componentes/comunes/Mensajes";
 import { guardarCampoDeOpcion, cancelarOpcionDeEnvio, enviarOpcionABodega } from "@/modulos/envios/acciones";
+import { estadoDePedidos } from "@/modulos/envios/estado-pedidos";
+import type { EstadoPedidos } from "@/modulos/envios/esquemas";
 import type { OpcionFacturacion, OpcionesFacturacion, EnvioCreado } from "@/modulos/envios/opciones";
 import { PedidoArrastrable, ZonaArrastre } from "./ArrastreFacturacion";
 import estilos from "./FacturacionTablero.module.css";
@@ -36,17 +39,21 @@ export function OpcionEnvio({
   sedeNombre,
   ocupado,
   puedeVerBodega,
+  alInteraccion,
 }: Omit<OpcionesFacturacion, "opciones"> & {
   opcion: OpcionFacturacion;
   sedeId: number;
   sedeNombre: string;
   ocupado: boolean;
   puedeVerBodega: boolean;
+  alInteraccion: (clave: string, activa: boolean) => void;
 }) {
   const router = useRouter(),
     mensaje = useMensajes();
   const [local, cambiarLocal] = useState(opcion);
   const [anterior, recordar] = useState(opcion);
+  const confirmacion = useRef<EstadoPedidos>([]);
+  const [editando, editar] = useState(false);
   const pendientes = useRef(0);
   const cola = useRef<Promise<void>>(Promise.resolve());
   const [guardando, guardar] = useState(false);
@@ -58,10 +65,15 @@ export function OpcionEnvio({
     camion?: string;
     piloto?: string;
   } | null>(null);
-  if (anterior !== opcion) {
+  if (!guardando && !editando && anterior !== opcion) {
     recordar(opcion);
-    if (!guardando) cambiarLocal(opcion);
+    cambiarLocal(opcion);
   }
+  useEffect(() => {
+    const clave = `opcion-${opcion.tipo}`;
+    alInteraccion(clave, editando || guardando);
+    return () => alInteraccion(clave, false);
+  }, [alInteraccion, opcion.tipo, editando, guardando]);
   const esRuta = opcion.tipo === "camion",
     nombre = esRuta ? "Envío por camión" : "Cliente recoge en bodega";
   const camion = camiones.find((c) => c.id === local.camionId),
@@ -78,7 +90,7 @@ export function OpcionEnvio({
     !ocupado
   );
   const etiqueta = `${esRuta ? "Ruta" : "Pedido"} ${opcion.siguienteNumero}`;
-  const clientes = new Set(opcion.pedidos.map((p) => JSON.stringify([p.cliente, p.sector]))).size;
+  const clientes = new Set(opcion.pedidos.map(claveCliente)).size;
 
   function cambiar(campo: "fecha" | "hora" | "camion" | "piloto", valor: string | number | null) {
     const atributo = campo === "camion" ? "camionId" : campo === "piloto" ? "pilotoId" : campo;
@@ -100,13 +112,16 @@ export function OpcionEnvio({
         mensaje(error instanceof ErrorNegocio ? error.message : "No se pudo guardar la opción de envío.", "error");
       } finally {
         pendientes.current -= 1;
-        if (!pendientes.current) guardar(false);
+        if (!pendientes.current) {
+          guardar(false);
+          router.refresh();
+        }
       }
     });
   }
   async function enviar() {
     await cola.current;
-    const resultado = await enviarOpcionABodega({ sedeId, tipo: opcion.tipo });
+    const resultado = await enviarOpcionABodega({ sedeId, tipo: opcion.tipo, estadoEsperado: confirmacion.current });
     if (!resultado.ok) {
       router.refresh();
       throw new ErrorNegocio(resultado.error);
@@ -183,7 +198,13 @@ export function OpcionEnvio({
           </label>
         </div>
       )}
-      <div className={`rejilla r2 ${estilos.campos}`}>
+      <div
+        className={`rejilla r2 ${estilos.campos}`}
+        onFocusCapture={() => editar(true)}
+        onBlurCapture={(evento) => {
+          if (!evento.currentTarget.contains(evento.relatedTarget as Node | null)) editar(false);
+        }}
+      >
         <CampoFecha
           etiqueta={`Fecha programada de ${esRuta ? "envío" : "despacho"} *`}
           valor={local.fecha}
@@ -261,7 +282,11 @@ export function OpcionEnvio({
           textoConfirmar="Regresar al tablero"
           alConfirmar={async () => {
             await cola.current;
-            const resultado = await cancelarOpcionDeEnvio({ sedeId, tipo: opcion.tipo });
+            const resultado = await cancelarOpcionDeEnvio({
+              sedeId,
+              tipo: opcion.tipo,
+              estadoEsperado: confirmacion.current,
+            });
             if (!resultado.ok) {
               router.refresh();
               throw new ErrorNegocio(resultado.error);
@@ -270,14 +295,21 @@ export function OpcionEnvio({
             router.refresh();
           }}
         >
-          <Button variant="secundario" size="pequeno" disabled={!opcion.pedidos.length || ocupado || guardando}>
+          <Button
+            variant="secundario"
+            size="pequeno"
+            disabled={!opcion.pedidos.length || ocupado || guardando}
+            onClick={() => {
+              confirmacion.current = estadoDePedidos(opcion.pedidos);
+            }}
+          >
             Cancelar
           </Button>
         </VentanaConfirmacion>
         <VentanaConfirmacion
           titulo="Enviar a Bodega"
           texto={
-            <div className={estilos.resumen}>
+            <div className={`${estilos.resumen} ${estilos.resumenEnvio}`}>
               <div>
                 Se crea {esRuta ? "la" : "el"} <b>{etiqueta}</b> de hoy en {sedeNombre} con {opcion.pedidos.length}{" "}
                 pedido(s) facturado(s) de {clientes} cliente(s) y {formatoKg(kg(total))}, en este orden:{" "}
@@ -315,6 +347,9 @@ export function OpcionEnvio({
         >
           <Button
             size="pequeno"
+            onClick={() => {
+              confirmacion.current = estadoDePedidos(opcion.pedidos);
+            }}
             disabled={!listo}
             title={
               listo

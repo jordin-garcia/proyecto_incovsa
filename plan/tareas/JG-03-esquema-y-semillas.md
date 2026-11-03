@@ -150,3 +150,9 @@ El esquema completo de los dos sistemas está en `prisma/schema.prisma` (32 tabl
 ### Archivos principales
 
 `prisma/schema.prisma`, `prisma/migrations/**`, `prisma.config.ts`, `prisma/semillas/base.ts`, `prisma/semillas/demo.ts`, `prisma/seed.ts`, `prisma/semilla-demo.ts`, `prisma/datos/guatemala.json`, `prisma/esquema.test.ts` (21 pruebas), `src/lib/prisma.ts`, `src/lib/cuentas.ts` (con su prueba), `pruebas/bd.ts`, `pruebas/configuracion-vitest.ts`, `vitest.config.mts`, `package.json` (scripts `db:*`, `semilla:demo` y `postinstall`), `.gitignore`, `.prettierignore` y `eslint.config.mjs` (ignoran `src/generated/`), y las precisiones en `specs/14` y `specs/18`.
+
+### Correcciones de la auditoría (2026-10-22)
+
+La corrigió el coordinador en JG-25.
+
+- **H-28:** el criterio 1 se había comprobado a mano. El trabajo `pruebas` de la CI ahora compara la base recién migrada con `schema.prisma` (`npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code`, paso «El esquema coincide con las migraciones»). Falla con código 2 si un cambio del esquema no tiene su migración, o al revés. Se comprobó con un PR de prueba que se cerró sin integrar (evidencia en `plan/evidencias/JG-25/README.md`).

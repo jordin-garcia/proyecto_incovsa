@@ -8,17 +8,17 @@ prioridad: P1
 estado: bloqueada
 bloqueo: Faltan accesos de INCOVSA — VPS (P-10), DNS de incovsa.com en Cloudflare (P-93) y cuentas Cloudflare/R2 (P-94). El environment GitHub "produccion" y los secretos VPS_* aún no existen; el agente no puede crearlos (403). Carlos los carga en la Mac cuando INCOVSA entregue IP, DNS y R2. Guía en evidencia/CE-08/.
 depende_de: [CE-06, CE-07]
-programada: 2026-10-28
+programada: 2026-11-06
 requisitos: [RNF-09, RNF-10, RNF-12]
 pantallas: []
 ---
 
 # CE-08 · Preparación del VPS, del dominio y de Cloudflare R2
 
-**Responsable:** Carlos Hugo Escobar · **Hito:** E3 · **Prioridad:** P1 · **Programada:** mié 28/10 · **Depende de:** CE-06, CE-07
+**Responsable:** Carlos Hugo Escobar · **Hito:** E3 · **Prioridad:** P1 · **Programada:** vie 06/11 · **Depende de:** CE-06, CE-07
 
 ## Objetivo
-Dejar el VPS de INCOVSA, el DNS de `incovsa.com` en Cloudflare y los buckets de R2 listos y seguros para el primer despliegue del 02/11 (specs/16, decisiones 28, 32 a 34 y 73).
+Dejar el VPS de INCOVSA, el DNS de `incovsa.com` en Cloudflare y los buckets de R2 listos y seguros para el primer despliegue (JG-19, desde el 07/11; specs/16, decisiones 28, 32 a 34, 73 y 90).
 
 ## Contexto que debes leer
 - `specs/16` §"Despliegue" completo y decisiones 28 a 34 y 73
@@ -32,7 +32,7 @@ Dejar el VPS de INCOVSA, el DNS de `incovsa.com` en Cloudflare y los buckets de 
 3. **Cloudflare R2 (P-94):** bucket de imágenes (público solo por `imagenes.incovsa.com`) y bucket de respaldos (privado), cada uno con su credencial limitada.
 4. **GitHub:** los secretos del `environment: produccion` (`VPS_HOST`, `VPS_USUARIO`, `VPS_LLAVE_SSH`, `VPS_KNOWN_HOSTS`) que usa CE-06.
 5. Instalar el `cron` de los respaldos (CE-07) y correr una vez el respaldo y la restauración contra R2.
-6. Probar el despliegue (CE-06) con la imagen de `develop` en un nombre de host temporal o con el sitio cerrado, y dejarlo listo para el 02/11.
+6. Probar el despliegue (CE-06) con la imagen de `develop` en un nombre de host temporal o con el sitio cerrado, y dejarlo listo para JG-19.
 
 ## Archivos que creas o modificas
 - Ninguno de código; si hace falta ajustar `docker-compose.yml`, `Caddyfile` o `despliegue.yml`, en este mismo PR.
@@ -45,7 +45,7 @@ Dejar el VPS de INCOVSA, el DNS de `incovsa.com` en Cloudflare y los buckets de 
 5. El flujo de despliegue llega al VPS por SSH.
 
 ## Fuera de alcance
-- El primer despliegue oficial (JG-19, 02/11).
+- El primer despliegue oficial (JG-19).
 
 ## Notas
 - Las credenciales de producción nunca se guardan en el equipo de Carlos fuera del gestor de contraseñas, ni en ningún archivo del repositorio (decisión 70). El inventario de servicios y accesos va en el Anexo J (CE-12), sin las credenciales.
@@ -67,4 +67,4 @@ Dejar el VPS de INCOVSA, el DNS de `incovsa.com` en Cloudflare y los buckets de 
 
 **Excepción de alcance (§C).** El protocolo pide un PR de bloqueo solo con la tarea y la bitácora. La asignación del coordinador del proyecto pidió dejar guía y scripts en `evidencia/CE-08/` y el comentario `IMAGEN_APP` en este mismo PR. Tras la CORRECCIÓN de `revision-claude` (2026-10-20): drop-in SSH `00-incovsa.conf` (gana a cloud-init), aborto si no hay llave antes de tocar SSH, UFW solo `22/80/443`, `verificar-vps.sh` como root y sin aceptar login root.
 
-**Fuera de este cierre:** JG-19 (primer despliegue oficial 02/11).
+**Fuera de este cierre:** JG-19 (primer despliegue oficial, desde el 07/11).
