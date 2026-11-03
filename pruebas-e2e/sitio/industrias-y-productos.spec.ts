@@ -59,6 +59,60 @@ async function accesible(page: Page) {
   await expect(page.getByRole("contentinfo")).toHaveCount(0);
 }
 
+/** Ícono, nombre y número de productos de cada opción de una barra lateral, en el orden en que se muestran. */
+async function opcionesDe(barra: import("@playwright/test").Locator) {
+  return barra.locator(":scope > a, :scope > button").evaluateAll((opciones) =>
+    opciones.map((o) => ({
+      icono: o.querySelectorAll(".filtro-nombre > svg").length,
+      nombre: o.querySelector(".filtro-nombre")?.textContent?.trim(),
+      cuenta: o.querySelector("small")?.textContent,
+    })),
+  );
+}
+
+test("JG-28 / RF-SW-03 / RF-SW-04: la barra de Industrias es igual a la de Productos, con ícono y número de productos", async ({
+  page,
+}) => {
+  await conCatalogo(async () => {
+    await irA(page, "/productos");
+    await expect(page.locator(".cat-lay")).toHaveAttribute("data-hidratado", "true");
+    const filtros = page.getByRole("complementary", { name: "Filtrar por industria" });
+    const deProductos = await opcionesDe(filtros);
+    expect(deProductos).toHaveLength(10);
+    expect(deProductos[0]).toEqual({ icono: 0, nombre: "Todas las industrias", cuenta: expect.any(String) });
+    for (const opcion of deProductos.slice(1)) expect(opcion.icono).toBe(1);
+    await expect(filtros).not.toContainText("Industria por confirmar");
+    const estiloProductos = await filtros.evaluate((e) => ({
+      ancho: Math.round(e.getBoundingClientRect().width),
+      fuente: getComputedStyle(e.querySelector("button")!).font,
+    }));
+
+    await irA(page, "/industrias/textil");
+    const barra = page.getByRole("navigation", { name: "Industrias", exact: true });
+    await expect(barra.getByRole("link")).toHaveCount(9);
+    // Mismas industrias, íconos y números que Productos, sin «Todas las industrias».
+    expect(await opcionesDe(barra)).toEqual(deProductos.slice(1));
+    expect(
+      await barra.evaluate((e) => ({
+        ancho: Math.round(e.getBoundingClientRect().width),
+        fuente: getComputedStyle(e.querySelector("a")!).font,
+      })),
+    ).toEqual(estiloProductos);
+    const activa = barra.getByRole("link", { name: /^Textil/ });
+    await expect(activa).toHaveAttribute("aria-current", "page");
+    await expect(barra.locator("[aria-current]")).toHaveCount(1);
+    // La industria activa se marca con los mismos colores que el filtro activo de Productos.
+    const colorActivo = await activa.evaluate((e) => [getComputedStyle(e).backgroundColor, getComputedStyle(e).color]);
+    await irA(page, "/productos?industria=textil");
+    await expect(page.locator(".cat-lay")).toHaveAttribute("data-hidratado", "true");
+    expect(
+      await filtros
+        .getByRole("button", { name: /^Textil/ })
+        .evaluate((e) => [getComputedStyle(e).backgroundColor, getComputedStyle(e).color]),
+    ).toEqual(colorActivo);
+  });
+});
+
 test("RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y relaciones actuales", async ({
   page,
 }) => {
@@ -66,13 +120,12 @@ test("RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y
     await irA(page, "/industrias");
     const barra = page.getByRole("navigation", { name: "Industrias", exact: true });
     await expect(barra.getByRole("link")).toHaveCount(9);
-    const enlace = barra.getByRole("link", { name: "Textil", exact: true });
-    await expect(enlace.locator(".ind-nombre")).toHaveCSS("opacity", "0");
-    await enlace.hover();
-    await expect(enlace.locator(".ind-nombre")).toHaveCSS("opacity", "1");
-    await page.mouse.move(0, 0);
+    await expect(barra.getByRole("link", { name: /^Cuero/ })).toHaveAttribute("aria-current", "page");
+    const enlace = barra.getByRole("link", { name: /^Textil/ });
+    await expect(enlace).toHaveAttribute("href", "/industrias/textil");
+    await expect(enlace).not.toHaveAttribute("aria-current");
     await enlace.focus();
-    await expect(enlace.locator(".ind-nombre")).toHaveCSS("opacity", "1");
+    await expect(enlace).toBeFocused();
     await expect(page.locator(".lista-prod")).toContainText("DM03 Ácido");
     await expect(page.locator(".lista-prod a")).toHaveCount(0);
     const nombres = await page.locator(".lista-prod span").allTextContents();
@@ -84,6 +137,8 @@ test("RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y
     const desplazamiento = await page.evaluate(() => window.scrollY);
     await enlace.press("Enter");
     await expect(page.locator(".ind-det h2")).toHaveText("Textil");
+    await expect(page).toHaveURL(/\/industrias\/textil$/);
+    await expect(enlace).toHaveAttribute("aria-current", "page");
     expect(Math.abs((await page.evaluate(() => window.scrollY)) - desplazamiento)).toBeLessThan(5);
     await conexion.query("DELETE FROM producto_industria WHERE producto_sitio_id = $1 AND industria_id = $2", [
       ids[0],
@@ -97,7 +152,9 @@ test("RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y
     await expect(page.locator(".lista-prod")).toContainText("DM03 Ácido");
     await irA(page, "/industrias/cuero");
     await expect(page.locator(".lista-prod")).not.toContainText("DM03 Ácido");
-    await expect(page.locator(".ind-img-vacia")).toContainText("Imagen de la industria");
+    // JG-28: sin imágenes, la industria no muestra recuadro ni texto en su lugar.
+    await expect(page.locator(".ind-img")).toHaveCount(0);
+    await expect(page.locator("main")).not.toContainText("Imagen de la industria");
     // IntersectionObserver inicia la transición después de montar la página.
     // Exige el estado final antes de medir contraste, sin desactivar animaciones ni reglas de axe.
     await expect(page.locator(".ind-det")).toHaveClass(/\bvisible\b/);
@@ -122,9 +179,32 @@ test("RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos,
     await expect(page.getByText("Ningún producto coincide", { exact: true })).toBeVisible();
     await page.getByRole("button", { name: /^Todas las industrias/ }).click();
     await expect(page.locator(".prod-t")).toHaveCount(1);
+    // JG-28: los productos sin industria solo aparecen en «Todas las industrias», sin aviso.
     await buscar.fill("DM03");
-    await page.getByRole("button", { name: /^Industria por confirmar/ }).click();
-    await expect(page.locator(".prod-t")).toHaveCount(3);
+    await expect(page.locator(".prod-t")).toHaveCount(5);
+    await expect(page.getByRole("button", { name: /Industria por confirmar/ })).toHaveCount(0);
+    await expect(page.locator(".catalogo-rejilla")).not.toContainText(/por confirmar/i);
+    for (const nombre of ["DM03 Cal", "DM03 Soda", "DM03 Zinc"])
+      await expect(page.locator(".prod-t", { hasText: nombre }).locator(".etiquetas")).toHaveCount(0);
+    await accesible(page);
+    // El filtro «sin» ya no existe: la dirección vieja muestra todas las industrias.
+    await irA(page, "/productos?industria=sin");
+    await expect(page.locator(".cat-lay")).toHaveAttribute("data-hidratado", "true");
+    await expect(page.getByRole("button", { name: /^Todas las industrias/ })).toHaveAttribute("aria-pressed", "true");
+  });
+});
+
+test("JG-28 / RF-SW-05: el detalle de un producto sin industria ni datos no muestra avisos ni espacios vacíos", async ({
+  page,
+}) => {
+  await conCatalogo(async ({ conexion, ids }) => {
+    await conexion.query("UPDATE producto_sitio SET presentacion = NULL, paises_origen = '' WHERE id = $1", [ids[2]]);
+    await irA(page, `/productos/${ids[2]}`);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("DM03 Cal");
+    await expect(page.locator(".industrias-producto")).toHaveCount(0);
+    await expect(page.locator(".fichas dt")).toHaveText(["Descripción"]);
+    await expect(page.locator("main")).not.toContainText(/por confirmar/i);
+    await expect(page.locator(".miga-producto")).toHaveText("Productos / DM03 Cal");
     await accesible(page);
   });
 });

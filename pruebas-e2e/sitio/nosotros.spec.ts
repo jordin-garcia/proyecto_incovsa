@@ -98,11 +98,15 @@ test("RF-SW-02 / CAM-80: ambos bloques alternan y quitar Inquiserca desde el pan
   await capturaEvidencia(page, `pruebas-e2e/sitio/evidencias/DM-06/aplicacion-sin-inquiserca-${info.project.name}.png`);
 });
 
-test("RF-SW-29 / RF-SW-16: cinco valores pendientes y presentación dinámica", async ({ page }) => {
+test("RF-SW-29 / RF-SW-16 / JG-28: cinco valores sin imagen, sin aviso de pendiente, y presentación dinámica", async ({
+  page,
+}) => {
   await irA(page, "/nosotros");
   await expect(page.locator(".valor-t")).toHaveCount(5);
   await expect(page.locator(".valor-t.vacio-v")).toHaveCount(5);
-  await expect(page.locator(".valores-fila")).toContainText("Imagen del valor pendiente de INCOVSA");
+  // JG-28: cada tarjeta vacía conserva solo su número, sin el texto del prototipo.
+  await expect(page.locator(".valor-t.vacio-v")).toHaveText(["01", "02", "03", "04", "05"]);
+  await expect(page.locator(".valores-fila")).not.toContainText(/pendiente/i);
   const valor = page.locator(".valor-t").first();
   await valor.scrollIntoViewIfNeeded();
   await expect(valor).toHaveClass(/visible/);

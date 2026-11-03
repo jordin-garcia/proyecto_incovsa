@@ -290,8 +290,7 @@ export function Documentos({
         <Icono nombre="escudo" />
         <div>
           El sistema guarda solo los enlaces y los muestra a quien tiene permiso. Que un enlace no se abra fuera de la
-          empresa, o que no se pueda descargar desde Google Drive, depende de cómo se comparta cada archivo en Drive
-          (P-92).
+          empresa, o que no se pueda descargar desde Google Drive, depende de cómo se comparta cada archivo en Drive.
         </div>
       </div>
       <Dialog

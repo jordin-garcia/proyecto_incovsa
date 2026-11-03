@@ -86,7 +86,7 @@ test("RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos factur
   );
   await expect(page.getByRole("dialog")).toContainText("Se ignoraron 1 referencia(s) que no están en estado «Hecho».");
   await expect(page.getByRole("dialog")).toContainText(
-    "Los datos de esos pedidos facturados deben corregirse en Odoo y volver a exportarse (P-91).",
+    "Los datos de esos pedidos facturados deben corregirse en Odoo y volver a exportarse.",
   );
   await capturar(`facturacion-resumen-${width}`);
   await page.getByRole("button", { name: "Listo" }).click();

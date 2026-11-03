@@ -29,20 +29,21 @@ export async function Industrias({ seleccion = "cuero" }: { seleccion?: string }
       />
       <section className="sec sec-industrias">
         <div className="wrap ind-lay2">
-          <nav className="ind-barra" aria-label="Industrias">
+          {/* JG-28: misma barra que los filtros de Productos (ícono, nombre y número de productos), sin «Todas». */}
+          <nav className="filtros" aria-label="Industrias">
             {datos.industrias.map((i, n) => (
               <Link
                 key={i.id}
                 href={`/industrias/${ICONOS_INDUSTRIAS[n]}`}
                 scroll={false}
                 className={n === indice ? "on" : ""}
-                aria-label={i.nombre}
                 aria-current={n === indice ? "page" : undefined}
               >
-                <Icono nombre={ICONOS_INDUSTRIAS[n]} />
-                <span className="ind-nombre" role="tooltip">
+                <span className="filtro-nombre">
+                  <Icono nombre={ICONOS_INDUSTRIAS[n]} />
                   {i.nombre}
                 </span>
+                <small>{datos.productos.filter((p) => p.industrias.some((j) => j.id === i.id)).length}</small>
               </Link>
             ))}
           </nav>
@@ -64,16 +65,11 @@ export async function Industrias({ seleccion = "cuero" }: { seleccion?: string }
               </Button>
             </div>
             <p className="desc">{industria.descripcion}</p>
-            <div className="ind-img">
-              {industria.imagenes.length ? (
+            {!!industria.imagenes.length && (
+              <div className="ind-img">
                 <Galeria imagenes={industria.imagenes} alt={`Industria ${industria.nombre}`} />
-              ) : (
-                <span className="ind-img-vacia">
-                  <Icono nombre={ICONOS_INDUSTRIAS[indice]} />
-                  <small>Imagen de la industria</small>
-                </span>
-              )}
-            </div>
+              </div>
+            )}
             <h3 className="titulo-lista-productos">Productos para esta industria · {productos.length}</h3>
             <div className="lista-prod">
               {productos.map((p) => (

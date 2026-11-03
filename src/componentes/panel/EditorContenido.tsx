@@ -125,7 +125,6 @@ function BloqueEditor({
                 {...register("texto")}
                 defaultValue={textoInicial}
                 rows={bloque === "historia" ? 6 : 5}
-                placeholder="Texto pendiente de INCOVSA"
                 aria-invalid={!!errors.texto}
                 aria-describedby={errors.texto ? `error-texto-${bloque}` : undefined}
               />

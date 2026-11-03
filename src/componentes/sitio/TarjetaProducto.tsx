@@ -20,20 +20,16 @@ export function TarjetaProducto({ producto }: { producto: ProductoPublico }) {
         {(producto.paisesOrigen || producto.presentacion) && (
           <p className="prod-datos">{[producto.paisesOrigen, producto.presentacion].filter(Boolean).join(" · ")}</p>
         )}
-        <div className="etiquetas">
-          {producto.industrias.length ? (
-            <>
-              {producto.industrias.slice(0, 2).map((i) => (
-                <span key={i.id} className="chip chip-v">
-                  {i.nombre}
-                </span>
-              ))}
-              {producto.industrias.length > 2 && <span className="chip">+{producto.industrias.length - 2}</span>}
-            </>
-          ) : (
-            <span className="chip chip-a">Industria por confirmar</span>
-          )}
-        </div>
+        {!!producto.industrias.length && (
+          <div className="etiquetas">
+            {producto.industrias.slice(0, 2).map((i) => (
+              <span key={i.id} className="chip chip-v">
+                {i.nombre}
+              </span>
+            ))}
+            {producto.industrias.length > 2 && <span className="chip">+{producto.industrias.length - 2}</span>}
+          </div>
+        )}
       </div>
     </Link>
   );

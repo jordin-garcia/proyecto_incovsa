@@ -37,7 +37,6 @@ export default async function Noticias() {
             <div className="tarjeta vacio noticias-vacio">
               <Icono nombre="noticia" />
               <h4>Todavía no hay noticias publicadas</h4>
-              <p>Las noticias se publican desde el panel del sitio, con imágenes, título y texto.</p>
             </div>
           )}
         </div>

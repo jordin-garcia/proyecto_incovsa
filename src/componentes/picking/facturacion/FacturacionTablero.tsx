@@ -511,7 +511,7 @@ function TableroInteractivo({
                   <p>Se ignoraron {resumen.otrosEstados} referencia(s) que no están en estado «Hecho».</p>
                 )}
                 {!!resumen?.noCargados.length && (
-                  <p>Los datos de esos pedidos facturados deben corregirse en Odoo y volver a exportarse (P-91).</p>
+                  <p>Los datos de esos pedidos facturados deben corregirse en Odoo y volver a exportarse.</p>
                 )}
               </div>
             </DialogDescription>

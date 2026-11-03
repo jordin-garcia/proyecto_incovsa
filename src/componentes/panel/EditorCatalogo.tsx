@@ -200,20 +200,18 @@ export function EditorCatalogo({ datos }: { datos: CatalogoSitio }) {
                     <b>{p.nombre}</b>
                     {p.descripcion && <div className={estilos.descripcion}>{p.descripcion}</div>}
                   </td>
-                  <td>{p.presentacion || "Por confirmar"}</td>
-                  <td>{p.paisesOrigen || "Por confirmar"}</td>
+                  <td>{p.presentacion}</td>
+                  <td>{p.paisesOrigen}</td>
                   <td>
-                    <div className="etiquetas">
-                      {p.industrias.length ? (
-                        p.industrias.map((i) => (
+                    {!!p.industrias.length && (
+                      <div className="etiquetas">
+                        {p.industrias.map((i) => (
                           <span key={i.id} className="chip chip-v">
                             {i.nombre}
                           </span>
-                        ))
-                      ) : (
-                        <span className="chip chip-a">Por confirmar</span>
-                      )}
-                    </div>
+                        ))}
+                      </div>
+                    )}
                   </td>
                   <td className={`der ${estilos.acciones}`}>
                     <Button

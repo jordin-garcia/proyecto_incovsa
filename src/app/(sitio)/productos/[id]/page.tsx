@@ -48,29 +48,32 @@ export default async function DetalleProducto({ params }: { params: Promise<{ id
             <div>
               <p className="eyebrow">Catálogo público</p>
               <h1 className="titulo-producto">{producto.nombre}</h1>
-              <div className="etiquetas industrias-producto">
-                {producto.industrias.length ? (
-                  producto.industrias.map((i) => (
+              {!!producto.industrias.length && (
+                <div className="etiquetas industrias-producto">
+                  {producto.industrias.map((i) => (
                     <Link key={i.id} className="chip chip-v" href={`/industrias/${rutaIndustria(i.id)}`}>
                       {i.nombre}
                     </Link>
-                  ))
-                ) : (
-                  <span className="chip chip-a">Industria por confirmar</span>
-                )}
-              </div>
-              <dl className="fichas">
-                {[
-                  ["Descripción", producto.descripcion],
-                  ["Presentación", producto.presentacion],
-                  ["Países de origen", producto.paisesOrigen],
-                ].map(([nombre, valor], indice) => (
-                  <div key={nombre} className={indice === 0 ? "descripcion-producto" : ""}>
-                    <dt>{nombre}</dt>
-                    <dd>{valor || "Por confirmar"}</dd>
-                  </div>
-                ))}
-              </dl>
+                  ))}
+                </div>
+              )}
+              {/* JG-28: el dato que falta no se muestra. */}
+              {(producto.descripcion || producto.presentacion || producto.paisesOrigen) && (
+                <dl className="fichas">
+                  {[
+                    ["Descripción", producto.descripcion, "descripcion-producto"],
+                    ["Presentación", producto.presentacion, ""],
+                    ["Países de origen", producto.paisesOrigen, ""],
+                  ]
+                    .filter(([, valor]) => valor)
+                    .map(([nombre, valor, clase]) => (
+                      <div key={nombre} className={clase || undefined}>
+                        <dt>{nombre}</dt>
+                        <dd>{valor}</dd>
+                      </div>
+                    ))}
+                </dl>
+              )}
               <div className="aviso aviso-v aviso-producto">
                 <Icono nombre="info" />
                 <div>

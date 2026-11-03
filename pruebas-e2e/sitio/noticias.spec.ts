@@ -96,6 +96,8 @@ test("RF-SW-18 / RF-SW-15 / RNF-08: estados vacíos y formulario accesibles sin 
   await irA(page, "/noticias");
   await expect(page.getByRole("heading", { name: "Novedades de la empresa", exact: true })).toBeVisible();
   await expect(page.getByText("Todavía no hay noticias publicadas", { exact: true })).toBeVisible();
+  // JG-28: el estado vacío no muestra al público la instrucción interna del prototipo.
+  await expect(page.locator(".noticias-vacio")).toHaveText("Todavía no hay noticias publicadas");
   await expect(page.getByRole("contentinfo")).toBeAttached();
   await comprobarAxe(page);
   await captura(page, "publico-vacio");
