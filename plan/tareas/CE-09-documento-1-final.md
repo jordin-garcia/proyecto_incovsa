@@ -6,15 +6,17 @@ responsable: Carlos Hugo Escobar
 hito: entrega
 prioridad: P1
 estado: pendiente
-depende_de: [CE-01, JG-17]
-programada: 2026-10-30
+depende_de: [CE-01]
+programada: 2026-11-03
 requisitos: []
 pantallas: []
 ---
 
 # CE-09 · Documento 1 final, con las reuniones 4 y 5 y los anexos A a E
 
-**Responsable:** Carlos Hugo Escobar · **Hito:** entrega · **Prioridad:** P1 · **Programada:** vie 30/10 · **Depende de:** CE-01, JG-17
+**Responsable:** Carlos Hugo Escobar · **Hito:** entrega · **Prioridad:** P1 · **Programada:** mar 03/11 · **Depende de:** CE-01
+
+> **Replanificación del 02/11 (JG-32, `specs/16` decisión 90):** esta tarea ya no espera a JG-17 ni al despliegue. Documenta el sistema tal como está en `develop` y se integra a más tardar el **martes 03/11 a las 18:00**, para que Jordin arme la entrega del 04/11 (JG-30). Nada de esta versión 1.0 depende de la reunión con el Ing. William: lo que salga de ella se agrega en la versión 1.1 del 12/11.
 
 ## Objetivo
 La versión final del **Documento 1, Memoria general y especificación del sistema**, que todavía refleja el 24/09 (P-77): con los cambios de las reuniones 4 y 5, todo lo de la versión vigente de `specs/`, los diagramas definitivos y los anexos A a E.
@@ -27,10 +29,10 @@ La versión final del **Documento 1, Memoria general y especificación del siste
 - `entregable-2/LEEME.md` y `entregable-2/herramientas/` (cómo se arma un documento desde Markdown)
 
 ## Qué hacer
-1. Pídele a Carlos el `.docx` del Documento 1 v0.2 (está en la carpeta local y en el Drive del equipo, no en el repositorio) y las notas de las reuniones 4 y 5 (`docs/Reuniones/`, en el Drive).
+1. Pídele a Carlos el `.docx` del Documento 1 v0.2 (está en la carpeta local y en el Drive del equipo, no en el repositorio). Las notas de las reuniones 1 a 5 ya están en el repositorio, en `docs/Reuniones/` (las subió Jordin el 02/11, JG-32). Esa carpeta se quita del repositorio antes de transferirlo a INCOVSA (CE-15): no la enlaces desde los documentos.
 2. Crear `entregable-3/documento-1/` con `documento.json` y un `.md` por capítulo, en el formato de `entregable-2/herramientas/armar_documento.py`, partiendo del texto de la v0.2 y actualizándolo con `specs/`: alcance y exclusiones (inventario excluido y aprobado por el docente), actores y permisos por usuario, requisitos con su estado, reglas de negocio, casos de uso, metodología, modelado, diseño y arquitectura (con el despliegue), base de datos, seguridad, interfaz, conclusiones y trabajo futuro.
 3. Regenerar las figuras 1 a 8 con los scripts de `entregable-1/diagramas/` actualizados al sistema real (casos de uso, actividades, estados, arquitectura y modelos entidad-relación).
-4. **Anexos:** A (actas, incluidas las de las reuniones 4 y 5 en Markdown, con la fecha corregida de la reunión 5; P-77), B (evidencias, sin fotografías de personas en el repositorio), C (prototipos aprobados: capturas del prototipo), D (matriz completa de requerimientos con su implementación y su prueba), E (reglas y los 15 casos de conversión validados por INCOVSA).
+4. **Anexos:** A (actas, incluidas las de las reuniones 4 y 5 en Markdown, con la fecha corregida de la reunión 5; P-77), B (evidencias; en `entregable-3/` no van fotografías de personas: las fotos y capturas de `docs/Reuniones/` están en el repositorio solo por la excepción temporal de la decisión 90 y no se copian a los anexos), C (prototipos aprobados: capturas del prototipo), D (matriz completa de requerimientos con su implementación y su prueba), E (reglas y los 15 casos de conversión validados por INCOVSA).
 5. Armar el `.docx` (se guarda en la carpeta local y en el Drive, no en el repositorio).
 
 ## Archivos que creas o modificas

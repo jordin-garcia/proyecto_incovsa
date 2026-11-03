@@ -7,14 +7,14 @@ hito: E3
 prioridad: P1
 estado: pendiente
 depende_de: [JG-15, JG-26]
-programada: 2026-10-31
+programada: 2026-11-05
 requisitos: [RF-SL-48, RF-SW-11, RNF-03, RNF-05, RNF-15]
 pantallas: []
 ---
 
 # CE-14 · Reautenticación, contraseñas fáciles de adivinar y mensajes de validación
 
-**Responsable:** Carlos Hugo Escobar · **Hito:** E3 · **Prioridad:** P1 · **Programada:** sáb 31/10 · **Depende de:** JG-15, JG-26
+**Responsable:** Carlos Hugo Escobar · **Hito:** E3 · **Prioridad:** P1 · **Programada:** jue 05/11 · **Depende de:** JG-15, JG-26
 
 ## Objetivo
 Corregir lo que encontró la revisión de seguridad (JG-15) en la administración de usuarios y de camiones y en Caddy:

@@ -1,6 +1,6 @@
 # Calendario del proyecto
 
-Trabajamos **todos los días**, del sábado 17/10/2026 al miércoles 04/11/2026 (specs/16, decisión 72). Las fechas no se mueven y nada del alcance se recorta (decisión 68).
+Trabajamos **todos los días**, del sábado 17/10/2026 al jueves 12/11/2026 (specs/16, decisiones 72 y 90). Nada del alcance se recorta (decisión 68). El 02/11 se replanificó la entrega (JG-32): la documentación del 04/11 no depende de INCOVSA, y el despliegue, la capacitación y la transferencia pasan a antes del 12/11.
 
 ## Hitos
 
@@ -12,10 +12,14 @@ Trabajamos **todos los días**, del sábado 17/10/2026 al miércoles 04/11/2026 
 | Mié 21/10 | Convergencia 1 | JG-12 |
 | Dom 25/10 | Convergencia 2 | JG-13 |
 | Mié 28/10 | Accesos de INCOVSA | VPS (P-10), DNS de incovsa.com en Cloudflare (P-93) y cuentas de los servicios (P-94), pedidos al Ing. William para esta fecha (decisión 73) |
-| Vie 30/10 | Convergencia final | JG-17: todo `specs/` y el prototipo en `develop`; solo quedan correcciones |
-| **Lun 02/11** | **E3: desarrollo completo** | Todo integrado; `develop` pasa a `main` y se hace el primer despliegue a producción (JG-19); contenido oficial cargado (DM-12) |
-| Mar 03/11 | Capacitación | Capacitación al personal de INCOVSA (JG-20 y JG-21); documentos y anexos terminados |
-| **Mié 04/11** | **Entrega final** | Presentación en clase del Entregable 3 (JG-22) y transferencia de accesos (CE-12) |
+| Vie 30/10 | Convergencia final | Pasó al 05/11 con la replanificación del 02/11 (JG-17, JG-32) |
+| Lun 02/11 | Cambios del docente | JG-28 (meta: integrada el 03/11 a las 10:00); hasta el 04/11 solo ese código entra a `develop` |
+| Mar 03/11, 18:00 | Documentos, versión 1.0 | Documentos 1 a 6, README y anexos integrados en `develop`; guía de estudio (JG-29); en la noche, armado (JG-30) |
+| **Mié 04/11, antes de 9:50** | **Entrega académica** | Documentación subida al portal del curso (JG-30) y prueba individual de conocimientos |
+| Jue 05/11 a dom 08/11 | Cierre y despliegue | JG-17, JG-27 y CE-14; en cuanto INCOVSA entregue los accesos: CE-08, JG-19, CE-10 y DM-12 |
+| **Lun 09/11** | **Presentación previa** | 8 minutos con otro docente, con preguntas individuales (JG-22) |
+| Lun 09/11 a mié 11/11 | Capacitación y versión 1.1 | JG-20, JG-21 y CE-15 |
+| **Jue 12/11** | **Entrega a la empresa** | Presentación a INCOVSA (JG-31), manuales, accesos y transferencia del repositorio |
 
 ## Guion de la demostración del 19/10
 
@@ -30,9 +34,9 @@ Lo presenta Jordin, en su equipo, con la aplicación en modo de producción loca
 7. **Usuarios y permisos:** con `ejemplo.01` (Gerencia), crear un usuario del picking con permisos por casillas y sedes, y entrar con él (CE-03, JG-07).
 8. **Sitio con CMS:** en el panel, con `ejemplo.08`, cambiar el texto de la misión, subir imágenes, editar una industria y crear un producto público; mostrar los cambios en Inicio, Industrias y Productos (DM-02 a DM-05).
 
-## Guion de la demostración del 04/11
+## Guion de las presentaciones del 09/11 y del 12/11
 
-Lo completa JG-22, en producción (https://incovsa.com), con el contenido oficial. Recorre el flujo que piden los lineamientos (`specs/17`): **pedido facturado → conversión de kg a unidades → generación del picking → preparación → carga → despacho → actualización de estado → reporte**. La actualización de inventario no aplica: el docente aprobó la exclusión (P-58). Además: el sitio público, el panel, la documentación interna, el tablero en la TV, la Ruta en el teléfono, los reportes con exportación y la bitácora.
+Lo completan JG-22 y JG-31, en producción (https://incovsa.com) con el contenido oficial si JG-19 ya está hecha; si no, en local, con la imagen de producción y la semilla de demostración (specs/16, decisión 90). Recorre el flujo que piden los lineamientos (`specs/17`): **pedido facturado → conversión de kg a unidades → generación del picking → preparación → carga → despacho → actualización de estado → reporte**. La actualización de inventario no aplica: el docente aprobó la exclusión (P-58). Además: el sitio público, el panel, la documentación interna, el tablero en la TV, la Ruta en el teléfono, los reportes con exportación y la bitácora.
 
 ## Calendario por día
 
@@ -52,12 +56,19 @@ Cada tarea tiene su día en el campo `programada`. Esta tabla la genera `node sc
 | Sáb 24 oct | **JG-24** Correcciones de la auditoría del 22/10 en la bitácora, el acceso, el sitio y Facturación | **CE-07** Respaldos automáticos y prueba de restauración | **DM-09** Bandeja de solicitudes del panel | **JM-06** Ruta del piloto y registro de la entrega | — |
 | Dom 25 oct | **JG-13** Convergencia 2 | — | — | — | **JC-07** Exportación de los reportes a Excel y PDF |
 | Mar 27 oct | **JG-14** Prueba del flujo completo y recorrido diario en GitHub Actions<br>**JG-25** Correcciones de la auditoría del 22/10 en configuración, producción y CI | **CE-13** Correcciones de la auditoría del 26/10 en el sitio y el panel | — | **JM-09** Correcciones de la auditoría del 26/10 en Bodega, el tablero y Ruta | **JC-09** Correcciones de la auditoría del 26/10 en Reportes, Facturación y la Bitácora |
-| Mié 28 oct | **JG-15** Revisión de seguridad con OWASP ASVS 5.0 nivel 2 y OWASP ZAP | **CE-08** Preparación del VPS, del dominio y de Cloudflare R2 | **DM-11** Rendimiento de las galerías y revisión integral del sitio y del panel | — | — |
+| Mié 28 oct | **JG-15** Revisión de seguridad con OWASP ASVS 5.0 nivel 2 y OWASP ZAP | — | **DM-11** Rendimiento de las galerías y revisión integral del sitio y del panel | — | — |
 | Jue 29 oct | **JG-16** Pruebas en navegadores, tamaños de pantalla y accesibilidad | — | — | — | — |
-| Vie 30 oct | **JG-17** Convergencia final y cierre del desarrollo<br>**JG-26** Endurecimiento de cookies, cabeceras, sesiones, contraseñas y registros | **CE-09** Documento 1 final, con las reuniones 4 y 5 y los anexos A a E | **DM-14** Límite de envíos de Contacto, campo trampa y topes de texto del panel | **JM-10** Identificadores únicos al reordenar las líneas en Bodega | **JC-10** Límites del archivo de Odoo contra archivos comprimidos maliciosos |
-| Sáb 31 oct | **JG-27** Documentación de seguridad y riesgos aceptados | **CE-14** Reautenticación, contraseñas fáciles de adivinar y mensajes de validación | **DM-13** Documento 3, manual de usuario de la administración del sitio | **JM-07** Documento 4, manual de usuario del sistema logístico | **JC-08** Documento 2, nueva versión para el Entregable 3 |
-| Dom 1 nov | **JG-18** Documento 6, plan y evidencias de pruebas (Anexos F y G) | — | — | — | **JC-11** Facturación en Firefox, la lista al seleccionar todos |
-| Lun 2 nov | **JG-19** Integración de develop en main y primer despliegue a producción<br>**JG-20** Material y cuentas para la capacitación del 03/11 | **CE-10** Verificación de producción después del primer despliegue<br>**CE-11** Documento 5 (instalación, despliegue y mantenimiento) y README final | **DM-12** Carga del contenido oficial de INCOVSA en producción | — | — |
-| Mar 3 nov | **JG-21** Capacitación al personal de INCOVSA y evidencia (Anexo H)<br>**JG-22** Presentación del Entregable 3 (04/11) | **CE-12** Anexos I y J, evidencia de entrega e inventario de servicios y accesos | — | — | — |
+| Vie 30 oct | **JG-26** Endurecimiento de cookies, cabeceras, sesiones, contraseñas y registros | — | **DM-14** Límite de envíos de Contacto, campo trampa y topes de texto del panel | **JM-10** Identificadores únicos al reordenar las líneas en Bodega | **JC-10** Límites del archivo de Odoo contra archivos comprimidos maliciosos |
+| Dom 1 nov | — | — | — | — | **JC-11** Facturación en Firefox, la lista al seleccionar todos |
+| Lun 2 nov | **JG-28** Cambios del Ing. Manuel Rojas en el sitio, el panel y el picking<br>**JG-32** Replanificación del Entregable 3 | — | — | — | — |
+| Mar 3 nov | **JG-18** Documento 6, plan y evidencias de pruebas (Anexos F y G)<br>**JG-29** Guía de estudio para la prueba individual del 04/11 | **CE-09** Documento 1 final, con las reuniones 4 y 5 y los anexos A a E<br>**CE-11** Documento 5 (instalación, despliegue y mantenimiento) y README final<br>**CE-12** Anexos I y J, evidencia de entrega e inventario de servicios y accesos | **DM-13** Documento 3, manual de usuario de la administración del sitio | **JM-07** Documento 4, manual de usuario del sistema logístico | **JC-08** Documento 2, nueva versión para el Entregable 3 |
+| Mié 4 nov | **JG-30** Armado y entrega de la documentación del Entregable 3 en el portal del curso | — | — | — | — |
+| Jue 5 nov | **JG-17** Convergencia final y cierre del desarrollo<br>**JG-27** Documentación de seguridad y riesgos aceptados | **CE-14** Reautenticación, contraseñas fáciles de adivinar y mensajes de validación | — | — | — |
+| Vie 6 nov | — | **CE-08** Preparación del VPS, del dominio y de Cloudflare R2 | — | — | — |
+| Sáb 7 nov | **JG-19** Integración de develop en main y primer despliegue a producción | **CE-10** Verificación de producción después del primer despliegue | — | — | — |
+| Dom 8 nov | **JG-22** Presentación previa con otro docente (09/11) | — | **DM-12** Carga del contenido oficial de INCOVSA en producción | — | — |
+| Lun 9 nov | **JG-20** Material y cuentas para la capacitación | — | — | — | — |
+| Mar 10 nov | **JG-21** Capacitación al personal de INCOVSA y evidencia (Anexo H) | — | — | — | — |
+| Mié 11 nov | **JG-31** Presentación final a la empresa (12/11) | **CE-15** Versión 1.1 del Documento 5 y de los anexos I y J, con producción y transferencia | — | — | — |
 
 <!-- calendario:fin -->

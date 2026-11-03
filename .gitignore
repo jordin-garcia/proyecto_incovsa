@@ -32,7 +32,9 @@ npm-debug.log*
 /almacenamiento-local/
 
 # Documentación del curso y datos de la empresa: se guardan en la carpeta local y en Google Drive
-docs/
+# Excepción temporal (02/11, JG-32): docs/Reuniones/ está en el repositorio para CE-09; CE-15 la quita antes de transferirlo a INCOVSA
+docs/*
+!docs/Reuniones/
 docs_incovsa/
 
 # Documentos entregables en Word y PDF

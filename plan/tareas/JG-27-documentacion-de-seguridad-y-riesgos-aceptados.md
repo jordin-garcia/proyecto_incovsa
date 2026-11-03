@@ -7,14 +7,14 @@ hito: E3
 prioridad: P1
 estado: pendiente
 depende_de: [JG-15]
-programada: 2026-10-31
+programada: 2026-11-05
 requisitos: [RNF-03, RNF-04, RNF-05, RNF-15, RNF-16]
 pantallas: []
 ---
 
 # JG-27 · Documentación de seguridad y riesgos aceptados
 
-**Responsable:** Jordin García · **Hito:** E3 · **Prioridad:** P1 · **Programada:** sáb 31/10 · **Depende de:** JG-15
+**Responsable:** Jordin García · **Hito:** E3 · **Prioridad:** P1 · **Programada:** jue 05/11 · **Depende de:** JG-15
 
 ## Objetivo
 Cerrar las brechas documentales de ASVS 5.0 nivel 2 que encontró JG-15. Además, dejar por escrito en `specs/16` cada riesgo que el coordinador aceptó el 29/10/2026, con su justificación y los controles que lo compensan. Es la base de la sección de seguridad del Documento 6 (JG-18).
