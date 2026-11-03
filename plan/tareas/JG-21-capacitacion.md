@@ -7,17 +7,17 @@ hito: entrega
 prioridad: P1
 estado: pendiente
 depende_de: [JG-20]
-programada: 2026-11-03
+programada: 2026-11-10
 requisitos: []
 pantallas: []
 ---
 
 # JG-21 · Capacitación al personal de INCOVSA y evidencia (Anexo H)
 
-**Responsable:** Jordin García · **Hito:** entrega · **Prioridad:** P1 · **Programada:** mar 03/11 · **Depende de:** JG-20
+**Responsable:** Jordin García · **Hito:** entrega · **Prioridad:** P1 · **Programada:** mar 10/11 · **Depende de:** JG-20
 
 ## Objetivo
-Registrar la **capacitación del 03/11** y su evidencia (Anexo H), incluida la prueba del panel por una persona de INCOVSA sin ayuda del equipo (Documento 6 §12).
+Registrar la **capacitación** (antes del 12/11; specs/16, decisión 90) y su evidencia: la versión 1.1 del Anexo H, que reemplaza el plan de la capacitación de la versión 1.0 (JG-30), incluida la prueba del panel por una persona de INCOVSA sin ayuda del equipo (Documento 6 §12).
 
 ## Contexto que debes leer
 - `entregable-3/capacitacion/**` (JG-20)

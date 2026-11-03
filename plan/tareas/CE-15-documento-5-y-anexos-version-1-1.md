@@ -1,0 +1,56 @@
+---
+id: CE-15
+titulo: Versión 1.1 del Documento 5 y de los anexos I y J, con producción y transferencia
+persona: carlos
+responsable: Carlos Hugo Escobar
+hito: entrega
+prioridad: P1
+estado: pendiente
+depende_de: [CE-10, CE-11, CE-12]
+programada: 2026-11-11
+requisitos: [RNF-09, RNF-10]
+pantallas: []
+---
+
+# CE-15 · Versión 1.1 del Documento 5 y de los anexos I y J, con producción y transferencia
+
+**Responsable:** Carlos Hugo Escobar · **Hito:** entrega · **Prioridad:** P1 · **Programada:** mié 11/11 · **Depende de:** CE-10, CE-11, CE-12
+
+> **Replanificación del 02/11 (JG-32, `specs/16` decisión 90):** la versión 1.0 del Documento 5 y de los anexos I y J se entregó el 04/11 sin producción. Esta tarea los completa para la entrega a INCOVSA del **12/11**, con lo que se haya acordado en la reunión con el Ing. William.
+
+## Objetivo
+Completar el Documento 5 y los anexos I y J con los datos reales de producción y de los accesos, y dejar lista la transferencia del repositorio a INCOVSA.
+
+## Contexto que debes leer
+- `## Resultado` de CE-08, JG-19, CE-10, CE-11 y CE-12
+- `specs/16` decisiones 33 y 90; `specs/19`: P-03, P-10, P-93 y P-94
+
+## Qué hacer
+1. **Documento 5:** reemplazar lo que la versión 1.0 dejó para completarse al desplegar (IP, dominio, certificado, R2, verificación de producción) con los datos y la evidencia reales de CE-08 y CE-10, sin credenciales. Subir la versión del documento y su tabla de control de versiones.
+2. **Anexo J:** cambiar cada «pendiente de entrega por INCOVSA» por el dato real, y agregar el medio de entrega de las credenciales acordado con INCOVSA.
+3. **Anexo I:** agregar la constancia de la entrega académica del 04/11 (JG-30) y dejar listo el acta de entrega a INCOVSA del 12/11.
+4. **Quitar `docs/Reuniones/` del repositorio** antes de la transferencia (decisión de Jordin del 02/11, JG-32) y volver a ignorar `docs/` en `.gitignore`. Esa carpeta tiene fotos y capturas de las reuniones: sale de la versión actual, pero sigue en el historial de git, como aceptó Jordin.
+5. Dejar los pasos de la transferencia del repositorio a la cuenta u organización de INCOVSA (decisión 33, P-94), para que Jordin los haga el 12/11.
+
+## Archivos que creas o modificas
+- `entregable-3/documento-5/**`, `entregable-3/anexos/anexo-i-evidencia-de-entrega.md`, `entregable-3/anexos/anexo-j-servicios-y-accesos.md`
+- `docs/Reuniones/**` (quitar), `.gitignore`
+
+## Criterios de aceptación
+1. El Documento 5 ya no tiene datos «para completarse al desplegar» y no contiene secretos.
+2. El Anexo J cubre todos los servicios con sus datos reales y ningún secreto.
+3. `docs/Reuniones/` ya no está en `develop` y `docs/` vuelve a estar en `.gitignore`.
+4. Los pasos de la transferencia del repositorio están listos para el 12/11.
+
+## Verificación
+```
+python entregable-2/herramientas/armar_documento.py entregable-3/documento-5
+git ls-files docs
+```
+El segundo comando no debe mostrar nada.
+
+## Fuera de alcance
+- La transferencia misma, que hace Jordin el 12/11.
+
+## Notas
+- Si INCOVSA no entregó los accesos antes del 11/11, los datos siguen como pendientes y se explica en la presentación (JG-31).
