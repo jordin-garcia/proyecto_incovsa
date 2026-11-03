@@ -36,18 +36,31 @@ Pueden crear, editar y eliminar usuarios. Al crear un usuario escriben la contra
 
 La eliminación es lógica (RF-SL-57). El usuario ya no puede iniciar sesión. Su nombre de usuario queda reservado en su sistema. Se conservan la bitácora y los registros donde aparece.
 
+Gerencia y Soporte no pueden eliminar ni desactivar su propia cuenta. El sistema muestra «No puede eliminar su propia cuenta.» o «No puede desactivar su propia cuenta.» (22/10/2026). Al eliminar un piloto, se quita de Envío por camión si estaba elegido.
+
+Las acciones de administración de usuarios no dependen de ninguna casilla de permisos. El servidor comprueba en cada una que quien la hace es Gerencia o Soporte, con la sesión del mismo sistema (28/10/2026).
+
+La contraseña tiene al menos 8 caracteres. El 29/10/2026, después de la revisión de seguridad, `specs/03-roles-y-accesos.md` agregó dos reglas:
+
+- se rechazan las contraseñas fáciles de adivinar: las de una lista local de contraseñas comunes, las que contienen una palabra de la empresa (incovsa, covadonga, inquiserca, quetzaltenango, guatemala o escuintla) y las que contienen el nombre de usuario, si tiene 4 o más caracteres. El mensaje es «Esa contraseña es muy fácil de adivinar. Elija otra.»;
+- para restablecer la contraseña de una cuenta de Gerencia o Soporte, incluida la propia, se pide además la contraseña de quien lo hace. Si no es correcta, se muestra «Su contraseña no es correcta.» y no cambia nada. El intento cuenta en el límite de intentos de quien lo hace y queda en la bitácora.
+
+Al 03/11/2026 esas dos reglas todavía no están en `develop`. Se implementan después del 04/11 y antes del despliegue (`specs/16-arquitectura-y-tecnologia.md`, decisión 90).
+
 ## Acceso personal
 
 El sitio tiene el botón Acceso personal (RF-SW-09, cambio del 13/10/2026). El orden es usuario, sistema y contraseña.
 
 1. Se pide el nombre de usuario.
-2. El sistema lo busca entre las cuentas activas de la administración del sitio y del picking. Si no es usuario de ninguno, muestra que no tiene permisos para acceder y no avanza. Ese paso revela si el nombre existe. Lo pidió la contraparte el 13/10/2026 y el coordinador lo aceptó el 14/10/2026. La consulta cuenta en el límite de intentos por dirección IP y queda en la bitácora.
+2. El sistema lo busca entre las cuentas activas de la administración del sitio y del picking. Si no es usuario de ninguno, muestra que no tiene permisos para acceder y no avanza. Ese paso revela si el nombre existe. Lo pidió la contraparte el 13/10/2026 y el coordinador lo aceptó el 14/10/2026. Cada consulta de un nombre que no existe cuenta como intento fallido de la dirección IP y queda en la bitácora.
 3. Se elige el sistema. Iniciar sesión en Odoo abre el enlace del ERP, sin intercambio de datos. La URL está pendiente (P-06). Administración del sitio solo se habilita si hay cuenta en el sitio. Sistema de picking solo se habilita si hay cuenta en el picking.
 4. Al elegir el sitio o el picking, se pide la contraseña de esa cuenta.
 
 Cerrar sesión lleva a la página de inicio del sitio. El mensaje de una contraseña incorrecta dice usuario o contraseña incorrectos, sin indicar cuál falló.
 
-El inicio de sesión usa nombre de usuario y contraseña, no correo. El correo de la cuenta es opcional. No hay selector de sede al iniciar sesión. Las contraseñas se guardan cifradas con un algoritmo unidireccional. En la aplicación, ese algoritmo es scrypt, el de Better Auth 1.7 (`specs/16-arquitectura-y-tecnologia.md`).
+Los intentos se limitan (RNF-15). Cinco intentos fallidos seguidos de un mismo usuario lo bloquean 15 minutos. Veinte intentos fallidos desde una misma dirección IP en 15 minutos la bloquean 15 minutos. Un inicio de sesión correcto reinicia el conteo del usuario.
+
+El inicio de sesión usa nombre de usuario y contraseña, no correo. El correo de la cuenta es opcional. No hay selector de sede al iniciar sesión. Las contraseñas se guardan cifradas con un algoritmo unidireccional. En la aplicación, ese algoritmo es scrypt, con los parámetros mínimos que recomienda OWASP y una sal por contraseña (30/10/2026, `specs/16-arquitectura-y-tecnologia.md`).
 
 ## Catálogo de permisos
 
@@ -87,7 +100,9 @@ El 14/10/2026 se eliminaron los permisos Administrar productos y su Peso de Conv
 
 Al crear o editar un usuario del picking se marcan las sedes a las que tiene acceso. Puede tener una, varias o todas. Cada usuario ve solo los datos de sus sedes. Gerencia y Soporte tienen acceso a todas. Quien tiene más de una sede elige con cuál trabaja en el selector de la barra superior (RN-17).
 
-La TV y la tableta del tablero quedan con la sesión abierta de cualquier usuario que tenga acceso a Bodega. Cada sistema tiene su propia sesión. Una persona puede estar en el sitio y en el picking a la vez, y cerrar uno no cierra el otro (16/10/2026).
+En Ruta también se ven solo las rutas de la sede de trabajo elegida. Un piloto con varias sedes cambia de sede para ver las rutas de otra (26/10/2026).
+
+La TV y la tableta del tablero quedan con la sesión abierta de cualquier usuario que tenga acceso a Bodega. Cada sistema tiene su propia sesión. Una persona puede estar en el sitio y en el picking a la vez, y cerrar uno no cierra el otro (16/10/2026). Al iniciar sesión en un sistema, se cierra la sesión que ese navegador ya tenía en ese mismo sistema. Al cerrar sesión, la página se recarga por completo y el navegador borra lo que guardó de las páginas (30/10/2026).
 
 La sesión vence por falta de uso y se renueva mientras se usa. Mientras INCOVSA no defina el tiempo (P-07), son 7 días, renovados con el uso una vez al día. Al eliminar o desactivar un usuario, o al restablecer su contraseña, se cierran al instante todas sus sesiones.
 
@@ -96,3 +111,7 @@ No hay un número fijo de usuarios. Los nombres de los pilotos siguen pendientes
 ## Bitácora de los accesos
 
 La bitácora registra las acciones de cada usuario, incluidos los inicios de sesión y los intentos fallidos (RN-39). Se consulta en la pestaña Bitácora de Reportes. No registra el marcado ni la prioridad de Bodega, ni el orden de las filas de Ruta antes de entregar.
+
+La bitácora la ve quien tiene el permiso de Reportes. Gerencia y Soporte ven todos los registros. Los demás ven las operaciones del sitio, las de acceso y, del picking, solo los registros de la sede que consultan (22/10/2026). Las operaciones de acceso son el inicio de sesión, el intento de acceso fallido, el intento fallido de inicio de sesión, el bloqueo de usuario y el bloqueo de IP. Se muestran como máximo las 250 operaciones más recientes del periodo.
+
+Los rechazos de autorización y los errores inesperados no van a la bitácora. Quedan en el registro del servidor, sin datos personales ni contraseñas (30/10/2026).

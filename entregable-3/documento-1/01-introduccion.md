@@ -1,8 +1,8 @@
 # Introducción
 
-Este documento es la memoria general y la especificación del sistema de INCOVSA. La versión es la 0.3, del 30 de octubre de 2026. La fuente de los hechos es la carpeta `specs/`, versión 1.7, con corte del 16 de octubre de 2026, y lo que `entregable-1/LEEME.md` dice de las versiones 0.1 y 0.2.
+Este documento es la memoria general y la especificación del sistema de INCOVSA. La versión es la 1.0, para la entrega del 4 de noviembre de 2026. Documenta el sistema tal como está en la rama `develop` el 3 de noviembre de 2026.
 
-TODO(CE-09): la prosa de la versión 0.2 no está en el repositorio. Falta el archivo Documento 1 v0.2 (`.docx` y `.pdf`) que `entregable-1/LEEME.md` nombra. Este capítulo se redactó desde `specs/` y desde ese LEEME, no desde el texto de la v0.2.
+El texto se redactó a partir de la carpeta `specs/`, versión 1.7, con los cambios que se integraron hasta el 03/11/2026. De las versiones 0.1 y 0.2 se toma lo que dice `entregable-1/LEEME.md`.
 
 Si este documento y `specs/` dicen cosas distintas, vale `specs/` (`specs/README.md`, regla 1).
 
@@ -59,6 +59,27 @@ La solución es una sola aplicación web, bajo el dominio incovsa.com, con dos c
 
 1. El sitio web corporativo e institucional autoadministrable. Es la presencia digital de la empresa y el punto de entrada a los sistemas internos.
 2. El sistema de control logístico de bodega (sistema de picking). Cubre el proceso posterior a la facturación: carga del pedido facturado desde Odoo, conversión a unidades, preparación, despacho, ruta y reportes.
+
+Dentro del alcance del sitio web están:
+
+- la información institucional: historia, misión, visión y valores, con galerías de hasta 5 imágenes que rotan;
+- las 9 industrias, con una barra lateral de íconos, sus imágenes y sus productos en texto;
+- el catálogo informativo de productos, sin precios y con búsqueda, y el detalle de cada producto con Productos Recomendados;
+- las noticias, con imágenes, título y texto;
+- la información de contacto de Quetzaltenango y Guatemala, con su mapa, y el formulario de solicitudes, quejas o reclamos, que se guardan en el sistema;
+- el panel administrativo, para editar ese contenido sin tocar código, y la bandeja de solicitudes;
+- la documentación interna, con los enlaces de Google Drive de cada producto documentado;
+- el acceso personal, la administración de usuarios del sitio con permisos y el diseño responsivo.
+
+Dentro del alcance del sistema de picking están:
+
+- la carga de los pedidos facturados desde el archivo .xlsx de Odoo, a un tablero que se guarda en la base de datos;
+- el armado de rutas y pedidos en las opciones Envío por camión y Cliente recoge en bodega, con control de peso del camión;
+- la conversión de kilogramos a unidades con el Peso de Conversión del archivo, con resto en kg;
+- el tablero de preparación, con lote, marcado por línea, prioridad y orden por peso en tiempo real, en modo claro u oscuro;
+- la ruta del piloto, con su recorrido y el cierre de la entrega;
+- los reportes de despacho, rutas realizadas y bitácora, con filtros por periodo y exportación a Excel y PDF;
+- la configuración de camiones y la administración de usuarios del picking con rol, sedes y permisos.
 
 El acceso tiene tres niveles.
 
@@ -129,9 +150,11 @@ Tabla: Fuera del alcance {#tab:exclusiones}
 
 El 23/09/2026 se habían incluido las compras, los traslados entre sedes y un inventario propio. El 29/09/2026 salieron del alcance junto con todo el control de inventario. La creación de productos en Configuración salió del alcance el 13/10/2026, porque el Peso de Conversión viene en el archivo de Odoo.
 
+La revisión de seguridad del 29/10/2026, con OWASP ASVS 5.0 nivel 2, dejó algunos riesgos aceptados. No se implementan antes de la entrega: la autenticación de varios factores, el cambio de la contraseña propia, ver y cerrar las sesiones propias, que un administrador cierre sesiones sin desactivar la cuenta, una vida máxima absoluta de la sesión, un límite de sesiones simultáneas, la contraseña inicial que obliga a cambiarla y la consulta de contraseñas filtradas. Tampoco los cambios de la infraestructura del servidor, la retención de las solicitudes y de las direcciones IP de la bitácora, ni los límites de conexiones de tiempo real y de exportaciones simultáneas (`specs/18-historial-de-decisiones.md`).
+
 ## Metodología
 
-El levantamiento se hizo con la contraparte, en reuniones y por escrito. El registro de fuentes está en `specs/18-historial-de-decisiones.md`. Esta sección usa solo ese registro. Las actas no están en el repositorio. El anexo A deja constancia de lo que falta.
+El levantamiento se hizo con la contraparte, en reuniones y por escrito. El registro de fuentes está en `specs/18-historial-de-decisiones.md`. Esta sección usa solo ese registro. Las actas y las notas de las reuniones están en el anexo A.
 
 Tabla: Fuentes del levantamiento registradas en `specs/18` {#tab:fuentes}
 
@@ -150,14 +173,20 @@ Tabla: Fuentes del levantamiento registradas en `specs/18` {#tab:fuentes}
 | 29/09/2026 | Reunión 4, virtual, con el Ing. William Ambrossio y el equipo. Notas de Daniela Marín |
 | 13/10/2026 | Reunión 5, virtual, de 18:00 a 21:30. Notas de Daniela Marín. Dicen 14 de octubre por error (P-77) |
 | 16/10/2026 | El docente aprobó la exclusión del inventario. Quedaron el despliegue, el plan de tareas y el trabajo con agentes de IA |
+| 22/10/2026 | Decisión del coordinador: en el diseño manda el prototipo aprobado (decisión 89) |
+| 22/10 y 26/10/2026 | Auditorías del coordinador sobre lo integrado. Sus decisiones precisan Facturación, Ruta, Reportes, Configuración y la bandeja de solicitudes |
+| 29/10/2026 | Revisión de seguridad con OWASP ASVS 5.0 nivel 2 y OWASP ZAP |
+| 02/11/2026 | El Ing. Manuel Rojas fijó las fechas de la fase final y pidió cambios en el sitio, el panel y el picking. El coordinador corrigió las barras laterales el 03/11 |
 
 La propuesta 2 (planificación de rutas en mapa) y la propuesta 3 (mantenimiento y combustible) no se seleccionaron.
 
-La carpeta `specs/` reemplazó a la especificación v1.0 del 20/09/2026. Los códigos eliminados se conservan con su estado, para no romper la trazabilidad con el Documento 1 v0.1. Lo marcado como pendiente no se documenta aquí como decidido.
+La carpeta `specs/` reemplazó a la especificación v1.0 del 20/09/2026. Los códigos eliminados se conservan con su estado, para no romper la trazabilidad con el Documento 1 v0.1. Lo marcado como pendiente no se documenta aquí como decidido. Los pendientes que siguen abiertos (`specs/19-pendientes.md`) se listan en el capítulo 8.
 
-El diseño de pantallas que `specs/` no detalla se toma del prototipo de simulación aprobado (`specs/20-prototipo-aprobado.md`). Si el prototipo y `specs/` dicen cosas distintas, vale `specs/`. El Ing. William Ambrossio aprobó ese prototipo el 13/10/2026, ya con los cambios de la reunión 4, y pidió los de la reunión 5.
+El prototipo de simulación aprobado (`specs/20-prototipo-aprobado.md`) es la referencia del diseño y del comportamiento que `specs/` no detalla. El Ing. William Ambrossio lo aprobó el 13/10/2026, ya con los cambios de la reunión 4, y pidió los de la reunión 5. Desde el 22/10/2026, en cómo se ve la aplicación (disposición, tamaños, colores, tipografía, espaciado y estilos) manda el prototipo. En los requisitos, las reglas, los textos, los datos y el comportamiento manda `specs/` (`specs/16-arquitectura-y-tecnologia.md`, decisión 89). Las excepciones de diseño están registradas en `specs/18-historial-de-decisiones.md`. Entre ellas están las de contraste que pide RNF-08 y los cambios que pidió el docente el 02/11/2026.
 
 El 16/10/2026 el coordinador fijó el trabajo por módulos, con un plan de tareas del 17/10/2026 al 04/11/2026 (`specs/16-arquitectura-y-tecnologia.md`, decisiones 62 a 86). Este documento no le pone otro nombre a ese modo de trabajo.
+
+El 02/11/2026 se replanificó la fase final (`specs/16-arquitectura-y-tecnologia.md`, decisión 90). INCOVSA todavía no entregó los accesos al servidor, al dominio ni a las cuentas de servicios (P-10, P-93 y P-94), y la reunión con el Ing. William Ambrossio está pendiente. Por eso esta versión 1.0 documenta el sistema tal como está en `develop` el 03/11/2026, y nada de ella depende de esa reunión. Lo que dependa de la reunión o de los accesos de INCOVSA (servidor, dominio y almacenamiento de imágenes en R2) se agrega en la versión 1.1, del 12/11/2026. Si no hay despliegue, la demostración del 04/11 es en local.
 
 ## Entregables del curso
 
@@ -167,9 +196,11 @@ Tabla: Fechas de entrega, según `specs/00-proyecto.md` {#tab:entregables}
 |---|---|---|
 | Lunes 21/09/2026 | Entregable 1. Definición, análisis y diseño inicial | 10 puntos |
 | Miércoles 14/10/2026 | Entregable 2. Avance funcional y documentación técnica. El avance con la aplicación real se presenta el lunes 19/10/2026 | 10 puntos |
-| Miércoles 04/11/2026 | Entregable 3. Entrega final. El desarrollo queda completo y se despliega el lunes 02/11/2026. La capacitación es el martes 03/11/2026 | 30 puntos |
+| 04/11, 09/11 y 12/11/2026 | Entregable 3, fase final. El miércoles 04/11, antes de las 9:50, entrega académica (sistema funcional y desplegado, repositorio actualizado y documentación también en el portal del curso) y prueba individual de conocimientos. El lunes 09/11, presentación previa de 8 minutos con otro docente. El jueves 12/11, entrega final a la empresa, con manuales y accesos | 30 puntos, 10 por fecha |
 
-`entregable-1/LEEME.md` dice que la v0.2, del 24/09/2026, todavía no incorpora las reuniones 4 y 5 ni los ajustes posteriores (P-77). Esta versión 0.3 toma esos cambios desde `specs/` 1.7. Las actas de las reuniones 4 y 5 siguen fuera del repositorio.
+Si INCOVSA no entrega los accesos a tiempo, la demostración es en local. El despliegue, la capacitación y la transferencia de los accesos y del repositorio pasan a antes del 12/11/2026 (decisión 90).
+
+`entregable-1/LEEME.md` dice que la v0.2, del 24/09/2026, todavía no incorpora las reuniones 4 y 5 ni los ajustes posteriores (P-77). Esta versión 1.0 incorpora esos cambios y los posteriores desde `specs/`.
 
 ## Cómo está armado este documento
 

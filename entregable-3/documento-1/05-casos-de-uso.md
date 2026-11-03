@@ -32,4 +32,24 @@ Tabla: Casos de uso CU-01 a CU-21 {#tab:casos-uso}
 
 Los casos vigentes del sitio son CU-07, CU-08, CU-09, CU-10, CU-11, CU-12, CU-15 y CU-21. Los del picking son CU-01, CU-02, CU-03, CU-04, CU-05, CU-11, CU-12, CU-13 y CU-14. CU-11 y CU-12 están en los dos componentes. CU-13 configura camiones. Ya no configura productos, clientes ni sectores.
 
-{fig:casos-sitio} y {fig:casos-picking} muestran esos casos con los actores por permiso. Gerencia y Soporte administran los usuarios.
+{{fig:casos-sitio}} y {{fig:casos-picking}}, en el capítulo de modelado, muestran esos casos con los actores por permiso. Gerencia y Soporte administran los usuarios.
+
+## Precisiones posteriores
+
+Después del 16/10/2026, `specs/` precisó cómo se comportan algunos casos. Ninguna precisión crea ni elimina un caso de uso, ni cambia su actor.
+
+Tabla: Precisiones de los casos de uso del 16/10/2026 al 03/11/2026 {#tab:precisiones-cu}
+
+| Caso | Precisión | Fuente |
+| --- | --- | --- |
+| CU-01 | Si dos facturadores de la misma sede trabajan a la vez, el servidor valida cada cambio contra lo guardado. Si el otro ya movió, envió o eliminó un pedido facturado, el cambio se rechaza con un aviso y la pantalla se actualiza en tiempo real (16/10 y 21/10). El archivo de Odoo se rechaza si, descomprimido, pasa de 50 MB o de 100 archivos internos, o si tiene más de 20 000 filas (29/10) | `specs/06` |
+| CU-03 | Si un marcado, un orden o un despacho no se guarda, vuelve atrás y la pantalla sigue en uso. Si otra pantalla ya despachó la ruta o el pedido, se avisa «El pedido ya no está en preparación.» (25/10) | `specs/07` |
+| CU-05 | El piloto ve solo las rutas de la sede de trabajo elegida en la barra superior (26/10). Dos pedidos facturados son del mismo cliente si su nombre y su sector coinciden sin distinguir mayúsculas, tildes ni espacios sobrantes (22/10, RN-49) | `specs/08`, `specs/12` |
+| CU-08 | A pedido del Ing. Manuel Rojas: los banners de las secciones tienen la misma altura, Productos usa la misma barra lateral de solo íconos que Industrias, con «Todas las industrias» primero, y el dato que falta no se muestra (02/11 y 03/11) | `specs/05` |
+| CU-09 | Se aceptan hasta 5 solicitudes por hora desde una misma dirección IP. Un campo oculto detecta a los robots: el envío responde como si fuera correcto, pero no se guarda (29/10). El mensaje admite hasta 2000 caracteres (24/10) | `specs/05` |
+| CU-12 | Gerencia y Soporte no pueden eliminar ni desactivar su propia cuenta (22/10). Al eliminar un piloto, se quita de «Envío por camión» si estaba elegido | `specs/11` |
+| CU-13 | No se puede eliminar ni cambiar de sede un camión elegido en «Envío por camión» (22/10) | `specs/11` |
+| CU-14 | La Bitácora muestra a cada usuario los registros de la sede que consulta. Gerencia y Soporte ven todos (22/10). Si falla una descarga de Excel o PDF, se avisa «No se pudo completar la operación. Inténtelo de nuevo.» (29/10) | `specs/10` |
+| CU-21 | El comentario del responsable admite hasta 2000 caracteres (27/10) | `specs/05` |
+
+`specs/03-roles-y-accesos.md` agrega dos precisiones a CU-11 y CU-12 (29/10). La primera rechaza las contraseñas fáciles de adivinar. La segunda pide la contraseña de quien restablece la de una cuenta de Gerencia o Soporte. La aplicación todavía no las aplica: se implementan después de la entrega del 04/11/2026 (`specs/16`, decisión 90).

@@ -115,7 +115,7 @@ Medidas que el equipo adoptó el 12/10/2026 para que la aplicación sea segura y
 - **(30/10, JG-26)** La CSP lleva `object-src 'none'` y `base-uri 'none'`, y su nonce tiene 128 bits del generador criptográfico. Next.js no envía `X-Powered-By`. Todas las respuestas llevan `Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()` y `Cross-Origin-Opener-Policy: same-origin`. No se envía `Cross-Origin-Embedder-Policy`, porque bloquearía los mapas de Google y la vista previa de Drive, que no envían `Cross-Origin-Resource-Policy`.
 - Los errores que ve el usuario no muestran detalles técnicos; el detalle queda solo en el registro del servidor.
 - **Registro del servidor (30/10, JG-26):** aparte de la bitácora de Reportes, el servidor escribe una línea JSON por cada rechazo de autorización (sin sesión, sin permiso, sede ajena, origen ajeno, entrada inválida, o un registro o una sede ajenos que rechaza un servicio con `ErrorAcceso`), por cada cookie de sede que no es del usuario y por cada error inesperado, también en la ruta de autenticación. Cada línea lleva la fecha, el nivel, el evento, el sistema, el identificador del usuario y la operación (el permiso que exige), y en los errores su tipo, su código y su ubicación. Nunca lleva datos personales, entradas del usuario, contraseñas, secretos ni el mensaje del error, que puede contener datos. `exigirPermiso` fija el contexto de cada operación (`src/lib/registro.ts`). **(17/10)** Ante un error inesperado, el mensaje es "No se pudo completar la operación. Inténtelo de nuevo." (`src/lib/errores.ts`); los errores de las reglas de negocio muestran su propio mensaje.
-- **(16/10)** Caddy obtiene y renueva solo el certificado HTTPS y agrega la cabecera HSTS.
+- **(16/10)** Caddy obtiene y renueva solo el certificado HTTPS. **(28/10)** La cabecera HSTS la envía Next.js (decisión 29).
 
 ### Secretos y dependencias
 
@@ -173,7 +173,7 @@ En el VPS, un archivo `docker-compose.yml` con tres servicios:
 
 | Servicio | Qué hace |
 |---|---|
-| Caddy | HTTPS con certificado automático, HSTS y redirección al puerto de la aplicación. Maneja sin configuración extra los avisos en tiempo real (SSE) |
+| Caddy | HTTPS con certificado automático y redirección al puerto de la aplicación. HSTS lo envía Next.js (decisión 29, 28/10). Maneja sin configuración extra los avisos en tiempo real (SSE) |
 | Aplicación | Next.js compilado como servidor independiente (`output: 'standalone'`), en **un solo proceso**, porque el aviso en tiempo real vive en la memoria del servidor (decisión 10) |
 | PostgreSQL 18 | La base de datos, con sus datos en un volumen de Docker |
 

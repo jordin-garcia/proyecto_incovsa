@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-"""Figura 5. Despliegue de producción (specs/16).
+"""Figura 5. Despliegue previsto en producción (specs/16).
 
-Una aplicación. Caddy en los puertos 80 y 443.
+Una aplicación. Caddy en los puertos 80 y 443, con HTTPS automático.
+HSTS y las demás cabeceras las envía la aplicación (decisión 29, 28/10).
 PostgreSQL 18 sin puerto publicado. R2 para las imágenes.
+El respaldo lo hace un cron del VPS con pg_dump y rclone.
 """
 import os
 import sys
@@ -31,9 +33,9 @@ NAV = caja(80, 90, 480, 210, "Navegador\nescritorio, tableta o teléfono", size=
 TV = caja(530, 90, 940, 210, "TV o tableta\ndel módulo de Bodega", size=26)
 
 marco(40, 300, 1280, 1180, "VPS")
-cv.text(620, 348, "Producción. Docker Compose. Un solo ambiente.", size=26, anchor="la")
-CADDY = caja(80, 420, 460, 600, "Caddy\nPuertos 80 y 443\nHTTPS y HSTS", size=26)
-APP = caja(560, 400, 1200, 620, "Una aplicación\nNext.js, un solo proceso\nSitio, panel y picking", size=26)
+cv.text(560, 348, "Producción prevista. Docker Compose. Un solo ambiente.", size=26, anchor="la")
+CADDY = caja(80, 420, 460, 600, "Caddy\nPuertos 80 y 443\nHTTPS automático", size=26)
+APP = caja(560, 400, 1200, 620, "Una aplicación\nNext.js, un solo proceso\nSitio, panel y picking\nHSTS y cabeceras de seguridad", size=26)
 cylinder(cv, 880, 900, 480, 190, "PostgreSQL 18\nPuerto no publicado", size=26)
 
 marco(1340, 300, 2040, 980, "Fuera del VPS")
@@ -49,7 +51,8 @@ cv.path([TV["b"], (735, 270), (360, 270), (360, CADDY["t"][1])])
 cv.arrow(CADDY["r"], APP["l"])
 cv.arrow((880, APP["b"][1]), (880, 805))
 cv.arrow((1200, 450), R2["l"])
-cv.arrow((1200, 530), BAK["l"])
+cv.path([(1120, 900), (1300, 900), (1300, BAK["l"][1]), BAK["l"]])
+cv.text(1196, 950, "cron: pg_dump\ny rclone", size=20, anchor="mm")
 cv.arrow((1200, 600), DRIVE["l"])
 cv.dashed_path([(600, APP["b"][1]), (600, 1120), (370, 1120), ODOO["t"]], open_head=True)
 cv.text(480, 1090, "enlace y archivo .xlsx", size=24, anchor="mm")

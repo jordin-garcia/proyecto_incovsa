@@ -2,7 +2,7 @@
 
 El catálogo funcional está en `specs/04-requerimientos-funcionales.md`. Los requerimientos no funcionales están en `specs/15-requerimientos-no-funcionales.md`. El estado compara cada código con el Documento 1 v0.1 del 21/09/2026.
 
-Los estados son Vigente, Modificado, Nuevo, Eliminado y Pendiente. Un código eliminado conserva su código y el estado Eliminado. No se reutiliza. Una fila con estado Eliminado no describe una función vigente. El comportamiento de cada módulo está en el archivo de `specs/` que le corresponde. Las marcas (29/09), (11/10), (13/10), (15/10) y (16/10) indican en qué fecha cambió el texto.
+Los estados son Vigente, Modificado, Nuevo, Eliminado y Pendiente. Un código eliminado conserva su código y el estado Eliminado. No se reutiliza. Una fila con estado Eliminado no describe una función vigente. El comportamiento de cada módulo está en el archivo de `specs/` que le corresponde. Las fechas entre paréntesis, como (29/09), (13/10) o (03/11), indican cuándo cambió el texto. Las tablas copian el texto vigente de `specs/` al 03/11/2026.
 
 \horizontal
 
@@ -14,13 +14,13 @@ Tabla: Requerimientos funcionales del sitio web {#tab:rf-sw}
 |---|---|---|
 | RF-SW-01 | El sitio presenta una página de inicio **informativa**, con información institucional y noticias. **(29/09)** Sin la sección "Catálogo informativo". **(13/10)** Misión con su texto a la izquierda y su imagen a la derecha; debajo, visión con su imagen a la izquierda y su texto a la derecha. **(15/10)** La sección de misión y visión va con el verde del pie de página | Modificado |
 | RF-SW-02 | El sitio presenta el apartado "Quiénes somos" con historia, misión, visión y valores. **(29/09)** Banner con transición entre los logotipos de INCOVSA e Inquiserca. **(13/10)** Misión y visión como en Inicio; valores como 5 imágenes, una por valor, sin texto (RF-SW-29). **(15/10)** "Misión y visión" y "A quién servimos" con el verde del pie de página; el bloque "INCOVSA e Inquiserca" alterna los dos logotipos como el banner | Modificado |
-| RF-SW-03 | El sitio presenta las **9 industrias** atendidas, con navegación por industria. Cada industria muestra su descripción, sus imágenes y sus productos en texto. **(13/10)** La navegación es una barra lateral izquierda solo con íconos, que muestra el nombre de la industria al pasar el cursor | Modificado |
-| RF-SW-04 | El sitio presenta un catálogo informativo de productos por industria, sin precios ni comercio electrónico. Se muestran nombre, países de origen y presentación, y nunca el lote. Un producto puede pertenecer a varias industrias. La búsqueda del prototipo está aprobada | Modificado |
-| RF-SW-05 | El sitio presenta el detalle de cada producto: imágenes, nombre, descripción, presentación, países de origen e industrias | Modificado |
+| RF-SW-03 | El sitio presenta las **9 industrias** atendidas, con navegación por industria. Cada industria muestra su descripción, sus imágenes y sus productos en texto. **(13/10)** La navegación es una barra lateral izquierda solo con íconos, que muestra el nombre de la industria al pasar el cursor. **(03/11, JG-28)** Se confirma la barra de solo íconos; Productos usa la misma (ver `specs/05-sitio-web.md`) | Modificado |
+| RF-SW-04 | El sitio presenta un catálogo informativo de productos por industria, sin precios ni comercio electrónico. Se muestran nombre, países de origen y presentación, y nunca el lote. Un producto puede pertenecer a varias industrias. La búsqueda del prototipo está aprobada. **(03/11, JG-28)** El filtro por industria es la barra lateral de solo íconos de Industrias, con «Todas las industrias» primero; no hay filtro «Industria por confirmar»: un producto sin industria solo aparece en «Todas las industrias» | Modificado |
+| RF-SW-05 | El sitio presenta el detalle de cada producto: imágenes, nombre, descripción, presentación, países de origen e industrias. **(02/11, JG-28)** El dato que falta no se muestra, sin aviso | Modificado |
 | RF-SW-06 | El sitio presenta un formulario de contacto para solicitudes, quejas o reclamos. **(13/10)** El contenido **solo se guarda en el sistema**; no se envía a ningún correo. **(15/10)** Al enviar, la página se desplaza hasta el aviso "Solicitud recibida" | Modificado |
 | RF-SW-07 | El panel permite actualizar sin tocar código la información institucional, las imágenes, las industrias, el catálogo, las noticias y la información de contacto. Quién lo hace depende de sus permisos | Modificado |
 | RF-SW-08 | El sitio y el panel son responsivos para escritorio, tableta y teléfono | Vigente |
-| RF-SW-09 | El sitio presenta el acceso a Odoo (enlace), a la administración del sitio y al sistema de picking. **(13/10)** "Acceso personal" pide primero el usuario, valida que exista en alguno de los dos sistemas, deja elegir el sistema y pide la contraseña al final ([03](03-roles-y-accesos.md)). **(15/10)** El panel izquierdo de las pantallas de acceso muestra solo el título y su descripción, centrados, sin notas de roles | Modificado |
+| RF-SW-09 | El sitio presenta el acceso a Odoo (enlace), a la administración del sitio y al sistema de picking. **(13/10)** "Acceso personal" pide primero el usuario, valida que exista en alguno de los dos sistemas, deja elegir el sistema y pide la contraseña al final (`specs/03-roles-y-accesos.md`). **(15/10)** El panel izquierdo de las pantallas de acceso muestra solo el título y su descripción, centrados, sin notas de roles | Modificado |
 | RF-SW-10 | El sitio tiene un área protegida de documentación interna (FT, HS, COA). Lo que cada usuario puede hacer depende de sus permisos. **(13/10)** Los documentos son enlaces de Google Drive | Modificado |
 | RF-SW-11 | Para recuperar su contraseña, el usuario la solicita a Gerencia o a Soporte. **(13/10)** La restablecen escribiendo una nueva en el panel. No hay recuperación por correo | Modificado |
 | RF-SW-12 | El panel tiene una bandeja con las solicitudes recibidas por el formulario de contacto | Vigente |
@@ -38,7 +38,7 @@ Tabla: Requerimientos funcionales del sitio web {#tab:rf-sw}
 | RF-SW-24 | El logotipo "Transformamos INCOVSA" no se usa en el sitio público | Nuevo |
 | RF-SW-25 | El acceso al panel y a la documentación interna depende de los permisos asignados a cada usuario | Nuevo |
 | RF-SW-26 | El menú lateral izquierdo del panel del sitio se reduce a íconos para ampliar el área de trabajo | Nuevo |
-| RF-SW-27 | **(11/10)** Los textos del sitio no mencionan el número de sedes y bodegas, ni Escuintla, ni el inventario, ni los roles fijos ([05](05-sitio-web.md)) | Nuevo |
+| RF-SW-27 | **(11/10)** Los textos del sitio no mencionan el número de sedes y bodegas, ni Escuintla, ni el inventario, ni los roles fijos (`specs/05-sitio-web.md`) | Nuevo |
 | RF-SW-28 | **(13/10)** Cada área de imágenes del sitio público admite hasta 5 imágenes que rotan cada 5 segundos; con una sola imagen, queda fija. La rotación no debe hacer más lenta la carga (RNF-17) | Nuevo |
 | RF-SW-29 | **(13/10)** La sección de valores muestra solo 5 imágenes, una por valor, en una sola fila y sin texto, que se suben desde el panel | Nuevo |
 | RF-SW-30 | **(13/10)** Al cerrar sesión en cualquiera de los dos sistemas, el usuario vuelve a la página de inicio del sitio | Nuevo |
@@ -56,7 +56,7 @@ Tabla: Requerimientos funcionales del sistema de picking {#tab:rf-sl}
 | RF-SL-04 | **(13/10)** Desde Configuración se ven, crean, editan y eliminan los **camiones**. Ya no hay productos, clientes ni sectores | Modificado |
 | RF-SL-05 | **(13/10)** El facturador decide si cada pedido facturado va en un camión o lo recoge el cliente, arrastrándolo a una de las dos opciones de envío | Modificado |
 | RF-SL-06 | **(13/10)** La opción "Envío por camión" tiene listas desplegables para elegir el camión y el piloto de la sede | Modificado |
-| RF-SL-07 | **(13/10)** Facturación muestra cada pedido facturado del tablero en una tarjeta de todo el ancho: número, cliente, sector, total en kg y productos con su cantidad, sin asa de arrastre ni "x" | Modificado |
+| RF-SL-07 | **(13/10)** Facturación muestra cada pedido facturado del tablero en una tarjeta: número, cliente, sector, total en kg y productos con su cantidad, sin asa de arrastre ni "x". **(22/10)** Las tarjetas van en la rejilla del prototipo (decisión 89) | Modificado |
 | RF-SL-08 | La tabla empieza vacía y cada clic en el botón "+" agrega una fila | **Eliminado** (29/09) |
 | RF-SL-09 | Búsqueda de clientes en tiempo real al capturar | **Eliminado** (29/09) |
 | RF-SL-10 | Búsqueda de productos en tiempo real al capturar | **Eliminado** (29/09) |
@@ -140,18 +140,56 @@ Tabla: Requerimientos no funcionales {#tab:rnf}
 | RNF-01 | Usabilidad | Interfaz responsiva en escritorio, tableta y teléfono. La contraparte lo reiteró el 29/09 para el sitio | Vigente |
 | RNF-02 | Usabilidad | Bodega se lee bien proyectado en una TV y se usa con facilidad en tableta: cantidades y productos bien visibles, estados claros, pocos pasos. Debe cumplirse en modo claro y en modo oscuro (29/09) | Vigente |
 | RNF-03 | Seguridad | Contraseñas guardadas con un algoritmo de cifrado unidireccional, nunca en texto plano | Vigente |
-| RNF-04 | Seguridad | Todas las rutas del panel, de la documentación interna y del picking están protegidas. Cada usuario solo entra a los módulos y hace las acciones que permiten **sus permisos** (29/09), y ve los datos de las sedes que tiene asignadas (11/10). **(12/10)** Los permisos y la sede se verifican **en el servidor en cada operación**, no solo al entrar a una página ([16-arquitectura-y-tecnologia.md](16-arquitectura-y-tecnologia.md), "Seguridad") | Modificado |
+| RNF-04 | Seguridad | Todas las rutas del panel, de la documentación interna y del picking están protegidas. Cada usuario solo entra a los módulos y hace las acciones que permiten **sus permisos** (29/09), y ve los datos de las sedes que tiene asignadas (11/10). **(12/10)** Los permisos y la sede se verifican **en el servidor en cada operación**, no solo al entrar a una página (`specs/16-arquitectura-y-tecnologia.md`, "Seguridad") | Modificado |
 | RNF-05 | Seguridad | Toda entrada de formulario se valida en el navegador y en el servidor. Incluye el archivo .xlsx de Odoo, que se valida en el servidor antes de mostrar sus líneas (29/09). **(12/10)** Los archivos subidos (.xlsx e imágenes) se validan por su contenido, no solo por la extensión. **(13/10)** Los enlaces de la documentación interna se validan como direcciones de Google Drive; el sistema ya no recibe PDF | Modificado |
 | RNF-06 | Integridad | El envío de una ruta o un pedido a bodega es transaccional: la ruta o el pedido, su número del día, sus líneas de preparación, sus clientes (en una ruta), su estado y su registro de bitácora se guardan completos o no se guardan. Desde el 29/09 ya no hay operaciones de existencias. **(15/10)** Texto ajustado a la terminología del 13/10: la ruta ya no es una entidad aparte del pedido | Modificado |
 | RNF-07 | Mantenibilidad | Escalable y modificable por un desarrollador externo, con estructura y convenciones documentadas | Vigente |
 | RNF-08 | Accesibilidad | Contraste, etiquetas en formularios y textos alternativos en imágenes | Vigente |
 | RNF-09 | Respaldo | Procedimiento documentado y probado de respaldo y restauración de la base de datos y la configuración. Las imágenes están en R2. **(12/10)** Los respaldos son automáticos. **(13/10)** Ya no hay PDF en el servidor: los documentos técnicos están en el Google Drive de la empresa, que los respalda | Modificado |
-| RNF-10 | Privacidad | El repositorio no contiene credenciales, claves, datos reales de producción ni datos personales. **(16/10)** Única excepción: el prototipo de simulación armado, que contiene nombres reales de productos y de clientes de la empresa y se sube porque el repositorio es privado ([16](16-arquitectura-y-tecnologia.md), decisión 63) | Modificado |
+| RNF-10 | Privacidad | El repositorio no contiene credenciales, claves, datos reales de producción ni datos personales. **(16/10)** Única excepción: el prototipo de simulación armado, que contiene nombres reales de productos y de clientes de la empresa y se sube porque el repositorio es privado (`specs/16-arquitectura-y-tecnologia.md`, decisión 63). **(02/11)** Excepción temporal: las actas, notas, capturas y fotos de las reuniones se subieron al repositorio para completar este documento, sabiendo que el repositorio es público por ahora. Se quitan antes de transferirlo a INCOVSA y siguen en el historial de git (decisión 90) | Modificado |
 | RNF-11 | Compatibilidad | Funciona en los navegadores de uso corriente en los equipos de la empresa. Cuáles son, está pendiente (P-38) | Vigente |
 | RNF-12 | Disponibilidad | Se despliega bajo el dominio de la empresa con HTTPS | Vigente |
 | RNF-13 | Tiempo real | En Bodega, el marcado de filas y el orden de prioridad se ven **al instante** en todas las pantallas de la sede, sin recargar | Nuevo |
 | RNF-14 | Usabilidad | Ruta se usa con comodidad en teléfono y tableta | Nuevo |
-| RNF-15 | Seguridad | **(12/10)** Los intentos de inicio de sesión se limitan: después de varios intentos fallidos seguidos, se bloquea temporalmente el acceso. El mensaje de la contraseña incorrecta no dice si lo que falló es el usuario o la contraseña. **(13/10 y 14/10)** El paso del usuario del acceso personal sí dice si el usuario existe, por pedido de la contraparte; esas consultas cuentan en el límite de intentos por dirección IP y quedan en la bitácora ([03](03-roles-y-accesos.md)) | Modificado |
+| RNF-15 | Seguridad | **(12/10)** Los intentos de inicio de sesión se limitan: después de varios intentos fallidos seguidos, se bloquea temporalmente el acceso. El mensaje de la contraseña incorrecta no dice si lo que falló es el usuario o la contraseña. **(13/10 y 14/10)** El paso del usuario del acceso personal sí dice si el usuario existe, por pedido de la contraparte; esas consultas cuentan en el límite de intentos por dirección IP y quedan en la bitácora (`specs/03-roles-y-accesos.md`) | Modificado |
 | RNF-16 | Seguridad | **(12/10)** La aplicación envía cabeceras de seguridad (Content-Security-Policy, HSTS, nosniff, Referrer-Policy y protección contra inserción en marcos) y mantiene sus dependencias al día con los parches de seguridad, revisadas en cada pull request | Nuevo |
-| RNF-17 | Rendimiento | **(13/10)** Las galerías de imágenes que rotan no hacen más lenta la carga de las páginas: al abrir una página solo se descarga la primera imagen de cada galería y las demás después. Se comprueba con pruebas de rendimiento (Documento 6) que la carga inicial con galerías de 5 imágenes no tarda más que con galerías de una | Nuevo |
+| RNF-17 | Rendimiento | **(13/10)** Las galerías de imágenes que rotan no hacen más lenta la carga de las páginas: al abrir una página solo se descarga la primera imagen de cada galería y las demás después. Se comprueba con pruebas de rendimiento (Documento 6) que la carga inicial con galerías de 5 imágenes no tarda más que con galerías de una. **(26/10, DM-11; autorizado por Daniela)** La comparación de medianas temporales admite **10 ms** de ruido de medición según `specs/05-sitio-web.md`; la igualdad de bytes y la ausencia de solicitudes secundarias antes de `load` siguen siendo estrictas | Modificado |
 | RNF-18 | Trazabilidad | **(13/10)** Cada registro guarda automáticamente la fecha y la hora exactas en que se guardó en la base de datos (RN-57) | Nuevo |
+
+## Precisiones posteriores al 16/10
+
+Después del 16/10/2026, las auditorías, la revisión de seguridad y los cambios del docente precisaron varios requerimientos. No cambian su código ni su estado. El detalle está en el archivo de `specs/` de cada módulo y en `specs/18-historial-de-decisiones.md`.
+
+Tabla: Precisiones de los requerimientos después del 16/10/2026 {#tab:precisiones}
+
+| Código | Precisión | Fecha |
+|---|---|---|
+| RF-SW-03, RF-SW-04 | Industrias y Productos usan la misma barra lateral de solo íconos. La de Productos tiene primero «Todas las industrias». No hay filtro «Industria por confirmar»: un producto sin industria solo aparece en «Todas las industrias» | 03/11 |
+| RF-SW-02 a RF-SW-06, RF-SW-18 | Los banners de Quiénes somos, Industrias, Productos, Noticias y Contacto miden lo mismo en cada tamaño de pantalla. Ninguna pantalla muestra avisos de datos pendientes ni códigos P-xx. En el sitio, si falta un dato, el elemento no se muestra. Noticias sin publicaciones muestra solo «Todavía no hay noticias publicadas» | 02/11 |
+| RF-SW-06, RF-SW-19 | El mensaje admite hasta 2000 caracteres. El aviso muestra el folio de la solicitud, por ejemplo `SOL-2026-0001` | 24/10 |
+| RF-SW-06, RF-SW-19 | Se aceptan hasta 5 solicitudes por hora desde una misma dirección IP. Un campo que las personas no ven detecta los envíos de robots, que no se guardan | 29/10 |
+| RF-SW-07, RNF-05 | Los textos largos del panel admiten hasta 10 000 caracteres. El correo de Información de contacto puede quedar vacío, pero si se escribe debe ser válido | 27/10 y 29/10 |
+| RF-SW-20 | El comentario del responsable admite hasta 2000 caracteres | 27/10 |
+| RF-SL-03, RF-SL-57 | Gerencia y Soporte no pueden eliminar ni desactivar su propia cuenta. Al eliminar un piloto, se quita de Envío por camión | 22/10 |
+| RF-SL-04 | No se puede eliminar ni cambiar de sede un camión que está elegido en Envío por camión | 22/10 |
+| RF-SL-07 | Las tarjetas de Facturación van en la rejilla de varias columnas del prototipo | 22/10 |
+| RF-SL-23 | Si no se guarda una marca, el orden o el despacho, el cambio vuelve atrás, la pantalla sigue en uso y se avisa. Si otra pantalla ya despachó la ruta o el pedido, avisa «El pedido ya no está en preparación.» | 25/10 |
+| RF-SL-26 | Ruta muestra solo las rutas de la sede de trabajo elegida, también al piloto | 26/10 |
+| RF-SL-27, RN-49 | El nombre del cliente y el sector se comparan sin distinguir mayúsculas ni tildes y sin espacios al inicio ni al final | 22/10 |
+| RF-SL-36 | La bitácora se filtra por la sede que se consulta, salvo para Gerencia y Soporte. Muestra texto legible, los bloqueos de usuario y de dirección IP, y como máximo las 250 operaciones más recientes del periodo | 22/10 y 23/10 |
+| RF-SL-38 | El PDF usa siempre el logotipo de INCOVSA del sistema. Si una descarga falla, se muestra «No se pudo completar la operación. Inténtelo de nuevo.» | 26/10 y 29/10 |
+| RF-SL-50, RNF-05 | El archivo de Odoo se rechaza si tiene más de 100 archivos internos, si descomprimido pasa de 50 MB o si tiene más de 20 000 filas. Cada texto tiene el largo máximo de la base de datos | 29/10 |
+| RF-SL-58 | El tablero en pantalla completa abre en modo claro y se queda en la ruta o el pedido que muestra hasta que se despacha. En una ruta larga, todas las líneas se pueden ver y tocar | 24/10 |
+| RF-SL-63, RF-SL-67 | Si otro facturador ya movió, envió o eliminó un pedido facturado, el cambio se rechaza con un aviso y la pantalla se actualiza | 21/10 |
+| RNF-03, RNF-15 | Las contraseñas se cifran con scrypt, con los parámetros mínimos de OWASP. Se rechazan las contraseñas fáciles de adivinar, y para restablecer la de una cuenta de Gerencia o Soporte se pide la contraseña de quien lo hace. Estas dos últimas reglas se implementan después del 04/11 | 29/10 y 30/10 |
+| RNF-16 | La política de seguridad de contenido usa un nonce nuevo por respuesta. En producción, las cookies propias llevan el prefijo `__Host-`. Se agregan las cabeceras Permissions-Policy y Cross-Origin-Opener-Policy | 22/10 y 30/10 |
+
+## Estado al 03/11/2026
+
+Los requerimientos vigentes están implementados en `develop`, con estas salvedades:
+
+- RNF-12 (despliegue bajo el dominio de la empresa con HTTPS) y los respaldos automáticos en el servidor (RNF-09) esperan los accesos al servidor y al dominio (P-10 y P-93);
+- las contraseñas fáciles de adivinar y la confirmación de la propia contraseña al restablecer la de una cuenta de Gerencia o Soporte (RNF-03, RNF-15, RF-SL-48 y RF-SW-11) se implementan después del 04/11 y antes del despliegue;
+- el panel ya permite cargar el contenido del sitio (RF-SW-07), pero el contenido oficial espera los datos de INCOVSA (P-17, P-19, P-21 y P-23).
+
+RNF-11 sigue pendiente de saber qué navegadores usa la empresa (P-38). Mientras tanto, las pruebas cubren Chromium, Firefox y WebKit en teléfono, tableta y escritorio. Lo que salga de la reunión con el Ing. William Ambrossio y del despliegue se agrega en la versión 1.1 (`specs/16-arquitectura-y-tecnologia.md`, decisión 90).

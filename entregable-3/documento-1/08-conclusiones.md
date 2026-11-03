@@ -1,20 +1,40 @@
 # Conclusiones
 
-La especificación 1.7, con corte del 16/10/2026, describe una sola aplicación para el sitio institucional y el picking de INCOVSA. El picking empieza cuando el pedido ya está facturado en Odoo. Facturación lee el archivo .xlsx. Bodega convierte los kilogramos a unidades con RN-01 y prepara. El despacho deja el pedido en Despachado o la ruta en En Ruta. La entrega de la ruta queda en Entregado. No hay paso de inventario.
+La especificación 1.7, con los cambios hasta el 03/11/2026, describe una sola aplicación para el sitio institucional y el picking de INCOVSA. Esta versión 1.0 documenta el sistema tal como está en `develop` el 03/11/2026. El picking empieza cuando el pedido ya está facturado en Odoo. Facturación lee el archivo .xlsx. Bodega convierte los kilogramos a unidades con RN-01 y prepara. El despacho deja el pedido en Despachado o la ruta en En Ruta. La entrega de la ruta queda en Entregado. Cada día, una prueba automática recorre ese flujo completo, hasta el reporte. No hay paso de inventario.
 
 El control de inventario salió del alcance el 29/09/2026, porque lo lleva Odoo. El Ing. Manuel Rojas aprobó esa exclusión. El coordinador lo informó el 16/10/2026 (P-58). Los códigos eliminados se conservan con estado Eliminado. No se presentan como funciones vigentes.
 
 El acceso es por permisos de cada usuario. Los únicos roles predeterminados son Gerencia y Soporte. Ellos administran los usuarios de los dos sistemas y restablecen las contraseñas dentro del sistema. No hay correo saliente.
 
-La conversión que INCOVSA validó el 23/09/2026 sigue en los 15 casos del anexo E. El Peso de Conversión llega en el archivo de Odoo desde el 13/10/2026.
+La conversión que INCOVSA validó el 23/09/2026 sigue en los 15 casos del anexo E. Cada caso es una prueba automatizada. El Peso de Conversión llega en el archivo de Odoo desde el 13/10/2026.
 
-El despliegue de producción está definido. Es Docker Compose en un VPS, con Caddy, una aplicación y PostgreSQL 18. Las imágenes van a R2. El primer despliegue está fechado el 02/11/2026. El VPS, el DNS y las cuentas de servicio siguen abiertos en `specs/19-pendientes.md`.
+La seguridad se revisó el 29/10/2026 contra OWASP ASVS 5.0, nivel 2, y con OWASP ZAP. Las correcciones del 30/10/2026 endurecieron las cookies, las cabeceras, las sesiones, el cifrado de las contraseñas y el registro del servidor. Los riesgos que el coordinador aceptó están en el capítulo de seguridad.
 
-La prosa de la versión 0.2 y las actas de las reuniones 1 a 5 no están en el repositorio. Esas ausencias quedan marcadas en la introducción y en el anexo A. No se redactó un acta de reemplazo.
+La arquitectura de despliegue está definida y su configuración está en el repositorio. Es Docker Compose en un VPS, con Caddy, una aplicación y PostgreSQL 18. Las imágenes irán a R2. El despliegue todavía no se hizo. Depende del VPS, del DNS y de las cuentas de servicio que INCOVSA no ha entregado (P-10, P-93 y P-94). Mientras tanto, la demostración del 04/11/2026 es en local, como lo aceptó el docente (`specs/16`, decisión 90).
 
-## Trabajo que sigue abierto
+Las actas de las reuniones con la contraparte están en el anexo A.
 
-`specs/19-pendientes.md` es la lista de lo que falta definir o recibir. Al 17/10/2026, según el propio archivo, ya se resolvieron P-58, P-40, P-95, P-96 y P-97. No se repiten aquí. Lo que sigue es la lista abierta de ese archivo. No es un plan nuevo.
+## Trabajo que sigue
+
+La decisión 90 de `specs/16` reparte la fase final en tres fechas. El 04/11/2026 se entrega esta versión 1.0 y se hace la prueba individual. El 09/11/2026 es la presentación previa con otro docente. El 12/11/2026 es la entrega final a la empresa. Esta versión no depende de la reunión pendiente con el Ing. William Ambrossio. Lo que salga de esa reunión, del despliegue y de la capacitación va en la versión 1.1 de los documentos, del 12/11/2026.
+
+Tabla: Trabajo previsto después del 04/11/2026 {#tab:trabajo-previsto}
+
+| Trabajo | Cuándo |
+|---|---|
+| Convergencia final de `specs/` y el prototipo con `develop` | Después del 04/11/2026 |
+| Rechazo de contraseñas fáciles de adivinar y confirmación de la propia contraseña al restablecer la de una cuenta de Gerencia o Soporte (`specs/03`) | Después del 04/11/2026 y antes del despliegue |
+| Documentación de los riesgos de seguridad aceptados en `specs/16` | Después del 04/11/2026 y antes del despliegue |
+| Integración de `develop` en `main` y primer despliegue en el VPS | En cuanto INCOVSA entregue los accesos, antes del 12/11/2026 |
+| Capacitación al personal de INCOVSA | Antes del 12/11/2026 |
+| Transferencia de los accesos y del repositorio a INCOVSA | Antes del 12/11/2026 |
+| Versión 1.1 de los documentos y anexos | 12/11/2026 |
+
+Quedan fuera del alcance, como trabajo futuro, la integración directa con Odoo (`specs/16`) y las funciones de seguridad que el coordinador aceptó no implementar antes de la entrega, como MFA o el cambio de la contraseña propia.
+
+## Pendientes abiertos
+
+`specs/19-pendientes.md` es la lista de lo que falta definir o recibir. Ya se resolvieron P-58, P-40, P-95, P-96, P-97 y P-98. No se repiten aquí. Lo que sigue es la lista abierta de ese archivo. No es un plan nuevo.
 
 ### Con INCOVSA
 
@@ -30,9 +50,9 @@ Tabla: Pendientes con INCOVSA {#tab:pendientes-incovsa}
 | P-06 | URL de inicio de sesión de Odoo | P2 |
 | P-07 | Tiempo de expiración de las sesiones | P2 |
 | P-08 | Usuario administrador inicial | P2 |
-| P-10 | VPS. El Ing. William se comprometió a contratarlo (16/10/2026). Se le pide el acceso a más tardar el 28/10/2026. Falta confirmar esa fecha y las características de `specs/16` | P2 |
-| P-93 | Quién administra el DNS de incovsa.com y si se puede pasar a Cloudflare. Se necesita a más tardar el 28/10/2026 | P2 |
-| P-94 | Cuentas de servicios, a más tardar el 28/10/2026. Correo de INCOVSA para Cloudflare y el VPS, y la organización de GitHub a la que se transfiere el repositorio | P2 |
+| P-10 | VPS. El Ing. William se comprometió a contratarlo (16/10/2026). Se pidió el acceso a más tardar el 28/10/2026 y no se había entregado al 03/11/2026. Falta confirmar que cumple las características de `specs/16` | P2 |
+| P-93 | Quién administra el DNS de incovsa.com y si se puede pasar a Cloudflare. Se pidió a más tardar el 28/10/2026 | P2 |
+| P-94 | Cuentas de servicios, pedidas a más tardar el 28/10/2026. Correo de INCOVSA para Cloudflare y el VPS, y la organización de GitHub a la que se transfiere el repositorio | P2 |
 | P-17 | Datos de los productos públicos | P2 |
 | P-18 | Logotipo vectorial, códigos de color exactos y tipografía | P2 |
 | P-19 | Texto de la historia de la empresa y sus imágenes, y las imágenes de los 5 valores | P2 |
@@ -60,6 +80,5 @@ Tabla: Pendientes del equipo {#tab:pendientes-equipo}
 | Id | Pendiente | Prioridad |
 |---|---|---|
 | P-04 | Archivar la evidencia del cuestionario del 9 al 11/09/2026, la reunión del 18/09/2026, las aclaraciones del 19 al 20/09/2026 y las respuestas del 23 al 24/09/2026 | P1 |
-| P-77 | Actualizar el Documento 1 y los diagramas con las reuniones 4 y 5, y archivar las actas en Markdown de esas reuniones. La reunión 5 fue el 13/10/2026, no el 14/10/2026 | P2 |
 
-La versión 0.3 de este documento alinea el texto y los diagramas con `specs/` 1.7. Las actas de las reuniones 4 y 5 siguen sin estar en el repositorio, así que P-77 no queda cerrado por este borrador.
+Esta versión 1.0 alinea el texto y los diagramas con `specs/` y reúne en el anexo A las actas de las cinco reuniones. Con eso se resolvió P-77 el 03/11/2026 (`specs/18`).

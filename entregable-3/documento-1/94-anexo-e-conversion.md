@@ -7,7 +7,9 @@ unidades = parte entera (cantidad_kg ÷ Peso de Conversión)
 resto_kg = cantidad_kg − (unidades × Peso de Conversión)
 ```
 
-La tabla siguiente copia los 15 casos que la empresa validó. No se agregan filas ni se cambian los valores.
+La conversión no redondea. Lo que no completa una unidad se muestra como resto en kilogramos (RN-05 y RN-21). Cuando el resto es 0, se muestra solo «N unidades». Los cálculos usan decimales exactos, no punto flotante. El Peso de Conversión llega en cada línea del archivo de Odoo desde el 13/10/2026 (RN-37).
+
+La tabla siguiente copia los 15 casos que la empresa validó el 23/09/2026. No se agregan filas ni se cambian los valores. Cada caso es una prueba automatizada de la aplicación, CP-01 a CP-15, en `src/modulos/conversion/servicio.test.ts`. Los casos fraccionados y los de datos incorrectos, como un Peso de Conversión en 0 (RN-50), están en el Documento 6.
 
 Tabla: Quince casos de conversión validados por INCOVSA {#tab:anexo-casos}
 

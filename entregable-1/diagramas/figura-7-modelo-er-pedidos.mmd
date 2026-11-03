@@ -18,11 +18,13 @@ erDiagram
     Envio ||--|{ LineaPreparacion : prepara
     Envio ||--|{ HistorialEstado : historial
     Usuario ||--o{ HistorialEstado : cambia
+    EstadoEnvio ||--o{ HistorialEstado : registra
     Envio ||--o{ EntregaRuta : "clientes si es ruta"
 
     PedidoFacturado {
         string numeroOdoo
-        string nombreCliente
+        string referencia
+        string cliente
         string sector
     }
     DetallePedidoFacturado {
@@ -33,8 +35,10 @@ erDiagram
     }
     Envio {
         string tipo
-        int numeroDia
-        datetime programadoEn
+        int numero
+        date fechaEnvio
+        datetime programadoPara
+        int posicionCola
     }
     LineaPreparacion {
         string producto
@@ -44,7 +48,7 @@ erDiagram
         boolean marcado
     }
     EntregaRuta {
-        string nombreCliente
+        string cliente
         string sector
         decimal totalKg
     }

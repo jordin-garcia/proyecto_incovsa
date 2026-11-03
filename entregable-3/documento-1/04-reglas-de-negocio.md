@@ -1,6 +1,6 @@
 # Reglas de negocio
 
-Las reglas están en `specs/12-reglas-de-negocio.md`. El estado compara cada regla con el Documento 1 v0.1. Los códigos no se reutilizan. Una regla con estado Eliminado ya no se aplica. La conversión vigente es RN-01, con ventas fraccionadas (RN-21). El sistema no lleva inventario (RN-40).
+Las reglas están en `specs/12-reglas-de-negocio.md`, versión 1.7 de la especificación, con los cambios hasta el 03/11/2026. El estado compara cada regla con el Documento 1 v0.1. Los códigos no se reutilizan. Una regla con estado Eliminado ya no se aplica. La conversión vigente es RN-01, con ventas fraccionadas (RN-21). El sistema no lleva inventario (RN-40).
 
 ## Catálogo
 
@@ -56,7 +56,7 @@ Tabla: Catálogo de reglas de negocio {#tab:reglas}
 | RN-46 | Los usuarios cuyo rol es **"Piloto"** son los que se eligen en la opción "Envío por camión" y los que ven solo sus rutas en Ruta | Nuevo |
 | RN-47 | Para recuperar su contraseña, el usuario la solicita a Gerencia o a Soporte, que escriben una nueva desde la administración de usuarios de su sistema. No hay recuperación por correo | Nuevo |
 | RN-48 | El **tablero de pedidos facturados** y lo asignado a cada opción de envío (pedidos facturados y su orden, camión, piloto, fecha y hora programadas) **se guardan en la base de datos** por sede. Se pueden eliminar del tablero uno, varios o todos los pedidos facturados. "Cancelar" en una opción de envío regresa sus pedidos facturados al tablero | Nuevo |
-| RN-49 | En la tabla de Ruta hay una fila por cliente: si un cliente tiene varios pedidos facturados en la misma ruta, van en una sola fila con la suma de sus kg. **(13/10)** Dos pedidos facturados son del mismo cliente cuando tienen el mismo nombre y el mismo sector en el archivo | Nuevo |
+| RN-49 | En la tabla de Ruta hay una fila por cliente: si un cliente tiene varios pedidos facturados en la misma ruta, van en una sola fila con la suma de sus kg. **(13/10)** Dos pedidos facturados son del mismo cliente cuando tienen el mismo nombre y el mismo sector en el archivo. **(22/10)** El nombre y el sector se comparan sin distinguir mayúsculas ni tildes y sin espacios al inicio ni al final, como `norm()` y `claveRuta()` del prototipo (un nombre o un sector vacío cuenta como «Sin nombre» o «Sin sector»). La misma comparación cuenta los clientes en la confirmación de Facturación y en Bodega. La fila muestra el nombre y el sector del primer pedido facturado | Nuevo |
 | RN-50 | **(14/10)** Si una línea de una referencia "Hecho" trae el Peso de Conversión vacío, no numérico o menor o igual a 0, ese pedido facturado **no se carga** y se avisa en el resumen de la carga, igual que con una cantidad inválida | Nuevo |
 | RN-51 | **(13/10 y 14/10)** Bodega agrupa las líneas por **producto, lote y Peso de Conversión**: suma la cantidad de las líneas iguales entre todos los clientes de la ruta o del pedido y muestra el lote resaltado. Lotes distintos van en filas distintas | Nuevo |
 | RN-52 | **(13/10)** Las rutas y los pedidos llevan cada uno su **correlativo diario por sede**: empiezan en 1 cada día, según la fecha de envío a bodega en la hora de Guatemala | Nuevo |
@@ -138,5 +138,9 @@ Cancelar una opción de envío devuelve sus pedidos facturados al tablero. La bi
 RN-39 registra las operaciones de los dos sistemas. Incluye inicios de sesión, intentos fallidos y bloqueos. No incluye los cierres de sesión. Incluye la carga de archivos de Odoo, la eliminación de pedidos facturados del tablero, el envío a bodega, la cancelación de una opción, los cambios de estado, los cierres de ruta, los camiones, los usuarios, los permisos, las sedes, las contraseñas, el contenido del sitio, los productos documentados y las solicitudes de contacto.
 
 Cada registro guarda el usuario, la fecha y la hora, la operación y su detalle. Si el intento no tiene un usuario válido, guarda el nombre de usuario que se escribió.
+
+La pestaña Bitácora de Reportes muestra el detalle como texto legible, nunca el dato técnico que se guarda (23/10/2026). En los intentos fallidos y los bloqueos de un usuario que no existe, el usuario escrito lleva «(no existe)». Los bloqueos se muestran como «Bloqueo de usuario» o «Bloqueo de IP», con el usuario o la dirección IP bloqueada. Se muestran como máximo las 250 operaciones más recientes del periodo (`specs/10-picking-reportes.md`).
+
+Gerencia y Soporte ven todos los registros. Los demás usuarios con permiso de Reportes ven, de la sede que consultan, las operaciones del sitio, las de acceso y las del picking de esa sede (22/10/2026, RN-17). Los cambios de un usuario del picking solo se les muestran si todas las sedes de ese usuario son la consultada.
 
 No se registran el marcado de filas en Bodega (RN-20), el reordenamiento de prioridad en Bodega (RN-28) ni el reordenamiento de filas en Ruta antes de la entrega. De la ruta solo se guarda el recorrido final (RN-29).

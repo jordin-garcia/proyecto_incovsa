@@ -6,6 +6,8 @@ Las capturas de este anexo salen de ese HTML, servido con `node scripts/servir-p
 
 En las capturas se ocultó el botón Demostración y se apagaron las notas amarillas de pendientes. `specs/20` los lista como herramientas de presentación y de validación, no como pantallas del sistema.
 
+El sistema implementado se aparta del prototipo solo en los cambios que pidió el docente, Ing. Manuel Rojas, el 02/11/2026 y el 03/11/2026: banners de igual altura, la barra de Productos igual a la de Industrias y sin los textos de pendientes del prototipo (`specs/05`, «Cambios del Ing. Manuel Rojas»). Las capturas de este anexo muestran el prototipo aprobado, no esos cambios.
+
 Las páginas públicas no tienen sesión. El panel, la documentación interna, Reportes y Configuración usan la cuenta de ejemplo `ejemplo.01`, rol Gerencia. Facturación usa `ejemplo.03`. Bodega y el tablero usan `ejemplo.05`. Ruta usa `ejemplo.06`, rol Piloto. La contraseña de demostración es `demo`. Esas cuentas son del prototipo.
 
 La pantalla de acceso lista las cuentas de demostración del prototipo, entre ellas Administrativo, Operativo y Vista general. Esos nombres están en el HTML aprobado. No son roles vigentes del sistema. Los roles vigentes son Gerencia y Soporte.
