@@ -324,3 +324,10 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 **José Daniel:** JG-28 quitó «(P-91)» de `src/componentes/picking/facturacion/FacturacionTablero.tsx` y de `pruebas-e2e/picking/facturacion-carga.spec.ts`. Actualiza tu rama desde `develop`.
 **Josué:** la captura de Facturación sin «(P-91)» ya se puede tomar para JM-07.
 **Carlos:** JG-28 cambió `pruebas-e2e/sitio/auditoria-ce13.spec.ts`: en teléfono, la prueba H-60 se desplaza al formulario de Contacto antes de escribir, porque el banner es más alto. Actualiza tu rama desde `develop`.
+
+## 2026-11-03 · JG-28 · Corrección: barra de Productos de solo íconos
+- Hecho: las instrucciones de las barras estaban al revés. La barra de Industrias vuelve a la del prototipo (solo íconos, nombre en un globo) y la de Productos usa esa misma barra, con «Todas las industrias» primero y un ícono de cuadrícula nuevo (`cuadricula` en `iconos.tsx`). Junto a la barra, la rejilla del catálogo tiene 2 columnas en teléfono.
+- Decisiones: el globo muestra solo el nombre, sin número de productos; ícono de cuadrícula para «Todas»; 2 columnas en teléfono. Registrado en `specs/04`, `specs/05`, `specs/18` y en el `## Resultado` de JG-28.
+- Pendiente o aviso para otros:
+**Daniela:** la corrección cambió `src/componentes/sitio/` (`sitio.css`, `Industrias.tsx`, `CatalogoCliente.tsx`) y `pruebas-e2e/sitio/industrias-y-productos.spec.ts`. Si ya tomaste las capturas de Industrias o Productos para DM-13, vuelve a tomarlas. Actualiza tu rama desde `develop`.
+**Josué:** si ya tomaste capturas de Industrias o Productos para JM-07, vuelve a tomarlas con la barra de solo íconos.

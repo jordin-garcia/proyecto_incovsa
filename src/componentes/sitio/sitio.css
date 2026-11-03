@@ -652,17 +652,91 @@
   .sec-detalle {
     padding-top: 40px;
   }
-  /* JG-28: la barra de Industrias usa la misma columna y los mismos filtros que la de Productos. */
+  /* Barra de solo íconos de Industrias. JG-28 (03/11): Productos usa la misma, con «Todas las industrias». */
   .ind-lay2 {
     display: grid;
-    grid-template-columns: 260px minmax(0, 1fr);
-    gap: 32px;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 26px;
     align-items: start;
   }
   .ind-lay2 > *,
-  .cat-lay > *,
   .det-lay > * {
     min-width: 0;
+  }
+  .ind-barra {
+    position: sticky;
+    top: 96px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px 8px;
+    border-radius: var(--radius-prototipo-7);
+    background: linear-gradient(180deg, var(--v900), var(--v950));
+    box-shadow: var(--s2);
+    z-index: 5;
+  }
+  .ind-barra > a,
+  .ind-barra > button {
+    position: relative;
+    width: 56px;
+    height: 52px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: var(--radius-prototipo-8);
+    background: transparent;
+    color: var(--color-prototipo-21);
+    cursor: pointer;
+  }
+  .ind-barra .ico {
+    width: 26px;
+    height: 26px;
+  }
+  .ind-barra > a:hover,
+  .ind-barra > a:focus-visible,
+  .ind-barra > button:hover,
+  .ind-barra > button:focus-visible {
+    background: var(--color-prototipo-28);
+    color: var(--color-blanco);
+  }
+  .ind-barra > a.on,
+  .ind-barra > button.on {
+    background: var(--color-prototipo-24);
+    color: var(--lima-b);
+    box-shadow: var(--shadow-prototipo-5);
+  }
+  .ind-nombre {
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    transform: translate(-6px, -50%);
+    white-space: nowrap;
+    padding: 9px 13px;
+    border-radius: var(--radius-prototipo-1);
+    background: var(--g900);
+    color: var(--color-blanco);
+    font: 600 14px/1 var(--f-ui);
+    box-shadow: var(--s2);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 0.15s,
+      transform 0.15s;
+  }
+  .ind-nombre::before {
+    content: "";
+    position: absolute;
+    left: -5px;
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    background: var(--g900);
+    transform: translateY(-50%) rotate(45deg);
+  }
+  .ind-barra > :hover .ind-nombre,
+  .ind-barra > :focus-visible .ind-nombre {
+    opacity: 1;
+    transform: translate(0, -50%);
   }
   .ind-det {
     padding: 34px;
@@ -731,55 +805,6 @@
     font-size: 14px;
     overflow-wrap: anywhere;
     max-width: 100%;
-  }
-  .cat-lay {
-    display: grid;
-    grid-template-columns: 260px minmax(0, 1fr);
-    gap: 32px;
-    align-items: start;
-  }
-  .filtros {
-    position: sticky;
-    top: 100px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .filtros > button,
-  .filtros > a {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
-    border: 0;
-    border-radius: var(--radius-prototipo-1);
-    background: transparent;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 14.5px;
-    color: var(--g700);
-    text-align: left;
-  }
-  .filtros > button:hover,
-  .filtros > a:hover {
-    background: var(--color-blanco);
-  }
-  .filtros > button.on,
-  .filtros > a.on {
-    background: var(--v100);
-    color: var(--v700);
-  }
-  .filtros small {
-    font: 600 12px/1 var(--f-mono);
-    color: var(--g600);
-  }
-  /* JG-28: ícono de la industria a la izquierda del nombre, en Productos y en Industrias. */
-  .filtro-nombre {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    min-width: 0;
   }
   .catalogo-busqueda {
     display: flex;
@@ -983,30 +1008,30 @@
     }
   }
   @media (max-width: 900px) {
-    .cat-lay,
-    .ind-lay2,
     .det-lay {
       grid-template-columns: 1fr;
     }
-    .filtros,
     .det-foto {
       position: static;
-    }
-    .filtros {
-      flex-direction: row;
-      overflow-x: auto;
-      padding-bottom: 6px;
-    }
-    .filtros > button,
-    .filtros > a {
-      white-space: nowrap;
-      flex: none;
     }
   }
   @media (max-width: 720px) {
     .pag-cab {
       --alto-pag-cab: 480px;
       padding: 40px 0;
+    }
+    .ind-lay2 {
+      grid-template-columns: 58px minmax(0, 1fr);
+      gap: 12px;
+    }
+    .ind-barra {
+      padding: 6px 4px;
+      top: 76px;
+    }
+    .ind-barra > a,
+    .ind-barra > button {
+      width: 50px;
+      height: 46px;
     }
     .ind-det {
       padding: 22px;
@@ -1016,8 +1041,9 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
     }
+    /* JG-28 (03/11): junto a la barra de íconos, tres columnas no caben en teléfono. */
     .catalogo-rejilla {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     .fichas {
       grid-template-columns: 1fr;
@@ -1034,7 +1060,8 @@
       transform: none;
     }
     .prod-t,
-    .prod-t .foto img {
+    .prod-t .foto img,
+    .ind-nombre {
       transition: none;
     }
   }

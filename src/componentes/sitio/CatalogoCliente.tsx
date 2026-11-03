@@ -22,13 +22,13 @@ export function CatalogoCliente({ datos, filtroInicial }: { datos: CatalogoSitio
   );
   const [filtro, cambiarFiltro] = useState(filtroInicial);
   const [busqueda, cambiarBusqueda] = useState("");
-  // JG-28: cada industria lleva su ícono; un producto sin industria solo aparece en «Todas las industrias».
+  // JG-28: la misma barra de solo íconos que Industrias, con «Todas las industrias» primero.
+  // Un producto sin industria solo aparece en «Todas las industrias».
   const filtros = [
-    { clave: "todas", nombre: "Todas las industrias", cuenta: datos.productos.length, icono: null },
+    { clave: "todas", nombre: "Todas las industrias", icono: "cuadricula" as const },
     ...datos.industrias.map((i, indice) => ({
       clave: ICONOS_INDUSTRIAS[indice]!,
       nombre: i.nombre,
-      cuenta: datos.productos.filter((p) => p.industrias.some((j) => j.id === i.id)).length,
       icono: ICONOS_INDUSTRIAS[indice]!,
     })),
   ];
@@ -40,21 +40,21 @@ export function CatalogoCliente({ datos, filtroInicial }: { datos: CatalogoSitio
   );
   return (
     <section className="sec sec-catalogo">
-      <div className="wrap cat-lay" data-hidratado={hidratado}>
-        <aside className="filtros" aria-label="Filtrar por industria">
+      <div className="wrap ind-lay2" data-hidratado={hidratado}>
+        <aside className="ind-barra" aria-label="Filtrar por industria">
           {filtros.map((f) => (
             <button
               key={f.clave}
               type="button"
               className={filtro === f.clave ? "on" : ""}
+              aria-label={f.nombre}
               aria-pressed={filtro === f.clave}
               onClick={() => cambiarFiltro(f.clave)}
             >
-              <span className="filtro-nombre">
-                {f.icono && <Icono nombre={f.icono} />}
+              <Icono nombre={f.icono} />
+              <span className="ind-nombre" role="tooltip">
                 {f.nombre}
               </span>
-              <small>{f.cuenta}</small>
             </button>
           ))}
         </aside>

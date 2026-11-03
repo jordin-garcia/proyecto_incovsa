@@ -95,5 +95,14 @@ npm run e2e -- pruebas-e2e/sitio pruebas-e2e/panel pruebas-e2e/picking/facturaci
 
 **Cómo usarlo**
 - Una página pública nueva con `EncabezadoPagina` recibe la altura común sin hacer nada más. Si un banner nuevo tiene más contenido que Quiénes somos, hay que subir `--alto-pag-cab` en `sitio.css` y en `specs/05`.
-- Para otra barra lateral con el mismo aspecto: contenedor `.filtros` con hijos `a` o `button`, cada uno con `<span className="filtro-nombre"><Icono …/>Nombre</span><small>número</small>` y la clase `on` en la opción activa.
 - Capturas de antes y después, y salidas de la verificación: `plan/evidencias/JG-28/`.
+
+### Corrección del coordinador (2026-11-03)
+
+Las instrucciones de las barras estaban al revés: la barra de **Productos** tenía que quedar como la de solo íconos de Industrias del prototipo, con un ícono más para «Todas las industrias». Esta corrección reemplaza el punto «Barras laterales» de arriba:
+- **Industrias** (`Industrias.tsx`) vuelve a la barra del prototipo: `<nav className="ind-barra" aria-label="Industrias">`, solo íconos, nombre en un globo (`.ind-nombre`, `role="tooltip"`) al pasar el cursor o con el teclado, enlaces con `aria-label` y `aria-current="page"`.
+- **Productos** (`CatalogoCliente.tsx`) usa esa misma barra (`.ind-lay2` y `.ind-barra`) con botones (`aria-pressed`): primero «Todas las industrias» con el ícono nuevo `cuadricula` (`src/componentes/comunes/iconos.tsx`) y después las 9 industrias. Sin nombres ni números de productos (decisión de Jordin: el globo dice solo el nombre).
+- Junto a la barra, la rejilla del catálogo baja a 2 columnas hasta 720 px (decisión de Jordin); en tableta y escritorio sigue con 3.
+- Se quitaron los estilos `.cat-lay`, `.filtros` y `.filtro-nombre`, que ya no se usan, y se restauraron los de `.ind-barra` y `.ind-nombre` para `a` y `button`.
+- Prueba: «JG-28 / RF-SW-03 / RF-SW-04: Productos usa la barra de solo íconos de Industrias…» (`industrias-y-productos.spec.ts`) compara las dos barras (nombres, íconos, orden, tamaño, fondo y colores normal y activo), comprueba que no muestran texto fuera del globo, el ícono propio de «Todas», el globo y las columnas de la rejilla en cada tamaño.
+- Capturas: `plan/evidencias/JG-28/correccion-*.png`.
