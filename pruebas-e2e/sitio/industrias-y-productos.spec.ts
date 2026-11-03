@@ -129,6 +129,8 @@ test("RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y
     await expect(page.locator(".lista-prod")).toContainText("DM03 Ácido");
     await expect(page.locator(".lista-prod a")).toHaveCount(0);
     const nombres = await page.locator(".lista-prod span").allTextContents();
+    // La tarjeta aparece al entrar en la pantalla (RF-SW-16); en teléfono queda debajo del banner (JG-28).
+    await page.locator(".ind-det").scrollIntoViewIfNeeded();
     await expect(
       page.getByRole("heading", { name: `Productos para esta industria · ${nombres.length}`, exact: true }),
     ).toBeVisible();
@@ -157,6 +159,7 @@ test("RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y
     await expect(page.locator("main")).not.toContainText("Imagen de la industria");
     // IntersectionObserver inicia la transición después de montar la página.
     // Exige el estado final antes de medir contraste, sin desactivar animaciones ni reglas de axe.
+    await page.locator(".ind-det").scrollIntoViewIfNeeded();
     await expect(page.locator(".ind-det")).toHaveClass(/\bvisible\b/);
     await expect(page.locator(".ind-det")).toHaveCSS("opacity", "1");
     await accesible(page);
@@ -174,6 +177,8 @@ test("RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos,
     await expect(page.locator(".prod-t")).toHaveCount(1);
     await expect(page.locator(".prod-t")).toContainText("Guatemala · Saco de prueba");
     await expect(page.locator(".prod-t")).not.toContainText(/lote/i);
+    // La tarjeta aparece al entrar en la pantalla (RF-SW-16); en teléfono queda debajo del banner (JG-28).
+    await page.locator(".prod-t").scrollIntoViewIfNeeded();
     await expect(page.locator(".prod-t")).toHaveClass(/visible/);
     await page.getByRole("button", { name: /^Textil/ }).click();
     await expect(page.getByText("Ningún producto coincide", { exact: true })).toBeVisible();
