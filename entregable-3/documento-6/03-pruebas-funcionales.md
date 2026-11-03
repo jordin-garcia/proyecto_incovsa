@@ -47,6 +47,6 @@ Además de cada función, se verificó que:
 
 ## Resultado
 
-Las 509 pruebas de Vitest pasan en la CI y en el equipo del coordinador (EV-01 y EV-08). Todas las pruebas de extremo a extremo pasan en Chromium, Firefox y WebKit (EV-04, secciones 6 y 7).
+Las 509 pruebas de Vitest pasan en la CI y en el equipo del coordinador (EV-01 y EV-08). MATRIZ_FUNCIONALES
 
 Ninguna función principal falla. Tres casos se comprueban en parte (CP-32, CP-51 y CP-64). Las diferencias funcionales y visuales que encontraron las auditorías se corrigieron (sección 13).

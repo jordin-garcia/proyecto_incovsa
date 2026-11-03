@@ -10,7 +10,7 @@ Esta sección documenta los principales errores que se encontraron durante las p
 - las convergencias (`plan/convergencia/`);
 - las bitácoras del equipo.
 
-Los hallazgos menores parecidos se agrupan en una sola fila. El detalle de cada uno está en el informe de origen, con su código H-xx (auditorías), R-xx (revisión manual de seguridad) o el requisito de ASVS. Cada corrección se integró a la rama `develop` con su *pull request* (#n), y cada error corregido tiene una prueba automatizada que lo habría detectado.
+Los hallazgos menores parecidos se agrupan en una sola fila. El detalle de cada uno está en el informe de origen, con su código H-xx (auditorías), R-xx (revisión manual de seguridad) o el requisito de ASVS. Cada corrección se integró a la rama `develop` con su *pull request* (#n). Cada error funcional o de seguridad corregido tiene una prueba automatizada que lo habría detectado; las correcciones de documentación y de la configuración de la CI (INC-15, INC-18, INC-22 e INC-27) se comprobaron revisándolas.
 
 **Severidad:**
 
@@ -47,7 +47,7 @@ Tabla: Registro de incidencias {#tab:incidencias}
 | INC-22 | Cada corrida de pruebas reescribía las capturas de evidencia del repositorio | Baja | Corregida | Solo se escriben a pedido (CE-13, #143; H-65) |
 | INC-23 | En Bodega, si otra pantalla despachaba a mitad de un reordenamiento, quedaban cambios parciales | Baja | Corregida | Transacción con la comprobación dentro (JM-09, #144; H-74) |
 | INC-24 | Ruta y Tablero: una ruta sin camión se mostraba como «cliente recoge» y había detalles de presentación | Baja | Corregida | Ver el resultado de JM-09 (#144; H-66 a H-73) |
-| INC-25 | Reportes: una descarga fallida no avisaba y el PDF salía sin negritas | Baja | Corregida | Descarga con aviso de error y fuente en negrita incluida (JC-09, #149; H-75 a H-81) |
+| INC-25 | Reportes: una descarga fallida no avisaba y el PDF salía sin negritas | Baja | Corregida | Descarga con aviso de error y fuente en negrita incluida (JC-09, #149; H-75 a H-77 y H-79 a H-81) |
 | INC-26 | El servidor de producción de las pruebas no arrancaba a tiempo en frío | Baja | Corregida | Espera de hasta 90 s (JG-25, #146; H-84) |
 | INC-27 | Errores en la documentación de la CI y en el registro de una excepción de contraste | Baja | Corregida | Documentación corregida y despliegue probado en modo de prueba (JG-25 #146, JG-13 #139; H-64, H-82, H-83) |
 | INC-28 | Un archivo .xlsx de 2 MB podía descomprimirse sin límite (bomba ZIP) y tumbar el servidor | **Alta** | Corregida | Máximo 100 entradas, 50 MB descomprimidos, 20 000 filas y largos máximos por campo (JC-10, #157; ASVS V5.2.3) |
@@ -68,7 +68,7 @@ Tabla: Registro de incidencias {#tab:incidencias}
 | INC-43 | Falla intermitente por tiempo en una prueba de Bodega en tiempo real: el botón sale de la pantalla antes del clic | s/e | Pendiente | Pasó al repetirse (SSE en 320 ms); se revisa en la convergencia final (JG-17) |
 | INC-44 | Otras fallas intermitentes en la suite completa (acceso personal en un equipo de 8 GB; flujo, tablero y cabeceras) | s/e | Pendiente | Pasaron al repetirse; se revisan en la convergencia final (JG-17) |
 | INC-45 | Sin Cloudflare R2 configurado no se pueden servir imágenes en producción | s/e | Pendiente | Se configura con el VPS (CE-08), que espera los accesos de INCOVSA (P-10, P-93 y P-94) |
-| INC-46 | ZAP (03/11/2026) señala que el formulario público de Contacto no tiene *token* anti-CSRF; apareció cuando DM-14 lo pasó a POST | Media | Justificada | El formulario es público y no usa sesión, así que un sitio ajeno no puede hacer nada en nombre de otra persona; además, Next.js rechaza las acciones del servidor con un origen ajeno (CP-99) y el envío tiene límite por IP y campo trampa (CP-87 y CP-88) |
+| INC-46 | ZAP (03/11/2026) señala que el formulario público de Contacto no tiene *token* anti-CSRF; apareció cuando DM-14 lo pasó a POST | Media | Justificada | El formulario es público y no usa sesión, así que un sitio ajeno no puede hacer nada en nombre de otra persona; el envío tiene límite por IP y campo trampa (CP-87 y CP-88). Las acciones con sesión usan cookies `SameSite=Lax`, y Next.js compara el origen cuando el navegador lo envía (observación OC-3 de ASVS). Decisión registrada en `plan/seguridad/zap-2026-10-29.md` |
 
 ## Resumen {-}
 

@@ -84,4 +84,4 @@ El módulo de conversión está incluido en las **pruebas de mutación** con Str
 
 ## Resultado
 
-**Aprobado.** Los 15 casos validados por INCOVSA dan exactamente el resultado esperado. Las ventas fraccionadas, los decimales y los datos incorrectos se tratan según las reglas aprobadas. La prueba directa de CP-20 se agrega en la convergencia final (JG-17).
+**Aprobado.** Los 15 casos validados por INCOVSA dan exactamente el resultado esperado. Las ventas fraccionadas, los decimales y los datos incorrectos se tratan según las reglas aprobadas. La prueba directa de CP-20 se programa en la convergencia final (JG-17).

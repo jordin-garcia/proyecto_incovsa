@@ -18,7 +18,7 @@ Cada caso de prueba tiene las columnas que piden los lineamientos:
     - permisos por perfil, topes de texto y límite de envíos de Contacto;
     - cabeceras, cookies, sesiones y archivos manipulados;
     - conversión con valores aleatorios, flujo completo, tiempo real y accesibilidad.
-- Cada caso nuevo tiene una prueba automatizada que lo comprueba; ninguno describe un comportamiento sin prueba.
+- Cada caso nuevo tiene una prueba automatizada que lo comprueba, salvo CP-111. Ese caso está pendiente, y su prueba la agrega la tarea CE-14 junto con la corrección.
 
 ## Resumen de resultados
 
@@ -46,7 +46,7 @@ Tabla: Casos que no están aprobados por completo {#tab:casos-parciales}
 
 | Id | Qué falta | Cómo se completa |
 |---|---|---|
-| CP-20 | RN-33 se comprueba de forma indirecta: cada línea enviada a Bodega guarda su propio Peso de Conversión, pero ninguna prueba carga un segundo archivo después del envío | Prueba de integración directa en la convergencia final (JG-17, 05/11/2026) |
+| CP-20 | RN-33 se comprueba de forma indirecta: cada línea enviada a Bodega guarda su propio Peso de Conversión, pero ninguna prueba carga un segundo archivo después del envío | Se programa una prueba de integración directa en la convergencia final (JG-17, 05/11/2026) |
 | CP-32 | El aviso de qué falta para enviar se prueba en la muestra de componentes, no en Facturación | Igual que CP-20 |
 | CP-42 | La apertura directa de la dirección se prueba con Bodega, que usa la misma verificación, y no con Facturación | Igual que CP-20 |
 | CP-51 | La prueba abre Inicio, pero no Quiénes somos, que lee el mismo contenido | Igual que CP-20 |

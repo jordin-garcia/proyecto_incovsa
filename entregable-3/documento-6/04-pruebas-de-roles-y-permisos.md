@@ -33,7 +33,7 @@ Todos los perfiles se prueban con los usuarios de demostración, cuyos permisos 
 
 ## Revisión manual
 
-Además de las pruebas automatizadas, la revisión de seguridad de JG-15 leyó las **82 operaciones del servidor**, 44 del picking y 38 del sitio y el panel. Comprobó que todas verifican la sesión, el permiso y la sede antes de leer o cambiar datos. Encontró un solo error: la exportación de reportes usaba la primera sede del usuario y no la elegida (INC-29). Se corrigió en JG-26 y ahora lo comprueba el caso CP-70.
+Además de las pruebas automatizadas, la revisión de seguridad de JG-15 leyó las **82 operaciones del servidor**, 44 del picking y 38 del sitio y el panel. Comprobó que todas verifican la sesión, el permiso y la sede antes de leer o cambiar datos. Encontró un solo error de permisos o de sede: la exportación de reportes usaba la primera sede del usuario y no la elegida (R-P01, INC-29). Se corrigió en JG-26 y ahora lo comprueba el caso CP-70. Los otros cuatro hallazgos de esa revisión no son de permisos; están en la sección 13.
 
 ## Resultado
 

@@ -19,7 +19,7 @@ Tabla: Alertas de OWASP ZAP sobre develop (03/11/2026) {#tab:zap}
 | Alerta | Riesgo | Decisión |
 |---|---|---|
 | CSP: `style-src 'unsafe-inline'` | Medio | Justificada: los componentes de la interfaz necesitan estilos en línea; los scripts sí exigen un *nonce* por respuesta (INC-33) |
-| Falta el *token* anti-CSRF en el formulario de Contacto | Medio | Justificada: el formulario es público y no usa sesión, y Next.js rechaza las acciones con un origen ajeno (INC-46) |
+| Falta el *token* anti-CSRF en el formulario de Contacto | Medio | Justificada: el formulario es público y no usa sesión, así que un sitio ajeno no puede hacer nada en nombre de otra persona; el envío tiene límite por IP y campo trampa (INC-46, registrada en `plan/seguridad/zap-2026-10-29.md`) |
 | Faltan las cabeceras `Cross-Origin-Embedder-Policy` y `Cross-Origin-Resource-Policy` | Bajo | Justificada: COEP bloquearía Google Maps y Google Drive (INC-33) |
 | 8 alertas informativas (contenido que se guarda o no en caché, cabeceras `Sec-Fetch-*` que envía el navegador, aplicación moderna, atributos con valores de listas de países) | Informativo | Falsos positivos o sin efecto en la seguridad |
 
@@ -126,7 +126,7 @@ El detalle está en el registro de incidencias (sección 13).
     - `pruebas-e2e/seguridad/cabeceras.spec.ts` y `src/lib/cabeceras.test.ts`;
     - CP-57;
     - ZAP;
-    - `npm audit`, sin vulnerabilidades.
+    - `npm audit`: ninguna vulnerabilidad alta; 19 moderadas en herramientas de desarrollo (ESLint y Stryker), con el riesgo aceptado hasta el 15/11/2026.
 - **Resultado:** **aprobada.** ZAP no reportó alertas de riesgo alto. Las alertas bajas se corrigieron o se justificaron (INC-32 e INC-33).
 
 ## Pruebas pendientes en producción {-}

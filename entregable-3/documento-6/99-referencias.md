@@ -1,5 +1,3 @@
-\vertical
-
 # Referencias {-}
 
 Deque Systems. (s. f.). *axe-core*. GitHub. Recuperado el 3 de noviembre de 2026, de <https://github.com/dequelabs/axe-core>

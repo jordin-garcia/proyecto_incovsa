@@ -19,7 +19,7 @@ Tabla: Evidencias de las ejecuciones de pruebas {#tab:g-ejecuciones}
 | EV-03 | Prueba integral del flujo completo (recorrido diario) | 41698054254, 03/11/2026, 37a5c44 | Aprobada: **3 de 3** (teléfono 10.8 s, tableta 21.3 s y escritorio 18.6 s). También aprobadas las diarias del 31/10, el 01/11 y el 02/11 |
 | EV-04 | Matriz de navegadores sobre `develop`: toda la batería de extremo a extremo, con axe, en Chromium, Firefox y WebKit, y en teléfono, tableta, escritorio y TV | 41706509553, 03/11/2026, 37a5c44 | MATRIZ_RESULTADO |
 | EV-05 | Matrices anteriores | 41028328780 (30/10, JG-16) y 41390020826 (02/11, rama de JC-11) | 1 499 de 1 500 casos (el que fallaba se corrigió en JC-11) y después 1 554 de 1 554, con 2 repeticiones |
-| EV-06 | Pruebas de mutación (Stryker) de conversión, permisos, envíos y Bodega | 41317332051, 01/11/2026, *commit* 5283147 | Aprobada: **67.90 %** (1 757 mutantes: 1 189 detectados, 457 sobrevivientes, 105 sin cobertura), por encima del umbral de 60 %. Duró 105 min |
+| EV-06 | Pruebas de mutación (Stryker) de conversión, permisos, envíos y Bodega | 41317332051, 01/11/2026, *commit* 5283147 | Aprobada: **67.90 %** (1 751 mutantes válidos: 1 189 detectados, 457 sobrevivientes y 105 sin cobertura; otros 6 no compilaron), por encima del umbral de 60 %. Duró 105 min |
 | EV-07 | Escaneo de seguridad con OWASP ZAP 2.17 sobre el servidor de producción | 41706521296, 03/11/2026, 37a5c44 (antes: 40986033558 del 29/10 y 41172622744 del 30/10) | Aprobada: **0 alertas altas**, 2 medias, 2 bajas y 8 informativas, todas justificadas (sección 8); 64 reglas sin alertas |
 | EV-08 | Pruebas unitarias y de integración en el equipo del coordinador (Windows 10, PostgreSQL local) | 03/11/2026, rama `jordin/JG-18-documento-6` sobre 37a5c44 | **57 archivos, 509 de 509 aprobadas**, 630.5 s |
 
@@ -54,7 +54,7 @@ Tabla: Informes de pruebas en el repositorio {#tab:g-informes}
 | Id | Informe | Archivo | Contenido |
 |---|---|---|---|
 | EV-13 | Revisión de seguridad OWASP ASVS 5.0 nivel 2 | `plan/seguridad/asvs-nivel-2.md` | Los 253 requisitos con su estado, las 82 operaciones del servidor revisadas y las tareas de corrección |
-| EV-14 | Escaneo de OWASP ZAP | `plan/seguridad/zap-2026-10-29.md` | Las alertas del 29/10 y del 30/10, con la decisión de cada una |
+| EV-14 | Escaneo de OWASP ZAP | `plan/seguridad/zap-2026-10-29.md` | Las alertas del 29/10, del 30/10 y del 03/11, con la decisión de cada una |
 | EV-15 | Matriz de navegadores y tamaños | `plan/pruebas/matriz-2026-10-30.md` | El resultado por navegador y tamaño, y las diferencias encontradas y corregidas |
 | EV-16 | Auditorías del coordinador | `plan/auditorias/2026-10-22.md` y `plan/auditorias/2026-10-26.md` | Los 84 hallazgos H-01 a H-84 con su severidad y su tarea de corrección |
 | EV-17 | Convergencias | `plan/convergencia/2026-10-22.md`, `2026-10-22-avance-e2.md` y `2026-10-26.md` | La comparación de la aplicación con `specs/` y el prototipo, con capturas lado a lado |
@@ -98,7 +98,7 @@ Capturas de la prueba integral (JG-14, sección 10), en escritorio.
 
 ### EV-12. Validación {-}
 
-![Formulario de Contacto en el teléfono con un correo y un teléfono incorrectos y campos obligatorios sin llenar: cada campo se marca y el resumen dice qué corregir (DM-08)](../../pruebas-e2e/sitio/evidencias/DM-08/aplicacion-error-390.png){#fig:g-contacto-error}
+![Panel, Información de contacto: un correo mal formado se marca con «Indique un correo válido.» y no se guarda (CP-91, CE-13b)](../../pruebas-e2e/panel/evidencias/CE-13b/despues-invalido-1440.png){#fig:g-correo-invalido}
 
 ### EV-19. Tamaños de pantalla {-}
 

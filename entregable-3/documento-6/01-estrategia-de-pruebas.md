@@ -14,7 +14,7 @@ Tabla: Tipos de pruebas del proyecto {#tab:tipos-pruebas}
 |---|---|---|---|
 | Unitarias | Vitest 5 | Funciones sin base de datos: la conversión de kilogramos a unidades, las fechas, los permisos, la lectura del archivo de Odoo, el formato de los reportes | En cada *pull request* y en cada integración a `develop` |
 | De integración | Vitest 5 con PostgreSQL 18 real | Las operaciones del servidor contra una base de datos real migrada desde cero: permisos y sedes, transacciones, numeración de rutas y pedidos, bitácora | Igual que las unitarias |
-| De propiedades | fast-check (dentro de Vitest) | Que la conversión cumpla siempre «unidades × Peso de Conversión + resto = cantidad», con miles de valores aleatorios | Igual que las unitarias |
+| De propiedades | fast-check (dentro de Vitest) | Que la conversión cumpla siempre «unidades × Peso de Conversión + resto = cantidad», con más de mil valores aleatorios | Igual que las unitarias |
 | De extremo a extremo | Playwright 1.64 | Las pantallas en un navegador real, como las usaría una persona: sitio, panel, acceso y picking | En el equipo de cada desarrollador antes de abrir el *pull request* y en la matriz de navegadores |
 | Prueba integral del flujo | Playwright con el servidor de producción | Pedido facturado → conversión → picking → preparación → carga → despacho → estado → reporte (sección 10) | Cada día a las 06:00 en GitHub Actions y en cada cambio del flujo |
 | Matriz de navegadores y tamaños | Playwright: Chromium, Firefox y WebKit | Toda la batería de extremo a extremo en teléfono, tableta, escritorio y TV (secciones 6 y 7) | A pedido y antes de cada entrega |
@@ -59,7 +59,7 @@ Tabla: Resultado de las pruebas automatizadas sobre develop {#tab:resultado-gene
 | Semgrep, gitleaks, OSV-Scanner | 41611123137, 03/11/2026 | 0 hallazgos en 79 reglas y 265 archivos; ningún secreto en 123 *commits*; ninguna vulnerabilidad sin aceptar |
 | npm audit | 41611123183 | 0 vulnerabilidades altas; 19 moderadas en herramientas de desarrollo (ESLint y Stryker), con el riesgo aceptado hasta el 15/11/2026 |
 | Prueba integral del flujo | 41698054254, 03/11/2026, commit 37a5c44 | **3 de 3 aprobadas** (teléfono, tableta y escritorio) |
-| Pruebas de mutación | 41317332051, 01/11/2026 | **67.90 %** (1 189 de 1 757 mutantes detectados; umbral: 60 %) |
+| Pruebas de mutación | 41317332051, 01/11/2026 | **67.90 %** (1 189 de 1 751 mutantes válidos detectados; umbral: 60 %) |
 | Matriz de navegadores | Ver la sección 7 | Ver las secciones 6 y 7 |
 | Pruebas unitarias y de integración en el equipo del coordinador | 03/11/2026, rama de esta tarea sobre 37a5c44 | **509 de 509 aprobadas** en 57 archivos (630.5 s) |
 | OWASP ZAP | 41706521296, 03/11/2026, commit 37a5c44 | Sin alertas de riesgo alto: 2 medias y 2 bajas, todas justificadas (sección 8) |
