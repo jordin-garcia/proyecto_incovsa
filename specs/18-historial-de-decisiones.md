@@ -750,3 +750,7 @@ Correcciones del coordinador a las brechas de la revisión de seguridad (JG-15) 
 - El Documento 1 pasa a la versión 1.0 (`entregable-3/documento-1/`): documenta el sistema tal como está en `develop` el 03/11/2026 y reemplaza a la v0.2 del 24/09 de «Documentos no alineados con las reuniones 4 y 5». El texto sale de esta carpeta, porque la v0.2 no está en el repositorio.
 - El Anexo A reúne las cinco actas. El Anexo B enumera la evidencia de cada reunión y no reproduce fotografías ni capturas, porque muestran a personas. La evidencia de las fuentes sin acta sigue pendiente (P-04).
 - `specs/16` decía en dos lugares que Caddy agrega la cabecera HSTS. Desde el 28/10 la envía Next.js (decisión 29): se corrigieron esas dos líneas.
+
+## Revisión automática de PR de documentos (03/11/2026, JG-08)
+
+- `revision-claude` tiene también `git log`, `git show` y `ls`, sin nada que ejecute código de la rama del PR (no se le da `node scripts/tareas.mjs`, porque ejecutaría el código del PR con el token del coordinador). No se activa `show_full_output`, porque el repositorio es público, y el prompt le pide publicar siempre su comentario aunque le nieguen un comando. Motivo: en los PR de documentos (#165 y #168) el bot terminaba sin veredicto.

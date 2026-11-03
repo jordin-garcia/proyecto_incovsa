@@ -354,3 +354,9 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 **Carlos:** terminé tu CE-09 (protocolo §E4) y cerré tu PR #98. Cambié `entregable-3/documento-1/**` y `entregable-1/diagramas/` (figura 5 y modelos entidad-relación 6 a 8). Actualiza tu rama desde `develop`. CE-11 y CE-12 también las termino yo hoy, desde tus PR #96 y #97.
 **CE-15:** las actas 4 y 5 en Markdown también están en `docs/Reuniones/`; se quitan con esa carpeta. Su contenido ya está en el anexo A del Documento 1.
 **JG-17:** el anexo D del Documento 1 muestra 35 requisitos vigentes sin una prueba con su código (la lista está en el anexo). RF-SL-80 no lo nombra ninguna tarea; sus pruebas llevan el código RN-57.
+
+## 2026-11-03 · JG-08 · Revisión automática de PR de documentos
+- Hecho: `revision-claude` falló tres veces en #168 (CE-09) sin publicar su comentario, después de 11 comandos negados. Le agregué `git log`, `git show` y `ls` (nada que ejecute código del PR), y el prompt le pide no repetir lo negado, no revisar binarios por dentro y publicar siempre el comentario. Prueba en `scripts/flujos.test.mjs`.
+- Decisiones: no activé `show_full_output` (repositorio público). Registrado en `specs/18` y en el `## Resultado` de JG-08.
+- Pendiente o aviso para otros:
+**Josué:** tu PR #165 (JM-07) tenía la misma falla del bot. Cuando esto entre a `develop`, actualiza tu rama (`gh pr update-branch 165`) para que se revise otra vez.
