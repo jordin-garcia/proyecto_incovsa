@@ -352,3 +352,9 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Decisiones: no activé `show_full_output` (repositorio público). Registrado en `specs/18` y en el `## Resultado` de JG-08.
 - Pendiente o aviso para otros:
 **Josué:** tu PR #165 (JM-07) tenía la misma falla del bot. Cuando esto entre a `develop`, actualiza tu rama (`gh pr update-branch 165`) para que se revise otra vez.
+
+## 2026-11-03 · JG-08 · Comentario del bot desde un archivo
+- Hecho: #168 siguió sin comentario del bot aun con las herramientas nuevas. El bot ahora escribe la revisión en `/tmp/revision-claude-comentario.md` (único archivo que puede escribir) y la publica con `gh pr comment --body-file`. Prueba en `scripts/flujos.test.mjs`.
+- Decisiones: `--body` queda como respaldo. Registrado en `specs/18` y en el `## Resultado` de JG-08.
+- Pendiente o aviso para otros:
+**Josué:** cuando esto entre a `develop`, actualiza la rama de tu PR #165 (`gh pr update-branch 165`) para que el bot lo revise otra vez.
