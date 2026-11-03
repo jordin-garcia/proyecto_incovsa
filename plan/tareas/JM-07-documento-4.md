@@ -71,3 +71,5 @@ python entregable-2/herramientas/armar_documento.py entregable-3/documento-4
 ```
 El archivo resultante se genera en `entregable-3/Documento 4 - Manual de usuario del sistema logistico v1.0.docx` y puede abrirse en Microsoft Word para actualizar campos de índices o exportar a `.pdf`.
 
+
+Lo integró el coordinador (protocolo §E4) el 03/11/2026 desde el PR #165 de Josué, sin cambiar su contenido. La revisión automática de su último commit no se completó por una falla del bot, que se corrigió en JG-08 (#169 y #170), y la rama iba atrasada respecto de `develop`. La rama `jordin/JM-07-documento-4` integra `develop` y se revisa con el bot corregido.

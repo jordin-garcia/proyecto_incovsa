@@ -366,3 +366,9 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Decisiones: `--body` queda como respaldo. Registrado en `specs/18` y en el `## Resultado` de JG-08.
 - Pendiente o aviso para otros:
 **Josué:** cuando esto entre a `develop`, actualiza la rama de tu PR #165 (`gh pr update-branch 165`) para que el bot lo revise otra vez.
+
+## 2026-11-03 · JM-07 · Integración del Documento 4 (protocolo §E4)
+- Hecho: el PR #165 de Josué no se integraba porque el bot no completó la revisión de su último commit (la misma falla de #168) y la rama iba atrasada. Lo continué en `jordin/JM-07-documento-4`, con `develop` integrada y sin cambiar el contenido de Josué, y cerré #165.
+- Decisiones: no se sube a la rama de Josué (protocolo §E1); el PR nuevo la reemplaza.
+- Pendiente o aviso para otros:
+**Josué:** integré tu JM-07 desde una rama mía (protocolo §E4) y cerré tu PR #165. Solo agregué una nota al final del `## Resultado` de `plan/tareas/JM-07-documento-4.md`. Actualiza tu copia desde `develop` y borra tu rama local.
