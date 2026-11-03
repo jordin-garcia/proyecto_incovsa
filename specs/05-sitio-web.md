@@ -133,7 +133,7 @@ Son 9 industrias, en este orden:
 8. Tratamiento de agua
 9. Lavandería
 
-- **Menú (02/11, JG-28; reemplaza a la barra de solo íconos del 13/10):** una **barra lateral igual a la de Productos**: el mismo ancho, tipografía y colores, y en cada opción el **ícono de la industria, su nombre y su número de productos**, con la industria elegida marcada como el filtro activo de Productos. No tiene la opción «Todas las industrias». Sigue siendo navegación: cada opción es un enlace a su industria y la elegida se anuncia como la página actual. En teléfono y tableta angosta se muestra como la de Productos: una fila que se desplaza de lado, encima del contenido. **No** se usa una barra superior horizontal en escritorio.
+- **Menú (13/10; confirmado el 03/11, JG-28):** una **barra lateral izquierda solo con íconos**, como la del prototipo: oscura, con el ícono de cada industria, la elegida marcada en lima y su nombre en un globo al pasar el cursor o llegar con el teclado. No muestra nombres ni números de productos. Sigue siendo navegación: cada ícono es un enlace a su industria y la elegida se anuncia como la página actual. En teléfono sigue a la izquierda del contenido, más angosta. **No** se usa una barra superior horizontal. Es la misma barra que la de [Productos](#catálogo-de-productos-rf-sw-04), sin «Todas las industrias». (El 02/11 se había cambiado por una lista con nombres y números; el coordinador lo corrigió el 03/11.)
 - Cada industria muestra **solo su descripción, su galería de imágenes y sus productos como texto**. No se muestran imágenes de productos. Si la industria no tiene imágenes, no se muestra la galería ni un recuadro en su lugar (02/11, JG-28).
 - **Sin pie de página.**
 - La descripción y los productos de cada industria vienen del sitio de Google de la empresa y necesitan revisión. Las descripciones definitivas y las imágenes están pendientes (P-21).
@@ -143,7 +143,7 @@ Son 9 industrias, en este orden:
 
 - Es solo informativo: sin precios y sin comercio electrónico.
 - Se filtra por industria. Un producto puede pertenecer a **varias** industrias.
-- **Barra de filtros (02/11, JG-28):** cada industria lleva su **ícono** (el mismo de Inicio y de Industrias) a la izquierda del nombre, con su número de productos. «Todas las industrias» va primero y sin ícono. **No** hay filtro «Industria por confirmar»: un producto sin industria solo aparece en «Todas las industrias», y su tarjeta no muestra etiquetas de industria.
+- **Barra de filtros (03/11, JG-28):** es la **misma barra lateral de solo íconos de [Industrias](#industrias-rf-sw-03)** (mismo ancho, colores, tamaño de cada ícono y globo con el nombre), con una opción más al principio: **«Todas las industrias», con un ícono de cuadrícula**. Las demás opciones son las 9 industrias con su ícono, en el mismo orden. No muestra nombres ni números de productos; el total filtrado se lee arriba de la rejilla («4 de 28 productos»). Junto a la barra, la rejilla tiene **3 columnas** en tableta y escritorio y **2 en teléfono** (hasta 720 px). **No** hay filtro «Industria por confirmar»: un producto sin industria solo aparece en «Todas las industrias», y su tarjeta no muestra etiquetas de industria. (El 02/11 se había hecho una lista con ícono, nombre y número; el coordinador lo corrigió el 03/11.)
 - En las tarjetas se muestran la galería de imágenes, el nombre, los países de origen y la presentación. **Nunca** el lote.
 - **La búsqueda de productos está aprobada** tal como está en el prototipo.
 - **Sin pie de página.**

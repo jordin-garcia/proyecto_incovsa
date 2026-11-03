@@ -59,57 +59,101 @@ async function accesible(page: Page) {
   await expect(page.getByRole("contentinfo")).toHaveCount(0);
 }
 
-/** Ícono, nombre y número de productos de cada opción de una barra lateral, en el orden en que se muestran. */
+/** Nombre, ícono y texto visible de cada opción de una barra de solo íconos, en el orden en que se muestran. */
 async function opcionesDe(barra: import("@playwright/test").Locator) {
   return barra.locator(":scope > a, :scope > button").evaluateAll((opciones) =>
     opciones.map((o) => ({
-      icono: o.querySelectorAll(".filtro-nombre > svg").length,
-      nombre: o.querySelector(".filtro-nombre")?.textContent?.trim(),
-      cuenta: o.querySelector("small")?.textContent,
+      nombre: o.getAttribute("aria-label"),
+      icono: [...o.querySelectorAll(":scope > svg")].map((s) => s.innerHTML),
+      globo: o.querySelector('.ind-nombre[role="tooltip"]')?.textContent,
+      // Sin el globo, la opción no muestra texto: ni nombre ni número de productos.
+      texto: [...o.childNodes]
+        .filter((n) => !(n instanceof Element && n.classList.contains("ind-nombre")))
+        .map((n) => n.textContent)
+        .join("")
+        .trim(),
     })),
   );
 }
 
-test("JG-28 / RF-SW-03 / RF-SW-04: la barra de Industrias es igual a la de Productos, con ícono y número de productos", async ({
+/** Tamaño y colores (normal y activa) de una barra de solo íconos. */
+async function estiloDe(barra: import("@playwright/test").Locator) {
+  return barra.evaluate((e) => {
+    const caja = (h: Element) => ({
+      ancho: Math.round(h.getBoundingClientRect().width),
+      alto: Math.round(h.getBoundingClientRect().height),
+    });
+    const colores = (h: Element) => [
+      getComputedStyle(h).backgroundColor,
+      getComputedStyle(h).color,
+      getComputedStyle(h).boxShadow,
+    ];
+    const activa = e.querySelector(":scope > .on")!;
+    const normal = [...e.children].find((h) => !h.classList.contains("on"))!;
+    return {
+      // El alto no se compara: Productos tiene una opción más («Todas las industrias»).
+      barra: {
+        ancho: caja(e).ancho,
+        fondo: getComputedStyle(e).backgroundImage,
+        radio: getComputedStyle(e).borderRadius,
+      },
+      opcion: caja(normal),
+      normal: colores(normal),
+      activa: colores(activa),
+    };
+  });
+}
+
+test("JG-28 / RF-SW-03 / RF-SW-04: Productos usa la barra de solo íconos de Industrias, con «Todas las industrias» primero", async ({
   page,
 }) => {
   await conCatalogo(async () => {
-    await irA(page, "/productos");
-    await expect(page.locator(".cat-lay")).toHaveAttribute("data-hidratado", "true");
-    const filtros = page.getByRole("complementary", { name: "Filtrar por industria" });
-    const deProductos = await opcionesDe(filtros);
-    expect(deProductos).toHaveLength(10);
-    expect(deProductos[0]).toEqual({ icono: 0, nombre: "Todas las industrias", cuenta: expect.any(String) });
-    for (const opcion of deProductos.slice(1)) expect(opcion.icono).toBe(1);
-    await expect(filtros).not.toContainText("Industria por confirmar");
-    const estiloProductos = await filtros.evaluate((e) => ({
-      ancho: Math.round(e.getBoundingClientRect().width),
-      fuente: getComputedStyle(e.querySelector("button")!).font,
-    }));
-
     await irA(page, "/industrias/textil");
     const barra = page.getByRole("navigation", { name: "Industrias", exact: true });
     await expect(barra.getByRole("link")).toHaveCount(9);
-    // Mismas industrias, íconos y números que Productos, sin «Todas las industrias».
-    expect(await opcionesDe(barra)).toEqual(deProductos.slice(1));
-    expect(
-      await barra.evaluate((e) => ({
-        ancho: Math.round(e.getBoundingClientRect().width),
-        fuente: getComputedStyle(e.querySelector("a")!).font,
-      })),
-    ).toEqual(estiloProductos);
-    const activa = barra.getByRole("link", { name: /^Textil/ });
-    await expect(activa).toHaveAttribute("aria-current", "page");
+    const deIndustrias = await opcionesDe(barra);
+    for (const opcion of deIndustrias) {
+      expect(opcion.icono).toHaveLength(1);
+      expect(opcion.globo).toBe(opcion.nombre);
+      expect(opcion.texto).toBe("");
+    }
+    await expect(barra.getByRole("link", { name: "Textil", exact: true })).toHaveAttribute("aria-current", "page");
     await expect(barra.locator("[aria-current]")).toHaveCount(1);
-    // La industria activa se marca con los mismos colores que el filtro activo de Productos.
-    const colorActivo = await activa.evaluate((e) => [getComputedStyle(e).backgroundColor, getComputedStyle(e).color]);
+    const estiloIndustrias = await estiloDe(barra);
+
     await irA(page, "/productos?industria=textil");
-    await expect(page.locator(".cat-lay")).toHaveAttribute("data-hidratado", "true");
-    expect(
-      await filtros
-        .getByRole("button", { name: /^Textil/ })
-        .evaluate((e) => [getComputedStyle(e).backgroundColor, getComputedStyle(e).color]),
-    ).toEqual(colorActivo);
+    await expect(page.locator(".sec-catalogo .ind-lay2")).toHaveAttribute("data-hidratado", "true");
+    const filtros = page.getByRole("complementary", { name: "Filtrar por industria" });
+    const deProductos = await opcionesDe(filtros);
+    expect(deProductos).toHaveLength(10);
+    // Mismas industrias, en el mismo orden y con los mismos íconos que Industrias, más «Todas las industrias» primero.
+    expect(deProductos.slice(1)).toEqual(deIndustrias);
+    expect(deProductos[0]).toMatchObject({ nombre: "Todas las industrias", globo: "Todas las industrias", texto: "" });
+    expect(deProductos[0]!.icono).toHaveLength(1);
+    expect(deIndustrias.map((o) => o.icono[0])).not.toContain(deProductos[0]!.icono[0]);
+    await expect(filtros).not.toContainText("Industria por confirmar");
+    // Mismo ancho, tamaño de cada opción, fondo y colores (normal y activa) que la barra de Industrias.
+    expect(await estiloDe(filtros)).toEqual(estiloIndustrias);
+    const textil = filtros.getByRole("button", { name: "Textil", exact: true });
+    await expect(textil).toHaveAttribute("aria-pressed", "true");
+    await expect(filtros.locator('[aria-pressed="true"]')).toHaveCount(1);
+    // El nombre está oculto y aparece en un globo al pasar el cursor o al llegar con el teclado.
+    const todas = filtros.getByRole("button", { name: "Todas las industrias", exact: true });
+    await expect(todas.locator(".ind-nombre")).toHaveCSS("opacity", "0");
+    await todas.hover();
+    await expect(todas.locator(".ind-nombre")).toHaveCSS("opacity", "1");
+    await page.mouse.move(0, 0);
+    await expect(todas.locator(".ind-nombre")).toHaveCSS("opacity", "0");
+    await todas.focus();
+    await expect(todas.locator(".ind-nombre")).toHaveCSS("opacity", "1");
+    // Junto a la barra, la rejilla tiene dos columnas en teléfono y tres en tableta y escritorio.
+    const columnas = await page
+      .locator(".catalogo-rejilla")
+      .evaluate((e) => getComputedStyle(e).gridTemplateColumns.split(" ").length);
+    expect(columnas).toBe(page.viewportSize()!.width <= 720 ? 2 : 3);
+    await todas.click();
+    await expect(todas).toHaveAttribute("aria-pressed", "true");
+    await expect(textil).toHaveAttribute("aria-pressed", "false");
   });
 });
 
@@ -124,8 +168,14 @@ test("RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y
     const enlace = barra.getByRole("link", { name: /^Textil/ });
     await expect(enlace).toHaveAttribute("href", "/industrias/textil");
     await expect(enlace).not.toHaveAttribute("aria-current");
+    // El nombre está oculto y aparece en un globo al pasar el cursor o al llegar con el teclado.
+    await expect(enlace.locator(".ind-nombre")).toHaveCSS("opacity", "0");
+    await enlace.hover();
+    await expect(enlace.locator(".ind-nombre")).toHaveCSS("opacity", "1");
+    await page.mouse.move(0, 0);
     await enlace.focus();
     await expect(enlace).toBeFocused();
+    await expect(enlace.locator(".ind-nombre")).toHaveCSS("opacity", "1");
     await expect(page.locator(".lista-prod")).toContainText("DM03 Ácido");
     await expect(page.locator(".lista-prod a")).toHaveCount(0);
     const nombres = await page.locator(".lista-prod span").allTextContents();
@@ -171,7 +221,7 @@ test("RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos,
 }) => {
   await conCatalogo(async () => {
     await irA(page, "/productos?industria=cuero");
-    await expect(page.locator(".cat-lay")).toHaveAttribute("data-hidratado", "true");
+    await expect(page.locator(".sec-catalogo .ind-lay2")).toHaveAttribute("data-hidratado", "true");
     const buscar = page.getByRole("textbox", { name: "Buscar producto" });
     await buscar.fill("dm03 acido");
     await expect(page.locator(".prod-t")).toHaveCount(1);
@@ -194,7 +244,7 @@ test("RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos,
     await accesible(page);
     // El filtro «sin» ya no existe: la dirección vieja muestra todas las industrias.
     await irA(page, "/productos?industria=sin");
-    await expect(page.locator(".cat-lay")).toHaveAttribute("data-hidratado", "true");
+    await expect(page.locator(".sec-catalogo .ind-lay2")).toHaveAttribute("data-hidratado", "true");
     await expect(page.getByRole("button", { name: /^Todas las industrias/ })).toHaveAttribute("aria-pressed", "true");
   });
 });

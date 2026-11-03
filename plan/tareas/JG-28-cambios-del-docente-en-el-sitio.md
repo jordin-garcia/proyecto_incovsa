@@ -19,7 +19,7 @@ pantallas: [sitio.js › nosotros, industrias, catalogo, producto, noticias, con
 > **Urgente (replanificación del 02/11, JG-32):** se integra **antes del 03/11 a las 10:00**, porque Daniela (DM-13) y Josué (JM-07) toman las capturas de los manuales después de esta tarea. Es el único cambio de código permitido en `develop` hasta la entrega del 04/11.
 
 ## Objetivo
-Aplicar los cambios que pidió el Ing. Manuel Rojas antes de la entrega del 04/11: banners de la misma altura en las secciones del sitio, la barra lateral de Industrias igual a la de Productos (las dos con el ícono de cada industria) y ningún texto ni elemento del prototipo que no deba ir en la aplicación final.
+Aplicar los cambios que pidió el Ing. Manuel Rojas antes de la entrega del 04/11: banners de la misma altura en las secciones del sitio, la barra lateral de Productos igual a la de solo íconos de Industrias, con un ícono más para «Todas las industrias» (corregido el 03/11), y ningún texto ni elemento del prototipo que no deba ir en la aplicación final.
 
 ## Contexto que debes leer
 - `specs/05-sitio-web.md` (Quiénes somos, Industrias, Productos, Noticias, Contacto, panel)
@@ -29,8 +29,8 @@ Aplicar los cambios que pidió el Ing. Manuel Rojas antes de la entrega del 04/1
 
 ## Qué hacer
 1. **Banners de la misma altura.** Quiénes somos, Industrias, Productos, Noticias y Contacto muestran el banner con **la misma altura** en cada tamaño de pantalla (teléfono, tableta y escritorio), sin importar el largo del título o del texto. El contenido queda centrado verticalmente. Quiénes somos conserva sus logotipos alternados dentro de esa altura.
-2. **Barra lateral de Productos con íconos.** Cada industria del filtro de Productos lleva su ícono (el mismo de `ICONOS_INDUSTRIAS` que usan Inicio e Industrias), a la izquierda del nombre, con el número de productos. La opción «Todas las industrias» se queda sin ícono.
-3. **Barra lateral de Industrias igual a la de Productos.** Reemplazar la barra de solo íconos por una lista con el mismo ancho, tipografía, colores, ícono, nombre, número de productos y forma de marcar la industria activa que la de Productos, sin la opción «Todas las industrias». Sigue siendo navegación (`<nav>`, enlaces a `/industrias/<clave>`, `aria-current`). En teléfono se comporta igual que la de Productos.
+2. **Barra lateral de Productos igual a la de Industrias (corregido el 03/11).** El filtro de Productos usa la misma barra de solo íconos de Industrias (la del prototipo, con el nombre en un globo), con una opción más al principio: «Todas las industrias», con un ícono de cuadrícula. El globo muestra solo el nombre. Junto a la barra, la rejilla del catálogo tiene 2 columnas hasta 720 px. *(El 02/11 decía: cada industria con su ícono a la izquierda del nombre y su número de productos, «Todas las industrias» sin ícono.)*
+3. **Barra lateral de Industrias (corregido el 03/11).** Se queda como la del prototipo: solo íconos, nombre en un globo, navegación (`<nav>`, enlaces a `/industrias/<clave>`, `aria-current`). *(El 02/11 decía: reemplazarla por una lista igual a la de Productos, con nombre y número de productos.)*
 4. **Quitar lo que viene del prototipo y no va en la aplicación final.** Revisa el código y recorre con Playwright **todas** las pantallas del sitio, del panel y del picking. Ya se encontraron estos:
    - Quiénes somos: «Imagen del valor pendiente de INCOVSA» (`src/app/(sitio)/nosotros/page.tsx`).
    - Productos y su detalle: el aviso «Industria por confirmar» (tarjeta, filtro y detalle) y «Por confirmar» en presentación y origen (`TarjetaProducto.tsx`, `CatalogoCliente.tsx`, `productos/[id]/page.tsx`).
@@ -49,8 +49,8 @@ Aplicar los cambios que pidió el Ing. Manuel Rojas antes de la entrega del 04/1
 
 ## Criterios de aceptación
 1. **Banners:** en teléfono, tableta y escritorio, el banner de Quiénes somos, Industrias, Productos, Noticias y Contacto mide lo mismo (diferencia de 1 px como máximo).
-2. **Barra de Productos:** cada industria muestra su ícono, su nombre y su número de productos; «Todas las industrias» no lleva ícono.
-3. **Barra de Industrias:** tiene el mismo ancho, ícono, nombre, número de productos y estado activo que la de Productos, y cada enlace lleva a su industria con `aria-current="page"` en la activa.
+2. **Barra de Productos (corregido el 03/11):** es la barra de solo íconos de Industrias (mismo ancho, tamaño de cada opción, fondo y colores normal y activo), con «Todas las industrias» primero y su ícono de cuadrícula, y las 9 industrias con su ícono en el mismo orden; sin nombres ni números fuera del globo, que muestra solo el nombre; la rejilla tiene 2 columnas hasta 720 px y 3 en tableta y escritorio.
+3. **Barra de Industrias (corregido el 03/11):** solo íconos; el nombre aparece en un globo al pasar el cursor o con el teclado; cada enlace lleva a su industria con `aria-current="page"` en la activa.
 4. **Sin restos del prototipo:** ninguna pantalla del sitio, del panel ni del picking muestra «pendiente de INCOVSA», «por confirmar», «Imagen de la industria» ni códigos P-xx.
 5. Se mantienen el contraste (RNF-08) y la accesibilidad de axe en las pantallas cambiadas.
 
@@ -89,11 +89,20 @@ npm run e2e -- pruebas-e2e/sitio pruebas-e2e/panel pruebas-e2e/picking/facturaci
 
 **Pruebas**
 - `pruebas-e2e/sitio/banners.spec.ts`: los cinco banners miden lo mismo (±1 px), centrados, en los tres tamaños, con axe.
-- `pruebas-e2e/sitio/industrias-y-productos.spec.ts`: barra de Industrias igual a la de Productos (íconos, nombres, números, ancho, fuente y colores de la activa), navegación con `aria-current`, producto sin industria solo en «Todas», detalle sin datos.
+- `pruebas-e2e/sitio/industrias-y-productos.spec.ts`: barras de Productos e Industrias (ver «Corrección del coordinador» abajo), navegación con `aria-current`, producto sin industria solo en «Todas», detalle sin datos.
 - `pruebas-e2e/flujo/sin-restos-del-prototipo.spec.ts`: recorre todas las pantallas del sitio, del panel y del picking (con un producto sin industria ni datos) y falla si aparece un texto prohibido, también en `placeholder`, `title`, `aria-label` y `alt`.
 - Se actualizaron `nosotros.spec.ts`, `noticias.spec.ts` y `facturacion-carga.spec.ts`. Con el banner más alto, en teléfono el contenido con presentación dinámica (RF-SW-16) queda debajo del borde: las pruebas que lo usan se desplazan hasta él antes de comprobarlo (`industrias-y-productos.spec.ts` y `auditoria-ce13.spec.ts`).
 
 **Cómo usarlo**
 - Una página pública nueva con `EncabezadoPagina` recibe la altura común sin hacer nada más. Si un banner nuevo tiene más contenido que Quiénes somos, hay que subir `--alto-pag-cab` en `sitio.css` y en `specs/05`.
-- Para otra barra lateral con el mismo aspecto: contenedor `.filtros` con hijos `a` o `button`, cada uno con `<span className="filtro-nombre"><Icono …/>Nombre</span><small>número</small>` y la clase `on` en la opción activa.
 - Capturas de antes y después, y salidas de la verificación: `plan/evidencias/JG-28/`.
+
+### Corrección del coordinador (2026-11-03)
+
+Las instrucciones de las barras estaban al revés: la barra de **Productos** tenía que quedar como la de solo íconos de Industrias del prototipo, con un ícono más para «Todas las industrias». Esta corrección reemplaza el punto «Barras laterales» de arriba:
+- **Industrias** (`Industrias.tsx`) vuelve a la barra del prototipo: `<nav className="ind-barra" aria-label="Industrias">`, solo íconos, nombre en un globo (`.ind-nombre`, `role="tooltip"`) al pasar el cursor o con el teclado, enlaces con `aria-label` y `aria-current="page"`.
+- **Productos** (`CatalogoCliente.tsx`) usa esa misma barra (`.ind-lay2` y `.ind-barra`) con botones (`aria-pressed`): primero «Todas las industrias» con el ícono nuevo `cuadricula` (`src/componentes/comunes/iconos.tsx`) y después las 9 industrias. Sin nombres ni números de productos (decisión de Jordin: el globo dice solo el nombre).
+- Junto a la barra, la rejilla del catálogo baja a 2 columnas hasta 720 px (decisión de Jordin); en tableta y escritorio sigue con 3.
+- Se quitaron los estilos `.cat-lay`, `.filtros` y `.filtro-nombre`, que ya no se usan, y se restauraron los de `.ind-barra` y `.ind-nombre` para `a` y `button`.
+- Prueba: «JG-28 / RF-SW-03 / RF-SW-04: Productos usa la barra de solo íconos de Industrias…» (`industrias-y-productos.spec.ts`) compara las dos barras (nombres, íconos, orden, ancho, tamaño de cada opción, fondo y colores normal y activo), comprueba que no muestran texto fuera del globo, el ícono propio de «Todas», el globo oculto que aparece al pasar el cursor o con el teclado, y las columnas de la rejilla en cada tamaño. La prueba «RF-SW-03 / P-97» vuelve a comprobar el globo de Industrias, como antes del 02/11.
+- Capturas: `plan/evidencias/JG-28/correccion-*.png`.

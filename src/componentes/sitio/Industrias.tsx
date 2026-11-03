@@ -29,21 +29,20 @@ export async function Industrias({ seleccion = "cuero" }: { seleccion?: string }
       />
       <section className="sec sec-industrias">
         <div className="wrap ind-lay2">
-          {/* JG-28: misma barra que los filtros de Productos (ícono, nombre y número de productos), sin «Todas». */}
-          <nav className="filtros" aria-label="Industrias">
+          <nav className="ind-barra" aria-label="Industrias">
             {datos.industrias.map((i, n) => (
               <Link
                 key={i.id}
                 href={`/industrias/${ICONOS_INDUSTRIAS[n]}`}
                 scroll={false}
                 className={n === indice ? "on" : ""}
+                aria-label={i.nombre}
                 aria-current={n === indice ? "page" : undefined}
               >
-                <span className="filtro-nombre">
-                  <Icono nombre={ICONOS_INDUSTRIAS[n]} />
+                <Icono nombre={ICONOS_INDUSTRIAS[n]} />
+                <span className="ind-nombre" role="tooltip">
                   {i.nombre}
                 </span>
-                <small>{datos.productos.filter((p) => p.industrias.some((j) => j.id === i.id)).length}</small>
               </Link>
             ))}
           </nav>

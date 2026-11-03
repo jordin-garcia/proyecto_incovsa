@@ -1,0 +1,38 @@
+
+Running 18 tests using 1 worker
+
+  ok  1 [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:107:5 › JG-28 / RF-SW-03 / RF-SW-04: Productos usa la barra de solo íconos de Industrias, con «Todas las industrias» primero (11.3s)
+  ok  2 [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:160:5 › RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y relaciones actuales (7.6s)
+  ok  3 [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:219:5 › RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos, vacío y tarjetas sin lote (6.6s)
+  ok  4 [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:252:5 › JG-28 / RF-SW-05: el detalle de un producto sin industria ni datos no muestra avisos ni espacios vacíos (5.6s)
+  ok  5 [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:267:5 › RF-SW-05 / RF-SW-17 / RF-SW-15: detalle público, galería, recomendados y enlaces (5.5s)
+▲ Next.js 16.4.3
+- Local:         http://127.0.0.1:3101
+- Network:       http://127.0.0.1:3101
+✓ Ready in 0ms
+✓ Running next.config took 36ms
+  ok  6 [telefono] › pruebas-e2e\sitio\rendimiento-galerias.spec.ts:74:5 › RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respecto de una (28.5s)
+  ok  7 [tableta] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:107:5 › JG-28 / RF-SW-03 / RF-SW-04: Productos usa la barra de solo íconos de Industrias, con «Todas las industrias» primero (6.3s)
+  ok  8 [tableta] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:160:5 › RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y relaciones actuales (6.3s)
+  ok  9 [tableta] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:219:5 › RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos, vacío y tarjetas sin lote (6.8s)
+  ok 10 [tableta] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:252:5 › JG-28 / RF-SW-05: el detalle de un producto sin industria ni datos no muestra avisos ni espacios vacíos (4.1s)
+  ok 11 [tableta] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:267:5 › RF-SW-05 / RF-SW-17 / RF-SW-15: detalle público, galería, recomendados y enlaces (6.1s)
+▲ Next.js 16.4.3
+- Local:         http://127.0.0.1:3103
+- Network:       http://127.0.0.1:3103
+✓ Ready in 0ms
+✓ Running next.config took 42ms
+  ok 12 [tableta] › pruebas-e2e\sitio\rendimiento-galerias.spec.ts:74:5 › RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respecto de una (32.0s)
+  ok 13 [escritorio] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:107:5 › JG-28 / RF-SW-03 / RF-SW-04: Productos usa la barra de solo íconos de Industrias, con «Todas las industrias» primero (6.4s)
+  ok 14 [escritorio] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:160:5 › RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y relaciones actuales (6.8s)
+  ok 15 [escritorio] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:219:5 › RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos, vacío y tarjetas sin lote (6.7s)
+  ok 16 [escritorio] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:252:5 › JG-28 / RF-SW-05: el detalle de un producto sin industria ni datos no muestra avisos ni espacios vacíos (4.5s)
+  ok 17 [escritorio] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:267:5 › RF-SW-05 / RF-SW-17 / RF-SW-15: detalle público, galería, recomendados y enlaces (6.7s)
+▲ Next.js 16.4.3
+- Local:         http://127.0.0.1:3105
+- Network:       http://127.0.0.1:3105
+✓ Ready in 0ms
+✓ Running next.config took 42ms
+  ok 18 [escritorio] › pruebas-e2e\sitio\rendimiento-galerias.spec.ts:74:5 › RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respecto de una (37.5s)
+
+  18 passed (3.9m)
