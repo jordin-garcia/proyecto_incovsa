@@ -171,7 +171,7 @@ Tabla: Fuentes del levantamiento registradas en `specs/18` {#tab:fuentes}
 | 21/09/2026 | Documento 1 v0.1, Entregable 1 |
 | 23 y 24/09/2026 | Respuestas del equipo a los puntos por aclarar. Quedan en `specs/` |
 | 29/09/2026 | Reunión 4, virtual, con el Ing. William Ambrossio y el equipo. Notas de Daniela Marín |
-| 13/10/2026 | Reunión 5, virtual, de 18:00 a 21:30. Notas de Daniela Marín. Dicen 14 de octubre por error (P-77) |
+| 13/10/2026 | Reunión 5, virtual, de 18:00 a 21:30. Notas de Daniela Marín. Una versión anterior decía 14 de octubre (P-77) |
 | 16/10/2026 | El docente aprobó la exclusión del inventario. Quedaron el despliegue, el plan de tareas y el trabajo con agentes de IA |
 | 22/10/2026 | Decisión del coordinador: en el diseño manda el prototipo aprobado (decisión 89) |
 | 22/10 y 26/10/2026 | Auditorías del coordinador sobre lo integrado. Sus decisiones precisan Facturación, Ruta, Reportes, Configuración y la bandeja de solicitudes |

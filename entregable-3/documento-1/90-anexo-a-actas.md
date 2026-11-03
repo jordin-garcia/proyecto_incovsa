@@ -165,7 +165,7 @@ Tabla: Datos de la reunión 5 {#tab:reunion-5}
 | Participantes por INCOVSA | Ing. William Ambrossio |
 | Responsable de las notas | Daniela Marín |
 
-Las notas originales dicen «14 de octubre de 2026». La reunión fue el 13 de octubre de 2026: lo confirman la captura de la reunión y el coordinador (P-77).
+Una versión anterior de las notas decía «14 de octubre de 2026». La reunión fue el 13 de octubre de 2026, como confirma la captura de la reunión (P-77).
 
 ### Temas tratados {-}
 

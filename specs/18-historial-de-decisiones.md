@@ -746,7 +746,7 @@ Correcciones del coordinador a las brechas de la revisión de seguridad (JG-15) 
 
 ## Documento 1 v1.0 y actas de las reuniones 4 y 5 (03/11/2026, CE-09)
 
-- Se resuelve **P-77**. Las actas en Markdown de las reuniones 4 y 5 quedan en `docs/Reuniones/` junto a las de las reuniones 1 a 3. El acta de la reunión 5 lleva la fecha correcta, el 13/10/2026, y aclara que las notas dicen 14/10 por error.
+- Se resuelve **P-77**. Las actas en Markdown de las reuniones 4 y 5 quedan en `docs/Reuniones/` junto a las de las reuniones 1 a 3. El acta de la reunión 5 lleva la fecha correcta, el 13/10/2026, y aclara que una versión anterior de las notas decía 14/10.
 - El Documento 1 pasa a la versión 1.0 (`entregable-3/documento-1/`): documenta el sistema tal como está en `develop` el 03/11/2026 y reemplaza a la v0.2 del 24/09 de «Documentos no alineados con las reuniones 4 y 5». El texto sale de esta carpeta, porque la v0.2 no está en el repositorio.
 - El Anexo A reúne las cinco actas. El Anexo B enumera la evidencia de cada reunión y no reproduce fotografías ni capturas, porque muestran a personas. La evidencia de las fuentes sin acta sigue pendiente (P-04).
 - `specs/16` decía en dos lugares que Caddy agrega la cabecera HSTS. Desde el 28/10 la envía Next.js (decisión 29): se corrigieron esas dos líneas.

@@ -12,6 +12,6 @@ Tabla: Evidencia de cada reunión {#tab:evidencias}
 | 4 | 29/09/2026 | Virtual | Documento de cambios solicitados y captura de la videollamada |
 | 5 | 13/10/2026 | Virtual | Notas de la reunión y captura de la videollamada |
 
-El contenido de cada reunión está en las actas del Anexo A. Las notas de la reunión 5 dicen «14 de octubre de 2026» por error. La captura de la videollamada confirma que la reunión fue el 13 de octubre de 2026 (P-77).
+El contenido de cada reunión está en las actas del Anexo A. Una versión anterior de las notas de la reunión 5 decía «14 de octubre de 2026». La captura de la videollamada confirma que la reunión fue el 13 de octubre de 2026 (P-77).
 
 La evidencia del cuestionario del 9 al 11 de septiembre de 2026, de la reunión del 18 de septiembre de 2026 y de las aclaraciones del 19 y 20 de septiembre de 2026 todavía no está archivada (P-04).
