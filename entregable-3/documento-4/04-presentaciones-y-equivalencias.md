@@ -12,20 +12,20 @@ Explicar cómo el sistema logístico maneja las diversas presentaciones de empaq
 
 En la comercialización de productos químicos y materias primas, los clientes suelen ordenar en kilogramos, pero la bodega despacha bultos cerrados o unidades físicas completas. El sistema modela esta relación de forma directa y transparente:
 
-1. **Presentación comercial:** el tipo de envase se encuentra incorporado en el nombre comercial proveniente de Odoo (por ejemplo, `SAC` para sacos, `TAM` para tambores, `GAR` para garrafas).
+1. **Presentación comercial:** el tipo de envase se encuentra incorporado en el nombre comercial proveniente de Odoo (por ejemplo, `SAC` para sacos, `TON` para toneles o tambores, `GAR` para garrafas).
 2. **Factor de equivalencia (Peso de Conversión):** cada línea de producto contiene un valor numérico en la columna `Movimientos de stock/Producto/Peso`. Este número representa exactamente cuántos kilogramos pesa una unidad física completa y cerrada de dicho producto.
 3. **Uso en el sistema:** este valor es utilizado por el motor logístico para calcular automáticamente cuántas unidades completas debe extraer el bodeguero del anaquel y cuántos kilogramos corresponden a producto fraccionado o sobrante.
 
-Tabla: Ejemplos de presentaciones y equivalencias de peso {#tab:equivalencias}
+Tabla: Ejemplos de presentaciones y equivalencias de peso del archivo de Odoo {#tab:equivalencias}
 
 | Producto comercial | Presentación física | Peso de Conversión (kg) |
 |---|---|---|
-| Bicarbonato de Sodio USP | Saco de papel multicapa | 25.00 |
-| Soda Cáustica en Escamas | Saco de polipropileno | 25.00 |
-| Ácido Sulfónico Lineal | Tambor plástico | 215.00 |
-| Metanol Puro | Tambor metálico | 160.00 |
-| Glicerina Grado USP | Tambor | 250.00 |
-| Hipoclorito de Sodio | Garrafa | 25.00 |
+| SODA CAUSTICA EN ESCAMAS (CHI-SAC/0025KG) | Saco | 25.00 |
+| SODA ASH (CHI-SAC/0040KG) | Saco (columna de peso) | 25.00 |
+| SULFATO DE SODIO (CHI-SAC/0050KG) | Saco | 50.00 |
+| ACIDO ACETICO GLACIAL (CHI-GAR/0030KG) | Garrafa | 30.00 |
+| HIDROSULFITO DE SODIO (CHI-TON/0050KG) | Tonel / tambor | 50.00 |
+| FORMOL AL 37% (CHI-GAR/0025KG) | Garrafa | 25.00 |
 
 ### Validación estricta del Peso de Conversión
 

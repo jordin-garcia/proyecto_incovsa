@@ -30,18 +30,18 @@ Para evitar que los operarios deban realizar múltiples viajes al mismo pasillo 
 
 1. **Criterio de agrupación:** se consolida en una sola fila la suma de productos que compartan exactamente el **mismo nombre comercial**, el **mismo número de lote** y el **mismo Peso de Conversión**.
 2. **Separación por lote:** si dos clientes solicitaron el mismo producto químico pero en Odoo fueron asignados a lotes distintos, el sistema genera **filas separadas** para cada lote, impidiendo mezclas accidentales de partidas.
-3. **Resaltado de lote:** el código de lote aparece resaltado prioritariamente en una etiqueta destacada verde, garantizando que el bodeguero extraiga la partida física autorizada por Control de Calidad.
+3. **Resaltado de lote:** el código de lote aparece resaltado prioritariamente en una etiqueta destacada verde, permitiendo que el bodeguero identifique de forma rápida la partida física que trae la orden de Odoo (RN-32).
 
 Tabla: Ejemplo de consolidación en una misma ruta {#tab:consolidacion-lotes}
 
 | Cliente en Odoo | Producto | Lote | Cantidad | Fila generada en Bodega | Conversión mostrada |
 |---|---|---|---|---|---|
-| Farmacia Central | Soda Cáustica Escamas | 5287 | 25.00 kg | **Fila 1 (Lote 5287):** 40.00 kg | 1 unidad + 15 kg |
-| Laboratorios San Juan | Soda Cáustica Escamas | 5287 | 15.00 kg | (Consolidada con la anterior) | |
-| Distribuidora Sur | Soda Cáustica Escamas | 9221 | 10.00 kg | **Fila 2 (Lote 9221):** 10.00 kg | 0 unidades + 10 kg |
+| Cliente A | SODA CAUSTICA EN ESCAMAS (CHI-SAC/0025KG) | 5287 | 25.00 kg | **Fila 1 (Lote 5287):** 40.00 kg | 1 unidad + 15 kg |
+| Cliente B | SODA CAUSTICA EN ESCAMAS (CHI-SAC/0025KG) | 5287 | 15.00 kg | (Consolidada con la anterior) | |
+| Cliente C | SODA CAUSTICA EN ESCAMAS (CHI-SAC/0025KG) | 9221 | 10.00 kg | **Fila 2 (Lote 9221):** 10.00 kg | 0 unidades + 10 kg |
 
 ### Resultado esperado
 El personal de bodega visualiza el total neto consolidado que debe extraer del anaquel para surtir el camión de una sola vez, sin importar cuántos clientes compartan el lote.
 
-> **Advertencia:** Respete estrictamente el número de lote indicado en la tarjeta. Si el lote físico en tarima no coincide con el número resaltado en verde, suspenda la preparación de esa fila y notifique al supervisor de bodega y facturación.
+> **Advertencia:** Respete el número de lote indicado en la tarjeta. Si el lote físico en tarima no coincide con el número resaltado en verde, notifique al supervisor de bodega y a facturación para verificar la orden.
 

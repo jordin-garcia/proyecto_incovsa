@@ -18,7 +18,7 @@ El sistema simplifica las operaciones logísticas dividiendo los envíos en dos 
 
 ### Procedimiento para armar un «Envío por camión»
 
-1. Seleccione uno o varios pedidos facturados del tablero izquierdo y arrástrelos hacia la tarjeta **Envío por camión**, o utilice el botón de asignación rápida.
+1. Seleccione uno o varios pedidos facturados del tablero izquierdo y arrástrelos hacia la tarjeta **Envío por camión**.
 2. En la lista desplegable **Camión**, elija el vehículo que realizará el flete (por ejemplo, `Camión 1 - 3,400 kg`). El sistema mostrará la barra de capacidad de carga.
 3. En la lista desplegable **Piloto**, seleccione al conductor asignado para la ruta (véase la {{fig:opcion-camion}}).
 
@@ -31,14 +31,14 @@ El sistema simplifica las operaciones logísticas dividiendo los envíos en dos 
 
 ![Confirmación de envío de ruta a Bodega](figuras/figura-08-confirmar-ruta-bodega.png){#fig:confirmar-ruta}
 
-8. Presione **Confirmar y enviar a Bodega**. El sistema asignará el número correlativo diario (por ejemplo, `Ruta 1`) y transferirá la orden en tiempo real al módulo de Bodega.
+8. Presione el botón **Enviar a Bodega** en la ventana de confirmación. El sistema asignará el número correlativo diario (por ejemplo, `Ruta 1`) y transferirá la orden en tiempo real al módulo de Bodega.
 
 ### Procedimiento para «Cliente recoge en bodega»
 
 1. Arrastre los pedidos correspondientes a la tarjeta **Cliente recoge en bodega**.
 2. Ingrese la **Fecha programada** y la **Hora programada** en que el cliente se presentará a retirar su mercadería.
 3. Presione el botón **Enviar a Bodega**.
-4. Revise el resumen en la ventana de confirmación (véase la {{fig:confirmar-pedido}}) y haga clic en **Confirmar y enviar a Bodega**.
+4. Revise el resumen en la ventana de confirmación (véase la {{fig:confirmar-pedido}}) y haga clic en **Enviar a Bodega**.
 
 ![Confirmación de pedido para recolección en bodega](figuras/figura-09-confirmar-pedido-bodega.png){#fig:confirmar-pedido}
 

@@ -30,9 +30,9 @@ Permitir que el personal operativo, administrativo y de transporte de INCOVSA ac
 
 ### Pasos para cerrar sesión
 
-1. Al concluir su jornada laboral o abandonar su equipo de trabajo, diríjase a la esquina superior derecha de la pantalla.
-2. Haga clic sobre su nombre o el ícono de su cuenta para desplegar el menú de usuario.
-3. Seleccione la opción **Cerrar sesión**. El sistema cerrará su sesión de forma segura y lo redirigirá a la página principal del sitio web público.
+1. Al concluir su jornada laboral o abandonar su equipo de trabajo, diríjase a la parte inferior del menú lateral izquierdo.
+2. Localice el botón situado junto a su nombre de usuario.
+3. Presione el botón **Cerrar sesión**. El sistema cerrará su sesión de forma segura y lo redirigirá a la página de inicio del sitio web institucional.
 
 ### Resultado esperado
 El usuario ingresa al sistema logístico visualizando únicamente los módulos y las sedes para las cuales cuenta con permisos asignados.

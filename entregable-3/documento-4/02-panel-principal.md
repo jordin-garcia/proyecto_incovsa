@@ -30,7 +30,7 @@ El menú lateral izquierdo permite alternar entre las funciones operativas del s
 - **Tablero:** modo de pantalla completa optimizado para televisores y monitores dentro de la bodega física, con alternancia de tema claro y oscuro.
 - **Ruta:** vista para pilotos donde se consultan las entregas asignadas, se ajusta el recorrido real y se registra la entrega final al cliente.
 - **Reportes:** estadísticas consolidadas de kilogramos y unidades despachadas, historial de rutas realizadas y bitácora de auditoría.
-- **Configuración:** administración de camiones y de cuentas de usuario del sistema de picking (exclusivo para Gerencia y Soporte).
+- **Configuración:** administración de la flota de camiones (para usuarios con permiso «Administrar camiones» en sus sedes) y de cuentas de usuario del picking (exclusivo para Gerencia y Soporte).
 
 ### Adaptabilidad en dispositivos móviles y tabletas
 

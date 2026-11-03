@@ -47,7 +47,7 @@ Al finalizar la descarga en el último cliente del circuito:
 
 ![Ventana de confirmación para el registro final de entrega de la ruta](figuras/figura-18-ruta-confirmar-entrega.png){#fig:ruta-confirmar}
 
-3. Presione el botón **Confirmar entrega**.
+3. Presione el botón **Ruta Entregada** en la ventana de confirmación.
 4. La ruta pasará al estado oficial de **Entregado** y desaparecerá de la pantalla móvil del piloto, quedando registrada en el historial del módulo de Reportes.
 
 ### Resultado esperado

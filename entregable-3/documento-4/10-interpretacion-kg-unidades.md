@@ -20,10 +20,10 @@ Tabla: Ejemplos prácticos de conversión bajo la regla RN-01 {#tab:ejemplos-rn0
 | Cantidad facturada | Peso de Conversión | Resultado en pantalla | Instrucción física para el bodeguero |
 |---|---|---|---|
 | 50.00 kg | 25.00 kg | **2 unidades** | Extraer 2 sacos completos cerrados |
-| 60.00 kg | 25.00 kg | **2 unidades + 10 kg** | Extraer 2 sacos completos y pesar 10 kg en cubeta o bolsa |
+| 60.00 kg | 25.00 kg | **2 unidades + 10 kg** | Extraer 2 sacos completos y pesar 10 kg sueltos |
 | 10.00 kg | 25.00 kg | **0 unidades + 10 kg** | No retirar saco completo; pesar únicamente 10 kg |
-| 160.00 kg | 160.00 kg | **1 unidad** | Extraer 1 tambor metálico cerrado |
-| 200.00 kg | 160.00 kg | **1 unidad + 40 kg** | Extraer 1 tambor cerrado y medir 40 kg en garrafa |
+| 50.00 kg | 50.00 kg | **1 unidad** | Extraer 1 tonel / tambor cerrado |
+| 70.00 kg | 50.00 kg | **1 unidad + 20 kg** | Extraer 1 tonel cerrado y pesar 20 kg en garrafa |
 | 75.00 kg | 25.00 kg | **3 unidades** | Extraer 3 sacos completos cerrados |
 
 ### Formato de visualización en las pantallas
@@ -36,9 +36,9 @@ En las tablas de preparación de Bodega (véase la {{fig:unidades-bodega}}), la 
 
 ![Visualización de la columna de unidades y equivalencias en Bodega](figuras/figura-10-bodega-tarjetas-preparacion.png){#fig:unidades-bodega}
 
-### Precisión matemática del sistema
+### Precisión del cálculo en el sistema
 
-A diferencia de hojas de cálculo convencionales que sufren problemas de redondeo por números flotantes, el sistema logístico calcula todas las conversiones internamente con números decimales de alta precisión expresados en gramos exactos (`Decimal(12,3)`), garantizando que ni un solo gramo se pierda ni se duplique entre lo facturado y lo despachado.
+El sistema calcula todas las conversiones de forma matemática exacta sin pérdidas por redondeo, garantizando que cada gramo facturado coincida plenamente con lo preparado físicamente.
 
 ### Resultado esperado
 El operario de almacén visualiza de un solo vistazo el trabajo exacto a realizar, reduciendo a cero los errores de despacho por confusiones entre bultos y kilogramos.

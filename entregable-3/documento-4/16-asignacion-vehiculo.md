@@ -31,7 +31,7 @@ Establecer el procedimiento mediante el cual los pedidos de diferentes clientes 
 Al completarse este procedimiento, el sistema ejecuta las siguientes acciones automáticas:
 - Genera un identificador único de **Ruta** con su correlativo del día (por ejemplo, `Ruta 2`).
 - Consolida todos los productos de los distintos clientes bajo las reglas de agrupación de bodega (RN-51).
-- Reserva el camión y asigna la responsabilidad de la carga al usuario piloto seleccionado.
+- Asocia el camión y el piloto seleccionado a la ruta creada.
 - Habilita la orden en el módulo de Bodega para que los montacarguistas inicien el alistamiento.
 
 ### Resultado esperado

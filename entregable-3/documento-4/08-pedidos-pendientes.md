@@ -13,7 +13,7 @@ Permitir que el encargado de facturación suba al sistema la planilla de salidas
 ### Procedimiento para cargar el archivo de Odoo
 
 1. En el menú lateral izquierdo del sistema de picking, haga clic en la opción **Facturación**.
-2. En la parte superior de la pantalla, localice y presione el botón **Cargar archivo de Odoo**.
+2. En la parte superior de la pantalla, localice y presione el botón **Cargar archivo .xlsx**.
 3. En la ventana de diálogo de su sistema operativo, seleccione el archivo Excel (`.xlsx`) correspondiente a los pedidos del día.
 4. El sistema procesará el archivo aplicando las siguientes validaciones automáticas:
    - **Formato y seguridad:** comprueba que sea un archivo Excel legítimo, con peso menor a 2 MB y sin riesgo de compresión anómala (máximo 100 archivos internos y 50 MB descomprimido).
@@ -24,7 +24,7 @@ Permitir que el encargado de facturación suba al sistema la planilla de salidas
 
 ![Resumen de carga del archivo exportado de Odoo](figuras/figura-05-carga-odoo-resumen.png){#fig:carga-odoo-resumen}
 
-6. Presione el botón **Entendido** para cerrar la ventana informativa.
+6. Presione el botón **Listo** para cerrar la ventana informativa.
 
 ### Gestión del tablero de pedidos facturados
 
@@ -39,13 +39,13 @@ Cada tarjeta de pedido facturado muestra:
 - **Peso total:** sumatoria en kilogramos de todos los productos incluidos en la orden.
 - **Detalle de productos:** desglose de cada producto con su lote, Peso de Conversión y kilogramos ordenados.
 
-### Búsqueda y selección de pedidos
+### Selección y arrastre de pedidos
 
-- **Buscador:** escriba en la barra de búsqueda el nombre del cliente o el número de referencia para filtrar instantáneamente el tablero.
-- **Selección individual o múltiple:** haga clic en la casilla de selección de una o varias tarjetas. También puede utilizar la opción «Seleccionar todos» para mover conjuntos de pedidos en bloque.
+- **Selección individual o múltiple:** haga clic sobre las tarjetas para seleccionarlas. También puede utilizar el botón **Seleccionar todos** para marcar todos los pedidos del tablero a la vez.
+- **Arrastre a opciones de envío:** una vez seleccionados los pedidos, arrástrelos con el puntero hacia la opción de envío deseada (**Envío por camión** o **Cliente recoge en bodega**) en el lado derecho de la pantalla.
 
 ### Resultado esperado
 Los pedidos facturados quedan listados de forma clara en el tablero, listos para ser organizados y despachados hacia la bodega.
 
-> **Advertencia:** Si el archivo contiene pedidos con prefijos desconocidos o mezcla de bodegas, el sistema rechazará la importación por completo para evitar que órdenes de una sede terminen asignadas a otra.
+> **Advertencia:** Si el archivo contiene pedidos con prefijos de bodega no reconocidos o mezclados, el sistema rechazará la importación indicando «Hay referencias de una bodega que no se reconoce. Se esperan los prefijos XE, GT o ESC.».
 

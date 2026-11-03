@@ -19,27 +19,27 @@ En el modelo logístico de INCOVSA, la prevención de sobrecargas se realiza dir
 
 ![Control de capacidad y monitoreo de peso en la opción Envío por camión](figuras/figura-14-control-peso-camion.png){#fig:control-peso-camion}
 
-### Gestión de alertas por sobrepeso
+### Gestión de alertas por sobrepeso (RN-13)
 
-- **Carga dentro del límite (Estado Normal):** mientras el peso total de los pedidos no sobrepase la capacidad nominal del camión, la barra se mantendrá en tono verde institucional, indicando que el flete es seguro.
-- **Detección de sobrepeso (Estado Crítico):** si la sumatoria de pedidos sobrepasa el límite del camión, la barra gráfica cambiará inmediatamente a color rojo intenso y se mostrará una advertencia explícita de sobrepeso señalando el exceso de kilogramos.
+- **Carga dentro del límite:** mientras el peso total de los pedidos no sobrepase la capacidad nominal del camión, la barra se mantendrá en tono normal indicando el porcentaje ocupado.
+- **Aviso de sobrepeso:** si la sumatoria de pedidos sobrepasa la capacidad del camión, el sistema muestra una alerta visual informando el exceso de kilogramos.
+- **Naturaleza informativa de la alerta (RN-13):** la alerta de sobrepeso **solo informa: se puede enviar igual**. El sistema no bloquea el botón de envío a bodega, permitiendo que el facturador o coordinador decida si despacha la ruta tal como está o si redistribuye la carga.
 
-### Procedimiento de corrección ante una alerta de sobrepeso
+### Procedimiento opcional ante un aviso de sobrepeso
 
-Si el sistema reporta que la ruta seleccionada excede el límite de carga del vehículo:
+Si el facturador decide ajustar la carga tras observar el aviso de sobrepeso:
 
 1. Revise los pedidos asignados a la tarjeta «Envío por camión».
-2. Localice los pedidos facturados de mayor peso o aquellos con fecha programada más holgada.
-3. Arrastre los pedidos sobrantes de regreso al tablero izquierdo de pedidos facturados, o presione la opción de devolver pedido.
-4. Observe cómo la barra de peso recalcula el total acumulado hasta regresar a la zona segura permitida.
-5. De forma alternativa, si dispone de un vehículo de mayor porte en la sede (por ejemplo, el camión de 6,000 kg), seleccione ese camión en la lista desplegable para absorber la totalidad de la carga sin dividir la ruta.
+2. Arrastre los pedidos de mayor peso de regreso al tablero izquierdo de pedidos facturados.
+3. Observe cómo la barra de peso recalcula el total acumulado dentro de la capacidad nominal del vehículo.
+4. De forma alternativa, si dispone de un vehículo de mayor capacidad en la sede (por ejemplo, el camión de 6,000 kg), elija ese camión en la lista desplegable.
 
 ### Simplificación aprobada de la carga física (P-45)
 
-Conforme a las aprobaciones emitidas por la contraparte institucional y la docencia del curso (P-45), el sistema **no requiere un paso redundante de confirmación de carga en báscula** por parte del personal de bodega. El control riguroso ejercido en el armado de la ruta garantiza la legalidad de la carga, agilizando el flujo físico en las rampas de despacho.
+Conforme a las aprobaciones de la contraparte institucional y del docente del curso (P-45), el sistema **no requiere confirmación de carga en báscula** por parte del personal de bodega. El control de peso se visualiza directamente en Facturación, agilizando el flujo físico en las rampas de despacho.
 
 ### Resultado esperado
-Los vehículos de transporte parten hacia sus rutas de entrega con cargas balanceadas y seguras, previniendo accidentes mecánicos, multas de transporte pesado y deterioro prematuro de los neumáticos y suspensiones de la flota.
+El personal de facturación conoce en tiempo real el peso acumulado en cada camión y dispone de alertas informativas para tomar decisiones operativas de transporte.
 
-> **Advertencia:** Jamás despache una ruta que mantenga la alerta de sobrepeso activa en color rojo. Distribuya la mercancía en múltiples viajes o asigne un camión con la capacidad técnica requerida.
+> **Nota (RN-13):** Conforme a la regla de negocio RN-13, la alerta de sobrepeso es informativa y no impide presionar «Enviar a Bodega». La decisión de enviar un camión con sobrepeso queda bajo el criterio del coordinador logístico.
 

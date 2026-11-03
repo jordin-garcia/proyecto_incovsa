@@ -6,7 +6,8 @@
 Capacitar al personal con funciones de Gerencia y Soporte técnico en la administración de la flota de transporte y en la gestión de cuentas, roles y permisos de acceso para los colaboradores del sistema logístico.
 
 ### Requisitos previos
-- Disponer de una cuenta con rol de **Gerencia** o **Soporte** (únicos roles facultados para administrar el módulo de Configuración).
+- Para la pestaña **Camiones**: disponer del permiso «Administrar camiones» (`pk.cfg.camiones`) en sus sedes asignadas, o contar con rol de Gerencia o Soporte.
+- Para la pestaña **Usuarios**: disponer de una cuenta con rol de **Gerencia** o **Soporte** (únicos roles facultados para administrar usuarios del picking).
 
 ### Administración de la flota de camiones
 
@@ -41,12 +42,12 @@ En la pestaña **Usuarios** se crean y regulan las cuentas del personal operativ
      - Bodega (`pk.bodega`): marcar preparación, reordenar y despachar rutas.
      - Ruta para pilotos (`pk.ruta.propias`): consultar y entregar sus rutas asignadas.
      - Reportes (`pk.reportes`): consultar estadísticas, rutas realizadas y bitácora.
-     - Camiones (`pk.camiones`): crear y modificar vehículos de la flota.
-  5. Presione **Guardar usuario**.
+     - Administrar camiones (`pk.cfg.camiones`): crear, editar y eliminar vehículos de la flota.
+  5. Presione **Guardar**.
 
 ### Restablecimiento de contraseñas y desactivación de cuentas
 
-- **Restablecimiento manual (RF-SL-48):** si un piloto o bodeguero olvida su clave, Gerencia o Soporte localiza al usuario en la lista, hace clic en **Editar** y escribe una nueva contraseña en el campo correspondiente, guardando los cambios de forma instantánea sin requerir enlaces por correo electrónico.
+- **Restablecimiento manual (RF-SL-48):** si un piloto o bodeguero olvida su clave, Gerencia o Soporte localiza al usuario en la lista y presiona el botón **Contraseña** ubicado en su fila de la tabla. En la ventana modal emergente escribe la nueva clave y hace clic en **Guardar**, aplicándose el cambio al instante sin requerir enlaces ni confirmaciones por correo electrónico.
 - **Eliminación y desactivación lógica:** cuando un trabajador concluye su relación laboral con INCOVSA, su cuenta se desactiva o elimina de forma lógica. El usuario queda inhabilitado para iniciar sesión, pero todos los registros históricos, despachos y marcas de bitácora en los que participó se conservan intactos para auditoría.
 - **Protección de administradores:** Gerencia y Soporte no pueden eliminar ni desactivar su propia cuenta de usuario en sesión.
 

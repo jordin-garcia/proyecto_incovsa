@@ -22,7 +22,7 @@ A continuación se detallan los problemas frecuentes organizados por módulo, ex
 - **Solución:**
   1. Verifique que el teclado no tenga las mayúsculas bloqueadas e intente escribir la clave con calma.
   2. Recuerde que el sistema diferencia estrictamente mayúsculas, minúsculas, números y caracteres especiales.
-  3. Si olvidó su clave, acérquese con el encargado de **Gerencia** o **Soporte**. Ellos pueden editar su cuenta en el módulo de Configuración y asignarle una nueva contraseña al instante.
+  3. Si olvidó su clave, acérquese con el encargado de **Gerencia** o **Soporte**. Ellos pueden acceder a Configuración > Usuarios y utilizar el botón **Contraseña** para asignarle una nueva clave al instante.
 
 #### 2. Permisos y visualización de módulos faltantes
 
@@ -36,7 +36,7 @@ A continuación se detallan los problemas frecuentes organizados por módulo, ex
 
 #### 3. Errores al cargar el archivo de Odoo en Facturación
 
-- **Síntoma:** El sistema rechaza el archivo y muestra «No se pudo leer el archivo. Verifique que sea el .xlsx exportado de Odoo» o notifica «Prefijo desconocido».
+- **Síntoma:** El sistema rechaza el archivo y muestra «No se pudo leer el archivo. Verifique que sea el .xlsx exportado de Odoo.» o notifica «Hay referencias de una bodega que no se reconoce. Se esperan los prefijos XE, GT o ESC.».
 - **Causas probables:**
   - El archivo fue guardado en un formato distinto a `.xlsx` (por ejemplo `.csv` o `.xls` antiguo).
   - El archivo contiene pedidos con prefijos de otra sede (por ejemplo, pedidos con prefijo `GT` de bodega Guatemala mientras el usuario está posicionado en Quetzaltenango `XE`).
@@ -75,12 +75,12 @@ A continuación se detallan los problemas frecuentes organizados por módulo, ex
   1. Compruebe que el dispositivo mantenga conexión a la red de la empresa.
   2. Espere unos segundos y repita la acción. Los datos ingresados previamente se encuentran a salvo en el servidor.
 
-### Canales de soporte técnico institucional
+### Canales de soporte y asistencia
 
 Si después de seguir las instrucciones de esta guía persiste algún inconveniente técnico:
-- **Área operativa y logística:** comuníquese con el Supervisor de Bodega de su sede.
-- **Cuentas, permisos y vehículos:** solicite asistencia al personal de **Gerencia** o **Soporte** de INCOVSA.
-- **Sistemas centrales y ERP Odoo:** reporte la incidencia al departamento de Tecnología de la Información liderado por el Ing. William Ambrossio.
+- **Operaciones de despacho:** comuníquese con el supervisor de bodega o el área de facturación.
+- **Cuentas, permisos y vehículos:** solicite asistencia a los usuarios con rol de **Gerencia** o **Soporte**.
+- **Inconsistencias en pedidos o datos de Odoo:** consulte con el área administrativa responsable de la emisión de facturas y exportación de archivos en Odoo.
 
 ### Resultado esperado
 Las operaciones logísticas de INCOVSA mantienen su continuidad sin interrupciones prolongadas, garantizando el despacho puntual de los pedidos a nuestros clientes.

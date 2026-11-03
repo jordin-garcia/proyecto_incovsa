@@ -32,14 +32,17 @@ Tabla: Principales eventos registrados en la bitácora {#tab:eventos-bitacora}
 
 | Operación | Cuándo se registra | Datos almacenados en el detalle |
 |---|---|---|
-| **Inicio de sesión** | Al autenticarse exitosamente un usuario | Nombre de usuario y sede de ingreso |
-| **Carga de archivo** | Al importar una planilla `.xlsx` de Odoo | Cantidad de pedidos importados y kg totales |
-| **Envío de ruta a bodega** | Al confirmar una ruta en Facturación | Número correlativo, camión, piloto y clientes |
-| **Envío de pedido a bodega**| Al confirmar un pedido en Facturación | Número correlativo y cliente que recoge |
-| **Cancelación de opción** | Al regresar pedidos al tablero | Número de pedidos devueltos |
-| **Despacho de ruta** | Al pulsar "Ruta Despachada" en Bodega | Identificador de ruta y hora de salida |
-| **Despacho de pedido** | Al pulsar "Pedido Despachado" en Bodega | Identificador de pedido y hora de entrega |
-| **Entrega de ruta** | Al pulsar "Ruta Entregada" por el piloto | Recorrido final de entrega ejecutado |
+| **Inicio de sesión** | Al autenticarse un usuario en el sistema | Nombre de usuario |
+| **Intento fallido de inicio de sesión** | Al ingresar credencial errónea | Nombre de usuario intentado |
+| **Carga de archivo de Odoo** | Al importar una planilla `.xlsx` de Odoo | Cantidad de pedidos importados y kg totales |
+| **Eliminación de pedidos facturados** | Al descartar pedidos del tablero de Facturación | Cantidad de pedidos descartados |
+| **Envío de ruta a bodega** | Al confirmar una ruta en Facturación | Tipo, número correlativo, camión y piloto |
+| **Envío de pedido a bodega** | Al confirmar un pedido en Facturación | Tipo, número correlativo y pedidos incluidos |
+| **Cancelación de opción de envío** | Al devolver pedidos al tablero de Facturación | Cantidad de pedidos devueltos |
+| **Cambio de estado** | Al despachar en Bodega («Ruta Despachada» o «Pedido Despachado») | Estado previo y nuevo estado («En Ruta» o «Despachado») |
+| **Cierre de ruta** | Al presionar «Ruta Entregada» en el módulo de Ruta | Número de ruta y orden de paradas del recorrido |
+| **Creación / Edición de camión** | Al crear o modificar vehículos en Configuración | Identificación y capacidad del camión |
+| **Creación / Cambio de contraseña** | Al crear usuarios o restablecer su clave | Nombre de usuario afectado |
 
 ### Inmutabilidad y seguridad de los registros (RN-39)
 
