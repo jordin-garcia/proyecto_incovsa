@@ -1,13 +1,30 @@
 # -*- coding: utf-8 -*-
 """Utilidades de dibujo UML clasico (trazo negro sobre blanco) con PIL."""
 import math
+import os
 from PIL import Image, ImageDraw, ImageFont
 
 S = 3  # supermuestreo
-FONT_R = "C:/Windows/Fonts/arial.ttf"
-FONT_B = "C:/Windows/Fonts/arialbd.ttf"
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+
+
+def _fuentes():
+    """Arial en Windows. Liberation Sans o DejaVu en Linux. Misma metrica aproximada."""
+    pares = (
+        ("C:/Windows/Fonts/arial.ttf", "C:/Windows/Fonts/arialbd.ttf"),
+        ("/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+         "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"),
+        ("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+         "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"),
+    )
+    for regular, negrita in pares:
+        if os.path.isfile(regular) and os.path.isfile(negrita):
+            return regular, negrita
+    raise SystemExit("No hay Arial, Liberation Sans ni DejaVu para dibujar las figuras.")
+
+
+FONT_R, FONT_B = _fuentes()
 
 
 class Canvas:

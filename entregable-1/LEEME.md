@@ -12,7 +12,7 @@ La especificación vigente del proyecto está en [`../specs/`](../specs/README.m
 | Archivo | Qué es |
 |---|---|
 | `Documento 1 - Memoria general y especificacion del sistema v0.1.docx` y `.pdf` | La versión **entregada** el 21/09/2026 (79 páginas). Se conserva sin cambios como registro de lo que se entregó |
-| `Documento 1 - Memoria general y especificacion del sistema v0.2.docx` y `.pdf` | La versión **vigente** (24/09/2026, 86 páginas). Incorpora las decisiones del 23 y 24/09/2026. **Todavía no** incorpora los cambios de las reuniones 4 y 5 (29/09 y 13/10/2026) ni los ajustes posteriores (P-77 en `specs/19-pendientes.md`). Mientras tanto, lo vigente es `specs/` |
+| `Documento 1 - Memoria general y especificacion del sistema v0.2.docx` y `.pdf` | La versión del 24/09/2026 (86 páginas). Incorpora las decisiones del 23 y 24/09/2026. La reemplaza el Documento 1 v1.0 del 03/11/2026, en `entregable-3/documento-1/`, que incorpora las reuniones 4 y 5 y los ajustes posteriores (CE-09). Las figuras vigentes están en `entregable-3/documento-1/figuras/` |
 
 ### Qué cambió de la v0.1 a la v0.2
 

@@ -347,6 +347,14 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Pendiente o aviso para otros:
 **Todos:** la guía de estudio para la prueba individual del 04/11 está en `plan/guia-de-estudio-entregable-3.md`. Léanla hoy; también sirve para las preguntas individuales del 09/11.
 
+## 2026-11-03 · CE-09 · Documento 1 v1.0 (terminado por el coordinador)
+- Hecho: terminé CE-09 desde la rama de Carlos (PR #98, que cierro). Documento 1 v1.0 en `entregable-3/documento-1/`, al día con `specs/` y con `develop` del 03/11: ocho capítulos, actas de las cinco reuniones (anexo A), evidencias sin fotografías (anexo B), nota de los cambios del Ing. Manuel Rojas (anexo C), matriz de 121 requisitos vigentes con sus tareas y pruebas (anexo D) y conversión (anexo E). Regeneré las figuras 5 a 8. Redacté las actas 4 y 5 en `docs/Reuniones/` (la 5 con fecha 13/10/2026).
+- Decisiones: P-77 resuelto (`specs/18`, `specs/19`). Corregí en `specs/16` que HSTS lo envía Next.js y no Caddy (decisión 29). El despliegue se documenta como previsto, no como hecho. Los documentos no nombran `docs/Reuniones/`.
+- Pendiente o aviso para otros:
+**Carlos:** terminé tu CE-09 (protocolo §E4) y cerré tu PR #98. Cambié `entregable-3/documento-1/**` y `entregable-1/diagramas/` (figura 5 y modelos entidad-relación 6 a 8). Actualiza tu rama desde `develop`. CE-11 y CE-12 también las termino yo hoy, desde tus PR #96 y #97.
+**CE-15:** las actas 4 y 5 en Markdown también están en `docs/Reuniones/`; se quitan con esa carpeta. Su contenido ya está en el anexo A del Documento 1.
+**JG-17:** el anexo D del Documento 1 muestra 35 requisitos vigentes sin una prueba con su código (la lista está en el anexo). RF-SL-80 no lo nombra ninguna tarea; sus pruebas llevan el código RN-57.
+
 ## 2026-11-03 · JG-08 · Revisión automática de PR de documentos
 - Hecho: `revision-claude` falló tres veces en #168 (CE-09) sin publicar su comentario, después de 11 comandos negados. Le agregué `git log`, `git show` y `ls` (nada que ejecute código del PR), y el prompt le pide no repetir lo negado, no revisar binarios por dentro y publicar siempre el comentario. Prueba en `scripts/flujos.test.mjs`.
 - Decisiones: no activé `show_full_output` (repositorio público). Registrado en `specs/18` y en el `## Resultado` de JG-08.

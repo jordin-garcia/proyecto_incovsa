@@ -1,0 +1,50 @@
+{
+  "titulo_documento": "DOCUMENTO 1: MEMORIA GENERAL Y ESPECIFICACIÓN DEL SISTEMA",
+  "archivo_salida": "Documento 1 - Memoria general y especificacion del sistema v1.0.docx",
+  "lugar_fecha": "Quetzaltenango, 3 de noviembre de 2026",
+  "portada": true,
+  "control_versiones": true,
+  "indices": true,
+  "numerar": true,
+  "versiones": [
+    [
+      "0.1",
+      "21/09/2026",
+      "Equipo del proyecto",
+      "Versión entregada del Entregable 1, de 79 páginas"
+    ],
+    [
+      "0.2",
+      "24/09/2026",
+      "Equipo del proyecto",
+      "Incorpora las decisiones del 23/09/2026 y del 24/09/2026"
+    ],
+    [
+      "0.3",
+      "30/10/2026",
+      "Carlos Hugo Escobar",
+      "Alineación con la especificación 1.7, corte del 16/10/2026. El inventario queda fuera del alcance, con la aprobación del docente. Incluye los permisos por usuario, los diagramas vigentes y las capturas del prototipo de simulación. Las actas y las evidencias del Drive siguen pendientes."
+    ],
+    [
+      "1.0",
+      "03/11/2026",
+      "Carlos Hugo Escobar y Héctor Jordin Adolfo García Coyoy",
+      "Versión para el Entregable No. 3 (04/11/2026): documenta el sistema tal como está en develop el 03/11/2026. Incorpora los cambios de las reuniones 4 y 5, la especificación vigente, las actas de las cinco reuniones (Anexo A), las evidencias (Anexo B) y la matriz de requerimientos con su implementación y su prueba (Anexo D)"
+    ]
+  ],
+  "secciones": [
+    "01-introduccion.md",
+    "02-actores-y-permisos.md",
+    "03-requerimientos.md",
+    "04-reglas-de-negocio.md",
+    "05-casos-de-uso.md",
+    "06-modelado-diseno-arquitectura.md",
+    "07-datos-seguridad-interfaz.md",
+    "08-conclusiones.md",
+    "90-anexo-a-actas.md",
+    "91-anexo-b-evidencias.md",
+    "92-anexo-c-prototipos.md",
+    "93-anexo-d-matriz.md",
+    "94-anexo-e-conversion.md"
+  ]
+}
