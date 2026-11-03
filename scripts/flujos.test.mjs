@@ -222,7 +222,11 @@ test("decisión 60: revision-claude siempre decide el veredicto y deja la revisi
   assert.match(accion, /no lo repitas ni busques otra forma/);
   // El comentario se publica desde un archivo de /tmp, el único que el bot puede escribir.
   assert.match(accion, /--body-file \/tmp\/revision-claude-comentario\.md/);
-  assert.doesNotMatch(accion, /Edit\((?!\/\/tmp\/revision-claude-comentario\.md\))|Write\(/);
+  // La lista exacta de arriba es la única: un solo --allowedTools y nada que amplíe los permisos.
+  assert.equal(accion.match(/--allowedTools/g).length, 1);
+  assert.doesNotMatch(accion, /--permission-mode|--dangerously-skip-permissions|--disallowedTools/);
+  assert.doesNotMatch(accion, /\b(?:MultiEdit|NotebookEdit)\b/);
+  assert.doesNotMatch(accion.replace("la herramienta Write en", ""), /\bWrite\b/);
   // Nada que ejecute código de la rama del PR: el bot corre con el token del coordinador.
   assert.doesNotMatch(accion, /Bash\(node|Bash\(npm|Bash\(npx|Bash\(python/);
   assert.match(trabajo, /^ {6}pull-requests: write$/m);
