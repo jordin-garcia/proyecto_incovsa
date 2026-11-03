@@ -70,3 +70,10 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Pendiente o aviso para otros:
 **Jordin (JG-19):** El hallazgo R-P02 de seguridad en Bodega está completamente subsanado y verificado con pruebas RNF-05.
 **Todos:** Queda garantizada la unicidad de identificadores al reordenar líneas y cola en Bodega.
+
+## 2026-11-03 · JM-07 · Documento 4, manual de usuario del sistema logístico
+- Hecho: Se elaboró y compiló el Documento 4 en `entregable-3/documento-4/` con los 22 apartados requeridos por los lineamientos del curso, adaptados al sistema real implementado en `develop`. Se redactó cada apartado con su objetivo, requisitos previos, pasos numerados en lenguaje comprensible para el personal de bodega, facturación y pilotos, resultado esperado, advertencias y justificación formal de "No aplica" para los apartados de inventario (exclusión P-58 aprobada por el docente). Se incorporaron 23 capturas reales de la aplicación en escritorio y dispositivo móvil. Se validó la compilación exitosa a `.docx` con `armar_documento.py`.
+- Decisiones: Se utilizó la estructura de 22 apartados de los lineamientos adaptada a la realidad operativa del sistema logístico y `develop` (replanificación JG-32 y decisión 90 de `specs/16`); se documentó la justificación formal de no aplicación de inventario, entradas y salidas en Odoo; se emplearon capturas actualizadas sin textos preliminares del prototipo (incorporando los cambios de JG-28).
+- Pendiente o aviso para otros:
+**Jordin (JG-30, JG-20):** El Documento 4 está terminado y compilado en `entregable-3/` listo para la entrega del tercer hito (04/11).
+**Todos:** El manual de usuario del sistema logístico (Documento 4) se compila desde la raíz con `python entregable-2/herramientas/armar_documento.py entregable-3/documento-4`.
