@@ -69,9 +69,9 @@ export default async function Nosotros() {
                   <Image src={src} alt={`Valor ${indice + 1} de INCOVSA`} width={300} height={400} unoptimized />
                 </figure>
               ) : (
+                // JG-28: el valor sin imagen conserva su tarjeta con el número, sin el aviso de pendiente.
                 <div className="valor-t vacio-v" key={indice}>
                   <span className="mono">{String(indice + 1).padStart(2, "0")}</span>
-                  <p className="muted">Imagen del valor pendiente de INCOVSA</p>
                 </div>
               ),
             )}

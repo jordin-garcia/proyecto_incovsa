@@ -15,6 +15,8 @@ test("RF-SW-06 / H-60: el formulario recorta los topes y no muestra mensajes de 
   await irA(page, "/contacto");
   // Antes de hidratar, React repite tarde el foco y la salida de los campos: se espera a que tome el formulario.
   await expect(page.locator("form.contacto-form")).toHaveAttribute("data-hidratado", "true");
+  // El formulario aparece al entrar en la pantalla (RF-SW-16); en teléfono queda debajo del banner (JG-28).
+  await page.locator("form.contacto-form").scrollIntoViewIfNeeded();
   await expect(page.getByRole("heading", { name: "Envíenos su mensaje" })).toBeVisible();
   const nombre = page.getByLabel("Nombre completo *", { exact: true });
   const empresa = page.getByLabel("Empresa", { exact: true });

@@ -1,0 +1,5 @@
+
+Running 1 test using 1 worker
+
+[1/1] [tableta] › pruebas-e2e\picking\facturacion-carga.spec.ts:40:1 › RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos facturados
+  1 passed (46.1s)

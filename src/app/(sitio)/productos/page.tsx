@@ -11,7 +11,7 @@ export default async function Productos({
   searchParams: Promise<{ industria?: string | string[] }>;
 }) {
   const [datos, inicio, consulta] = await Promise.all([leerCatalogoSitio(), leerInicioSitio(), searchParams]);
-  const filtro = z.enum(["todas", "sin", ...ICONOS_INDUSTRIAS]).safeParse(consulta.industria ?? "todas");
+  const filtro = z.enum(["todas", ...ICONOS_INDUSTRIAS]).safeParse(consulta.industria ?? "todas");
   const filtroInicial = filtro.success ? filtro.data : "todas";
   return (
     <main>

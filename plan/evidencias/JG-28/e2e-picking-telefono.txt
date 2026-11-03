@@ -1,0 +1,176 @@
+
+Running 54 tests using 1 worker
+
+[1/54] [telefono] › pruebas-e2e\picking\auditoria-jg24.spec.ts:67:1 › RN-49 / D-01: la confirmación de Facturación cuenta un cliente aunque varíen mayúsculas, tildes y espacios exteriores
+[2/54] [telefono] › pruebas-e2e\picking\bodega.spec.ts:83:7 › Módulo de Bodega E2E › Criterio 8 / RNF-08: Bodega con datos sin violaciones serias de axe, contraste incluido
+[3/54] [telefono] › pruebas-e2e\picking\bodega.spec.ts:96:7 › Módulo de Bodega E2E › RNF-08: pedido que recoge el cliente, con «Sin lote», y su Detalle sin violaciones serias de axe
+[4/54] [telefono] › pruebas-e2e\picking\bodega.spec.ts:117:7 › Módulo de Bodega E2E › RNF-08: líneas marcadas sin violaciones serias de axe, contraste incluido
+[5/54] [telefono] › pruebas-e2e\picking\bodega.spec.ts:145:7 › Módulo de Bodega E2E › RNF-08: Detalle de Ruta sin violaciones serias de axe, contraste incluido
+[6/54] [telefono] › pruebas-e2e\picking\bodega.spec.ts:159:7 › Módulo de Bodega E2E › RNF-08: Bodega vacía sin violaciones serias de axe, contraste incluido
+[7/54] [telefono] › pruebas-e2e\picking\bodega.spec.ts:169:7 › Módulo de Bodega E2E › RF-SL-21 / RN-51 (CP-19): el envío muestra dos filas con lote resaltado y unidades correctas
+[8/54] [telefono] › pruebas-e2e\picking\bodega.spec.ts:200:7 › Módulo de Bodega E2E › RF-SL-74 / RF-SL-75 (CP-36): fecha y hora programadas y Detalle de Ruta completo
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[9/54] [telefono] › pruebas-e2e\picking\bodega.spec.ts:231:7 › Módulo de Bodega E2E › RF-SL-23 / RN-20: marcar línea persiste al recargar y marcar todo marca todas
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[10/54] [telefono] › pruebas-e2e\picking\bodega.spec.ts:280:7 › Módulo de Bodega E2E › RF-SL-61 (auditoría H-17): el encabezado de Bodega tiene la estructura de cab() con la instrucción a la par del título
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[11/54] [telefono] › pruebas-e2e\picking\bodega.spec.ts:297:7 › Módulo de Bodega E2E › RF-SL-75 / RNF-01 (auditoría H-18, H-19 y H-20): «Programada» en verde y negrita, avance y herramientas como el prototipo
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[12/54] [telefono] › pruebas-e2e\picking\bodega.spec.ts:341:7 › Módulo de Bodega E2E › RF-SL-74 (auditoría H-21): en el Detalle se desplaza la ventana, no una zona interna
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[13/54] [telefono] › pruebas-e2e\picking\bodega.spec.ts:375:7 › Módulo de Bodega E2E › RF-SL-23 (auditoría H-24): sin red, la marca vuelve atrás con un mensaje y la pantalla sigue en uso
+[14/54] [telefono] › pruebas-e2e\picking\bodega.spec.ts:417:7 › Módulo de Bodega E2E › RF-SL-24 / RN-11 (CP-38): despacho solo habilitado con todo marcado y pasa a En Ruta
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] (node:6416) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[15/54] [telefono] › pruebas-e2e\picking\bodega.spec.ts:462:7 › Módulo de Bodega E2E › Criterio 7: usuario sin pk.bodega ve pantalla sin acceso con textos del prototipo
+[WebServer] {"fecha":"2026-11-03T04:33:33.516Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"picking","usuarioId":"fPhRaptFSH3B5KwZpZCqQp6BMMRj613K","operacion":"pk.bodega","motivo":"sin_permiso"}
+
+[WebServer] {"fecha":"2026-11-03T04:33:34.794Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"picking","usuarioId":"fPhRaptFSH3B5KwZpZCqQp6BMMRj613K","operacion":"pk.bodega","motivo":"sin_permiso"}
+
+[16/54] [telefono] › pruebas-e2e\picking\camiones.spec.ts:28:7 › Configuración: camiones › RF-SL-04: se crea, edita y elimina un camión
+[17/54] [telefono] › pruebas-e2e\picking\camiones.spec.ts:74:7 › Configuración: camiones › criterio 6: sin violaciones serias de axe
+[18/54] [telefono] › pruebas-e2e\picking\camiones.spec.ts:83:7 › Configuración: camiones › RNF-04: sin pk.cfg.camiones la pantalla rechaza el acceso
+[WebServer] {"fecha":"2026-11-03T04:33:58.617Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"picking","usuarioId":"NQtIr2gBujXGEG6h4mxeIwXBLvrW8n7m","operacion":"pk.cfg.camiones","motivo":"sin_permiso"}
+
+[WebServer] {"fecha":"2026-11-03T04:33:59.886Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"picking","usuarioId":"NQtIr2gBujXGEG6h4mxeIwXBLvrW8n7m","operacion":"pk.cfg.camiones","motivo":"sin_permiso"}
+
+[19/54] [telefono] › pruebas-e2e\picking\facturacion-carga.spec.ts:40:1 › RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos facturados
+[WebServer] Error: aborted
+[WebServer]     at ignore-listed frames {
+[WebServer]   code: 'ECONNRESET'
+[WebServer] }
+
+[WebServer] ⨯ uncaughtException: Error: aborted
+[WebServer]     at ignore-listed frames {
+[WebServer]   code: 'ECONNRESET'
+[WebServer] }
+
+[WebServer] ⨯ uncaughtException:  Error: aborted
+[WebServer]     at ignore-listed frames {
+[WebServer]   code: 'ECONNRESET'
+[WebServer] }
+
+[20/54] [telefono] › pruebas-e2e\picking\facturacion-envio.spec.ts:51:5 › RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bodega
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[21/54] [telefono] › pruebas-e2e\picking\reportes-exportacion.spec.ts:26:5 › RF-SL-38 / CAM-96: descarga Excel y PDF desde las tres pestañas de Reportes
+[22/54] [telefono] › pruebas-e2e\picking\reportes-exportacion.spec.ts:69:7 › RF-SL-38 / H-77: avisa cuando la exportación responde 400
+[23/54] [telefono] › pruebas-e2e\picking\reportes-exportacion.spec.ts:69:7 › RF-SL-38 / H-77: avisa cuando la exportación responde 403
+[24/54] [telefono] › pruebas-e2e\picking\reportes-exportacion.spec.ts:69:7 › RF-SL-38 / H-77: avisa cuando la exportación responde 500
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[25/54] [telefono] › pruebas-e2e\picking\reportes-exportacion.spec.ts:91:5 › RNF-04 (R-P01): al elegir la segunda sede en Reportes, Excel y PDF traen sus datos y su nombre
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[26/54] [telefono] › pruebas-e2e\picking\reportes.spec.ts:25:5 › RF-SL-59 / CP-64: periodos y fechas inválidas en Reportes
+[27/54] [telefono] › pruebas-e2e\picking\reportes.spec.ts:120:7 › RF-SL-59 / RNF-08: Despacho del periodo conserva el rango y es accesible
+[28/54] [telefono] › pruebas-e2e\picking\reportes.spec.ts:120:7 › RF-SL-59 / RNF-08: Rutas realizadas conserva el rango y es accesible
+[29/54] [telefono] › pruebas-e2e\picking\reportes.spec.ts:120:7 › RF-SL-59 / RNF-08: Bitácora conserva el rango y es accesible
+[30/54] [telefono] › pruebas-e2e\picking\reportes.spec.ts:151:5 › RF-SL-38 / RF-SL-37 / RN-39: datos de demostración, conversiones y recorrido en las tres pestañas
+[31/54] [telefono] › pruebas-e2e\picking\ruta.spec.ts:86:7 › Módulo de Ruta E2E (JM-06) › Criterio 1: RF-SL-26 / RN-46 - Visibilidad de rutas por rol y permiso
+[WebServer] {"fecha":"2026-11-03T04:36:38.143Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"picking","usuarioId":"NQtIr2gBujXGEG6h4mxeIwXBLvrW8n7m","operacion":"pk.ruta.propias","motivo":"sin_permiso"}
+
+[32/54] [telefono] › pruebas-e2e\picking\ruta.spec.ts:134:7 › Módulo de Ruta E2E (JM-06) › Criterio 2: RF-SL-78 - Orden de la más reciente a la más antigua
+[33/54] [telefono] › pruebas-e2e\picking\ruta.spec.ts:155:7 › Módulo de Ruta E2E (JM-06) › Criterio 3: RF-SL-27 / RN-49 - Detalle de ruta con Cliente, Sector y Total (kg)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[34/54] [telefono] › pruebas-e2e\picking\ruta.spec.ts:186:7 › Módulo de Ruta E2E (JM-06) › Criterio 4 y 5: RF-SL-28, RF-SL-29, RN-29, RN-11 - Cierre de ruta y entrega con recorrido reordenado
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[35/54] [telefono] › pruebas-e2e\picking\ruta.spec.ts:254:7 › Módulo de Ruta E2E (JM-06) › Criterio 6 y 7 / RNF-08 / RNF-14: Accesibilidad con axe y responsividad
+[36/54] [telefono] › pruebas-e2e\picking\ruta.spec.ts:280:7 › Módulo de Ruta E2E (JM-06) › H-69 / RNF-14: el piloto reordena los clientes con el arrastre táctil (hasTouch) en el teléfono
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[37/54] [telefono] › pruebas-e2e\picking\usuarios.spec.ts:31:7 › Configuración: usuarios del picking › RF-SL-03: Gerencia crea un usuario de Bodega que solo ve Quetzaltenango
+[WebServer] {"fecha":"2026-11-03T04:37:11.389Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"picking","usuarioId":"caac5597-0143-4f32-91f2-d438cb2fe81a","operacion":"pk.facturacion","motivo":"sin_permiso"}
+
+[38/54] [telefono] › pruebas-e2e\picking\usuarios.spec.ts:77:7 › Configuración: usuarios del picking › criterio 6: con pk.cfg.camiones sin Gerencia no ve la pestaña Usuarios
+[39/54] [telefono] › pruebas-e2e\picking\usuarios.spec.ts:106:7 › Configuración: usuarios del picking › criterio 8: la pestaña Usuarios no tiene violaciones serias de axe
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[40/54] [telefono] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:98:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RNF-13 / RF-SL-23 (CP-37): el marcado aparece de inmediato en quien marca (optimista), revierte ante fallo y sincroniza en < 2s
+[telefono] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:98:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RNF-13 / RF-SL-23 (CP-37): el marcado aparece de inmediato en quien marca (optimista), revierte ante fallo y sincroniza en < 2s
+▲ Next.js 16.4.3
+
+
+- Local:         http://127.0.0.1:3101
+- Network:       http://127.0.0.1:3101
+✓ Ready in 0ms
+
+
+✓ Running next.config took 36ms
+
+
+[telefono] TIEMPO REAL SSE: 776 ms
+
+[41/54] [telefono] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:203:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RF-SL-20 / RN-28 / RNF-13: reordenar filas y cola se refleja en tiempo real en otra pantalla en < 2s sin historial
+[42/54] [telefono] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:334:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RF-SL-20: el arrastre funciona con teclado, mouse y touch (dedo con pulsación de 380 ms)
+[43/54] [telefono] › pruebas-e2e\picking\facturacion-dos-facturadores.spec.ts:38:5 › RN-48 / RNF-13 / decisiones 39 y 41: dos facturadores, edición, arrastre y envío simultáneos
+[44/54] [telefono] › pruebas-e2e\picking\tablero.spec.ts:100:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-58: cambia entre modo claro y modo oscuro y el modo se conserva al recargar esa pantalla sin afectar a otras
+[45/54] [telefono] › pruebas-e2e\picking\tablero.spec.ts:154:7 › Tablero de Bodega en pantalla completa (JM-05) › CAM-93 / CAM-94: colores del lote y del cuadro del pedido en cada modo, y la silueta del camión grande en todas las rutas
+[46/54] [telefono] › pruebas-e2e\picking\tablero.spec.ts:201:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-77 (CP-40): con más líneas de las que caben en una columna, se numeran de arriba hacia abajo, primero la izquierda
+[47/54] [telefono] › pruebas-e2e\picking\tablero.spec.ts:238:7 › Tablero de Bodega en pantalla completa (JM-05) › RNF-02: en una ruta que no cabe en la pantalla se pueden ver y tocar todas las líneas
+[48/54] [telefono] › pruebas-e2e\picking\tablero.spec.ts:299:7 › Tablero de Bodega en pantalla completa (JM-05) › RNF-13 / RF-SL-23: marcar una línea en Bodega se ve en el tablero en menos de 2 segundos, resaltada
+[49/54] [telefono] › pruebas-e2e\picking\tablero.spec.ts:368:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-23 / RF-SL-20 / RF-SL-74: en el tablero se marca con un toque, se marca todo, se ordena por peso y se ve el detalle
+[50/54] [telefono] › pruebas-e2e\picking\tablero.spec.ts:432:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-25: la pantalla se queda en la ruta que muestra aunque cambie la prioridad de la cola
+[51/54] [telefono] › pruebas-e2e\picking\tablero.spec.ts:468:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-24: con todo marcado, Pedido Despachado confirma, avisa y saca el pedido del tablero
+[telefono] › pruebas-e2e\picking\tablero.spec.ts:468:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-24: con todo marcado, Pedido Despachado confirma, avisa y saca el pedido del tablero
+(node:14292) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[52/54] [telefono] › pruebas-e2e\picking\tablero.spec.ts:491:7 › Tablero de Bodega en pantalla completa (JM-05) › RNF-02 / RNF-08: coincide con el prototipo en los dos modos y no tiene violaciones serias de accesibilidad
+[53/54] [telefono] › pruebas-e2e\picking\tablero.spec.ts:547:7 › Tablero de Bodega en pantalla completa (JM-05) › H-71: si la ruta no tiene camión asignado se muestra con camión «—» y no como recogida en bodega
+[54/54] [telefono] › pruebas-e2e\picking\tablero.spec.ts:561:7 › Tablero de Bodega en pantalla completa (JM-05) › H-73: un usuario sin permiso de Bodega (ejemplo.06) es redirigido a su módulo inicial (/picking/ruta)
+[telefono] › pruebas-e2e\picking\tablero.spec.ts:561:7 › Tablero de Bodega en pantalla completa (JM-05) › H-73: un usuario sin permiso de Bodega (ejemplo.06) es redirigido a su módulo inicial (/picking/ruta)
+{"fecha":"2026-11-03T04:38:57.061Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"picking","usuarioId":"bfbqjh3QCMwOlP9Uj37nQmY0hcWPkMiE","operacion":"pk.bodega","motivo":"sin_permiso"}
+
+
+  54 passed (7.1m)

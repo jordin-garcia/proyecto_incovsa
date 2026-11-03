@@ -22,24 +22,20 @@ export function CatalogoCliente({ datos, filtroInicial }: { datos: CatalogoSitio
   );
   const [filtro, cambiarFiltro] = useState(filtroInicial);
   const [busqueda, cambiarBusqueda] = useState("");
+  // JG-28: cada industria lleva su ícono; un producto sin industria solo aparece en «Todas las industrias».
   const filtros = [
-    { clave: "todas", nombre: "Todas las industrias", cuenta: datos.productos.length },
+    { clave: "todas", nombre: "Todas las industrias", cuenta: datos.productos.length, icono: null },
     ...datos.industrias.map((i, indice) => ({
       clave: ICONOS_INDUSTRIAS[indice]!,
       nombre: i.nombre,
       cuenta: datos.productos.filter((p) => p.industrias.some((j) => j.id === i.id)).length,
+      icono: ICONOS_INDUSTRIAS[indice]!,
     })),
-    {
-      clave: "sin",
-      nombre: "Industria por confirmar",
-      cuenta: datos.productos.filter((p) => !p.industrias.length).length,
-    },
   ];
   const industriaId = datos.industrias[ICONOS_INDUSTRIAS.findIndex((i) => i === filtro)]?.id;
   const productos = datos.productos.filter(
     (p) =>
-      (filtro === "todas" ||
-        (filtro === "sin" ? !p.industrias.length : p.industrias.some((i) => i.id === industriaId))) &&
+      (filtro === "todas" || p.industrias.some((i) => i.id === industriaId)) &&
       normalizar(p.nombre).includes(normalizar(busqueda)),
   );
   return (
@@ -54,7 +50,10 @@ export function CatalogoCliente({ datos, filtroInicial }: { datos: CatalogoSitio
               aria-pressed={filtro === f.clave}
               onClick={() => cambiarFiltro(f.clave)}
             >
-              {f.nombre}
+              <span className="filtro-nombre">
+                {f.icono && <Icono nombre={f.icono} />}
+                {f.nombre}
+              </span>
               <small>{f.cuenta}</small>
             </button>
           ))}

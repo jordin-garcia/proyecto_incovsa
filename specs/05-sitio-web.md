@@ -28,6 +28,14 @@ Archivos recibidos (`docs_incovsa/PAGINA WEB/INFORMACION EMPRESA/`): los logotip
 - **Diseño responsivo:** la arquitectura visual se adapta correctamente a teléfono y escritorio (RF-SW-08).
 - **Datos validados por INCOVSA:** las industrias y las proporciones y tamaños de las imágenes de productos son correctos.
 
+### Cambios del Ing. Manuel Rojas (02/11/2026, JG-28)
+
+> Pedido del docente antes de la entrega del 04/11. Se aparta del prototipo aprobado (decisión 89 de [16](16-arquitectura-y-tecnologia.md)); en lo demás, el prototipo sigue mandando en diseño.
+
+- **Banners de la misma altura:** el banner de Quiénes somos, Industrias, Productos, Noticias y Contacto mide lo mismo en cada tamaño de pantalla, sin importar el largo del título o del texto, con el contenido centrado verticalmente: **440 px** en escritorio (más de 1024 px), **380 px** en tableta (721 a 1024 px), **480 px** de 481 a 720 px y **560 px** en teléfono (hasta 480 px). La altura alcanza para el banner más alto, el de Quiénes somos, desde 360 px de ancho; en pantallas más angostas ese banner crece lo necesario para no recortar su contenido. Quiénes somos conserva sus logotipos alternados dentro de esa altura: en tableta van a la par del texto (200 × 100 px) y en teléfono debajo (180 × 90 px).
+- **Barras laterales de Productos e Industrias:** ver [Industrias](#industrias-rf-sw-03) y [Catálogo de productos](#catálogo-de-productos-rf-sw-04).
+- **Sin restos del prototipo:** ninguna pantalla del sitio, del panel ni del picking muestra avisos de datos pendientes («pendiente de INCOVSA», «por confirmar», «Imagen de la industria») ni los códigos internos de los pendientes (P-xx). En el sitio público, **si falta un dato, el elemento no se muestra** (sin aviso y sin espacio vacío). En el panel, la celda sin dato queda vacía. Se conservan, por decisión del coordinador, el recuadro vacío de misión y visión sin imagen y la tarjeta de cada valor sin imagen, que muestra solo su número.
+
 ### Pie de página (RF-SW-15)
 
 | Páginas | Pie de página |
@@ -106,7 +114,7 @@ La imagen original de la visión dice "tranparente"; el texto del sitio dice "tr
 - **Banner principal** con una **transición dinámica entre el logotipo de INCOVSA y el de Inquiserca**, que se alternan en el mismo lugar. Si se quita el logotipo de Inquiserca desde el panel, el banner muestra solo el de INCOVSA.
 - **Historia:** texto pendiente de INCOVSA (P-19) y galería opcional de hasta 5 imágenes.
 - **Misión y visión** como se describe arriba (13/10).
-- **Valores (RF-SW-29, 13/10):** **solo 5 imágenes, una por cada valor**, en **una sola fila**, como las tarjetas de valores del prototipo. **Sin texto.** Se suben desde el panel. Mientras falte la imagen de un valor, su lugar muestra la tarjeta de pendiente del prototipo. En teléfono, la fila se acomoda al ancho de la pantalla.
+- **Valores (RF-SW-29, 13/10):** **solo 5 imágenes, una por cada valor**, en **una sola fila**, como las tarjetas de valores del prototipo. **Sin texto.** Se suben desde el panel. Mientras falte la imagen de un valor, su lugar muestra una tarjeta vacía con el número del valor, **sin texto** (02/11, JG-28: ya no dice «Imagen del valor pendiente de INCOVSA»). En teléfono, la fila se acomoda al ancho de la pantalla.
 - **A quién servimos:** mercado industrial y mercado artesanal, como en el prototipo.
 - **INCOVSA e Inquiserca (15/10):** el bloque muestra los **logotipos de INCOVSA e Inquiserca alternándose**, de la misma manera que el banner principal. Si no hay logotipo de Inquiserca, muestra solo el de INCOVSA.
 - **Fondos (15/10):** las secciones que eran blancas, **"Misión y visión"** y **"A quién servimos"**, van con el **verde del pie de página** (`--v950`). Historia, Valores e "INCOVSA e Inquiserca" conservan el fondo claro, de modo que se alternan claro y verde.
@@ -125,8 +133,8 @@ Son 9 industrias, en este orden:
 8. Tratamiento de agua
 9. Lavandería
 
-- **Menú (13/10):** una **barra lateral alineada a la izquierda** que muestra **solo el ícono** de cada industria, parecida a la barra lateral reducida del panel y del picking. Al pasar el cursor (o el foco del teclado) sobre un ícono, se muestra el **nombre de la industria**. Así se amplía el espacio para la imagen y el contenido de la industria elegida. **No** se usa una barra superior horizontal.
-- Cada industria muestra **solo su descripción, su galería de imágenes y sus productos como texto**. No se muestran imágenes de productos.
+- **Menú (02/11, JG-28; reemplaza a la barra de solo íconos del 13/10):** una **barra lateral igual a la de Productos**: el mismo ancho, tipografía y colores, y en cada opción el **ícono de la industria, su nombre y su número de productos**, con la industria elegida marcada como el filtro activo de Productos. No tiene la opción «Todas las industrias». Sigue siendo navegación: cada opción es un enlace a su industria y la elegida se anuncia como la página actual. En teléfono y tableta angosta se muestra como la de Productos: una fila que se desplaza de lado, encima del contenido. **No** se usa una barra superior horizontal en escritorio.
+- Cada industria muestra **solo su descripción, su galería de imágenes y sus productos como texto**. No se muestran imágenes de productos. Si la industria no tiene imágenes, no se muestra la galería ni un recuadro en su lugar (02/11, JG-28).
 - **Sin pie de página.**
 - La descripción y los productos de cada industria vienen del sitio de Google de la empresa y necesitan revisión. Las descripciones definitivas y las imágenes están pendientes (P-21).
 - **Productos de cada industria (17/10, P-97):** son los **productos públicos del catálogo que tienen esa industria** (la relación N:M de PRODUCTO_INDUSTRIA), en orden alfabético por nombre, como los Productos Recomendados. Se administran desde el Catálogo del panel, al asignarle industrias a cada producto. La lista fija del prototipo (`base.js` › `INDUSTRIAS`, tomada de Google Sites) no se usa.
@@ -135,6 +143,7 @@ Son 9 industrias, en este orden:
 
 - Es solo informativo: sin precios y sin comercio electrónico.
 - Se filtra por industria. Un producto puede pertenecer a **varias** industrias.
+- **Barra de filtros (02/11, JG-28):** cada industria lleva su **ícono** (el mismo de Inicio y de Industrias) a la izquierda del nombre, con su número de productos. «Todas las industrias» va primero y sin ícono. **No** hay filtro «Industria por confirmar»: un producto sin industria solo aparece en «Todas las industrias», y su tarjeta no muestra etiquetas de industria.
 - En las tarjetas se muestran la galería de imágenes, el nombre, los países de origen y la presentación. **Nunca** el lote.
 - **La búsqueda de productos está aprobada** tal como está en el prototipo.
 - **Sin pie de página.**
@@ -143,7 +152,7 @@ Son 9 industrias, en este orden:
 
 ### Detalle de producto (RF-SW-05)
 
-Muestra la **galería de imágenes**, el **nombre**, la **descripción**, la **presentación**, los **países de origen** y las industrias del producto.
+Muestra la **galería de imágenes**, el **nombre**, la **descripción**, la **presentación**, los **países de origen** y las industrias del producto. Si falta alguno de esos datos (o el producto no tiene industrias), no se muestra, sin aviso ni espacio vacío (02/11, JG-28).
 
 - **Sin pie de página.**
 - **No** muestra documentos técnicos.
@@ -160,6 +169,7 @@ Muestra la **galería de imágenes**, el **nombre**, la **descripción**, la **p
 - **(15/10)** Ya **no** hay opción de publicar u ocultar: toda noticia se publica al guardarla, y la que no debe mostrarse se elimina.
 - **Presentación (15/10):** cada noticia ocupa **todo el ancho** de la página, con su galería a la izquierda y la fecha, el título y el **texto completo** a la derecha (en teléfono, uno debajo del otro). El texto respeta sus saltos de línea y las palabras muy largas se parten para que nada quede oculto. Se ordenan de la más reciente a la más antigua.
 - El contenido inicial está pendiente (P-23).
+- **Sin noticias (02/11, JG-28):** la página muestra solo «Todavía no hay noticias publicadas» con su ícono, sin la instrucción interna del prototipo sobre cómo se publican.
 
 ### Contacto (RF-SW-06, RF-SW-19)
 

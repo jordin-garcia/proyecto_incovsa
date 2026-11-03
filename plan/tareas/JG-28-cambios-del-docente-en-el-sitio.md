@@ -5,7 +5,7 @@ persona: jordin
 responsable: Jordin García
 hito: entrega
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: []
 programada: 2026-11-02
 requisitos: [RF-SW-02, RF-SW-03, RF-SW-04, RNF-08]
@@ -73,3 +73,27 @@ npm run e2e -- pruebas-e2e/sitio pruebas-e2e/panel pruebas-e2e/picking/facturaci
 
 ## Notas
 - Antes de empezar, toma capturas del estado actual de las cinco secciones en los tres tamaños, para comparar en el PR.
+
+## Resultado
+
+**Qué se hizo**
+- **Banners:** `.pag-cab` (`src/componentes/sitio/sitio.css`) tiene una altura mínima común, `--alto-pag-cab`, con el contenido centrado: 440 px en escritorio, 380 px en tableta (721–1024 px), 480 px de 481 a 720 px y 560 px en teléfono (hasta 480 px). Los cinco banners miden lo mismo desde 360 px de ancho; más angosto, el de Quiénes somos crece para no recortarse. En Quiénes somos (`nosotros.css`), los logotipos van a la par del texto en tableta (200 × 100 px) y debajo en teléfono (180 × 90 px). Antes medían de 254 a 626 px.
+- **Barras laterales:** Productos (`CatalogoCliente.tsx`) muestra el ícono de `ICONOS_INDUSTRIAS` a la izquierda de cada industria; «Todas las industrias» no lleva ícono. Industrias (`Industrias.tsx`) usa la misma barra (`.filtros` y `.filtro-nombre`, 260 px): ícono, nombre y número de productos, como `<nav aria-label="Industrias">` con enlaces y `aria-current="page"`. En 900 px o menos, las dos son una fila que se desplaza de lado. Se quitaron los estilos de la barra de solo íconos y del globo con el nombre.
+- **Sin restos del prototipo:** se quitaron el filtro y el chip «Industria por confirmar» (también `"sin"` del `z.enum` de `/productos`), «Por confirmar» en el detalle y en el Catálogo del panel (celdas vacías), «Imagen de la industria» (sin imágenes no se muestra la galería), «Imagen del valor pendiente de INCOVSA» (la tarjeta conserva solo su número), el texto de ayuda «Texto pendiente de INCOVSA», «(P-92)» en Documentos, «(P-91)» en Facturación y la instrucción interna de Noticias sin publicaciones. En el detalle de un producto, el dato que falta no se muestra.
+- **Especificaciones:** `specs/04` (RF-SW-03, 04 y 05), `specs/05` («Cambios del Ing. Manuel Rojas» y sus secciones) y `specs/18`.
+
+**Decisiones (con Jordin, 02/11)**
+- Se conservan el recuadro vacío de misión y visión sin imagen (decisión del 14/10) y las cinco tarjetas de los valores sin imagen, solo con su número.
+- Se quita la línea «Las noticias se publican desde el panel del sitio…» del estado vacío de Noticias.
+- La tarjeta de un producto sin imagen conserva el ícono de imagen: es un elemento de diseño, no un aviso.
+
+**Pruebas**
+- `pruebas-e2e/sitio/banners.spec.ts`: los cinco banners miden lo mismo (±1 px), centrados, en los tres tamaños, con axe.
+- `pruebas-e2e/sitio/industrias-y-productos.spec.ts`: barra de Industrias igual a la de Productos (íconos, nombres, números, ancho, fuente y colores de la activa), navegación con `aria-current`, producto sin industria solo en «Todas», detalle sin datos.
+- `pruebas-e2e/flujo/sin-restos-del-prototipo.spec.ts`: recorre todas las pantallas del sitio, del panel y del picking (con un producto sin industria ni datos) y falla si aparece un texto prohibido, también en `placeholder`, `title`, `aria-label` y `alt`.
+- Se actualizaron `nosotros.spec.ts`, `noticias.spec.ts` y `facturacion-carga.spec.ts`. Con el banner más alto, en teléfono el contenido con presentación dinámica (RF-SW-16) queda debajo del borde: las pruebas que lo usan se desplazan hasta él antes de comprobarlo (`industrias-y-productos.spec.ts` y `auditoria-ce13.spec.ts`).
+
+**Cómo usarlo**
+- Una página pública nueva con `EncabezadoPagina` recibe la altura común sin hacer nada más. Si un banner nuevo tiene más contenido que Quiénes somos, hay que subir `--alto-pag-cab` en `sitio.css` y en `specs/05`.
+- Para otra barra lateral con el mismo aspecto: contenedor `.filtros` con hijos `a` o `button`, cada uno con `<span className="filtro-nombre"><Icono …/>Nombre</span><small>número</small>` y la clase `on` en la opción activa.
+- Capturas de antes y después, y salidas de la verificación: `plan/evidencias/JG-28/`.

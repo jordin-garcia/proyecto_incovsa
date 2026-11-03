@@ -1,0 +1,304 @@
+
+Running 41 tests using 1 worker
+
+[1/41] [tableta] › pruebas-e2e\sitio\auditoria-ce13.spec.ts:11:5 › RF-SW-06 / H-60: el formulario recorta los topes y no muestra mensajes de Zod en inglés
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[2/41] [tableta] › pruebas-e2e\sitio\auditoria-ce13.spec.ts:63:5 › RF-SW-06 / H-61: al salir del campo solo se validan el correo y el teléfono
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[3/41] [tableta] › pruebas-e2e\sitio\banners.spec.ts:10:5 › JG-28 / RF-SW-02 / RNF-08: los cinco banners del sitio miden lo mismo, con el contenido centrado
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[4/41] [tableta] › pruebas-e2e\sitio\contacto.spec.ts:68:1 › RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[5/41] [tableta] › pruebas-e2e\sitio\contacto.spec.ts:118:1 › RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[6/41] [tableta] › pruebas-e2e\sitio\contacto.spec.ts:152:1 › RF-SW-06 / P-98: el sexto envío de la IP muestra el límite y no se registra
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[7/41] [tableta] › pruebas-e2e\sitio\contacto.spec.ts:189:1 › RF-SW-06 / RNF-08: la trampa queda fuera del teclado y Contacto pasa axe
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[8/41] [tableta] › pruebas-e2e\sitio\contacto.spec.ts:204:1 › RF-SW-06: enviar Contacto sin JavaScript usa POST y no deja datos en la URL
+[9/41] [tableta] › pruebas-e2e\sitio\contacto.spec.ts:225:1 › RNF-05: Información de contacto limita los campos del panel y muestra errores en español
+[10/41] [tableta] › pruebas-e2e\sitio\contacto.spec.ts:251:1 › RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[11/41] [tableta] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:73:5 › JG-28 / RF-SW-03 / RF-SW-04: la barra de Industrias es igual a la de Productos, con ícono y número de productos
+[12/41] [tableta] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:116:5 › RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y relaciones actuales
+[13/41] [tableta] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:169:5 › RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos, vacío y tarjetas sin lote
+[14/41] [tableta] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:202:5 › JG-28 / RF-SW-05: el detalle de un producto sin industria ni datos no muestra avisos ni espacios vacíos
+[15/41] [tableta] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:217:5 › RF-SW-05 / RF-SW-17 / RF-SW-15: detalle público, galería, recomendados y enlaces
+[16/41] [tableta] › pruebas-e2e\sitio\inicio.spec.ts:6:5 › RF-SW-01 / RF-SW-27: Inicio informativo conserva secciones, cifras y textos aprobados
+[17/41] [tableta] › pruebas-e2e\sitio\inicio.spec.ts:30:5 › RF-SW-15 / RF-SW-22 / RF-SW-24: pie público y mapas solo de las dos oficinas
+[18/41] [tableta] › pruebas-e2e\sitio\inicio.spec.ts:64:5 › RF-SW-08 / RNF-08: menú responsivo, ausencia de desbordamiento y accesibilidad
+[19/41] [tableta] › pruebas-e2e\sitio\inicio.spec.ts:81:5 › RF-SW-16: tarjetas aparecen al entrar en pantalla y desaparecen al salir
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[20/41] [tableta] › pruebas-e2e\sitio\inicio.spec.ts:110:5 › RN-56 / RNF-17: cinco imágenes rotan cada 5 s, una queda fija y las secundarias cargan después
+[21/41] [tableta] › pruebas-e2e\sitio\nosotros.spec.ts:21:5 › RF-SW-02 / CAM-79 / RNF-08: secciones, fondos, pie y accesibilidad de Quiénes somos
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[22/41] [tableta] › pruebas-e2e\sitio\nosotros.spec.ts:54:5 › RF-SW-02 / CAM-80: ambos bloques alternan y quitar Inquiserca desde el panel deja solo INCOVSA
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[WebServer] [browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+[WebServer] 
+[WebServer] - A server/client branch `if (typeof window !== 'undefined')`.
+[WebServer] - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+[WebServer] - Date formatting in a user's locale which doesn't match the server.
+[WebServer] - External changing data without sending a snapshot of it along with the HTML.
+[WebServer] - Invalid HTML tag nesting.
+[WebServer] 
+[WebServer] It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+[WebServer] 
+[WebServer] https://react.dev/link/hydration-mismatch
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <RedirectBoundary>
+[WebServer]       <RedirectErrorBoundary router={{...}}>
+[WebServer]         <InnerLayoutRouter url="/nosotros" tree={[...]} params={{}} renderTree={{...}} segmentPath={[...]} ...>
+[WebServer]           <SegmentViewNode type="layout" pagePath="(sitio)/la...">
+[WebServer]             <SegmentTrieNode>
+[WebServer]             <link>
+[WebServer]             <script>
+[WebServer]             <script>
+[WebServer]             <LayoutSitio>
+[WebServer]               <div className="sitio">
+[WebServer]                 <Cabecera>
+[WebServer]                 <OuterLayoutRouter>
+[WebServer]                 <Pie datos={{logotipo:"...", ...}} anio="2026">
+[WebServer]                   <footer className="pie-sitio">
+[WebServer]                     <div className="wrap">
+[WebServer]                       <div className="pie-rej">
+[WebServer]                         <div>
+[WebServer]                           <img
+[WebServer]                             alt="INCOVSA Químicos"
+[WebServer]                             fetchPriority={undefined}
+[WebServer] +                           loading="lazy"
+[WebServer] -                           loading="eager"
+[WebServer]                             width={180}
+[WebServer]                             height={54}
+[WebServer]                             decoding="async"
+[WebServer]                             data-nimg="1"
+[WebServer]                             className="pie-logo"
+[WebServer]                             style={{color:"transparent"}}
+[WebServer]                             sizes={undefined}
+[WebServer]                             srcSet={undefined}
+[WebServer]                             src="/marca/incovsa-quimicos-blanco.webp"
+[WebServer]                             ref={function}
+[WebServer]                             onLoad={function onLoad}
+[WebServer]                             onError={function onError}
+[WebServer]                           >
+[WebServer]                           ...
+[WebServer]                         ...
+[WebServer]                       ...
+[WebServer]                 ...
+[WebServer]         ...
+[WebServer]  
+
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[23/41] [tableta] › pruebas-e2e\sitio\nosotros.spec.ts:101:5 › RF-SW-29 / RF-SW-16 / JG-28: cinco valores sin imagen, sin aviso de pendiente, y presentación dinámica
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[24/41] [tableta] › pruebas-e2e\sitio\nosotros.spec.ts:120:5 › RF-SW-02 / RF-SW-29 / RN-56: historia y cinco imágenes publicadas conservan orden, fila y ausencia de textos
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[25/41] [tableta] › pruebas-e2e\sitio\noticias.spec.ts:92:1 › RF-SW-18 / RF-SW-15 / RNF-08: estados vacíos y formulario accesibles sin opción de ocultar
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[26/41] [tableta] › pruebas-e2e\sitio\noticias.spec.ts:124:1 › RF-SW-18 / RN-56 / RN-39: crea, edita y elimina con confirmación; texto completo y sin desbordamiento
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[27/41] [tableta] › pruebas-e2e\sitio\noticias.spec.ts:205:1 › RF-SW-25 / RNF-08: sin permiso de Noticias ofrece volver al módulo propio
+[WebServer] {"fecha":"2026-11-03T04:22:24.137Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"sitio","usuarioId":"sIbpRIwGFPaJ2Qq8amn8AUO6KqQxxoEx","operacion":"sit.noticias","motivo":"sin_permiso"}
+
+[28/41] [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:89:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /
+[29/41] [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:89:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /nosotros
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[30/41] [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:89:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /industrias
+[31/41] [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:89:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /productos
+[32/41] [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:89:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /noticias
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[33/41] [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:89:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /contacto
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[34/41] [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:89:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /acceso
+[35/41] [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:104:5 › RF-SW-16 / RNF-08: aparición, desaparición y navegación pública completa con teclado
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[36/41] [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:138:5 › RF-SW-05 / RNF-08: detalle del producto y regreso al catálogo con teclado
+[37/41] [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:155:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.08
+[38/41] [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:155:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.09
+[39/41] [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:155:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.10
+[40/41] [tableta] › pruebas-e2e\sitio\revision-integral.spec.ts:224:5 › RNF-01 / RNF-08: revisión de Usuarios del sitio con Gerencia
+[41/41] [tableta] › pruebas-e2e\sitio\rendimiento-galerias.spec.ts:74:5 › RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respecto de una
+[tableta] › pruebas-e2e\sitio\rendimiento-galerias.spec.ts:74:5 › RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respecto de una
+▲ Next.js 16.4.3
+
+
+- Local:         http://127.0.0.1:3101
+- Network:       http://127.0.0.1:3101
+✓ Ready in 0ms
+
+
+✓ Running next.config took 36ms
+
+
+  1) [tableta] › pruebas-e2e\sitio\rendimiento-galerias.spec.ts:74:5 › RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respecto de una 
+
+    Error: primeraPortadaMs
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 221.75
+    Received:    225.14999999850988
+
+      137 |       };
+      138 |       for (const metrica of ["primeraPortadaMs", "cargaMs"] as const) {
+    > 139 |         expect(mediana(cinco.map((m) => m[metrica])), metrica).toBeLessThanOrEqual(
+          |                                                                ^
+      140 |           mediana(una.map((m) => m[metrica])) + 10,
+      141 |         );
+      142 |       }
+        at C:\Users\Hecto\Documents\proyecto_incovsa\pruebas-e2e\sitio\rendimiento-galerias.spec.ts:139:64
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-3.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #5: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-4.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #6: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-5.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #7: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-6.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #8: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-7.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #9: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-9.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #10: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-8.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #11: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-10.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #12: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-11.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #13: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-14.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #14: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-12.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #15: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-13.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #16: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-17.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #17: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-15.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #18: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-18.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #19: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-16.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #20: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-20.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #21: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-19.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #22: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-22.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #23: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-24.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #24: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-21.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #25: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-23.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #26: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-27.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #27: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-25.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #28: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\test-failed-26.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-tableta\error-context.md
+
+
+  1 failed
+    [tableta] › pruebas-e2e\sitio\rendimiento-galerias.spec.ts:74:5 › RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respecto de una 
+  40 passed (5.6m)
