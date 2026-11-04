@@ -1,4 +1,6 @@
-# Anexo I. Evidencia de entrega
+# Anexo I. Evidencia de entrega {-}
+
+Tabla: Control de versiones del Anexo I
 
 | Versión | Fecha | Cambios | Autor |
 |---|---|---|---|
@@ -10,7 +12,7 @@ El acta no lleva contraseñas, llaves ni tokens: solo los nombres de lo que se e
 
 La versión 1.1 (CE-15) agrega, antes de esta acta, la constancia de la entrega académica del miércoles 04/11/2026 al Ing. Manuel Rojas.
 
-## Datos de la entrega
+## Datos de la entrega {-}
 
 Fecha prevista: **jueves 12 de noviembre de 2026**
 
@@ -18,9 +20,11 @@ Fecha de la firma: ________________________________
 
 Lugar: ________________________________
 
-## Quién entrega
+## Quién entrega {-}
 
 El equipo del proyecto (README, «Autores»):
+
+Tabla: Integrantes del equipo que entregan
 
 | Integrante | Rol en el proyecto | Firma |
 |---|---|---|
@@ -32,9 +36,11 @@ El equipo del proyecto (README, «Autores»):
 
 Si no firma todo el equipo, nombre de quien entrega en su representación: ________________________________
 
-## Quién recibe
+## Quién recibe {-}
 
 La contraparte del proyecto en INCOVSA es el Ing. William Ambrossio. La persona que recibe las credenciales la indica INCOVSA (P-03).
+
+Tabla: Datos de quien recibe
 
 | Dato | Quien recibe |
 |---|---|
@@ -42,7 +48,7 @@ La contraparte del proyecto en INCOVSA es el Ing. William Ambrossio. La persona 
 | Cargo | ________________________________ |
 | Firma | ________________________________ |
 
-## Qué se entrega
+## Qué se entrega {-}
 
 Marque cada elemento que se entrega ese día. Deje sin marcar lo que no se entrega y anótelo en «Lo que no se entrega».
 
@@ -76,7 +82,7 @@ Marque solo lo que existe el día de la entrega. Los valores no se escriben aqu�
 - [ ] Copia de la configuración de `rclone` de los respaldos, entregada en persona.
 - [ ] Primera cuenta de administrador del sistema, creada por la persona que la usa. Nombre de usuario: ________________
 
-## Lo que no se entrega
+## Lo que no se entrega {-}
 
 Anote lo que no se entregó y el motivo (por ejemplo, un servicio que INCOVSA todavía no entrega: P-10, P-93 o P-94).
 
@@ -86,9 +92,11 @@ ________________________________________________________________
 
 ________________________________________________________________
 
-## Conformidad
+## Conformidad {-}
 
 Quien recibe declara que recibió lo marcado en esta acta y, en persona, las credenciales del Anexo J que se marcaron en «Accesos».
+
+Tabla: Firmas de conformidad
 
 | | Nombre | Firma | Fecha |
 |---|---|---|---|

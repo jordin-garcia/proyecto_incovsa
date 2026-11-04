@@ -1,4 +1,6 @@
-# Anexo J. Inventario de servicios y accesos
+# Anexo J. Inventario de servicios y accesos {-}
+
+Tabla: Control de versiones del Anexo J
 
 | Versión | Fecha | Cambios | Autor |
 |---|---|---|---|
@@ -8,13 +10,15 @@ Este anexo lista cada servicio que usa el sistema: quién es el dueño de la cue
 
 **Este anexo no contiene contraseñas, llaves, tokens, identificadores de cuenta ni direcciones IP** (RNF-10). Solo nombra las variables y los secretos. Los valores se entregan en persona, como dice «Entrega de las credenciales».
 
-## Estado al 03/11/2026
+## Estado al 03/11/2026 {-}
 
 - INCOVSA todavía no entrega el VPS (P-10), el DNS de incovsa.com (P-93) ni el correo de la empresa para crear las cuentas de Cloudflare y del VPS, ni la cuenta u organización de GitHub que recibe el repositorio (P-94). Esos datos dicen **«pendiente de entrega por INCOVSA»**.
 - El sistema no está desplegado. El despliegue (JG-19), la entrega de accesos y la transferencia del repositorio se hacen antes de la entrega final a INCOVSA del **jueves 12/11/2026** (`specs/16`, decisión 90).
 - La versión 1.1 de este anexo (CE-15) cambia cada pendiente por el dato real que ya se tenga.
 
-## Resumen
+## Resumen {-}
+
+Tabla: Resumen de los servicios
 
 | Servicio | Dueño de la cuenta | Para qué se usa | Cómo se accede | Quién recibe la credencial | Estado |
 |---|---|---|---|---|---|
@@ -29,7 +33,9 @@ Este anexo lista cada servicio que usa el sistema: quién es el dueño de la cue
 
 El sistema no usa más servicios con credenciales. **Odoo** solo aparece como un enlace (`URL_ODOO`) y como el archivo `.xlsx` que exporta el facturador: no hay conexión ni credencial de Odoo. **No hay cuenta de correo**: el sistema no envía correos (`specs/16`, «Servicios externos»).
 
-## VPS
+## VPS {-}
+
+Tabla: Ficha del VPS
 
 | Campo | Dato |
 |---|---|
@@ -39,7 +45,9 @@ El sistema no usa más servicios con credenciales. **Odoo** solo aparece como un
 | Quién recibe | La cuenta del proveedor ya es de INCOVSA. Los secretos que se guardan en el servidor los recibe la persona de P-03 (ver «Entrega de las credenciales»). |
 | Estado | **Pendiente de entrega por INCOVSA** (P-10). |
 
-## Dominio y DNS en Cloudflare
+## Dominio y DNS en Cloudflare {-}
+
+Tabla: Ficha del dominio y del DNS en Cloudflare
 
 | Campo | Dato |
 |---|---|
@@ -49,7 +57,9 @@ El sistema no usa más servicios con credenciales. **Odoo** solo aparece como un
 | Quién recibe | La cuenta es de INCOVSA. No hay una credencial del equipo que entregar. |
 | Estado | **Pendiente de entrega por INCOVSA** (P-93 y P-94). |
 
-## R2, bucket de imágenes
+## R2, bucket de imágenes {-}
+
+Tabla: Ficha del bucket de imágenes de R2
 
 | Campo | Dato |
 |---|---|
@@ -59,7 +69,9 @@ El sistema no usa más servicios con credenciales. **Odoo** solo aparece como un
 | Quién recibe | La persona de P-03 recibe la copia de la llave junto con el `.env` (ver «Entrega de las credenciales»). |
 | Estado | **Pendiente de entrega por INCOVSA** (P-94). El bucket no existe. |
 
-## R2, bucket privado de respaldos
+## R2, bucket privado de respaldos {-}
+
+Tabla: Ficha del bucket privado de respaldos de R2
 
 | Campo | Dato |
 |---|---|
@@ -69,7 +81,9 @@ El sistema no usa más servicios con credenciales. **Odoo** solo aparece como un
 | Quién recibe | La persona de P-03 recibe la copia de la configuración de `rclone` (ver «Entrega de las credenciales»). |
 | Estado | **Pendiente de entrega por INCOVSA** (P-94). El bucket no existe y la tarea de `cron` no está instalada. |
 
-## GitHub: repositorio, Actions y entorno `produccion`
+## GitHub: repositorio, Actions y entorno `produccion` {-}
+
+Tabla: Ficha de GitHub
 
 | Campo | Dato |
 |---|---|
@@ -79,7 +93,9 @@ El sistema no usa más servicios con credenciales. **Odoo** solo aparece como un
 | Quién recibe | No se entrega una contraseña: el repositorio cambia de dueño con la transferencia (ver «Transferencia del repositorio»). La contraseña de GitHub del coordinador nunca se entrega. |
 | Estado | El repositorio existe. El entorno `produccion` no existe todavía. La transferencia no se ha hecho. |
 
-## GHCR
+## GHCR {-}
+
+Tabla: Ficha de GHCR
 
 | Campo | Dato |
 |---|---|
@@ -89,7 +105,9 @@ El sistema no usa más servicios con credenciales. **Odoo** solo aparece como un
 | Quién recibe | Nadie: no hay credencial propia que entregar. |
 | Estado | Todavía no hay imágenes de producción: el primer despliegue es JG-19. |
 
-## Google Drive de INCOVSA
+## Google Drive de INCOVSA {-}
+
+Tabla: Ficha del Google Drive de INCOVSA
 
 | Campo | Dato |
 |---|---|
@@ -101,7 +119,9 @@ El sistema no usa más servicios con credenciales. **Odoo** solo aparece como un
 
 El Drive del equipo, donde se guardan los `.docx` y los `.pdf` de los documentos, es otro servicio y no forma parte de la entrega de accesos.
 
-## Cuentas de administrador del sistema
+## Cuentas de administrador del sistema {-}
+
+Tabla: Ficha de las cuentas de administrador del sistema
 
 | Campo | Dato |
 |---|---|
@@ -113,7 +133,7 @@ El Drive del equipo, donde se guardan los `.docx` y los `.pdf` de los documentos
 
 Las cuentas de la semilla de demostración son solo para desarrollo (decisión 79) y no existen en producción.
 
-## Entrega de las credenciales
+## Entrega de las credenciales {-}
 
 **Medio: en persona.** Lo decidió el coordinador el 03/11/2026. No se envían por correo, chat, el repositorio, el Drive del equipo ni ningún otro medio digital del equipo, y ninguna computadora ni cuenta del equipo conserva una copia (decisión 70).
 
@@ -144,7 +164,7 @@ Las cuentas de la semilla de demostración son solo para desarrollo (decisión 7
 9. Lo entregado se anota en «Accesos» del Anexo I, que se firma en la entrega final del 12/11.
 10. Después de la entrega, INCOVSA decide si retira las invitaciones del equipo a sus cuentas.
 
-## Transferencia del repositorio
+## Transferencia del repositorio {-}
 
 Los pasos los hace el coordinador con la cuenta `jordin-garcia`, a más tardar el 12/11 (decisiones 33 y 90). Siguen la página «Transferring a repository» de la documentación de GitHub (<https://docs.github.com/en/repositories/creating-and-managing-repositories/transferring-a-repository>).
 
