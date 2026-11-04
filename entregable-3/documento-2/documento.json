@@ -1,0 +1,54 @@
+{
+  "titulo_documento": "DOCUMENTO 2: DOCUMENTACIÓN TÉCNICA DEL SISTEMA",
+  "archivo_salida": "Documento 2 - Documentacion tecnica del sistema v1.0.docx",
+  "lugar_fecha": "Quetzaltenango, 3 de noviembre de 2026",
+  "portada": true,
+  "control_versiones": true,
+  "indices": true,
+  "numerar": true,
+  "versiones": [
+    [
+      "0.1",
+      "12/10/2026",
+      "Héctor Jordin Adolfo García Coyoy",
+      "Diseño técnico inicial del Entregable 2."
+    ],
+    [
+      "0.2",
+      "14/10/2026",
+      "Héctor Jordin Adolfo García Coyoy",
+      "Actualización por la reunión del 13/10: modelo, conversión, flujos y documentación interna."
+    ],
+    [
+      "0.3",
+      "15/10/2026",
+      "Héctor Jordin Adolfo García Coyoy",
+      "Ajustes de noticias, fecha y hora, trazabilidad y pruebas."
+    ],
+    [
+      "0.4",
+      "15/10/2026",
+      "Héctor Jordin Adolfo García Coyoy",
+      "Fechas de creación, programación con zona horaria, cuentas ambos y nombres de estados."
+    ],
+    [
+      "1.0",
+      "03/11/2026",
+      "José Daniel Cifuentes",
+      "Documentación del sistema implementado: despliegue diseñado, modelo y diccionario desde Prisma, versiones fijadas, seguridad y pruebas, operación y ejemplo real de extensión."
+    ]
+  ],
+  "secciones": [
+    "01-introduccion-y-arquitectura.md",
+    "02-modelado-y-datos.md",
+    "02b-diccionario-de-datos.md",
+    "03-tecnologias-y-repositorio.md",
+    "04-configuracion.md",
+    "05-seguridad.md",
+    "06-logica-de-negocio.md",
+    "07-operacion-y-mantenimiento.md",
+    "08-matriz-de-trazabilidad.md",
+    "90-anexo-f-casos-de-prueba.md",
+    "99-referencias.md"
+  ]
+}
