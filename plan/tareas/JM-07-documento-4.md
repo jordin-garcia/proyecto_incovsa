@@ -73,3 +73,5 @@ El archivo resultante se genera en `entregable-3/Documento 4 - Manual de usuario
 
 
 Lo integró el coordinador (protocolo §E4) el 03/11/2026 desde el PR #165 de Josué, sin cambiar su contenido. La revisión automática de su último commit no se completó por una falla del bot, que se corrigió en JG-08 (#169 y #170), y la rama iba atrasada respecto de `develop`. La rama `jordin/JM-07-documento-4` integra `develop` y se revisa con el bot corregido.
+
+**Correcciones del coordinador (03/11/2026), por la revisión automática de #171:** el PDF de Reportes es A4 horizontal y sin fecha de emisión, y la Bitácora también se exporta (`specs/10`); el modo oscuro del tablero usa grises para el lote y el cuadro de «PEDIDO», con los botones «Modo claro», «Modo oscuro», «Pantalla completa» y «Volver al módulo» (`specs/07`); un camión solo está protegido si está elegido en «Envío por camión»; el resumen de la carga y los mensajes de bodega son los de la aplicación; y se quitaron procesos de INCOVSA que `specs/` no recoge (compras, báscula, notas de crédito). También se corrigieron el texto del medidor de peso, la ubicación de «Cancelar» y la forma de nombrar los permisos.

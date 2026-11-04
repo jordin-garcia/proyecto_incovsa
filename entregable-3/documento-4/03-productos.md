@@ -6,7 +6,7 @@
 Comprender el modelo operativo mediante el cual el sistema gestiona los productos químicos y materias primas de INCOVSA, eliminando la necesidad de alimentar manualmente un catálogo interno y garantizando la sincronización con el ERP institucional.
 
 ### Requisitos previos
-- Acceso con rol de Facturación, Bodega o Gerencia.
+- Permiso de Facturación o de Bodega en la sede de trabajo.
 
 ### Procedimiento y flujo de productos
 

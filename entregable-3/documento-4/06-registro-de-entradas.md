@@ -9,7 +9,7 @@ Explicar las razones técnicas y organizacionales por las cuales el registro de 
 
 Al igual que la consulta de existencias, el registro de entradas de inventario fue retirado del alcance del sistema por mutuo acuerdo con INCOVSA y el docente del curso:
 
-1. **Gestión centralizada de compras:** todas las recepciones de materias primas importadas y nacionales, pesajes de ingreso en báscula, ingresos por compras locales y transferencias entre bodegas son ingresadas directamente en **Odoo** por el departamento de Compras y Almacén Central.
+1. **El inventario lo lleva Odoo:** las entradas de mercancía y los traslados entre bodegas se registran en el ERP **Odoo** de la empresa, según su procedimiento interno.
 2. **Exclusión formal (RF-SL-41, RF-SL-43):** los requerimientos correspondientes a compras y traslados fueron declarados formalmente excluidos el 29 de septiembre de 2026 y ratificados en el historial de decisiones (`specs/09` y `specs/18`).
 3. **Evitar doble digitación:** si los bodegueros tuviesen que registrar las entradas tanto en Odoo como en el sistema de picking, se duplicaría el tiempo administrativo y aumentarían los riesgos de error humano.
 

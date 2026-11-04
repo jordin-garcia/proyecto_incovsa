@@ -15,7 +15,7 @@ En el modelo logístico de INCOVSA, la prevención de sobrecargas se realiza dir
 
 1. **Capacidad máxima nominal:** cada camión registrado en la sede cuenta con un límite de carga útil expresado en kilogramos (por ejemplo, Quetzaltenango dispone habitualmente de dos camiones con capacidad de 3,400 kg y un camión con capacidad de 6,000 kg).
 2. **Cálculo automático de la carga:** al seleccionar el vehículo en la lista desplegable de la opción «Envío por camión», el sistema calcula instantáneamente la sumatoria de kilogramos de todos los productos y pedidos incluidos en esa opción de envío.
-3. **Barra gráfica de capacidad:** una barra visual dinámica muestra el porcentaje de ocupación del camión en tiempo real, indicando los kilogramos asignados frente a la capacidad total permitida (por ejemplo, `2,185.00 kg / 3,400.00 kg - 64% ocupado`).
+3. **Barra gráfica de capacidad:** junto a «Peso acumulado», una barra muestra la ocupación del camión en tiempo real, con los kilogramos asignados frente a su capacidad (por ejemplo, `2,185.00 / 3,400.00 kg`).
 
 ![Control de capacidad y monitoreo de peso en la opción Envío por camión](figuras/figura-14-control-peso-camion.png){#fig:control-peso-camion}
 
@@ -34,9 +34,9 @@ Si el facturador decide ajustar la carga tras observar el aviso de sobrepeso:
 3. Observe cómo la barra de peso recalcula el total acumulado dentro de la capacidad nominal del vehículo.
 4. De forma alternativa, si dispone de un vehículo de mayor capacidad en la sede (por ejemplo, el camión de 6,000 kg), elija ese camión en la lista desplegable.
 
-### Simplificación aprobada de la carga física (P-45)
+### Control del peso de la carga
 
-Conforme a las aprobaciones de la contraparte institucional y del docente del curso (P-45), el sistema **no requiere confirmación de carga en báscula** por parte del personal de bodega. El control de peso se visualiza directamente en Facturación, agilizando el flujo físico en las rampas de despacho.
+El sistema no pide confirmar ni pesar la carga en Bodega. El peso de cada camión se controla en Facturación, con la barra de ocupación y la alerta de sobrepeso de la opción «Envío por camión» (RN-13).
 
 ### Resultado esperado
 El personal de facturación conoce en tiempo real el peso acumulado en cada camión y dispone de alertas informativas para tomar decisiones operativas de transporte.

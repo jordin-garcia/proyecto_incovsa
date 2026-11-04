@@ -36,11 +36,13 @@ A continuación se detallan los problemas frecuentes organizados por módulo, ex
 
 #### 3. Errores al cargar el archivo de Odoo en Facturación
 
-- **Síntoma:** El sistema rechaza el archivo y muestra «No se pudo leer el archivo. Verifique que sea el .xlsx exportado de Odoo.» o notifica «Hay referencias de una bodega que no se reconoce. Se esperan los prefijos XE, GT o ESC.».
-- **Causas probables:**
-  - El archivo fue guardado en un formato distinto a `.xlsx` (por ejemplo `.csv` o `.xls` antiguo).
-  - El archivo contiene pedidos con prefijos de otra sede (por ejemplo, pedidos con prefijo `GT` de bodega Guatemala mientras el usuario está posicionado en Quetzaltenango `XE`).
-  - Una o más líneas de producto traen cantidad en cero o Peso de Conversión vacío o en 0 (regla RN-50).
+- **Síntomas y causas:** cada mensaje tiene una causa distinta.
+  - «No se pudo leer el archivo. Verifique que sea el .xlsx exportado de Odoo.»: el archivo no es un `.xlsx` válido (por ejemplo, un `.csv` o un `.xls` antiguo) o no tiene la estructura del archivo de Odoo.
+  - «Hay referencias de una bodega que no se reconoce. Se esperan los prefijos XE, GT o ESC.»: alguna referencia empieza con un prefijo que no es de ninguna sede.
+  - «El archivo trae referencias de más de una bodega. Cada archivo debe ser de una sola bodega.»: el archivo mezcla referencias de varias sedes.
+  - «El archivo es de la bodega de Guatemala y usted está trabajando en Quetzaltenango. Cambie la sede o cargue el archivo correcto. No se cargó nada.»: el archivo es de otra sede (por ejemplo, referencias `GT` mientras trabaja en Quetzaltenango).
+  - En estos cuatro casos no se carga nada.
+  - Si una o más líneas traen cantidad en cero o Peso de Conversión vacío o en 0 (regla RN-50), el archivo sí se carga, pero esos pedidos facturados no: aparecen en el **Resumen de la carga** con su motivo.
 - **Solución:**
   1. Abra el archivo en Excel y compruebe que todas las referencias comiencen con el prefijo de la sede activa.
   2. Verifique que no existan líneas con peso o cantidad igual a cero.

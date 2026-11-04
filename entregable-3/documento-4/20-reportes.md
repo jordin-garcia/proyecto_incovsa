@@ -44,11 +44,12 @@ La segunda pestaña constituye el archivo histórico de transporte de la sede (v
 
 Para presentar informes ejecutivos a la dirección de la empresa o realizar análisis en herramientas externas:
 
-1. Seleccione la pestaña que desea documentar (**Despacho** o **Rutas realizadas**).
+1. Seleccione la pestaña que desea documentar: **Despacho**, **Rutas realizadas** o **Bitácora**. Las tres se exportan.
 2. Configure el periodo deseado en los controles de fecha.
 3. En la esquina superior derecha de la tabla, localice los botones de exportación:
-   - **Botón Excel:** genera y descarga de inmediato un archivo `.xlsx` editable con todas las filas del reporte, cabeceras oficiales y formatos numéricos limpios.
-   - **Botón PDF:** genera un documento formal en formato `.pdf` formateado en tamaño carta, con el logotipo institucional de INCOVSA, fecha y hora de emisión, y tabla ajustada para impresión directa o envío por correo electrónico.
+   - **Botón Excel:** descarga un archivo `.xlsx` de una sola hoja con las filas de la pestaña en el periodo elegido. El archivo no lleva colores ni formato.
+   - **Botón PDF:** descarga un documento `.pdf` en tamaño A4 horizontal con el logotipo de INCOVSA, el título de la pestaña, la sede (salvo en la Bitácora), el periodo y la tabla.
+4. El nombre del archivo indica la pestaña, la sede (salvo en la Bitácora) y el periodo; por ejemplo, `despacho-quetzaltenango-16-10-2026.xlsx`. Si el archivo no se puede descargar, la pantalla muestra «No se pudo completar la operación. Inténtelo de nuevo.».
 
 ### Resultado esperado
 La empresa obtiene reportes formales, inmediatos y confiables de la operación logística, eliminando el armado manual de planillas en papel.

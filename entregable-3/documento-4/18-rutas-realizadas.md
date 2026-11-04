@@ -53,5 +53,5 @@ Al finalizar la descarga en el último cliente del circuito:
 ### Resultado esperado
 La empresa obtiene la confirmación digital de entrega en tiempo real desde el terreno, conociendo el circuito de entrega exacto cumplido por el vehículo.
 
-> **Advertencia:** El botón «Ruta Entregada» da por entregada la totalidad de los productos de la ruta. El sistema logístico no registra devoluciones ni mermas en calle; cualquier producto devuelto físicamente debe reportarse a la administración de bodega para su trámite en Odoo.
+> **Advertencia:** El botón «Ruta Entregada» da por entregada la totalidad de los productos de la ruta. El sistema logístico no registra devoluciones ni mermas en calle; las devoluciones se tramitan en Odoo según el procedimiento de la empresa.
 

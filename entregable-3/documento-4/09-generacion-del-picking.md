@@ -47,7 +47,7 @@ El sistema simplifica las operaciones logísticas dividiendo los envíos en dos 
 ### Cancelación de opciones antes del envío
 
 Si cometió un error o desea redistribuir los pedidos antes de enviarlos a bodega:
-- Presione el botón **Cancelar** en la esquina superior de la opción de envío.
+- Presione el botón **Cancelar** de la opción de envío, en la fila de botones de abajo, junto a **Enviar a Bodega**.
 - Confirme en la ventana modal pulsando **Regresar al tablero**. Todos los pedidos asignados regresarán íntegros al tablero de facturación sin perder datos.
 
 ### Resultado esperado

@@ -20,11 +20,14 @@ Permitir que el encargado de facturación suba al sistema la planilla de salidas
    - **Correspondencia de bodega:** verifica que el prefijo de las referencias coincida con la sede activa (`XE` para Quetzaltenango, `GT` para Guatemala o `ESC` para Escuintla). No se permite mezclar bodegas en un mismo archivo.
    - **Estado:** solo se extraen las líneas cuyo estado sea **Hecho**.
    - **Integridad de datos (RN-50):** valida que cada línea cuente con cantidad en kilogramos mayor que cero y Peso de Conversión válido mayor que cero.
-5. Al finalizar la lectura, el sistema desplegará una ventana de resumen indicando cuántos pedidos facturados fueron importados y cuántos kilogramos totales representan (véase la {{fig:carga-odoo-resumen}}). En caso de existir líneas con errores o de otra bodega, se detallará el motivo exacto del descarte.
+5. Al finalizar la lectura, el sistema muestra la ventana **Resumen de la carga** (véase la {{fig:carga-odoo-resumen}}) con:
+   - cuántos pedidos facturados de la sede se agregaron al tablero;
+   - los pedidos facturados que no se cargaron, agrupados por motivo y con su número, si los hay;
+   - cuántas referencias se ignoraron por no estar en estado «Hecho», si las hay.
+6. Pulse **Listo** para cerrar la ventana. Los pedidos facturados que no se cargaron deben corregirse en Odoo y volver a exportarse.
 
 ![Resumen de carga del archivo exportado de Odoo](figuras/figura-05-carga-odoo-resumen.png){#fig:carga-odoo-resumen}
 
-6. Presione el botón **Listo** para cerrar la ventana informativa.
 
 ### Gestión del tablero de pedidos facturados
 
@@ -47,5 +50,8 @@ Cada tarjeta de pedido facturado muestra:
 ### Resultado esperado
 Los pedidos facturados quedan listados de forma clara en el tablero, listos para ser organizados y despachados hacia la bodega.
 
-> **Advertencia:** Si el archivo contiene pedidos con prefijos de bodega no reconocidos o mezclados, el sistema rechazará la importación indicando «Hay referencias de una bodega que no se reconoce. Se esperan los prefijos XE, GT o ESC.».
+> **Advertencia:** El sistema no carga nada si las referencias no corresponden a la sede de trabajo:
+> - con un prefijo desconocido muestra «Hay referencias de una bodega que no se reconoce. Se esperan los prefijos XE, GT o ESC.»;
+> - con referencias de varias bodegas muestra «El archivo trae referencias de más de una bodega. Cada archivo debe ser de una sola bodega.»;
+> - con un archivo de otra sede muestra, por ejemplo, «El archivo es de la bodega de Guatemala y usted está trabajando en Quetzaltenango. Cambie la sede o cargue el archivo correcto. No se cargó nada.».
 

@@ -22,7 +22,7 @@ En la pestaña **Camiones** del módulo de Configuración se definen los vehícu
   4. Seleccione la **Sede** física a la que estará asignado el automotor.
   5. Presione **Guardar**. El camión aparecerá de inmediato disponible en la lista desplegable de Facturación.
 - **Protección de camiones en uso:**
-  - El sistema prohíbe eliminar o cambiar de sede un camión que se encuentre actualmente seleccionado en una opción de envío en Facturación o en una ruta activa, mostrando el mensaje de alerta «<camión> está elegido en «Envío por camión» de Facturación.».
+  - El sistema prohíbe eliminar o cambiar de sede un camión que se encuentre elegido en «Envío por camión» de Facturación, mostrando el mensaje de alerta «<camión> está elegido en «Envío por camión» de Facturación.».
 
 ### Administración de usuarios del sistema de picking
 

@@ -34,7 +34,7 @@ Tabla: Principales eventos registrados en la bitácora {#tab:eventos-bitacora}
 |---|---|---|
 | **Inicio de sesión** | Al autenticarse un usuario en el sistema | Nombre de usuario |
 | **Intento fallido de inicio de sesión** | Al ingresar credencial errónea | Nombre de usuario intentado |
-| **Carga de archivo de Odoo** | Al importar una planilla `.xlsx` de Odoo | Cantidad de pedidos importados y kg totales |
+| **Carga de archivo de Odoo** | Al importar una planilla `.xlsx` de Odoo | Sede, nombre del archivo, pedidos cargados, pedidos no cargados con su motivo y referencias en otro estado |
 | **Eliminación de pedidos facturados** | Al descartar pedidos del tablero de Facturación | Cantidad de pedidos descartados |
 | **Envío de ruta a bodega** | Al confirmar una ruta en Facturación | Tipo, número correlativo, camión y piloto |
 | **Envío de pedido a bodega** | Al confirmar un pedido en Facturación | Tipo, número correlativo y pedidos incluidos |
