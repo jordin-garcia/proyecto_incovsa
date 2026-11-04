@@ -195,6 +195,7 @@ En el VPS, un archivo `docker-compose.yml` con tres servicios:
 
 - La cuenta de **Cloudflare** (R2 y DNS) y la del **VPS** se crean desde el inicio **a nombre de INCOVSA**, con un correo de la empresa, y se invita al equipo (P-94).
 - El **repositorio** se transfiere a una cuenta u organización de INCOVSA el día de la entrega (Anexo J).
+- **(03/11, Jordin, CE-12) Entrega de las credenciales: en persona.** La copia de respaldo de los secretos del servidor (el `.env` del VPS y la configuración de `rclone`) se entrega en persona a quien indique INCOVSA (P-03), que la copia del VPS a su propio medio de guarda desde una computadora de INCOVSA. No se envía por correo, chat ni otro medio digital del equipo, y ninguna computadora ni cuenta del equipo conserva copia (decisión 70). La llave privada SSH del despliegue y la contraseña del primer administrador no se entregan (Anexo J).
 
 ## Decisiones técnicas (12/10)
 

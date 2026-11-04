@@ -1,26 +1,26 @@
 # Anexo I. Evidencia de entrega
 
-Este formulario registra la entrega del 4 de noviembre de 2026. Quien recibe lo firma. No contiene contraseñas, llaves ni tokens.
+| Versión | Fecha | Cambios | Autor |
+|---|---|---|---|
+| 1.0 | 03/11/2026 | Formato del acta de entrega a INCOVSA, listo para firmarse | Carlos Hugo Escobar Gómez y Héctor Jordin Adolfo García Coyoy |
+
+Este anexo es el acta de la entrega final del sistema a INCOVSA, el **jueves 12/11/2026** (`specs/16`, decisión 90). Se imprime, se llena a mano el día de la entrega y lo firman quien entrega y quien recibe.
+
+El acta no lleva contraseñas, llaves ni tokens: solo los nombres de lo que se entrega. Las credenciales se entregan en persona, con el procedimiento del Anexo J.
+
+La versión 1.1 (CE-15) agrega, antes de esta acta, la constancia de la entrega académica del miércoles 04/11/2026 al Ing. Manuel Rojas.
 
 ## Datos de la entrega
 
-La decisión 72 fija la entrega final el miércoles 4 de noviembre de 2026. La decisión 73 fija ese día la entrega de accesos. Specs/17 llama a esa fecha el Entregable 3.
+Fecha prevista: **jueves 12 de noviembre de 2026**
 
-Fecha prevista
+Fecha de la firma: ________________________________
 
-4 de noviembre de 2026
-
-Lugar
-
-________________________________
-
-Fecha de la firma
-
-________________________________
+Lugar: ________________________________
 
 ## Quién entrega
 
-Entrega el equipo de la tabla Autores del README.
+El equipo del proyecto (README, «Autores»):
 
 | Integrante | Rol en el proyecto | Firma |
 |---|---|---|
@@ -30,61 +30,67 @@ Entrega el equipo de la tabla Autores del README.
 | Josué André Menéndez Juárez | Base de datos y frontend del sistema logístico | ________________ |
 | José Daniel Cifuentes Carrascosa | Backend del sistema logístico y documentación técnica | ________________ |
 
-Nombre de quien firma en el acto, si no firma toda la tabla
-
-________________________________
-
-Firma de quien firma en el acto
-
-________________________________
+Si no firma todo el equipo, nombre de quien entrega en su representación: ________________________________
 
 ## Quién recibe
 
-La contraparte prevista es el Ing. William Ambrossio. El README lo nombra contraparte. La decisión 73 le pide el VPS y el DNS. La línea de firma queda en blanco. P-03 no dice quién recibe.
+La contraparte del proyecto en INCOVSA es el Ing. William Ambrossio. La persona que recibe las credenciales la indica INCOVSA (P-03).
 
-Nombre de quien recibe
-
-________________________________
-
-Cargo
-
-________________________________
+| Dato | Quien recibe |
+|---|---|
+| Nombre | ________________________________ |
+| Cargo | ________________________________ |
+| Firma | ________________________________ |
 
 ## Qué se entrega
 
-Marque cada elemento que se entrega el día de la firma. Deje vacía la casilla de lo que no se entrega.
+Marque cada elemento que se entrega ese día. Deje sin marcar lo que no se entrega y anótelo en «Lo que no se entrega».
 
-- [ ] Repositorio privado de GitHub, transferido ese día.
-- [ ] Documento 1. Memoria general y especificación del sistema.
-- [ ] Documento 2. Documentación técnica.
-- [ ] Documento 3. Manual de usuario de la administración del sitio.
-- [ ] Documento 4. Manual de usuario del sistema logístico.
-- [ ] Documento 5. Manual técnico de instalación, despliegue y mantenimiento.
-- [ ] Documento 6. Plan y evidencias de pruebas.
-- [ ] Anexos A a J.
+**Sistema y repositorio**
+
+- [ ] Sistema desplegado en `https://incovsa.com` (JG-19).
+- [ ] Repositorio de GitHub transferido a la cuenta u organización de INCOVSA (Anexo J, «Transferencia del repositorio»). Destino: ________________________________ Fecha de la transferencia: ________________
 - [ ] README del repositorio.
-- [ ] Accesos del Anexo J. Las credenciales van por el medio que defina Jordin. Este formulario no las copia.
-- [ ] Capacitación del 3 de noviembre de 2026.
-- [ ] Sistema en marcha en https://incovsa.com.
 
-El sistema en marcha depende de JG-19. Al redactar este anexo, JG-19 está pendiente. CE-08 está bloqueada. P-10, P-93 y P-94 no están entregados. El día de la firma, marque el sistema si JG-19 ya terminó. Si falta un servicio del Anexo J, escríbalo en Lo que no se entrega.
+**Documentos**
 
-Destino del repositorio
+- [ ] Documento 1. Memoria general y especificación del sistema. Versión: ______
+- [ ] Documento 2. Documentación técnica. Versión: ______
+- [ ] Documento 3. Manual de usuario de la administración del sitio. Versión: ______
+- [ ] Documento 4. Manual de usuario del sistema logístico. Versión: ______
+- [ ] Documento 5. Manual técnico de instalación, despliegue y mantenimiento. Versión: ______
+- [ ] Documento 6. Plan y evidencias de pruebas. Versión: ______
+- [ ] Anexos A a J.
 
-TODO(CE-12): nombre de la cuenta u organización de GitHub de INCOVSA.
+**Capacitación**
 
-Nombre, cuando se conozca
+- [ ] Capacitación realizada (Anexo H). Fecha: ________________
 
-________________________________
+**Accesos (Anexo J)**
 
-Lo que no se entrega
+Marque solo lo que existe el día de la entrega. Los valores no se escriben aquí.
 
-________________________________
+- [ ] Cuenta del VPS a nombre de INCOVSA.
+- [ ] Cuenta de Cloudflare a nombre de INCOVSA, con el DNS de incovsa.com y los buckets de imágenes y de respaldos.
+- [ ] Copia del `.env` del VPS, entregada en persona.
+- [ ] Copia de la configuración de `rclone` de los respaldos, entregada en persona.
+- [ ] Primera cuenta de administrador del sistema, creada por la persona que la usa. Nombre de usuario: ________________
 
-## Firmas
+## Lo que no se entrega
 
-Quien recibe firma este anexo.
+Anote lo que no se entregó y el motivo (por ejemplo, un servicio que INCOVSA todavía no entrega: P-10, P-93 o P-94).
 
-Firma de quien recibe
+________________________________________________________________
 
-________________________________
+________________________________________________________________
+
+________________________________________________________________
+
+## Conformidad
+
+Quien recibe declara que recibió lo marcado en esta acta y, en persona, las credenciales del Anexo J que se marcaron en «Accesos».
+
+| | Nombre | Firma | Fecha |
+|---|---|---|---|
+| Entrega | ________________ | ________________ | ________________ |
+| Recibe | ________________ | ________________ | ________________ |

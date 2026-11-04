@@ -1,143 +1,172 @@
 # Anexo J. Inventario de servicios y accesos
 
-Este anexo lista los servicios de la entrega del 4 de noviembre de 2026. No contiene contraseñas, llaves, tokens ni direcciones IP. RNF-10 deja esas credenciales fuera del repositorio.
+| Versión | Fecha | Cambios | Autor |
+|---|---|---|---|
+| 1.0 | 03/11/2026 | Inventario para la entrega académica del 04/11, con los servicios que INCOVSA todavía no entrega marcados como pendientes | Carlos Hugo Escobar Gómez y Héctor Jordin Adolfo García Coyoy |
 
-Las secciones de cada servicio son de consulta. Las dos últimas secciones son los pasos de ese día.
+Este anexo lista cada servicio que usa el sistema: quién es el dueño de la cuenta, para qué se usa, cómo se accede y quién recibe la credencial. También trae el procedimiento para entregar las credenciales y los pasos para transferir el repositorio a INCOVSA.
 
-CE-08 está bloqueada. P-10, P-93 y P-94 no están entregados. Al redactar este anexo, INCOVSA no ha entregado el VPS, el DNS de incovsa.com en Cloudflare ni los buckets de R2.
+**Este anexo no contiene contraseñas, llaves, tokens, identificadores de cuenta ni direcciones IP** (RNF-10). Solo nombra las variables y los secretos. Los valores se entregan en persona, como dice «Entrega de las credenciales».
+
+## Estado al 03/11/2026
+
+- INCOVSA todavía no entrega el VPS (P-10), el DNS de incovsa.com (P-93) ni el correo de la empresa para crear las cuentas de Cloudflare y del VPS, ni la cuenta u organización de GitHub que recibe el repositorio (P-94). Esos datos dicen **«pendiente de entrega por INCOVSA»**.
+- El sistema no está desplegado. El despliegue (JG-19), la entrega de accesos y la transferencia del repositorio se hacen antes de la entrega final a INCOVSA del **jueves 12/11/2026** (`specs/16`, decisión 90).
+- La versión 1.1 de este anexo (CE-15) cambia cada pendiente por el dato real que ya se tenga.
+
+## Resumen
+
+| Servicio | Dueño de la cuenta | Para qué se usa | Cómo se accede | Quién recibe la credencial | Estado |
+|---|---|---|---|---|---|
+| VPS | INCOVSA | Servidor de producción de incovsa.com | Panel del proveedor y SSH con llave | La cuenta es de INCOVSA. Los secretos del servidor, la persona de P-03 | Pendiente de entrega por INCOVSA (P-10) |
+| Dominio y DNS en Cloudflare | INCOVSA | DNS de incovsa.com y del subdominio `imagenes.incovsa.com` | Panel de Cloudflare | La cuenta es de INCOVSA | Pendiente de entrega por INCOVSA (P-93 y P-94) |
+| R2, bucket de imágenes | INCOVSA, en la misma cuenta de Cloudflare | Imágenes del sitio | Panel de Cloudflare. La aplicación, con una llave limitada a ese bucket | La persona de P-03 | Pendiente de entrega por INCOVSA (P-94) |
+| R2, bucket privado de respaldos | INCOVSA, en la misma cuenta de Cloudflare | Respaldos diarios de PostgreSQL | Panel de Cloudflare. El VPS, con `rclone` y una llave limitada a ese bucket | La persona de P-03 | Pendiente de entrega por INCOVSA (P-94) |
+| GitHub: repositorio, Actions y entorno `produccion` | Hoy, la cuenta `jordin-garcia`. Después de la transferencia, INCOVSA | Código, integración continua y despliegue automático | GitHub, con la cuenta dueña | Se transfiere el repositorio, no una contraseña | Repositorio en uso. Cuenta de destino pendiente (P-94) |
+| GHCR (registro de imágenes de Docker) | El dueño del repositorio | Imágenes de producción de la aplicación | Lo usa el flujo de despliegue con el token de cada corrida | Nadie: no hay credencial que entregar | Sin imágenes de producción todavía |
+| Google Drive de INCOVSA | INCOVSA | Documentos técnicos (FT, HS y COA) | Enlaces que el sistema muestra según los permisos | La cuenta es de INCOVSA | Cuenta o carpeta pendiente (P-92) |
+| Cuentas de administrador del sistema | La persona que indique INCOVSA | Primera cuenta de Gerencia o Soporte del sitio y del picking | `incovsa.com/acceso` | Nadie: la persona escribe su propia contraseña | Pendiente: persona (P-08) y despliegue (JG-19) |
+
+El sistema no usa más servicios con credenciales. **Odoo** solo aparece como un enlace (`URL_ODOO`) y como el archivo `.xlsx` que exporta el facturador: no hay conexión ni credencial de Odoo. **No hay cuenta de correo**: el sistema no envía correos (`specs/16`, «Servicios externos»).
 
 ## VPS
 
-| Campo | Hecho |
+| Campo | Dato |
 |---|---|
-| Dueño | INCOVSA. La decisión 33 pide crear la cuenta a nombre de la empresa, con un correo de la empresa, e invitar al equipo. El repositorio no trae ese correo ni el nombre del proveedor. |
-| Uso | Servidor de producción de incovsa.com. Docker Compose corre Caddy, la aplicación y PostgreSQL 18. La decisión 28 pide Ubuntu Server 24.04 LTS, 2 vCPU, 4 GB de RAM, 80 GB SSD, dirección IP fija y SSH con llave. |
-| Acceso | SSH con llave. La decisión 28 no nombra al usuario del sistema. La lista `evidencia/CE-08/pasos-hugo.md` usa el usuario `despliegue`. Esa cuenta no existe mientras P-10 siga abierto. La dirección IP no se anota aquí. |
-| Receptor | La persona de P-03. El pendiente está en Entregar las credenciales. |
-| Estado | No entregado. El Ing. William Ambrossio se comprometió a contratarlo. La decisión 73 pidió el acceso a más tardar el 28 de octubre de 2026. |
-
-TODO(CE-12): correo de INCOVSA para la cuenta del VPS y la cuenta de Cloudflare.
-
-TODO(CE-12): proveedor del VPS.
+| Dueño | INCOVSA. La cuenta del proveedor se crea a nombre de la empresa, con un correo de la empresa, y se invita al equipo (decisión 33). Proveedor y correo: **pendiente de entrega por INCOVSA** (P-10 y P-94). |
+| Uso | Servidor de producción de incovsa.com. Docker Compose corre Caddy, la aplicación y PostgreSQL 18. Características pedidas: Ubuntu Server 24.04 LTS, 2 vCPU, 4 GB de RAM, 80 GB SSD, dirección IP fija y SSH con llave (decisión 28). |
+| Acceso | SSH solo con llave, con el usuario de despliegue (`despliegue`, apartado Despliegue del Documento 5). El ingreso de root por SSH queda prohibido: root entra solo por la consola del proveedor, con la cuenta de INCOVSA. La dirección del servidor no se anota aquí. |
+| Quién recibe | La cuenta del proveedor ya es de INCOVSA. Los secretos que se guardan en el servidor los recibe la persona de P-03 (ver «Entrega de las credenciales»). |
+| Estado | **Pendiente de entrega por INCOVSA** (P-10). |
 
 ## Dominio y DNS en Cloudflare
 
-| Campo | Hecho |
+| Campo | Dato |
 |---|---|
-| Dueño | La cuenta de Cloudflare de INCOVSA, decisión 33. El correo es el pendiente de la sección VPS. El repositorio no nombra al registrador del dominio. P-93 no dice quién administra hoy el DNS. |
-| Uso | DNS de incovsa.com en el plan gratuito de Cloudflare. El plan hace que incovsa.com resuelva al VPS y que `imagenes.incovsa.com` muestre el bucket de imágenes. La decisión 32 lo fija. Ese DNS no está entregado. Si INCOVSA no puede pasarlo a Cloudflare, la aplicación sirve las imágenes desde una ruta propia. |
-| Acceso | Panel de la cuenta de Cloudflare de INCOVSA. Esa cuenta no existe mientras P-94 siga abierto. |
-| Receptor | La persona de P-03. El pendiente está en Entregar las credenciales. |
-| Estado | No entregado. P-93 sigue abierto. CE-08 está bloqueada. |
-
-TODO(CE-12): registrador del dominio incovsa.com.
-
-TODO(CE-12): quién administra el DNS de incovsa.com y si puede pasar a Cloudflare.
+| Dueño | INCOVSA, en su cuenta de Cloudflare (decisión 33). El registrador del dominio y quién administra hoy el DNS: **pendiente de entrega por INCOVSA** (P-93). |
+| Uso | DNS de incovsa.com en el plan gratuito de Cloudflare: incovsa.com apunta al VPS y `imagenes.incovsa.com` al bucket de imágenes (decisión 32). Si el DNS no pudiera pasar a Cloudflare, la aplicación serviría las imágenes desde una ruta propia. |
+| Acceso | Panel de Cloudflare, con la cuenta de INCOVSA. |
+| Quién recibe | La cuenta es de INCOVSA. No hay una credencial del equipo que entregar. |
+| Estado | **Pendiente de entrega por INCOVSA** (P-93 y P-94). |
 
 ## R2, bucket de imágenes
 
-| Campo | Hecho |
+| Campo | Dato |
 |---|---|
-| Dueño | La cuenta de Cloudflare de INCOVSA. El correo es el pendiente de la sección VPS. |
-| Uso | Imágenes del sitio. La base de datos guarda solo la dirección. En producción el sitio las muestra desde `imagenes.incovsa.com`. La dirección gratuita `r2.dev` queda fuera de producción. La lista `evidencia/CE-08/pasos-hugo.md` llama al bucket `incovsa-imagenes`. La lectura pública de ese bucket usa solo `imagenes.incovsa.com`. |
-| Acceso | Panel de Cloudflare, con una credencial limitada a ese bucket. El valor no está en el repositorio. El bucket no está creado. |
-| Receptor | La persona de P-03. El pendiente está en Entregar las credenciales. |
-| Estado | No entregado. P-94 sigue abierto. |
+| Dueño | INCOVSA, en la misma cuenta de Cloudflare. |
+| Uso | Imágenes del sitio. La base de datos solo guarda su dirección. En producción se sirven desde `imagenes.incovsa.com`; la dirección gratuita `r2.dev` no se usa (`specs/16`, «Almacenamiento»). Nombre de ejemplo: `incovsa-imagenes`. |
+| Acceso | Panel de Cloudflare para el dueño de la cuenta. La aplicación usa una llave limitada a ese bucket, en las variables `R2_CUENTA`, `R2_LLAVE` y `R2_SECRETO` del `.env` del VPS (apartado Almacenamiento del Documento 5). |
+| Quién recibe | La persona de P-03 recibe la copia de la llave junto con el `.env` (ver «Entrega de las credenciales»). |
+| Estado | **Pendiente de entrega por INCOVSA** (P-94). El bucket no existe. |
 
 ## R2, bucket privado de respaldos
 
-| Campo | Hecho |
+| Campo | Dato |
 |---|---|
-| Dueño | La misma cuenta de Cloudflare de INCOVSA. |
-| Uso | Respaldos de PostgreSQL. El bucket es privado y es distinto del bucket de imágenes. La lista `evidencia/CE-08/pasos-hugo.md` lo llama `incovsa-respaldos`. La decisión 34 programa cada noche, en el VPS, una tarea cron que ejecuta `pg_dump` y sube el archivo con `rclone`. El script conserva 7 diarios y 4 semanales. La credencial de R2 del VPS entra solo a ese bucket. Esa tarea no está instalada. CE-08 está bloqueada. |
-| Acceso | Panel de Cloudflare para el dueño de la cuenta. En el VPS, `rclone` con una credencial limitada a `incovsa-respaldos`. El repositorio tiene `scripts/respaldo.sh` y `scripts/restaurar.sh`. La prueba de integración continua usa un destino local de `rclone` mientras no exista la cuenta de R2. |
-| Receptor | La persona de P-03. El pendiente está en Entregar las credenciales. |
-| Estado | El bucket no está creado. P-94 sigue abierto. CE-07 dejó los scripts. CE-08, que instala el cron en el VPS, está bloqueada. |
+| Dueño | INCOVSA, en la misma cuenta de Cloudflare. |
+| Uso | Respaldos de PostgreSQL. Cada noche, una tarea de `cron` del VPS ejecuta `pg_dump` dentro del contenedor de PostgreSQL y sube el archivo con `rclone`. Se conservan 7 diarios y 4 semanales (decisión 34, `specs/16` «Respaldos»). Es un bucket privado, distinto del de las imágenes. Nombre de ejemplo: `incovsa-respaldos`. |
+| Acceso | Panel de Cloudflare para el dueño de la cuenta. En el VPS, el remoto `r2` de `rclone`, con una llave limitada a ese bucket, guardada en la configuración de `rclone` del usuario de despliegue, no en el `.env` (apartado Respaldo del Documento 5). |
+| Quién recibe | La persona de P-03 recibe la copia de la configuración de `rclone` (ver «Entrega de las credenciales»). |
+| Estado | **Pendiente de entrega por INCOVSA** (P-94). El bucket no existe y la tarea de `cron` no está instalada. |
 
-## GitHub y GHCR
+## GitHub: repositorio, Actions y entorno `produccion`
 
-| Campo | Hecho |
+| Campo | Dato |
 |---|---|
-| Dueño | Hoy el repositorio `jordin-garcia/proyecto_incovsa` está en la cuenta de GitHub del coordinador. El login `jordin-garcia` está en la decisión 76. Esa cuenta es de GitHub Student e incluye GitHub Pro. El 4 de noviembre de 2026 la decisión 33 lo transfiere a una cuenta u organización de INCOVSA. La decisión no escribe el nombre. |
-| Uso | Repositorio privado, GitHub Actions y el registro privado GHCR. En un push a `main`, `.github/workflows/despliegue.yml` publica la imagen de producción en `ghcr.io`, bajo el dueño del repositorio. La imagen lleva la etiqueta del commit y la etiqueta `produccion`. El flujo conserva las últimas 5 imágenes de ese paquete. El cupo actual de GHCR es 2 GB. Tras la transferencia, el cupo depende del plan de la cuenta de INCOVSA. |
-| Acceso | GitHub, con la cuenta dueña. El paso de SSH al VPS lee el environment `produccion`. Los nombres de los secretos son `VPS_HOST`, `VPS_USUARIO`, `VPS_LLAVE_SSH` y `VPS_KNOWN_HOSTS`. Los valores no están en el repositorio. CE-08 registra que ese environment todavía no existe. |
-| Receptor | La persona de P-03, sobre la cuenta u organización cuyo nombre falta. |
-| Estado | El repositorio existe. La transferencia no se ha hecho. Este anexo no la ejecuta. |
+| Dueño | Hoy, la cuenta de GitHub Student del coordinador: el repositorio es `jordin-garcia/proyecto_incovsa`. Se transfiere a una cuenta u organización de INCOVSA (decisión 33) antes del 12/11 (decisión 90). Nombre de la cuenta u organización: **pendiente de entrega por INCOVSA** (P-94). |
+| Uso | Código, integración continua con GitHub Actions y despliegue automático: un *push* a `main` publica la imagen en GHCR y entra al VPS por SSH (apartado Despliegue del Documento 5). Hoy el repositorio es público (decisión 90). |
+| Acceso | GitHub, con la cuenta dueña. El paso de SSH lee los secretos del entorno `produccion`: `VPS_HOST`, `VPS_USUARIO`, `VPS_LLAVE_SSH` y `VPS_KNOWN_HOSTS`. GitHub no deja leer esos valores, solo reemplazarlos. El entorno se crea en el despliegue (JG-19). |
+| Quién recibe | No se entrega una contraseña: el repositorio cambia de dueño con la transferencia (ver «Transferencia del repositorio»). La contraseña de GitHub del coordinador nunca se entrega. |
+| Estado | El repositorio existe. El entorno `produccion` no existe todavía. La transferencia no se ha hecho. |
 
-El nombre de destino está marcado en Transferir el repositorio.
+## GHCR
+
+| Campo | Dato |
+|---|---|
+| Dueño | La cuenta dueña del repositorio. El flujo publica en `ghcr.io/` seguido del nombre del repositorio, así que después de la transferencia publica bajo el dueño nuevo. |
+| Uso | Registro privado de las imágenes de producción, con la etiqueta del *commit* y la etiqueta `produccion`. El flujo conserva las últimas 5. Con GitHub Student hay 2 GB; después de la transferencia, el límite depende del plan de INCOVSA (`specs/16`, «Despliegue»). |
+| Acceso | El flujo de despliegue entra con el token de cada corrida, que no queda en el VPS. |
+| Quién recibe | Nadie: no hay credencial propia que entregar. |
+| Estado | Todavía no hay imágenes de producción: el primer despliegue es JG-19. |
 
 ## Google Drive de INCOVSA
 
-| Campo | Hecho |
+| Campo | Dato |
 |---|---|
-| Dueño | INCOVSA. El repositorio no nombra la cuenta ni la carpeta. |
-| Uso | Documentos técnicos del sitio. Ahí están la ficha técnica, la hoja de seguridad y el certificado de análisis. El sistema guarda el enlace. El PDF permanece en Drive. El sistema muestra la vista previa y la descarga según el permiso. Acepta solo enlaces `https://drive.google.com` y `https://docs.google.com`. |
-| Acceso | Quien tiene permiso abre el enlace desde la documentación interna. La protección dentro de Drive la define INCOVSA al compartir el archivo. P-92 sigue abierto. El Drive del equipo, donde están los `.docx` y los `.pdf` fuera del repositorio, es otro servicio. |
-| Receptor | La persona de P-03. La cuenta sigue en INCOVSA. El repositorio no guarda una contraseña de ese Drive. |
-| Estado | P-92 sigue abierto. |
+| Dueño | INCOVSA. Cuenta o carpeta: **pendiente de entrega por INCOVSA** (P-92). |
+| Uso | Documentos técnicos del sitio (ficha técnica, hoja de seguridad y certificado de análisis). El sistema guarda solo el enlace y muestra la vista previa y la descarga según los permisos. Acepta solo enlaces `https` de `drive.google.com` y `docs.google.com` (apartado Configuración de servicios externos del Documento 5). |
+| Acceso | Quien tiene permiso abre el enlace desde la documentación interna. La protección dentro de Drive la pone INCOVSA al compartir cada archivo (solo cuentas de la empresa y sin descarga para quien solo puede ver, P-92). |
+| Quién recibe | La cuenta es de INCOVSA. El sistema no guarda ninguna credencial de Drive. |
+| Estado | **Pendiente de entrega por INCOVSA** (P-92). |
 
-TODO(CE-12): cuenta o carpeta de Google Drive de INCOVSA para los documentos técnicos, y cómo se comparte cada archivo.
+El Drive del equipo, donde se guardan los `.docx` y los `.pdf` de los documentos, es otro servicio y no forma parte de la entrega de accesos.
 
 ## Cuentas de administrador del sistema
 
-| Campo | Hecho |
+| Campo | Dato |
 |---|---|
-| Dueño | La persona que indique INCOVSA. P-08 no la nombra. |
-| Uso | `npm run crear-admin` pide en la terminal el nombre completo, el nombre de usuario, el rol y la contraseña. El rol es Gerencia o Soporte. Cada ejecución crea una cuenta. El sistema de esa cuenta es `ambos`, y entra al sitio y al picking. La contraseña no queda en el repositorio ni en la semilla. En producción el comando corre dentro del contenedor de la aplicación. JG-19 lo ejecuta. Si P-08 no está resuelto, JG-19 se detiene y pregunta a Jordin. |
-| Acceso | La ruta de la aplicación es `/acceso`, en `incovsa.com`, cuando el sistema esté en marcha. Gerencia o Soporte escriben una contraseña nueva desde la administración de usuarios. No hay recuperación por correo. La semilla de demostración no es esta cuenta. La decisión 79 la deja para desarrollo. |
-| Receptor | La persona de P-08 usa la cuenta. La entrega del 4 de noviembre de 2026 pone la contraseña en manos de la persona de P-03. Ninguna de las dos está nombrada. |
-| Estado | JG-19 está pendiente. La cuenta de producción no existe al redactar este anexo. |
+| Dueño | La persona que indique INCOVSA: **pendiente de entrega por INCOVSA** (P-08). |
+| Uso | Primera cuenta de Gerencia o de Soporte. Entra al sitio y al picking. Las demás cuentas las crea ese administrador desde el sistema. |
+| Acceso | `https://incovsa.com/acceso`, cuando el sistema esté desplegado. La cuenta se crea en el VPS con `docker compose exec app npm run crear-admin` (apartado Creación del primer administrador del Documento 5). Si olvida la contraseña, otra cuenta de Gerencia o Soporte le escribe una nueva desde la administración de usuarios: no hay recuperación por correo. |
+| Quién recibe | Nadie: la cuenta se crea con esa persona presente y ella misma escribe su contraseña. La contraseña no se anota en ningún lugar del equipo. |
+| Estado | Pendiente: persona (P-08) y despliegue (JG-19). |
 
-TODO(CE-12): persona y nombre de usuario del administrador inicial.
+Las cuentas de la semilla de demostración son solo para desarrollo (decisión 79) y no existen en producción.
 
-## Entregar las credenciales
+## Entrega de las credenciales
 
-La decisión 73 fija la entrega de accesos el 4 de noviembre de 2026. La capacitación es el 3 de noviembre de 2026.
+**Medio: en persona.** Lo decidió el coordinador el 03/11/2026. No se envían por correo, chat, el repositorio, el Drive del equipo ni ningún otro medio digital del equipo, y ninguna computadora ni cuenta del equipo conserva una copia (decisión 70).
 
-Ese día el coordinador Héctor Jordin Adolfo García Coyoy transfiere el repositorio. La contraparte prevista es el Ing. William Ambrossio. La decisión 73 pide al Ing. William el acceso al VPS y al DNS. El README lo registra como contraparte. La decisión no nombra a otras personas.
+**Qué se entrega.** La copia de respaldo de los secretos del servidor (`specs/16`, «Respaldos»):
 
-TODO(CE-12): persona de INCOVSA que recibe las credenciales.
+- el archivo `.env` de `~/incovsa` en el VPS, con `POSTGRES_PASSWORD`, `DATABASE_URL`, `BETTER_AUTH_SECRET_SITIO`, `BETTER_AUTH_SECRET_PICKING`, `R2_CUENTA`, `R2_LLAVE` y `R2_SECRETO`;
+- la configuración de `rclone` del usuario de despliegue, con la llave de R2 de los respaldos.
 
-TODO(CE-12): preguntar a Jordin el medio.
+**Qué no se entrega.**
 
-El medio lo define Jordin con INCOVSA. Este anexo no lo elige.
+- La llave privada SSH del usuario de despliegue: vive solo en el secreto `VPS_LLAVE_SSH` y se borra de la computadora de quien despliega al cargarla (apartado Despliegue del Documento 5, Paso 7). Si INCOVSA necesita otra, se crea una nueva (Paso 1 de ese apartado), su llave pública se agrega al usuario de despliegue desde la consola del proveedor y el secreto se reemplaza (Paso 7).
+- La contraseña del primer administrador: la escribe esa persona (ver «Cuentas de administrador del sistema»).
+- Las contraseñas de las cuentas de Cloudflare, del VPS y de Google: ya son de INCOVSA.
+- La contraseña de GitHub del coordinador: el repositorio se transfiere.
 
-1. Si la línea del medio sigue abierta, pregunte a Jordin antes de entregar credenciales.
-2. Cuando las cuentas existan, confirme que la cuenta del VPS y la cuenta de Cloudflare están a nombre de INCOVSA y que el equipo está invitado. La decisión 33 lo pide. El dueño de esas cuentas es INCOVSA.
-3. Entregue por ese medio la contraseña de cada cuenta creada con `npm run crear-admin`. El comando no la guarda. Si JG-19 no creó la cuenta, no hay contraseña que entregar.
-4. Si ya existe la credencial de R2, déjela en el VPS. Si ya existe la llave SSH de `despliegue`, déjela en el secreto `VPS_LLAVE_SSH` del environment `produccion`. La decisión 70 deja las credenciales de producción en el VPS y en los secretos de GitHub Actions. No las copie a este anexo ni al medio.
-5. No copie al repositorio, a este anexo ni al Anexo I las contraseñas, las llaves privadas, los tokens, la dirección IP, el archivo de entorno del VPS ni los valores del environment `produccion`.
-6. No entregue la contraseña de GitHub del coordinador. El repositorio cambia de dueño por la transferencia de la sección siguiente.
-7. Si un servicio sigue sin entregar, anótelo en el Anexo I. No invente una credencial de reemplazo. Al redactar este anexo faltan P-10, P-93 y P-94.
-8. Quien recibe firma el Anexo I el mismo día.
+**Quién recibe:** la persona de INCOVSA que indique la empresa: **pendiente de entrega por INCOVSA** (P-03). **Dónde la guarda INCOVSA:** lo elige INCOVSA; la versión 1.1 (CE-15) lo anota sin escribir ningún valor.
 
-## Transferir el repositorio
+**Pasos, el día de la entrega (antes del 12/11, con el coordinador):**
 
-No transfiera el repositorio al redactar este anexo. Los pasos corren el 4 de noviembre de 2026, con el coordinador.
+1. Si la persona que recibe (P-03) no está nombrada, deténgase: no entregue nada.
+2. Confirme que las cuentas del VPS y de Cloudflare están a nombre de INCOVSA, con un correo de la empresa (decisión 33).
+3. En una reunión presencial, con una computadora de INCOVSA, quien recibe copia del VPS a su medio de guarda el `.env` y la configuración de `rclone` del usuario de despliegue. El coordinador acompaña y no conserva copia.
+4. Quien recibe comprueba que la copia tiene cada secreto de la lista de «Qué se entrega».
+5. Si un servicio todavía no existe, no hay credencial de ese servicio que entregar: anótelo en «Lo que no se entrega» del Anexo I. No invente una credencial de reemplazo.
+6. No copie ningún valor al repositorio, a este anexo ni al Anexo I: el acta registra solo los nombres de lo que se entregó.
+7. Quien recibe firma el Anexo I ese mismo día.
+8. Después de la entrega, INCOVSA decide si retira las invitaciones del equipo a sus cuentas.
 
-La decisión 33 manda transferirlo ese día a una cuenta u organización de INCOVSA. P-94 pide el nombre. La decisión 33 no lo escribe.
+## Transferencia del repositorio
 
-TODO(CE-12): nombre de la cuenta u organización de GitHub de INCOVSA.
+Los pasos los hace el coordinador con la cuenta `jordin-garcia`, antes del 12/11 (decisiones 33 y 90). Siguen la página «Transferring a repository» de la documentación de GitHub (<https://docs.github.com/en/repositories/creating-and-managing-repositories/transferring-a-repository>).
 
-El repositorio actual es `jordin-garcia/proyecto_incovsa`. El dueño actual es la cuenta `jordin-garcia`. Esa cuenta es de GitHub Student.
+**Antes de transferir:**
 
-En la transferencia, la imagen de GHCR permanece en la cuenta que la publicó. GitHub quita el vínculo con el repositorio. Los flujos de GitHub Actions del repositorio transferido pierden el acceso a esa imagen. GitHub describe ese efecto en la página About permissions for GitHub Packages, en https://docs.github.com/en/packages/learn-github-packages/about-permissions-for-github-packages.
-
-Los pasos de la pantalla están en la página Transferring a repository, en https://docs.github.com/en/repositories/creating-and-managing-repositories/transferring-a-repository.
-
-1. Si el pendiente del nombre sigue abierto, deténgase y no elija una cuenta de destino.
-2. Confirme que la cuenta o la organización de destino ya existe en GitHub.com.
-3. Confirme que el destino no tiene un repositorio con el mismo nombre.
+1. Si INCOVSA no ha dado el nombre de la cuenta u organización de destino (P-94), deténgase: no elija un destino.
+2. Confirme que CE-15 ya quitó `docs/Reuniones/` del repositorio (decisión 90). Esa carpeta sigue en el historial de git, como aceptó el coordinador.
+3. Confirme que el destino existe en GitHub.com y que no tiene un repositorio con el mismo nombre ni una bifurcación del mismo repositorio.
 4. Si el destino es una organización, confirme que el coordinador puede crear repositorios en ella.
-5. Abra el repositorio con la cuenta `jordin-garcia`.
-6. Elija **Settings**.
-7. Al final de la página, en la zona **Danger Zone**, elija **Transfer**.
-8. En el campo **New owner**, indique el nombre del pendiente. Conserve el nombre del repositorio. Cámbielo solo si INCOVSA pide otro nombre y el coordinador es dueño de la organización de destino.
-9. Lea el aviso de GitHub sobre funciones que dependen del plan. Specs/16 dicen que, tras la transferencia, el cupo de GHCR depende del plan de INCOVSA. La cuenta actual es GitHub Student, que incluye GitHub Pro, y por eso `develop` y `main` pueden exigir las revisiones. Si el plan de destino no incluye eso, el coordinador confirma las reglas antes de seguir.
-10. Escriba el nombre del repositorio donde GitHub lo pide y confirme con **I understand, transfer this repository**.
-11. Si el destino es una cuenta personal, el dueño nuevo tiene un día para aceptar la transferencia. Si no acepta, la invitación caduca.
-12. No copie los secretos, los webhooks ni las llaves de despliegue. GitHub los deja en el repositorio transferido. El dueño anterior queda como colaborador.
-13. Si ya hay imágenes en `ghcr.io/jordin-garcia/proyecto_incovsa`, publique de nuevo la imagen de producción bajo el dueño nuevo antes del siguiente despliegue al VPS.
-14. Actualice el remoto de cada clon local a la dirección nueva.
-15. Si alguien crea un repositorio en la dirección vieja, GitHub borra la redirección.
-16. Anote en el Anexo I el nombre del destino y si la transferencia terminó.
+5. Revise el plan de la cuenta de destino. Si el repositorio es privado y el destino es una cuenta gratuita, GitHub quita las reglas de protección de las ramas (`develop` y `main` dejan de exigir las verificaciones) y el límite de GHCR baja. Confírmelo con INCOVSA antes de seguir.
+
+**Transferir:**
+
+6. Abra el repositorio, elija **Settings** y, al final de la página, en **Danger Zone**, elija **Transfer**.
+7. En **New owner**, escriba o elija el destino. Conserve el nombre `proyecto_incovsa`, salvo que INCOVSA pida otro.
+8. Lea el aviso de GitHub sobre las funciones que dependen del plan.
+9. Escriba el nombre del repositorio donde GitHub lo pide y confirme con **I understand, transfer this repository**.
+10. Si el destino es una cuenta personal, su dueño tiene un día para aceptar la transferencia por correo; si no la acepta, la invitación caduca.
+
+**Después de transferir:**
+
+11. GitHub conserva los secretos, los *webhooks* y las llaves de despliegue, y deja al dueño anterior como colaborador. Su documentación no menciona los entornos: compruebe que el entorno `produccion` y sus cuatro secretos siguen en **Settings → Environments**. Si faltan, vuelva a crearlos con el Paso 7 del apartado Despliegue del Documento 5.
+12. Las imágenes ya publicadas se quedan en `ghcr.io/jordin-garcia/proyecto_incovsa` y el repositorio transferido pierde el acceso a ellas (página «About permissions for GitHub Packages», <https://docs.github.com/en/packages/learn-github-packages/about-permissions-for-github-packages>). Antes del siguiente despliegue, publique otra vez la imagen de producción con un *push* a `main` o con el flujo Despliegue: el flujo ya publica bajo el dueño nuevo.
+13. Cambie la imagen por defecto `ghcr.io/jordin-garcia/proyecto_incovsa:produccion` de `docker-compose.yml` por la del dueño nuevo, en un PR, o fije `IMAGEN_APP` en el `.env` del VPS.
+14. En el VPS y en cada copia local, cambie el remoto con `git remote set-url origin` y la dirección nueva. Si el repositorio es privado, el VPS necesita una llave de despliegue o un token de solo lectura para descargarlo (apartado Despliegue del Documento 5).
+15. Las direcciones viejas redirigen a la nueva mientras nadie cree un repositorio con el mismo nombre en `jordin-garcia`. No lo haga.
+16. Anote en el Anexo I el destino y la fecha de la transferencia.
