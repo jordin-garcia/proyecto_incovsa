@@ -1,6 +1,6 @@
 # Sitio web institucional autoadministrable y sistema de control logístico de bodega INCOVSA
 
-> **README preliminar (Entregable No. 2, 14/10/2026; actualizado el 16/10/2026 con la versión 1.5 de la especificación).** Las secciones marcadas como *pendiente* se completan junto con el código. La especificación vigente del proyecto está en [`specs/`](specs/README.md) y es la fuente de verdad para el equipo y para los agentes de IA.
+> **README final (Entregable No. 3, 03/11/2026).** Las secciones 7 a 13 traen los comandos reales del repositorio. El procedimiento completo de instalación, despliegue, respaldo y mantenimiento está en el Documento 5, carpeta [`entregable-3/documento-5/`](entregable-3/documento-5/). La especificación vigente del proyecto está en [`specs/`](specs/README.md) y es la fuente de verdad para el equipo y para los agentes de IA.
 
 ## 1. Nombre del proyecto
 
@@ -55,9 +55,9 @@ En producción la aplicación corre en un VPS con Docker Compose: Caddy (HTTPS),
 
 **Desarrollo** (no requiere Docker):
 
-- Node.js 24 LTS.
+- Node.js 24 LTS, con npm 11.19.0 o posterior.
 - PostgreSQL 18.
-- Git.
+- Git y GitHub CLI.
 
 **Producción:**
 
@@ -69,60 +69,126 @@ El sistema no envía correos.
 
 ## 7. Instalación
 
-*Pendiente: se completa con el código.*
+Con Node.js 24, npm 11.19.0 o posterior, Git, GitHub CLI y PostgreSQL 18:
+
+```
+gh repo clone jordin-garcia/proyecto_incovsa
+cd proyecto_incovsa
+node scripts/verificar-entorno.mjs
+npm ci
+npx playwright install --with-deps chromium firefox webkit
+```
+
+`npm ci` instala `package-lock.json` y ejecuta `prisma generate`. El procedimiento completo está en el Documento 5.
 
 ## 8. Configuración
 
-*Pendiente: se completa con el código.*
+```
+cp .env.example .env
+```
+
+En Windows, `Copy-Item .env.example .env`. Escriba en `.env` el usuario y la contraseña de su PostgreSQL. No suba ese archivo.
+
+En el VPS, cuando exista, copie `.env.produccion.example` a `.env` y cambie los valores de ejemplo. El detalle está en el Documento 5.
 
 ## 9. Variables de entorno
 
-*Pendiente: se documentan en `.env.example`, con valores de ejemplo. Nunca se suben credenciales reales al repositorio.*
+Los nombres y los valores de ejemplo están en `.env.example` y en `.env.produccion.example`. El Documento 5 los lista todos. Nunca se suben credenciales reales al repositorio.
+
+Desarrollo usa `DATABASE_URL` y `DATABASE_URL_PRUEBAS`. Producción agrega `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `DOMINIO` y `RCLONE_DEST`. `DATABASE_URL` de producción apunta al servicio `postgres`.
 
 ## 10. Base de datos
 
-*Pendiente: creación de la base de datos, migraciones de Prisma (`npx prisma migrate deploy`) y semilla con datos de ejemplo (`npx prisma db seed`). Los pedidos llegan en el archivo de Odoo; no hay carga de catálogos.* El primer administrador se crea con `npm run crear-admin`, que pide el usuario y la contraseña en la terminal.
+```
+psql -U postgres -c "CREATE DATABASE incovsa;"
+psql -U postgres -c "CREATE DATABASE incovsa_pruebas;"
+npm run db:aplicar
+npm run db:semilla
+npm run semilla:demo
+```
+
+`npm run db:aplicar` ejecuta `prisma migrate deploy`. Ese es el comando que antes se escribía `npx prisma migrate deploy`. `npm run db:semilla` carga la semilla base, la misma que ejecuta `npx prisma db seed`.
+
+Los pedidos llegan en el archivo de Odoo. No hay carga de catálogos.
+
+El primer administrador se crea con `npm run crear-admin`, que pide el usuario y la contraseña en la terminal.
+
+En producción, las migraciones se aplican solas al arrancar el contenedor. Después del primer despliegue se cargan la semilla base (sedes, permisos, estados, industrias y países) y el primer administrador dentro del contenedor, sin `-T`. La semilla de demostración no existe en la imagen de producción.
+
+```
+docker compose exec app npm run db:semilla
+docker compose exec app npm run crear-admin
+```
+
+`npm run db:reiniciar` borra la base de `DATABASE_URL` y vuelve a aplicar las migraciones. Úselo solo en su base local. Después ejecute otra vez `npm run db:semilla` y `npm run semilla:demo`.
 
 ## 11. Ejecución
 
-*Pendiente: se completa con el código.*
+```
+npm run dev
+```
+
+Abra http://localhost:3000. Para el servidor ya compilado, ejecute `npm run build` y después `npm run start`.
+
+En producción no se usa `npm run dev`. El VPS arranca con Docker Compose. Vea el Documento 5.
 
 ## 12. Pruebas
 
-- **Vitest**, contra una base PostgreSQL de pruebas real. Son obligatorias las de la conversión de kilogramos a unidades, la lectura del archivo de Odoo y la verificación de permisos y sedes.
-- **Playwright**, para el flujo completo, los permisos, las pruebas responsive y las de navegadores (Chromium, Firefox y WebKit).
-- GitHub Actions corre en cada pull request ESLint, Prettier, la revisión de tipos, Vitest, las migraciones desde cero, `npm audit` y la compilación.
+```
+npm test
+npm run e2e
+npm run verificar
+```
 
-Los casos de prueba iniciales están en el Anexo F del Documento 2 v0.4. *Pendiente: comandos para ejecutarlas.*
+`npm test` corre Vitest contra la base PostgreSQL de `DATABASE_URL_PRUEBAS`. Son obligatorias las de la conversión de kilogramos a unidades, la lectura del archivo de Odoo y la verificación de permisos y sedes.
+
+`npm run e2e` corre Playwright. Fuera de CI reutiliza un servidor que ya responda en http://localhost:3000. Si no hay servidor, arranca `npm run dev`. Los proyectos de `playwright.config.ts` son `telefono`, `tableta`, `escritorio` y `tv`. El proyecto `tv` solo incluye pruebas cuyo archivo coincide con `tablero`. El comando de la sección 7 descarga Chromium, Firefox y WebKit.
+
+`npm run verificar` corre el formato, el lint, los tipos y `npm test`, en ese orden. No incluye `npm run e2e`.
+
+GitHub Actions corre en cada pull request ESLint, Prettier, la revisión de tipos, Vitest, las migraciones desde cero, `npm audit`, la compilación, las pruebas de mutación, los controles de seguridad (Semgrep, gitleaks, cadena de suministro, actionlint e integridad de las pruebas), el título del PR, los archivos protegidos y la revisión del bot de Claude. Además, a diario corre la prueba del flujo completo contra el servidor compilado (`recorrido-diario.yml`). La matriz de navegadores (`matriz-navegadores.yml`) y OWASP ZAP (`zap.yml`) se ejecutan a mano. El respaldo y la restauración se prueban cada lunes (`produccion-respaldo.yml`).
+
+Los casos formales están en el Anexo F del Documento 2 y en el Documento 6.
 
 ## 13. Despliegue
 
-- En producción, un VPS que contrata INCOVSA, con Docker Compose: Caddy (HTTPS automático), la aplicación y PostgreSQL 18.
-- El primer despliegue se hace cuando la aplicación esté completa.
-- Después, cada integración en `main` se despliega automáticamente: GitHub Actions compila la imagen, la guarda en GHCR y la despliega en el VPS con las migraciones. Se conservan las últimas 5 imágenes para volver a una versión anterior.
-- Respaldos diarios de la base de datos en un bucket privado de Cloudflare R2.
+En producción, un VPS que contrata INCOVSA, con Docker Compose: Caddy (HTTPS automático), la aplicación y PostgreSQL 18. El servidor se prepara con `evidencia/CE-08/preparar-vps.sh`. En su carpeta `~/incovsa` se clona el repositorio, que trae `docker-compose.yml`, `Caddyfile` y los scripts de respaldo y restauración, y se crea el `.env` desde `.env.produccion.example`.
 
-*Pendiente: procedimiento completo, que se documenta en el Documento 5.*
+El primer despliegue se hace cuando el coordinador integra `develop` en `main`, en cuanto INCOVSA entregue el acceso al VPS, el DNS de incovsa.com y las cuentas de Cloudflare (P-10, P-93 y P-94 de [`specs/19`](specs/19-pendientes.md)). Hasta entonces el sistema se demuestra en local.
+
+Después, cada integración en `main` ejecuta el flujo Despliegue. GitHub Actions compila la imagen, la guarda en GHCR con la etiqueta del commit y `produccion`, y la arranca en el VPS con las migraciones. Se conservan las últimas 5 imágenes. Para volver a una etiqueta anterior, sin migraciones:
+
+```
+gh workflow run despliegue.yml --ref main -f etiqueta=ETIQUETA
+gh run watch
+```
+
+Los respaldos diarios de la base de datos van a un bucket privado de Cloudflare R2 con `scripts/respaldo.sh`. La prueba de restauración que ya pasó está en GitHub Actions y usa un remoto local de rclone, no R2.
+
+El procedimiento completo está en el Documento 5.
 
 ## 14. Estructura del proyecto
 
 ```
 specs/            especificación vigente (fuente de verdad)
-plan/             plan de desarrollo, bitácoras de avance e informe de la investigación sobre agentes de IA
+plan/             plan de desarrollo, tareas, bitácoras de avance e informe de la investigación sobre agentes de IA
 entregable-1/     Documento 1, diagramas y prototipos (incluido el prototipo de simulación aprobado, ya armado)
 entregable-2/     Documento 2, diagramas y herramientas de documentación
+entregable-3/     documentos finales del Entregable No. 3 (incluido el Documento 5) y sus anexos
 src/app/          rutas y pantallas: sitio, panel, picking y API
 src/modulos/      lógica de negocio por módulo de dominio
 src/componentes/  componentes de interfaz
 src/lib/          Prisma, las dos configuraciones de Better Auth y sesión
-prisma/           esquema, migraciones y semilla
-scripts/          crear-admin y respaldo de la base de datos
+prisma/           esquema, migraciones y semillas
+scripts/          crear-admin, respaldo y restauración de la base de datos, y herramientas del plan y de calidad
+pruebas/          ayudas y datos de prueba de Vitest
 pruebas-e2e/      pruebas de Playwright
-.github/workflows/ integración continua y despliegue automático
+evidencia/        evidencia de las tareas de infraestructura y de pruebas
+vendor/           SheetJS 0.20.3, que no se instala desde el registro de npm
+.github/workflows/ integración continua, controles de seguridad, respaldo y despliegue automático
 Dockerfile, docker-compose.yml y Caddyfile   producción en el VPS
+.env.example y .env.produccion.example       variables de entorno con valores de ejemplo
 ```
-
-Las carpetas `src/`, `prisma/`, `scripts/`, `pruebas-e2e/` y `.github/workflows/`, y los archivos de producción, se crean con el código.
 
 ## 15. Autores
 
