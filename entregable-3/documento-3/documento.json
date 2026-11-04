@@ -4,10 +4,15 @@
   "lugar_fecha": "Quetzaltenango, 3 de noviembre de 2026",
   "portada": true,
   "control_versiones": true,
-  "indices": true,
+  "indices": false,
   "numerar": true,
   "versiones": [
-    ["1.0", "03/11/2026", "Daniela Marín", "Versión inicial para el Entregable No. 3: guía de administración del sitio, basada en las funciones implementadas y los permisos del sistema"]
+    [
+      "1.0",
+      "03/11/2026",
+      "Daniela Marín",
+      "Versión inicial para el Entregable No. 3: guía de administración del sitio, basada en las funciones implementadas y los permisos del sistema"
+    ]
   ],
   "secciones": [
     "01-acceso.md",
