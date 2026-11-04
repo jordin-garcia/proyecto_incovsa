@@ -18,7 +18,7 @@ Al igual que la consulta de existencias, el registro de entradas de inventario f
 El registro de entradas de mercancía (recepciones de compras, ingresos y traslados de entrada) se realiza y controla directamente en el ERP **Odoo**. El sistema logístico de picking no gestiona entradas físicas ni kardex de compras, por lo que no interviene en este proceso.
 
 ### Resultado esperado
-Las entradas de mercancía quedan centralizadas en Odoo, garantizando la consistencia fiscal, contable y física del inventario empresarial.
+Las entradas de mercancía se registran en Odoo, que lleva el inventario de la empresa.
 
 > **Nota:** Este apartado se incluye en el presente manual para dar cumplimiento riguroso a la estructura de 22 secciones exigida por los lineamientos del curso, dejando constancia de su justificación aprobada.
 

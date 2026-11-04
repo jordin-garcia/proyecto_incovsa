@@ -15,13 +15,13 @@ En el modelo logístico de INCOVSA, la prevención de sobrecargas se realiza dir
 
 1. **Capacidad máxima nominal:** cada camión registrado en la sede cuenta con un límite de carga útil expresado en kilogramos (por ejemplo, Quetzaltenango dispone habitualmente de dos camiones con capacidad de 3,400 kg y un camión con capacidad de 6,000 kg).
 2. **Cálculo automático de la carga:** al seleccionar el vehículo en la lista desplegable de la opción «Envío por camión», el sistema calcula instantáneamente la sumatoria de kilogramos de todos los productos y pedidos incluidos en esa opción de envío.
-3. **Barra gráfica de capacidad:** junto a «Peso acumulado», una barra muestra la ocupación del camión en tiempo real, con los kilogramos asignados frente a su capacidad (por ejemplo, `2,185.00 / 3,400.00 kg`).
+3. **Barra gráfica de capacidad:** la línea «Peso acumulado» muestra los kilogramos asignados frente a la capacidad del camión (por ejemplo, `2,185 / 3,400 kg`), y debajo una barra muestra la ocupación en tiempo real.
 
 ![Control de capacidad y monitoreo de peso en la opción Envío por camión](figuras/figura-14-control-peso-camion.png){#fig:control-peso-camion}
 
 ### Gestión de alertas por sobrepeso (RN-13)
 
-- **Carga dentro del límite:** mientras el peso total de los pedidos no sobrepase la capacidad nominal del camión, la barra se mantendrá en tono normal indicando el porcentaje ocupado.
+- **Carga dentro del límite:** mientras el peso total de los pedidos no sobrepase la capacidad nominal del camión, la barra se mantiene en su color normal.
 - **Aviso de sobrepeso:** si la sumatoria de pedidos sobrepasa la capacidad del camión, el sistema muestra una alerta visual informando el exceso de kilogramos.
 - **Naturaleza informativa de la alerta (RN-13):** la alerta de sobrepeso **solo informa: se puede enviar igual**. El sistema no bloquea el botón de envío a bodega, permitiendo que el facturador o coordinador decida si despacha la ruta tal como está o si redistribuye la carga.
 

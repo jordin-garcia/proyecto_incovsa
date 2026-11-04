@@ -11,12 +11,12 @@ Operar el módulo de Tablero en modo de pantalla completa, diseñado específica
 
 ### Procedimiento para activar el Tablero en pantalla completa
 
-1. En el encabezado del módulo de Bodega, pulse **Abrir tablero en pantalla completa**.
+1. En el encabezado del módulo de Bodega, pulse **Abrir tablero en pantalla completa**, o elija **Tablero** en el menú lateral.
 2. Se abre el tablero, una página sin menú lateral que muestra la ruta o el pedido en curso con letras grandes, el panel del camión y la cola.
 3. En la barra superior del tablero encontrará los controles:
-   - **Modo claro** y **Modo oscuro:** dos botones para elegir el modo de esa pantalla (véase la {{fig:tablero-oscuro}}). La primera vez, el tablero abre en modo claro. El modo elegido se conserva al recargar esa pantalla y no cambia las demás.
-   - **Pantalla completa:** pone el navegador en pantalla completa. Con la tecla `Esc` se sale de la pantalla completa, pero se sigue en el tablero.
-   - **Volver al módulo:** regresa al módulo de Bodega.
+   - **Modo claro** y **Modo oscuro:** dos botones para elegir el modo de esa pantalla (véase la {{fig:tablero-oscuro}}). Si no se ha elegido un modo, o al reiniciar el navegador o abrir otra pestaña, el tablero abre en modo claro. El modo elegido se conserva al recargar esa pantalla y no cambia las demás.
+   - **Pantalla completa** (botón con ícono, sin texto): pone el navegador en pantalla completa. Con la tecla `Esc` se sale de la pantalla completa, pero se sigue en el tablero.
+   - **Volver al módulo** (botón con ícono, sin texto): regresa al módulo de Bodega.
 
 ![Tablero de Bodega en pantalla completa con modo oscuro de alto contraste](figuras/figura-13-bodega-tablero-oscuro.png){#fig:tablero-oscuro}
 
@@ -32,7 +32,7 @@ Elija el modo que se lea mejor en cada pantalla. El modo de una pantalla no camb
 El tablero está pensado para leerse bien proyectado en una TV y para usarse en una tableta: cantidades grandes, producto, lote y unidades claramente separados y estados visibles.
 - Cada línea se marca o se desmarca tocándola completa, o con su casilla desde el teclado.
 - Las líneas que cambian, también desde otra pantalla, se resaltan un momento.
-- Si las líneas no caben, se desplaza solo el área de las líneas; la cabecera y las opciones quedan fijas.
+- En tableta, escritorio y TV, si las líneas no caben, se desplaza solo el área de las líneas; la cabecera y las opciones quedan fijas. En el teléfono se desplaza toda la pantalla.
 
 ### Operación desatendida en televisores de bodega
 

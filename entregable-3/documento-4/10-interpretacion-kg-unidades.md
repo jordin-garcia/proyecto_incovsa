@@ -13,7 +13,7 @@ Capacitar al personal de bodega y supervisores en la interpretación de las cant
 En la industria química y de materias primas, los pedidos de los clientes frecuentemente combinan compras de bultos completos con fracciones de producto. Para eliminar la necesidad de que los operarios realicen cálculos aritméticos manuales durante la carga física, el sistema aplica automáticamente la **Regla RN-01**:
 
 1. **Unidades completas:** se calcula dividiendo el peso total en kilogramos entre el Peso de Conversión unitario, tomando la parte entera exacta. Representa los sacos, tambores o garrafas selladas de fábrica que se deben retirar de la estiba.
-2. **Resto en kilogramos:** corresponde al sobrante de producto que no alcanza a completar una unidad entera. Representa la cantidad exacta que el operario debe extraer y pesar en la báscula de fraccionamiento.
+2. **Resto en kilogramos:** corresponde al sobrante de producto que no alcanza a completar una unidad entera. Es la cantidad que el operario prepara aparte de las unidades completas.
 
 Tabla: Ejemplos prácticos de conversión bajo la regla RN-01 {#tab:ejemplos-rn01}
 

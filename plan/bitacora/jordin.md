@@ -379,7 +379,7 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Pendiente o aviso para otros: ninguno.
 
 ## 2026-11-03 · JM-07 · Correcciones del Documento 4
-- Hecho: con el bot ya funcionando, su revisión de #171 dio CORREGIR con 5 hallazgos del Documento 4. Los corregí: exportación de Reportes, modo oscuro y salida del tablero, protección de camiones, resumen y mensajes de la carga del archivo, y procesos de INCOVSA que `specs/` no recoge. Apliqué también 3 opcionales (medidor de peso, botón Cancelar y permisos).
+- Hecho: con el bot ya funcionando, su revisión de #171 dio CORREGIR con 5 hallazgos del Documento 4. Los corregí: exportación de Reportes, modo oscuro y salida del tablero, protección de camiones, resumen y mensajes de la carga del archivo, y procesos de INCOVSA que `specs/` no recoge. Apliqué también opcionales: medidor de peso, botón Cancelar, permisos, detalle de la carga en la bitácora (apartado 19) y el mensaje de columna faltante.
 - Decisiones: las devoluciones y el inventario se describen solo como «se tramitan en Odoo según el procedimiento de la empresa», sin inventar áreas ni pasos.
 - Pendiente o aviso para otros:
 **Josué:** corregí tu Documento 4 en `entregable-3/documento-4/` (apartados 03, 06, 07, 08, 09, 14, 15, 18, 19, 20, 21 y 22). Están en el `## Resultado` de JM-07. Quedan opcionales de la revisión para la v1.1: los ejemplos de productos del apartado 04 y revisar si las figuras 04 y 06 son la misma captura.

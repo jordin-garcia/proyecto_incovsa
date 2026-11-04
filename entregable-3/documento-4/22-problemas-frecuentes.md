@@ -38,10 +38,11 @@ A continuación se detallan los problemas frecuentes organizados por módulo, ex
 
 - **Síntomas y causas:** cada mensaje tiene una causa distinta.
   - «No se pudo leer el archivo. Verifique que sea el .xlsx exportado de Odoo.»: el archivo no es un `.xlsx` válido (por ejemplo, un `.csv` o un `.xls` antiguo) o no tiene la estructura del archivo de Odoo.
+  - «El archivo no tiene la columna «…». ¿Es el export de salidas de Odoo?»: al archivo le falta una de las columnas que se leen; probablemente no es el export de salidas de Odoo.
   - «Hay referencias de una bodega que no se reconoce. Se esperan los prefijos XE, GT o ESC.»: alguna referencia empieza con un prefijo que no es de ninguna sede.
   - «El archivo trae referencias de más de una bodega. Cada archivo debe ser de una sola bodega.»: el archivo mezcla referencias de varias sedes.
   - «El archivo es de la bodega de Guatemala y usted está trabajando en Quetzaltenango. Cambie la sede o cargue el archivo correcto. No se cargó nada.»: el archivo es de otra sede (por ejemplo, referencias `GT` mientras trabaja en Quetzaltenango).
-  - En estos cuatro casos no se carga nada.
+  - En estos cinco casos no se carga nada.
   - Si una o más líneas traen cantidad en cero o Peso de Conversión vacío o en 0 (regla RN-50), el archivo sí se carga, pero esos pedidos facturados no: aparecen en el **Resumen de la carga** con su motivo.
 - **Solución:**
   1. Abra el archivo en Excel y compruebe que todas las referencias comiencen con el prefijo de la sede activa.
