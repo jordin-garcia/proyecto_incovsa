@@ -5,7 +5,7 @@ persona: jose-daniel
 responsable: José Daniel Cifuentes
 hito: entrega
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JC-07]
 programada: 2026-11-03
 requisitos: []
@@ -52,3 +52,26 @@ python entregable-2/herramientas/armar_documento.py entregable-3/documento-2
 ## Notas
 - La portada del documento lee los nombres y carnés de `entregable-3/equipo.local.json`, que no se sube al repositorio (tiene datos personales). Si no existe en tu equipo, pídele a Jordin una copia de `entregable-2/equipo.local.json` y guárdala con ese nombre en `entregable-3/`.
 - Los `.docx` y `.pdf` no se suben al repositorio (`.gitignore`): se guardan en la carpeta local y en el Drive del equipo.
+
+## Resultado
+
+- Creada la versión 1.0 en `entregable-3/documento-2/`, con las 28 secciones técnicas actualizadas al código de `develop` del 03/11/2026. La v0.4 no se modificó.
+- Diccionario y siete vistas ER regenerados desde `prisma/schema.prisma`: 32 tablas y 240 columnas, con tipos, precisión, claves, nulabilidad, relaciones e índices. Las versiones directas se contrastan con `package-lock.json`.
+- Actualizados arquitectura, componentes, clases, cinco secuencias y despliegue: 16 figuras. Se documentan Docker Compose, Caddy, GHCR/Actions, configuración, migraciones, sesiones, permisos, SSE, conversión, Odoo, reportes, archivos, errores, respaldos y limitaciones. Se distinguen el despliegue diseñado y los controles actuales de los pendientes CE-08, CE-14 y JG-27.
+- El procedimiento de extensión sigue la funcionalidad real de JC-07, desde el filtro y la consulta autorizada hasta la generación de XLSX/PDF, la descarga y sus pruebas.
+- Armado obligatorio aprobado con `python entregable-2/herramientas/armar_documento.py entregable-3/documento-2`. El armador local de esta versión ajusta columnas, figuras y estilos sin cambiar la herramienta compartida. Word/PDF locales: 106 páginas, 56 tablas de contenido y tres índices completos. Los nombres y carnés aportados por José Daniel se guardan únicamente en el archivo local excluido de Git.
+- Verificación: criterios documentales 3/3, incluidas alteraciones negativas de tipo/nulabilidad; `npm run verificar` (509 pruebas en 57 archivos), `npm run build`, plan válido (82 tareas), inspección estructural y visual de todas las páginas. Revisión independiente LISTO después de reforzar la prueba del diccionario. E2E completa local exenta por decisión 90; la CI se conserva íntegra.
+- No se añadieron dependencias, cambios de esquema, requisitos ni comportamiento. Evidencia resumida en `entregable-3/documento-2/VERIFICACION.md`. Por instrucción posterior de José Daniel, se subió la carpeta `para-subir-JC-08` al Drive del equipo mediante Chrome. Se comprobó la carga completada de 2/2 archivos y la presencia del Word (3.1 MB) y PDF (4.2 MB) finales en [Drive](https://drive.google.com/drive/u/0/folders/1TCE1etT7-sg9jVz3rp0VZF5a2Tt618c2). La copia local está en `entregable-3/para-subir-JC-08/`.
+
+### Cómo regenerarlo
+
+Desde la raíz, con Python 3, python-docx y Pillow:
+
+```
+python entregable-3/diagramas/generar_figuras.py
+python entregable-3/documento-2/verificar_documento.py
+python entregable-2/herramientas/armar_documento.py entregable-3/documento-2
+python entregable-3/documento-2/armar_version_final.py
+```
+
+`entregable-3/documento-2/README.md` explica la portada, la revisión y la actualización de los campos de índices. Los DOCX/PDF se generan en `entregable-3/` y nunca se versionan. JG-30 puede compilar las fuentes integradas con su archivo `equipo.local.json` y usar el documento para armar la entrega académica.
