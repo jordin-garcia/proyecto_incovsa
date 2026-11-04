@@ -1,4 +1,4 @@
-# Base de datos
+# Configuración de la base de datos
 
 Cree dos bases en el PostgreSQL 18 de su computadora. `incovsa` es la de desarrollo. `incovsa_pruebas` es la de `npm test`. No cree estas bases dentro de Docker.
 
@@ -48,3 +48,11 @@ npm run db:reiniciar
 Ese script es `prisma migrate reset --force`. Borra la base de `DATABASE_URL` y vuelve a aplicar las migraciones. Después ejecute otra vez `npm run db:semilla` y, si quiere la demostración, `npm run semilla:demo`.
 
 En el VPS la base la crea el contenedor `postgres` con `POSTGRES_USER`, `POSTGRES_PASSWORD` y `POSTGRES_DB`. El puerto 5432 no se publica hacia afuera. El volumen es `postgres-datos`, montado en `/var/lib/postgresql`. No cree `incovsa_pruebas` en el VPS.
+
+La **semilla base** también se carga en producción: tiene las sedes, los permisos, los estados, las industrias y la lista de países que cualquier instalación necesita, sin datos personales ni de la empresa. La imagen la incluye para eso. Después del primer despliegue, desde `~/incovsa`, ejecútela una vez dentro del contenedor `app`:
+
+```
+docker compose exec app npm run db:semilla
+```
+
+No crea nada que ya exista ni sobrescribe el contenido que INCOVSA edite desde el panel, así que repetirla no hace daño. La semilla de demostración no existe en la imagen de producción.

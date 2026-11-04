@@ -1,13 +1,14 @@
 {
   "titulo_documento": "DOCUMENTO 5: MANUAL TÉCNICO DE INSTALACIÓN, DESPLIEGUE Y MANTENIMIENTO",
-  "archivo_salida": "Documento 5 - Instalacion despliegue y mantenimiento v0.1.docx",
-  "lugar_fecha": "Quetzaltenango, 2 de noviembre de 2026",
+  "archivo_salida": "Documento 5 - Manual tecnico de instalacion despliegue y mantenimiento v1.0.docx",
+  "lugar_fecha": "Quetzaltenango, 3 de noviembre de 2026",
   "portada": true,
   "control_versiones": true,
   "indices": true,
   "numerar": true,
   "versiones": [
-    ["0.1", "21/10/2026", "Carlos Hugo Escobar", "borrador a partir de CE-05, CE-06 y CE-07, sin el VPS real"]
+    ["0.1", "21/10/2026", "Carlos Hugo Escobar", "Borrador a partir de CE-05, CE-06 y CE-07, sin el servidor de producción"],
+    ["1.0", "03/11/2026", "Héctor Jordin Adolfo García Coyoy", "Versión para el Entregable No. 3: los 19 apartados de los lineamientos con los comandos de develop al 03/11/2026; los datos que dependen de los accesos de INCOVSA quedan marcados como pendientes de producción"]
   ],
   "secciones": [
     "00-introduccion.md",
@@ -26,8 +27,9 @@
     "13-primer-administrador.md",
     "14-respaldo.md",
     "15-restauracion.md",
-    "16-actualizacion.md",
-    "17-mantenimiento.md",
-    "18-diagnostico.md"
+    "16-actualizacion-del-sistema.md",
+    "17-actualizacion-de-dependencias.md",
+    "18-mantenimiento.md",
+    "19-diagnostico.md"
   ]
 }

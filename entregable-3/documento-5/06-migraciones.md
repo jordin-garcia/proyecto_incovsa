@@ -1,4 +1,4 @@
-# Migraciones
+# Ejecución de migraciones
 
 Aplique las migraciones que ya están en `prisma/migrations`. No cree migraciones nuevas si no es el coordinador.
 

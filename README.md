@@ -1,6 +1,6 @@
 # Sitio web institucional autoadministrable y sistema de control logístico de bodega INCOVSA
 
-> **README del repositorio (Entregable No. 2, 14/10/2026, actualizado el 16/10/2026 con la versión 1.5 de la especificación).** Las secciones 7 a 13 traen los comandos del repositorio. El procedimiento completo está en el Documento 5, carpeta `entregable-3/documento-5/`. La especificación vigente del proyecto está en [`specs/`](specs/README.md) y es la fuente de verdad para el equipo y para los agentes de IA.
+> **README final (Entregable No. 3, 03/11/2026).** Las secciones 7 a 13 traen los comandos reales del repositorio. El procedimiento completo de instalación, despliegue, respaldo y mantenimiento está en el Documento 5, carpeta [`entregable-3/documento-5/`](entregable-3/documento-5/). La especificación vigente del proyecto está en [`specs/`](specs/README.md) y es la fuente de verdad para el equipo y para los agentes de IA.
 
 ## 1. Nombre del proyecto
 
@@ -55,9 +55,9 @@ En producción la aplicación corre en un VPS con Docker Compose: Caddy (HTTPS),
 
 **Desarrollo** (no requiere Docker):
 
-- Node.js 24 LTS.
+- Node.js 24 LTS, con npm 11.19.0 o posterior.
 - PostgreSQL 18.
-- Git.
+- Git y GitHub CLI.
 
 **Producción:**
 
@@ -111,9 +111,12 @@ npm run semilla:demo
 
 Los pedidos llegan en el archivo de Odoo. No hay carga de catálogos.
 
-El primer administrador se crea con `npm run crear-admin`, que pide el usuario y la contraseña en la terminal. Dentro del contenedor, sin `-T`:
+El primer administrador se crea con `npm run crear-admin`, que pide el usuario y la contraseña en la terminal.
+
+En producción, las migraciones se aplican solas al arrancar el contenedor. Después del primer despliegue se cargan la semilla base (sedes, permisos, estados, industrias y países) y el primer administrador dentro del contenedor, sin `-T`. La semilla de demostración no existe en la imagen de producción.
 
 ```
+docker compose exec app npm run db:semilla
 docker compose exec app npm run crear-admin
 ```
 
@@ -143,13 +146,15 @@ npm run verificar
 
 `npm run verificar` corre el formato, el lint, los tipos y `npm test`, en ese orden. No incluye `npm run e2e`.
 
-GitHub Actions corre en cada pull request ESLint, Prettier, la revisión de tipos, Vitest, las migraciones desde cero, `npm audit` y la compilación.
+GitHub Actions corre en cada pull request ESLint, Prettier, la revisión de tipos, Vitest, las migraciones desde cero, `npm audit`, la compilación, las pruebas de mutación, los controles de seguridad (Semgrep, gitleaks, cadena de suministro, actionlint e integridad de las pruebas), el título del PR, los archivos protegidos y la revisión del bot de Claude. Además, a diario corre la prueba del flujo completo contra el servidor compilado (`recorrido-diario.yml`). La matriz de navegadores (`matriz-navegadores.yml`) y OWASP ZAP (`zap.yml`) se ejecutan a mano. El respaldo y la restauración se prueban cada lunes (`produccion-respaldo.yml`).
 
 Los casos formales están en el Anexo F del Documento 2 y en el Documento 6.
 
 ## 13. Despliegue
 
-En producción, un VPS que contrata INCOVSA, con Docker Compose. Caddy sirve HTTPS, la aplicación y PostgreSQL 18. El primer despliegue real es JG-19, el 2 de noviembre de 2026, cuando la aplicación esté completa y el coordinador integre `develop` en `main`. La preparación del VPS, del DNS y de R2 sigue bloqueada en CE-08, por P-10, P-93 y P-94.
+En producción, un VPS que contrata INCOVSA, con Docker Compose: Caddy (HTTPS automático), la aplicación y PostgreSQL 18. El servidor se prepara con `evidencia/CE-08/preparar-vps.sh` y en su carpeta `~/incovsa` solo hacen falta `docker-compose.yml`, `Caddyfile` y un `.env` creado desde `.env.produccion.example`.
+
+El primer despliegue se hace cuando el coordinador integra `develop` en `main`, en cuanto INCOVSA entregue el acceso al VPS, el DNS de incovsa.com y las cuentas de Cloudflare (P-10, P-93 y P-94 de [`specs/19`](specs/19-pendientes.md)). Hasta entonces el sistema se demuestra en local.
 
 Después, cada integración en `main` ejecuta el flujo Despliegue. GitHub Actions compila la imagen, la guarda en GHCR con la etiqueta del commit y `produccion`, y la arranca en el VPS con las migraciones. Se conservan las últimas 5 imágenes. Para volver a una etiqueta anterior, sin migraciones:
 
@@ -166,21 +171,24 @@ El procedimiento completo está en el Documento 5.
 
 ```
 specs/            especificación vigente (fuente de verdad)
-plan/             plan de desarrollo, bitácoras de avance e informe de la investigación sobre agentes de IA
+plan/             plan de desarrollo, tareas, bitácoras de avance e informe de la investigación sobre agentes de IA
 entregable-1/     Documento 1, diagramas y prototipos (incluido el prototipo de simulación aprobado, ya armado)
 entregable-2/     Documento 2, diagramas y herramientas de documentación
+entregable-3/     documentos finales del Entregable No. 3 (incluido el Documento 5) y sus anexos
 src/app/          rutas y pantallas: sitio, panel, picking y API
 src/modulos/      lógica de negocio por módulo de dominio
 src/componentes/  componentes de interfaz
 src/lib/          Prisma, las dos configuraciones de Better Auth y sesión
-prisma/           esquema, migraciones y semilla
-scripts/          crear-admin y respaldo de la base de datos
+prisma/           esquema, migraciones y semillas
+scripts/          crear-admin, respaldo y restauración de la base de datos, y herramientas del plan y de calidad
+pruebas/          ayudas y datos de prueba de Vitest
 pruebas-e2e/      pruebas de Playwright
-.github/workflows/ integración continua y despliegue automático
+evidencia/        evidencia de las tareas de infraestructura y de pruebas
+vendor/           SheetJS 0.20.3, que no se instala desde el registro de npm
+.github/workflows/ integración continua, controles de seguridad, respaldo y despliegue automático
 Dockerfile, docker-compose.yml y Caddyfile   producción en el VPS
+.env.example y .env.produccion.example       variables de entorno con valores de ejemplo
 ```
-
-Las carpetas `src/`, `prisma/`, `scripts/`, `pruebas-e2e/` y `.github/workflows/`, y los archivos de producción, se crean con el código.
 
 ## 15. Autores
 

@@ -18,7 +18,10 @@ En el VPS, cuando exista, el archivo de partida es otro.
 
 ```
 cp .env.produccion.example .env
+chmod 600 .env
 ```
+
+`chmod 600` deja el archivo legible solo para el usuario de despliegue. `verificar-vps.sh` comprueba ese permiso.
 
 Cambie cada valor de ejemplo antes de arrancar. Genere las dos claves de sesión con este comando y pegue cada resultado en una variable distinta. El comentario de `.env.example` pide al menos 32 caracteres.
 
@@ -49,7 +52,7 @@ Tabla: Variables de los archivos de ejemplo {#tab:variables}
 | `R2_BUCKET_IMAGENES` | vacío, `""` | `incovsa-imagenes` |
 | `URL_IMAGENES` | vacío, `""` | `https://imagenes.incovsa.com` |
 | `RCLONE_DEST` | No está en ese archivo | `r2:incovsa-respaldos` |
-| `IMAGEN_APP` | No está en ese archivo | Comentada. El ejemplo es `ghcr.io/jordin-garcia/proyecto_incovsa:produccion` |
+| `IMAGEN_APP` | No está en ese archivo | Comentada. Sin ella, Compose usa `ghcr.io/jordin-garcia/proyecto_incovsa:produccion` |
 | `URL_ODOO` | vacío, `""` | Vacía |
 | `TIEMPO_REAL_CONSULTA_MS` | `5000` | `5000` |
 | `DOMINIO` | No está en ese archivo | `incovsa.com` |
@@ -58,10 +61,20 @@ Tabla: Variables de los archivos de ejemplo {#tab:variables}
 
 `CLAVE_DEMO` es la contraseña de las cuentas `ejemplo.01` a `ejemplo.10`. Mínimo 8 caracteres. No la ponga en el `.env` de producción. `npm run semilla:demo` se niega si `NODE_ENV` es `production`.
 
-`ALMACENAMIENTO=disco` guarda archivos en `almacenamiento-local/`. Úselo en desarrollo. En producción el código rechaza ese modo. `URL_IMAGENES` no lleva barra al final. `URL_ODOO` se deja vacía hasta que INCOVSA defina la dirección. Ese dato es P-06.
+`ALMACENAMIENTO=disco` guarda archivos en `almacenamiento-local/`. Úselo en desarrollo. En producción el código rechaza ese modo. `URL_IMAGENES` no lleva barra al final y en producción tiene que ser una dirección `https` sin usuario ni contraseña.
+
+`URL_ODOO` se deja vacía hasta que INCOVSA defina la dirección (P-06). Si se escribe, tiene que ser una dirección completa que empiece con `https://`: solo entonces el acceso personal muestra el enlace a Odoo, y una dirección mal escrita impide abrir la página de acceso.
+
+`TIEMPO_REAL_CONSULTA_MS` está en los dos ejemplos, pero la aplicación no la lee: el intervalo de consulta cuando no hay conexión de tiempo real está fijo en 5000 milisegundos en `src/modulos/tiempo-real/cliente.ts`. Cambiar la variable no tiene efecto.
+
+`BETTER_AUTH_URL` tiene que ser exactamente la dirección pública del sitio, con `https://` en producción. Las cookies de sesión de producción usan el prefijo `__Host-`, que el navegador solo acepta por HTTPS, y las subidas de imágenes comparan su origen con esa dirección.
+
+En producción, la aplicación no arranca las sesiones si las claves `BETTER_AUTH_SECRET_SITIO` y `BETTER_AUTH_SECRET_PICKING` son las de ejemplo (las que empiezan con «cambie-est»), tienen menos de 32 caracteres o son iguales entre sí. El sitio público responde, pero nadie puede iniciar sesión. `SESION_DIAS` tiene que ser un entero positivo.
 
 `RCLONE_DEST` es el remoto de rclone, no una llave. Las llaves de R2 del respaldo viven en la configuración de rclone del usuario de despliegue, no en `.env`.
 
 `docker-compose.yml` también lee `CADDYFILE`. Si no la define, usa `./Caddyfile`. No está en los archivos de ejemplo.
 
-TODO(CE-11): `ejemplo-de-cuenta`, `ejemplo-de-llave`, `ejemplo-de-secreto`, `incovsa-imagenes` y `r2:incovsa-respaldos` son textos del ejemplo. No hay cuenta R2 (P-94). El código de `src/modulos/almacenamiento/servicio.ts` exige que `R2_CUENTA` tenga 32 caracteres hexadecimales. El ejemplo no cumple ese formato y no debe usarse tal cual.
+`R2_CUENTA` es el identificador de la cuenta de Cloudflare: el código de `src/modulos/almacenamiento/servicio.ts` exige 32 caracteres hexadecimales en minúsculas. El texto `ejemplo-de-cuenta` no cumple ese formato y no debe usarse tal cual.
+
+> **Pendiente de producción (versión 1.1).** `ejemplo-de-cuenta`, `ejemplo-de-llave`, `ejemplo-de-secreto`, `incovsa-imagenes` y `r2:incovsa-respaldos` son textos del ejemplo. Los valores reales existen cuando INCOVSA cree la cuenta de Cloudflare (P-94) y se entregan por el medio seguro del Anexo J, nunca en este manual.
