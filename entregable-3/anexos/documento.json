@@ -1,0 +1,18 @@
+{
+  "titulo_documento": "ANEXOS H, I Y J: CAPACITACIÓN, ENTREGA, SERVICIOS Y ACCESOS",
+  "archivo_salida": "Anexos H, I y J - Capacitacion, entrega, servicios y accesos v1.0.docx",
+  "lugar_fecha": "Quetzaltenango, 3 de noviembre de 2026",
+  "portada": true,
+  "control_versiones": true,
+  "indices": true,
+  "numerar": false,
+  "pagina_por_seccion": true,
+  "versiones": [
+    ["1.0", "03/11/2026", "Héctor Jordin Adolfo García Coyoy y Carlos Hugo Escobar Gómez", "Versión para el Entregable No. 3: plan de la capacitación (Anexo H), acta de la entrega a INCOVSA lista para firmarse (Anexo I) e inventario de servicios y accesos (Anexo J). Lo que depende de INCOVSA queda pendiente para la versión 1.1 del 12/11/2026"]
+  ],
+  "secciones": [
+    "anexo-h-capacitacion.md",
+    "anexo-i-evidencia-de-entrega.md",
+    "anexo-j-servicios-y-accesos.md"
+  ]
+}

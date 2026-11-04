@@ -1,5 +1,7 @@
 # Anexo J. Inventario de servicios y accesos
 
+Tabla: Control de versiones del Anexo J
+
 | Versión | Fecha | Cambios | Autor |
 |---|---|---|---|
 | 1.0 | 03/11/2026 | Inventario para la entrega académica del 04/11, con los servicios que INCOVSA todavía no entrega marcados como pendientes | Carlos Hugo Escobar Gómez y Héctor Jordin Adolfo García Coyoy |
@@ -16,6 +18,8 @@ Este anexo lista cada servicio que usa el sistema: quién es el dueño de la cue
 
 ## Resumen
 
+Tabla: Resumen de los servicios
+
 | Servicio | Dueño de la cuenta | Para qué se usa | Cómo se accede | Quién recibe la credencial | Estado |
 |---|---|---|---|---|---|
 | VPS | INCOVSA | Servidor de producción de incovsa.com | Panel del proveedor y SSH con llave | La cuenta es de INCOVSA. Los secretos del servidor, la persona de P-03 | Pendiente de entrega por INCOVSA (P-10) |
@@ -31,6 +35,8 @@ El sistema no usa más servicios con credenciales. **Odoo** solo aparece como un
 
 ## VPS
 
+Tabla: Ficha del VPS
+
 | Campo | Dato |
 |---|---|
 | Dueño | INCOVSA. La cuenta del proveedor se crea a nombre de la empresa, con un correo de la empresa, y se invita al equipo (decisión 33). Proveedor y correo: **pendiente de entrega por INCOVSA** (P-10 y P-94). |
@@ -40,6 +46,8 @@ El sistema no usa más servicios con credenciales. **Odoo** solo aparece como un
 | Estado | **Pendiente de entrega por INCOVSA** (P-10). |
 
 ## Dominio y DNS en Cloudflare
+
+Tabla: Ficha del dominio y del DNS en Cloudflare
 
 | Campo | Dato |
 |---|---|
@@ -51,6 +59,8 @@ El sistema no usa más servicios con credenciales. **Odoo** solo aparece como un
 
 ## R2, bucket de imágenes
 
+Tabla: Ficha del bucket de imágenes de R2
+
 | Campo | Dato |
 |---|---|
 | Dueño | INCOVSA, en la misma cuenta de Cloudflare. |
@@ -60,6 +70,8 @@ El sistema no usa más servicios con credenciales. **Odoo** solo aparece como un
 | Estado | **Pendiente de entrega por INCOVSA** (P-94). El bucket no existe. |
 
 ## R2, bucket privado de respaldos
+
+Tabla: Ficha del bucket privado de respaldos de R2
 
 | Campo | Dato |
 |---|---|
@@ -71,6 +83,8 @@ El sistema no usa más servicios con credenciales. **Odoo** solo aparece como un
 
 ## GitHub: repositorio, Actions y entorno `produccion`
 
+Tabla: Ficha de GitHub
+
 | Campo | Dato |
 |---|---|
 | Dueño | Hoy, la cuenta de GitHub Student del coordinador: el repositorio es `jordin-garcia/proyecto_incovsa`. Se transfiere a una cuenta u organización de INCOVSA (decisión 33) a más tardar el 12/11 (decisión 90). Nombre de la cuenta u organización: **pendiente de entrega por INCOVSA** (P-94). |
@@ -81,6 +95,8 @@ El sistema no usa más servicios con credenciales. **Odoo** solo aparece como un
 
 ## GHCR
 
+Tabla: Ficha de GHCR
+
 | Campo | Dato |
 |---|---|
 | Dueño | La cuenta dueña del repositorio. El flujo publica en `ghcr.io/` seguido del nombre del repositorio, así que después de la transferencia publica bajo el dueño nuevo. |
@@ -90,6 +106,8 @@ El sistema no usa más servicios con credenciales. **Odoo** solo aparece como un
 | Estado | Todavía no hay imágenes de producción: el primer despliegue es JG-19. |
 
 ## Google Drive de INCOVSA
+
+Tabla: Ficha del Google Drive de INCOVSA
 
 | Campo | Dato |
 |---|---|
@@ -102,6 +120,8 @@ El sistema no usa más servicios con credenciales. **Odoo** solo aparece como un
 El Drive del equipo, donde se guardan los `.docx` y los `.pdf` de los documentos, es otro servicio y no forma parte de la entrega de accesos.
 
 ## Cuentas de administrador del sistema
+
+Tabla: Ficha de las cuentas de administrador del sistema
 
 | Campo | Dato |
 |---|---|

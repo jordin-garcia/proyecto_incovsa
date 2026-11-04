@@ -1,5 +1,7 @@
 # Anexo I. Evidencia de entrega
 
+Tabla: Control de versiones del Anexo I
+
 | Versión | Fecha | Cambios | Autor |
 |---|---|---|---|
 | 1.0 | 03/11/2026 | Formato del acta de entrega a INCOVSA, listo para firmarse | Carlos Hugo Escobar Gómez y Héctor Jordin Adolfo García Coyoy |
@@ -22,6 +24,8 @@ Lugar: ________________________________
 
 El equipo del proyecto (README, «Autores»):
 
+Tabla: Integrantes del equipo que entregan
+
 | Integrante | Rol en el proyecto | Firma |
 |---|---|---|
 | Héctor Jordin Adolfo García Coyoy | Coordinador, arquitecto e integrador, responsable de calidad | ________________ |
@@ -35,6 +39,8 @@ Si no firma todo el equipo, nombre de quien entrega en su representación: _____
 ## Quién recibe
 
 La contraparte del proyecto en INCOVSA es el Ing. William Ambrossio. La persona que recibe las credenciales la indica INCOVSA (P-03).
+
+Tabla: Datos de quien recibe
 
 | Dato | Quien recibe |
 |---|---|
@@ -89,6 +95,8 @@ ________________________________________________________________
 ## Conformidad
 
 Quien recibe declara que recibió lo marcado en esta acta y, en persona, las credenciales del Anexo J que se marcaron en «Accesos».
+
+Tabla: Firmas de conformidad
 
 | | Nombre | Firma | Fecha |
 |---|---|---|---|
