@@ -1,0 +1,32 @@
+{
+  "titulo_documento": "DOCUMENTO 3: MANUAL DE USUARIO DE LA ADMINISTRACIÓN DEL SITIO",
+  "archivo_salida": "Documento 3 - Manual de usuario de la administracion del sitio v1.0.docx",
+  "lugar_fecha": "Quetzaltenango, 3 de noviembre de 2026",
+  "portada": true,
+  "control_versiones": true,
+  "indices": true,
+  "numerar": true,
+  "versiones": [
+    ["1.0", "03/11/2026", "Daniela Marín", "Versión inicial para el Entregable No. 3: guía de administración del sitio, basada en las funciones implementadas y los permisos del sistema"]
+  ],
+  "secciones": [
+    "01-acceso.md",
+    "02-recuperacion-de-contrasena.md",
+    "03-conociendo-el-panel.md",
+    "04-informacion-institucional.md",
+    "05-historia-mision-vision-valores.md",
+    "06-imagenes-del-sitio.md",
+    "07-industrias.md",
+    "08-productos-informativos.md",
+    "09-informacion-de-contacto.md",
+    "10-noticias.md",
+    "11-documentos-internos.md",
+    "12-cargar-documentos-tecnicos.md",
+    "13-contenido-restringido-y-permisos.md",
+    "14-administracion-de-usuarios.md",
+    "15-consultas-y-solicitudes.md",
+    "16-cerrar-sesion.md",
+    "17-problemas-frecuentes.md",
+    "99-referencias.md"
+  ]
+}
