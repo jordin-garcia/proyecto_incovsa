@@ -138,7 +138,7 @@ jobs:
         env:
           EJECUCION: ${{ steps.claude.outputs.execution_file }}
         run: |
-          node --input-type=module -e '
+          node --input-type=module <<'JS'
             import { readFileSync } from "node:fs";
             const recortar = (texto, n) => { const s = String(texto ?? "").replace(/\s+/g, " "); return s.length > n ? s.slice(0, n) + "…" : s; };
             const leerLinea = (l) => { try { return JSON.parse(l); } catch { return {}; } };
@@ -159,7 +159,7 @@ jobs:
             } catch (error) {
               console.log(`No se pudo leer el registro de la revisión: ${error.message}`);
             }
-          '
+          JS
 
       - name: Veredicto de la revisión
         id: veredicto
