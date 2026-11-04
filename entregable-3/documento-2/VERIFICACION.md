@@ -24,4 +24,4 @@ Las páginas se renderizaron e inspeccionaron a tamaño nativo. Después de los 
 
 No se ejecuta la E2E completa local: JC-08 cambia solo documentación y aplica la decisión 90 de specs/16. La CI mantiene todos los controles configurados sin cambios ni omisiones. La revisión y las comprobaciones de GitHub corresponden al PR de esta tarea.
 
-El DOCX, PDF y equipo.local.json quedan fuera de Git. José Daniel confirmó que hará personalmente la subida a Drive. Se preparó `entregable-3/para-subir-JC-08/` con solo el Word y el PDF finales; no se afirma una subida por el agente.
+El DOCX, PDF y equipo.local.json quedan fuera de Git. Por autorización posterior de José Daniel se subió `entregable-3/para-subir-JC-08/` mediante Chrome al Drive del equipo. La interfaz confirmó la carga completada, 2 de 2 archivos al 100 %, y se verificó el Word (3.1 MB) y PDF (4.2 MB) dentro de la [carpeta de entrega](https://drive.google.com/drive/u/0/folders/1TCE1etT7-sg9jVz3rp0VZF5a2Tt618c2). No se cambiaron permisos ni archivos existentes.
