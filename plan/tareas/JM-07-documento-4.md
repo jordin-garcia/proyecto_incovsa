@@ -5,7 +5,7 @@ persona: josue
 responsable: Josué Menéndez
 hito: entrega
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JM-06, JC-07, CE-03]
 programada: 2026-11-03
 requisitos: []
@@ -48,3 +48,30 @@ python entregable-2/herramientas/armar_documento.py entregable-3/documento-4
 ## Notas
 - La portada del documento lee los nombres y carnés de `entregable-3/equipo.local.json`, que no se sube al repositorio (tiene datos personales). Si no existe en tu equipo, pídele a Jordin una copia de `entregable-2/equipo.local.json` y guárdala con ese nombre en `entregable-3/`.
 - Los `.docx` y `.pdf` no se suben al repositorio (`.gitignore`): se guardan en la carpeta local y en el Drive del equipo.
+
+## Resultado
+
+Se redactó y compiló el **Documento 4: Manual de usuario del sistema logístico (picking)** en `entregable-3/documento-4/`, dando cumplimiento estricto a los 22 apartados requeridos por los lineamientos del curso y adaptados a la realidad operativa de INCOVSA y `develop`:
+
+1. **22 apartados estructurados y redactados:** cada uno en formato Markdown con objetivo, requisitos previos, pasos numerados, resultado esperado, advertencias y capturas reales del sistema. Los apartados 5, 6 y 7 justifican detalladamente por qué la consulta de existencias y los registros de entradas y salidas no aplican en el sistema de picking al ser administrados centralmente en Odoo (exclusión P-58 aprobada formalmente por el docente).
+2. **23 figuras con capturas reales:** se incorporaron las pantallas de acceso en tres pasos, tablero principal de picking, resumen de carga de Odoo, tablero de pedidos facturados, opciones de envío por camión y recolección, confirmaciones modulares, tarjetas de preparación en bodega con lotes y agrupaciones (RN-51), detalle de ruta, alistamiento físico completo, tablero en pantalla completa en modo oscuro para televisores industriales, control de capacidad vehicular y prevención de sobrepeso, pantalla de rutas para pilotos en teléfonos móviles con reordenamiento de paradas (RN-29), confirmación de entrega en ruta, indicadores cuantitativos y reporte consolidado por producto en Despacho, histórico de rutas realizadas, bitácora de auditoría inmutable, configuración de camiones y usuarios, y gestión de incidencias.
+3. **Compilación validada:** el documento compila limpiamente mediante `python entregable-2/herramientas/armar_documento.py entregable-3/documento-4`, generando `Documento 4 - Manual de usuario del sistema logistico v1.0.docx` con portada institucional, tabla de control de versiones v1.0, índices automáticos y numeración formal.
+
+### Archivos creados o modificados
+- `entregable-3/documento-4/documento.json`: configuración y orden de secciones del manual.
+- `entregable-3/documento-4/01-acceso.md` a `22-problemas-frecuentes.md`: las 22 secciones del manual.
+- `entregable-3/documento-4/figuras/*.png`: 23 capturas reales de la aplicación.
+- `plan/tareas/JM-07-documento-4.md`: tarea marcada como hecha con resultado y evidencias.
+- `plan/bitacora/josue.md`: entrada de bitácora correspondiente a la finalización de la tarea.
+
+### Cómo usar lo creado
+Para compilar el documento en formato `.docx`:
+```bash
+python entregable-2/herramientas/armar_documento.py entregable-3/documento-4
+```
+El archivo resultante se genera en `entregable-3/Documento 4 - Manual de usuario del sistema logistico v1.0.docx` y puede abrirse en Microsoft Word para actualizar campos de índices o exportar a `.pdf`.
+
+
+Lo integró el coordinador (protocolo §E4) el 03/11/2026 desde el PR #165 de Josué, sin cambiar su contenido. La revisión automática de su último commit no se completó por una falla del bot, que se corrigió en JG-08 (#169 y #170), y la rama iba atrasada respecto de `develop`. La rama `jordin/JM-07-documento-4` integra `develop` y se revisa con el bot corregido.
+
+**Correcciones del coordinador (03/11/2026), por la revisión automática de #171:** el PDF de Reportes es A4 horizontal y sin fecha de emisión, y la Bitácora también se exporta (`specs/10`); el modo oscuro del tablero usa grises para el lote y el cuadro de «PEDIDO», con los botones «Modo claro», «Modo oscuro», «Pantalla completa» y «Volver al módulo» (`specs/07`); un camión solo está protegido si está elegido en «Envío por camión»; el resumen de la carga y los mensajes de bodega son los de la aplicación; y se quitaron procesos de INCOVSA que `specs/` no recoge (compras, báscula, notas de crédito). También se corrigieron el texto del medidor de peso, la ubicación de «Cancelar», la forma de nombrar los permisos, el detalle de la carga en la bitácora (apartado 19) y los mensajes de error de la carga.

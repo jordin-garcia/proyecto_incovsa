@@ -367,7 +367,19 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Pendiente o aviso para otros:
 **Josué:** cuando esto entre a `develop`, actualiza la rama de tu PR #165 (`gh pr update-branch 165`) para que el bot lo revise otra vez.
 
+## 2026-11-03 · JM-07 · Integración del Documento 4 (protocolo §E4)
+- Hecho: el PR #165 de Josué no se integraba porque el bot no completó la revisión de su último commit (la misma falla de #168) y la rama iba atrasada. Lo continué en `jordin/JM-07-documento-4`, con `develop` integrada y sin cambiar el contenido de Josué, y cerré #165.
+- Decisiones: no se sube a la rama de Josué (protocolo §E1); el PR nuevo la reemplaza.
+- Pendiente o aviso para otros:
+**Josué:** integré tu JM-07 desde una rama mía (protocolo §E4) y cerré tu PR #165. Solo agregué una nota al final del `## Resultado` de `plan/tareas/JM-07-documento-4.md`. Actualiza tu copia desde `develop` y borra tu rama local.
+
 ## 2026-11-03 · JG-08 · Registro de los comandos negados al bot
 - Hecho: el PR #171 (JM-07) siguió sin veredicto del bot con los dos ajustes anteriores (46 turnos, 4 comandos negados). Agregué el paso «Registro de la revisión», que imprime las herramientas usadas, los comandos negados y el mensaje final del bot, para encontrar la causa. Prueba en `scripts/flujos.test.mjs`.
 - Decisiones: sin `show_full_output` ni resultados de comandos en el registro (repositorio público).
 - Pendiente o aviso para otros: ninguno.
+
+## 2026-11-03 · JM-07 · Correcciones del Documento 4
+- Hecho: con el bot ya funcionando, su revisión de #171 dio CORREGIR con 5 hallazgos del Documento 4. Los corregí: exportación de Reportes, modo oscuro y salida del tablero, protección de camiones, resumen y mensajes de la carga del archivo, y procesos de INCOVSA que `specs/` no recoge. Apliqué también opcionales: medidor de peso, botón Cancelar, permisos, detalle de la carga en la bitácora (apartado 19) y el mensaje de columna faltante.
+- Decisiones: las devoluciones y el inventario se describen solo como «se tramitan en Odoo según el procedimiento de la empresa», sin inventar áreas ni pasos.
+- Pendiente o aviso para otros:
+**Josué:** corregí tu Documento 4 en `entregable-3/documento-4/` (apartados 03, 06, 07, 08, 09, 14, 15, 18, 19, 20, 21 y 22). Están en el `## Resultado` de JM-07. Quedan opcionales de la revisión para la v1.1: los ejemplos de productos del apartado 04 y revisar si las figuras 04 y 06 son la misma captura.

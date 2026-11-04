@@ -1,0 +1,57 @@
+# Pedidos pendientes en Facturación
+
+## Carga del archivo de Odoo y gestión del tablero
+
+### Objetivo
+Permitir que el encargado de facturación suba al sistema la planilla de salidas generada por el ERP Odoo, valide los datos automáticamente y visualice los pedidos facturados pendientes de asignación logística.
+
+### Requisitos previos
+- Disponer de una cuenta con permiso sobre el módulo de Facturación (`pk.facturacion`).
+- Estar posicionado en la sede de trabajo correspondiente (por ejemplo, Quetzaltenango).
+- Contar con el archivo en formato `.xlsx` exportado recientemente de Odoo con las salidas facturadas en estado "Hecho".
+
+### Procedimiento para cargar el archivo de Odoo
+
+1. En el menú lateral izquierdo del sistema de picking, haga clic en la opción **Facturación**.
+2. En la parte superior de la pantalla, localice y presione el botón **Cargar archivo .xlsx**.
+3. En la ventana de diálogo de su sistema operativo, seleccione el archivo Excel (`.xlsx`) correspondiente a los pedidos del día.
+4. El sistema procesará el archivo aplicando las siguientes validaciones automáticas:
+   - **Formato y seguridad:** comprueba que sea un archivo Excel legítimo, con peso menor a 2 MB y sin riesgo de compresión anómala (máximo 100 archivos internos y 50 MB descomprimido).
+   - **Correspondencia de bodega:** verifica que el prefijo de las referencias coincida con la sede activa (`XE` para Quetzaltenango, `GT` para Guatemala o `ESC` para Escuintla). No se permite mezclar bodegas en un mismo archivo.
+   - **Estado:** solo se extraen las líneas cuyo estado sea **Hecho**.
+   - **Integridad de datos (RN-50):** valida que cada línea cuente con cantidad en kilogramos mayor que cero y Peso de Conversión válido mayor que cero.
+5. Al finalizar la lectura, el sistema muestra la ventana **Resumen de la carga** (véase la {{fig:carga-odoo-resumen}}) con:
+   - cuántos pedidos facturados de la sede se agregaron al tablero;
+   - los pedidos facturados que no se cargaron, agrupados por motivo y con su número, si los hay;
+   - cuántas referencias se ignoraron por no estar en estado «Hecho», si las hay.
+6. Pulse **Listo** para cerrar la ventana. Los pedidos facturados que no se cargaron deben corregirse en Odoo y volver a exportarse.
+
+![Resumen de carga del archivo exportado de Odoo](figuras/figura-05-carga-odoo-resumen.png){#fig:carga-odoo-resumen}
+
+
+### Gestión del tablero de pedidos facturados
+
+Una vez cargado el archivo, los pedidos aparecen organizados en el lado izquierdo de la pantalla, denominado **Tablero de pedidos facturados** (véase la {{fig:tablero-facturacion}}):
+
+![Tablero de pedidos facturados pendientes de asignación](figuras/figura-06-tablero-pedidos-facturados.png){#fig:tablero-facturacion}
+
+Cada tarjeta de pedido facturado muestra:
+- **Número de pedido:** correlativo de Odoo (por ejemplo, `03539`).
+- **Cliente:** nombre o razón social del comprador.
+- **Sector:** municipio o zona de entrega (columna `Contacto/Ciudad`).
+- **Peso total:** sumatoria en kilogramos de todos los productos incluidos en la orden.
+- **Detalle de productos:** desglose de cada producto con su lote, Peso de Conversión y kilogramos ordenados.
+
+### Selección y arrastre de pedidos
+
+- **Selección individual o múltiple:** haga clic sobre las tarjetas para seleccionarlas. También puede utilizar el botón **Seleccionar todos** para marcar todos los pedidos del tablero a la vez.
+- **Arrastre a opciones de envío:** una vez seleccionados los pedidos, arrástrelos con el puntero hacia la opción de envío deseada (**Envío por camión** o **Cliente recoge en bodega**) en el lado derecho de la pantalla.
+
+### Resultado esperado
+Los pedidos facturados quedan listados de forma clara en el tablero, listos para ser organizados y despachados hacia la bodega.
+
+> **Advertencia:** El sistema no carga nada si las referencias no corresponden a la sede de trabajo:
+> - con un prefijo desconocido muestra «Hay referencias de una bodega que no se reconoce. Se esperan los prefijos XE, GT o ESC.»;
+> - con referencias de varias bodegas muestra «El archivo trae referencias de más de una bodega. Cada archivo debe ser de una sola bodega.»;
+> - con un archivo de otra sede muestra, por ejemplo, «El archivo es de la bodega de Guatemala y usted está trabajando en Quetzaltenango. Cambie la sede o cargue el archivo correcto. No se cargó nada.».
+
