@@ -372,3 +372,8 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Decisiones: no se sube a la rama de Josué (protocolo §E1); el PR nuevo la reemplaza.
 - Pendiente o aviso para otros:
 **Josué:** integré tu JM-07 desde una rama mía (protocolo §E4) y cerré tu PR #165. Solo agregué una nota al final del `## Resultado` de `plan/tareas/JM-07-documento-4.md`. Actualiza tu copia desde `develop` y borra tu rama local.
+
+## 2026-11-03 · JG-08 · Registro de los comandos negados al bot
+- Hecho: el PR #171 (JM-07) siguió sin veredicto del bot con los dos ajustes anteriores (46 turnos, 4 comandos negados). Agregué el paso «Registro de la revisión», que imprime las herramientas usadas, los comandos negados y el mensaje final del bot, para encontrar la causa. Prueba en `scripts/flujos.test.mjs`.
+- Decisiones: sin `show_full_output` ni resultados de comandos en el registro (repositorio público).
+- Pendiente o aviso para otros: ninguno.

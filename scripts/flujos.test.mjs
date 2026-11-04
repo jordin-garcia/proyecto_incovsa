@@ -227,6 +227,13 @@ test("decisión 60: revision-claude siempre decide el veredicto y deja la revisi
   assert.doesNotMatch(accion, /--permission-mode|--dangerously-skip-permissions|--disallowedTools/);
   assert.doesNotMatch(accion, /\b(?:MultiEdit|NotebookEdit)\b/);
   assert.doesNotMatch(accion.replace("la herramienta Write en", ""), /\bWrite\b/);
+  // El registro de la revisión muestra los comandos negados sin la salida completa (repositorio público).
+  const flujoRevision = leer(".github", "workflows", "revision-claude.yml");
+  assert.match(flujoRevision, /name: Registro de la revisión/);
+  assert.match(flujoRevision, /permission_denials/);
+  // El paso de diagnóstico nunca cambia el resultado del check.
+  assert.match(flujoRevision, /name: Registro de la revisión\n.*\n.*\n {8}continue-on-error: true/);
+  assert.doesNotMatch(flujoRevision, /^\s*show_full_output:/m);
   // Nada que ejecute código de la rama del PR: el bot corre con el token del coordinador.
   assert.doesNotMatch(accion, /Bash\(node|Bash\(npm|Bash\(npx|Bash\(python/);
   assert.match(trabajo, /^ {6}pull-requests: write$/m);
