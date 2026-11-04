@@ -14,7 +14,7 @@ Finalizar la sesión de administración del sitio al terminar el trabajo.
 3. Compruebe que el sitio vuelve a la página de inicio.
 4. Si utilizó un equipo compartido, cierre también la ventana del navegador cuando sea apropiado.
 
-![Aplicación: control Cerrar sesión al pie del menú](figuras/16-cerrar-sesion.png){#fig:cerrar-sesion}
+![Aplicación: control de salida al pie del menú](figuras/16-cerrar-sesion.png){#fig:cerrar-sesion}
 
 ### Resultado esperado
 La sesión de administración se cierra y aparece el sitio público.

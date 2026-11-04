@@ -16,7 +16,7 @@ Asociar la ficha técnica, la hoja de seguridad y el certificado de análisis de
 4. Revise los datos y seleccione **Guardar**.
 5. Abra la fila creada para comprobar que se muestra cada documento disponible.
 
-![Aplicación: registro de producto documentado](figuras/12-producto-documentado.png){#fig:producto-documentado}
+![Aplicación: formulario Nuevo producto documentado](figuras/12-producto-documentado.png){#fig:producto-documentado}
 
 ## Compartir documentos de forma restringida en Google Drive
 

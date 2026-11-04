@@ -11,9 +11,9 @@ Administrar imágenes de las galerías del sitio usando archivos compatibles.
 
 ### Pasos
 1. Abra la sección que contiene la galería.
-2. Seleccione **Elegir imágenes** o arrastre las imágenes desde su computadora al área de la galería.
+2. Seleccione el área que indica **Arrastre aquí hasta 5 imágenes o haga clic para elegirlas**, o arrastre las imágenes desde su computadora.
 3. Compruebe la vista previa y el orden de las imágenes.
-4. Quite una imagen con la acción **Quitar** si ya no debe aparecer.
+4. Use las flechas de la miniatura para cambiar el orden; use el botón con icono de papelera, **Quitar la imagen N**, para retirarla.
 5. En las galerías de Portada, Misión, Visión e Historia, seleccione **Guardar y publicar**. En Industrias, Catálogo y Noticias, use el botón de guardado de esa sección.
 6. Compruebe la página pública después de guardar.
 

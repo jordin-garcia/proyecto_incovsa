@@ -1,6 +1,6 @@
 # Administración de usuarios
 
-## Crear y actualizar una cuenta
+## Crear, actualizar o desactivar una cuenta
 
 ### Objetivo
 Solicitar la creación, modificación o desactivación de una cuenta del sitio.
@@ -17,7 +17,8 @@ Solicitar la creación, modificación o desactivación de una cuenta del sitio.
 5. Seleccione **Guardar** y confirme que la cuenta aparezca como activa.
 6. Entregue el usuario y contraseña inicial directamente a la persona por el canal aprobado por INCOVSA.
 7. Para restablecer una contraseña, use el botón **Contraseña** de la fila y escriba una nueva.
-8. Para retirar una cuenta, seleccione el control de eliminación y confirme.
+8. Para desactivar una cuenta sin eliminar su registro, edítela, desmarque **Cuenta activa** y guarde. Confirme que ya no aparezca activa.
+9. Si la cuenta debe eliminarse, seleccione el control de eliminación y confirme.
 
 ![Aplicación: administración de usuarios del sitio](figuras/14-usuarios-sitio.png){#fig:usuarios-sitio}
 

@@ -16,7 +16,7 @@ Actualizar los textos e imágenes institucionales publicados en Inicio y Quiéne
 4. Pulse **Guardar y publicar** cuando la sección lo indique.
 5. Use **Ver en el sitio** para abrir la página relacionada y comprobar el resultado.
 
-![Aplicación: sección Contenido institucional](figuras/04-contenido-institucional.png){#fig:contenido-institucional}
+![Aplicación: sección de edición de contenido institucional](figuras/04-contenido-institucional.png){#fig:contenido-institucional}
 
 ### Resultado esperado
 El contenido guardado se muestra en las páginas públicas que utilizan ese bloque.

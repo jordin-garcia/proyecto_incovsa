@@ -11,7 +11,7 @@ Revisar los mensajes que llegan por el formulario público y dar seguimiento seg
 
 ### Pasos
 1. Abra **Solicitudes** en el panel.
-2. Seleccione el motivo: Solicitud, Queja o Reclamo.
+2. Seleccione la pestaña **Solicitudes**, **Quejas** o **Reclamos**.
 3. Abra un registro y lea el mensaje completo.
 4. Si tiene permiso de gestión, seleccione el responsable y guarde el comentario correspondiente.
 5. Use los botones **Asignado**, **En proceso** o **Solucionado** para registrar el estado.

@@ -17,7 +17,7 @@ Mantener actualizadas las secciones institucionales de Quiénes somos.
 5. Para los valores, cargue una imagen en cada una de las cinco posiciones. No se agrega texto: la página pública muestra cinco imágenes.
 6. Abra **Quiénes somos** en el sitio para revisar los cambios.
 
-![Aplicación: Historia, Misión, Visión y Valores](figuras/05-historia-mision-vision-valores.png){#fig:textos-institucionales}
+![Aplicación: edición de Historia, Misión, Visión y Valores](figuras/05-historia-mision-vision-valores.png){#fig:textos-institucionales}
 
 ### Resultado esperado
 El sitio presenta los textos publicados y, donde se hayan cargado, sus imágenes.

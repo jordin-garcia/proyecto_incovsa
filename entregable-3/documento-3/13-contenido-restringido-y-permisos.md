@@ -17,7 +17,7 @@ Reconocer por qué algunas secciones o acciones están disponibles solo para cie
 5. Para otras áreas, Gerencia o Soporte asignan el permiso específico de Contenido institucional, Industrias, Catálogo, Noticias, Información de contacto o Solicitudes.
 6. Si necesita otro acceso, indique a Gerencia o Soporte su nombre de usuario y la tarea que debe realizar.
 
-![Aplicación: secciones del panel visibles con acceso total](figuras/13-permisos-panel.png){#fig:permisos-panel}
+![Aplicación: permisos disponibles en la administración de usuarios](figuras/13-permisos-panel.png){#fig:permisos-panel}
 
 ### Resultado esperado
 La cuenta muestra las secciones que tiene autorizadas y las operaciones permitidas en cada sección.

@@ -17,6 +17,8 @@ Mantener vigentes los datos de contacto que el público consulta en el sitio.
 5. Seleccione **Guardar**.
 6. Abra la página **Contacto** y confirme que el dato aparece correctamente.
 
+Para actualizar el mapa, abra la ubicación en Google Maps, seleccione **Compartir** y luego **Insertar un mapa**. Copie la dirección que aparece en `src` dentro del código de inserción y úsela en el campo del mapa; una dirección normal de búsqueda o de compartir no es equivalente.
+
 ![Aplicación: Información de contacto](figuras/09-informacion-contacto.png){#fig:contacto-panel}
 
 ### Resultado esperado

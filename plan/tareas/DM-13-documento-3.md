@@ -47,10 +47,10 @@ python entregable-2/herramientas/armar_documento.py entregable-3/documento-3
 
 ## Resultado
 
-- Se creó `entregable-3/documento-3/` con los 17 apartados, sus procedimientos, advertencias y 19 capturas reales de la aplicación con la semilla de demostración. Incluye las instrucciones de acceso restringido de Google Drive basadas en P-92.
-- El archivo `Documento 3 - Manual de usuario de la administracion del sitio v1.0.docx` se generó en `entregable-3/` y se subió a `Proyecto INCOVSA/Documentación Tecnica` en el Drive compartido del equipo. El documento tiene 29 páginas y fue renderizado e inspeccionado visualmente.
+- Se creó `entregable-3/documento-3/` con los 17 apartados, sus procedimientos, advertencias y 18 archivos de captura real de la aplicación con la semilla de demostración (19 apariciones; la del panel se reutiliza en dos procedimientos). Incluye las instrucciones de acceso restringido de Google Drive basadas en P-92.
+- El archivo `Documento 3 - Manual de usuario de la administracion del sitio v1.0.docx` se generó en `entregable-3/` y se subió a `Proyecto INCOVSA/Documentación Tecnica` en el Drive compartido del equipo. Incluye portada, control de versiones e índices de contenido y figuras actualizados en Word; el índice de tablas indica que no hay tablas de instrucciones.
 - La portada usa `entregable-3/equipo.local.json`, archivo local ignorado por Git. No se versionan nombres/carnés en ese JSON ni el DOCX/PDF.
-- Para regenerar el DOCX, ejecutar el comando de Verificación desde la raíz del repositorio. Los índices automáticos se desactivaron porque el generador deja sus campos vacíos fuera de Word; se comprobó que la versión final no tenga páginas de índice en blanco.
+- Para regenerar el DOCX, ejecutar el comando de Verificación desde la raíz del repositorio. Abrirlo en Word, actualizar los campos de índice (clic derecho → Actualizar campos) y guardar para completar las entradas antes de distribuirlo. La automatización COM de Word quedó bloqueada por el control de acceso del equipo.
 - La capacitación JG-21 queda como comprobación de uso con personal, tal como está programada; los ajustes que surjan se incorporarán a la versión 1.1.
 
 ## Notas
