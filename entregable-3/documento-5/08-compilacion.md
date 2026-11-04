@@ -23,7 +23,7 @@ La imagen que corre en el VPS se construye con el `Dockerfile`, sobre `node:24-b
 3. `compilacion`: ejecuta `npm run build`.
 4. `ejecucion`: la imagen final. Copia la salida `standalone`, los estáticos, las dependencias de producción, `src/`, el esquema y las migraciones de Prisma, la semilla base con sus datos, y de `scripts/` solo `crear-admin.ts` y `administrador.ts`.
 
-La imagen final no lleva la semilla de demostración, las herramientas de desarrollo ni los scripts de respaldo. El código es de root y de solo lectura; el proceso corre como `nextjs` (uid 1001) y solo puede escribir en `.next/cache`. El `ENTRYPOINT` es `/app/entrada.sh`, que aplica las migraciones y arranca `node server.js`. El flujo `produccion-imagen` comprueba todo esto en cada *pull request* que cambia la imagen.
+La imagen final no lleva la semilla de demostración, las herramientas de desarrollo ni los scripts de respaldo. El código es de root y de solo lectura; el proceso corre como `nextjs` (uid 1001) y dentro de `/app` solo puede escribir en `.next/cache` (fuera de `/app`, también en `/home/nextjs` y en `/tmp`). El `ENTRYPOINT` es `/app/entrada.sh`, que aplica las migraciones y arranca `node server.js`. El flujo `produccion-imagen` comprueba todo esto en cada *pull request* que cambia la imagen.
 
 Para construir esa imagen en un equipo que tenga Docker:
 

@@ -29,6 +29,8 @@ Cambie cada valor de ejemplo antes de arrancar. Genere las dos claves de sesión
 openssl rand -base64 32
 ```
 
+Para la contraseña de PostgreSQL de producción use en cambio `openssl rand -hex 32`: la contraseña va también dentro de `DATABASE_URL`, y los caracteres `/`, `+` y `=` que produce `-base64` rompen esa dirección.
+
 La tabla siguiente repite todos los nombres de `.env.example` y de `.env.produccion.example`. La columna de desarrollo y la de producción muestran el valor de ejemplo de cada archivo, no un secreto real. Si una variable no está en un archivo, la celda dice que no está.
 
 Tabla: Variables de los archivos de ejemplo {#tab:variables}

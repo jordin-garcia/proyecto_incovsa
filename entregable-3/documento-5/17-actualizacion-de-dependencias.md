@@ -36,12 +36,12 @@ En cada entrega, abra https://cdn.sheetjs.com/advisories y revise a mano los avi
 
 ## Imágenes de Docker
 
-`docker-compose.yml` usa `caddy:2` y `postgres:18`. Esas etiquetas reciben las correcciones de su línea. Para descargarlas en el VPS:
+`docker-compose.yml` usa `caddy:2` y `postgres:18`. Esas etiquetas reciben las correcciones de su línea. Para descargarlas en el VPS sin tocar el contenedor `app` (`--no-deps` evita que Compose lo vuelva a crear con otra etiqueta):
 
 ```
 cd "$HOME/incovsa"
 docker compose pull caddy postgres
-docker compose up -d caddy postgres
+docker compose up -d --no-deps caddy postgres
 ```
 
 No cambie `postgres:18` por otra versión principal sin un respaldo y una restauración de prueba: una versión principal nueva de PostgreSQL no lee los datos de la anterior sin migrarlos.

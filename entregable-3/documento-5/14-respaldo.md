@@ -14,9 +14,10 @@ La línea de cron, también escrita en `evidencia/CE-07/README.md`, corre a las 
 crontab -e
 ```
 
-Agregue esta única línea.
+Agregue estas dos líneas. La primera hace falta porque el cron de Ubuntu solo busca programas en `/usr/bin` y `/bin`, y Node.js está en `/usr/local/bin`; sin ella el respaldo falla.
 
 ```
+PATH=/usr/local/bin:/usr/bin:/bin
 15 2 * * * cd "$HOME/incovsa" && set -a && . ./.env && set +a && ./scripts/respaldo.sh
 ```
 
@@ -64,12 +65,12 @@ cp .env.produccion.example .env
 chmod 600 .env
 ```
 
-Escriba los valores guardados en el medio seguro: la contraseña de PostgreSQL (en `POSTGRES_PASSWORD` y dentro de `DATABASE_URL`), las dos claves de autenticación y las llaves de R2 de las imágenes. Ninguna línea puede quedar con el valor de la plantilla. Si en lugar de recuperar las claves de autenticación crea otras, se cierran todas las sesiones abiertas; guarde las nuevas en el medio seguro.
+Escriba los valores guardados en el medio seguro: la contraseña de PostgreSQL (en `POSTGRES_PASSWORD` y dentro de `DATABASE_URL`), las dos claves de autenticación y las llaves de R2 de las imágenes. Ningún secreto puede quedar con el valor de la plantilla. Si en lugar de recuperar las claves de autenticación crea otras, se cierran todas las sesiones abiertas; guarde las nuevas en el medio seguro.
 
-**Paso 2.** Cree el remoto `r2` de rclone con la llave limitada al bucket privado de respaldos:
+**Paso 2.** Cree el remoto `r2` de rclone con la llave limitada al bucket privado de respaldos. Escriba el comando con un espacio al inicio, para que no quede en el historial de la terminal (Ubuntu omite esas líneas con `HISTCONTROL=ignorespace`), o use `rclone config` en modo interactivo:
 
 ```
-rclone config create r2 s3 provider Cloudflare env_auth false access_key_id LLAVE secret_access_key SECRETO endpoint https://CUENTA.r2.cloudflarestorage.com
+ rclone config create r2 s3 provider Cloudflare env_auth false access_key_id LLAVE secret_access_key SECRETO endpoint https://CUENTA.r2.cloudflarestorage.com
 rclone lsf r2:incovsa-respaldos/diarios
 ```
 

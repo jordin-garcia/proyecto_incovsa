@@ -28,7 +28,9 @@ gh workflow run despliegue.yml --ref main -f etiqueta=ETIQUETA
 gh run watch
 ```
 
-Sustituya `ETIQUETA` por el SHA de un *commit* de `main` cuya imagen siga en GHCR. El flujo conserva como máximo 5 imágenes.
+Sustituya `ETIQUETA` por el SHA completo, de 40 caracteres, de un *commit* de `main` cuya imagen siga en GHCR; un SHA corto no existe como etiqueta. El flujo conserva como máximo 5 imágenes.
+
+Volver atrás no mueve la etiqueta `produccion`, que sigue en la versión que falló. Para que un `docker compose up` posterior no la vuelva a poner, escriba en el `.env` del VPS `IMAGEN_APP=ghcr.io/jordin-garcia/proyecto_incovsa:ETIQUETA` con la misma etiqueta, y vuelva a comentarla cuando se publique una versión corregida.
 
 No edite una migración ya aplicada para deshacer un cambio de esquema. Si hay que corregir la base, el coordinador agrega otra migración.
 

@@ -65,7 +65,7 @@ Tabla: Recursos mínimos del VPS {#tab:vps}
 | Red | Dirección IP fija |
 | Acceso | SSH solo con llave |
 
-En ese servidor, `evidencia/CE-08/preparar-vps.sh` instala Docker Engine y el complemento Compose desde el repositorio oficial de Docker, UFW y fail2ban. Las imágenes del archivo `docker-compose.yml` son `caddy:2`, `postgres:18` y la de la aplicación en GHCR. El usuario de despliegue necesita además Git, Node.js 24 y `rclone` en el `PATH`: Git para clonar el repositorio en `~/incovsa`, y Node.js y rclone porque `scripts/respaldo.sh` los llama en el host. El script de preparación no los instala. Instálelos como root: Node.js 24 desde https://nodejs.org/en/download y rclone desde https://rclone.org/install/.
+En ese servidor, `evidencia/CE-08/preparar-vps.sh` instala Docker Engine y el complemento Compose desde el repositorio oficial de Docker, UFW y fail2ban. Las imágenes del archivo `docker-compose.yml` son `caddy:2`, `postgres:18` y la de la aplicación en GHCR. El usuario de despliegue necesita además Git, Node.js 24 y `rclone` en el `PATH`: Git para clonar el repositorio en `~/incovsa`, y Node.js y rclone porque `scripts/respaldo.sh` los llama en el host. El script de preparación no los instala. Se instalan como root, de forma que los encuentre cualquier usuario (apartado Despliegue, Paso 3).
 
 > **Pendiente de producción (versión 1.1).** INCOVSA todavía no entrega el VPS (P-10). La dirección IP y el nombre del servidor se agregan cuando exista.
 

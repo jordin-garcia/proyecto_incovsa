@@ -11,7 +11,7 @@ Tabla: Registros DNS de producción {#tab:dns}
 | `incovsa.com` (`@`) | A | La dirección IP fija del VPS |
 | `imagenes` | Dominio personalizado de R2 | El bucket de imágenes; el registro lo crea el panel de R2 al conectar el dominio |
 
-Caddy obtiene el certificado por los puertos 80 y 443. Mientras Caddy emite el primer certificado, deje el registro de `incovsa.com` como «DNS only» (sin el proxy de Cloudflare), para que la validación llegue al VPS.
+El registro de `incovsa.com` queda siempre como «DNS only», sin el proxy de Cloudflare. Caddy obtiene el certificado por los puertos 80 y 443 y termina el HTTPS en el VPS, y escribe en `X-Real-IP` la dirección de quien se conecta. Con el proxy de Cloudflare esa dirección sería la de Cloudflare: el bloqueo de 20 fallos por dirección IP afectaría a todos los usuarios a la vez y la bitácora perdería la dirección real. Activar el proxy exige antes cambiar el `Caddyfile` y `src/lib/ip.ts`, y es una decisión del coordinador.
 
 > **Pendiente de producción (versión 1.1).** El DNS de `incovsa.com` todavía no está en Cloudflare (P-93), así que no hay certificado real ni registro de `imagenes.incovsa.com`. La decisión 32 prevé que, si INCOVSA no puede mover el DNS, la aplicación sirva las imágenes desde una ruta propia; ese modo no está implementado en producción, y `ALMACENAMIENTO=disco` lanza `El almacenamiento local no está disponible en producción.` Si el DNS no se puede mover, avise al coordinador antes del despliegue.
 

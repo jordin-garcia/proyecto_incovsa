@@ -152,7 +152,7 @@ Los casos formales están en el Anexo F del Documento 2 y en el Documento 6.
 
 ## 13. Despliegue
 
-En producción, un VPS que contrata INCOVSA, con Docker Compose: Caddy (HTTPS automático), la aplicación y PostgreSQL 18. El servidor se prepara con `evidencia/CE-08/preparar-vps.sh` y en su carpeta `~/incovsa` solo hacen falta `docker-compose.yml`, `Caddyfile` y un `.env` creado desde `.env.produccion.example`.
+En producción, un VPS que contrata INCOVSA, con Docker Compose: Caddy (HTTPS automático), la aplicación y PostgreSQL 18. El servidor se prepara con `evidencia/CE-08/preparar-vps.sh`. En su carpeta `~/incovsa` se clona el repositorio, que trae `docker-compose.yml`, `Caddyfile` y los scripts de respaldo y restauración, y se crea el `.env` desde `.env.produccion.example`.
 
 El primer despliegue se hace cuando el coordinador integra `develop` en `main`, en cuanto INCOVSA entregue el acceso al VPS, el DNS de incovsa.com y las cuentas de Cloudflare (P-10, P-93 y P-94 de [`specs/19`](specs/19-pendientes.md)). Hasta entonces el sistema se demuestra en local.
 

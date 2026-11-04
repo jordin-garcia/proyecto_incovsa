@@ -383,3 +383,12 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Decisiones: las devoluciones y el inventario se describen solo como «se tramitan en Odoo según el procedimiento de la empresa», sin inventar áreas ni pasos.
 - Pendiente o aviso para otros:
 **Josué:** corregí tu Documento 4 en `entregable-3/documento-4/` (apartados 03, 06, 07, 08, 09, 14, 15, 18, 19, 20, 21 y 22). Están en el `## Resultado` de JM-07. Quedan opcionales de la revisión para la v1.1: los ejemplos de productos del apartado 04 y revisar si las figuras 04 y 06 son la misma captura.
+
+## 2026-11-03 · CE-11 · Documento 5 y README final (protocolo §E4)
+- Hecho: terminé CE-11 desde el borrador de Carlos (#96, del 21/10), en `jordin/CE-11-documento-5-y-readme`. Documento 5 v1.0 con los 19 apartados contrastados con `develop`, el procedimiento completo del primer despliegue y dos pruebas de restauración; README con las 16 secciones completas. Revisión en contexto limpio: 5 correcciones aplicadas (orden de `verificar-vps.sh`, Node.js y `PATH` del cron, DNS sin proxy, `--no-deps` y README).
+- Decisiones: los datos de producción quedan como «Pendiente de producción (versión 1.1)» (decisión 90). DNS de `incovsa.com` en «DNS only».
+- Pendiente o aviso para otros:
+**Carlos:** terminé tu CE-11 desde una rama mía (protocolo §E4) y cerré tu PR #96. Cambié `entregable-3/documento-5/` (separé los apartados 16 y 17 y renumeré 18 y 19) y `README.md`. Actualiza tu copia desde `develop` y borra tu rama local. Para CE-15, busca los avisos «Pendiente de producción (versión 1.1)».
+**JG-19:** el flujo de despliegue no arranca `caddy` ni carga la semilla base: el primer despliegue necesita los pasos de «El primer despliegue» del apartado 9 del Documento 5.
+**JG-17:** hallazgos de código fuera del alcance de CE-11 (documentados tal como están): `scripts/crear-admin.ts` imprime el mensaje general sin TTY en lugar de «Ejecute crear-admin en una terminal interactiva.»; `TIEMPO_REAL_CONSULTA_MS` está en los `.env` de ejemplo pero el código no la lee; el comentario de `.env.example` dice «ejemplo.01 a ejemplo.11» y no existe `ejemplo.11`.
+
