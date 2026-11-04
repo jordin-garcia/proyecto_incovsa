@@ -5,7 +5,7 @@ persona: daniela
 responsable: Daniela Marín
 hito: entrega
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [DM-11, CE-04]
 programada: 2026-11-03
 requisitos: []
@@ -44,6 +44,14 @@ Redactar el **Documento 3** para el personal de INCOVSA que administra el conten
 ```
 python entregable-2/herramientas/armar_documento.py entregable-3/documento-3
 ```
+
+## Resultado
+
+- Se creó `entregable-3/documento-3/` con los 17 apartados, sus procedimientos, advertencias y 19 capturas reales de la aplicación con la semilla de demostración. Incluye las instrucciones de acceso restringido de Google Drive basadas en P-92.
+- El archivo `Documento 3 - Manual de usuario de la administracion del sitio v1.0.docx` se generó en `entregable-3/` y se subió a `Proyecto INCOVSA/Documentación Tecnica` en el Drive compartido del equipo. El documento tiene 29 páginas y fue renderizado e inspeccionado visualmente.
+- La portada usa `entregable-3/equipo.local.json`, archivo local ignorado por Git. No se versionan nombres/carnés en ese JSON ni el DOCX/PDF.
+- Para regenerar el DOCX, ejecutar el comando de Verificación desde la raíz del repositorio. Los índices automáticos se desactivaron porque el generador deja sus campos vacíos fuera de Word; se comprobó que la versión final no tenga páginas de índice en blanco.
+- La capacitación JG-21 queda como comprobación de uso con personal, tal como está programada; los ajustes que surjan se incorporarán a la versión 1.1.
 
 ## Notas
 - La portada del documento lee los nombres y carnés de `entregable-3/equipo.local.json`, que no se sube al repositorio (tiene datos personales). Si no existe en tu equipo, pídele a Jordin una copia de `entregable-2/equipo.local.json` y guárdala con ese nombre en `entregable-3/`.

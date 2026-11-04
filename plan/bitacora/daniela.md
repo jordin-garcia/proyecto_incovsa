@@ -137,3 +137,10 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Decisiones: Daniela autorizó modificar `src/modulos/contenido/esquemas-contacto.ts` y sus pruebas, que definen los límites y mensajes de Información de contacto. No se agregaron dependencias ni migraciones y no hizo falta cambiar `specs/`.
 - Pendiente o aviso para otros:
   - **Jordin y responsables de Picking/Flujo/Seguridad:** la suite global tuvo fallos preexistentes fuera del alcance de DM-14; consultar el registro Playwright del PR para revisar Tablero de Bodega, Flujo completo y cabeceras de seguridad.
+
+## 2026-11-03 · DM-13 · Documento 3, manual de usuario de la administración del sitio
+
+- Hecho: redactados los 17 apartados del manual con pasos, resultados, advertencias y 19 capturas Playwright de la aplicación con datos de demostración. Generado el DOCX de 29 páginas y subido a `Proyecto INCOVSA/Documentación Tecnica` en Drive. Los nombres y carnés de portada permanecen en el archivo local ignorado `entregable-3/equipo.local.json`.
+- Verificación: `node scripts/tareas.mjs --validar` pasó (82 tareas); Prettier pasó para el documento; el generador informó 19 figuras y 0 tablas. El DOCX se renderizó con LibreOffice y se inspeccionó visualmente. `npm run verificar` pasó (57 archivos, 509 pruebas) antes de la corrección de maquetación; los hooks del segundo commit pasaron formato, lint, tipos y gitleaks (0 commits/secretos detectados). `npm run build -- --webpack` quedó impedido por DNS/red al descargar Google Fonts; la tarea solo agrega documentación.
+- Decisiones: se desactivaron índices automáticos en `documento.json` porque el generador produce campos que LibreOffice deja vacíos y páginas en blanco; se verificó la salida final de 29 páginas. El DOCX y el PDF se conservan fuera de Git, como indica la tarea. JG-21 comprobará la comprensión del manual en la capacitación y cualquier ajuste pasará a versión 1.1.
+- Pendiente o aviso para otros: ninguno.
