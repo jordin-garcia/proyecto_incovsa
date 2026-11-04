@@ -45,9 +45,11 @@ def dibujar(titulo, part, pasos, salida, ancho=360):
         elif t == "self":
             a, txt = X[p[1]], p[3]
             lineas = txt.count("\n")
-            cv.text(a + 26, y + 8, txt, size=FS - 3, anchor="la", bg=(255, 255, 255))
+            ultimo = p[1] == part[-1][0]
+            lado = -1 if ultimo else 1
+            cv.text(a + 26 * lado, y + 8, txt, size=FS - 3, anchor="ra" if ultimo else "la", bg=(255, 255, 255))
             h = 34 + lineas * (FS - 3) * 1.22
-            cv.path([(a, y), (a + 18, y), (a + 18, y + h), (a + 4, y + h)], w=2.2)
+            cv.path([(a, y), (a + 18 * lado, y), (a + 18 * lado, y + h), (a + 4 * lado, y + h)], w=2.2)
             y = y + h + PASO * 0.75
         elif t == "ini":          # abre un fragmento: ("ini", tipo, condición)
             marcos.append((p[1], p[2], y))
@@ -101,7 +103,7 @@ FIG = {
  ("msg","s","d","Bloquear envío; exigir todas marcadas;\nestado, historial y Bitácora en transacción"),
  ("ret","d","s","Commit: En Ruta o Despachado"),
  ("ret","s","i","Aviso SSE posterior; actualizar cola")]),
- "7": ("Carga diseñada y entrega de ruta", [("u","Facturador o piloto"),("i","Facturación y Ruta"),("s","Servidor\nenvios y ruta"),("d","PostgreSQL")], [
+ "7": ("Carga y entrega de ruta", [("u","Facturador o piloto"),("i","Facturación y Ruta"),("s","Servidor\nenvios y ruta"),("d","PostgreSQL")], [
  ("msg","u","i","Elige camión, piloto, fecha y hora"),
  ("msg","i","s","Guardar campos; permiso y sede"),
  ("msg","s","d","Guardar opción; sumar peso exacto"),

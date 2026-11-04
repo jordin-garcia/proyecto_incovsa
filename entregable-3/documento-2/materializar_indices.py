@@ -19,7 +19,9 @@ def normalizar(texto):
 
 def materializar(docx, texto_pdf):
     doc = Document(docx)
-    paginas = [normalizar(p) for p in Path(texto_pdf).read_text().split('\f')]
+    paginas_texto = Path(texto_pdf).read_text().split('\f')
+    paginas = [normalizar(p) for p in paginas_texto]
+    lineas_por_pagina = [[normalizar(l) for l in p.splitlines() if l.strip()] for p in paginas_texto]
     inicio = next(i for i, p in enumerate(paginas) if normalizar('Este documento explica cómo está construida') in p)
     entradas = {'general': [], 'Figura': [], 'Tabla': []}
     for p in doc.paragraphs:
@@ -34,10 +36,14 @@ def materializar(docx, texto_pdf):
         else:
             continue
         buscado = normalizar(texto)
-        coincidencias = [i + 1 for i, pagina in enumerate(paginas) if i >= inicio and buscado in pagina]
+        coincidencias = [i + 1 for i, lineas in enumerate(lineas_por_pagina) if i >= inicio and any(buscado == ''.join(lineas[j:j+k]) for j in range(len(lineas)) for k in range(1, 5))]
         if not coincidencias:
             raise ValueError('No se localizó en el PDF: ' + texto)
         entradas[grupo].append((texto, coincidencias[0], nivel))
+    for grupo, filas in entradas.items():
+        numeros = [pagina for _, pagina, _ in filas]
+        if numeros != sorted(numeros):
+            raise ValueError('El índice no sigue el orden de páginas: ' + grupo)
     campos = []
     for p in doc.paragraphs:
         instrucciones = p._p.findall('.//' + qn('w:instrText'))

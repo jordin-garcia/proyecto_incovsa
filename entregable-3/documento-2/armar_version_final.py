@@ -57,7 +57,7 @@ class ArmadorFinal(base.Armador):
         tabla = self.doc.tables[-1]
         cabecera = [c.text for c in tabla.rows[0].cells]
         if cabecera[:2] == ['Campo', 'Tipo']:
-            base.fijar_anchos(tabla, [3.1, 2.0, 2.0, 0.8, 3.2, 1.0, self.ancho_util-12.1])
+            base.fijar_anchos(tabla, [3.6, 2.7, 2.0, 0.8, 3.0, 1.2, self.ancho_util-13.3])
         for fila in tabla.rows:
             for i, celda in enumerate(fila.cells):
                 celda.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
@@ -82,6 +82,10 @@ class ArmadorFinal(base.Armador):
             for lado,valor in (('top','65'),('bottom','65'),('left','85'),('right','85')):
                 el=OxmlElement('w:'+lado);el.set(qn('w:w'),valor);el.set(qn('w:type'),'dxa');margen.append(el)
             pr.append(margen)
+        # Word incluye un borde azul en Title en algunas plantillas; la portada no lleva reglas decorativas.
+        for raiz in (self.doc.styles.element, self.doc.element):
+            for borde in raiz.xpath('.//w:pBdr'):
+                borde.getparent().remove(borde)
         self.doc.save(salida)
         return salida, nf, nt
 

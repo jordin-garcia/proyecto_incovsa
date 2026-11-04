@@ -44,11 +44,11 @@ Por eso no hay módulo, tablas ni pantallas de inventario. Los pedidos llegan al
 
 El flujo va del pedido facturado en Odoo a la entrega. Cada operación interna verifica el permiso y la sede. Las operaciones auditables guardan Bitácora en su transacción; el movimiento, marcado y orden no generan un registro por cada cambio (RN-20, RN-28).
 
-## Carga de los pedidos facturados (módulo `odoo`)
+## Carga de los pedidos facturados (módulo odoo)
 
 El facturador sube el archivo .xlsx. El servidor lo lee con las reglas de la sección «Lectura del archivo de Odoo» y guarda cada referencia válida como **pedido facturado**, con su cliente, su sector y sus líneas tal como vienen. Los pedidos facturados aparecen en el tablero de Facturación.
 
-## Armado de rutas y pedidos (módulo `envios`)
+## Armado de rutas y pedidos (módulo envios)
 
 - Hay **dos opciones de envío** por sede: «Envío por camión» y «Cliente recoge en bodega».
 - El facturador selecciona uno, varios o todos los pedidos facturados y los arrastra a una opción, entre opciones o de regreso al tablero; dentro de una opción los ordena. El orden se guarda en `pedido_facturado.posicion`.
@@ -73,13 +73,13 @@ Cargas, movimientos, cancelaciones y envíos toman el mismo bloqueo de sede (`sr
 
 La interfaz aplaza aplicar refrescos mientras hay arrastre o un borrador de fecha/hora con guardado pendiente; al terminar recupera el estado más reciente. Seleccionar todos conserva la tarjeta visible y no desplaza la lista (JC-11). El transporte SSE es compartido por sede y módulo; cada aviso solo comunica la sede y dispara una consulta autorizada. Se revalida sesión antes de avisos y latidos de 25 segundos; sin SSE, consulta cada 5 segundos.
 
-## Preparación (módulo `bodega`)
+## Preparación (módulo bodega)
 
 Bodega muestra las rutas y los pedidos En Preparación en el orden de la cola, con su fecha y hora programadas, su detalle, el lote resaltado de cada línea y su conversión. El personal marca las líneas una por una o todas a la vez, cambia la prioridad o las ordena de mayor a menor peso. El marcado y el orden se comparten en tiempo real y no van al historial ni a la bitácora (RN-20, RN-28).
 
 El tablero usa las mismas operaciones que el módulo, sin armazón, en modo claro por omisión; la preferencia vive en sessionStorage. Mantiene visible el envío hasta despacharlo aunque cambie su prioridad. Las líneas que no caben se pueden desplazar y se numeran de arriba hacia abajo por columnas. Las operaciones de orden verifican el conjunto completo y sin duplicados y comprueban el estado dentro de la transacción; una carrera de despacho revierte toda la operación.
 
-## Despacho y entrega (módulos `bodega` y `ruta`)
+## Despacho y entrega (módulos bodega y ruta)
 
 - «Ruta Despachada» o «Pedido Despachado» se habilita cuando todas las líneas están marcadas. El pedido pasa a **Despachado** y termina; la ruta pasa a **En Ruta** y aparece en el módulo de Ruta del piloto.
 - El piloto ve sus rutas en curso, de la más reciente a la más antigua, reordena los clientes y pulsa «Ruta Entregada»: el orden de ese momento queda como **recorrido** y la ruta pasa a **Entregado**. Desde ahí se consulta en Reportes. Piloto ve solo sus rutas en la sede activa; con varias sedes debe cambiar la sede de trabajo. El cierre valida permiso, sede y asignación y toma bloqueo de la ruta.

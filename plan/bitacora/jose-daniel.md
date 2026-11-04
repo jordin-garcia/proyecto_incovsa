@@ -81,3 +81,10 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 **Jordin:** JC-11 elimina el fallo definitivo de Firefox en teléfono. La matriz final está en https://github.com/jordin-garcia/proyecto_incovsa/actions/runs/41390020826 ; las dos pruebas de arrastre de Bodega en WebKit pasaron al repetirse. Actualiza desde `develop` después de integrar el PR.
 
 - Corrección del bot (02/11): limpieza del relleno superior al desmarcar el último pedido con clic individual. Regresión primero roja en los tres tamaños y luego corregida; conserva las comprobaciones anteriores. La optimización opcional de las mediciones queda sin aplicar.
+
+## 2026-11-03 · JC-08 · Documento 2 versión 1.0
+- Hecho: redactadas las 28 secciones técnicas con el sistema implementado, 16 figuras y diccionario de 32 tablas/240 columnas desde Prisma. Versiones exactas del lock y ejemplo real de extensión JC-07. Word/PDF locales de 106 páginas con portada e índices revisados; los datos de portada no se suben a Git.
+- Decisiones: conservar intacta la v0.4 y las herramientas compartidas. El despliegue se describe como diseñado; se mantienen los pendientes reales CE-08, CE-14 y JG-27 y las incidencias de la matriz del 03/11. Sin dependencias, esquema ni cambios de aplicación. La subida a Drive necesita conexión/carpeta o entrega por José Daniel; no se simula una subida.
+- Verificación: criterios 3/3 con pruebas negativas de diccionario; formato, lint, tipos, 509 pruebas de Vitest y compilación aprobados; plan válido (82 tareas). Inspección visual y estructural de todas las páginas; revisión independiente LISTO tras reforzar CA2. E2E completa local exenta por decisión 90.
+- Pendiente o aviso para otros:
+**Jordin (JG-30):** Documento 2 v1.0 listo en `entregable-3/documento-2/`. Su README explica cómo regenerar diccionario, 16 figuras y Word con tu `entregable-3/equipo.local.json`; DOCX/PDF y portada se conservan fuera de Git. La copia en Drive depende de la conexión/carpeta del equipo o la subida por José Daniel.
