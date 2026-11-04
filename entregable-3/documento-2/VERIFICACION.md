@@ -24,4 +24,4 @@ Las páginas se renderizaron e inspeccionaron a tamaño nativo. Después de los 
 
 No se ejecuta la E2E completa local: JC-08 cambia solo documentación y aplica la decisión 90 de specs/16. La CI mantiene todos los controles configurados sin cambios ni omisiones. La revisión y las comprobaciones de GitHub corresponden al PR de esta tarea.
 
-El DOCX, PDF y equipo.local.json quedan fuera de Git. La entrega en Drive requiere la conexión/carpeta del equipo o la subida por José Daniel; no se afirma una subida externa sin confirmación.
+El DOCX, PDF y equipo.local.json quedan fuera de Git. José Daniel confirmó que hará personalmente la subida a Drive. Se preparó `entregable-3/para-subir-JC-08/` con solo el Word y el PDF finales; no se afirma una subida por el agente.

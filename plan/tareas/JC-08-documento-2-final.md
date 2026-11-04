@@ -61,7 +61,7 @@ python entregable-2/herramientas/armar_documento.py entregable-3/documento-2
 - El procedimiento de extensión sigue la funcionalidad real de JC-07, desde el filtro y la consulta autorizada hasta la generación de XLSX/PDF, la descarga y sus pruebas.
 - Armado obligatorio aprobado con `python entregable-2/herramientas/armar_documento.py entregable-3/documento-2`. El armador local de esta versión ajusta columnas, figuras y estilos sin cambiar la herramienta compartida. Word/PDF locales: 106 páginas, 56 tablas de contenido y tres índices completos. Los nombres y carnés aportados por José Daniel se guardan únicamente en el archivo local excluido de Git.
 - Verificación: criterios documentales 3/3, incluidas alteraciones negativas de tipo/nulabilidad; `npm run verificar` (509 pruebas en 57 archivos), `npm run build`, plan válido (82 tareas), inspección estructural y visual de todas las páginas. Revisión independiente LISTO después de reforzar la prueba del diccionario. E2E completa local exenta por decisión 90; la CI se conserva íntegra.
-- No se añadieron dependencias, cambios de esquema, requisitos ni comportamiento. Evidencia resumida en `entregable-3/documento-2/VERIFICACION.md`. La copia en Drive queda pendiente de la conexión/carpeta o subida por José Daniel; los archivos finales ya están disponibles localmente.
+- No se añadieron dependencias, cambios de esquema, requisitos ni comportamiento. Evidencia resumida en `entregable-3/documento-2/VERIFICACION.md`. José Daniel confirmó que hará personalmente la subida a Drive. Se preparó `entregable-3/para-subir-JC-08/` con únicamente el Word y el PDF finales; no se afirma una subida por el agente.
 
 ### Cómo regenerarlo
 
