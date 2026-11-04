@@ -1,0 +1,80 @@
+
+Running 5 tests using 1 worker
+
+(node:63960) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:30:5 › RF-SW-09 / RF-SL-02 / H-33: el sistema no autorizado vuelve al paso 2 sin registrar un fallo ni pedir sede (10.9s)
+(node:44892) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:70:7 › RF-SW-30 / H-34: cerrar sitio muestra Sesión cerrada en Inicio (22.2s)
+  ok 3 [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:70:7 › RF-SW-30 / H-34: cerrar picking muestra Sesión cerrada en Inicio (16.2s)
+  ok 4 [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:89:5 › RF-SW-25 / H-07 / H-13 / H-39: acceso denegado ofrece el módulo propio y un módulo inexistente conserva el armazón (17.2s)
+  x  5 [escritorio] › pruebas-e2e\picking\auditoria-jg24.spec.ts:65:1 › RN-49 / D-01: la confirmación de Facturación cuenta un cliente aunque varíen mayúsculas, tildes y espacios exteriores (9.6s)
+
+
+  1) [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:30:5 › RF-SW-09 / RF-SL-02 / H-33: el sistema no autorizado vuelve al paso 2 sin registrar un fallo ni pedir sede 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('.acc-op:not(.deshabilitada) p').first()
+    Expected: "rgb(114, 115, 114)"
+    Received: "rgb(84, 85, 84)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" locator('.acc-op:not(.deshabilitada) p').first() with timeout 5000ms
+      - waiting for locator('.acc-op:not(.deshabilitada) p').first()
+        12 × locator resolved to <p>El ERP con el que la empresa ya trabaja. Solo es …</p>
+           - unexpected value "rgb(84, 85, 84)"
+
+
+      51 |     await page.getByRole("button", { name: "Continuar" }).click();
+      52 |     await expect(page.getByRole("heading", { name: "¿A dónde desea ingresar?" })).toBeVisible();
+    > 53 |     await expect(page.locator(".acc-op:not(.deshabilitada) p").first()).toHaveCSS("color", "rgb(114, 115, 114)");
+         |                                                                         ^
+      54 |     await expect(page.getByRole("combobox")).toHaveCount(0);
+      55 |     await page.goto("/acceso/picking");
+      56 |     await expect(page).toHaveURL(/\/acceso$/);
+        at C:\Users\Hecto\Documents\proyecto_incovsa\pruebas-e2e\acceso\auditoria-jg24.spec.ts:53:73
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\acceso-auditoria-jg24-RF-S-70c2c-trar-un-fallo-ni-pedir-sede-escritorio\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\acceso-auditoria-jg24-RF-S-70c2c-trar-un-fallo-ni-pedir-sede-escritorio\error-context.md
+
+  2) [escritorio] › pruebas-e2e\picking\auditoria-jg24.spec.ts:65:1 › RN-49 / D-01: la confirmación de Facturación cuenta un cliente aunque varíen mayúsculas, tildes y espacios exteriores 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  getByRole('dialog').locator('.confirmacion-texto')
+    Expected: "rgb(114, 115, 114)"
+    Received: "rgb(84, 85, 84)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" getByRole('dialog').locator('.confirmacion-texto') with timeout 5000ms
+      - waiting for getByRole('dialog').locator('.confirmacion-texto')
+        13 × locator resolved to <div class="confirmacion-texto" id="radix-_R_4ukislritrkndlbH2_">…</div>
+           - unexpected value "rgb(84, 85, 84)"
+
+
+      79 |     .click();
+      80 |   await expect(page.getByRole("dialog")).toContainText("2 pedido(s) facturado(s) de 1 cliente(s) y 50 kg");
+    > 81 |   await expect(page.getByRole("dialog").locator(".confirmacion-texto")).toHaveCSS("color", "rgb(114, 115, 114)");
+         |                                                                         ^
+      82 |   expect(
+      83 |     (await new AxeBuilder({ page }).analyze()).violations.filter((v) =>
+      84 |       ["serious", "critical"].includes(v.impact ?? ""),
+        at C:\Users\Hecto\Documents\proyecto_incovsa\pruebas-e2e\picking\auditoria-jg24.spec.ts:81:73
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\picking-auditoria-jg24-RN--cae76-ildes-y-espacios-exteriores-escritorio\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\picking-auditoria-jg24-RN--cae76-ildes-y-espacios-exteriores-escritorio\error-context.md
+
+  2 failed
+    [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:30:5 › RF-SW-09 / RF-SL-02 / H-33: el sistema no autorizado vuelve al paso 2 sin registrar un fallo ni pedir sede 
+    [escritorio] › pruebas-e2e\picking\auditoria-jg24.spec.ts:65:1 › RN-49 / D-01: la confirmación de Facturación cuenta un cliente aunque varíen mayúsculas, tildes y espacios exteriores 
+  3 passed (1.7m)

@@ -143,3 +143,31 @@ Quedaron funcionando en GitHub la integración continua, las verificaciones de t
 
 - `revision-claude` no revisaba los PR cuyos cambios sube el agente en la nube de Cursor (actor `cursor[bot]`): la acción rechaza los eventos de bots, y `gh run rerun` no lo resolvía porque conserva el actor. Ocurrió en #83, #85 y #86. Por decisión del coordinador, el paso «Revisar con Claude» agrega `allowed_bots: "cursor"`, solo ese bot (decisión 62 y `specs/18`).
 - Mientras tanto, para revisar como humano un PR que disparó un bot no admitido: pasarlo a borrador y volver a marcarlo listo (`gh pr ready <n> --undo` y `gh pr ready <n>`). Eso desactiva la integración automática, que hay que volver a activar.
+
+### Dependabot agrupado (24/10/2026, decisión del coordinador)
+
+No corresponde a una auditoría: es un ajuste del coordinador después de la ronda de Dependabot del 24/10 (`specs/18`, «Dependabot agrupado»). Se tituló por error «Correcciones de la auditoría (2026-10-24)» (auditoría del 26/10, H-82).
+
+
+- La ronda semanal de Dependabot del 24/10 abrió 9 PR a la vez, uno por paquete (#117 a #125): `dependabot.yml` no agrupaba nada y permitía 5 PR por ecosistema. Además propuso TypeScript 7, que rompe `calidad`, `plan` e `integridad-pruebas` porque quitó la API de JavaScript que usa `scripts/integridad-pruebas.mjs`, y `@types/node` 26, que no corresponde al Node.js 24 de `specs/16`. Por decisión del coordinador:
+  - En los dos ecosistemas, las versiones menores y los parches llegan juntos en un solo PR (grupo `menores-y-parches`); cada versión mayor, en su propio PR.
+  - En npm se ignoran las versiones mayores de `typescript` y de `@types/node`.
+  - Lo prueba `scripts/flujos.test.mjs` («Dependabot junta menores y parches…»).
+- De esa ronda, #118 y #123 eran actualizaciones menores o de parche, y se cerraron #124 y #125. Las versiones mayores de las acciones de Docker (#117, #119 y #120) se integraron el 24/10 por la noche, y #121 (ESLint 10) y #122 (`@hookform/resolvers` 6) se cerraron con su motivo (auditoría del 26/10).
+
+### Correcciones de la auditoría (2026-10-22)
+
+- **H-40:** el veredicto de `revision-claude` aceptaba cualquier comentario de `github-actions[bot]` con la marca, y cualquier flujo con `pull-requests: write` publica con ese usuario. Ahora la segunda línea del comentario cita la ejecución («Commit revisado: <sha> · Ejecución: <id>»), el flujo lista sus propias ejecuciones del commit (`actions: read`) y `scripts/veredicto-revision.mjs --ejecuciones` solo acepta el comentario que cita una de ellas y que se publicó después de que empezara. La CLI exige ese archivo. Lo prueban los casos «H-40» de `scripts/veredicto-revision.test.mjs`. Las revisiones anteriores a este cambio no citan la ejecución: un PR abierto antes necesita un commit nuevo para que se revise otra vez.
+
+### Correcciones de la auditoría (2026-10-26)
+
+- **H-82:** la sección anterior se llamaba «Correcciones de la auditoría (2026-10-24)», pero esa auditoría no existe, y decía que #117, #119 y #120 seguían abiertas. Se corrigió el título y el texto, y el agrupamiento de Dependabot quedó también en `specs/16`, «Dependencias al día». Lo prueba `scripts/auditoria-jg25.test.mjs` («H-82»).
+- **H-83:** `despliegue.yml` corrió en modo prueba con las versiones mayores nuevas de las acciones de Docker (login v4.6.0, setup-buildx v4.4.1 y build-push v7.4.0). La evidencia está en `plan/evidencias/JG-25/README.md`.
+
+### Revisión de PR de documentos (03/11/2026, decisión del coordinador)
+
+- Tres revisiones de `revision-claude` sobre el PR de CE-09 (#168, solo documentos) terminaron sin comentario y sin veredicto: el bot intentó 11 comandos no permitidos y se detuvo sin publicar. Lo mismo pasó en #165 (JM-07).
+- Se agregaron `git log`, `git show` y `ls`. No se agregó `node scripts/tareas.mjs`: ejecutaría el código de la rama del PR con el token del coordinador. Lo prueba `scripts/flujos.test.mjs`, que rechaza `node`, `npm`, `npx` y `python` en las herramientas del bot. El prompt le dice que no repita un comando negado, que no revise por dentro los binarios (.docx, .pdf, .png), que anote como opcional lo que no pudo comprobar y que termine siempre publicando el comentario.
+- Lo prueba `scripts/flujos.test.mjs` («decisión 60…»). No se activó `show_full_output` para depurar: el repositorio es público y esa salida puede mostrar datos sensibles.
+- **Segundo ajuste (03/11):** con las herramientas nuevas, #168 siguió sin comentario (3 comandos negados), mientras #169, con una revisión corta, sí lo publicó. Una revisión larga dentro de `gh pr comment --body '<texto>'` hacía que se negara el comando. Ahora el bot escribe el comentario con Write en `/tmp/revision-claude-comentario.md` (`Edit(//tmp/revision-claude-comentario.md)`, el único archivo que puede escribir) y lo publica con `--body-file`; `--body` queda como respaldo. Lo prueba `scripts/flujos.test.mjs`.
+- **Registro de la revisión (03/11):** el paso «Registro de la revisión» imprime, desde el archivo de ejecución de la acción, las herramientas que usó el bot (recortadas), los comandos que le negaron y su mensaje final. No imprime los resultados de los comandos ni activa `show_full_output`. Sirve para diagnosticar una revisión que termina sin veredicto, como en #171. Lo prueba `scripts/flujos.test.mjs`.

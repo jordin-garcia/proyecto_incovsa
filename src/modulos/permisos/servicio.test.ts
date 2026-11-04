@@ -1,7 +1,15 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { SesionActual } from "@/lib/sesion";
 import { prisma } from "@/lib/prisma";
-import { accesoModulo, esPiloto, exigirPermiso, sedesDelUsuario, tienePermiso } from "./servicio";
+import {
+  ErrorAcceso,
+  accesoModulo,
+  esPiloto,
+  exigirAccesoTotal,
+  exigirPermiso,
+  sedesDelUsuario,
+  tienePermiso,
+} from "./servicio";
 import { seleccionarSedeDeTrabajo } from "./sede";
 import { opcionesPermitidas } from "./navegacion";
 
@@ -28,6 +36,16 @@ describe("Autorización central", () => {
     expect(() => exigirPermiso(s, "pk.bodega", 2)).not.toThrow();
     expect(tienePermiso({ ...s, sistema: "sitio" }, "sit.contenido")).toBe(true);
   });
+  it("specs/03 (H-44): solo Gerencia y Soporte del sistema administran usuarios, sin permisos ajenos", () => {
+    const gerencia = sesionDePrueba({ usuario: { ...sesionDePrueba().usuario, rol: " Gérencia " }, permisos: [] });
+    expect(() => exigirAccesoTotal(gerencia, "picking")).not.toThrow();
+    expect(() => exigirAccesoTotal({ ...gerencia, sistema: "sitio" }, "sitio")).not.toThrow();
+    // La sesión del otro sistema, un rol sin acceso total aunque tenga todas las casillas, o sin sesión.
+    expect(() => exigirAccesoTotal(gerencia, "sitio")).toThrow(ErrorAcceso);
+    const conCasillas = sesionDePrueba({ permisos: ["pk.cfg.camiones", "pk.facturacion", "pk.reportes"] });
+    expect(() => exigirAccesoTotal(conCasillas, "picking")).toThrow(ErrorAcceso);
+    expect(() => exigirAccesoTotal(null, "picking")).toThrow(ErrorAcceso);
+  });
   it("RN-38: las casillas y el sistema limitan los módulos", () => {
     const s = sesionDePrueba();
     expect(opcionesPermitidas(s).map((o) => o.texto)).toEqual(["Facturación"]);
@@ -47,6 +65,45 @@ describe("Autorización central", () => {
       expect(() => exigirPermiso(s, "pk.facturacion", sede)).toThrow("No tiene permisos para acceder a este módulo.");
     expect(() => exigirPermiso(sesionDePrueba(), "pk.facturacion", 1)).not.toThrow();
     expect(tienePermiso(null, "pk.facturacion")).toBe(false);
+  });
+  it("ASVS V16.3.2: cada rechazo por permiso o por sede deja una línea en el registro del servidor", () => {
+    const registro = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      const casos = [
+        [null, "pk.reportes", undefined, { motivo: "sin_sesion", sistema: "picking" }],
+        [sesionDePrueba({ permisos: [] }), "pk.reportes", undefined, { motivo: "sin_permiso", usuarioId: "prueba" }],
+        [sesionDePrueba(), "pk.facturacion", 2, { motivo: "sede_ajena", usuarioId: "prueba", sede: 2 }],
+      ] as const;
+      for (const [s, permiso, sede, esperado] of casos) {
+        registro.mockClear();
+        expect(() => exigirPermiso(s, permiso, sede)).toThrow(ErrorAcceso);
+        expect(registro).toHaveBeenCalledTimes(1);
+        const linea = registro.mock.calls[0]![0] as string;
+        expect(JSON.parse(linea)).toMatchObject({
+          nivel: "aviso",
+          evento: "autorizacion_rechazada",
+          operacion: permiso,
+          sistema: "picking",
+          fecha: expect.any(String),
+          ...esperado,
+        });
+        // Sin datos personales: ni el nombre ni el nombre de usuario.
+        expect(linea).not.toContain("Usuario de prueba");
+      }
+      registro.mockClear();
+      expect(() => exigirAccesoTotal(sesionDePrueba(), "picking")).toThrow(ErrorAcceso);
+      expect(JSON.parse(registro.mock.calls[0]![0] as string)).toMatchObject({
+        motivo: "sin_permiso",
+        operacion: "acceso_total",
+        sistema: "picking",
+        usuarioId: "prueba",
+      });
+      registro.mockClear();
+      exigirPermiso(sesionDePrueba(), "pk.facturacion", 1);
+      expect(registro).not.toHaveBeenCalled();
+    } finally {
+      registro.mockRestore();
+    }
   });
   it.each(["Piloto", " piloto ", "PILOTO", "Píloto"])("RN-46: reconoce %s", (rol) => {
     expect(esPiloto(sesionDePrueba({ usuario: { ...sesionDePrueba().usuario, rol } }))).toBe(true);
@@ -70,5 +127,39 @@ describe("Autorización central", () => {
     expect(
       opcionesPermitidas(sesionDePrueba({ sistema: "sitio", permisos: ["sit.contenido"] })).map((o) => o.texto),
     ).toEqual(["Resumen", "Contenido institucional"]);
+  });
+});
+
+describe("ASVS V16.3.2: rechazos lanzados por los servicios", () => {
+  it("ASVS V16.3.2: un ErrorAcceso lanzado por un servicio queda registrado con el contexto de la operación", async () => {
+    const registro = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      const { crearCamion } = await import("@/modulos/camiones/servicio");
+      const sedes = await prisma.sede.findMany({ orderBy: { id: "asc" }, select: { id: true } });
+      // Como en la acción: se exige el permiso del módulo y luego el servicio rechaza la sede ajena (exigirSede).
+      async function accion() {
+        await Promise.resolve();
+        exigirPermiso(sesionDePrueba({ permisos: ["pk.cfg.camiones"] }), "pk.cfg.camiones");
+        await crearCamion(
+          { identificacion: "Intruso V16", capacidadKg: "1000", sedeId: sedes[1]!.id },
+          { usuarioId: "prueba", sedesIds: [sedes[0]!.id] },
+        );
+      }
+      await expect(accion()).rejects.toBeInstanceOf(ErrorAcceso);
+      expect(registro).toHaveBeenCalledTimes(1);
+      expect(JSON.parse(registro.mock.calls[0]![0] as string)).toMatchObject({
+        evento: "autorizacion_rechazada",
+        motivo: "regla_de_acceso",
+        sistema: "picking",
+        usuarioId: "prueba",
+        operacion: "pk.cfg.camiones",
+      });
+      // rechazarAcceso registra su propio motivo y el error no lo repite.
+      registro.mockClear();
+      expect(() => exigirPermiso(null, "pk.bodega")).toThrow(ErrorAcceso);
+      expect(registro).toHaveBeenCalledTimes(1);
+    } finally {
+      registro.mockRestore();
+    }
   });
 });

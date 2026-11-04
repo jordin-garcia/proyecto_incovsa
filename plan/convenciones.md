@@ -137,7 +137,9 @@ Si tu tarea necesita cambiar uno (por ejemplo, una columna o una dependencia), d
 - Primero las pruebas, y se confirma que fallan por la razón esperada (fase roja). Nunca se debilitan, se omiten ni se borran.
 - Cada acción del servidor nueva tiene una prueba que confirma que rechaza a un usuario sin sesión, sin el permiso o de otra sede.
 - **Playwright** en `pruebas-e2e/<area>/`, con localizadores por rol y texto visible. Proyectos: `telefono` (390 × 844), `tableta` (768 × 1024), `escritorio` (1440 × 900) y `tv` (1920 × 1080, solo el tablero). Accesibilidad con `@axe-core/playwright`, sin violaciones serias ni críticas.
+- **Navegadores (30/10, JG-16):** `npm run e2e` usa Chromium. Para Firefox o WebKit: `npx playwright install firefox webkit` una vez y `NAVEGADOR=firefox npm run e2e -- <archivos>` (o `webkit`). Para que una prueba funcione en los tres, usa las funciones de `pruebas-e2e/comunes/`: `irA` y `recargar` en lugar de `page.goto` y `page.reload`, `arrastrarConDedo` para el arrastre táctil (no CDP), `anotarAvisos` para comprobar un aviso que se oculta e `imagenWebp` para elegir una imagen WebP. Espera la hidratación antes de escribir en un formulario. La matriz completa: `gh workflow run matriz-navegadores.yml --ref develop`.
 - Los datos de prueba del archivo de Odoo están en `pruebas/fixtures/` (JG-04). El archivo real de INCOVSA nunca se sube.
+- **Evidencia (26/10, D-08):** una prueba que guarda capturas o archivos de evidencia dentro del repositorio (`plan/evidencias/`, `pruebas-e2e/**/evidencias/`) solo los escribe si la variable `EVIDENCIA=1` está definida. Así, una corrida normal de `npm run e2e` deja el árbol limpio. Para regenerar la evidencia de tu tarea: `EVIDENCIA=1 npm run e2e -- <archivos>`. CE-13 aplica la regla a las pruebas existentes.
 
 ---
 
@@ -151,7 +153,7 @@ Para cada pantalla de la tarea:
 3. Implementa con los componentes de `src/componentes/` y **solo** los tokens del design system (JG-05). No se agregan colores, tamaños, sombras ni fuentes nuevos.
 4. Compara lado a lado la aplicación y el prototipo en 390 px, 768 px y 1440 px (y 1920 px en el tablero): textos, orden, datos mostrados, estados (vacío, cargando, error, con datos), mensajes, ventanas de confirmación, avisos e interacción.
 5. Pega las capturas de los dos en el PR.
-6. Donde `specs/` cambia el prototipo, manda `specs/`: anótalo en "Decisiones tomadas" del PR.
+6. **En diseño manda el prototipo** (`specs/16`, decisión 89): si `specs/` describe cómo se ve una pantalla de otra forma (disposición, estructura visual, tamaños, colores, tipografía, espaciado o estilos), sigue el prototipo y corrige `specs/`. Donde `specs/` cambia los textos, los datos o el comportamiento, manda `specs/`. Anótalo en "Decisiones tomadas" del PR.
 
 Lo que el prototipo tiene y la aplicación **no** (botón "Demostración", notas amarillas P-xx, leyenda "Prototipo para validación", `localStorage`) está en `specs/20-prototipo-aprobado.md`.
 

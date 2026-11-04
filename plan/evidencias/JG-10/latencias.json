@@ -1,0 +1,103 @@
+{
+    "fecha":  "2026-10-21",
+    "entorno":  "Next.js standalone de producción; un trabajador; batería completa de 204 pruebas aprobadas",
+    "origenDelPlazo":  "entrada real en avisarCambio, antes de autorizar y enviar SSE",
+    "mediciones":  [
+                       {
+                           "sede":  1,
+                           "ms":  808,
+                           "limite":  1999,
+                           "proyecto":  "escritorio",
+                           "escenario":  "SSE",
+                           "operacion":  "desmarcar"
+                       },
+                       {
+                           "sede":  1,
+                           "ms":  781,
+                           "limite":  1999,
+                           "proyecto":  "escritorio",
+                           "escenario":  "SSE",
+                           "operacion":  "marcar"
+                       },
+                       {
+                           "sede":  1,
+                           "ms":  1831,
+                           "limite":  1999,
+                           "proyecto":  "tableta",
+                           "escenario":  "SSE",
+                           "operacion":  "desmarcar"
+                       },
+                       {
+                           "sede":  1,
+                           "ms":  699,
+                           "limite":  1999,
+                           "proyecto":  "tableta",
+                           "escenario":  "SSE",
+                           "operacion":  "marcar"
+                       },
+                       {
+                           "sede":  1,
+                           "ms":  701,
+                           "limite":  1999,
+                           "proyecto":  "telefono",
+                           "escenario":  "SSE",
+                           "operacion":  "desmarcar"
+                       },
+                       {
+                           "sede":  1,
+                           "ms":  568,
+                           "limite":  1999,
+                           "proyecto":  "telefono",
+                           "escenario":  "SSE",
+                           "operacion":  "marcar"
+                       },
+                       {
+                           "sede":  1,
+                           "ms":  1017,
+                           "limite":  1999,
+                           "proyecto":  "escritorio",
+                           "escenario":  "reconexion",
+                           "operacion":  "desmarcar"
+                       },
+                       {
+                           "sede":  1,
+                           "ms":  4782,
+                           "limite":  10000,
+                           "proyecto":  "escritorio",
+                           "escenario":  "respaldo",
+                           "operacion":  "marcar"
+                       },
+                       {
+                           "sede":  1,
+                           "ms":  612,
+                           "limite":  1999,
+                           "proyecto":  "tableta",
+                           "escenario":  "reconexion",
+                           "operacion":  "desmarcar"
+                       },
+                       {
+                           "sede":  1,
+                           "ms":  4944,
+                           "limite":  10000,
+                           "proyecto":  "tableta",
+                           "escenario":  "respaldo",
+                           "operacion":  "marcar"
+                       },
+                       {
+                           "sede":  1,
+                           "ms":  515,
+                           "limite":  1999,
+                           "proyecto":  "telefono",
+                           "escenario":  "reconexion",
+                           "operacion":  "desmarcar"
+                       },
+                       {
+                           "sede":  1,
+                           "ms":  4951,
+                           "limite":  10000,
+                           "proyecto":  "telefono",
+                           "escenario":  "respaldo",
+                           "operacion":  "marcar"
+                       }
+                   ]
+}

@@ -17,6 +17,7 @@ Tu agente sigue esta guía en tu primera tarea (`JG-01`, `CE-01`, `DM-01`, `JM-0
 | **Homebrew** (solo macOS) | — | Sigue https://brew.sh |
 | **Git** | `winget install --id Git.Git -e` | `brew install git` |
 | **GitHub CLI** | `winget install --id GitHub.cli -e` | `brew install gh` |
+| **gitleaks** (secretos antes de cada commit) | `winget install --id Gitleaks.Gitleaks -e` | `brew install gitleaks` |
 | **Node.js 24 LTS** (exactamente la 24, con **npm 11.19 o posterior**: la 24.21 o una más nueva ya lo trae; si no, `npm i -g npm@11.19.0`) | Descarga el instalador de la versión 24 en https://nodejs.org/en/download | `brew install node@24` y sigue el aviso de Homebrew para agregarlo al `PATH` |
 | **PostgreSQL 18** | Instalador oficial en https://www.postgresql.org/download/windows/ (versión 18). Anota la contraseña del usuario `postgres` y agrega `C:\Program Files\PostgreSQL\18\bin` al `PATH` | `brew install postgresql@18`, luego `brew services start postgresql@18` y agrega su carpeta `bin` al `PATH` como indica Homebrew |
 | **Editor (opcional)** | VS Code: `winget install --id Microsoft.VisualStudioCode -e` | `brew install --cask visual-studio-code` |
@@ -60,7 +61,7 @@ Todo debe aparecer con ✅. Si algo falla, el mismo script dice qué instalar.
    psql -U postgres -c "CREATE DATABASE incovsa_pruebas;"
    ```
    En macOS con Homebrew, el usuario es el tuyo: `psql postgres -c "CREATE DATABASE incovsa;"`.
-2. Copia `.env.example` a `.env` (PowerShell: `Copy-Item .env.example .env`; macOS: `cp .env.example .env`) y **tú** escribe en `.env` el usuario y la contraseña de tu PostgreSQL. Los agentes no leen `.env` (specs/16, decisión 70).
+2. Copia `.env.example` a `.env` (PowerShell: `Copy-Item .env.example .env`; macOS: `cp .env.example .env`) y **tú** escribe en `.env` el usuario y la contraseña de tu PostgreSQL. Cambia también `BETTER_AUTH_SECRET_SITIO` y `BETTER_AUTH_SECRET_PICKING` por dos claves distintas, generadas cada una con `openssl rand -base64 32`: con las de ejemplo («cambie-esto…»), el modo de producción no deja iniciar sesión, y las pruebas de `pruebas-e2e/flujo` usan ese modo (JG-25). Los agentes no leen `.env` (specs/16, decisión 70).
 3. Instala y prepara:
    ```bash
    npm ci

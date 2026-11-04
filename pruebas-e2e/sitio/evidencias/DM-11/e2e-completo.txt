@@ -1,0 +1,1108 @@
+
+> incovsa@0.1.0 e2e
+> playwright test --workers 2
+
+[WebServer] (node:12852) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:4340) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] ⚠ Warning: Next.js ignored package-lock.json in C:\Users\danie because it is outside the current Git repository (C:\Users\danie\OneDrive\Escritorio\progra web\proyecto_incovsa).
+[WebServer]  To use this directory, set `turbopack.root` in your Next.js config.
+[WebServer] 
+[WebServer] (node:46148) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 438 tests using 2 workers
+
+(node:44420) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:30836) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11844) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok   2 [telefono] › pruebas-e2e\acceso\acceso-personal.spec.ts:59:5 › RF-SW-09: restringe opciones según la cuenta y rechaza usuarios inexistentes (4.1s)
+[WebServer] 2026-10-27T03:40:40.952Z WARN [Better Auth]: Invalid password
+[WebServer] (node:37756) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok   1 [telefono] › pruebas-e2e\acceso\acceso-personal.spec.ts:17:5 › RF-SW-09 / CAM-83: los tres pasos, sistemas habilitados, ayuda, contraseña y accesibilidad (5.6s)
+[WebServer] (node:42800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok   4 [telefono] › pruebas-e2e\acceso\acceso-personal.spec.ts:123:5 › RNF-05: no expone altas, cambios de contraseña ni accesos que evadan límites; verifica origen (1.7s)
+[WebServer] (node:35436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok   5 [telefono] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:30:5 › RF-SW-09 / RF-SL-02 / H-33: el sistema no autorizado vuelve al paso 2 sin registrar un fallo ni pedir sede (1.9s)
+[WebServer] (node:38028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2828) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:20704) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:3516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok   3 [telefono] › pruebas-e2e\acceso\acceso-personal.spec.ts:83:5 › RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio y conserva la otra (7.8s)
+[WebServer] (node:17312) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok   6 [telefono] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:70:7 › RF-SW-30 / H-34: cerrar sitio muestra Sesión cerrada en Inicio (7.0s)
+[WebServer] (node:44408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] (node:10536) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok   7 [telefono] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:70:7 › RF-SW-30 / H-34: cerrar picking muestra Sesión cerrada en Inicio (6.2s)
+[WebServer] (node:39124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok   9 [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.03 en picking solo ve sus módulos (1.4s)
+[WebServer] (node:6760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:37732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  10 [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.03 en sitio solo ve sus módulos (1.7s)
+[WebServer] Error inesperado en una acción del servidor: Error [ZodError]: [
+[WebServer]   {
+[WebServer]     "code": "invalid_value",
+[WebServer]     "values": [
+[WebServer]       "facturacion",
+[WebServer]       "bodega",
+[WebServer]       "tablero",
+[WebServer]       "ruta",
+[WebServer]       "reportes",
+[WebServer]       "configuracion"
+[WebServer]     ],
+[WebServer]     "path": [
+[WebServer]       "modulo"
+[WebServer]     ],
+[WebServer]     "message": "Invalid option: expected one of \"facturacion\"|\"bodega\"|\"tablero\"|\"ruta\"|\"reportes\"|\"configuracion\""
+[WebServer]   }
+[WebServer] ]
+[WebServer]     at GET (src\app\api\tiempo-real\route.ts:12:38)
+[WebServer]   10 | export async function GET(request: Request) {
+[WebServer]   11 |   try {
+[WebServer] > 12 |     const datos = esquemaSuscripcion.parse(Object.fromEntries(new URL(request.url).searchParams));
+[WebServer]      |                                      ^
+[WebServer]   13 |     const autorizar = async () => {
+[WebServer]   14 |       const sesion = await obtenerSesion("picking", request.headers);
+[WebServer]   15 |       exigirPermiso(sesion, permisoDelModulo(sesion, datos.modulo), datos.sede);
+[WebServer] (node:43548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok   8 [telefono] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:89:5 › RF-SW-25 / H-07 / H-13 / H-39: acceso denegado ofrece el módulo propio y un módulo inexistente conserva el armazón (5.9s)
+  ok  11 [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.05 en picking solo ve sus módulos (2.3s)
+[WebServer] (node:21384) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  12 [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.06 en picking solo ve sus módulos (2.3s)
+  ok  13 [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.08 en sitio solo ve sus módulos (1.6s)
+  ok  14 [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.09 en sitio solo ve sus módulos (1.3s)
+[WebServer] (node:3940) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  15 [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.01 en picking solo ve sus módulos (2.1s)
+  ok  16 [telefono] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.01 en sitio solo ve sus módulos (1.8s)
+[WebServer] (node:47376) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  17 [telefono] › pruebas-e2e\acceso\permisos.spec.ts:73:5 › RNF-04: primera barrera por sistema y rechazo de acceso directo en el servidor (1.6s)
+  ok  19 [telefono] › pruebas-e2e\comunes\aplicacion.spec.ts:5:5 › RNF-07: la aplicación responde en / con el título de INCOVSA y en español (1.1s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '4162560284'
+[WebServer] }
+  ok  18 [telefono] › pruebas-e2e\acceso\permisos.spec.ts:86:5 › RN-17 / RF-SL-66: cookie ajena se ignora y la sede autorizada persiste (3.8s)
+[WebServer] (node:33812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  21 [telefono] › pruebas-e2e\comunes\armazon.spec.ts:7:7 › RF-SW-26 / RF-SL-60: armazón de panel, navegación y preferencia (1.5s)
+  ok  20 [telefono] › pruebas-e2e\comunes\aplicacion.spec.ts:12:5 › RNF-08: la página de inicio no tiene violaciones serias ni críticas de accesibilidad (2.8s)
+[WebServer] (node:21532) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  23 [telefono] › pruebas-e2e\comunes\armazon.spec.ts:7:7 › RF-SW-26 / RF-SL-60: armazón de picking, navegación y preferencia (774ms)
+  ok  22 [telefono] › pruebas-e2e\comunes\armazon.spec.ts:61:7 › RNF-08: panel accesible con menú abierto y cerrado (1.3s)
+[WebServer] (node:8292) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:31896) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  25 [telefono] › pruebas-e2e\comunes\armazon.spec.ts:72:5 › RF-SL-60: sede solo en módulos aplicables y con varias sedes (1.2s)
+  ok  24 [telefono] › pruebas-e2e\comunes\armazon.spec.ts:61:7 › RNF-08: picking accesible con menú abierto y cerrado (1.5s)
+[WebServer] (node:51032) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  26 [telefono] › pruebas-e2e\comunes\armazon.spec.ts:95:5 › RNF-01: tipografías locales y paleta exclusiva del prototipo (656ms)
+[WebServer] (node:50144) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  27 [telefono] › pruebas-e2e\comunes\campos-fecha-hora.spec.ts:8:5 › RF-SL-70: fecha con teclado, normalización, inexistente y valor ISO (1.0s)
+  ok  28 [telefono] › pruebas-e2e\comunes\campos-fecha-hora.spec.ts:31:5 › RF-SL-70: hora de 24 horas, normalización y rechazo de hora inválida (622ms)
+[WebServer] (node:43060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  29 [telefono] › pruebas-e2e\comunes\campos-fecha-hora.spec.ts:47:5 › RF-SL-70: selectores nativos anclados al campo y elección sincronizada (676ms)
+  ok  30 [telefono] › pruebas-e2e\comunes\componentes.spec.ts:9:5 › RNF-08: pestañas, botones segmentados y lista desplegable con teclado (757ms)
+[WebServer] (node:32496) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  31 [telefono] › pruebas-e2e\comunes\componentes.spec.ts:28:5 › RNF-08: la ventana de confirmación no tiene violaciones serias ni críticas (1.3s)
+  ok  32 [telefono] › pruebas-e2e\comunes\componentes.spec.ts:38:5 › RNF-08: Escape, volver, confirmar y retorno del foco (1.3s)
+[WebServer] (node:11988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  33 [telefono] › pruebas-e2e\comunes\componentes.spec.ts:60:7 › RNF-08: mensaje de Guardar desaparece a los cuatro segundos (5.2s)
+  ok  34 [telefono] › pruebas-e2e\comunes\componentes.spec.ts:60:7 › RNF-08: mensaje de Enviar a Bodega desaparece a los cuatro segundos (5.0s)
+[WebServer] (node:16224) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:34748) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  36 [telefono] › pruebas-e2e\panel\auditoria-jg24.spec.ts:11:5 › RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recupera medidas y hover del prototipo (3.8s)
+[WebServer] (node:51300) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  35 [telefono] › pruebas-e2e\comunes\componentes.spec.ts:60:7 › RNF-08: mensaje de Volver desaparece a los cuatro segundos (5.2s)
+[WebServer] (node:34760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  37 [telefono] › pruebas-e2e\panel\auditoria-jg24.spec.ts:50:5 › RF-SW-29 / RN-39 / H-04: publicar y quitar un valor muestra el número del valor en el aviso (2.7s)
+[WebServer] (node:29960) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  38 [telefono] › pruebas-e2e\panel\contenido.spec.ts:19:5 › RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y accesibilidad (7.0s)
+[WebServer] (node:48776) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  39 [telefono] › pruebas-e2e\panel\contenido.spec.ts:85:5 › RF-SW-25: el permiso se exige también al abrir la sección directamente (673ms)
+[WebServer] (node:16176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  40 [telefono] › pruebas-e2e\panel\contenido.spec.ts:111:5 › RF-SW-23 / RNF-05: publica una imagen de 5 MB y limpia la imagen retirada (1.8s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '4162560284'
+[WebServer] }
+[WebServer] (node:33212) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  41 [telefono] › pruebas-e2e\panel\contenido.spec.ts:150:5 › RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas (1.1s)
+[WebServer] (node:36540) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  42 [telefono] › pruebas-e2e\panel\contenido.spec.ts:170:5 › RF-SW-23: un borrador de portada o historia no cambia la etiqueta publicada (1.1s)
+[WebServer] (node:8592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:43784) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok  43 [telefono] › pruebas-e2e\panel\contenido.spec.ts:186:5 › RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visita sin sesión (2.4s)
+[WebServer] (node:22980) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:51544) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:43608) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  44 [telefono] › pruebas-e2e\panel\contenido.spec.ts:245:5 › RF-SW-23 / RF-SW-24: reemplazar INCOVSA actualiza cabecera y pie públicos (3.7s)
+  ok  45 [telefono] › pruebas-e2e\panel\documentos.spec.ts:44:5 › RF-SW-14 / RN-41 / RNF-08: crear, buscar, editar y eliminar productos documentados (12.8s)
+[WebServer] (node:45308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:39532) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:46228) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:46200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  46 [telefono] › pruebas-e2e\panel\documentos.spec.ts:95:5 › RN-19 / RF-SW-21 / RNF-08: solo ver y ver-descargar reciben opciones y direcciones autorizadas; CSP permite Drive (12.7s)
+[WebServer] (node:34524) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:5512) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  47 [telefono] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:21:5 › RF-SW-07 / RN-56: guardar descripción y galería publica la industria sin perder los datos anteriores (4.8s)
+[WebServer] (node:48088) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:38296) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:35692) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  48 [telefono] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:82:5 › RF-SW-07 / RNF-08: industrias y catálogo conservan estructura y accesibilidad (5.9s)
+[WebServer] (node:51328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:30684) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  49 [telefono] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:114:5 › RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes de eliminar (6.0s)
+[WebServer] (node:956) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  50 [telefono] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:159:5 › RF-SW-23: impide cerrar el editor mientras se publica y conserva el borrador si falla (2.0s)
+  ok  51 [telefono] › pruebas-e2e\panel\solicitudes.spec.ts:71:1 › RF-SW-20 / CP-63 / RNF-08: filtros, estados libres, responsable y edición del comentario accesibles (13.0s)
+[WebServer] (node:47528) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  52 [telefono] › pruebas-e2e\panel\solicitudes.spec.ts:130:1 › RF-SW-31 / CP-59: indicador normal y reducido baja al abrir una solicitud (1.4s)
+[WebServer] (node:6468) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  53 [telefono] › pruebas-e2e\panel\solicitudes.spec.ts:148:1 › RNF-04 / RF-SW-20: solo lectura sin gestionar y sección ausente sin permisos (1.9s)
+[WebServer] (node:30536) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:50600) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  55 [telefono] › pruebas-e2e\picking\auditoria-jg24.spec.ts:65:1 › RN-49 / D-01: la confirmación de Facturación cuenta un cliente aunque varíen mayúsculas, tildes y espacios exteriores (1.6s)
+  ok  54 [telefono] › pruebas-e2e\panel\usuarios.spec.ts:30:7 › Panel: usuarios del sitio › RF-SW-13: Gerencia crea un usuario con solo sit.doc.ver y ese usuario solo ve la documentación (3.8s)
+[WebServer] (node:50212) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:7336) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  57 [telefono] › pruebas-e2e\panel\usuarios.spec.ts:80:7 › Panel: usuarios del sitio › RF-SW-11 / RN-47: restablecer la contraseña no ofrece correo y la nueva clave entra (3.1s)
+[WebServer] (node:25856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  58 [telefono] › pruebas-e2e\panel\usuarios.spec.ts:116:7 › Panel: usuarios del sitio › RF-SW-11: ¿Olvidó su contraseña? del sitio pide a Gerencia o a Soporte (971ms)
+[WebServer] (node:32484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  59 [telefono] › pruebas-e2e\panel\usuarios.spec.ts:131:7 › Panel: usuarios del sitio › criterio 5: la lista y el alta no tienen violaciones serias de axe (3.6s)
+[WebServer] (node:3824) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  60 [telefono] › pruebas-e2e\picking\camiones.spec.ts:27:7 › Configuración: camiones › RF-SL-04: se crea, edita y elimina un camión (4.5s)
+[WebServer] (node:32128) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  61 [telefono] › pruebas-e2e\picking\camiones.spec.ts:73:7 › Configuración: camiones › criterio 6: sin violaciones serias de axe (1.1s)
+[WebServer] (node:39728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  62 [telefono] › pruebas-e2e\picking\camiones.spec.ts:82:7 › Configuración: camiones › RNF-04: sin pk.cfg.camiones la pantalla rechaza el acceso (490ms)
+[WebServer] (node:16376) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  63 [telefono] › pruebas-e2e\picking\facturacion-carga.spec.ts:37:1 › RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos facturados (5.6s)
+[WebServer] (node:39572) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:7324) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3768) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:50332) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:47112) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29152) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:31400) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  64 [telefono] › pruebas-e2e\picking\facturacion-envio.spec.ts:49:5 › RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bodega (13.6s)
+  ok  56 [telefono] › pruebas-e2e\picking\bodega.spec.ts:82:7 › Módulo de Bodega E2E › Criterio 8 / RNF-08: Bodega con datos sin violaciones serias de axe, contraste incluido (1.2s)
+[WebServer] (node:492) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:5920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  66 [telefono] › pruebas-e2e\picking\bodega.spec.ts:95:7 › Módulo de Bodega E2E › RNF-08: pedido que recoge el cliente, con «Sin lote», y su Detalle sin violaciones serias de axe (2.2s)
+[WebServer] (node:17448) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  67 [telefono] › pruebas-e2e\picking\bodega.spec.ts:116:7 › Módulo de Bodega E2E › RNF-08: líneas marcadas sin violaciones serias de axe, contraste incluido (2.6s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '4162560284'
+[WebServer] }
+[WebServer] (node:9928) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  68 [telefono] › pruebas-e2e\picking\bodega.spec.ts:144:7 › Módulo de Bodega E2E › RNF-08: Detalle de Ruta sin violaciones serias de axe, contraste incluido (2.2s)
+[WebServer] (node:40192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:50468) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  65 [telefono] › pruebas-e2e\picking\reportes-exportacion.spec.ts:22:5 › RF-SL-38 / CAM-96: descarga Excel y PDF desde las tres pestañas de Reportes (8.0s)
+  ok  69 [telefono] › pruebas-e2e\picking\bodega.spec.ts:158:7 › Módulo de Bodega E2E › RNF-08: Bodega vacía sin violaciones serias de axe, contraste incluido (1.2s)
+[WebServer] (node:41656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  71 [telefono] › pruebas-e2e\picking\bodega.spec.ts:168:7 › Módulo de Bodega E2E › RF-SL-21 / RN-51 (CP-19): el envío muestra dos filas con lote resaltado y unidades correctas (1.2s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '4162560284'
+[WebServer] }
+[WebServer] (node:14324) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  72 [telefono] › pruebas-e2e\picking\bodega.spec.ts:199:7 › Módulo de Bodega E2E › RF-SL-74 / RF-SL-75 (CP-36): fecha y hora programadas y Detalle de Ruta completo (1.6s)
+[WebServer] (node:35156) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  73 [telefono] › pruebas-e2e\picking\bodega.spec.ts:230:7 › Módulo de Bodega E2E › RF-SL-23 / RN-20: marcar línea persiste al recargar y marcar todo marca todas (2.8s)
+[WebServer] (node:29844) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  74 [telefono] › pruebas-e2e\picking\bodega.spec.ts:279:7 › Módulo de Bodega E2E › RF-SL-61 (auditoría H-17): el encabezado de Bodega tiene la estructura de cab() con la instrucción a la par del título (713ms)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '4162560284'
+[WebServer] }
+[WebServer] (node:25748) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  75 [telefono] › pruebas-e2e\picking\bodega.spec.ts:296:7 › Módulo de Bodega E2E › RF-SL-75 / RNF-01 (auditoría H-18, H-19 y H-20): «Programada» en verde y negrita, avance y herramientas como el prototipo (662ms)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '4162560284'
+[WebServer] }
+  ok  70 [telefono] › pruebas-e2e\picking\reportes.spec.ts:23:5 › RF-SL-59 / CP-64: periodos y fechas inválidas en Reportes (7.5s)
+[WebServer] (node:28684) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  76 [telefono] › pruebas-e2e\picking\bodega.spec.ts:340:7 › Módulo de Bodega E2E › RF-SL-74 (auditoría H-21): en el Detalle se desplaza la ventana, no una zona interna (2.0s)
+  ok  77 [telefono] › pruebas-e2e\picking\reportes.spec.ts:116:7 › RF-SL-59 / RNF-08: Despacho del periodo conserva el rango y es accesible (1.9s)
+[WebServer] (node:11992) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  78 [telefono] › pruebas-e2e\picking\bodega.spec.ts:374:7 › Módulo de Bodega E2E › RF-SL-23 (auditoría H-24): sin red, la marca vuelve atrás con un mensaje y la pantalla sigue en uso (2.0s)
+  ok  79 [telefono] › pruebas-e2e\picking\reportes.spec.ts:116:7 › RF-SL-59 / RNF-08: Rutas realizadas conserva el rango y es accesible (2.1s)
+[WebServer] (node:13340) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:4340) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+  ok  80 [telefono] › pruebas-e2e\picking\bodega.spec.ts:416:7 › Módulo de Bodega E2E › RF-SL-24 / RN-11 (CP-38): despacho solo habilitado con todo marcado y pasa a En Ruta (2.4s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '4162560284'
+[WebServer] }
+[WebServer] (node:35536) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  81 [telefono] › pruebas-e2e\picking\reportes.spec.ts:116:7 › RF-SL-59 / RNF-08: Bitácora conserva el rango y es accesible (4.2s)
+(node:15320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10676) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:43308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3368) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:19880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:22696) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:39412) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:37736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  82 [telefono] › pruebas-e2e\picking\bodega.spec.ts:461:7 › Módulo de Bodega E2E › Criterio 7: usuario sin pk.bodega ve pantalla sin acceso con textos del prototipo (965ms)
+(node:25668) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:43924) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:536) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:9072) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  83 [telefono] › pruebas-e2e\picking\reportes.spec.ts:147:5 › RF-SL-38 / RF-SL-37 / RN-39: datos de demostración, conversiones y recorrido en las tres pestañas (5.9s)
+[WebServer] (node:36588) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:48580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  84 [telefono] › pruebas-e2e\picking\ruta.spec.ts:82:7 › Módulo de Ruta E2E (JM-06) › Criterio 1: RF-SL-26 / RN-46 - Visibilidad de rutas por rol y permiso (3.1s)
+  ok  86 [telefono] › pruebas-e2e\picking\ruta.spec.ts:121:7 › Módulo de Ruta E2E (JM-06) › Criterio 2: RF-SL-78 - Orden de la más reciente a la más antigua (748ms)
+[WebServer] (node:9108) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  87 [telefono] › pruebas-e2e\picking\ruta.spec.ts:142:7 › Módulo de Ruta E2E (JM-06) › Criterio 3: RF-SL-27 / RN-49 - Detalle de ruta con Cliente, Sector y Total (kg) (936ms)
+  ok  85 [telefono] › pruebas-e2e\picking\usuarios.spec.ts:30:7 › Configuración: usuarios del picking › RF-SL-03: Gerencia crea un usuario de Bodega que solo ve Quetzaltenango (4.5s)
+[WebServer] (node:36176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:43324) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:52196) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:46560) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:27240) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:41028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  88 [telefono] › pruebas-e2e\picking\ruta.spec.ts:173:7 › Módulo de Ruta E2E (JM-06) › Criterio 4 y 5: RF-SL-28, RF-SL-29, RN-29, RN-11 - Cierre de ruta y entrega con recorrido reordenado (4.0s)
+  ok  89 [telefono] › pruebas-e2e\picking\usuarios.spec.ts:76:7 › Configuración: usuarios del picking › criterio 6: con pk.cfg.camiones sin Gerencia no ve la pestaña Usuarios (3.4s)
+[WebServer] (node:44684) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:4504) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:28196) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  90 [telefono] › pruebas-e2e\picking\ruta.spec.ts:241:7 › Módulo de Ruta E2E (JM-06) › Criterio 6 y 7 / RNF-08 / RNF-14: Accesibilidad con axe y responsividad (1.5s)
+[WebServer] [browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+[WebServer] 
+[WebServer] - A server/client branch `if (typeof window !== 'undefined')`.
+[WebServer] - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+[WebServer] - Date formatting in a user's locale which doesn't match the server.
+[WebServer] - External changing data without sending a snapshot of it along with the HTML.
+[WebServer] - Invalid HTML tag nesting.
+[WebServer] 
+[WebServer] It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+[WebServer] 
+[WebServer] https://react.dev/link/hydration-mismatch
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <RedirectBoundary>
+[WebServer]       <RedirectErrorBoundary router={{...}}>
+[WebServer]         <InnerLayoutRouter url="/contacto" tree={[...]} params={{}} renderTree={{...}} segmentPath={[...]} ...>
+[WebServer]           <SegmentViewNode type="layout" pagePath="(sitio)/la...">
+[WebServer]             <SegmentTrieNode>
+[WebServer]             <link>
+[WebServer]             <script>
+[WebServer]             <script>
+[WebServer]             <LayoutSitio>
+[WebServer]               <div className="sitio">
+[WebServer]                 <Cabecera>
+[WebServer]                 <OuterLayoutRouter>
+[WebServer]                 <Pie datos={{logotipo:"...", ...}} anio="2026">
+[WebServer]                   <footer className="pie-sitio">
+[WebServer]                     <div className="wrap">
+[WebServer]                       <div className="pie-rej">
+[WebServer]                         <div>
+[WebServer]                           <img
+[WebServer]                             alt="INCOVSA Químicos"
+[WebServer]                             fetchPriority={undefined}
+[WebServer] +                           loading="lazy"
+[WebServer] -                           loading="eager"
+[WebServer]                             width={180}
+[WebServer]                             height={54}
+[WebServer]                             decoding="async"
+[WebServer]                             data-nimg="1"
+[WebServer]                             className="pie-logo"
+[WebServer]                             style={{color:"transparent"}}
+[WebServer]                             sizes={undefined}
+[WebServer]                             srcSet={undefined}
+[WebServer]                             src="/marca/incovsa-quimicos-blanco.webp"
+[WebServer]                             ref={function}
+[WebServer]                             onLoad={function onLoad}
+[WebServer]                             onError={function onError}
+[WebServer]                           >
+[WebServer]                           ...
+[WebServer]                         ...
+[WebServer]                       ...
+[WebServer]                 ...
+[WebServer]         ...
+[WebServer]  
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok  92 [telefono] › pruebas-e2e\sitio\contacto.spec.ts:63:1 › RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible (3.2s)
+  ok  91 [telefono] › pruebas-e2e\picking\usuarios.spec.ts:105:7 › Configuración: usuarios del picking › criterio 8: la pestaña Usuarios no tiene violaciones serias de axe (5.2s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok  93 [telefono] › pruebas-e2e\sitio\contacto.spec.ts:111:1 › RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito (2.1s)
+[WebServer] (node:40320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:30168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  95 [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:61:5 › RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y relaciones actuales (3.0s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] (node:45276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  94 [telefono] › pruebas-e2e\sitio\contacto.spec.ts:144:1 › RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos (4.2s)
+  ok  96 [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:108:5 › RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos, vacío y tarjetas sin lote (1.6s)
+[WebServer] (node:30968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  98 [telefono] › pruebas-e2e\sitio\inicio.spec.ts:5:5 › RF-SW-01 / RF-SW-27: Inicio informativo conserva secciones, cifras y textos aprobados (1.1s)
+[WebServer] (node:20576) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  97 [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:131:5 › RF-SW-05 / RF-SW-17 / RF-SW-15: detalle público, galería, recomendados y enlaces (2.7s)
+[WebServer] (node:36860) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok  99 [telefono] › pruebas-e2e\sitio\inicio.spec.ts:29:5 › RF-SW-15 / RF-SW-22 / RF-SW-24: pie público y mapas solo de las dos oficinas (1.3s)
+  ok 100 [telefono] › pruebas-e2e\sitio\inicio.spec.ts:63:5 › RF-SW-08 / RNF-08: menú responsivo, ausencia de desbordamiento y accesibilidad (1.7s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 101 [telefono] › pruebas-e2e\sitio\inicio.spec.ts:80:5 › RF-SW-16: tarjetas aparecen al entrar en pantalla y desaparecen al salir (1.7s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 103 [telefono] › pruebas-e2e\sitio\nosotros.spec.ts:19:5 › RF-SW-02 / CAM-79 / RNF-08: secciones, fondos, pie y accesibilidad de Quiénes somos (1.7s)
+  ok 102 [telefono] › pruebas-e2e\sitio\inicio.spec.ts:95:5 › RN-56 / RNF-17: cinco imágenes rotan cada 5 s, una queda fija y las secundarias cargan después (4.4s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] (node:9404) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 104 [telefono] › pruebas-e2e\sitio\nosotros.spec.ts:55:5 › RF-SW-02 / CAM-80: ambos bloques alternan y quitar Inquiserca desde el panel deja solo INCOVSA (14.5s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 105 [telefono] › pruebas-e2e\sitio\nosotros.spec.ts:105:5 › RF-SW-29 / RF-SW-16: cinco valores pendientes y presentación dinámica (1.5s)
+[WebServer] (node:25400) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] (node:36600) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:41104) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 106 [telefono] › pruebas-e2e\sitio\nosotros.spec.ts:120:5 › RF-SW-02 / RF-SW-29 / RN-56: historia y cinco imágenes publicadas conservan orden, fila y ausencia de textos (2.2s)
+  ok 107 [telefono] › pruebas-e2e\sitio\noticias.spec.ts:95:1 › RF-SW-18 / RF-SW-15 / RNF-08: estados vacíos y formulario accesibles sin opción de ocultar (2.7s)
+[WebServer] (node:34812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:31040) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 108 [telefono] › pruebas-e2e\sitio\noticias.spec.ts:125:1 › RF-SW-18 / RN-56 / RN-39: crea, edita y elimina con confirmación; texto completo y sin desbordamiento (9.5s)
+[WebServer] (node:6208) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 109 [telefono] › pruebas-e2e\sitio\noticias.spec.ts:206:1 › RF-SW-25 / RNF-08: sin permiso de Noticias ofrece volver al módulo propio (1.5s)
+  ok 110 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:77:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública / (4.4s)
+  ok 111 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:77:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /nosotros (4.2s)
+  ok 112 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:77:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /industrias (2.3s)
+[WebServer] (node:49740) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 113 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:77:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /productos (2.9s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 114 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:77:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /noticias (2.9s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 115 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:77:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /contacto (2.7s)
+  ok 116 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:77:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /acceso (2.6s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] (node:41912) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 117 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:92:5 › RF-SW-16 / RNF-08: aparición, desaparición y navegación pública completa con teclado (8.9s)
+[WebServer] (node:5512) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12208) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 118 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:126:5 › RF-SW-05 / RNF-08: detalle del producto y regreso al catálogo con teclado (10.8s)
+[WebServer] (node:21604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:36848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 119 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:143:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.08 (10.1s)
+[WebServer] (node:14652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 120 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:143:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.09 (8.3s)
+[WebServer] (node:20948) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 121 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:143:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.10 (2.4s)
+[WebServer] (node:35128) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:49568) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 122 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:192:5 › RNF-01 / RNF-08: revisión de Usuarios del sitio con Gerencia (4.9s)
+(node:24764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:17992) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+▲ Next.js 16.4.2
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3102
+- Network:       http://127.0.0.1:3102
+- Local:         http://127.0.0.1:3103
+- Network:       http://127.0.0.1:3103
+✓ Ready in 0ms
+✓ Ready in 0ms
+✓ Running next.config took 18ms
+✓ Running next.config took 18ms
+  x  123 [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:85:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión (0ms)
+  -  125 [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:116:7 › RNF-13: avisos de cambios por sede › RNF-13: al cortar SSE consulta cada 5 segundos, apaga En vivo y se reconecta sola
+  -  126 [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:147:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede
+(node:32400) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:22900) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3104
+- Network:       http://127.0.0.1:3104
+✓ Ready in 0ms
+✓ Running next.config took 12ms
+  x  124 [telefono] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:96:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RNF-13 / RF-SL-23 (CP-37): el marcado aparece de inmediato en quien marca (optimista), revierte ante fallo y sincroniza en < 2s (0ms)
+  -  128 [telefono] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:201:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RF-SL-20 / RN-28 / RNF-13: reordenar filas y cola se refleja en tiempo real en otra pantalla en < 2s sin historial
+  -  129 [telefono] › pruebas-e2e\picking\bodega-tiempo-real.spec.ts:332:7 › Bodega - Prioridad compartida y tiempo real (JM-04) › RF-SL-20: el arrastre funciona con teclado, mouse y touch (dedo con pulsación de 380 ms)
+(node:44108) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3540) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3105
+- Network:       http://127.0.0.1:3105
+✓ Ready in 0ms
+✓ Running next.config took 11ms
+(node:20020) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:39904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 130 [telefono] › pruebas-e2e\picking\tablero.spec.ts:93:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-58: cambia entre modo claro y modo oscuro y el modo se conserva al recargar esa pantalla sin afectar a otras (5.2s)
+  ok 131 [telefono] › pruebas-e2e\picking\tablero.spec.ts:147:7 › Tablero de Bodega en pantalla completa (JM-05) › CAM-93 / CAM-94: colores del lote y del cuadro del pedido en cada modo, y la silueta del camión grande en todas las rutas (797ms)
+  ok 132 [telefono] › pruebas-e2e\picking\tablero.spec.ts:194:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-77 (CP-40): con más líneas de las que caben en una columna, se numeran de arriba hacia abajo, primero la izquierda (436ms)
+  ok 133 [telefono] › pruebas-e2e\picking\tablero.spec.ts:231:7 › Tablero de Bodega en pantalla completa (JM-05) › RNF-02: en una ruta que no cabe en la pantalla se pueden ver y tocar todas las líneas (652ms)
+  ok 134 [telefono] › pruebas-e2e\picking\tablero.spec.ts:291:7 › Tablero de Bodega en pantalla completa (JM-05) › RNF-13 / RF-SL-23: marcar una línea en Bodega se ve en el tablero en menos de 2 segundos, resaltada (1.4s)
+  ok 135 [telefono] › pruebas-e2e\picking\tablero.spec.ts:360:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-23 / RF-SL-20 / RF-SL-74: en el tablero se marca con un toque, se marca todo, se ordena por peso y se ve el detalle (1.4s)
+  ok 136 [telefono] › pruebas-e2e\picking\tablero.spec.ts:424:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-25: la pantalla se queda en la ruta que muestra aunque cambie la prioridad de la cola (1.8s)
+  ok 127 [telefono] › pruebas-e2e\picking\facturacion-dos-facturadores.spec.ts:37:5 › RN-48 / RNF-13 / decisiones 39 y 41: dos facturadores, edición, arrastre y envío simultáneos (12.5s)
+Error inesperado en una acción del servidor: Error [ZodError]: [
+  {
+    "expected": "string",
+    "code": "invalid_type",
+    "path": [
+      "sede"
+    ],
+    "message": "Invalid input: expected string, received undefined"
+  },
+  {
+    "code": "invalid_value",
+    "values": [
+      "facturacion",
+      "bodega",
+      "tablero",
+      "ruta",
+      "reportes",
+      "configuracion"
+    ],
+    "path": [
+      "modulo"
+    ],
+    "message": "Invalid option: expected one of \"facturacion\"|\"bodega\"|\"tablero\"|\"ruta\"|\"reportes\"|\"configuracion\""
+  }
+]
+    at c (C:\Users\danie\OneDrive\Escritorio\progra web\proyecto_incovsa\.next\standalone\.next\server\chunks\_1nbnlp2k2vxpk._.js:1:6504)
+  ok 138 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:4:5 › RNF-16: páginas, errores, redirecciones, API y recursos envían las cabeceras de seguridad (136ms)
+  ok 139 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:20:5 › RNF-16: el navegador admite Google Maps y Drive, y rechaza marcos de otros orígenes (449ms)
+  ok 140 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:49:5 › RNF-16: otro sitio no puede insertar la aplicación dentro de un marco (161ms)
+(node:3540) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+  ok 141 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:66:5 › RNF-16: cada respuesta tiene su nonce y los scripts en línea ajenos quedan bloqueados (376ms)
+  ok 137 [telefono] › pruebas-e2e\picking\tablero.spec.ts:460:7 › Tablero de Bodega en pantalla completa (JM-05) › RF-SL-24: con todo marcado, Pedido Despachado confirma, avisa y saca el pedido del tablero (2.9s)
+(node:26264) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 143 [telefono] › pruebas-e2e\picking\tablero.spec.ts:483:7 › Tablero de Bodega en pantalla completa (JM-05) › RNF-02 / RNF-08: coincide con el prototipo en los dos modos y no tiene violaciones serias de accesibilidad (4.8s)
+(node:10560) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  142 [telefono] › pruebas-e2e\sitio\rendimiento-galerias.spec.ts:73:5 › RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respecto de una (10.2s)
+(node:34300) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:41568) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 2026-10-27T03:45:49.368Z WARN [Better Auth]: Invalid password
+  ok 144 [tableta] › pruebas-e2e\acceso\acceso-personal.spec.ts:17:5 › RF-SW-09 / CAM-83: los tres pasos, sistemas habilitados, ayuda, contraseña y accesibilidad (3.2s)
+  ok 145 [tableta] › pruebas-e2e\acceso\acceso-personal.spec.ts:59:5 › RF-SW-09: restringe opciones según la cuenta y rechaza usuarios inexistentes (2.7s)
+  ok 147 [tableta] › pruebas-e2e\acceso\acceso-personal.spec.ts:123:5 › RNF-05: no expone altas, cambios de contraseña ni accesos que evadan límites; verifica origen (275ms)
+[WebServer] (node:36532) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:45360) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:21896) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:4780) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 148 [tableta] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:30:5 › RF-SW-09 / RF-SL-02 / H-33: el sistema no autorizado vuelve al paso 2 sin registrar un fallo ni pedir sede (2.2s)
+[WebServer] (node:36712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 146 [tableta] › pruebas-e2e\acceso\acceso-personal.spec.ts:83:5 › RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio y conserva la otra (5.4s)
+[WebServer] (node:49640) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:47264) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 149 [tableta] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:70:7 › RF-SW-30 / H-34: cerrar sitio muestra Sesión cerrada en Inicio (6.8s)
+[WebServer] (node:51992) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 150 [tableta] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:70:7 › RF-SW-30 / H-34: cerrar picking muestra Sesión cerrada en Inicio (6.8s)
+[WebServer] (node:7812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:31356) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 152 [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.03 en picking solo ve sus módulos (1.9s)
+[WebServer] (node:45756) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] Error inesperado en una acción del servidor: Error [ZodError]: [
+[WebServer]   {
+[WebServer]     "code": "invalid_value",
+[WebServer]     "values": [
+[WebServer]       "facturacion",
+[WebServer]       "bodega",
+[WebServer]       "tablero",
+[WebServer]       "ruta",
+[WebServer]       "reportes",
+[WebServer]       "configuracion"
+[WebServer]     ],
+[WebServer]     "path": [
+[WebServer]       "modulo"
+[WebServer]     ],
+[WebServer]     "message": "Invalid option: expected one of \"facturacion\"|\"bodega\"|\"tablero\"|\"ruta\"|\"reportes\"|\"configuracion\""
+[WebServer]   }
+[WebServer] ]
+[WebServer]     at GET (src\app\api\tiempo-real\route.ts:12:38)
+[WebServer]   10 | export async function GET(request: Request) {
+[WebServer]   11 |   try {
+[WebServer] > 12 |     const datos = esquemaSuscripcion.parse(Object.fromEntries(new URL(request.url).searchParams));
+[WebServer]      |                                      ^
+[WebServer]   13 |     const autorizar = async () => {
+[WebServer]   14 |       const sesion = await obtenerSesion("picking", request.headers);
+[WebServer]   15 |       exigirPermiso(sesion, permisoDelModulo(sesion, datos.modulo), datos.sede);
+[WebServer] (node:47036) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 151 [tableta] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:89:5 › RF-SW-25 / H-07 / H-13 / H-39: acceso denegado ofrece el módulo propio y un módulo inexistente conserva el armazón (5.0s)
+[WebServer] (node:22348) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 153 [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.03 en sitio solo ve sus módulos (1.7s)
+  ok 154 [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.05 en picking solo ve sus módulos (1.9s)
+[WebServer] (node:38648) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 155 [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.06 en picking solo ve sus módulos (1.7s)
+  ok 156 [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.08 en sitio solo ve sus módulos (1.6s)
+  ok 157 [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.09 en sitio solo ve sus módulos (1.4s)
+[WebServer] (node:33756) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 158 [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.01 en picking solo ve sus módulos (1.9s)
+  ok 159 [tableta] › pruebas-e2e\acceso\permisos.spec.ts:56:7 › RN-38: ejemplo.01 en sitio solo ve sus módulos (1.9s)
+[WebServer] (node:26884) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 160 [tableta] › pruebas-e2e\acceso\permisos.spec.ts:73:5 › RNF-04: primera barrera por sistema y rechazo de acceso directo en el servidor (2.2s)
+  ok 162 [tableta] › pruebas-e2e\comunes\aplicacion.spec.ts:5:5 › RNF-07: la aplicación responde en / con el título de INCOVSA y en español (1.2s)
+  ok 161 [tableta] › pruebas-e2e\acceso\permisos.spec.ts:86:5 › RN-17 / RF-SL-66: cookie ajena se ignora y la sede autorizada persiste (3.5s)
+[WebServer] (node:33004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 163 [tableta] › pruebas-e2e\comunes\aplicacion.spec.ts:12:5 › RNF-08: la página de inicio no tiene violaciones serias ni críticas de accesibilidad (1.6s)
+  ok 164 [tableta] › pruebas-e2e\comunes\armazon.spec.ts:7:7 › RF-SW-26 / RF-SL-60: armazón de panel, navegación y preferencia (952ms)
+[WebServer] (node:13388) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 166 [tableta] › pruebas-e2e\comunes\armazon.spec.ts:7:7 › RF-SW-26 / RF-SL-60: armazón de picking, navegación y preferencia (1.4s)
+[WebServer] (node:24764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 165 [tableta] › pruebas-e2e\comunes\armazon.spec.ts:61:7 › RNF-08: panel accesible con menú abierto y cerrado (2.1s)
+[WebServer] (node:48480) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 167 [tableta] › pruebas-e2e\comunes\armazon.spec.ts:61:7 › RNF-08: picking accesible con menú abierto y cerrado (1.9s)
+[WebServer] (node:30904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 168 [tableta] › pruebas-e2e\comunes\armazon.spec.ts:72:5 › RF-SL-60: sede solo en módulos aplicables y con varias sedes (1.8s)
+  ok 169 [tableta] › pruebas-e2e\comunes\armazon.spec.ts:95:5 › RNF-01: tipografías locales y paleta exclusiva del prototipo (707ms)
+[WebServer] (node:43052) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 170 [tableta] › pruebas-e2e\comunes\campos-fecha-hora.spec.ts:8:5 › RF-SL-70: fecha con teclado, normalización, inexistente y valor ISO (1.2s)
+  ok 171 [tableta] › pruebas-e2e\comunes\campos-fecha-hora.spec.ts:31:5 › RF-SL-70: hora de 24 horas, normalización y rechazo de hora inválida (1.0s)
+[WebServer] (node:12080) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 172 [tableta] › pruebas-e2e\comunes\campos-fecha-hora.spec.ts:47:5 › RF-SL-70: selectores nativos anclados al campo y elección sincronizada (1.0s)
+  ok 173 [tableta] › pruebas-e2e\comunes\componentes.spec.ts:9:5 › RNF-08: pestañas, botones segmentados y lista desplegable con teclado (985ms)
+[WebServer] (node:14164) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 174 [tableta] › pruebas-e2e\comunes\componentes.spec.ts:28:5 › RNF-08: la ventana de confirmación no tiene violaciones serias ni críticas (1.4s)
+  ok 175 [tableta] › pruebas-e2e\comunes\componentes.spec.ts:38:5 › RNF-08: Escape, volver, confirmar y retorno del foco (1.4s)
+[WebServer] (node:42484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 177 [tableta] › pruebas-e2e\comunes\componentes.spec.ts:60:7 › RNF-08: mensaje de Enviar a Bodega desaparece a los cuatro segundos (5.1s)
+  ok 176 [tableta] › pruebas-e2e\comunes\componentes.spec.ts:60:7 › RNF-08: mensaje de Guardar desaparece a los cuatro segundos (5.1s)
+[WebServer] (node:51668) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:45228) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 179 [tableta] › pruebas-e2e\panel\auditoria-jg24.spec.ts:11:5 › RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recupera medidas y hover del prototipo (2.9s)
+[WebServer] (node:42384) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:17064) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 180 [tableta] › pruebas-e2e\panel\auditoria-jg24.spec.ts:50:5 › RF-SW-29 / RN-39 / H-04: publicar y quitar un valor muestra el número del valor en el aviso (1.9s)
+[WebServer] (node:42204) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 178 [tableta] › pruebas-e2e\comunes\componentes.spec.ts:60:7 › RNF-08: mensaje de Volver desaparece a los cuatro segundos (5.5s)
+  ok 181 [tableta] › pruebas-e2e\panel\contenido.spec.ts:19:5 › RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y accesibilidad (7.0s)
+[WebServer] (node:25012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 182 [tableta] › pruebas-e2e\panel\contenido.spec.ts:85:5 › RF-SW-25: el permiso se exige también al abrir la sección directamente (656ms)
+[WebServer] (node:6060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '4162560284'
+[WebServer] }
+  ok 183 [tableta] › pruebas-e2e\panel\contenido.spec.ts:111:5 › RF-SW-23 / RNF-05: publica una imagen de 5 MB y limpia la imagen retirada (1.9s)
+[WebServer] (node:23428) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 184 [tableta] › pruebas-e2e\panel\contenido.spec.ts:150:5 › RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas (1.1s)
+[WebServer] (node:23972) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 185 [tableta] › pruebas-e2e\panel\contenido.spec.ts:170:5 › RF-SW-23: un borrador de portada o historia no cambia la etiqueta publicada (1.3s)
+[WebServer] (node:44228) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:9816) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 186 [tableta] › pruebas-e2e\panel\contenido.spec.ts:186:5 › RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visita sin sesión (2.5s)
+[WebServer] (node:35896) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:31140) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14368) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 187 [tableta] › pruebas-e2e\panel\contenido.spec.ts:245:5 › RF-SW-23 / RF-SW-24: reemplazar INCOVSA actualiza cabecera y pie públicos (2.8s)
+  ok 188 [tableta] › pruebas-e2e\panel\documentos.spec.ts:44:5 › RF-SW-14 / RN-41 / RNF-08: crear, buscar, editar y eliminar productos documentados (4.7s)
+[WebServer] (node:17280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24144) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:30832) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 190 [tableta] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:21:5 › RF-SW-07 / RN-56: guardar descripción y galería publica la industria sin perder los datos anteriores (2.8s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '4162560284'
+[WebServer] }
+  ok 189 [tableta] › pruebas-e2e\panel\documentos.spec.ts:95:5 › RN-19 / RF-SW-21 / RNF-08: solo ver y ver-descargar reciben opciones y direcciones autorizadas; CSP permite Drive (5.1s)
+[WebServer] (node:47360) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13372) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24236) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 191 [tableta] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:82:5 › RF-SW-07 / RNF-08: industrias y catálogo conservan estructura y accesibilidad (5.6s)
+[WebServer] (node:22472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 192 [tableta] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:114:5 › RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes de eliminar (5.8s)
+[WebServer] (node:37388) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:41376) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 193 [tableta] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:159:5 › RF-SW-23: impide cerrar el editor mientras se publica y conserva el borrador si falla (2.6s)
+  ok 194 [tableta] › pruebas-e2e\panel\solicitudes.spec.ts:71:1 › RF-SW-20 / CP-63 / RNF-08: filtros, estados libres, responsable y edición del comentario accesibles (13.8s)
+[WebServer] (node:14324) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 195 [tableta] › pruebas-e2e\panel\solicitudes.spec.ts:130:1 › RF-SW-31 / CP-59: indicador normal y reducido baja al abrir una solicitud (2.1s)
+[WebServer] (node:22696) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 196 [tableta] › pruebas-e2e\panel\solicitudes.spec.ts:148:1 › RNF-04 / RF-SW-20: solo lectura sin gestionar y sección ausente sin permisos (2.0s)
+[WebServer] (node:25616) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:22564) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 198 [tableta] › pruebas-e2e\picking\auditoria-jg24.spec.ts:65:1 › RN-49 / D-01: la confirmación de Facturación cuenta un cliente aunque varíen mayúsculas, tildes y espacios exteriores (1.8s)
+  ok 197 [tableta] › pruebas-e2e\panel\usuarios.spec.ts:30:7 › Panel: usuarios del sitio › RF-SW-13: Gerencia crea un usuario con solo sit.doc.ver y ese usuario solo ve la documentación (4.5s)
+[WebServer] (node:20128) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:39976) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:22280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:37320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 200 [tableta] › pruebas-e2e\panel\usuarios.spec.ts:80:7 › Panel: usuarios del sitio › RF-SW-11 / RN-47: restablecer la contraseña no ofrece correo y la nueva clave entra (3.9s)
+(node:11404) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:19164) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2096) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 201 [tableta] › pruebas-e2e\panel\usuarios.spec.ts:116:7 › Panel: usuarios del sitio › RF-SW-11: ¿Olvidó su contraseña? del sitio pide a Gerencia o a Soporte (2.0s)
+[WebServer] (node:14384) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 199 [tableta] › pruebas-e2e\picking\bodega.spec.ts:82:7 › Módulo de Bodega E2E › Criterio 8 / RNF-08: Bodega con datos sin violaciones serias de axe, contraste incluido (1.8s)
+[WebServer] (node:47780) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 203 [tableta] › pruebas-e2e\picking\bodega.spec.ts:95:7 › Módulo de Bodega E2E › RNF-08: pedido que recoge el cliente, con «Sin lote», y su Detalle sin violaciones serias de axe (3.3s)
+[WebServer] (node:35012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 202 [tableta] › pruebas-e2e\panel\usuarios.spec.ts:131:7 › Panel: usuarios del sitio › criterio 5: la lista y el alta no tienen violaciones serias de axe (5.8s)
+[WebServer] (node:36504) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 204 [tableta] › pruebas-e2e\picking\bodega.spec.ts:116:7 › Módulo de Bodega E2E › RNF-08: líneas marcadas sin violaciones serias de axe, contraste incluido (3.9s)
+[WebServer] (node:51248) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 206 [tableta] › pruebas-e2e\picking\bodega.spec.ts:144:7 › Módulo de Bodega E2E › RNF-08: Detalle de Ruta sin violaciones serias de axe, contraste incluido (2.2s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '4162560284'
+[WebServer] }
+[WebServer] (node:25436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 207 [tableta] › pruebas-e2e\picking\bodega.spec.ts:158:7 › Módulo de Bodega E2E › RNF-08: Bodega vacía sin violaciones serias de axe, contraste incluido (1.4s)
+[WebServer] (node:31256) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 205 [tableta] › pruebas-e2e\picking\camiones.spec.ts:27:7 › Configuración: camiones › RF-SL-04: se crea, edita y elimina un camión (5.8s)
+  ok 208 [tableta] › pruebas-e2e\picking\bodega.spec.ts:168:7 › Módulo de Bodega E2E › RF-SL-21 / RN-51 (CP-19): el envío muestra dos filas con lote resaltado y unidades correctas (681ms)
+[WebServer] (node:14780) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 209 [tableta] › pruebas-e2e\picking\camiones.spec.ts:73:7 › Configuración: camiones › criterio 6: sin violaciones serias de axe (1.3s)
+[WebServer] (node:49808) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 210 [tableta] › pruebas-e2e\picking\bodega.spec.ts:199:7 › Módulo de Bodega E2E › RF-SL-74 / RF-SL-75 (CP-36): fecha y hora programadas y Detalle de Ruta completo (1.5s)
+  ok 211 [tableta] › pruebas-e2e\picking\camiones.spec.ts:82:7 › Configuración: camiones › RNF-04: sin pk.cfg.camiones la pantalla rechaza el acceso (593ms)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '4162560284'
+[WebServer] }
+[WebServer] (node:26264) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 212 [tableta] › pruebas-e2e\picking\bodega.spec.ts:230:7 › Módulo de Bodega E2E › RF-SL-23 / RN-20: marcar línea persiste al recargar y marcar todo marca todas (3.1s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '4162560284'
+[WebServer] }
+[WebServer] (node:36472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 214 [tableta] › pruebas-e2e\picking\bodega.spec.ts:279:7 › Módulo de Bodega E2E › RF-SL-61 (auditoría H-17): el encabezado de Bodega tiene la estructura de cab() con la instrucción a la par del título (783ms)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '4162560284'
+[WebServer] }
+[WebServer] (node:45840) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 215 [tableta] › pruebas-e2e\picking\bodega.spec.ts:296:7 › Módulo de Bodega E2E › RF-SL-75 / RNF-01 (auditoría H-18, H-19 y H-20): «Programada» en verde y negrita, avance y herramientas como el prototipo (766ms)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '4162560284'
+[WebServer] }
+  ok 216 [tableta] › pruebas-e2e\picking\bodega.spec.ts:340:7 › Módulo de Bodega E2E › RF-SL-74 (auditoría H-21): en el Detalle se desplaza la ventana, no una zona interna (2.4s)
+[WebServer] (node:37460) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 213 [tableta] › pruebas-e2e\picking\facturacion-carga.spec.ts:37:1 › RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos facturados (8.0s)
+[WebServer] (node:48580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 217 [tableta] › pruebas-e2e\picking\bodega.spec.ts:374:7 › Módulo de Bodega E2E › RF-SL-23 (auditoría H-24): sin red, la marca vuelve atrás con un mensaje y la pantalla sigue en uso (2.2s)
+[WebServer] (node:44484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 219 [tableta] › pruebas-e2e\picking\bodega.spec.ts:416:7 › Módulo de Bodega E2E › RF-SL-24 / RN-11 (CP-38): despacho solo habilitado con todo marcado y pasa a En Ruta (3.6s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '4162560284'
+[WebServer] }
+[WebServer] (node:26668) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:7872) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:25940) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:16448) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:22168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:49340) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:47212) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 220 [tableta] › pruebas-e2e\picking\bodega.spec.ts:461:7 › Módulo de Bodega E2E › Criterio 7: usuario sin pk.bodega ve pantalla sin acceso con textos del prototipo (663ms)
+(node:41676) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:38540) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 218 [tableta] › pruebas-e2e\picking\facturacion-envio.spec.ts:49:5 › RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bodega (18.7s)
+(node:26360) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 221 [tableta] › pruebas-e2e\picking\reportes-exportacion.spec.ts:22:5 › RF-SL-38 / CAM-96: descarga Excel y PDF desde las tres pestañas de Reportes (7.8s)
+[WebServer] (node:15320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 223 [tableta] › pruebas-e2e\picking\reportes.spec.ts:116:7 › RF-SL-59 / RNF-08: Despacho del periodo conserva el rango y es accesible (2.3s)
+[WebServer] (node:48300) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 224 [tableta] › pruebas-e2e\picking\reportes.spec.ts:116:7 › RF-SL-59 / RNF-08: Rutas realizadas conserva el rango y es accesible (1.9s)
+[WebServer] (node:21688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 222 [tableta] › pruebas-e2e\picking\reportes.spec.ts:23:5 › RF-SL-59 / CP-64: periodos y fechas inválidas en Reportes (5.3s)
+(node:7820) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:42096) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 225 [tableta] › pruebas-e2e\picking\reportes.spec.ts:116:7 › RF-SL-59 / RNF-08: Bitácora conserva el rango y es accesible (3.1s)
+(node:6452) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:50720) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:46548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:33056) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:41988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:42168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 226 [tableta] › pruebas-e2e\picking\reportes.spec.ts:147:5 › RF-SL-38 / RF-SL-37 / RN-39: datos de demostración, conversiones y recorrido en las tres pestañas (5.1s)
+  ok 227 [tableta] › pruebas-e2e\picking\ruta.spec.ts:82:7 › Módulo de Ruta E2E (JM-06) › Criterio 1: RF-SL-26 / RN-46 - Visibilidad de rutas por rol y permiso (2.6s)
+  ok 229 [tableta] › pruebas-e2e\picking\ruta.spec.ts:121:7 › Módulo de Ruta E2E (JM-06) › Criterio 2: RF-SL-78 - Orden de la más reciente a la más antigua (878ms)
+[WebServer] (node:43836) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 230 [tableta] › pruebas-e2e\picking\ruta.spec.ts:142:7 › Módulo de Ruta E2E (JM-06) › Criterio 3: RF-SL-27 / RN-49 - Detalle de ruta con Cliente, Sector y Total (kg) (982ms)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '4162560284'
+[WebServer] }
+[WebServer] (node:27940) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '4162560284'
+[WebServer] }
+  ok 228 [tableta] › pruebas-e2e\picking\usuarios.spec.ts:30:7 › Configuración: usuarios del picking › RF-SL-03: Gerencia crea un usuario de Bodega que solo ve Quetzaltenango (3.9s)
+[WebServer] (node:39436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:24936) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:37736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:19652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:13052) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:28892) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 231 [tableta] › pruebas-e2e\picking\ruta.spec.ts:173:7 › Módulo de Ruta E2E (JM-06) › Criterio 4 y 5: RF-SL-28, RF-SL-29, RN-29, RN-11 - Cierre de ruta y entrega con recorrido reordenado (4.8s)
+  ok 232 [tableta] › pruebas-e2e\picking\usuarios.spec.ts:76:7 › Configuración: usuarios del picking › criterio 6: con pk.cfg.camiones sin Gerencia no ve la pestaña Usuarios (3.2s)
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '4162560284'
+[WebServer] }
+(node:29396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:49412) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 233 [tableta] › pruebas-e2e\picking\ruta.spec.ts:241:7 › Módulo de Ruta E2E (JM-06) › Criterio 6 y 7 / RNF-08 / RNF-14: Accesibilidad con axe y responsividad (1.4s)
+[WebServer] [browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+[WebServer] 
+[WebServer] - A server/client branch `if (typeof window !== 'undefined')`.
+[WebServer] - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+[WebServer] - Date formatting in a user's locale which doesn't match the server.
+[WebServer] - External changing data without sending a snapshot of it along with the HTML.
+[WebServer] - Invalid HTML tag nesting.
+[WebServer] 
+[WebServer] It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+[WebServer] 
+[WebServer] https://react.dev/link/hydration-mismatch
+[WebServer] 
+[WebServer]   ...
+[WebServer]     <RedirectBoundary>
+[WebServer]       <RedirectErrorBoundary router={{...}}>
+[WebServer]         <InnerLayoutRouter url="/contacto" tree={[...]} params={{}} renderTree={{...}} segmentPath={[...]} ...>
+[WebServer]           <SegmentViewNode type="layout" pagePath="(sitio)/la...">
+[WebServer]             <SegmentTrieNode>
+[WebServer]             <link>
+[WebServer]             <script>
+[WebServer]             <script>
+[WebServer]             <LayoutSitio>
+[WebServer]               <div className="sitio">
+[WebServer]                 <Cabecera>
+[WebServer]                 <OuterLayoutRouter>
+[WebServer]                 <Pie datos={{logotipo:"...", ...}} anio="2026">
+[WebServer]                   <footer className="pie-sitio">
+[WebServer]                     <div className="wrap">
+[WebServer]                       <div className="pie-rej">
+[WebServer]                         <div>
+[WebServer]                           <img
+[WebServer]                             alt="INCOVSA Químicos"
+[WebServer]                             fetchPriority={undefined}
+[WebServer] +                           loading="lazy"
+[WebServer] -                           loading="eager"
+[WebServer]                             width={180}
+[WebServer]                             height={54}
+[WebServer]                             decoding="async"
+[WebServer]                             data-nimg="1"
+[WebServer]                             className="pie-logo"
+[WebServer]                             style={{color:"transparent"}}
+[WebServer]                             sizes={undefined}
+[WebServer]                             srcSet={undefined}
+[WebServer]                             src="/marca/incovsa-quimicos-blanco.webp"
+[WebServer]                             ref={function}
+[WebServer]                             onLoad={function onLoad}
+[WebServer]                             onError={function onError}
+[WebServer]                           >
+[WebServer]                           ...
+[WebServer]                         ...
+[WebServer]                       ...
+[WebServer]                 ...
+[WebServer]         ...
+[WebServer]  
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 235 [tableta] › pruebas-e2e\sitio\contacto.spec.ts:63:1 › RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible (3.3s)
+  ok 234 [tableta] › pruebas-e2e\picking\usuarios.spec.ts:105:7 › Configuración: usuarios del picking › criterio 8: la pestaña Usuarios no tiene violaciones serias de axe (5.9s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 236 [tableta] › pruebas-e2e\sitio\contacto.spec.ts:111:1 › RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito (2.1s)
+[WebServer] (node:41536) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:36128) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 238 [tableta] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:61:5 › RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y relaciones actuales (4.1s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[WebServer] (node:51212) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 237 [tableta] › pruebas-e2e\sitio\contacto.spec.ts:144:1 › RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos (5.4s)
+  ok 239 [tableta] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:108:5 › RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos, vacío y tarjetas sin lote (1.6s)
+[WebServer] (node:21204) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:32304) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 241 [tableta] › pruebas-e2e\sitio\inicio.spec.ts:5:5 › RF-SW-01 / RF-SW-27: Inicio informativo conserva secciones, cifras y textos aprobados (1.7s)
+  ok 240 [tableta] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:131:5 › RF-SW-05 / RF-SW-17 / RF-SW-15: detalle público, galería, recomendados y enlaces (2.3s)
+[WebServer] (node:21604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ok 242 [tableta] › pruebas-e2e\sitio\inicio.spec.ts:29:5 › RF-SW-15 / RF-SW-22 / RF-SW-24: pie público y mapas solo de las dos oficinas (1.5s)
+  ok 243 [tableta] › pruebas-e2e\sitio\inicio.spec.ts:63:5 › RF-SW-08 / RNF-08: menú responsivo, ausencia de desbordamiento y accesibilidad (2.0s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 244 [tableta] › pruebas-e2e\sitio\inicio.spec.ts:80:5 › RF-SW-16: tarjetas aparecen al entrar en pantalla y desaparecen al salir (1.7s)
+  ok 245 [tableta] › pruebas-e2e\sitio\inicio.spec.ts:95:5 › RN-56 / RNF-17: cinco imágenes rotan cada 5 s, una queda fija y las secundarias cargan después (3.8s)
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+  ok 246 [tableta] › pruebas-e2e\sitio\nosotros.spec.ts:19:5 › RF-SW-02 / CAM-79 / RNF-08: secciones, fondos, pie y accesibilidad de Quiénes somos (3.1s)

@@ -75,3 +75,10 @@ Verificación local, el 19/10/2026.
 - `npm run verificar` pasó. Formato, lint, tipos y 249 pruebas.
 - `npm run build` pasó. La ruta `/picking/configuracion` queda dinámica.
 - `npm run e2e -- pruebas-e2e/picking/camiones.spec.ts` pasó. 9 pruebas, en 390, 768 y 1440 px, con color-contrast activo y sin violaciones serias de axe.
+
+### Correcciones de la auditoría (2026-10-22)
+
+Las corrigió el coordinador en JG-25.
+
+- **H-41:** la parte «desaparece de Facturación» del criterio 1 se probaba con `camionesActivosDeSede`, que Facturación no usa. La prueba «RF-SL-04 (H-41)» de `src/modulos/camiones/servicio.test.ts` elimina un camión y comprueba con `consultarOpciones` que ya no se ofrece. El código ya lo cumplía.
+- **H-42 y D-03:** no se puede cambiar de sede un camión elegido en «Envío por camión»; `editarCamion` lo rechaza con el mismo aviso que la eliminación («<camión> está elegido en «Envío por camión» de Facturación.»). Sin cambio de sede, se sigue editando. La comprobación es `exigirNoElegido`, común a las dos operaciones. Lo prueba «D-03» del mismo archivo.

@@ -14,6 +14,9 @@ vendor/
 out/
 build/
 coverage/
+.stryker-tmp/
+.cache-mutacion/
+reports/mutation/
 playwright-report/
 test-results/
 .playwright-mcp/

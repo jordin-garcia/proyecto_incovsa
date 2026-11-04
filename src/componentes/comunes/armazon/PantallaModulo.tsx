@@ -9,6 +9,7 @@ import {
 } from "@/modulos/permisos/navegacion";
 import { ErrorAcceso } from "@/modulos/permisos/servicio";
 import { SinAcceso } from "./SinAcceso";
+import { Vacio } from "../Vacio";
 import { esquemaRutaModulo } from "@/modulos/permisos/esquemas";
 
 /** Solo conecta el armazón. Las tareas de módulos aportan las pantallas y sus operaciones. */
@@ -20,7 +21,12 @@ export async function PantallaModulo({ sistema, seccion }: { sistema: "sitio" | 
   const modulo = ruta.data[0]!;
   const opciones = sistema === "sitio" ? SECCIONES_PANEL : MODULOS_PICKING;
   const definicion = opciones.find((o) => o.href.split("/")[2] === modulo);
-  if (!definicion) notFound();
+  if (!definicion)
+    return (
+      <div className="tarjeta">
+        <Vacio icono="buscar" titulo={sistema === "sitio" ? "Sección no encontrada" : "Módulo no encontrado"} />
+      </div>
+    );
   const destino = opcionesPermitidas(sesion)[0]?.href;
   const sede = sistema === "picking" ? await obtenerSedeDeTrabajo(sesion) : null;
   try {

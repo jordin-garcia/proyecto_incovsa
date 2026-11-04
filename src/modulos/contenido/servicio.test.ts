@@ -2,8 +2,28 @@ import { beforeEach, expect, it } from "vitest";
 import { prisma } from "@/lib/prisma";
 import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import { leerEstructuraSitio, leerInicioSitio } from "./servicio";
+import { esquemaPublicacion, esquemaTexto } from "./esquemas";
 
 beforeEach(() => limpiarTablasDeNegocio());
+
+it("RNF-05: el texto institucional y las descripciones de industrias admiten hasta 10 000 caracteres", () => {
+  expect(esquemaTexto.safeParse({ texto: "a".repeat(10_000) }).success).toBe(true);
+  for (const bloque of ["mision", "vision", "historia"] as const) {
+    expect(esquemaPublicacion.safeParse({ bloque, texto: "a".repeat(10_000), imagenes: [] }).success).toBe(true);
+    const resultado = esquemaPublicacion.safeParse({ bloque, texto: "a".repeat(10_001), imagenes: [] });
+    expect(resultado.success).toBe(false);
+    if (!resultado.success)
+      expect(resultado.error.issues).toContainEqual(
+        expect.objectContaining({ path: ["texto"], message: "El texto admite hasta 10 000 caracteres." }),
+      );
+  }
+  const descripcion = esquemaTexto.safeParse({ texto: "a".repeat(10_001) });
+  expect(descripcion.success).toBe(false);
+  if (!descripcion.success)
+    expect(descripcion.error.issues).toContainEqual(
+      expect.objectContaining({ path: ["texto"], message: "El texto admite hasta 10 000 caracteres." }),
+    );
+});
 
 it("RF-SW-22 / RF-SW-24: expone solo oficinas y usa el logotipo público configurado", async () => {
   const escuintla = await prisma.sede.findUniqueOrThrow({ where: { nombre: "Escuintla" } });

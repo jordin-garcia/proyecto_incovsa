@@ -1,5 +1,6 @@
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { irA } from "../comunes/navegacion";
 
 try {
   process.loadEnvFile();
@@ -19,7 +20,7 @@ async function entrar(context: BrowserContext, usuario: string, clave = process.
 }
 
 async function abrirConfiguracion(page: Page) {
-  await page.goto("/picking/configuracion");
+  await irA(page, "/picking/configuracion");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 }
 
@@ -58,7 +59,7 @@ test.describe("Configuración: usuarios del picking", () => {
 
     await context.clearCookies();
     await entrar(context, usuario, CLAVE_NUEVA);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     await expect(page.getByRole("heading", { name: "Rutas y pedidos por preparar" })).toBeVisible();
     await expect(page.getByText("Quetzaltenango", { exact: true }).first()).toBeVisible();
@@ -69,7 +70,7 @@ test.describe("Configuración: usuarios del picking", () => {
     await expect(page.getByRole("link", { name: "Configuración" })).toHaveCount(0);
     await expect(page.getByRole("combobox", { name: "Sede" })).toHaveCount(0);
 
-    await page.goto("/picking/facturacion");
+    await irA(page, "/picking/facturacion");
     await expect(page.getByRole("heading", { name: "Sin acceso a este módulo" })).toBeVisible();
   });
 
@@ -112,6 +113,9 @@ test.describe("Configuración: usuarios del picking", () => {
 
     await page.getByRole("button", { name: "Nuevo usuario" }).click();
     await expect(page.getByRole("heading", { name: "Nuevo usuario del picking" })).toBeVisible();
+    await page.getByRole("dialog").evaluate(async (elemento) => {
+      await Promise.all(elemento.getAnimations().map((animacion) => animacion.finished));
+    });
     const dialogo = await new AxeBuilder({ page }).include(".modal").analyze();
     expect(dialogo.violations.filter((v) => v.impact === "serious" || v.impact === "critical")).toEqual([]);
   });

@@ -44,6 +44,12 @@ function detalleCamion(identificacion: string, capacidadKg: string, sedeNombre: 
   return { identificacion, capacidadKg, sede: sedeNombre, resumen };
 }
 
+/** No se elimina ni se cambia de sede un camión elegido en «Envío por camión» (specs/11). */
+async function exigirNoElegido(tx: Prisma.TransactionClient, camion: { id: number; identificacion: string }) {
+  const elegido = await tx.opcionEnvio.findFirst({ where: { camionId: camion.id }, select: { id: true } });
+  if (elegido) throw new ErrorNegocio(`${camion.identificacion} está elegido en «Envío por camión» de Facturación.`);
+}
+
 async function nombreDeSede(tx: Prisma.TransactionClient, sedeId: number) {
   const sede = await tx.sede.findUnique({ where: { id: sedeId }, select: { nombre: true } });
   if (!sede) throw new ErrorAcceso();
@@ -116,9 +122,11 @@ export async function editarCamion(
   return prisma.$transaction(async (tx) => {
     const actual = await tx.camion.findFirst({
       where: { id: entrada.id, eliminadoEn: null, sedeId: { in: [...contexto.sedesIds] } },
-      select: { id: true, sedeId: true },
+      select: { id: true, sedeId: true, identificacion: true },
     });
     if (!actual) throw new ErrorAcceso();
+    // D-03 (specs/11): la opción de envío quedaría apuntando a un camión de otra sede.
+    if (entrada.sedeId !== actual.sedeId) await exigirNoElegido(tx, actual);
     const sedeNombre = await nombreDeSede(tx, entrada.sedeId);
     const cambio = await tx.camion.updateMany({
       where: { id: actual.id, eliminadoEn: null, sedeId: { in: [...contexto.sedesIds] } },
@@ -158,13 +166,7 @@ export async function eliminarCamion(
       select: { id: true, identificacion: true, capacidadKg: true, sedeId: true, sede: { select: { nombre: true } } },
     });
     if (!actual) throw new ErrorAcceso();
-    const elegido = await tx.opcionEnvio.findFirst({
-      where: { camionId: actual.id },
-      select: { id: true },
-    });
-    if (elegido) {
-      throw new ErrorNegocio(`${actual.identificacion} está elegido en «Envío por camión» de Facturación.`);
-    }
+    await exigirNoElegido(tx, actual);
     const cambio = await tx.camion.updateMany({
       where: { id: actual.id, eliminadoEn: null, sedeId: actual.sedeId },
       data: { eliminadoEn: new Date() },

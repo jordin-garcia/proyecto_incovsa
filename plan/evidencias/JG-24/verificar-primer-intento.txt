@@ -1,0 +1,86 @@
+
+> incovsa@0.1.0 verificar
+> npm run formato && npm run lint && npm run tipos && npm test
+
+
+> incovsa@0.1.0 formato
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> incovsa@0.1.0 lint
+> eslint .
+
+
+> incovsa@0.1.0 tipos
+> tsc --noEmit
+
+
+> incovsa@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.5 C:/Users/Hecto/Documents/proyecto_incovsa
+
+(node:50252) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+ ❯ src/modulos/reportes/exportacion.test.ts (3 tests | 1 failed) 3570ms
+   × RF-SL-38 / CAM-96: descarga los seis archivos con una sola hoja o un PDF titulado y con su nombre 2973ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/modulos/reportes/exportacion.test.ts > RF-SL-38 / CAM-96: descarga los seis archivos con una sola hoja o un PDF titulado y con su nombre
+AssertionError: expected [ …(4) ] to deep equally contain [ '25/10/2026 · 09:00', …(3) ]
+
+- Expected
++ Received
+
+  [
++   [
++     "Periodo",
++     "25/10/2026",
++     "",
++     "",
++   ],
++   [
++     "",
++     "",
++     "",
++     "",
++   ],
++   [
++     "Fecha",
++     "Usuario",
++     "Operación",
++     "Detalle",
++   ],
++   [
+      "25/10/2026 · 09:00",
+-   "persona-de-prueba",
++     "persona-de-prueba (no existe)",
+      "Inicio de sesión",
+      "Sitio web · persona-de-prueba",
++   ],
+  ]
+
+ ❯ src/modulos/reportes/exportacion.test.ts:164:25
+    162|         } else {
+    163|           expect(filas).toContainEqual(["Fecha", "Usuario", "Operación…
+    164|           expect(filas).toContainEqual([
+       |                         ^
+    165|             "25/10/2026 · 09:00",
+    166|             "persona-de-prueba",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 42 passed (43)
+      Tests  1 failed | 358 passed (359)
+   Start at  18:26:58
+   Duration  443.42s (tests 64%, import 35%, transform 1%)
+
+     Import  141 modules were evaluated 245 times · 141.11s total, 35% of tracked time
+             ~59.90s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+

@@ -1,0 +1,590 @@
+[
+  {
+    "nombre": "inicio",
+    "width": 390,
+    "ruta": "/",
+    "titulos": [
+      "Química que sostiene a la industria guatemalteca",
+      "Cada industria tiene su propio conjunto de productos",
+      "Cuero",
+      "Textil",
+      "Cerería",
+      "Hulera",
+      "Medicamentos",
+      "Limpieza",
+      "Alimentación animal",
+      "Tratamiento de agua",
+      "Lavandería",
+      "Misión y visión",
+      "Nuestra misión",
+      "Nuestra visión",
+      "Visítenos",
+      "Quetzaltenango",
+      "Guatemala",
+      "¿Necesita un producto que no aparece en el catálogo?"
+    ]
+  },
+  {
+    "nombre": "nosotros",
+    "width": 390,
+    "ruta": "/nosotros",
+    "titulos": [
+      "Más de treinta años abasteciendo de químicos a la industria del país",
+      "De tenería a distribuidor de productos químicos",
+      "Misión y visión",
+      "Nuestra misión",
+      "Nuestra visión",
+      "Lo que nos guía",
+      "Dos mercados, la misma calidad de producto",
+      "Mercado industrial",
+      "Mercado artesanal",
+      "Dos empresas del mismo grupo, una sola identidad"
+    ]
+  },
+  {
+    "nombre": "industrias",
+    "width": 390,
+    "ruta": "/industrias",
+    "titulos": ["Nueve industrias, cada una con su propio conjunto de productos", "Cuero"]
+  },
+  {
+    "nombre": "productos",
+    "width": 390,
+    "ruta": "/productos",
+    "titulos": [
+      "Productos, presentación y origen",
+      "Ácido Acético",
+      "Ácido Fórmico",
+      "Ácido Oxálico",
+      "Ácido Sulfúrico",
+      "Alguicida",
+      "Bicarbonato de Sodio",
+      "Blanqueador",
+      "Clarificante",
+      "Enzima Ácida INCO-EAL",
+      "Enzima Ácida INCO-EAL",
+      "Enzima Neutra INCO-ENL",
+      "Afirmador / Fijador Textil",
+      "Hidrosulfito de Sodio",
+      "Hidrosulfito de Sodio",
+      "Hipoclorito de Calcio en Tableta",
+      "Hipoclorito de Calcio Granular",
+      "Metabisulfito",
+      "Negro Sulfuroso High Quality",
+      "Peróxido de Hidrógeno",
+      "Soda Cáustica",
+      "Soda Ash",
+      "Soda Cáustica",
+      "Soda Cáustica",
+      "Soda Cáustica (POL)",
+      "Sulfato de Aluminio",
+      "Sulfato de Sodio",
+      "Sulfuro de Sodio",
+      "Tricloro Granular y Polvo"
+    ]
+  },
+  {
+    "nombre": "noticias",
+    "width": 390,
+    "ruta": "/noticias",
+    "titulos": ["Novedades de la empresa"]
+  },
+  {
+    "nombre": "contacto",
+    "width": 390,
+    "ruta": "/contacto",
+    "titulos": ["Cuéntenos cómo podemos ayudarle", "Envíenos su mensaje", "Quetzaltenango", "Guatemala"]
+  },
+  {
+    "nombre": "acceso",
+    "width": 390,
+    "ruta": "/acceso",
+    "titulos": ["Acceso personal", "¿Quién es usted?"]
+  },
+  {
+    "nombre": "ejemplo.08-resumen",
+    "width": 390,
+    "ruta": "/panel?cuenta=ejemplo.08",
+    "titulos": [
+      "Hola, Usuario de ejemplo 08",
+      "Contenido institucional",
+      "Industrias",
+      "Catálogo",
+      "Noticias",
+      "Solicitudes",
+      "Documentación interna"
+    ]
+  },
+  {
+    "nombre": "ejemplo.08-contenido",
+    "width": 390,
+    "ruta": "/panel/contenido?cuenta=ejemplo.08",
+    "titulos": [
+      "Inicio y Quiénes somos",
+      "Portada",
+      "Logotipo de INCOVSA",
+      "Misión",
+      "Visión",
+      "Historia",
+      "Valores",
+      "Logotipo de Inquiserca"
+    ]
+  },
+  {
+    "nombre": "ejemplo.08-industrias",
+    "width": 390,
+    "ruta": "/panel/industrias?cuenta=ejemplo.08",
+    "titulos": [
+      "Industrias atendidas",
+      "Cuero",
+      "Textil",
+      "Cerería",
+      "Hulera",
+      "Medicamentos",
+      "Limpieza",
+      "Alimentación animal",
+      "Tratamiento de agua",
+      "Lavandería"
+    ]
+  },
+  {
+    "nombre": "ejemplo.08-catalogo",
+    "width": 390,
+    "ruta": "/panel/catalogo?cuenta=ejemplo.08",
+    "titulos": ["Catálogo de productos públicos"]
+  },
+  {
+    "nombre": "ejemplo.08-noticias",
+    "width": 390,
+    "ruta": "/panel/noticias?cuenta=ejemplo.08",
+    "titulos": ["Noticias"]
+  },
+  {
+    "nombre": "ejemplo.08-contacto",
+    "width": 390,
+    "ruta": "/panel/contacto?cuenta=ejemplo.08",
+    "titulos": ["Información de contacto", "Quetzaltenango", "Guatemala"]
+  },
+  {
+    "nombre": "ejemplo.08-solicitudes",
+    "width": 390,
+    "ruta": "/panel/solicitudes?cuenta=ejemplo.08",
+    "titulos": ["Solicitudes recibidas"]
+  },
+  {
+    "nombre": "ejemplo.08-documentos",
+    "width": 390,
+    "ruta": "/panel/documentos?cuenta=ejemplo.08",
+    "titulos": ["Documentación interna"]
+  },
+  {
+    "nombre": "ejemplo.09-documentos",
+    "width": 390,
+    "ruta": "/panel/documentos?cuenta=ejemplo.09",
+    "titulos": ["Documentación interna"]
+  },
+  {
+    "nombre": "ejemplo.10-documentos",
+    "width": 390,
+    "ruta": "/panel/documentos?cuenta=ejemplo.10",
+    "titulos": ["Documentación interna"]
+  },
+  {
+    "nombre": "usuarios",
+    "width": 390,
+    "ruta": "/panel/usuarios?cuenta=ejemplo.01",
+    "titulos": ["Usuarios del sitio"]
+  },
+  {
+    "nombre": "inicio",
+    "width": 768,
+    "ruta": "/",
+    "titulos": [
+      "Química que sostiene a la industria guatemalteca",
+      "Cada industria tiene su propio conjunto de productos",
+      "Cuero",
+      "Textil",
+      "Cerería",
+      "Hulera",
+      "Medicamentos",
+      "Limpieza",
+      "Alimentación animal",
+      "Tratamiento de agua",
+      "Lavandería",
+      "Misión y visión",
+      "Nuestra misión",
+      "Nuestra visión",
+      "Visítenos",
+      "Quetzaltenango",
+      "Guatemala",
+      "¿Necesita un producto que no aparece en el catálogo?"
+    ]
+  },
+  {
+    "nombre": "nosotros",
+    "width": 768,
+    "ruta": "/nosotros",
+    "titulos": [
+      "Más de treinta años abasteciendo de químicos a la industria del país",
+      "De tenería a distribuidor de productos químicos",
+      "Misión y visión",
+      "Nuestra misión",
+      "Nuestra visión",
+      "Lo que nos guía",
+      "Dos mercados, la misma calidad de producto",
+      "Mercado industrial",
+      "Mercado artesanal",
+      "Dos empresas del mismo grupo, una sola identidad"
+    ]
+  },
+  {
+    "nombre": "industrias",
+    "width": 768,
+    "ruta": "/industrias",
+    "titulos": ["Nueve industrias, cada una con su propio conjunto de productos", "Cuero"]
+  },
+  {
+    "nombre": "productos",
+    "width": 768,
+    "ruta": "/productos",
+    "titulos": [
+      "Productos, presentación y origen",
+      "Ácido Acético",
+      "Ácido Fórmico",
+      "Ácido Oxálico",
+      "Ácido Sulfúrico",
+      "Alguicida",
+      "Bicarbonato de Sodio",
+      "Blanqueador",
+      "Clarificante",
+      "Enzima Ácida INCO-EAL",
+      "Enzima Ácida INCO-EAL",
+      "Enzima Neutra INCO-ENL",
+      "Afirmador / Fijador Textil",
+      "Hidrosulfito de Sodio",
+      "Hidrosulfito de Sodio",
+      "Hipoclorito de Calcio en Tableta",
+      "Hipoclorito de Calcio Granular",
+      "Metabisulfito",
+      "Negro Sulfuroso High Quality",
+      "Peróxido de Hidrógeno",
+      "Soda Cáustica",
+      "Soda Ash",
+      "Soda Cáustica",
+      "Soda Cáustica",
+      "Soda Cáustica (POL)",
+      "Sulfato de Aluminio",
+      "Sulfato de Sodio",
+      "Sulfuro de Sodio",
+      "Tricloro Granular y Polvo"
+    ]
+  },
+  {
+    "nombre": "noticias",
+    "width": 768,
+    "ruta": "/noticias",
+    "titulos": ["Novedades de la empresa"]
+  },
+  {
+    "nombre": "contacto",
+    "width": 768,
+    "ruta": "/contacto",
+    "titulos": ["Cuéntenos cómo podemos ayudarle", "Envíenos su mensaje", "Quetzaltenango", "Guatemala"]
+  },
+  {
+    "nombre": "acceso",
+    "width": 768,
+    "ruta": "/acceso",
+    "titulos": ["Acceso personal", "¿Quién es usted?"]
+  },
+  {
+    "nombre": "ejemplo.08-resumen",
+    "width": 768,
+    "ruta": "/panel?cuenta=ejemplo.08",
+    "titulos": [
+      "Hola, Usuario de ejemplo 08",
+      "Contenido institucional",
+      "Industrias",
+      "Catálogo",
+      "Noticias",
+      "Solicitudes",
+      "Documentación interna"
+    ]
+  },
+  {
+    "nombre": "ejemplo.08-contenido",
+    "width": 768,
+    "ruta": "/panel/contenido?cuenta=ejemplo.08",
+    "titulos": [
+      "Inicio y Quiénes somos",
+      "Portada",
+      "Logotipo de INCOVSA",
+      "Misión",
+      "Visión",
+      "Historia",
+      "Valores",
+      "Logotipo de Inquiserca"
+    ]
+  },
+  {
+    "nombre": "ejemplo.08-industrias",
+    "width": 768,
+    "ruta": "/panel/industrias?cuenta=ejemplo.08",
+    "titulos": [
+      "Industrias atendidas",
+      "Cuero",
+      "Textil",
+      "Cerería",
+      "Hulera",
+      "Medicamentos",
+      "Limpieza",
+      "Alimentación animal",
+      "Tratamiento de agua",
+      "Lavandería"
+    ]
+  },
+  {
+    "nombre": "ejemplo.08-catalogo",
+    "width": 768,
+    "ruta": "/panel/catalogo?cuenta=ejemplo.08",
+    "titulos": ["Catálogo de productos públicos"]
+  },
+  {
+    "nombre": "ejemplo.08-noticias",
+    "width": 768,
+    "ruta": "/panel/noticias?cuenta=ejemplo.08",
+    "titulos": ["Noticias"]
+  },
+  {
+    "nombre": "ejemplo.08-contacto",
+    "width": 768,
+    "ruta": "/panel/contacto?cuenta=ejemplo.08",
+    "titulos": ["Información de contacto", "Quetzaltenango", "Guatemala"]
+  },
+  {
+    "nombre": "ejemplo.08-solicitudes",
+    "width": 768,
+    "ruta": "/panel/solicitudes?cuenta=ejemplo.08",
+    "titulos": ["Solicitudes recibidas"]
+  },
+  {
+    "nombre": "ejemplo.08-documentos",
+    "width": 768,
+    "ruta": "/panel/documentos?cuenta=ejemplo.08",
+    "titulos": ["Documentación interna"]
+  },
+  {
+    "nombre": "ejemplo.09-documentos",
+    "width": 768,
+    "ruta": "/panel/documentos?cuenta=ejemplo.09",
+    "titulos": ["Documentación interna"]
+  },
+  {
+    "nombre": "ejemplo.10-documentos",
+    "width": 768,
+    "ruta": "/panel/documentos?cuenta=ejemplo.10",
+    "titulos": ["Documentación interna"]
+  },
+  {
+    "nombre": "usuarios",
+    "width": 768,
+    "ruta": "/panel/usuarios?cuenta=ejemplo.01",
+    "titulos": ["Usuarios del sitio"]
+  },
+  {
+    "nombre": "inicio",
+    "width": 1440,
+    "ruta": "/",
+    "titulos": [
+      "Química que sostiene a la industria guatemalteca",
+      "Cada industria tiene su propio conjunto de productos",
+      "Cuero",
+      "Textil",
+      "Cerería",
+      "Hulera",
+      "Medicamentos",
+      "Limpieza",
+      "Alimentación animal",
+      "Tratamiento de agua",
+      "Lavandería",
+      "Misión y visión",
+      "Nuestra misión",
+      "Nuestra visión",
+      "Visítenos",
+      "Quetzaltenango",
+      "Guatemala",
+      "¿Necesita un producto que no aparece en el catálogo?"
+    ]
+  },
+  {
+    "nombre": "nosotros",
+    "width": 1440,
+    "ruta": "/nosotros",
+    "titulos": [
+      "Más de treinta años abasteciendo de químicos a la industria del país",
+      "De tenería a distribuidor de productos químicos",
+      "Misión y visión",
+      "Nuestra misión",
+      "Nuestra visión",
+      "Lo que nos guía",
+      "Dos mercados, la misma calidad de producto",
+      "Mercado industrial",
+      "Mercado artesanal",
+      "Dos empresas del mismo grupo, una sola identidad"
+    ]
+  },
+  {
+    "nombre": "industrias",
+    "width": 1440,
+    "ruta": "/industrias",
+    "titulos": ["Nueve industrias, cada una con su propio conjunto de productos", "Cuero"]
+  },
+  {
+    "nombre": "productos",
+    "width": 1440,
+    "ruta": "/productos",
+    "titulos": [
+      "Productos, presentación y origen",
+      "Ácido Acético",
+      "Ácido Fórmico",
+      "Ácido Oxálico",
+      "Ácido Sulfúrico",
+      "Alguicida",
+      "Bicarbonato de Sodio",
+      "Blanqueador",
+      "Clarificante",
+      "Enzima Ácida INCO-EAL",
+      "Enzima Ácida INCO-EAL",
+      "Enzima Neutra INCO-ENL",
+      "Afirmador / Fijador Textil",
+      "Hidrosulfito de Sodio",
+      "Hidrosulfito de Sodio",
+      "Hipoclorito de Calcio en Tableta",
+      "Hipoclorito de Calcio Granular",
+      "Metabisulfito",
+      "Negro Sulfuroso High Quality",
+      "Peróxido de Hidrógeno",
+      "Soda Cáustica",
+      "Soda Ash",
+      "Soda Cáustica",
+      "Soda Cáustica",
+      "Soda Cáustica (POL)",
+      "Sulfato de Aluminio",
+      "Sulfato de Sodio",
+      "Sulfuro de Sodio",
+      "Tricloro Granular y Polvo"
+    ]
+  },
+  {
+    "nombre": "noticias",
+    "width": 1440,
+    "ruta": "/noticias",
+    "titulos": ["Novedades de la empresa"]
+  },
+  {
+    "nombre": "contacto",
+    "width": 1440,
+    "ruta": "/contacto",
+    "titulos": ["Cuéntenos cómo podemos ayudarle", "Envíenos su mensaje", "Quetzaltenango", "Guatemala"]
+  },
+  {
+    "nombre": "acceso",
+    "width": 1440,
+    "ruta": "/acceso",
+    "titulos": ["Acceso personal", "¿Quién es usted?"]
+  },
+  {
+    "nombre": "ejemplo.08-resumen",
+    "width": 1440,
+    "ruta": "/panel?cuenta=ejemplo.08",
+    "titulos": [
+      "Hola, Usuario de ejemplo 08",
+      "Contenido institucional",
+      "Industrias",
+      "Catálogo",
+      "Noticias",
+      "Solicitudes",
+      "Documentación interna"
+    ]
+  },
+  {
+    "nombre": "ejemplo.08-contenido",
+    "width": 1440,
+    "ruta": "/panel/contenido?cuenta=ejemplo.08",
+    "titulos": [
+      "Inicio y Quiénes somos",
+      "Portada",
+      "Logotipo de INCOVSA",
+      "Misión",
+      "Visión",
+      "Historia",
+      "Valores",
+      "Logotipo de Inquiserca"
+    ]
+  },
+  {
+    "nombre": "ejemplo.08-industrias",
+    "width": 1440,
+    "ruta": "/panel/industrias?cuenta=ejemplo.08",
+    "titulos": [
+      "Industrias atendidas",
+      "Cuero",
+      "Textil",
+      "Cerería",
+      "Hulera",
+      "Medicamentos",
+      "Limpieza",
+      "Alimentación animal",
+      "Tratamiento de agua",
+      "Lavandería"
+    ]
+  },
+  {
+    "nombre": "ejemplo.08-catalogo",
+    "width": 1440,
+    "ruta": "/panel/catalogo?cuenta=ejemplo.08",
+    "titulos": ["Catálogo de productos públicos"]
+  },
+  {
+    "nombre": "ejemplo.08-noticias",
+    "width": 1440,
+    "ruta": "/panel/noticias?cuenta=ejemplo.08",
+    "titulos": ["Noticias"]
+  },
+  {
+    "nombre": "ejemplo.08-contacto",
+    "width": 1440,
+    "ruta": "/panel/contacto?cuenta=ejemplo.08",
+    "titulos": ["Información de contacto", "Quetzaltenango", "Guatemala"]
+  },
+  {
+    "nombre": "ejemplo.08-solicitudes",
+    "width": 1440,
+    "ruta": "/panel/solicitudes?cuenta=ejemplo.08",
+    "titulos": ["Solicitudes recibidas"]
+  },
+  {
+    "nombre": "ejemplo.08-documentos",
+    "width": 1440,
+    "ruta": "/panel/documentos?cuenta=ejemplo.08",
+    "titulos": ["Documentación interna"]
+  },
+  {
+    "nombre": "ejemplo.09-documentos",
+    "width": 1440,
+    "ruta": "/panel/documentos?cuenta=ejemplo.09",
+    "titulos": ["Documentación interna"]
+  },
+  {
+    "nombre": "ejemplo.10-documentos",
+    "width": 1440,
+    "ruta": "/panel/documentos?cuenta=ejemplo.10",
+    "titulos": ["Documentación interna"]
+  },
+  {
+    "nombre": "usuarios",
+    "width": 1440,
+    "ruta": "/panel/usuarios?cuenta=ejemplo.01",
+    "titulos": ["Usuarios del sitio"]
+  }
+]

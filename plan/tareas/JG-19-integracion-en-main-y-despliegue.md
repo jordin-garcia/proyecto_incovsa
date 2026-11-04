@@ -6,23 +6,23 @@ responsable: Jordin García
 hito: entrega
 prioridad: P1
 estado: pendiente
-depende_de: [JG-17, CE-06, CE-07, CE-08]
-programada: 2026-11-02
+depende_de: [JG-17, CE-06, CE-07, CE-08, JC-10, JG-26, DM-14, CE-14, JM-10, JG-27]
+programada: 2026-11-07
 requisitos: [RNF-12]
 pantallas: []
 ---
 
 # JG-19 · Integración de develop en main y primer despliegue a producción
 
-**Responsable:** Jordin García · **Hito:** entrega · **Prioridad:** P1 · **Programada:** lun 02/11 · **Depende de:** JG-17, CE-06, CE-07, CE-08
+**Responsable:** Jordin García · **Hito:** entrega · **Prioridad:** P1 · **Programada:** sáb 07/11 · **Depende de:** JG-17, CE-06, CE-07, CE-08, JC-10, JG-26, DM-14, CE-14, JM-10, JG-27
 
 ## Objetivo
-El lunes 02/11, con el desarrollo completo, integrar `develop` en `main`, lo que dispara el **primer despliegue automático** a producción (specs/16, decisiones 31 y 75), y verificar con Carlos que la aplicación funciona en `incovsa.com` con HTTPS.
+Después de la entrega académica del 04/11 y en cuanto INCOVSA entregue los accesos (CE-08; specs/16, decisión 90), integrar `develop` en `main`, lo que dispara el **primer despliegue automático** a producción (specs/16, decisiones 31 y 75), y verificar con Carlos que la aplicación funciona en `incovsa.com` con HTTPS.
 
 ## Contexto que debes leer
 - `specs/16` "Despliegue" y decisiones 27 a 34, 37 y 75
 - `## Resultado` de CE-05, CE-06, CE-07 y CE-08
-- `plan/convergencia/2026-10-30.md`
+- `plan/convergencia/2026-11-05.md` (JG-17)
 
 ## Qué hacer
 1. Confirmar que `develop` tiene todas las verificaciones en verde, que el recorrido diario del día pasó y que no quedan tareas del hito E3 pendientes.

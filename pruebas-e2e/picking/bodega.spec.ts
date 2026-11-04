@@ -1,6 +1,8 @@
 import { execSync } from "node:child_process";
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { comprobarEncabezadoModulo } from "../comunes/encabezado";
+import { irA, recargar } from "../comunes/navegacion";
 
 try {
   process.loadEnvFile();
@@ -83,7 +85,7 @@ test.describe("Módulo de Bodega E2E", () => {
     context,
   }) => {
     await entrar(context);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     await expect(page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`)).toBeVisible();
@@ -97,7 +99,7 @@ test.describe("Módulo de Bodega E2E", () => {
     baseURL,
   }) => {
     await entrarEnSede(context, baseURL, 2);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     const tarjeta = page.locator(`article.ped[data-id="${datosPedido.envioId}"]`);
@@ -114,24 +116,35 @@ test.describe("Módulo de Bodega E2E", () => {
 
   test("RNF-08: líneas marcadas sin violaciones serias de axe, contraste incluido", async ({ page, context }) => {
     await entrar(context);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     const tarjeta = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
     // Marcar todo pasa por una acción del servidor y un refresco: se espera más que el valor por omisión.
+    const respuestaMarcarTodo = page.waitForResponse(
+      (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
+    );
     await tarjeta.getByRole("button", { name: "Marcar todo" }).click();
     await expect(tarjeta.locator("tr.lista")).toHaveCount(2, { timeout: 15_000 });
+    expect((await respuestaMarcarTodo).ok()).toBe(true);
 
     expect(await violacionesGraves(page)).toEqual([]);
 
     // Deja el envío sin marcar para las pruebas siguientes.
+    const respuestaDesmarcarTodo = page.waitForResponse(
+      (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
+    );
     await tarjeta.getByRole("button", { name: "Desmarcar todo" }).click();
     await expect(tarjeta.locator("tr.lista")).toHaveCount(0, { timeout: 15_000 });
+    expect((await respuestaDesmarcarTodo).ok()).toBe(true);
+    await recargar(page);
+    await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
+    await expect(tarjeta.locator("tr.lista")).toHaveCount(0);
   });
 
   test("RNF-08: Detalle de Ruta sin violaciones serias de axe, contraste incluido", async ({ page, context }) => {
     await entrar(context);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     await page
@@ -146,7 +159,7 @@ test.describe("Módulo de Bodega E2E", () => {
   test("RNF-08: Bodega vacía sin violaciones serias de axe, contraste incluido", async ({ page, context, baseURL }) => {
     // Gerencia trabaja en todas las sedes; en Escuintla las pruebas no crean envíos.
     await entrarEnSede(context, baseURL, 3);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     await expect(page.locator(".tarjeta.vacio")).toBeVisible();
 
@@ -158,7 +171,7 @@ test.describe("Módulo de Bodega E2E", () => {
     context,
   }) => {
     await entrar(context);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     const tarjeta = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
@@ -189,7 +202,7 @@ test.describe("Módulo de Bodega E2E", () => {
     context,
   }) => {
     await entrar(context);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     const tarjeta = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
@@ -217,7 +230,7 @@ test.describe("Módulo de Bodega E2E", () => {
 
   test("RF-SL-23 / RN-20: marcar línea persiste al recargar y marcar todo marca todas", async ({ page, context }) => {
     await entrar(context);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     const tarjeta = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
@@ -225,12 +238,16 @@ test.describe("Módulo de Bodega E2E", () => {
     const botonMarca = fila5287.locator("button.marca");
 
     // Marcar línea 1
+    const respuestaMarcado = page.waitForResponse(
+      (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
+    );
     await botonMarca.click();
     await expect(botonMarca).toHaveClass(/on/);
     await expect(fila5287).toHaveClass(/lista/);
 
     // Recargar y confirmar persistencia
-    await page.reload();
+    expect((await respuestaMarcado).ok()).toBe(true);
+    await recargar(page);
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     const tarjetaRecargada = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
     const filaRecargada = tarjetaRecargada.locator("tr", { hasText: "Lote 5287" });
@@ -238,15 +255,163 @@ test.describe("Módulo de Bodega E2E", () => {
 
     // Botón Marcar todo
     const botonMarcarTodo = tarjetaRecargada.getByRole("button", { name: "Marcar todo" });
+    const respuestaMarcarTodo = page.waitForResponse(
+      (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
+    );
     await botonMarcarTodo.click();
 
     await expect(tarjetaRecargada.locator("tr.lista")).toHaveCount(2);
     await expect(tarjetaRecargada.locator(".ped-avance")).toContainText("2 de 2");
+    expect((await respuestaMarcarTodo).ok()).toBe(true);
 
     // Desmarcar todo
     const botonDesmarcarTodo = tarjetaRecargada.getByRole("button", { name: "Desmarcar todo" });
+    const respuestaDesmarcarTodo = page.waitForResponse(
+      (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
+    );
     await botonDesmarcarTodo.click();
     await expect(tarjetaRecargada.locator("tr.lista")).toHaveCount(0);
+    expect((await respuestaDesmarcarTodo).ok()).toBe(true);
+    await recargar(page);
+    await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
+    await expect(tarjetaRecargada.locator("tr.lista")).toHaveCount(0);
+  });
+
+  test("RF-SL-61 (auditoría H-17): el encabezado de Bodega tiene la estructura de cab() con la instrucción a la par del título", async ({
+    page,
+    context,
+  }) => {
+    await entrar(context);
+    await irA(page, "/picking/bodega");
+    await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
+    await comprobarEncabezadoModulo(page, {
+      eyebrow: "Módulo de bodega · tablero de preparación",
+      titulo: "Rutas y pedidos por preparar",
+      instruccion:
+        "Arrastre una ruta, un pedido o una fila para cambiar la prioridad; se ve al instante en todas las pantallas de la sede.",
+      accion: "Abrir tablero en pantalla completa",
+    });
+    await expect(page.locator(".cab-fx .acc a")).toHaveAttribute("href", "/picking/tablero");
+  });
+
+  test("RF-SL-75 / RNF-01 (auditoría H-18, H-19 y H-20): «Programada» en verde y negrita, avance y herramientas como el prototipo", async ({
+    page,
+    context,
+  }) => {
+    await entrar(context);
+    await irA(page, "/picking/bodega");
+    await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
+    const tarjeta = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
+
+    // H-18: `.ped-meta .prog` en --v700 y negrita (estilos.css:959); los demás datos siguen en gris.
+    const verde700 = await page.evaluate(() => {
+      const muestra = document.createElement("span");
+      muestra.style.color = "var(--v700)";
+      document.body.append(muestra);
+      const color = getComputedStyle(muestra).color;
+      muestra.remove();
+      return color;
+    });
+    const programada = tarjeta.locator(".ped-meta .prog");
+    await expect(programada).toHaveCSS("color", verde700);
+    await expect(programada).toHaveCSS("font-weight", "700");
+    await expect(tarjeta.locator(".ped-meta span:not(.prog)").first()).not.toHaveCSS("color", verde700);
+
+    // H-20: `.ped-herr` con separación de 8 px, relleno 12px 22px y fondo blanco (estilos.css:960).
+    const herramientas = tarjeta.locator(".ped-herr");
+    await expect(herramientas).toHaveCSS("column-gap", "8px");
+    await expect(herramientas).toHaveCSS("padding", "12px 22px");
+    await expect(herramientas).toHaveCSS("background-color", "rgb(255, 255, 255)");
+
+    // H-19: hasta 720 px, el avance ocupa todo el ancho de la cabecera de la tarjeta (estilos.css:659).
+    const medidas = await tarjeta.locator(".ped-cab").evaluate((cab) => {
+      const estilo = getComputedStyle(cab);
+      const interior = cab.clientWidth - parseFloat(estilo.paddingLeft) - parseFloat(estilo.paddingRight);
+      const avance = cab.querySelector(".ped-avance")!;
+      return { interior, avance: avance.getBoundingClientRect().width, margen: getComputedStyle(avance).marginLeft };
+    });
+    if (page.viewportSize()!.width <= 720) {
+      expect(Math.abs(medidas.avance - medidas.interior)).toBeLessThanOrEqual(1);
+      expect(medidas.margen).toBe("0px");
+    } else {
+      expect(medidas.avance).toBeLessThan(medidas.interior);
+    }
+  });
+
+  test("RF-SL-74 (auditoría H-21): en el Detalle se desplaza la ventana, no una zona interna", async ({
+    page,
+    context,
+  }) => {
+    await entrar(context);
+    // Una ventana baja obliga a desplazar el Detalle de Ruta, que tiene tres pedidos facturados.
+    await page.setViewportSize({ width: page.viewportSize()!.width, height: 560 });
+    await irA(page, "/picking/bodega");
+    await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
+    await page
+      .locator(`article.ped[data-id="${datosEnvio.envioId}"]`)
+      .getByRole("button", { name: "Detalle de Ruta" })
+      .click();
+    const ventana = page.locator("[role=dialog]");
+    await expect(ventana).toBeVisible();
+    const grupos = ventana.locator(".det-grupos");
+    await expect(grupos.locator(".det-g")).toHaveCount(3);
+    await expect(grupos).toHaveCSS("max-height", "none");
+    await expect(grupos).toHaveCSS("overflow-y", "visible");
+    await expect(grupos).not.toHaveAttribute("role", "region");
+    const desplazamiento = await ventana.evaluate((el) => {
+      const zona = el.querySelector(".det-grupos")!;
+      return {
+        ventana: el.scrollHeight > el.clientHeight,
+        grupos: zona.scrollHeight > zona.clientHeight + 1,
+      };
+    });
+    expect(desplazamiento).toEqual({ ventana: true, grupos: false });
+    // El último pedido facturado se alcanza desplazando la ventana.
+    await grupos.locator(".det-g").last().scrollIntoViewIfNeeded();
+    await expect(grupos.locator(".det-g").last()).toBeInViewport();
+    expect(await violacionesGraves(page)).toEqual([]);
+  });
+
+  test("RF-SL-23 (auditoría H-24): sin red, la marca vuelve atrás con un mensaje y la pantalla sigue en uso", async ({
+    page,
+    context,
+  }) => {
+    await entrar(context);
+    await irA(page, "/picking/bodega");
+    await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
+    const tarjeta = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
+    const fila = tarjeta.locator("tbody tr").first();
+    const marca = fila.locator("button.marca");
+    await expect(fila).not.toHaveClass(/lista/);
+
+    // Las acciones del servidor se cortan como si la tableta perdiera el wifi.
+    const sinRed = (url: URL) => url.pathname === "/picking/bodega";
+    await page.route(sinRed, (r) => (r.request().headers()["next-action"] ? r.abort("connectionreset") : r.continue()));
+    await marca.click();
+    await expect(page.locator(".toast.t-error")).toContainText(
+      "No se pudo completar la operación. Inténtelo de nuevo.",
+    );
+    await expect(fila).not.toHaveClass(/lista/);
+    await expect(marca).toHaveAttribute("aria-pressed", "false");
+    await expect(page.getByRole("heading", { level: 1, name: "Rutas y pedidos por preparar" })).toBeVisible();
+
+    // Abrir el Detalle sin red tampoco pierde la pantalla.
+    await tarjeta.getByRole("button", { name: "Detalle de Ruta" }).click();
+    await expect(page.locator(".toast.t-error").last()).toContainText("No se pudo completar la operación");
+    await expect(page.locator("[role=dialog]")).toHaveCount(0);
+    await page.unroute(sinRed);
+
+    // Al volver la red, la misma pantalla sigue funcionando.
+    let respuesta = page.waitForResponse(
+      (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
+    );
+    await marca.click();
+    expect((await respuesta).ok()).toBe(true);
+    await expect(fila).toHaveClass(/lista/);
+    respuesta = page.waitForResponse((r) => r.request().method() === "POST" && !!r.request().headers()["next-action"]);
+    await marca.click();
+    expect((await respuesta).ok()).toBe(true);
+    await expect(fila).not.toHaveClass(/lista/);
   });
 
   test("RF-SL-24 / RN-11 (CP-38): despacho solo habilitado con todo marcado y pasa a En Ruta", async ({
@@ -254,7 +419,7 @@ test.describe("Módulo de Bodega E2E", () => {
     context,
   }) => {
     await entrar(context);
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     const tarjeta = page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`);
@@ -264,8 +429,12 @@ test.describe("Módulo de Bodega E2E", () => {
     await expect(botonDespacho).toBeDisabled();
 
     // Marcar todo
+    const respuestaMarcarTodo = page.waitForResponse(
+      (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
+    );
     await tarjeta.getByRole("button", { name: "Marcar todo" }).click();
     await expect(botonDespacho).toBeEnabled();
+    expect((await respuestaMarcarTodo).ok()).toBe(true);
 
     // Pulsar botón de despacho
     await botonDespacho.click();
@@ -277,9 +446,16 @@ test.describe("Módulo de Bodega E2E", () => {
     await expect(modalConfirmacion).toContainText("La ruta pasa a En Ruta");
 
     // Confirmar
+    const respuestaDespacho = page.waitForResponse(
+      (r) => r.request().method() === "POST" && !!r.request().headers()["next-action"],
+    );
     await modalConfirmacion.getByRole("button", { name: "Ruta Despachada" }).click();
+    expect((await respuestaDespacho).ok()).toBe(true);
 
     // Ya no aparece en Bodega
+    await expect(page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`)).toHaveCount(0);
+    await recargar(page);
+    await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
     await expect(page.locator(`article.ped[data-id="${datosEnvio.envioId}"]`)).toHaveCount(0);
   });
 
@@ -288,7 +464,7 @@ test.describe("Módulo de Bodega E2E", () => {
     context,
   }) => {
     await entrar(context, "ejemplo.04");
-    await page.goto("/picking/bodega");
+    await irA(page, "/picking/bodega");
     await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 
     const sinAcceso = page.locator(".sin-acceso");

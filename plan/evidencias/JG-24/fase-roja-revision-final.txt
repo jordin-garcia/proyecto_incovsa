@@ -1,0 +1,15 @@
+   × RF-SL-36 / RN-39 / H-12: presenta contenido y registros históricos sin JSON ni objetos vacíos 1117ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/modulos/reportes/servicio.test.ts > RF-SL-36 / RN-39 / H-12: presenta contenido y registros históricos sin JSON ni objetos vacíos
+- Expected
++ Received
+-   "Industria Cuero",
+      Tests  1 failed | 8 skipped (9)
+  x  1 [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:89:5 › RF-SW-25 / H-07 / H-13 / H-39: acceso denegado ofrece el módulo propio y un módulo inexistente conserva el armazón (17.6s)
+  1) [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:89:5 › RF-SW-25 / H-07 / H-13 / H-39: acceso denegado ofrece el módulo propio y un módulo inexistente conserva el armazón 
+    Error: expect(locator).toBeVisible() failed
+    Locator: getByRole('heading', { name: 'Sección no encontrada', exact: true })
+    Error: element(s) not found
+      - Expect "toBeVisible" getByRole('heading', { name: 'Sección no encontrada', exact: true }) with timeout 5000ms
+      - waiting for getByRole('heading', { name: 'Sección no encontrada', exact: true })
+      101 |   // En el panel, el prototipo dice «Sección no encontrada» (panel.js › ruta); «Módulo» es solo del picking.

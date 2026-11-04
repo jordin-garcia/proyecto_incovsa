@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { irA } from "../comunes/navegacion";
 
 const clave = process.env.CLAVE_DEMO;
 test.beforeEach(async ({ page }, info) => {
@@ -8,7 +9,7 @@ test.beforeEach(async ({ page }, info) => {
   await page.setExtraHTTPHeaders({ "X-Real-IP": `198.18.${red}.${info.workerIndex + 1}` });
 });
 async function abrirAcceso(page: Page) {
-  await page.goto("/acceso");
+  await irA(page, "/acceso");
   await expect(page.locator(".acc-lay")).toHaveAttribute("data-hidratado", "true");
   const otro = page.getByRole("button", { name: "Usar otro usuario" });
   if (await otro.isVisible()) await otro.click();
@@ -36,6 +37,8 @@ test("RF-SW-09 / CAM-83: los tres pasos, sistemas habilitados, ayuda, contraseñ
   await page.getByRole("button", { name: "Entendido" }).click();
   await page.getByRole("link", { name: /Sistema de picking/ }).click();
   await expect(page.getByRole("heading", { name: "Sistema de picking", level: 2 })).toBeVisible();
+  await expect(page.getByRole("combobox")).toHaveCount(0);
+  await expect(page.getByLabel("Sede", { exact: true })).toHaveCount(0);
   await expect(page.locator(".acc-lay")).toHaveAttribute("data-hidratado", "true");
   await page.getByRole("button", { name: "¿Olvidó su contraseña?" }).click();
   await expect(page.getByRole("dialog")).toContainText("Pídale a Gerencia o a Soporte que la restablezcan.");
@@ -45,7 +48,7 @@ test("RF-SW-09 / CAM-83: los tres pasos, sistemas habilitados, ayuda, contraseñ
   await expect(page.getByLabel("Contraseña", { exact: true })).toHaveAttribute("type", "text");
   await page.getByRole("button", { name: "Ingresar" }).click();
   await expect(page.getByRole("region", { name: "Acceso para personal" }).getByRole("alert")).toContainText(
-    "Usuario o contraseña incorrectos",
+    "Usuario o contraseña incorrectos.",
   );
   expect(
     (await new AxeBuilder({ page }).analyze()).violations.filter((v) =>
@@ -90,6 +93,7 @@ test("RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio 
     await page
       .getByRole("link", { name: sistema === "sitio" ? /Administración del sitio/ : /Sistema de picking/ })
       .click();
+    await expect(page.locator(".acc-lay")).toHaveAttribute("data-hidratado", "true");
     await page.getByLabel("Contraseña", { exact: true }).fill(clave!);
     await page.getByRole("button", { name: "Ingresar" }).click();
     await expect(page).toHaveURL(sistema === "sitio" ? /\/panel\/documentos$/ : /\/picking\/facturacion$/);
@@ -109,7 +113,7 @@ test("RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio 
   expect(await (await context.request.get("/api/auth/sitio/get-session")).json()).toBeNull();
   expect(await (await context.request.get("/api/auth/picking/get-session")).json()).not.toBeNull();
   // El resto de la conexión del armazón a sesión/permisos/sedes corresponde a JG-07.
-  await page.goto("/picking");
+  await irA(page, "/picking");
   if (await page.getByRole("button", { name: "Menú", exact: true }).isVisible())
     await page.getByRole("button", { name: "Menú", exact: true }).click();
   await page.getByRole("button", { name: "Cerrar sesión" }).click();

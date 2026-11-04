@@ -153,3 +153,7 @@ El cambio de sede se ejecuta en una transición: mientras espera al servidor, de
 - [Comparación de armazones y estados de acceso denegado](../evidencias/JG-07/README.md).
 - [Verificación local](../evidencias/JG-07/verificacion.md).
 - [Revisión independiente](../evidencias/JG-07/revision.md).
+
+### Correcciones de la auditoría (2026-10-22)
+
+H-39: un módulo inexistente muestra «Módulo no encontrado» dentro del armazón, después de comprobar la sesión. No se amplían permisos ni sedes.

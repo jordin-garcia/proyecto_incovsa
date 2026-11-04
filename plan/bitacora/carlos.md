@@ -98,9 +98,25 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Decisiones: sin grupo sudo en el usuario de despliegue (opcional del bot); docker basta.
 - Pendiente o aviso para otros: ninguno nuevo; siguen P-10 / P-93 / P-94.
 
-## 2026-10-21 · CE-12 · Anexos I y J (borrador)
-- Hecho: inventario de servicios en `entregable-3/anexos/anexo-j-servicios-y-accesos.md` y formulario de firma en `anexo-i-evidencia-de-entrega.md`. Sin secretos. La transferencia del repositorio no se ejecutó.
-- Decisiones: el medio de las credenciales lo define Jordin. El anexo no elige gestor ni entrega en persona.
+## 2026-10-21 · CE-09 · Documento 1 final (fuente v0.3)
+- Avance, no cierre: ocho capítulos y anexos A a E en `entregable-3/documento-1/`. Figuras 1 a 5 regeneradas. Diagramas de `entregable-1/diagramas/` alineados con `specs/` 1.7.
+- Decisiones: la v0.2 no está en el repositorio, así que el texto sale de `specs/`. Las actas no se inventan.
 - Pendiente o aviso para otros:
-  - **Jordin:** el medio de entrega de credenciales, el correo de INCOVSA (P-94), quién recibe (P-03), el administrador inicial (P-08) y el nombre de la cuenta u organización de GitHub de destino.
-  - **Carlos:** el 4 de noviembre, con el coordinador, ejecutar la transferencia. No antes.
+  - **Carlos:** aportar el `.docx` v0.2 y las notas de las reuniones 4 y 5 (la 5 es del 13/10/2026).
+  - **Jordin:** `entregable-3/equipo.local.json`. No se commitea. JG-17 sigue pendiente para cerrar la columna de implementación del anexo D.
+
+## 2026-10-23 · CE-09 · Bloqueada tras la revisión de Claude
+- Hecho en esta corrección: la tarea pasa a `estado: bloqueada` con campo `bloqueo`. Figuras 6 a 8 en PNG, generadas desde los `.mmd`, sin nueva dependencia. Anexo C con capturas del prototipo de simulación aprobado. Las imágenes de la v0.2, incluido Inventario, no se presentan como prototipo vigente.
+- Decisiones: no se marcan hechas la tarea ni las actas. No se inventan minutas ni fotografías. No se edita `specs/19`. `mermaid-cli` no entra en `package.json`.
+- Pendiente o aviso para otros:
+  - **Carlos:** incorporar las actas en Markdown de las reuniones 4 y 5 y las evidencias de `docs/Reuniones/` sin fotografías de personas. La reunión 5 va fechada el 13/10/2026 (P-77).
+  - **Jordin:** JG-17 sigue pendiente. Cuando esté hecha, el anexo D puede quitar los `TODO(CE-09)`. Si las evidencias del levantamiento no existen, la decisión queda en `specs/19`.
+
+## 2026-10-27 · CE-13 · Correcciones de la auditoría del 26/10 en el sitio y el panel
+- Hecho: H-56 a H-63 y H-65. La bitácora de noticias guarda el título y la de solicitudes los textos del prototipo. La galería compartida mide como `campoGaleria`. El formulario de Contacto recorta los topes en español y valida al salir solo correo y teléfono. El mapa inválido avisa con el texto del prototipo. El comentario de la bandeja admite 2000 caracteres. La evidencia de `pruebas-e2e` se escribe solo con `EVIDENCIA=1`, mediante `pruebas-e2e/comunes/evidencia.ts`.
+- Decisiones: H-60 usa `maxLength` y el mensaje «El … admite hasta N caracteres.» (reversible). H-62 quita «Indique un correo válido.» y no lo registra en `specs/` (reversible). *(Nota del coordinador, 27/10: se revirtió en CE-13b; el correo sí se valida, ver `specs/05` y `specs/18`.)* H-63 no migra comentarios ya guardados. `plan/convenciones.md` ya decía D-08 y es archivo protegido: no se editó. La rama del agente es `cursor/ce-13-correcciones-auditoria-0917`.
+- Pendiente o aviso para otros:
+  - **Daniela:** toqué `src/componentes/sitio/FormularioContacto.tsx`, `src/componentes/panel/contenido.module.css`, `noticias.module.css`, `EditorContacto.tsx`, `BandejaSolicitudes.tsx`, y las pruebas `pruebas-e2e/sitio/{contacto,noticias,nosotros}.spec.ts` y `pruebas-e2e/panel/{solicitudes,contenido,industrias-y-catalogo,documentos}.spec.ts`. Las aserciones siguen; solo se salta la escritura sin `EVIDENCIA=1`, salvo el aviso del mapa en `contacto.spec.ts`, que ahora espera el aviso y no el texto bajo el campo.
+  - **José Daniel:** toqué `pruebas-e2e/picking/facturacion-dos-facturadores.spec.ts` para usar la ayuda de evidencia. `info.attach` no cambia.
+  - **Josué:** revisé `pruebas-e2e/picking/tablero.spec.ts`, `pruebas-e2e/picking/bodega-tiempo-real.spec.ts` y `pruebas-e2e/picking/flujo/tiempo-real.spec.ts`. Solo escriben en `test-results/` o `info.outputPath`, así que no los edité. JM-09 sigue siendo quien toca el tablero.
+  - **Jordin:** toqué `pruebas-e2e/panel/auditoria-jg24.spec.ts`, `pruebas-e2e/acceso/auditoria-jg24.spec.ts`, `pruebas-e2e/picking/auditoria-jg24.spec.ts`, `specs/05-sitio-web.md` y `specs/18-historial-de-decisiones.md`. No edité `plan/convenciones.md`.

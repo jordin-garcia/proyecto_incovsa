@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState, useTransition } from "react";
+import { useCallback, useLayoutEffect, useRef, useState, useTransition } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -17,6 +17,8 @@ import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import { OpcionEnvio } from "./OpcionEnvio";
 import { PedidoArrastrable, ZonaArrastre, coordenadasTeclado } from "./ArrastreFacturacion";
 import type { OpcionesFacturacion } from "@/modulos/envios/opciones";
+import { estadoDePedidos } from "@/modulos/envios/estado-pedidos";
+import type { EstadoPedidos } from "@/modulos/envios/esquemas";
 import type { TipoOpcion } from "@/modulos/envios/esquemas";
 import { useRouter } from "next/navigation";
 import { Button } from "@/componentes/ui/button";
@@ -44,18 +46,39 @@ const motivos = [
   "no traen productos",
 ] as const;
 
-export function FacturacionTablero({
-  pedidos,
-  sedeId,
-  sedeNombre,
-  opciones,
-  puedeVerBodega,
-}: {
+type PropsFacturacion = {
   pedidos: PedidoEnTablero[];
   sedeId: number;
   sedeNombre: string;
   opciones: OpcionesFacturacion;
   puedeVerBodega: boolean;
+};
+
+/** El armazón comparte SSE. Conserva la vista durante una interacción y aplica el último contenido al terminar. */
+export function FacturacionTablero(props: PropsFacturacion) {
+  const [pausas, cambiarPausas] = useState<Set<string>>(() => new Set());
+  const [mostrado, mostrar] = useState(props);
+  if (!pausas.size && mostrado !== props) mostrar(props);
+  const alInteraccion = useCallback((clave: string, activa: boolean) => {
+    cambiarPausas((actuales) => {
+      const siguientes = new Set(actuales);
+      if (activa) siguientes.add(clave);
+      else siguientes.delete(clave);
+      return siguientes;
+    });
+  }, []);
+  return <TableroInteractivo {...mostrado} alInteraccion={alInteraccion} />;
+}
+
+function TableroInteractivo({
+  pedidos,
+  sedeId,
+  sedeNombre,
+  opciones,
+  puedeVerBodega,
+  alInteraccion,
+}: PropsFacturacion & {
+  alInteraccion: (clave: string, activa: boolean) => void;
 }) {
   const [arrastrados, arrastrar] = useState<number[]>([]);
   const [activo, fijarActivo] = useState<{ id: number; zona: string } | null>(null);
@@ -67,6 +90,7 @@ export function FacturacionTablero({
       keyboardCodes: { start: ["Space"], end: ["Space"], cancel: ["Escape"] },
     }),
   );
+  const confirmacionEliminar = useRef<{ ids: number[]; estadoEsperado: EstadoPedidos } | null>(null);
   const router = useRouter();
   const mensaje = useMensajes();
   const [seleccionados, seleccionar] = useState<Set<number>>(() => new Set());
@@ -75,6 +99,7 @@ export function FacturacionTablero({
   const lista = useRef<HTMLDivElement>(null);
   const archivo = useRef<HTMLInputElement>(null);
   const restaurarDesplazamiento = useRef<number | null>(null);
+  const tarjetaAncla = useRef<{ elemento: HTMLElement; arriba: number } | null>(null);
   const seleccionadosEnTablero = pedidos.filter((pedido) => seleccionados.has(pedido.id));
   const idsSeleccionados = seleccionadosEnTablero.map((pedido) => pedido.id);
   const todos = pedidos.length > 0 && seleccionadosEnTablero.length === pedidos.length;
@@ -94,17 +119,41 @@ export function FacturacionTablero({
     const scrollTop = restaurarDesplazamiento.current;
     if (!elemento) return;
     if (scrollTop === null) {
-      if (!seleccionados.size) elemento.style.paddingBottom = "";
+      if (!seleccionados.size) {
+        elemento.style.paddingBottom = "";
+        elemento.style.paddingTop = "";
+      }
       return;
     }
     if (!seleccionados.size) {
       elemento.style.paddingBottom = "";
+      elemento.style.paddingTop = "";
     } else {
       const rellenoActual = Number.parseFloat(getComputedStyle(elemento).paddingBottom) || 0;
       const espacioNecesario = Math.max(0, scrollTop + elemento.clientHeight - elemento.scrollHeight);
       elemento.style.paddingBottom = `${rellenoActual + espacioNecesario}px`;
     }
-    elemento.scrollTop = scrollTop;
+    const ancla = tarjetaAncla.current;
+    if (ancla?.elemento.isConnected) {
+      // Las filas anteriores cambian de altura. Conservar el mismo scrollTop no conserva
+      // el pedido que se estaba leyendo; corregimos su posición antes del repintado.
+      elemento.style.paddingTop = "";
+      const destino = elemento.scrollTop + ancla.elemento.getBoundingClientRect().top - ancla.arriba;
+      if (destino < 0) {
+        const relleno = Number.parseFloat(getComputedStyle(elemento).paddingTop) || 0;
+        elemento.style.paddingTop = `${relleno - destino}px`;
+      }
+      const desplazamiento = Math.max(0, destino);
+      const faltante = Math.max(0, desplazamiento + elemento.clientHeight - elemento.scrollHeight);
+      if (faltante) {
+        const relleno = Number.parseFloat(getComputedStyle(elemento).paddingBottom) || 0;
+        elemento.style.paddingBottom = `${relleno + faltante}px`;
+      }
+      elemento.scrollTop = desplazamiento;
+      tarjetaAncla.current = null;
+    } else {
+      elemento.scrollTop = scrollTop;
+    }
     restaurarDesplazamiento.current = null;
   }, [seleccionados]);
 
@@ -119,6 +168,25 @@ export function FacturacionTablero({
   }
 
   function seleccionarTodos(marcada: boolean) {
+    const elemento = lista.current;
+    if (elemento) {
+      const marco = elemento.getBoundingClientRect();
+      const tarjetas = [...elemento.querySelectorAll<HTMLElement>("[role='button']")];
+      const visible =
+        tarjetas.find((tarjeta) => {
+          const posicion = tarjeta.getBoundingClientRect();
+          return posicion.top >= marco.top && posicion.bottom <= marco.bottom;
+        }) ??
+        tarjetas.find((tarjeta) => {
+          const posicion = tarjeta.getBoundingClientRect();
+          return posicion.top >= marco.top && posicion.top < marco.bottom;
+        }) ??
+        tarjetas.find((tarjeta) => {
+          const posicion = tarjeta.getBoundingClientRect();
+          return posicion.bottom > marco.top && posicion.top < marco.bottom;
+        });
+      tarjetaAncla.current = visible ? { elemento: visible, arriba: visible.getBoundingClientRect().top } : null;
+    }
     restaurarDesplazamiento.current = lista.current?.scrollTop ?? 0;
     seleccionar(marcada ? new Set(pedidos.map((pedido) => pedido.id)) : new Set());
   }
@@ -142,7 +210,9 @@ export function FacturacionTablero({
   }
 
   async function confirmarEliminacion() {
-    const resultado = await eliminarPedidosFacturados({ sedeId, ids: idsSeleccionados });
+    const confirmacion = confirmacionEliminar.current;
+    if (!confirmacion) return;
+    const resultado = await eliminarPedidosFacturados({ sedeId, ...confirmacion });
     if (!resultado.ok) {
       router.refresh();
       throw new ErrorNegocio(resultado.error);
@@ -155,6 +225,7 @@ export function FacturacionTablero({
   function soltar(evento: DragEndEvent) {
     const ids = arrastrados;
     arrastrar([]);
+    alInteraccion("arrastre", false);
     if (!evento.over || evento.active.id === evento.over.id) return;
     const origen = evento.active.data.current?.zona;
     const destino = evento.over.data.current?.zona;
@@ -174,6 +245,12 @@ export function FacturacionTablero({
         origen: origen === "tablero" ? null : (origen as TipoOpcion),
         destino: destino === "tablero" ? null : (destino as TipoOpcion),
         antesDe,
+        estadoOrigen: estadoDePedidos(
+          origen === "tablero" ? pedidos : opciones.opciones.find((o) => o.tipo === origen)!.pedidos,
+        ),
+        estadoDestino: estadoDePedidos(
+          destino === "tablero" ? pedidos : opciones.opciones.find((o) => o.tipo === destino)!.pedidos,
+        ),
       });
       if (!resultado.ok) mensaje(resultado.error, "error");
       else seleccionar(new Set());
@@ -183,6 +260,7 @@ export function FacturacionTablero({
 
   return (
     <DndContext
+      id={`facturacion-sede-${sedeId}`}
       sensors={sensores}
       collisionDetection={(contexto) => {
         // Primero la zona visible: las tarjetas recortadas por el scroll del tablero
@@ -204,6 +282,7 @@ export function FacturacionTablero({
         return closestCenter(dentro);
       }}
       onDragStart={({ active }) => {
+        alInteraccion("arrastre", true);
         fijarActivo({ id: Number(active.id), zona: String(active.data.current?.zona ?? "tablero") });
         arrastrar(
           active.data.current?.zona === "tablero" && seleccionados.has(Number(active.id))
@@ -211,7 +290,10 @@ export function FacturacionTablero({
             : [Number(active.id)],
         );
       }}
-      onDragCancel={() => arrastrar([])}
+      onDragCancel={() => {
+        arrastrar([]);
+        alInteraccion("arrastre", false);
+      }}
       onDragEnd={soltar}
       accessibility={{
         screenReaderInstructions: {
@@ -235,7 +317,7 @@ export function FacturacionTablero({
         instruccion="Cargue el .xlsx de Odoo, seleccione los pedidos facturados, arrástrelos a una opción de envío y envíela a Bodega."
         acciones={
           <Button onClick={() => archivo.current?.click()} disabled={ocupado}>
-            <Icono nombre="subir" aria-hidden="true" /> {ocupado ? "Cargando archivo…" : "Cargar archivo .xlsx"}
+            <Icono nombre="subir" aria-hidden="true" /> Cargar archivo .xlsx
           </Button>
         }
       />
@@ -283,7 +365,17 @@ export function FacturacionTablero({
                     variante="peligro"
                     alConfirmar={confirmarEliminacion}
                   >
-                    <Button variant="peligro" size="pequeno" disabled={ocupado}>
+                    <Button
+                      variant="peligro"
+                      size="pequeno"
+                      disabled={ocupado}
+                      onClick={() => {
+                        confirmacionEliminar.current = {
+                          ids: idsSeleccionados,
+                          estadoEsperado: estadoDePedidos(seleccionadosEnTablero),
+                        };
+                      }}
+                    >
                       <Icono nombre="borrar" aria-hidden="true" /> Eliminar
                     </Button>
                   </VentanaConfirmacion>
@@ -311,7 +403,7 @@ export function FacturacionTablero({
                       role="button"
                       tabIndex={0}
                       aria-pressed={seleccionado}
-                      title="Clic para seleccionar"
+                      title="Clic para seleccionar; arrastre para llevarlo a una opción de envío"
                       onClick={() => alternarSeleccion(pedido.id)}
                       onKeyDown={(evento) => {
                         if (evento.key === "Enter") {
@@ -366,6 +458,7 @@ export function FacturacionTablero({
               sedeNombre={sedeNombre}
               ocupado={ocupado}
               puedeVerBodega={puedeVerBodega}
+              alInteraccion={alInteraccion}
             />
           ))}
         </aside>
@@ -418,7 +511,7 @@ export function FacturacionTablero({
                   <p>Se ignoraron {resumen.otrosEstados} referencia(s) que no están en estado «Hecho».</p>
                 )}
                 {!!resumen?.noCargados.length && (
-                  <p>Los datos de esos pedidos facturados deben corregirse en Odoo y volver a exportarse (P-91).</p>
+                  <p>Los datos de esos pedidos facturados deben corregirse en Odoo y volver a exportarse.</p>
                 )}
               </div>
             </DialogDescription>

@@ -1,23 +1,23 @@
 ---
 id: JG-20
-titulo: Material y cuentas para la capacitación del 03/11
+titulo: Material y cuentas para la capacitación
 persona: jordin
 responsable: Jordin García
 hito: entrega
 prioridad: P1
 estado: pendiente
 depende_de: [DM-13, JM-07, JG-19]
-programada: 2026-11-02
+programada: 2026-11-09
 requisitos: []
 pantallas: []
 ---
 
-# JG-20 · Material y cuentas para la capacitación del 03/11
+# JG-20 · Material y cuentas para la capacitación
 
-**Responsable:** Jordin García · **Hito:** entrega · **Prioridad:** P1 · **Programada:** lun 02/11 · **Depende de:** DM-13, JM-07, JG-19
+**Responsable:** Jordin García · **Hito:** entrega · **Prioridad:** P1 · **Programada:** lun 09/11 · **Depende de:** DM-13, JM-07, JG-19
 
 ## Objetivo
-Preparar la **capacitación del martes 03/11** (specs/16, decisión 72): agenda, guía por rol basada en los manuales (Documentos 3 y 4), cuentas de las personas que se capacitan y el formato de evidencia del Anexo H.
+Preparar la **capacitación al personal de INCOVSA**, en la fecha que se acuerde con INCOVSA, antes de la entrega a la empresa del 12/11 (specs/16, decisión 90): agenda, guía por rol basada en los manuales (Documentos 3 y 4), cuentas de las personas que se capacitan y el formato de evidencia del Anexo H.
 
 ## Contexto que debes leer
 - `specs/17` (Anexo H, evidencia de capacitación) y `specs/19` (P-03: quiénes reciben la capacitación)
@@ -35,7 +35,7 @@ Preparar la **capacitación del martes 03/11** (specs/16, decisión 72): agenda,
 ## Criterios de aceptación
 1. La agenda y la guía cubren todos los módulos de los dos sistemas.
 2. Las cuentas de las personas que se capacitan están listas en producción (las crean Gerencia o Soporte desde la administración de usuarios).
-3. El formato de evidencia está listo para llenarse el 03/11.
+3. El formato de evidencia está listo para llenarse el día de la capacitación.
 
 ## Fuera de alcance
 - La capacitación misma (JG-21).

@@ -1,0 +1,7 @@
+{
+  "puerto": 3000,
+  "pantallas": ["/acceso", "/acceso/picking", "/acceso/sitio"],
+  "herramienta": "next-devtools: get_errors",
+  "resultado": { "configErrors": [], "sessionErrors": [] },
+  "consola": "Las solicitudes CORS fallidas de gc.kis.v2.scr.kaspersky-labs.com corresponden a la extensión del equipo. Se conservan sus mensajes en consola.txt sin identificadores locales."
+}

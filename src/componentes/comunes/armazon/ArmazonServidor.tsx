@@ -7,7 +7,15 @@ import { opcionesPermitidas, SECCIONES_PANEL, MODULOS_PICKING } from "@/modulos/
 import { esAccesoTotal } from "@/lib/roles";
 import { ArmazonConSesion } from "./ArmazonConSesion";
 
-export async function ArmazonServidor({ sistema, children }: { sistema: "sitio" | "picking"; children: ReactNode }) {
+export async function ArmazonServidor({
+  sistema,
+  children,
+  contadores = {},
+}: {
+  sistema: "sitio" | "picking";
+  children: ReactNode;
+  contadores?: Record<string, number>;
+}) {
   const sesion = await obtenerSesion(sistema);
   if (!sesion) redirect("/acceso");
   const sedes = sistema === "picking" ? await sedesDelUsuario(sesion) : [];
@@ -15,7 +23,7 @@ export async function ArmazonServidor({ sistema, children }: { sistema: "sitio" 
   return (
     <ArmazonConSesion
       sistema={sistema}
-      opciones={opcionesPermitidas(sesion)}
+      opciones={opcionesPermitidas(sesion).map((opcion) => ({ ...opcion, contador: contadores[opcion.href] }))}
       catalogo={
         sistema === "sitio"
           ? SECCIONES_PANEL.map(({ href, texto, icono }) => ({ href, texto, icono }))

@@ -1,0 +1,4 @@
+
+> incovsa@0.1.0 tipos
+> tsc --noEmit
+

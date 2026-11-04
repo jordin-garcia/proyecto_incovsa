@@ -1,0 +1,175 @@
+
+Running 34 tests using 1 worker
+
+  ok  1 [telefono] › pruebas-e2e\sitio\auditoria-ce13.spec.ts:11:5 › RF-SW-06 / H-60: el formulario recorta los topes y no muestra mensajes de Zod en inglés (8.6s)
+  ok  2 [telefono] › pruebas-e2e\sitio\auditoria-ce13.spec.ts:61:5 › RF-SW-06 / H-61: al salir del campo solo se validan el correo y el teléfono (3.0s)
+  ok  3 [telefono] › pruebas-e2e\sitio\contacto.spec.ts:66:1 › RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible (5.2s)
+  ok  4 [telefono] › pruebas-e2e\sitio\contacto.spec.ts:116:1 › RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito (3.8s)
+  ok  5 [telefono] › pruebas-e2e\sitio\contacto.spec.ts:150:1 › RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos (9.0s)
+  ok  6 [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:62:5 › RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y relaciones actuales (6.0s)
+  ok  7 [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:109:5 › RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos, vacío y tarjetas sin lote (3.6s)
+  ok  8 [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:132:5 › RF-SW-05 / RF-SW-17 / RF-SW-15: detalle público, galería, recomendados y enlaces (6.5s)
+  ok  9 [telefono] › pruebas-e2e\sitio\inicio.spec.ts:6:5 › RF-SW-01 / RF-SW-27: Inicio informativo conserva secciones, cifras y textos aprobados (2.7s)
+  ok 10 [telefono] › pruebas-e2e\sitio\inicio.spec.ts:30:5 › RF-SW-15 / RF-SW-22 / RF-SW-24: pie público y mapas solo de las dos oficinas (2.1s)
+  ok 11 [telefono] › pruebas-e2e\sitio\inicio.spec.ts:64:5 › RF-SW-08 / RNF-08: menú responsivo, ausencia de desbordamiento y accesibilidad (3.1s)
+  ok 12 [telefono] › pruebas-e2e\sitio\inicio.spec.ts:81:5 › RF-SW-16: tarjetas aparecen al entrar en pantalla y desaparecen al salir (2.6s)
+  ok 13 [telefono] › pruebas-e2e\sitio\inicio.spec.ts:110:5 › RN-56 / RNF-17: cinco imágenes rotan cada 5 s, una queda fija y las secundarias cargan después (4.1s)
+  ok 14 [telefono] › pruebas-e2e\sitio\nosotros.spec.ts:21:5 › RF-SW-02 / CAM-79 / RNF-08: secciones, fondos, pie y accesibilidad de Quiénes somos (3.0s)
+  ok 15 [telefono] › pruebas-e2e\sitio\nosotros.spec.ts:54:5 › RF-SW-02 / CAM-80: ambos bloques alternan y quitar Inquiserca desde el panel deja solo INCOVSA (18.0s)
+  ok 16 [telefono] › pruebas-e2e\sitio\nosotros.spec.ts:101:5 › RF-SW-29 / RF-SW-16: cinco valores pendientes y presentación dinámica (2.1s)
+  ok 17 [telefono] › pruebas-e2e\sitio\nosotros.spec.ts:116:5 › RF-SW-02 / RF-SW-29 / RN-56: historia y cinco imágenes publicadas conservan orden, fila y ausencia de textos (5.6s)
+  ok 18 [telefono] › pruebas-e2e\sitio\noticias.spec.ts:92:1 › RF-SW-18 / RF-SW-15 / RNF-08: estados vacíos y formulario accesibles sin opción de ocultar (6.2s)
+  ok 19 [telefono] › pruebas-e2e\sitio\noticias.spec.ts:122:1 › RF-SW-18 / RN-56 / RN-39: crea, edita y elimina con confirmación; texto completo y sin desbordamiento (17.3s)
+  ok 20 [telefono] › pruebas-e2e\sitio\noticias.spec.ts:203:1 › RF-SW-25 / RNF-08: sin permiso de Noticias ofrece volver al módulo propio (3.7s)
+  ok 21 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:89:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública / (4.6s)
+  ok 22 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:89:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /nosotros (2.7s)
+  ok 23 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:89:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /industrias (2.5s)
+  ok 24 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:89:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /productos (4.9s)
+  ok 25 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:89:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /noticias (2.6s)
+  ok 26 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:89:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /contacto (4.0s)
+  ok 27 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:89:7 › RNF-01 / RNF-08 / RF-SW-16: revisión integral pública /acceso (2.3s)
+  ok 28 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:104:5 › RF-SW-16 / RNF-08: aparición, desaparición y navegación pública completa con teclado (20.1s)
+  ok 29 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:138:5 › RF-SW-05 / RNF-08: detalle del producto y regreso al catálogo con teclado (6.6s)
+  ok 30 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:155:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.08 (23.5s)
+  ok 31 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:155:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.09 (3.4s)
+  ok 32 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:155:7 › RF-SW-26 / RNF-08: revisión integral del panel con ejemplo.10 (3.2s)
+  ok 33 [telefono] › pruebas-e2e\sitio\revision-integral.spec.ts:224:5 › RNF-01 / RNF-08: revisión de Usuarios del sitio con Gerencia (4.2s)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3101
+- Network:       http://127.0.0.1:3101
+✓ Ready in 0ms
+✓ Running next.config took 32ms
+  x  34 [telefono] › pruebas-e2e\sitio\rendimiento-galerias.spec.ts:74:5 › RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respecto de una (25.9s)
+
+
+  1) [telefono] › pruebas-e2e\sitio\rendimiento-galerias.spec.ts:74:5 › RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respecto de una 
+
+    Error: cargaMs
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 435.6000000014901
+    Received:    437.0499999988824
+
+      137 |       };
+      138 |       for (const metrica of ["primeraPortadaMs", "cargaMs"] as const) {
+    > 139 |         expect(mediana(cinco.map((m) => m[metrica])), metrica).toBeLessThanOrEqual(
+          |                                                                ^
+      140 |           mediana(una.map((m) => m[metrica])) + 10,
+      141 |         );
+      142 |       }
+        at C:\Users\Hecto\Documents\proyecto_incovsa\pruebas-e2e\sitio\rendimiento-galerias.spec.ts:139:64
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-3.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #5: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-4.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #6: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-7.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #7: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-5.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #8: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-6.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #9: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-9.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #10: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-8.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #11: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-11.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #12: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-10.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #13: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-14.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #14: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-12.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #15: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-13.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #16: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-17.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #17: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-15.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #18: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-19.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #19: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-16.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #20: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-18.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #21: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-21.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #22: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-20.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #23: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-24.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #24: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-22.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #25: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-23.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #26: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-26.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #27: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-27.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #28: screenshot (image/png) ─────────────────────────────────────────────────────────
+    test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\test-failed-25.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\sitio-rendimiento-galerias-8b1f7-mpo-inicial-respecto-de-una-telefono\error-context.md
+
+  1 failed
+    [telefono] › pruebas-e2e\sitio\rendimiento-galerias.spec.ts:74:5 › RNF-17 / CP-52: cinco imágenes no aumentan bytes ni tiempo inicial respecto de una 
+  33 passed (4.0m)

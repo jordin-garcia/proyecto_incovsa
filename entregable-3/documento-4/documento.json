@@ -1,0 +1,42 @@
+{
+  "titulo_documento": "DOCUMENTO 4: MANUAL DE USUARIO DEL SISTEMA LOGÍSTICO (PICKING)",
+  "archivo_salida": "Documento 4 - Manual de usuario del sistema logistico v1.0.docx",
+  "lugar_fecha": "Quetzaltenango, 3 de noviembre de 2026",
+  "portada": true,
+  "control_versiones": true,
+  "indices": true,
+  "numerar": true,
+  "versiones": [
+    [
+      "1.0",
+      "03/11/2026",
+      "Josué Menéndez",
+      "Versión 1.0 para el Entregable No. 3: manual de usuario del sistema logístico de bodega (picking) con los 22 apartados requeridos por los lineamientos del curso, adaptados al sistema implementado y en lenguaje comprensible para el personal operativo"
+    ]
+  ],
+  "secciones": [
+    "01-acceso.md",
+    "02-panel-principal.md",
+    "03-productos.md",
+    "04-presentaciones-y-equivalencias.md",
+    "05-consulta-de-inventario.md",
+    "06-registro-de-entradas.md",
+    "07-registro-de-salidas.md",
+    "08-pedidos-pendientes.md",
+    "09-generacion-del-picking.md",
+    "10-interpretacion-kg-unidades.md",
+    "11-preparacion-en-bodega.md",
+    "12-marcado-y-prioridad.md",
+    "13-actualizacion-de-estado.md",
+    "14-tablero-de-bodega.md",
+    "15-registro-de-carga.md",
+    "16-asignacion-vehiculo.md",
+    "17-despacho.md",
+    "18-rutas-realizadas.md",
+    "19-historial-bitacora.md",
+    "20-reportes.md",
+    "21-usuarios-y-roles.md",
+    "22-problemas-frecuentes.md"
+  ]
+}
+

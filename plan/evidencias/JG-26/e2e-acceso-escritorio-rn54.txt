@@ -1,0 +1,8 @@
+
+Running 3 tests using 1 worker
+
+  ok 1 [escritorio] › pruebas-e2e\acceso\acceso-personal.spec.ts:84:5 › RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio y conserva la otra (13.5s)
+  ok 2 [escritorio] › pruebas-e2e\acceso\acceso-personal.spec.ts:84:5 › RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio y conserva la otra (14.4s)
+  ok 3 [escritorio] › pruebas-e2e\acceso\acceso-personal.spec.ts:84:5 › RN-54 / RF-SW-30: dos sesiones simultáneas; salir de una lleva al inicio y conserva la otra (13.2s)
+
+  3 passed (47.6s)

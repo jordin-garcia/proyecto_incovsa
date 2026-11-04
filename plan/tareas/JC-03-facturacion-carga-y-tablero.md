@@ -72,3 +72,11 @@ npm run e2e -- pruebas-e2e/picking/facturacion-carga.spec.ts
 - Uso: entre a Facturación con `pk.facturacion`, cargue el `.xlsx` de Odoo de hasta 2 MB, revise el resumen y seleccione uno o varios pedidos para eliminarlos después de confirmar. La carga queda disponible al recargar o al entrar con otra persona autorizada de la misma sede.
 - Verificación: `npm run verificar` (179 pruebas), `npm run build`, prueba E2E de JC-03 (94 pruebas generales aprobadas; 2 proyectos de JC-03 saltados porque el caso recorre los tres anchos en escritorio), compilación y errores de Next.js sin hallazgos. Revisión independiente: hallazgos corregidos.
 - Capturas comparativas de aplicación y prototipo en 390, 768 y 1440 px y estados vacío, resumen, con datos, seleccionado y confirmación; el panel de opciones de envío queda vacío hasta JC-04.
+
+### Correcciones de la auditoría (2026-10-22)
+
+H-09 a H-11: carga y eliminación guardan un resumen textual con sede, pedidos y kilogramos. Las tarjetas tienen la instrucción completa del prototipo y el botón conserva «Cargar archivo .xlsx» durante la carga, deshabilitado hasta terminar. Las pruebas verifican también ese estado ocupado.
+
+### Correcciones de la auditoría (2026-10-26)
+
+H-80 y H-81: `facturacion-carga.spec.ts` exige la rejilla del prototipo (mínimo de 210 px, separación de 10 px y número de columnas según el ancho), las tarjetas sin asa ni «x» y el encabezado común en teléfono, tableta y escritorio. No cambia el comportamiento de Facturación. Correcciones realizadas en JC-09; los 48 casos dirigidos de navegador y las 456 pruebas generales pasan.

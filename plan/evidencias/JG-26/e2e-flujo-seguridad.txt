@@ -1,0 +1,59 @@
+
+Running 30 tests using 1 worker
+
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3100
+- Network:       http://127.0.0.1:3100
+✓ Ready in 0ms
+✓ Running next.config took 66ms
+(node:11456) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+  ok  1 [telefono] › pruebas-e2e\flujo\flujo-completo.spec.ts:195:5 › RN-11 / RN-52 / RN-29 / RF-SL-16 / RF-SL-24 / RF-SL-29 / RF-SL-37 / RF-SL-38 / RNF-06: flujo completo de un pedido facturado hasta el reporte (19.5s)
+  ok  2 [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:86:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión (3.8s)
+  ok  3 [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:117:7 › RNF-13: avisos de cambios por sede › RNF-13: al cortar SSE consulta cada 5 segundos, apaga En vivo y se reconecta sola (14.5s)
+  ok  4 [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:148:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede (655ms)
+{"fecha":"2026-10-31T06:39:58.870Z","nivel":"error","evento":"error_inesperado","tipo":"ZodError","ubicacion":["at c (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\.next\\server\\chunks\\_1nbnlp2k2vxpk._.js:1:6504)","at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:59:14)","at r0.renderToResponse (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.prod.js:5:14382)","at C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.prod.js:5:18053","at NextTracerImpl.trace (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\node_modules\\next\\dist\\server\\lib\\trace\\tracer.js:180:72)"]}
+  ok  5 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:11:5 › RNF-16: páginas, errores, redirecciones, API y recursos envían las cabeceras de seguridad (265ms)
+  ok  6 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:34:5 › RNF-16 (ASVS V3.3.1 y V3.3.3): en producción todas las cookies propias llevan __Host-, Secure y path=/ (3.0s)
+  ok  7 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:72:5 › RNF-16 (ASVS V11.5.1): el nonce de la CSP tiene 128 bits (122ms)
+  ok  8 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:80:5 › RNF-16: el navegador admite Google Maps y Drive, y rechaza marcos de otros orígenes (1.0s)
+  ok  9 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:109:5 › RNF-16: otro sitio no puede insertar la aplicación dentro de un marco (287ms)
+  ok 10 [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:126:5 › RNF-16: cada respuesta tiene su nonce y los scripts en línea ajenos quedan bloqueados (1.0s)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3101
+- Network:       http://127.0.0.1:3101
+✓ Ready in 0ms
+✓ Running next.config took 49ms
+(node:14364) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+  ok 11 [tableta] › pruebas-e2e\flujo\flujo-completo.spec.ts:195:5 › RN-11 / RN-52 / RN-29 / RF-SL-16 / RF-SL-24 / RF-SL-29 / RF-SL-37 / RF-SL-38 / RNF-06: flujo completo de un pedido facturado hasta el reporte (27.5s)
+  ok 12 [tableta] › pruebas-e2e\flujo\tiempo-real.spec.ts:86:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión (4.2s)
+  ok 13 [tableta] › pruebas-e2e\flujo\tiempo-real.spec.ts:117:7 › RNF-13: avisos de cambios por sede › RNF-13: al cortar SSE consulta cada 5 segundos, apaga En vivo y se reconecta sola (13.9s)
+  ok 14 [tableta] › pruebas-e2e\flujo\tiempo-real.spec.ts:148:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede (506ms)
+{"fecha":"2026-10-31T06:41:00.514Z","nivel":"error","evento":"error_inesperado","tipo":"ZodError","ubicacion":["at c (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\.next\\server\\chunks\\_1nbnlp2k2vxpk._.js:1:6504)","at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:59:14)","at r0.renderToResponse (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.prod.js:5:14382)","at C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.prod.js:5:18053","at NextTracerImpl.trace (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\node_modules\\next\\dist\\server\\lib\\trace\\tracer.js:180:72)"]}
+  ok 15 [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:11:5 › RNF-16: páginas, errores, redirecciones, API y recursos envían las cabeceras de seguridad (313ms)
+  ok 16 [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:34:5 › RNF-16 (ASVS V3.3.1 y V3.3.3): en producción todas las cookies propias llevan __Host-, Secure y path=/ (2.6s)
+  ok 17 [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:72:5 › RNF-16 (ASVS V11.5.1): el nonce de la CSP tiene 128 bits (96ms)
+  ok 18 [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:80:5 › RNF-16: el navegador admite Google Maps y Drive, y rechaza marcos de otros orígenes (968ms)
+  ok 19 [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:109:5 › RNF-16: otro sitio no puede insertar la aplicación dentro de un marco (266ms)
+  ok 20 [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:126:5 › RNF-16: cada respuesta tiene su nonce y los scripts en línea ajenos quedan bloqueados (805ms)
+▲ Next.js 16.4.2
+- Local:         http://127.0.0.1:3102
+- Network:       http://127.0.0.1:3102
+✓ Ready in 0ms
+✓ Running next.config took 32ms
+(node:11356) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+  ok 21 [escritorio] › pruebas-e2e\flujo\flujo-completo.spec.ts:195:5 › RN-11 / RN-52 / RN-29 / RF-SL-16 / RF-SL-24 / RF-SL-29 / RF-SL-37 / RF-SL-38 / RNF-06: flujo completo de un pedido facturado hasta el reporte (23.7s)
+  ok 22 [escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:86:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión (4.1s)
+  ok 23 [escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:117:7 › RNF-13: avisos de cambios por sede › RNF-13: al cortar SSE consulta cada 5 segundos, apaga En vivo y se reconecta sola (13.9s)
+  ok 24 [escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:148:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede (463ms)
+{"fecha":"2026-10-31T06:41:55.252Z","nivel":"error","evento":"error_inesperado","tipo":"ZodError","ubicacion":["at c (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\.next\\server\\chunks\\_1nbnlp2k2vxpk._.js:1:6504)","at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:59:14)","at r0.renderToResponse (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.prod.js:5:14382)","at C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.prod.js:5:18053","at NextTracerImpl.trace (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\node_modules\\next\\dist\\server\\lib\\trace\\tracer.js:180:72)"]}
+  ok 25 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:11:5 › RNF-16: páginas, errores, redirecciones, API y recursos envían las cabeceras de seguridad (204ms)
+  ok 26 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:34:5 › RNF-16 (ASVS V3.3.1 y V3.3.3): en producción todas las cookies propias llevan __Host-, Secure y path=/ (2.6s)
+  ok 27 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:72:5 › RNF-16 (ASVS V11.5.1): el nonce de la CSP tiene 128 bits (162ms)
+  ok 28 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:80:5 › RNF-16: el navegador admite Google Maps y Drive, y rechaza marcos de otros orígenes (955ms)
+  ok 29 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:109:5 › RNF-16: otro sitio no puede insertar la aplicación dentro de un marco (273ms)
+  ok 30 [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:126:5 › RNF-16: cada respuesta tiene su nonce y los scripts en línea ajenos quedan bloqueados (886ms)
+
+  30 passed (2.9m)

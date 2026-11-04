@@ -1,0 +1,9 @@
+
+Running 2 tests using 1 worker
+
+(node:38416) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [escritorio] › pruebas-e2e\panel\auditoria-jg24.spec.ts:11:5 › RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recupera medidas y hover del prototipo (15.9s)
+  ok 2 [escritorio] › pruebas-e2e\panel\auditoria-jg24.spec.ts:50:5 › RF-SW-29 / RN-39 / H-04: publicar y quitar un valor muestra el número del valor en el aviso (12.2s)
+
+  2 passed (33.6s)

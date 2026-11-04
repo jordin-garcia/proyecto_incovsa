@@ -1,0 +1,10 @@
+# Excepciones de OSV-Scanner (job `cadena-suministro` de .github/workflows/seguridad.yml). Cada una lleva su
+# vencimiento y su razón, y está registrada en specs/16 ("Secretos y dependencias") y en specs/18.
+
+[[IgnoredVulns]]
+# Riesgo aceptado por el coordinador el 31/10/2026 (JG-26). minimatch < 11.0.1 (publicado el 30/10/2026, riesgo medio):
+# denegación de servicio con ciertos patrones glob. Solo lo usan ESLint y Stryker en desarrollo, con patrones del propio
+# repositorio; no está en la imagen de producción. Se revisa al vencer o cuando Dependabot proponga la versión corregida.
+id = "GHSA-g3hv-75wg-m249"
+ignoreUntil = 2026-11-15
+reason = "minimatch solo en herramientas de desarrollo (ESLint y Stryker) con patrones del repositorio; no va en producción."

@@ -1,0 +1,13 @@
+
+> incovsa@0.1.0 test
+> vitest run src/app/acceso/servicio.test.ts src/modulos/envios/servicio.test.ts
+
+
+ RUN  v5.0.5 C:/Users/Hecto/Documents/proyecto_incovsa
+
+
+ Test Files  2 passed (2)
+      Tests  22 passed (22)
+   Start at  18:21:57
+   Duration  72.54s (tests 89%, import 10%, transform 1%)
+

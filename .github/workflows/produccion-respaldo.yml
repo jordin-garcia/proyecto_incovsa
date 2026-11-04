@@ -15,6 +15,7 @@ on:
       - scripts/restaurar.sh
       - scripts/lib-respaldo.mjs
       - scripts/respaldo.test.mjs
+      - docker-compose.yml
       - .github/workflows/produccion-respaldo.yml
 
 permissions:
@@ -148,8 +149,55 @@ jobs:
           test "$semanales" -eq 4
           rclone lsf "${RCLONE_DEST}/diarios" --files-only | grep -qx "${FECHA}.dump"
 
+      # H-55 (auditoría del 22/10): en el VPS, el cron usa el modo por omisión de los scripts, `docker compose exec`
+      # sobre el servicio postgres de docker-compose.yml. Los pasos anteriores usan USAR_DOCKER_RUN.
+      - name: "RNF-09: levantar PostgreSQL con docker compose (modo del VPS)"
+        run: |
+          # docker-compose.yml lee .env (env_file de app). Solo las variables de esta base temporal.
+          printf 'POSTGRES_USER=%s\nPOSTGRES_PASSWORD=%s\nPOSTGRES_DB=%s\n' \
+            "$POSTGRES_USER" "$POSTGRES_PASSWORD" "$POSTGRES_DB" > .env
+          docker compose up -d --wait postgres
+
+      - name: "RNF-09: respaldo y restauración con docker compose exec (modo del VPS)"
+        env:
+          USAR_DOCKER_RUN: "0"
+        run: |
+          set -euo pipefail
+          # 1. La base de compose recibe los datos de demostración desde el respaldo del paso anterior.
+          POSTGRES_DB_DEST=incovsa_origen RCLONE_ORIGEN="diarios/${FECHA}.dump" ./scripts/restaurar.sh
+          # 2. Respaldo de esa base con docker compose exec, a otro destino de rclone.
+          destino="$(mktemp -d)"
+          POSTGRES_DB=incovsa_origen RCLONE_DEST="incovsa-local:${destino}" FECHA=20991231 ./scripts/respaldo.sh
+          rclone lsf "incovsa-local:${destino}/diarios" --files-only | grep -qx "20991231.dump"
+          # 3. Restauración de ese respaldo en una base nueva, también con docker compose exec.
+          POSTGRES_DB=incovsa_origen POSTGRES_DB_DEST=incovsa_copia RCLONE_DEST="incovsa-local:${destino}" \
+            RCLONE_ORIGEN=diarios/20991231.dump ./scripts/restaurar.sh
+
+      - name: "RNF-09: la copia hecha con docker compose tiene las mismas filas"
+        run: |
+          set -euo pipefail
+          consulta="SELECT string_agg(format('SELECT %L::text, count(*)::text FROM %I.%I', table_schema || '.' || table_name, table_schema, table_name), ' UNION ALL ' ORDER BY table_schema, table_name) FROM information_schema.tables WHERE table_type = 'BASE TABLE' AND table_schema NOT IN ('pg_catalog', 'information_schema')"
+          contar() {
+            local db="$1"
+            shift
+            local filas
+            filas="$("$@" psql -v ON_ERROR_STOP=1 --no-password -U "$POSTGRES_USER" -d "$db" -At -c "$consulta")"
+            test -n "$filas"
+            "$@" psql -v ON_ERROR_STOP=1 --no-password -U "$POSTGRES_USER" -d "$db" -At -F "$(printf '\t')" -c "$filas"
+          }
+          origen="$(mktemp)"
+          copia="$(mktemp)"
+          contar "$POSTGRES_DB" docker exec incovsa-pg >"$origen"
+          contar incovsa_copia docker compose exec -T postgres >"$copia"
+          test -s "$origen"
+          if ! diff -u "$origen" "$copia"; then
+            echo "RNF-09: la copia de docker compose no tiene las mismas filas"
+            exit 1
+          fi
+
       - name: Bajar PostgreSQL
         if: always()
         run: |
           docker rm -f incovsa-pg || true
           docker network rm incovsa-respaldo || true
+          if [ -f .env ]; then docker compose down -v || true; fi

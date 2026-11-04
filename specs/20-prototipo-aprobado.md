@@ -15,7 +15,7 @@
 ## Cómo se usa para desarrollar
 
 1. La aplicación real se construye **a partir de este prototipo**, que desde el 14/10/2026 incluye los cambios de las reuniones 4 y 5, y desde el 15/10/2026 los ajustes del coordinador.
-2. Si el prototipo y esta carpeta dicen cosas distintas, **vale esta carpeta** (regla 1 de [README.md](README.md)). Los cambios de la reunión 4 ya están escritos en los archivos de cada módulo.
+2. Si el prototipo y esta carpeta dicen cosas distintas, **vale esta carpeta** en los requisitos, las reglas, los textos, los datos y el comportamiento (regla 1 de [README.md](README.md)); **en el diseño vale el prototipo** (decisión 89 de [16](16-arquitectura-y-tecnologia.md), 22/10). Los cambios de la reunión 4 ya están escritos en los archivos de cada módulo.
 3. Lo que esta carpeta no detalla (distribución de la pantalla, textos de ayuda, orden de los elementos, interacción) se toma del prototipo.
 4. Mientras un cambio esté pendiente (P-xx), no se implementa como decidido. Donde el cambio está pendiente pero el prototipo ya resuelve algo, el archivo del módulo dice qué parte del prototipo se conserva.
 
@@ -67,7 +67,7 @@ Los colores se tomaron de los dos logotipos recibidos. Los códigos exactos de l
 ### Formas y componentes
 
 - Radios: 8, 12, 18 y 26 px. Sombras suaves en tono verde oscuro.
-- **Accesibilidad de los textos secundarios (18/10, JG-05 y JG-06):** para cumplir RNF-08, la miga de navegación, el eyebrow y la instrucción del encabezado de módulo, los encabezados de tabla y los textos secundarios de las pantallas de acceso usan `--g600` sobre `--g50`. La combinación `--g500`/`--g50` del prototipo tiene contraste 4.46:1, inferior al mínimo 4.5:1. Se conserva la paleta aprobada y no se reduce el umbral de axe. **(19/10, JM-08)** Bodega aplica lo mismo en el pie de las tarjetas, las líneas marcadas, «Sin lote» y el Detalle de Ruta, y la etiqueta «RUTA» no lleva opacidad. Única excepción, por decisión del coordinador: el cuadro lima del pedido que recoge el cliente conserva los colores del prototipo ([18](18-historial-de-decisiones.md)).
+- **Accesibilidad de los textos secundarios (18/10, JG-05 y JG-06; desde el 22/10 sujeta a la decisión 89, que JG-24 aplica preguntándole a Jordin si falla axe):** para cumplir RNF-08, la miga de navegación, el eyebrow y la instrucción del encabezado de módulo, los encabezados de tabla y los textos secundarios de las pantallas de acceso usan `--g600` sobre `--g50`. La combinación `--g500`/`--g50` del prototipo tiene contraste 4.46:1, inferior al mínimo 4.5:1. Se conserva la paleta aprobada y no se reduce el umbral de axe. **(19/10, JM-08)** Bodega aplica lo mismo en el pie de las tarjetas, las líneas marcadas, «Sin lote» y el Detalle de Ruta, y la etiqueta «RUTA» no lleva opacidad. Única excepción, por decisión del coordinador: el cuadro lima del pedido que recoge el cliente conserva los colores del prototipo ([18](18-historial-de-decisiones.md)). **(23/10, DM-07, excepción a la decisión 89 por decisión del coordinador)** El texto del área de subida de `CampoGaleria` (galerías y campos de una sola imagen del panel) usa `--g600` en reposo (`--g50`) y al pasar el cursor (`--v50`), porque con el `--g500` del prototipo queda en 4.46:1 y 4.41:1. Solo cambia el color del texto; lo demás sigue el prototipo. **(25/10, DM-09; ratificada por Jordin el 26/10, D-07)** En la bandeja de Solicitudes del panel, las pestañas inactivas y el texto secundario de la fila seleccionada usan `--g600`, porque con el `--g500` del prototipo quedan en 4.46:1 y 4.40:1 ([05](05-sitio-web.md)).
 - Íconos de trazo, dibujados en SVG dentro del código.
 - **Encabezado de los módulos (15/10):** en todos los módulos de la administración del sitio y del picking, el título va con su instrucción, lo más breve posible, a la par (como en Facturación, CAM-55).
 - **Secciones verdes del sitio (15/10):** misión y visión (Inicio y Quiénes somos) y "A quién servimos" usan el verde del pie (`--v950`), con títulos en blanco y el acento `--lima-b`.
@@ -255,3 +255,7 @@ Definidos e implementados en el prototipo el 16/10/2026.
 | Id | Cambio | Dónde |
 |---|---|---|
 | CAM-96 | Reportes: botones **Excel** y **PDF** también en "Rutas realizadas" y "Bitácora", como en Despacho | [10](10-picking-reportes.md) |
+
+## Contraste aprobado del 23/10/2026 (JG-24)
+
+Como excepciones de contraste a la decisión 89, Jordin autorizó conservar los colores accesibles actuales de los textos secundarios medidos con axe (4.46:1 en el prototipo), «RUTA» sin opacidad (4.44:1 con la opacidad del prototipo) y las zonas vacías de Facturación (2.61:1 en el prototipo). Las pruebas mantienen RNF-08 y su mínimo de 4.5:1. Se suma a la excepción del área de subida de `CampoGaleria`; los demás estilos siguen el prototipo. Evidencia en `plan/evidencias/JG-24/contraste-prototipo.json` y precisión en `specs/18`.

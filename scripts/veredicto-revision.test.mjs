@@ -387,3 +387,43 @@ test("RNF-16: con CORREGIR, el mensaje explica que hay que corregir y hacer push
   assert.equal(r.estado, "corregir");
   assert.match(r.mensaje, /corrígelos y haz push/);
 });
+
+// H-40 (auditoría del 22/10): solo cuenta el comentario que publicó una ejecución del flujo revision-claude.
+const EJECUCIONES = [{ id: 18700001, creado: "2026-09-26T09:55:00Z" }];
+const deEjecucion = (cuerpo, id = 18700001) =>
+  revision(SHA, cuerpo).replace(`Commit revisado: ${SHA}`, `Commit revisado: ${SHA} · Ejecución: ${id}`);
+
+test("H-40: acepta la revisión que cita una ejecución de revision-claude de ese commit", () => {
+  const r = evaluarVeredicto([comentario(deEjecucion(LISTO))], SHA, "EM-03", EJECUCIONES);
+  assert.equal(r.estado, "aprobada");
+  assert.equal(decidirRevision([comentario(deEjecucion(LISTO))], SHA, "EM-03", EJECUCIONES), false);
+});
+
+test("H-40: un LISTO de otro flujo de github-actions[bot] no aprueba el PR", () => {
+  // Sin ejecución, con una ejecución que no es de revision-claude o publicado antes de que empezara.
+  for (const falso of [
+    comentario(revision(SHA, LISTO)),
+    comentario(deEjecucion(LISTO, 99999999)),
+    comentario(deEjecucion(LISTO), BOT, "2026-09-26T09:50:00Z"),
+  ]) {
+    assert.equal(evaluarVeredicto([falso], SHA, "EM-03", EJECUCIONES).estado, "sin_revision");
+    assert.equal(decidirRevision([falso], SHA, "EM-03", EJECUCIONES), true);
+  }
+  // El LISTO falso más reciente no reemplaza al CORREGIR real.
+  const comentarios = [
+    comentario(deEjecucion(CORREGIR), BOT, "2026-09-26T10:00:00Z"),
+    comentario(revision(SHA, LISTO), BOT, "2026-09-26T10:05:00Z"),
+  ];
+  assert.equal(evaluarVeredicto(comentarios, SHA, "EM-06", EJECUCIONES).estado, "corregir");
+});
+
+test("H-40: el flujo pide la ejecución en el comentario y pasa las ejecuciones de revision-claude al veredicto", async () => {
+  const { readFileSync } = await import("node:fs");
+  const flujo = readFileSync(new URL("../.github/workflows/revision-claude.yml", import.meta.url), "utf8");
+  assert.match(
+    flujo,
+    /Commit revisado: \$\{\{ github\.event\.pull_request\.head\.sha \}\} · Ejecución: \$\{\{ github\.run_id \}\}/,
+  );
+  assert.match(flujo, /actions\/workflows\/revision-claude\.yml\/runs\?head_sha=/);
+  assert.equal((flujo.match(/--ejecuciones "\$RUNNER_TEMP\/ejecuciones\.jsonl"/g) ?? []).length, 2);
+});

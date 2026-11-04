@@ -212,11 +212,30 @@ test("decisión 60: revision-claude siempre decide el veredicto y deja la revisi
   assert.match(formal, /gh pr review "\$PR" --approve/);
   assert.match(formal, /gh pr review "\$PR" --request-changes/);
   assert.match(formal, /@\$AUTOR/);
-  // Las herramientas del bot son las mínimas.
+  // Las herramientas del bot son las mínimas, todas de solo lectura salvo publicar el comentario.
   assert.match(
     accion,
-    /--allowedTools "Read,Grep,Glob,Bash\(git diff:\*\),Bash\(gh pr view:\*\),Bash\(gh pr diff:\*\),Bash\(gh pr comment:\*\)"/,
+    /--allowedTools "Read,Grep,Glob,Bash\(git diff:\*\),Bash\(git log:\*\),Bash\(git show:\*\),Bash\(ls:\*\),Bash\(gh pr view:\*\),Bash\(gh pr diff:\*\),Bash\(gh pr comment:\*\),Edit\(\/\/tmp\/revision-claude-comentario\.md\)"/,
   );
+  // Aunque le nieguen un comando, el bot publica su comentario; si no, el check falla sin veredicto (03/11).
+  assert.match(accion, /Termina SIEMPRE publicando el comentario del punto 4/);
+  assert.match(accion, /no lo repitas ni busques otra forma/);
+  // El comentario se publica desde un archivo de /tmp, el único que el bot puede escribir.
+  assert.match(accion, /--body-file \/tmp\/revision-claude-comentario\.md/);
+  // La lista exacta de arriba es la única: un solo --allowedTools y nada que amplíe los permisos.
+  assert.equal(accion.match(/--allowedTools/g).length, 1);
+  assert.doesNotMatch(accion, /--permission-mode|--dangerously-skip-permissions|--disallowedTools/);
+  assert.doesNotMatch(accion, /\b(?:MultiEdit|NotebookEdit)\b/);
+  assert.doesNotMatch(accion.replace("la herramienta Write en", ""), /\bWrite\b/);
+  // El registro de la revisión muestra los comandos negados sin la salida completa (repositorio público).
+  const flujoRevision = leer(".github", "workflows", "revision-claude.yml");
+  assert.match(flujoRevision, /name: Registro de la revisión/);
+  assert.match(flujoRevision, /permission_denials/);
+  // El paso de diagnóstico nunca cambia el resultado del check.
+  assert.match(flujoRevision, /name: Registro de la revisión\n.*\n.*\n {8}continue-on-error: true/);
+  assert.doesNotMatch(flujoRevision, /^\s*show_full_output:/m);
+  // Nada que ejecute código de la rama del PR: el bot corre con el token del coordinador.
+  assert.doesNotMatch(accion, /Bash\(node|Bash\(npm|Bash\(npx|Bash\(python/);
   assert.match(trabajo, /^ {6}pull-requests: write$/m);
 });
 
@@ -247,5 +266,26 @@ test("JG-08: Dependabot propone actualizaciones semanales de npm y de GitHub Act
     assert.ok(bloque, `falta ${ecosistema}`);
     assert.match(bloque, /interval: "weekly"/);
     assert.match(bloque, /target-branch: "develop"/);
+  }
+});
+
+test("JG-08: Dependabot junta menores y parches en un PR por ecosistema e ignora las mayores de typescript y @types/node", () => {
+  const dependabot = leer(".github", "dependabot.yml");
+  const bloque = (ecosistema) =>
+    dependabot.split(/\n(?= {2}- package-ecosystem:)/).find((b) => b.includes(`package-ecosystem: "${ecosistema}"`));
+  for (const ecosistema of ["npm", "github-actions"]) {
+    assert.match(
+      bloque(ecosistema),
+      /\n {4}groups:\n {6}[\w-]+:\n {8}update-types: \["minor", "patch"\](\n|$)/,
+      `${ecosistema} debe agrupar las versiones menores y los parches`,
+    );
+  }
+  // TypeScript 7 quitó la API de JavaScript que usa scripts/integridad-pruebas.mjs; Node.js 24 exige @types/node 24.
+  for (const paquete of ["typescript", "@types/node"]) {
+    assert.match(
+      bloque("npm"),
+      new RegExp(`- dependency-name: "${paquete}"\\n {8}update-types: \\["version-update:semver-major"\\]`),
+      `npm debe ignorar las versiones mayores de ${paquete}`,
+    );
   }
 });

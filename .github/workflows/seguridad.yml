@@ -1,0 +1,111 @@
+name: Seguridad
+
+on:
+  pull_request:
+    branches: [develop, main]
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [develop]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: seguridad-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  semgrep:
+    name: semgrep
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - name: Instalar Semgrep
+        run: pipx install semgrep==1.182.0
+      - name: Probar reglas propias
+        run: node scripts/probar-semgrep.mjs
+      - name: Revisar autorización y APIs inseguras
+        run: semgrep scan --error --strict --metrics=off --config .semgrep/seguridad.yml --config p/typescript --config p/nextjs src
+
+  secretos:
+    name: secretos
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - run: bash scripts/instalar-controles.sh gitleaks
+      - name: Buscar secretos en todo el historial
+        run: gitleaks git --redact --no-banner --ignore-gitleaks-allow
+
+  cadena-suministro:
+    name: cadena-suministro
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+      - name: Validar orígenes antes de descargar dependencias
+        run: node scripts/cadena-suministro.mjs --solo-origenes
+      - run: npm ci --ignore-scripts
+      - name: Revisar registro, integridad y avisar cambios
+        env:
+          BASE_DEPENDENCIAS: ${{ github.event.pull_request.base.sha || github.event.before }}
+          PR: ${{ github.event.pull_request.number }}
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/cadena-suministro.mjs
+      - run: bash scripts/instalar-controles.sh osv-scanner
+      - run: osv-scanner scan source --lockfile=package-lock.json
+
+  workflows:
+    name: workflows
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - run: bash scripts/instalar-controles.sh actionlint
+      - run: actionlint -color
+      - name: Comprobar acciones fijadas por SHA y permisos
+        run: node --test scripts/flujos.test.mjs
+
+  integridad-pruebas:
+    name: integridad-pruebas
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Comprobar integridad con la versión de la base
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [ -z "$BASE" ]; then BASE=$(git rev-parse HEAD^); fi
+          if git cat-file -e "$BASE:scripts/integridad-pruebas.mjs"; then
+            git show "$BASE:scripts/integridad-pruebas.mjs" > scripts/.integridad-base.mjs
+            node scripts/.integridad-base.mjs "$BASE" HEAD
+          else
+            # Solo el primer PR del coordinador incorpora el control; los siguientes usan siempre la base.
+            node scripts/integridad-pruebas.mjs "$BASE" HEAD
+          fi

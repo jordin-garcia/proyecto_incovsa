@@ -41,3 +41,19 @@ it("RN-39 / RNF-04: consultar exige sesión y reportes del picking antes de leer
   await prisma.usuarioPermiso.deleteMany({ where: { usuarioId: u.id, permisoId: permiso.id } });
   await expect(consultarBitacora(rango, bodega)).rejects.toThrow("No tiene permisos");
 });
+
+it("RF-SL-36 / H-14: cada consulta limita a 250 filas y ordena los empates por id", async () => {
+  const gerencia = await entrar("ejemplo.01");
+  await prisma.bitacora.createMany({
+    data: Array.from({ length: 260 }, (_, i) => ({
+      sistema: "sitio",
+      operacion: "Cambio de contenido del sitio",
+      detalle: { resumen: `Registro ${i}` },
+      creadoEn: new Date("2030-01-01T00:00:00Z"),
+    })),
+  });
+  const filas = await consultarBitacora(rango, gerencia);
+  expect(filas).toHaveLength(250);
+  expect(filas[0]?.detalle).toEqual({ resumen: "Registro 259" });
+  expect(filas.at(-1)?.detalle).toEqual({ resumen: "Registro 10" });
+});

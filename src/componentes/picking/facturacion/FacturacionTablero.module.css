@@ -40,6 +40,8 @@
   gap: 10px;
   min-height: 220px;
   overflow: auto;
+  /* JC-11: el tablero restaura su propia posición; evita una segunda corrección de Firefox. */
+  overflow-anchor: none;
   padding: 14px;
 }
 
@@ -285,6 +287,11 @@
 .resumen > p {
   margin: 0;
   color: var(--g600);
+}
+
+.resumenEnvio {
+  color: var(--g800);
+  font-size: 16px;
 }
 
 @media (max-width: 1024px) {

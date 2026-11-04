@@ -96,3 +96,7 @@ npm run e2e -- pruebas-e2e/picking/facturacion-envio.spec.ts
 - Verificación: `npm run verificar` (230 pruebas, 21 archivos), `npm run build`, comando E2E de JC-04 (3 proyectos, sin omisiones nuevas) y suite E2E completa con `--workers=1` (115 aprobadas; las 2 omisiones ya existentes son las de JC-03, que recorre los tres anchos desde escritorio). Next.js sin errores de compilación ni ejecución. Las pruebas usan bases locales desechables y cubren el fallo real de inserción de líneas, su reversión y el doble clic simultáneo.
 - Revisión en contexto limpio: LISTO; corregidos el orden descendente, la detección del destino y la cobertura táctil, los colores del prototipo y el presupuesto de espera de las pruebas que comparten tablero.
 - Evidencia: `evidencia/JC-04/README.md`, con 36 capturas comparativas de aplicación y prototipo en 390, 768 y 1440 px: vacío, datos/sobrepeso, fecha inválida, cancelar, confirmar envío y envío creado.
+
+### Correcciones de la auditoría (2026-10-22)
+
+D-01, RN-49: `claveCliente()`, en `src/modulos/envios/cliente.ts`, compara nombre y sector sin mayúsculas, tildes ni espacios exteriores. Facturación, Bodega y las entregas usan la misma clave; se conservan los datos del primer pedido facturado y los espacios interiores siguen distinguiendo clientes. El resumen de «Enviar a Bodega» recupera `--g800` y 16 px con una clase local, como el HTML renderizado del prototipo; las confirmaciones comunes conservan `--g600` y 15.5 px.

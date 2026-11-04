@@ -10,12 +10,12 @@ Esta carpeta es la **fuente de verdad** del proyecto. Todo lo que el equipo o un
 
 ## Reglas de precedencia
 
-1. Si algún documento del proyecto contradice a esta carpeta, **esta carpeta tiene la razón**. Eso incluye actas, plan de proyecto, Documento 1, anexos, prototipos, diagramas y notas.
+1. Si algún documento del proyecto contradice a esta carpeta, **esta carpeta tiene la razón**. Eso incluye actas, plan de proyecto, Documento 1, anexos, diagramas y notas. **Excepción, el diseño (22/10):** en cómo se ve la aplicación (disposición, estructura visual, tamaños, colores, tipografía, espaciado y estilos) manda el prototipo aprobado, y esta carpeta se corrige ([16-arquitectura-y-tecnologia.md](16-arquitectura-y-tecnologia.md), decisión 89).
 2. Las actas de reunión (`docs/Reuniones/`) son el **registro histórico** de lo que se dijo ese día. No se modifican. Si una decisión posterior las contradice, la explicación está en [18-historial-de-decisiones.md](18-historial-de-decisiones.md).
 3. Lo marcado como **[PENDIENTE]** no está decidido. No debe implementarse ni documentarse como decidido hasta que se resuelva y se registre aquí.
 4. Lo marcado como **[DECISIÓN TÉCNICA]** lo resuelve el equipo de desarrollo, no INCOVSA. Una vez resuelto se registra en [16-arquitectura-y-tecnologia.md](16-arquitectura-y-tecnologia.md).
 5. No se inventan datos. Si falta un dato, se agrega a [19-pendientes.md](19-pendientes.md).
-6. El **prototipo de simulación aprobado** es la referencia de diseño y de comportamiento en todo lo que esta carpeta no detalla. Si contradice a esta carpeta, vale esta carpeta ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)).
+6. El **prototipo de simulación aprobado** es la referencia de **diseño** siempre (decisión 89) y de **comportamiento** en todo lo que esta carpeta no detalla. En los requisitos, las reglas, los textos, los datos y el comportamiento, si contradice a esta carpeta, vale esta carpeta ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)).
 
 ## Índice
 

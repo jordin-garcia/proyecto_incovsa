@@ -1,0 +1,14 @@
+{
+  "fecha": "2026-10-23",
+  "pagina": "prototipo /panel/noticias, Nueva noticia",
+  "elemento": ".gc-subir > span",
+  "regla": "color-contrast",
+  "impacto": "serious",
+  "texto": "Arrastre aquí hasta 5 imágenes o haga clic para elegirlas",
+  "color": "#727372",
+  "fondo": "#f1f8f2",
+  "tamano": "13.5px",
+  "contrasteAxe": 4.4,
+  "minimo": 4.5,
+  "decision": "Pendiente de Jordin: conservar --g600 o corregir el prototipo y su criterio de diseño. No se debilitan pruebas."
+}

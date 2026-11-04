@@ -2,6 +2,8 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { prisma } from "@/lib/prisma";
 import { ErrorNegocio } from "@/lib/errores";
 import { ErrorAcceso } from "@/modulos/permisos/servicio";
+import { consultarOpciones } from "@/modulos/envios/opciones";
+import type { SesionActual } from "@/lib/sesion";
 import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import { esquemaCamion, esquemaEditarCamion } from "./esquemas";
 import {
@@ -207,5 +209,62 @@ describe("camiones", () => {
     expect(await listarCamionesDeSedes([quetzaltenango])).toMatchObject([
       { id: creado.id, elegidoEnFacturacion: true },
     ]);
+  });
+
+  it("RF-SL-04 (H-41): un camión eliminado ya no se ofrece en Facturación (consultarOpciones)", async () => {
+    const creado = await crearCamion(
+      esquemaCamion.parse({ identificacion: "Camión que se va", capacidadKg: "2000", sedeId: quetzaltenango }),
+      contexto(quetzaltenango),
+    );
+    const facturacion: SesionActual = {
+      sistema: "picking",
+      usuario: { id: usuarioId, usuario: "ce02", nombre: "Usuario de configuración", rol: "Facturador" },
+      permisos: ["pk.facturacion"],
+      sedes: [{ id: quetzaltenango, nombre: "Quetzaltenango", prefijoOdoo: "XE" }],
+    };
+    expect((await consultarOpciones(facturacion, quetzaltenango)).camiones.map((c) => c.id)).toContain(creado.id);
+
+    await eliminarCamion({ id: creado.id }, contexto(quetzaltenango));
+
+    expect((await consultarOpciones(facturacion, quetzaltenango)).camiones.map((c) => c.id)).not.toContain(creado.id);
+  });
+
+  it("D-03: no cambia de sede un camión elegido en Envío por camión, pero sí lo edita en su sede", async () => {
+    const creado = await crearCamion(
+      esquemaCamion.parse({ identificacion: "Camión elegido", capacidadKg: "3400", sedeId: quetzaltenango }),
+      contexto(quetzaltenango, guatemala),
+    );
+    await prisma.opcionEnvio.update({
+      where: { sedeId_tipo: { sedeId: quetzaltenango, tipo: "camion" } },
+      data: { camionId: creado.id },
+    });
+
+    await expect(
+      editarCamion(
+        esquemaEditarCamion.parse({
+          id: creado.id,
+          identificacion: "Camión elegido",
+          capacidadKg: "3400",
+          sedeId: guatemala,
+        }),
+        contexto(quetzaltenango, guatemala),
+      ),
+    ).rejects.toThrow(new ErrorNegocio("Camión elegido está elegido en «Envío por camión» de Facturación."));
+    expect((await prisma.camion.findUniqueOrThrow({ where: { id: creado.id } })).sedeId).toBe(quetzaltenango);
+    expect(
+      await prisma.bitacora.count({ where: { operacion: "Edición de camión", registroId: String(creado.id) } }),
+    ).toBe(0);
+
+    // Sin cambiar de sede, el camión elegido se sigue editando.
+    const editado = await editarCamion(
+      esquemaEditarCamion.parse({
+        id: creado.id,
+        identificacion: "Camión elegido",
+        capacidadKg: "3500",
+        sedeId: quetzaltenango,
+      }),
+      contexto(quetzaltenango, guatemala),
+    );
+    expect(editado.capacidadKg).toBe("3500.000");
   });
 });

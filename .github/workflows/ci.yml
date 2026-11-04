@@ -121,6 +121,11 @@ jobs:
       - name: Aplicar las migraciones desde cero
         if: steps.proyecto.outputs.prisma != 'false'
         run: npm run db:aplicar
+      # JG-03, criterio 1 (auditoría del 22/10, H-28): la base recién migrada tiene que coincidir con schema.prisma.
+      # Sale con 2 si hay diferencias (un cambio del esquema sin su migración, o al revés) y con 1 si hay un error.
+      - name: El esquema coincide con las migraciones
+        if: steps.proyecto.outputs.prisma != 'false'
+        run: npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code
       - if: steps.proyecto.outputs.app != 'false'
         run: npm test
 

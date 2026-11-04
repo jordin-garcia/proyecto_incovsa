@@ -147,3 +147,9 @@ La aplicación base de Next.js 16.4.2 está en la raíz del repositorio, con **t
 - **Roles** (`@/lib/roles`): `normalizarRol(texto)` para comparar roles, y `esAccesoTotal(rol)`, que es verdadero para Gerencia y Soporte (RN-38).
 - **Instalar:** `npm ci` (nunca `npm install`, que puede reescribir `package-lock.json`), con npm 11.19 o posterior.
 - **Comandos:** `npm run dev`, `build`, `start`, `formato`, `formato:arreglar`, `lint`, `tipos`, `test`, `e2e` y `verificar`. Antes del primer `npm run e2e` hay que ejecutar `npx playwright install chromium` (o la lista de `plan/instalacion.md` §5).
+
+### Correcciones de la auditoría (2026-10-22)
+
+La corrigió el coordinador en JG-25.
+
+- **H-27:** los criterios 7 y 8 ya se cumplían, pero no tenían prueba. `scripts/auditoria-jg25.test.mjs` comprueba que `.env.example` tiene las 15 variables del paso 14, todas con valores de ejemplo, que el repositorio no guarda ningún `.env` aparte de las dos plantillas, y que cada `npm run` de la tabla «Comandos» de `AGENTS.md` existe en `package.json`.

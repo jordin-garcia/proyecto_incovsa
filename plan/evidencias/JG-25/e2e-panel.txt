@@ -1,0 +1,259 @@
+
+Running 84 tests using 1 worker
+
+[1/84] [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:90:5 › RF-SW-07 / RF-SW-23 / H-58: la galería compartida mide como el prototipo
+[2/84] [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:143:5 › RF-SL-36 / RN-39 / H-56: Reportes › Bitácora muestra el título de la noticia
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[3/84] [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:201:5 › RF-SL-36 / RN-39 / H-57 / RNF-05 / H-63: la bitácora de solicitudes usa los textos del prototipo y el comentario tiene tope
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[4/84] [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:283:1 › H-62: el mapa inválido avisa con el texto del prototipo
+[5/84] [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:316:1 › H-62: un correo mal formado se rechaza al salir del campo y no se guarda
+[6/84] [telefono] › pruebas-e2e\panel\auditoria-ce13.spec.ts:330:1 › H-62: un correo con formato válido se guarda
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[7/84] [telefono] › pruebas-e2e\panel\auditoria-jg24.spec.ts:12:5 › RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recupera medidas y hover del prototipo
+[8/84] [telefono] › pruebas-e2e\panel\auditoria-jg24.spec.ts:51:5 › RF-SW-29 / RN-39 / H-04: publicar y quitar un valor muestra el número del valor en el aviso
+[9/84] [telefono] › pruebas-e2e\panel\contenido.spec.ts:20:5 › RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y accesibilidad
+[10/84] [telefono] › pruebas-e2e\panel\contenido.spec.ts:83:5 › RF-SW-25: el permiso se exige también al abrir la sección directamente
+[11/84] [telefono] › pruebas-e2e\panel\contenido.spec.ts:109:5 › RF-SW-23 / RNF-05: publica una imagen de 5 MB y limpia la imagen retirada
+[12/84] [telefono] › pruebas-e2e\panel\contenido.spec.ts:148:5 › RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas
+[13/84] [telefono] › pruebas-e2e\panel\contenido.spec.ts:165:5 › RF-SW-23: un borrador de portada o historia no cambia la etiqueta publicada
+[14/84] [telefono] › pruebas-e2e\panel\contenido.spec.ts:181:5 › RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visita sin sesión
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[15/84] [telefono] › pruebas-e2e\panel\contenido.spec.ts:243:5 › RF-SW-23 / RF-SW-24: reemplazar INCOVSA actualiza cabecera y pie públicos
+[16/84] [telefono] › pruebas-e2e\panel\documentos.spec.ts:33:5 › RF-SW-14 / RN-41 / RNF-08: crear, buscar, editar y eliminar productos documentados
+[17/84] [telefono] › pruebas-e2e\panel\documentos.spec.ts:84:5 › RN-19 / RF-SW-21 / RNF-08: solo ver y ver-descargar reciben opciones y direcciones autorizadas; CSP permite Drive
+[18/84] [telefono] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:22:5 › RF-SW-07 / RN-56: guardar descripción y galería publica la industria sin perder los datos anteriores
+[19/84] [telefono] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:83:5 › RF-SW-07 / RNF-08: industrias y catálogo conservan estructura y accesibilidad
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[20/84] [telefono] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:115:5 › RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes de eliminar
+[21/84] [telefono] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:154:5 › RF-SW-23: impide cerrar el editor mientras se publica y conserva el borrador si falla
+[22/84] [telefono] › pruebas-e2e\panel\solicitudes.spec.ts:68:1 › RF-SW-20 / CP-63 / RNF-08: filtros, estados libres, responsable y edición del comentario accesibles
+[23/84] [telefono] › pruebas-e2e\panel\solicitudes.spec.ts:127:1 › RF-SW-31 / CP-59: indicador normal y reducido baja al abrir una solicitud
+[24/84] [telefono] › pruebas-e2e\panel\solicitudes.spec.ts:145:1 › RNF-04 / RF-SW-20: solo lectura sin gestionar y sección ausente sin permisos
+[25/84] [telefono] › pruebas-e2e\panel\usuarios.spec.ts:30:7 › Panel: usuarios del sitio › RF-SW-13: Gerencia crea un usuario con solo sit.doc.ver y ese usuario solo ve la documentación
+[26/84] [telefono] › pruebas-e2e\panel\usuarios.spec.ts:80:7 › Panel: usuarios del sitio › RF-SW-11 / RN-47: restablecer la contraseña no ofrece correo y la nueva clave entra
+[27/84] [telefono] › pruebas-e2e\panel\usuarios.spec.ts:116:7 › Panel: usuarios del sitio › RF-SW-11: ¿Olvidó su contraseña? del sitio pide a Gerencia o a Soporte
+[28/84] [telefono] › pruebas-e2e\panel\usuarios.spec.ts:131:7 › Panel: usuarios del sitio › criterio 5: la lista y el alta no tienen violaciones serias de axe
+[29/84] [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:90:5 › RF-SW-07 / RF-SW-23 / H-58: la galería compartida mide como el prototipo
+[30/84] [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:143:5 › RF-SL-36 / RN-39 / H-56: Reportes › Bitácora muestra el título de la noticia
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[31/84] [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:201:5 › RF-SL-36 / RN-39 / H-57 / RNF-05 / H-63: la bitácora de solicitudes usa los textos del prototipo y el comentario tiene tope
+[32/84] [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:283:1 › H-62: el mapa inválido avisa con el texto del prototipo
+[33/84] [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:316:1 › H-62: un correo mal formado se rechaza al salir del campo y no se guarda
+[34/84] [tableta] › pruebas-e2e\panel\auditoria-ce13.spec.ts:330:1 › H-62: un correo con formato válido se guarda
+[35/84] [tableta] › pruebas-e2e\panel\auditoria-jg24.spec.ts:12:5 › RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recupera medidas y hover del prototipo
+[36/84] [tableta] › pruebas-e2e\panel\auditoria-jg24.spec.ts:51:5 › RF-SW-29 / RN-39 / H-04: publicar y quitar un valor muestra el número del valor en el aviso
+[37/84] [tableta] › pruebas-e2e\panel\contenido.spec.ts:20:5 › RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y accesibilidad
+[38/84] [tableta] › pruebas-e2e\panel\contenido.spec.ts:83:5 › RF-SW-25: el permiso se exige también al abrir la sección directamente
+[39/84] [tableta] › pruebas-e2e\panel\contenido.spec.ts:109:5 › RF-SW-23 / RNF-05: publica una imagen de 5 MB y limpia la imagen retirada
+[40/84] [tableta] › pruebas-e2e\panel\contenido.spec.ts:148:5 › RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[41/84] [tableta] › pruebas-e2e\panel\contenido.spec.ts:165:5 › RF-SW-23: un borrador de portada o historia no cambia la etiqueta publicada
+[42/84] [tableta] › pruebas-e2e\panel\contenido.spec.ts:181:5 › RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visita sin sesión
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[43/84] [tableta] › pruebas-e2e\panel\contenido.spec.ts:243:5 › RF-SW-23 / RF-SW-24: reemplazar INCOVSA actualiza cabecera y pie públicos
+[44/84] [tableta] › pruebas-e2e\panel\documentos.spec.ts:33:5 › RF-SW-14 / RN-41 / RNF-08: crear, buscar, editar y eliminar productos documentados
+[45/84] [tableta] › pruebas-e2e\panel\documentos.spec.ts:84:5 › RN-19 / RF-SW-21 / RNF-08: solo ver y ver-descargar reciben opciones y direcciones autorizadas; CSP permite Drive
+[46/84] [tableta] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:22:5 › RF-SW-07 / RN-56: guardar descripción y galería publica la industria sin perder los datos anteriores
+[47/84] [tableta] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:83:5 › RF-SW-07 / RNF-08: industrias y catálogo conservan estructura y accesibilidad
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[48/84] [tableta] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:115:5 › RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes de eliminar
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[49/84] [tableta] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:154:5 › RF-SW-23: impide cerrar el editor mientras se publica y conserva el borrador si falla
+[50/84] [tableta] › pruebas-e2e\panel\solicitudes.spec.ts:68:1 › RF-SW-20 / CP-63 / RNF-08: filtros, estados libres, responsable y edición del comentario accesibles
+[51/84] [tableta] › pruebas-e2e\panel\solicitudes.spec.ts:127:1 › RF-SW-31 / CP-59: indicador normal y reducido baja al abrir una solicitud
+[52/84] [tableta] › pruebas-e2e\panel\solicitudes.spec.ts:145:1 › RNF-04 / RF-SW-20: solo lectura sin gestionar y sección ausente sin permisos
+[53/84] [tableta] › pruebas-e2e\panel\usuarios.spec.ts:30:7 › Panel: usuarios del sitio › RF-SW-13: Gerencia crea un usuario con solo sit.doc.ver y ese usuario solo ve la documentación
+[54/84] [tableta] › pruebas-e2e\panel\usuarios.spec.ts:80:7 › Panel: usuarios del sitio › RF-SW-11 / RN-47: restablecer la contraseña no ofrece correo y la nueva clave entra
+[55/84] [tableta] › pruebas-e2e\panel\usuarios.spec.ts:116:7 › Panel: usuarios del sitio › RF-SW-11: ¿Olvidó su contraseña? del sitio pide a Gerencia o a Soporte
+[56/84] [tableta] › pruebas-e2e\panel\usuarios.spec.ts:131:7 › Panel: usuarios del sitio › criterio 5: la lista y el alta no tienen violaciones serias de axe
+[57/84] [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:90:5 › RF-SW-07 / RF-SW-23 / H-58: la galería compartida mide como el prototipo
+[58/84] [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:143:5 › RF-SL-36 / RN-39 / H-56: Reportes › Bitácora muestra el título de la noticia
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[59/84] [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:201:5 › RF-SL-36 / RN-39 / H-57 / RNF-05 / H-63: la bitácora de solicitudes usa los textos del prototipo y el comentario tiene tope
+[WebServer] Error: aborted
+[WebServer]     at ignore-listed frames {
+[WebServer]   code: 'ECONNRESET'
+[WebServer] }
+
+[WebServer] ⨯ uncaughtException: Error: aborted
+[WebServer]     at ignore-listed frames {
+[WebServer]   code: 'ECONNRESET'
+[WebServer] }
+
+[WebServer] ⨯ uncaughtException:  Error: aborted
+[WebServer]     at ignore-listed frames {
+[WebServer]   code: 'ECONNRESET'
+[WebServer] }
+
+  1) [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:201:5 › RF-SL-36 / RN-39 / H-57 / RNF-05 / H-63: la bitácora de solicitudes usa los textos del prototipo y el comentario tiene tope 
+
+    Error: apiRequestContext.post: read ECONNRESET
+    Call log:
+      - → POST http://localhost:3000/api/auth/picking/sign-in/username
+        - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36
+        - accept: */*
+        - accept-encoding: gzip,deflate,br
+        - origin: http://localhost:3000
+        - content-type: application/json
+        - content-length: 52
+        - cookie: incovsa-sitio.session_token=Ejp93gwVWUZq5FvuOOuInkCc1nr1PBM7.eqt%2FvpMwxoEshX4KMvCgscMKWLbCew7%2BULVgclqrds0%3D
+
+
+      22 |
+      23 | async function entrar(page: Page, sistema: "sitio" | "picking", usuario: string) {
+    > 24 |   const respuesta = await page.request.post(`/api/auth/${sistema}/sign-in/username`, {
+         |                                        ^
+      25 |     headers: { origin: "http://localhost:3000" },
+      26 |     data: { usuario, clave: process.env.CLAVE_DEMO },
+      27 |   });
+        at entrar (C:\Users\Hecto\Documents\proyecto_incovsa\pruebas-e2e\panel\auditoria-ce13.spec.ts:24:40)
+        at C:\Users\Hecto\Documents\proyecto_incovsa\pruebas-e2e\panel\auditoria-ce13.spec.ts:232:11
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\panel-auditoria-ce13-RF-SL-1247c--y-el-comentario-tiene-tope-escritorio\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\panel-auditoria-ce13-RF-SL-1247c--y-el-comentario-tiene-tope-escritorio\error-context.md
+
+
+[60/84] [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:283:1 › H-62: el mapa inválido avisa con el texto del prototipo
+[61/84] [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:316:1 › H-62: un correo mal formado se rechaza al salir del campo y no se guarda
+[62/84] [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:330:1 › H-62: un correo con formato válido se guarda
+[63/84] [escritorio] › pruebas-e2e\panel\auditoria-jg24.spec.ts:12:5 › RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recupera medidas y hover del prototipo
+[64/84] [escritorio] › pruebas-e2e\panel\auditoria-jg24.spec.ts:51:5 › RF-SW-29 / RN-39 / H-04: publicar y quitar un valor muestra el número del valor en el aviso
+[65/84] [escritorio] › pruebas-e2e\panel\contenido.spec.ts:20:5 › RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y accesibilidad
+[66/84] [escritorio] › pruebas-e2e\panel\contenido.spec.ts:83:5 › RF-SW-25: el permiso se exige también al abrir la sección directamente
+[67/84] [escritorio] › pruebas-e2e\panel\contenido.spec.ts:109:5 › RF-SW-23 / RNF-05: publica una imagen de 5 MB y limpia la imagen retirada
+[68/84] [escritorio] › pruebas-e2e\panel\contenido.spec.ts:148:5 › RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[69/84] [escritorio] › pruebas-e2e\panel\contenido.spec.ts:165:5 › RF-SW-23: un borrador de portada o historia no cambia la etiqueta publicada
+[70/84] [escritorio] › pruebas-e2e\panel\contenido.spec.ts:181:5 › RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visita sin sesión
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[71/84] [escritorio] › pruebas-e2e\panel\contenido.spec.ts:243:5 › RF-SW-23 / RF-SW-24: reemplazar INCOVSA actualiza cabecera y pie públicos
+[72/84] [escritorio] › pruebas-e2e\panel\documentos.spec.ts:33:5 › RF-SW-14 / RN-41 / RNF-08: crear, buscar, editar y eliminar productos documentados
+[73/84] [escritorio] › pruebas-e2e\panel\documentos.spec.ts:84:5 › RN-19 / RF-SW-21 / RNF-08: solo ver y ver-descargar reciben opciones y direcciones autorizadas; CSP permite Drive
+[74/84] [escritorio] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:22:5 › RF-SW-07 / RN-56: guardar descripción y galería publica la industria sin perder los datos anteriores
+[75/84] [escritorio] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:83:5 › RF-SW-07 / RNF-08: industrias y catálogo conservan estructura y accesibilidad
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[76/84] [escritorio] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:115:5 › RF-SW-23 / RN-39: crea, edita, filtra por dos industrias y confirma antes de eliminar
+[77/84] [escritorio] › pruebas-e2e\panel\industrias-y-catalogo.spec.ts:154:5 › RF-SW-23: impide cerrar el editor mientras se publica y conserva el borrador si falla
+[78/84] [escritorio] › pruebas-e2e\panel\solicitudes.spec.ts:68:1 › RF-SW-20 / CP-63 / RNF-08: filtros, estados libres, responsable y edición del comentario accesibles
+[79/84] [escritorio] › pruebas-e2e\panel\solicitudes.spec.ts:127:1 › RF-SW-31 / CP-59: indicador normal y reducido baja al abrir una solicitud
+[80/84] [escritorio] › pruebas-e2e\panel\solicitudes.spec.ts:145:1 › RNF-04 / RF-SW-20: solo lectura sin gestionar y sección ausente sin permisos
+[81/84] [escritorio] › pruebas-e2e\panel\usuarios.spec.ts:30:7 › Panel: usuarios del sitio › RF-SW-13: Gerencia crea un usuario con solo sit.doc.ver y ese usuario solo ve la documentación
+[82/84] [escritorio] › pruebas-e2e\panel\usuarios.spec.ts:80:7 › Panel: usuarios del sitio › RF-SW-11 / RN-47: restablecer la contraseña no ofrece correo y la nueva clave entra
+[83/84] [escritorio] › pruebas-e2e\panel\usuarios.spec.ts:116:7 › Panel: usuarios del sitio › RF-SW-11: ¿Olvidó su contraseña? del sitio pide a Gerencia o a Soporte
+[84/84] [escritorio] › pruebas-e2e\panel\usuarios.spec.ts:131:7 › Panel: usuarios del sitio › criterio 5: la lista y el alta no tienen violaciones serias de axe
+  2) [escritorio] › pruebas-e2e\panel\usuarios.spec.ts:131:7 › Panel: usuarios del sitio › criterio 5: la lista y el alta no tienen violaciones serias de axe 
+
+    Error: browserContext.newPage: Target crashed 
+     Please check out https://github.com/dequelabs/axe-core-npm/blob/develop/packages/playwright/error-handling.md
+
+      133 |     await abrirUsuarios(page);
+      134 |     await expect(page.getByRole("button", { name: "Nuevo usuario" })).toBeVisible();
+    > 135 |     const lista = await new AxeBuilder({ page }).analyze();
+          |                   ^
+      136 |     expect(lista.violations.filter((v) => v.impact === "serious" || v.impact === "critical")).toEqual([]);
+      137 |
+      138 |     await page.getByRole("button", { name: "Nuevo usuario" }).click();
+        at AxeBuilder.analyze (C:\Users\Hecto\Documents\proyecto_incovsa\node_modules\@axe-core\playwright\dist\index.js:254:13)
+        at C:\Users\Hecto\Documents\proyecto_incovsa\pruebas-e2e\panel\usuarios.spec.ts:135:19
+    [cause]: Error: browserContext.newPage: Target crashed 
+        at AxeBuilder.finishRun (C:\Users\Hecto\Documents\proyecto_incovsa\node_modules\@axe-core\playwright\dist\index.js:350:37)
+        at AxeBuilder.analyze (C:\Users\Hecto\Documents\proyecto_incovsa\node_modules\@axe-core\playwright\dist\index.js:252:25)
+        at C:\Users\Hecto\Documents\proyecto_incovsa\pruebas-e2e\panel\usuarios.spec.ts:135:19
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\panel-usuarios-Panel-usuar-4c397-n-violaciones-serias-de-axe-escritorio\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\panel-usuarios-Panel-usuar-4c397-n-violaciones-serias-de-axe-escritorio\error-context.md
+
+
+  2 failed
+    [escritorio] › pruebas-e2e\panel\auditoria-ce13.spec.ts:201:5 › RF-SL-36 / RN-39 / H-57 / RNF-05 / H-63: la bitácora de solicitudes usa los textos del prototipo y el comentario tiene tope 
+    [escritorio] › pruebas-e2e\panel\usuarios.spec.ts:131:7 › Panel: usuarios del sitio › criterio 5: la lista y el alta no tienen violaciones serias de axe 
+  82 passed (12.5m)

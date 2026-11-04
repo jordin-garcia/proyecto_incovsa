@@ -1,0 +1,219 @@
+
+Running 39 tests using 1 worker
+
+[1/39] [telefono] › pruebas-e2e\flujo\flujo-completo.spec.ts:195:5 › RN-11 / RN-52 / RN-29 / RF-SL-16 / RF-SL-24 / RF-SL-29 / RF-SL-37 / RF-SL-38 / RNF-06: flujo completo de un pedido facturado hasta el reporte
+[telefono] › pruebas-e2e\flujo\flujo-completo.spec.ts:195:5 › RN-11 / RN-52 / RN-29 / RF-SL-16 / RF-SL-24 / RF-SL-29 / RF-SL-37 / RF-SL-38 / RNF-06: flujo completo de un pedido facturado hasta el reporte
+▲ Next.js 16.4.3
+
+
+- Local:         http://127.0.0.1:3100
+- Network:       http://127.0.0.1:3100
+✓ Ready in 0ms
+
+
+✓ Running next.config took 101ms
+
+
+(node:12640) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[2/39] [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:86:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión
+[3/39] [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:117:7 › RNF-13: avisos de cambios por sede › RNF-13: al cortar SSE consulta cada 5 segundos, apaga En vivo y se reconecta sola
+[4/39] [telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:148:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede
+[telefono] › pruebas-e2e\flujo\tiempo-real.spec.ts:148:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede
+{"fecha":"2026-11-03T03:47:54.519Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"picking","operacion":"pk.bodega","motivo":"sin_sesion"}
+
+
+{"fecha":"2026-11-03T03:47:54.877Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"picking","usuarioId":"NQtIr2gBujXGEG6h4mxeIwXBLvrW8n7m","operacion":"pk.bodega","motivo":"sede_ajena","sede":2}
+
+
+{"fecha":"2026-11-03T03:47:54.915Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"picking","usuarioId":"NQtIr2gBujXGEG6h4mxeIwXBLvrW8n7m","operacion":"pk.facturacion","motivo":"sin_permiso"}
+
+
+[5/39] [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:11:5 › RNF-16: páginas, errores, redirecciones, API y recursos envían las cabeceras de seguridad
+[telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:11:5 › RNF-16: páginas, errores, redirecciones, API y recursos envían las cabeceras de seguridad
+{"fecha":"2026-11-03T03:47:56.594Z","nivel":"error","evento":"error_inesperado","tipo":"ZodError","ubicacion":["at u (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\.next\\server\\chunks\\_1nbnlp2k2vxpk._.js:1:6554)","at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:59:14)","at r0.renderToResponse (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.prod.js:5:14429)","at C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.prod.js:5:18100","at NextTracerImpl.trace (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\node_modules\\next\\dist\\server\\lib\\trace\\tracer.js:196:72)"]}
+
+
+[6/39] [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:34:5 › RNF-16 (ASVS V3.3.1 y V3.3.3): en producción todas las cookies propias llevan __Host-, Secure y path=/
+[7/39] [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:72:5 › RNF-16 (ASVS V11.5.1): el nonce de la CSP tiene 128 bits
+[8/39] [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:80:5 › RNF-16: el navegador admite Google Maps y Drive, y rechaza marcos de otros orígenes
+[9/39] [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:109:5 › RNF-16: otro sitio no puede insertar la aplicación dentro de un marco
+[10/39] [telefono] › pruebas-e2e\seguridad\cabeceras.spec.ts:126:5 › RNF-16: cada respuesta tiene su nonce y los scripts en línea ajenos quedan bloqueados
+[11/39] [telefono] › pruebas-e2e\flujo\sin-restos-del-prototipo.spec.ts:107:5 › JG-28 / RF-SW-02 / RF-SW-03 / RF-SW-04: el sitio público no muestra textos del prototipo
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[12/39] [telefono] › pruebas-e2e\flujo\sin-restos-del-prototipo.spec.ts:120:5 › JG-28: el panel del sitio no muestra textos del prototipo
+[13/39] [telefono] › pruebas-e2e\flujo\sin-restos-del-prototipo.spec.ts:134:5 › JG-28: el picking no muestra textos del prototipo
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] {"fecha":"2026-11-03T03:49:42.441Z","nivel":"error","evento":"error_inesperado","tipo":"ZodError","ubicacion":["at GET (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\dev\\server\\chunks\\[root-of-the-server]__18l46bxodbzdl._.js:63:188)","at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:59:14)","at AppRouteRouteModule.renderToResponse (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:5:26017)","at C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:5:31261","at NextTracerImpl.trace (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\node_modules\\next\\dist\\server\\lib\\trace\\tracer.js:196:72)"]}
+
+[14/39] [tableta] › pruebas-e2e\flujo\flujo-completo.spec.ts:195:5 › RN-11 / RN-52 / RN-29 / RF-SL-16 / RF-SL-24 / RF-SL-29 / RF-SL-37 / RF-SL-38 / RNF-06: flujo completo de un pedido facturado hasta el reporte
+[tableta] › pruebas-e2e\flujo\flujo-completo.spec.ts:195:5 › RN-11 / RN-52 / RN-29 / RF-SL-16 / RF-SL-24 / RF-SL-29 / RF-SL-37 / RF-SL-38 / RNF-06: flujo completo de un pedido facturado hasta el reporte
+▲ Next.js 16.4.3
+
+
+- Local:         http://127.0.0.1:3102
+
+
+- Network:       http://127.0.0.1:3102
+
+
+✓ Ready in 0ms
+
+
+✓ Running next.config took 122ms
+
+
+(node:13600) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[15/39] [tableta] › pruebas-e2e\flujo\tiempo-real.spec.ts:86:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión
+[16/39] [tableta] › pruebas-e2e\flujo\tiempo-real.spec.ts:117:7 › RNF-13: avisos de cambios por sede › RNF-13: al cortar SSE consulta cada 5 segundos, apaga En vivo y se reconecta sola
+[17/39] [tableta] › pruebas-e2e\flujo\tiempo-real.spec.ts:148:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede
+[tableta] › pruebas-e2e\flujo\tiempo-real.spec.ts:148:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede
+{"fecha":"2026-11-03T03:50:45.382Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"picking","operacion":"pk.bodega","motivo":"sin_sesion"}
+
+
+{"fecha":"2026-11-03T03:50:45.782Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"picking","usuarioId":"NQtIr2gBujXGEG6h4mxeIwXBLvrW8n7m","operacion":"pk.bodega","motivo":"sede_ajena","sede":2}
+
+
+{"fecha":"2026-11-03T03:50:45.807Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"picking","usuarioId":"NQtIr2gBujXGEG6h4mxeIwXBLvrW8n7m","operacion":"pk.facturacion","motivo":"sin_permiso"}
+
+
+[18/39] [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:11:5 › RNF-16: páginas, errores, redirecciones, API y recursos envían las cabeceras de seguridad
+[tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:11:5 › RNF-16: páginas, errores, redirecciones, API y recursos envían las cabeceras de seguridad
+{"fecha":"2026-11-03T03:50:47.734Z","nivel":"error","evento":"error_inesperado","tipo":"ZodError","ubicacion":["at u (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\.next\\server\\chunks\\_1nbnlp2k2vxpk._.js:1:6554)","at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:59:14)","at r0.renderToResponse (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.prod.js:5:14429)","at C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.prod.js:5:18100","at NextTracerImpl.trace (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\node_modules\\next\\dist\\server\\lib\\trace\\tracer.js:196:72)"]}
+
+
+[19/39] [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:34:5 › RNF-16 (ASVS V3.3.1 y V3.3.3): en producción todas las cookies propias llevan __Host-, Secure y path=/
+[20/39] [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:72:5 › RNF-16 (ASVS V11.5.1): el nonce de la CSP tiene 128 bits
+[21/39] [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:80:5 › RNF-16: el navegador admite Google Maps y Drive, y rechaza marcos de otros orígenes
+[22/39] [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:109:5 › RNF-16: otro sitio no puede insertar la aplicación dentro de un marco
+[23/39] [tableta] › pruebas-e2e\seguridad\cabeceras.spec.ts:126:5 › RNF-16: cada respuesta tiene su nonce y los scripts en línea ajenos quedan bloqueados
+[24/39] [tableta] › pruebas-e2e\flujo\sin-restos-del-prototipo.spec.ts:107:5 › JG-28 / RF-SW-02 / RF-SW-03 / RF-SW-04: el sitio público no muestra textos del prototipo
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[25/39] [tableta] › pruebas-e2e\flujo\sin-restos-del-prototipo.spec.ts:120:5 › JG-28: el panel del sitio no muestra textos del prototipo
+[26/39] [tableta] › pruebas-e2e\flujo\sin-restos-del-prototipo.spec.ts:134:5 › JG-28: el picking no muestra textos del prototipo
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] {"fecha":"2026-11-03T03:51:49.623Z","nivel":"error","evento":"error_inesperado","tipo":"ZodError","ubicacion":["at GET (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\dev\\server\\chunks\\[root-of-the-server]__18l46bxodbzdl._.js:63:188)","at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:59:14)","at AppRouteRouteModule.renderToResponse (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:5:26017)","at C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:5:31261","at NextTracerImpl.trace (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\node_modules\\next\\dist\\server\\lib\\trace\\tracer.js:196:72)"]}
+
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[27/39] [escritorio] › pruebas-e2e\flujo\flujo-completo.spec.ts:195:5 › RN-11 / RN-52 / RN-29 / RF-SL-16 / RF-SL-24 / RF-SL-29 / RF-SL-37 / RF-SL-38 / RNF-06: flujo completo de un pedido facturado hasta el reporte
+[escritorio] › pruebas-e2e\flujo\flujo-completo.spec.ts:195:5 › RN-11 / RN-52 / RN-29 / RF-SL-16 / RF-SL-24 / RF-SL-29 / RF-SL-37 / RF-SL-38 / RNF-06: flujo completo de un pedido facturado hasta el reporte
+▲ Next.js 16.4.3
+
+
+- Local:         http://127.0.0.1:3104
+
+
+- Network:       http://127.0.0.1:3104
+
+
+✓ Ready in 0ms
+
+
+✓ Running next.config took 35ms
+
+
+(node:13964) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[28/39] [escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:86:7 › RNF-13: avisos de cambios por sede › RNF-13 / RF-SL-23: el marcado aparece en otro navegador en menos de 2 segundos y usa una conexión
+[29/39] [escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:117:7 › RNF-13: avisos de cambios por sede › RNF-13: al cortar SSE consulta cada 5 segundos, apaga En vivo y se reconecta sola
+[30/39] [escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:148:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede
+[escritorio] › pruebas-e2e\flujo\tiempo-real.spec.ts:148:7 › RNF-13: avisos de cambios por sede › RNF-04 / RN-17: la ruta rechaza peticiones sin sesión, sin permiso y de otra sede
+{"fecha":"2026-11-03T03:52:45.287Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"picking","operacion":"pk.bodega","motivo":"sin_sesion"}
+
+
+{"fecha":"2026-11-03T03:52:45.635Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"picking","usuarioId":"NQtIr2gBujXGEG6h4mxeIwXBLvrW8n7m","operacion":"pk.bodega","motivo":"sede_ajena","sede":2}
+
+
+{"fecha":"2026-11-03T03:52:45.672Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"picking","usuarioId":"NQtIr2gBujXGEG6h4mxeIwXBLvrW8n7m","operacion":"pk.facturacion","motivo":"sin_permiso"}
+
+
+[31/39] [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:11:5 › RNF-16: páginas, errores, redirecciones, API y recursos envían las cabeceras de seguridad
+[escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:11:5 › RNF-16: páginas, errores, redirecciones, API y recursos envían las cabeceras de seguridad
+{"fecha":"2026-11-03T03:52:47.264Z","nivel":"error","evento":"error_inesperado","tipo":"ZodError","ubicacion":["at u (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\.next\\server\\chunks\\_1nbnlp2k2vxpk._.js:1:6554)","at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:59:14)","at r0.renderToResponse (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.prod.js:5:14429)","at C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.prod.js:5:18100","at NextTracerImpl.trace (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\standalone\\node_modules\\next\\dist\\server\\lib\\trace\\tracer.js:196:72)"]}
+
+
+[32/39] [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:34:5 › RNF-16 (ASVS V3.3.1 y V3.3.3): en producción todas las cookies propias llevan __Host-, Secure y path=/
+[33/39] [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:72:5 › RNF-16 (ASVS V11.5.1): el nonce de la CSP tiene 128 bits
+[34/39] [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:80:5 › RNF-16: el navegador admite Google Maps y Drive, y rechaza marcos de otros orígenes
+[35/39] [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:109:5 › RNF-16: otro sitio no puede insertar la aplicación dentro de un marco
+[36/39] [escritorio] › pruebas-e2e\seguridad\cabeceras.spec.ts:126:5 › RNF-16: cada respuesta tiene su nonce y los scripts en línea ajenos quedan bloqueados
+[37/39] [escritorio] › pruebas-e2e\flujo\sin-restos-del-prototipo.spec.ts:107:5 › JG-28 / RF-SW-02 / RF-SW-03 / RF-SW-04: el sitio público no muestra textos del prototipo
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[38/39] [escritorio] › pruebas-e2e\flujo\sin-restos-del-prototipo.spec.ts:120:5 › JG-28: el panel del sitio no muestra textos del prototipo
+[39/39] [escritorio] › pruebas-e2e\flujo\sin-restos-del-prototipo.spec.ts:134:5 › JG-28: el picking no muestra textos del prototipo
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] {"fecha":"2026-11-03T03:53:50.269Z","nivel":"error","evento":"error_inesperado","tipo":"ZodError","ubicacion":["at GET (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\.next\\dev\\server\\chunks\\[root-of-the-server]__18l46bxodbzdl._.js:63:188)","at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:59:14)","at AppRouteRouteModule.renderToResponse (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:5:26017)","at C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:5:31261","at NextTracerImpl.trace (C:\\Users\\Hecto\\Documents\\proyecto_incovsa\\node_modules\\next\\dist\\server\\lib\\trace\\tracer.js:196:72)"]}
+
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+  39 passed (7.1m)

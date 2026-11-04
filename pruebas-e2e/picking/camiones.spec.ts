@@ -1,5 +1,6 @@
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { irA } from "../comunes/navegacion";
 
 try {
   process.loadEnvFile();
@@ -17,7 +18,7 @@ async function entrar(context: BrowserContext, usuario: string) {
 }
 
 async function abrirConfiguracion(page: Page) {
-  await page.goto("/picking/configuracion");
+  await irA(page, "/picking/configuracion");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
 }
 

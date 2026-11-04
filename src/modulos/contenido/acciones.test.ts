@@ -10,6 +10,7 @@ const estado = vi.hoisted(() => ({ sesion: null as SesionActual | null }));
 vi.mock("@/lib/sesion", () => ({ obtenerSesion: async () => estado.sesion }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 import { publicarContenido } from "./acciones";
+import { POST } from "@/app/api/imagenes/publicar/route";
 
 const sesion: SesionActual = {
   sistema: "sitio",
@@ -93,7 +94,42 @@ it("RF-SW-29 / RN-39: publica cinco imágenes en sus posiciones y elimina la sus
   expect((await publicarContenido(formulario("valores", siguientes))).ok).toBe(true);
   expect(await leerImagenLocal(sustituida.replace("/api/imagenes/", ""))).toBeNull();
   expect(await prisma.bitacora.count()).toBe(2);
+  expect((await prisma.bitacora.findFirstOrThrow({ orderBy: { id: "desc" } })).detalle).toMatchObject({
+    bloque: "Imagen del valor 3",
+  });
   await Promise.all(siguientes.filter((v): v is string => v !== null).map(borrarImagen));
+});
+
+it("RNF-05 / H-05: la publicación institucional acepta el origen público y no el origen interno del proxy", async () => {
+  vi.stubEnv("BETTER_AUTH_URL", "https://incovsa.test");
+  try {
+    for (const origin of ["http://localhost:3000", "https://ajeno.invalid"]) {
+      expect(
+        (
+          await POST(
+            new Request("http://localhost:3000/api/imagenes/publicar", {
+              method: "POST",
+              headers: { origin },
+              body: formulario("mision", [], "No publicar"),
+            }),
+          )
+        ).status,
+      ).toBe(403);
+    }
+    const respuesta = await POST(
+      new Request("http://localhost:3000/api/imagenes/publicar", {
+        method: "POST",
+        headers: { origin: "https://incovsa.test" },
+        body: formulario("mision", [], "Misión detrás del proxy"),
+      }),
+    );
+    expect(respuesta.status).toBe(200);
+    expect((await prisma.contenidoInstitucional.findUniqueOrThrow({ where: { seccion: "mision" } })).texto).toBe(
+      "Misión detrás del proxy",
+    );
+  } finally {
+    vi.unstubAllEnvs();
+  }
 });
 
 it("RN-56: conserva el orden al intercambiar las cinco posiciones de una galería", async () => {

@@ -5,7 +5,7 @@ persona: jose-daniel
 responsable: José Daniel Cifuentes
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [JC-04, JM-03]
 programada: 2026-10-23
 requisitos: [RF-SL-36, RF-SL-37, RF-SL-38, RF-SL-59, RN-39, CU-14]
@@ -61,3 +61,15 @@ npm run e2e -- pruebas-e2e/picking/reportes.spec.ts
 
 ## Fuera de alcance
 - La exportación a Excel y PDF (JC-07).
+
+## Resultado
+
+- Hecho: implementé las consultas de Despacho, Rutas realizadas y Bitácora con filtros diario, semanal, mensual, anual y rango. La pantalla conserva el comportamiento del prototipo y las capturas comparativas cubren 390, 768 y 1440 px.
+- Decisiones tomadas: el periodo y las fechas se resuelven con `America/Guatemala`; las consultas verifican sesión, `pk.reportes` y sede. La Bitácora filtra registros de Picking según la sede del usuario objetivo, ocultando cambios que cruzan sedes. No cambié esquema, migraciones ni dependencias. Excel y PDF siguen deshabilitados para JC-07.
+- Archivos principales: `src/modulos/reportes/servicio.ts`, `src/modulos/reportes/periodo.ts`, `src/app/picking/reportes/page.tsx`, `src/componentes/picking/reportes/Reportes.tsx` y `pruebas-e2e/picking/reportes.spec.ts`.
+- Uso para JC-07: `consultarDespacho`, `consultarRutas` y `consultarOperaciones` reciben sesión, sede y filtro validado; el filtro se construye con `resolverPeriodo` de `src/modulos/reportes/periodo.ts`. Los tipos de retorno de esas funciones contienen los datos listos para la presentación y exportación.
+- Verificación: `npm run verificar` (273 pruebas), `npm run build`, seis E2E de JC-06, tres pruebas de tokens y revisión independiente LISTO. La suite E2E completa tuvo tres fallos ajenos a JC-06, descritos en `evidencia/JC-06/verificacion.md`.
+
+### Correcciones de la auditoría (2026-10-22)
+
+H-12 a H-15: Bitácora presenta los detalles como texto, conserva la identidad de inicios históricos y limita la consulta a lotes de 250, completando 250 registros visibles después del filtro por sede. El mensaje sin permiso coincide con el prototipo. Las capturas, revisión e informe anteriores se conservan en evidencia/JC-06/; la referencia histórica anterior a src/modulos/reportes/evidencias/verificacion.md corresponde ahora a evidencia/JC-06/verificacion.md.

@@ -1,0 +1,138 @@
+
+Running 4 tests using 1 worker
+
+(node:57976) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:18:5 › RF-SW-09 / RF-SL-02 / H-33: el sistema no autorizado vuelve al paso 2 sin registrar un fallo ni pedir sede (35.4s)
+(node:29904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:47:7 › RF-SW-30 / H-34: cerrar sitio muestra Sesión cerrada en Inicio (26.4s)
+(node:54852) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:47:7 › RF-SW-30 / H-34: cerrar picking muestra Sesión cerrada en Inicio (22.8s)
+(node:39340) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:60:5 › RF-SW-25 / H-07 / H-13 / H-39: acceso denegado ofrece el módulo propio y un módulo inexistente conserva el armazón (8.6s)
+
+
+  1) [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:18:5 › RF-SW-09 / RF-SL-02 / H-33: el sistema no autorizado vuelve al paso 2 sin registrar un fallo ni pedir sede 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: expect(page).toHaveURL(expected) failed
+
+    Expected pattern: /\/acceso$/
+    Received string:  "http://localhost:3000/acceso/picking"
+
+    Call log:
+      - Expect "toHaveURL" with timeout 5000ms
+      - Test timeout of 30000ms exceeded.
+
+
+      33 |     await expect(page.getByRole("combobox")).toHaveCount(0);
+      34 |     await page.goto("/acceso/picking");
+    > 35 |     await expect(page).toHaveURL(/\/acceso$/);
+         |                        ^
+      36 |     await expect(page.getByRole("heading",{name:"¿A dónde desea ingresar?"})).toBeVisible();
+      37 |     expect(await contar()).toBe(antes);
+      38 |     await evidencia(page,"sistema-no-autorizado");
+        at C:\Users\Hecto\Documents\proyecto_incovsa\pruebas-e2e\acceso\auditoria-jg24.spec.ts:35:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\acceso-auditoria-jg24-RF-S-70c2c-trar-un-fallo-ni-pedir-sede-escritorio\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\acceso-auditoria-jg24-RF-S-70c2c-trar-un-fallo-ni-pedir-sede-escritorio\error-context.md
+
+  2) [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:47:7 › RF-SW-30 / H-34: cerrar sitio muestra Sesión cerrada en Inicio 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Sesión cerrada.', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Sesión cerrada.', { exact: true }) with timeout 5000ms
+      - waiting for getByText('Sesión cerrada.', { exact: true })
+
+
+      52 |     await page.getByRole("button",{name:"Cerrar sesión",exact:true}).click();
+      53 |     await expect(page).toHaveURL("/");
+    > 54 |     await expect(page.getByText("Sesión cerrada.",{exact:true})).toBeVisible();
+         |                                                                  ^
+      55 |     expect(await (await context.request.get(`/api/auth/${sistema}/get-session`)).json()).toBeNull();
+      56 |     await evidencia(page,`salida-${sistema}`);
+      57 |   });
+        at C:\Users\Hecto\Documents\proyecto_incovsa\pruebas-e2e\acceso\auditoria-jg24.spec.ts:54:66
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\acceso-auditoria-jg24-RF-S-1f94f-ra-Sesión-cerrada-en-Inicio-escritorio\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\acceso-auditoria-jg24-RF-S-1f94f-ra-Sesión-cerrada-en-Inicio-escritorio\error-context.md
+
+  3) [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:47:7 › RF-SW-30 / H-34: cerrar picking muestra Sesión cerrada en Inicio 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Sesión cerrada.', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Sesión cerrada.', { exact: true }) with timeout 5000ms
+      - waiting for getByText('Sesión cerrada.', { exact: true })
+
+
+      52 |     await page.getByRole("button",{name:"Cerrar sesión",exact:true}).click();
+      53 |     await expect(page).toHaveURL("/");
+    > 54 |     await expect(page.getByText("Sesión cerrada.",{exact:true})).toBeVisible();
+         |                                                                  ^
+      55 |     expect(await (await context.request.get(`/api/auth/${sistema}/get-session`)).json()).toBeNull();
+      56 |     await evidencia(page,`salida-${sistema}`);
+      57 |   });
+        at C:\Users\Hecto\Documents\proyecto_incovsa\pruebas-e2e\acceso\auditoria-jg24.spec.ts:54:66
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\acceso-auditoria-jg24-RF-S-11a14-ra-Sesión-cerrada-en-Inicio-escritorio\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\acceso-auditoria-jg24-RF-S-11a14-ra-Sesión-cerrada-en-Inicio-escritorio\error-context.md
+
+  4) [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:60:5 › RF-SW-25 / H-07 / H-13 / H-39: acceso denegado ofrece el módulo propio y un módulo inexistente conserva el armazón 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: getByRole('link', { name: 'Ir a mi módulo', exact: true })
+    Expected: "/panel/documentos"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" getByRole('link', { name: 'Ir a mi módulo', exact: true }) with timeout 5000ms
+      - waiting for getByRole('link', { name: 'Ir a mi módulo', exact: true })
+
+
+      64 |     await expect(page.getByRole("heading",{name:"Sin acceso a este módulo"})).toBeVisible();
+      65 |     const volver = page.getByRole("link",{name:"Ir a mi módulo",exact:true});
+    > 66 |     await expect(volver).toHaveAttribute("href","/panel/documentos");
+         |                          ^
+      67 |     await evidencia(page,`sin-acceso-${modulo}`);
+      68 |   }
+      69 |   await entrar(context,"picking","ejemplo.03");
+        at C:\Users\Hecto\Documents\proyecto_incovsa\pruebas-e2e\acceso\auditoria-jg24.spec.ts:66:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\acceso-auditoria-jg24-RF-S-4575b-istente-conserva-el-armazón-escritorio\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\acceso-auditoria-jg24-RF-S-4575b-istente-conserva-el-armazón-escritorio\error-context.md
+
+  4 failed
+    [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:18:5 › RF-SW-09 / RF-SL-02 / H-33: el sistema no autorizado vuelve al paso 2 sin registrar un fallo ni pedir sede 
+    [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:47:7 › RF-SW-30 / H-34: cerrar sitio muestra Sesión cerrada en Inicio 
+    [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:47:7 › RF-SW-30 / H-34: cerrar picking muestra Sesión cerrada en Inicio 
+    [escritorio] › pruebas-e2e\acceso\auditoria-jg24.spec.ts:60:5 › RF-SW-25 / H-07 / H-13 / H-39: acceso denegado ofrece el módulo propio y un módulo inexistente conserva el armazón 
