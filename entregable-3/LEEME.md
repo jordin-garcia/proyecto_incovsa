@@ -14,14 +14,13 @@ La versión 1.0 documenta el sistema tal como está en `develop` el 03/11/2026. 
 | `documento-2/` | `Documento 2 - Documentacion tecnica del sistema v1.0.docx` | 1.0 | José Daniel Cifuentes |
 | `documento-3/` | `Documento 3 - Manual de usuario de la administracion del sitio v1.0.docx` | 1.0 | Daniela Marín |
 | `documento-4/` | `Documento 4 - Manual de usuario del sistema logistico v1.0.docx` | 1.0 | Josué Menéndez |
-| `documento-5/` | `Documento 5 - Manual tecnico de instalacion despliegue y mantenimiento v1.0.docx` | 1.0 | Carlos Hugo Escobar |
+| `documento-5/` | `Documento 5 - Manual tecnico de instalacion despliegue y mantenimiento v1.0.docx`, con los anexos H, I y J | 1.0 | Carlos Hugo Escobar |
 | `documento-6/` | `Documento 6 - Plan y evidencias de pruebas v1.0.docx`, con los anexos F y G | 1.0 | Jordin García |
-| `anexos/` | `Anexos H, I y J - Capacitacion, entrega, servicios y accesos v1.0.docx` | 1.0 | Jordin García y Carlos Hugo Escobar |
 | [`../README.md`](../README.md) | El README del repositorio, con sus 16 secciones | Final | Carlos Hugo Escobar |
 
 ## Dónde está cada anexo
 
-Los anexos van en el orden de `specs/17`:
+Los anexos van en el orden de `specs/17`, al final del documento con el que se relacionan. Los anexos H, I y J son de la entrega a INCOVSA y van al final del Documento 5; sus fuentes están en `anexos/`, porque las completan otras tareas en la versión 1.1:
 
 | Anexo | Contenido | Dónde está | Versión 1.0 |
 |---|---|---|---|
@@ -32,22 +31,21 @@ Los anexos van en el orden de `specs/17`:
 | E | Reglas y tablas de conversión | Documento 1 (`documento-1/94-anexo-e-conversion.md`) | La conversión y los 15 casos validados |
 | F | Casos de prueba | Documento 6 (`documento-6/90-anexo-f-casos-de-prueba.md`) | 111 casos con su resultado |
 | G | Evidencias de pruebas | Documento 6 (`documento-6/91-anexo-g-evidencias.md`) | Las ejecuciones, los informes y las capturas |
-| H | Evidencia de capacitación | `anexos/anexo-h-capacitacion.md` | El plan de la capacitación |
-| I | Evidencia de entrega | `anexos/anexo-i-evidencia-de-entrega.md` | El acta de la entrega a INCOVSA, lista para firmarse |
-| J | Inventario de servicios y accesos | `anexos/anexo-j-servicios-y-accesos.md` | Los servicios, con lo que INCOVSA no ha entregado marcado como pendiente |
+| H | Evidencia de capacitación | Documento 5 (`anexos/anexo-h-capacitacion.md`) | El plan de la capacitación |
+| I | Evidencia de entrega | Documento 5 (`anexos/anexo-i-evidencia-de-entrega.md`) | El acta de la entrega a INCOVSA, lista para firmarse |
+| J | Inventario de servicios y accesos | Documento 5 (`anexos/anexo-j-servicios-y-accesos.md`) | Los servicios, con lo que INCOVSA no ha entregado marcado como pendiente |
 
 ## Qué se sube al portal del curso
 
-La subida la hace Jordin. Se suben los PDF, en este orden:
+La subida la hace Jordin. Se suben los 6 PDF, en este orden:
 
 1. `Documento 1 - Memoria general y especificacion del sistema v1.0.pdf` (incluye los anexos A a E)
 2. `Documento 2 - Documentacion tecnica del sistema v1.0.pdf`
 3. `Documento 3 - Manual de usuario de la administracion del sitio v1.0.pdf`
 4. `Documento 4 - Manual de usuario del sistema logistico v1.0.pdf`
-5. `Documento 5 - Manual tecnico de instalacion despliegue y mantenimiento v1.0.pdf`
+5. `Documento 5 - Manual tecnico de instalacion despliegue y mantenimiento v1.0.pdf` (incluye los anexos H, I y J)
 6. `Documento 6 - Plan y evidencias de pruebas v1.0.pdf` (incluye los anexos F y G)
-7. `Anexos H, I y J - Capacitacion, entrega, servicios y accesos v1.0.pdf`
-8. El enlace del repositorio, con el README final: https://github.com/jordin-garcia/proyecto_incovsa
+7. El enlace del repositorio, con el README final: https://github.com/jordin-garcia/proyecto_incovsa
 
 Se guarda una captura de la constancia de la subida. Va a la versión 1.1 del Anexo I (CE-15).
 
@@ -76,7 +74,6 @@ python entregable-2/herramientas/armar_documento.py entregable-3/documento-3
 python entregable-2/herramientas/armar_documento.py entregable-3/documento-4
 python entregable-2/herramientas/armar_documento.py entregable-3/documento-5
 python entregable-2/herramientas/armar_documento.py entregable-3/documento-6
-python entregable-2/herramientas/armar_documento.py entregable-3/anexos
 ```
 
 - El Documento 2 tiene un segundo paso, `armar_version_final.py`, que ajusta las figuras, las tablas y los estilos. Para regenerar también sus figuras y comprobar el diccionario de datos, se sigue el procedimiento completo de `documento-2/README.md`.

@@ -7,8 +7,18 @@
   "indices": true,
   "numerar": true,
   "versiones": [
-    ["0.1", "21/10/2026", "Carlos Hugo Escobar", "Borrador a partir de CE-05, CE-06 y CE-07, sin el servidor de producción"],
-    ["1.0", "03/11/2026", "Héctor Jordin Adolfo García Coyoy", "Versión para el Entregable No. 3: los 19 apartados de los lineamientos con los comandos de develop al 03/11/2026; los datos que dependen de los accesos de INCOVSA quedan marcados como pendientes de producción"]
+    [
+      "0.1",
+      "21/10/2026",
+      "Carlos Hugo Escobar",
+      "Borrador a partir de CE-05, CE-06 y CE-07, sin el servidor de producción"
+    ],
+    [
+      "1.0",
+      "03/11/2026",
+      "Héctor Jordin Adolfo García Coyoy",
+      "Versión para el Entregable No. 3: los 19 apartados de los lineamientos con los comandos de develop al 03/11/2026; los datos que dependen de los accesos de INCOVSA quedan marcados como pendientes de producción. Incluye los anexos H (plan de la capacitación), I (acta de la entrega a INCOVSA) y J (inventario de servicios y accesos)"
+    ]
   ],
   "secciones": [
     "00-introduccion.md",
@@ -30,6 +40,9 @@
     "16-actualizacion-del-sistema.md",
     "17-actualizacion-de-dependencias.md",
     "18-mantenimiento.md",
-    "19-diagnostico.md"
+    "19-diagnostico.md",
+    "../anexos/anexo-h-capacitacion.md",
+    "../anexos/anexo-i-evidencia-de-entrega.md",
+    "../anexos/anexo-j-servicios-y-accesos.md"
   ]
 }

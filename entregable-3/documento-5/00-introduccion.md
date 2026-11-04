@@ -6,4 +6,6 @@ Con este manual puede dejar el sistema funcionando en una computadora de desarro
 
 Los únicos nombres de INCOVSA de este manual son `incovsa.com` e `imagenes.incovsa.com`. No hay direcciones IP, contraseñas ni llaves reales. Los valores de ejemplo salen de `.env.example` y de `.env.produccion.example`. Cámbielos en su equipo y no los suba al repositorio.
 
+Al final están los anexos de la entrega a INCOVSA: el Anexo H, con el plan de la capacitación; el Anexo I, con el acta de la entrega, y el Anexo J, con el inventario de servicios y accesos.
+
 La rama por defecto del repositorio es `develop`. La rama `main` queda solo para las versiones y el despliegue: cada integración en `main` publica la imagen de producción y la despliega en el servidor.
