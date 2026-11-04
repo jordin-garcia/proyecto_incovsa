@@ -1,4 +1,4 @@
-# Almacenamiento
+# Configuración del almacenamiento
 
 En desarrollo deje `ALMACENAMIENTO=disco`. La aplicación escribe WebP en `almacenamiento-local/imagenes/` y guarda en la base una ruta `/api/imagenes/` seguida del nombre. No cree un bucket para desarrollar.
 
@@ -8,8 +8,8 @@ Acepta JPG, PNG y WebP, comprobados por el contenido. El máximo es 5 MB. El anc
 
 El bucket de imágenes se publica solo por `imagenes.incovsa.com`. No use la dirección `r2.dev`. El bucket de respaldos es otro, privado, y no sirve imágenes. Su nombre de ejemplo en `RCLONE_DEST` es `incovsa-respaldos`.
 
-Cree cada credencial limitada a un solo bucket. La de la aplicación usa `R2_LLAVE` y `R2_SECRETO`. La del respaldo va en el archivo de configuración de rclone del usuario de despliegue, no en `.env`.
+En Cloudflare, cree los dos buckets en la cuenta de INCOVSA: el de imágenes, conectado al dominio personalizado `imagenes.incovsa.com` desde el panel de R2, y el de respaldos, sin acceso público. Cree cada credencial limitada a un solo bucket. La de la aplicación usa `R2_LLAVE` y `R2_SECRETO`. La del respaldo va en el archivo de configuración de rclone del usuario de despliegue, no en `.env`.
 
-TODO(CE-11): No hay buckets reales hasta P-94. `incovsa-imagenes` e `incovsa-respaldos` son nombres del ejemplo. No los dé por creados. No hay identificador de cuenta, llave ni secreto.
+> **Pendiente de producción (versión 1.1).** No hay buckets reales hasta que INCOVSA cree la cuenta de Cloudflare (P-94). `incovsa-imagenes` e `incovsa-respaldos` son nombres del ejemplo; no los dé por creados.
 
-Si una subida falla en desarrollo, lea el apartado Diagnóstico. El mensaje `La imagen debe pesar hasta 5 MB.` y el mensaje `Seleccione una imagen JPG, PNG o WebP válida.` salen de ese módulo.
+Si una subida falla, lea el apartado Diagnóstico de errores comunes. El mensaje `La imagen debe pesar hasta 5 MB.` y el mensaje `Seleccione una imagen JPG, PNG o WebP válida.` salen de ese módulo.

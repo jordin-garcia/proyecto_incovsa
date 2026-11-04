@@ -10,12 +10,14 @@ Hacen falta estas versiones. `package.json` exige Node.js 24, menor que 25, y np
 - PostgreSQL 18, con `psql` en el `PATH`.
 - Git, con `core.autocrlf` en `false`.
 - GitHub CLI, con sesión iniciada.
+- gitleaks, que busca secretos antes de cada *commit*. El gancho de husky lo usa si está instalado, junto con el formato, el lint y la revisión de tipos.
 
 En Windows, con PowerShell:
 
 ```
 winget install --id Git.Git -e
 winget install --id GitHub.cli -e
+winget install --id Gitleaks.Gitleaks -e
 ```
 
 Descargue Node.js 24 desde https://nodejs.org/en/download. Instale PostgreSQL 18 desde https://www.postgresql.org/download/windows/ y agregue `C:\Program Files\PostgreSQL\18\bin` al `PATH`. Anote la contraseña que elija para el usuario `postgres`. No la escriba en el repositorio.
@@ -25,6 +27,7 @@ En macOS:
 ```
 brew install git
 brew install gh
+brew install gitleaks
 brew install node@24
 brew install postgresql@18
 brew services start postgresql@18
@@ -34,7 +37,7 @@ Siga el aviso de Homebrew para poner `node@24` y la carpeta `bin` de PostgreSQL 
 
 Cierre la terminal y ábrala de nuevo después de instalar.
 
-Configure Git con su nombre y el correo de su cuenta de GitHub. El repositorio es privado. Acepte la invitación antes de clonar.
+Configure Git con su nombre y el correo de su cuenta de GitHub. Si el repositorio es privado, pida acceso al coordinador y acepte la invitación antes de clonar.
 
 ```
 git config --global user.name "Tu Nombre Completo"
@@ -62,18 +65,18 @@ Tabla: Recursos mínimos del VPS {#tab:vps}
 | Red | Dirección IP fija |
 | Acceso | SSH solo con llave |
 
-En ese servidor, `evidencia/CE-08/preparar-vps.sh` instala Docker Engine y el complemento Compose desde el repositorio oficial de Docker. Las imágenes del archivo `docker-compose.yml` son `caddy:2`, `postgres:18` y la de la aplicación en GHCR. El usuario de despliegue necesita además Node.js 24 y `rclone` en el `PATH`, porque `scripts/respaldo.sh` los llama en el host. Ese script de preparación no instala Node.js ni rclone.
+En ese servidor, `evidencia/CE-08/preparar-vps.sh` instala Docker Engine y el complemento Compose desde el repositorio oficial de Docker, UFW y fail2ban. Las imágenes del archivo `docker-compose.yml` son `caddy:2`, `postgres:18` y la de la aplicación en GHCR. El usuario de despliegue necesita además Git, Node.js 24 y `rclone` en el `PATH`: Git para clonar el repositorio en `~/incovsa`, y Node.js y rclone porque `scripts/respaldo.sh` los llama en el host. El script de preparación no los instala. Se instalan como root, de forma que los encuentre cualquier usuario (apartado Despliegue, Paso 3).
 
-TODO(CE-11): El VPS no existe (P-10). No hay IP ni nombre de host del servidor. No ejecute `preparar-vps.sh` hasta que INCOVSA entregue el acceso.
+> **Pendiente de producción (versión 1.1).** INCOVSA todavía no entrega el VPS (P-10). La dirección IP y el nombre del servidor se agregan cuando exista.
 
 ## Cuentas y servicios
 
 Hacen falta estas cuentas. Ninguna contraseña va en el repositorio.
 
-- GitHub, con acceso al repositorio `jordin-garcia/proyecto_incovsa`, a GitHub Actions y al registro GHCR.
-- Cloudflare, a nombre de INCOVSA, para el DNS de `incovsa.com` y para R2. Todavía no está creada.
-- El VPS, contratado por INCOVSA. Todavía no está contratado.
+- GitHub, con acceso al repositorio `jordin-garcia/proyecto_incovsa`, a GitHub Actions y al registro GHCR. El repositorio se transfiere a la cuenta u organización de GitHub de INCOVSA el día de la entrega (decisión 33 de la especificación).
+- Cloudflare, a nombre de INCOVSA y con un correo de la empresa, para el DNS de `incovsa.com` y para R2.
+- El VPS, contratado por INCOVSA a su nombre.
 - El Google Drive de INCOVSA, donde ya viven las fichas técnicas, las hojas de seguridad y los certificados de análisis. La aplicación solo guarda enlaces.
 - Odoo, solo como origen del archivo `.xlsx` que exporta el facturador. No hay conexión directa ni cuenta SMTP.
 
-TODO(CE-11): Las cuentas de VPS, DNS y R2 dependen de P-10, P-93 y P-94. Este apartado no trae direcciones, llaves ni nombres de bucket reales.
+> **Pendiente de producción (versión 1.1).** Las cuentas del VPS, del DNS y de Cloudflare R2, y la cuenta de GitHub de INCOVSA, dependen de P-10, P-93 y P-94. El inventario de cuentas, sin credenciales, está en el Anexo J. Las credenciales se entregan por un medio seguro y separado de este manual.

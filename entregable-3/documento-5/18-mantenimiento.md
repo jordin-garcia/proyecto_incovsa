@@ -1,8 +1,18 @@
-# Mantenimiento
+# Mantenimiento preventivo
 
-Haga estas comprobaciones con el usuario de despliegue, desde `~/incovsa`, cuando el VPS exista. Hoy puede ensayar en su computadora solo los comandos de desarrollo.
+Haga estas comprobaciones con el usuario de despliegue, desde `~/incovsa`.
 
-Cada noche, confirme que el cron del apartado Respaldo corrió. Busque la etiqueta `incovsa-respaldo` en el registro del sistema. La misma línea sale por la salida estándar del script. Tiene que nombrar la fecha, la carpeta `diarios` o `semanales`, y el archivo `.dump`. No tiene que mostrar la contraseña.
+## Cada día
+
+Confirme que el respaldo de la noche corrió. El script escribe en el registro del sistema con la etiqueta `incovsa-respaldo`:
+
+```
+journalctl -t incovsa-respaldo --since yesterday
+```
+
+Tiene que aparecer `respaldo diario AAAAMMDD.dump listo` con la fecha del día (y los domingos también `respaldo semanal AAAAMMDD.dump listo`), seguido de `retención aplicada`. Ninguna línea muestra la contraseña. Si aparece `el respaldo falló con código N` o no hay línea del día, lea el apartado Diagnóstico de errores comunes.
+
+## Cada semana
 
 Vea el estado de los tres servicios.
 
@@ -23,6 +33,15 @@ curl -fsSI https://incovsa.com/
 
 No publique el puerto de PostgreSQL. `docker compose port postgres 5432` no debe mostrar un puerto del host distinto de vacío o de `:0`. Así lo comprueba el flujo `produccion-imagen`.
 
+## Cada mes
+
+- Ensaye una restauración del respaldo más reciente en una base nueva (apartado Restauración) y bórrela al terminar.
+- Revise el uso del disco del VPS con `df -h` y `docker system df`. Si las imágenes viejas ocupan espacio, bórrelas con `docker image prune`, que no toca los volúmenes.
+- Revise que el flujo «Respaldo y restauración» de GitHub Actions siga en verde (corre cada lunes).
+- Revise las excepciones de `osv-scanner.toml` que estén por vencer (apartado Actualización de dependencias).
+
+## Reglas de operación
+
 El disco de la base es el volumen `postgres-datos`. Si se llena, el contenedor `postgres` deja de aceptar escrituras. Borre respaldos solo por la retención del script. No borre objetos del bucket para liberar espacio sin mirar `diarios/` y `semanales/`.
 
 No cargue la semilla de demostración en producción. No cree cuentas `ejemplo.01` en el VPS. Las cuentas reales las crea Gerencia o Soporte después del primer administrador.
@@ -31,4 +50,4 @@ Caddy renueva el certificado solo. No copie certificados a mano dentro del conte
 
 Antes de cambiar una regla de negocio, lea `specs/` y registre el cambio en `specs/18-historial-de-decisiones.md`. Las reglas viven en `src/modulos/`. Cada operación del servidor verifica sesión, permiso y sede. El esquema de la base solo lo cambia el coordinador.
 
-TODO(CE-11): Estas comprobaciones de producción no se han ejecutado. CE-08 sigue bloqueada y CE-10 no ha verificado https://incovsa.com.
+> **Pendiente de producción (versión 1.1).** Estas comprobaciones se ejecutan por primera vez después del primer despliegue y de la verificación de producción (tarea CE-10).

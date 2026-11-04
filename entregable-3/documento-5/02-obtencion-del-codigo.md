@@ -1,6 +1,6 @@
 # Obtención del código
 
-Clone el repositorio privado con GitHub CLI. La rama por defecto es `develop`. El comando lo deja en esa rama.
+Clone el repositorio con GitHub CLI. La rama por defecto es `develop`. El comando lo deja en esa rama.
 
 ```
 gh repo clone jordin-garcia/proyecto_incovsa
@@ -15,6 +15,6 @@ node scripts/verificar-entorno.mjs
 
 No descargue un ZIP para trabajar. El archivo de bloqueo y los ganchos de Git forman parte del clon.
 
-Para producción, el VPS no compila el código. En `~/incovsa` bastan `docker-compose.yml`, `Caddyfile` y `.env`. El apartado Despliegue dice cuándo copiarlos. Hoy esa carpeta no existe en un servidor real.
+En producción, el VPS no compila el código: descarga la imagen de GHCR. Aun así, el usuario de despliegue clona el repositorio en `~/incovsa`, porque de ahí salen `docker-compose.yml`, `Caddyfile`, `.env.produccion.example` y los scripts de respaldo y restauración (`scripts/respaldo.sh`, `scripts/restaurar.sh` y `scripts/lib-respaldo.mjs`), que la imagen no trae. El apartado Despliegue dice cómo hacerlo.
 
-TODO(CE-11): No clone hacia un VPS todavía. P-10 sigue sin servidor.
+> **Pendiente de producción (versión 1.1).** El nombre del repositorio cambia cuando se transfiera a la cuenta u organización de GitHub de INCOVSA (P-94 y decisión 33 de la especificación). Use entonces el nombre nuevo en `gh repo clone`.

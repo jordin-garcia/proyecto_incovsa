@@ -1,4 +1,4 @@
-# Dependencias
+# Instalación de dependencias
 
 Desde la raíz del repositorio, instale exactamente lo que fija `package-lock.json`. No use `npm install` para preparar el equipo. `npm ci` no reescribe el archivo de bloqueo.
 
