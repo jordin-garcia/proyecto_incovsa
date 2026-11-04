@@ -37,7 +37,8 @@ Tabla: Temas de la capacitación por rol
 
 | Rol | Temas | Apartados |
 |---|---|---|
-| Todas las personas | Acceso personal, recuperación de la contraseña por medio de Gerencia o Soporte, el entorno de trabajo y cerrar sesión | Documento 3: 1, 2, 3 y 16. Documento 4: 1 y 2 |
+| Todas las personas del sitio | Acceso personal, recuperación de la contraseña por medio de Gerencia o Soporte, el panel y cerrar sesión | Documento 3: 1, 2, 3 y 16 |
+| Todas las personas del picking | Acceso personal y el entorno de trabajo, con el selector de sede | Documento 4: 1 y 2 |
 | Personal que administra el contenido del sitio | Información institucional; historia, misión, visión y valores; imágenes del sitio; industrias; productos informativos; información de contacto; noticias; documentos internos y carga de fichas técnicas, hojas de seguridad y certificados; contenido restringido y permisos; consultas y solicitudes; problemas frecuentes | Documento 3: 4 a 13, 15 y 17 |
 | Personal de Facturación | Los productos y su Peso de Conversión tal como llegan de Odoo; pedidos pendientes; generación del picking y opciones de envío; registro de carga y control de peso; asignación de los pedidos al camión y al piloto | Documento 4: 3, 4, 8, 9, 15 y 16 |
 | Personal de Bodega | Interpretación de kilogramos y unidades; preparación de los pedidos; marcado y prioridad; detalle y cambios de estado; tablero en pantalla completa; despacho de rutas y pedidos | Documento 4: 10 a 14 y 17 |
@@ -61,6 +62,6 @@ Durante la capacitación, una persona de INCOVSA que no participó en el desarro
 - Fecha, lugar y duración real de la capacitación.
 - Asistentes por cargo, sin nombres. La lista de asistencia firmada queda en el Drive del equipo.
 - Temas cubiertos con cada rol.
-- Capturas o fotografías de la capacitación.
+- Capturas de pantalla de la capacitación. Las fotografías en las que aparecen personas no se ponen en este anexo, porque el repositorio es público: quedan en el Drive del equipo y el anexo solo las menciona.
 - Resultado de la prueba del panel sin ayuda, que también completa la sección 12 del Documento 6.
 - Dudas o dificultades observadas. Las que sean del sistema se agregan al registro de incidencias del Documento 6 (sección 13) y las de los manuales se corrigen en los Documentos 3 y 4.

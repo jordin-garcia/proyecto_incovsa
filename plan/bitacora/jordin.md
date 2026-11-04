@@ -397,3 +397,10 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Decisiones: las credenciales se entregan **en persona** (lo decidí hoy; un correo no cumple el «medio seguro y separado» de `specs/17` ni la decisión 70). Registrado en `specs/16` («Cuentas de los servicios» y «Respaldos») y en `specs/18`.
 - Pendiente o aviso para otros:
 **Carlos:** terminé tu CE-12 desde una rama mía (protocolo §E4) y cerré tu PR #97. Reescribí `entregable-3/anexos/anexo-i-evidencia-de-entrega.md` y `entregable-3/anexos/anexo-j-servicios-y-accesos.md` (fechas de la decisión 90, entrega en persona, sin `TODO`). Actualiza tu copia desde `develop` y borra tu rama local. Para CE-15: lee el `## Resultado` de CE-12; además, el apartado 14 del Documento 5 todavía dice «el medio seguro que el coordinador acuerde»: cámbialo por «en persona (Anexo J)».
+
+## 2026-11-03 · JG-30 · Armado de la documentación del Entregable 3
+- Hecho: armé los 6 documentos v1.0 y comprobé su formato (`specs/17`). Creé el Anexo H v1.0 (plan de la capacitación), `entregable-3/LEEME.md` y `entregable-3/anexos/documento.json`, que arma los anexos H, I y J en un solo `.docx`. Revisión en contexto limpio: LISTO.
+- Decisiones: la capacitación dura 2 horas, en una sesión para los dos sistemas. Los PDF los exporto yo desde Word, y también subo la documentación al portal.
+- Pendiente o aviso para otros:
+**Carlos:** les puse título («Tabla: …») a todas las tablas de tus anexos I y J (`entregable-3/anexos/anexo-i-evidencia-de-entrega.md` y `anexo-j-servicios-y-accesos.md`), para que aparezcan en el índice de tablas. No cambié el texto. Actualiza tu copia desde `develop`. Para CE-15, los anexos H, I y J se arman juntos con `python entregable-2/herramientas/armar_documento.py entregable-3/anexos`: sube ahí la versión a 1.1.
+**JG-21:** el Anexo H v1.0 tiene el plan; la versión 1.1 lo reemplaza por la evidencia (ver «Evidencia que se registra en la versión 1.1»).

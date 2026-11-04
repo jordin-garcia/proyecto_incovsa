@@ -60,7 +60,9 @@ Se guarda una captura de la constancia de la subida. Va a la versión 1.1 del An
 | Entrega de los accesos y transferencia del repositorio a INCOVSA | Anexos I y J | CE-15 |
 | Constancia de la entrega académica del 04/11 | Anexo I | CE-15 |
 | Capacitación al personal de INCOVSA y prueba del panel sin ayuda | Anexo H y Documento 6, sección 12 | JG-20 y JG-21 |
-| Reautenticación y contraseñas fáciles de adivinar (CP-111) | Documento 6 | CE-14 |
+| Reautenticación y contraseñas fáciles de adivinar (CP-111) | Documentos 2 y 6 | CE-14 |
+| Convergencia final, documentación de seguridad e incidencias pendientes | Documento 1 (Anexo D), Documento 2 y Documento 6 (secciones 7 y 13) | JG-17 y JG-27 |
+| Lo que salga de la reunión con el Ing. William Ambrossio | Los documentos que correspondan | JG-17 |
 
 ## Cómo se arma un documento
 
@@ -77,7 +79,7 @@ python entregable-2/herramientas/armar_documento.py entregable-3/documento-6
 python entregable-2/herramientas/armar_documento.py entregable-3/anexos
 ```
 
-- El Documento 2 tiene un segundo paso, `armar_version_final.py`, que ajusta las figuras, las tablas y los estilos (`documento-2/README.md`).
+- El Documento 2 tiene un segundo paso, `armar_version_final.py`, que ajusta las figuras, las tablas y los estilos. Para regenerar también sus figuras y comprobar el diccionario de datos, se sigue el procedimiento completo de `documento-2/README.md`.
 - Los `.docx` quedan en esta carpeta. Para el PDF, se abre cada uno en Word, se selecciona todo y se actualizan los campos con F9 y se guarda como PDF, o se usa `entregable-2/herramientas/actualizar_indices.ps1`.
 - La portada lee los nombres y carnés de `equipo.local.json`, que no se sube al repositorio.
 - Los `.docx` y los `.pdf` no se suben al repositorio (`.gitignore`): se guardan en la carpeta local y en el Drive del equipo.

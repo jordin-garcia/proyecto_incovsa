@@ -5,7 +5,7 @@ persona: jordin
 responsable: Jordin García
 hito: entrega
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [CE-09, JC-08, DM-13, JM-07, CE-11, CE-12, JG-18, JG-28]
 programada: 2026-11-04
 requisitos: []
@@ -60,3 +60,26 @@ node scripts/tareas.mjs --validar
 
 ## Notas
 - Si un documento no está integrado a las 18:00 del 03/11, Jordin decide si lo termina como coordinador (protocolo §E4) o se entrega con lo que haya.
+
+## Resultado
+
+**Versión 1.0 de la documentación del Entregable 3, armada el 03/11/2026** desde `develop` (commit d63cbf6, con DM-13 integrada).
+
+### Qué se hizo
+- **Los 6 documentos** se armaron con `armar_documento.py` (y `armar_version_final.py` en el Documento 2), sin errores: Documento 1 (24 figuras y 43 tablas), 2 (16 y 56), 3 (19 y 0), 4 (27 y 4), 5 (0 y 5) y 6 (17 y 39). Se comprobó el formato de `specs/17` en los 6 `.docx`: carta, márgenes de 2.54 cm, Arial 11, interlineado 1.5, texto justificado, los tres índices automáticos y la tabla de control de versiones. Los Documentos 1, 4 y 5 no citan fuentes externas; los 2, 3 y 6 tienen sus referencias en APA 7.
+- **Anexo H v1.0** (`entregable-3/anexos/anexo-h-capacitacion.md`): el plan de la capacitación, con a quién va por cargo (`specs/03`), los temas por rol con los apartados de los Documentos 3 y 4, la duración, la prueba del panel sin ayuda (Documento 6 §12) y la evidencia que agrega la versión 1.1.
+- **Anexos H, I y J en un solo documento:** `entregable-3/anexos/documento.json` arma `Anexos H, I y J - Capacitacion, entrega, servicios y accesos v1.0.docx` (17 tablas). Se les puso título a todas las tablas de los anexos I y J, para que queden identificadas en el índice de tablas.
+- **`entregable-3/LEEME.md`:** qué se entrega, la versión de cada documento, dónde está cada anexo (A a E en el Documento 1, F y G en el Documento 6, H a J en `anexos/`), los archivos que se suben al portal y su orden, y lo que se completa en la versión 1.1 del 12/11.
+- El README de `develop` es el final: tiene las 16 secciones.
+- Revisión en contexto limpio (subagente `revisor`): LISTO, sin hallazgos de corrección. Se aplicaron los opcionales 1, 2, 3 y 5.
+
+### Decisiones
+- **Duración de la capacitación: 2 horas, en una sesión para los dos sistemas** (decisión de Jordin del 03/11; `specs/` no la definía).
+- Los PDF los exporta Jordin desde Word: el agente no pudo ejecutar `actualizar_indices.ps1`, porque el modo automático bloquea `-ExecutionPolicy Bypass`.
+- Las fotografías con personas de la capacitación no van en el Anexo H (el repositorio es público): quedan en el Drive del equipo.
+
+### Cómo usarlo
+- Para volver a armar todo: los comandos de «Cómo se arma un documento» en `entregable-3/LEEME.md`.
+- **Subida al portal:** la hace Jordin, con los 7 PDF y el enlace del repositorio, en el orden del LEEME. La captura de la constancia se guarda en el Drive del equipo para el Anexo I v1.1.
+- **CE-15:** agregue la constancia de la subida al Anexo I y suba la versión en `entregable-3/anexos/documento.json`.
+- **JG-21:** reemplace el plan del Anexo H por la evidencia y agregue la fila 1.1 en `entregable-3/anexos/documento.json`.
