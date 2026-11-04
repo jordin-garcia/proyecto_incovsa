@@ -133,7 +133,7 @@ Medidas que el equipo adoptó el 12/10/2026 para que la aplicación sea segura y
 - Frecuencia: **diaria, en la noche** (`pg_dump` de la base). Se conservan **7 diarios y 4 semanales**.
 - Destino: fuera del servidor, en un bucket **privado** de Cloudflare R2, distinto del de las imágenes.
 - **Cómo (16/10):** una tarea de `cron` del VPS ejecuta `pg_dump` dentro del contenedor de PostgreSQL y sube el archivo a R2 con `rclone`. El mismo script borra los respaldos que sobran (conserva 7 diarios y 4 semanales). La credencial de R2 del VPS solo tiene acceso a ese bucket. No se agrega un cifrado propio: R2 cifra lo que guarda, y una llave de cifrado perdida dejaría los respaldos inservibles.
-- **Configuración (22/10, RNF-09):** la configuración sin secretos (`docker-compose.yml`, `Caddyfile` y `.env.produccion.example`) se respalda en el repositorio. La copia de respaldo de los secretos del `.env` del VPS y de la configuración de `rclone` se guarda solo en el medio seguro que el coordinador acuerde con INCOVSA para entregar las credenciales (Anexo J, CE-12), nunca en las computadoras del equipo (decisión 70). El Documento 5 (CE-11) explica cómo rehacer el `.env` desde la plantilla con esos valores.
+- **Configuración (22/10, RNF-09):** la configuración sin secretos (`docker-compose.yml`, `Caddyfile` y `.env.produccion.example`) se respalda en el repositorio. La copia de respaldo de los secretos del `.env` del VPS y de la configuración de `rclone` se guarda solo en el medio de guarda de INCOVSA, al que se copia en persona (Anexo J, CE-12; «Cuentas de los servicios»), nunca en las computadoras del equipo (decisión 70). El Documento 5 (CE-11) explica cómo rehacer el `.env` desde la plantilla con esos valores.
 
 ### Mantenibilidad
 
@@ -195,6 +195,7 @@ En el VPS, un archivo `docker-compose.yml` con tres servicios:
 
 - La cuenta de **Cloudflare** (R2 y DNS) y la del **VPS** se crean desde el inicio **a nombre de INCOVSA**, con un correo de la empresa, y se invita al equipo (P-94).
 - El **repositorio** se transfiere a una cuenta u organización de INCOVSA el día de la entrega (Anexo J).
+- **(03/11, Jordin, CE-12) Entrega de las credenciales: en persona.** La copia de respaldo de los secretos del servidor (el `.env` del VPS y la configuración de `rclone`) se entrega en persona a quien indique INCOVSA (P-03), que la copia del VPS a su propio medio de guarda desde una computadora de INCOVSA, con su propia llave SSH. No se envía por correo, chat ni otro medio digital del equipo, y ninguna computadora ni cuenta del equipo conserva copia (decisión 70). La llave privada SSH del despliegue y la contraseña del primer administrador no se entregan (Anexo J).
 
 ## Decisiones técnicas (12/10)
 
