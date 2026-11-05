@@ -30,6 +30,6 @@ export function irA(page: Page, url: string, opciones?: Parameters<Page["goto"]>
  * (`aria-busy`): Facturación muestra los movimientos al soltar y los guarda después, en orden (JG-33).
  */
 export async function recargar(page: Page, opciones?: Parameters<Page["reload"]>[0]) {
-  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 15_000 });
   return repetirSiSeInterrumpe(page, () => page.reload(opciones));
 }

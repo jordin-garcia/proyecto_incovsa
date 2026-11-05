@@ -7,6 +7,18 @@ import { irA, recargar } from "../comunes/navegacion";
 
 const tarjeta = (page: Page, id: number) => page.locator(`article[data-pedido-id="${id}"]`);
 const opcion = (page: Page, nombre: string) => page.getByRole("region", { name: nombre, exact: true });
+const aviso =
+  "Otro facturador modificó estos pedidos. La pantalla se actualizará; revisa los cambios e inténtalo de nuevo";
+
+/** Levanta la tarjeta con el teclado y la lleva a la zona de la derecha, sin soltarla. */
+async function levantar(page: Page, id: number, destino: string) {
+  const fila = tarjeta(page, id);
+  await fila.focus();
+  await page.keyboard.press("Space", { delay: 50 });
+  await expect(fila).toHaveAttribute("data-arrastrando", "true");
+  await page.keyboard.press("ArrowRight", { delay: 50 });
+  await expect(page.getByRole("status").filter({ hasText: `Destino: ${destino}.` })).toBeAttached();
+}
 
 let bd: Client;
 const ids: number[] = [];
@@ -101,7 +113,7 @@ async function moverConTeclado(page: Page, id: number, destino: string) {
   await expect(page.getByRole("status").filter({ hasText: `Destino: ${destino}.` })).toBeAttached();
   await page.keyboard.press("Space", { delay: 50 });
   // Se sigue grabando hasta que el servidor confirma, para notar también un regreso al llegar sus datos.
-  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 15_000 });
 }
 
 test("RF-SL-63: al soltar, el pedido facturado aparece en su destino sin regresar a su lugar", async ({ page }) => {
@@ -157,7 +169,7 @@ test("RF-SL-63 (04/11): con pedidos seleccionados, un botón por opción de env�
   );
 
   // Lo que se agregó con los botones se guarda.
-  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 15_000 });
   await recargar(page);
   await expect(filasCamion.nth(-2)).toHaveAttribute("data-pedido-id", String(primero));
   await expect(filasCamion.last()).toHaveAttribute("data-pedido-id", String(segundo));
@@ -165,4 +177,58 @@ test("RF-SL-63 (04/11): con pedidos seleccionados, un botón por opción de env�
     "data-pedido-id",
     String(tercero),
   );
+});
+
+test("RN-48 / JG-33: dos movimientos seguidos, sin esperar a que se guarde el primero, se guardan sin conflicto", async ({
+  page,
+}) => {
+  await abrir(page);
+  const [primero, segundo] = ids as [number, number];
+  for (const id of [primero, segundo]) {
+    await levantar(page, id, "Envío por camión");
+    await page.keyboard.press("Space", { delay: 50 });
+    await expect(tarjeta(page, id)).toHaveAttribute("data-arrastrando", "false");
+  }
+  const filas = opcion(page, "Envío por camión").locator("article");
+  await expect(filas.nth(-2)).toHaveAttribute("data-pedido-id", String(primero));
+  await expect(filas.last()).toHaveAttribute("data-pedido-id", String(segundo));
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 15_000 });
+  await expect(page.getByText(aviso, { exact: true })).toHaveCount(0);
+  await recargar(page);
+  await expect(filas.nth(-2)).toHaveAttribute("data-pedido-id", String(primero));
+  await expect(filas.last()).toHaveAttribute("data-pedido-id", String(segundo));
+});
+
+test("RN-48 / JG-33: si otro facturador cambia la opción mientras se arrastra, al soltar sale el aviso", async ({
+  page,
+  browser,
+  baseURL,
+}, info) => {
+  await abrir(page);
+  const otro = await browser.newContext({
+    baseURL,
+    viewport: info.project.use.viewport,
+    extraHTTPHeaders: { "x-real-ip": "127.0.0.1" },
+  });
+  try {
+    const respuesta = await otro.request.post("/api/auth/picking/sign-in/username", {
+      headers: { origin: baseURL! },
+      data: { usuario: "ejemplo.04", clave: process.env.CLAVE_DEMO },
+    });
+    expect(respuesta.ok()).toBe(true);
+    const segunda = await otro.newPage();
+    await abrir(segunda);
+    // El primer facturador levanta un pedido hacia «Envío por camión» mientras el otro agrega otro a esa opción.
+    await levantar(page, ids[0]!, "Envío por camión");
+    await levantar(segunda, ids[1]!, "Envío por camión");
+    await segunda.keyboard.press("Space", { delay: 50 });
+    await expect(segunda.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 15_000 });
+    await page.keyboard.press("Space", { delay: 50 });
+    await expect(page.getByText(aviso, { exact: true })).toBeVisible();
+    // La pantalla vuelve a lo guardado: el pedido sigue en el tablero y la opción trae el del otro facturador.
+    await expect(page.getByTestId("tablero-pedidos").locator(`[data-pedido-id="${ids[0]}"]`)).toHaveCount(1);
+    await expect(opcion(page, "Envío por camión").locator(`[data-pedido-id="${ids[1]}"]`)).toHaveCount(1);
+  } finally {
+    await otro.close();
+  }
 });

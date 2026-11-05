@@ -149,7 +149,7 @@ Solo hay **dos** opciones, sin importar cuántos camiones tenga la sede:
 - De una **opción** de regreso al **tablero**.
 - **Dentro de una opción**, para cambiar su orden (13/10).
 - Funciona con mouse y con el dedo. Como la tarjeta ya no tiene asa, en pantallas táctiles el arrastre empieza con una **pulsación larga** sobre la tarjeta; un toque corto la selecciona (decisión de diseño del 14/10).
-- **(04/11, JG-33)** Al soltar, el pedido facturado aparece **de inmediato** en su destino, como en el prototipo: no regresa antes a su lugar. Los movimientos se guardan en el orden en que se hicieron, uno a la vez; mientras alguno se está guardando, "Enviar a Bodega", "Cancelar", "Eliminar", los botones de las opciones y los campos de las opciones esperan a que termine. Si el servidor rechaza un movimiento (por ejemplo, por el aviso de conflicto), la pantalla vuelve a lo guardado y muestra el aviso.
+- **(04/11, JG-33)** Al soltar, el pedido facturado aparece **de inmediato** en su destino, como en el prototipo: no regresa antes a su lugar. Los movimientos se guardan en el orden en que se hicieron, uno a la vez; cada uno se comprueba contra lo que el facturador veía al soltarlo (RN-48). Mientras se guardan, "Enviar a Bodega", "Cancelar", "Eliminar", "Seleccionar todos" y los botones de las opciones esperan a que terminen; recargar o cerrar la página con movimientos sin guardar pide confirmación. Si el servidor rechaza un movimiento (por ejemplo, por el aviso de conflicto), la pantalla vuelve a lo guardado y muestra el aviso.
 
 ### Peso y alerta de sobrepeso (RF-SL-14, RN-13)
 

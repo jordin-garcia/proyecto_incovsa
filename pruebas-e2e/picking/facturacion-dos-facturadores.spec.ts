@@ -34,7 +34,7 @@ async function mover(page: Page, id: number, tecla: string) {
   await page.keyboard.press("Space", { delay: 50 });
   await expect(tarjeta(page, id)).toHaveAttribute("data-arrastrando", "false");
   // El movimiento se ve al soltar y se guarda después (JG-33): el otro facturador debe actuar sobre lo ya guardado.
-  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 15_000 });
 }
 
 test("RN-48 / RNF-13 / decisiones 39 y 41: dos facturadores, edición, arrastre y envío simultáneos", async ({

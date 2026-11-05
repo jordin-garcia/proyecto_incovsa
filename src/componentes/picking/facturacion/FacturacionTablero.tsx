@@ -46,13 +46,21 @@ const motivos = [
   "no traen productos",
 ] as const;
 
-/** Movimiento ya soltado que todavía no llega del servidor: la vista lo aplica de inmediato, como el prototipo. */
-type Movimiento = { ids: number[]; origen: string; destino: string; antesDe: number | null };
+/** Lo que pide el facturador al soltar o al pulsar el botón de una opción. */
+type PedidoDeMovimiento = { ids: number[]; origen: string; destino: string; antesDe: number | null };
+
+/** Movimiento ya soltado: la vista lo aplica de inmediato, como el prototipo, mientras se guarda (JG-33). */
+type Movimiento = PedidoDeMovimiento & {
+  /** Lo que el facturador veía en las dos zonas al soltar: con eso el servidor busca conflictos (RN-48). */
+  vistos: { origen: EstadoPedidos; destino: EstadoPedidos };
+  /** Fecha de modificación que dejó el servidor en cada pedido movido, una vez guardado. */
+  guardado?: Record<number, string>;
+};
 
 /**
  * Aplica los movimientos con la misma regla que `moverPedidos()` del servidor: se insertan antes de `antesDe` o al
- * final. Los pedidos se buscan en todas las listas, así que aplicar un movimiento que el servidor ya incluye no cambia
- * nada.
+ * final. Los pedidos se buscan en todas las listas, así que un movimiento que los datos ya incluyen casi no cambia
+ * nada, y se deja de aplicar en cuanto llegan esos datos (`incluido()`).
  */
 function aplicarMovimientos(pedidos: PedidoEnTablero[], opciones: OpcionesFacturacion, movimientos: Movimiento[]) {
   if (!movimientos.length) return { pedidos, opciones };
@@ -81,6 +89,22 @@ function aplicarMovimientos(pedidos: PedidoEnTablero[], opciones: OpcionesFactur
       opciones: opciones.opciones.map((opcion) => ({ ...opcion, pedidos: listas.get(opcion.tipo)! })),
     },
   };
+}
+
+/**
+ * Un movimiento guardado está en los datos del servidor cuando cada pedido movido trae esa fecha de modificación o una
+ * posterior (o ya no está, porque se envió o se eliminó). Datos anteriores, como los que retuvo una pausa, no cuentan.
+ */
+function incluido(movimiento: Movimiento, pedidos: PedidoEnTablero[], opciones: OpcionesFacturacion) {
+  const guardado = movimiento.guardado;
+  if (!guardado) return false;
+  const fechas = new Map(
+    [...pedidos, ...opciones.opciones.flatMap((opcion) => opcion.pedidos)].map((p) => [p.id, p.actualizadoEn]),
+  );
+  return movimiento.ids.every((id) => {
+    const fecha = fechas.get(id);
+    return fecha === undefined || fecha >= (guardado[id] ?? "");
+  });
 }
 
 type PropsFacturacion = {
@@ -117,27 +141,27 @@ function TableroInteractivo({
 }: PropsFacturacion & {
   alInteraccion: (clave: string, activa: boolean) => void;
 }) {
-  // Cola de movimientos: la vista los muestra al soltar y se guardan uno a la vez. Cada uno se envía con los datos del
-  // servidor que ya incluyen el anterior, porque la comprobación de conflictos (RN-48) compara posiciones y fechas.
+  // Cola de movimientos: la vista los muestra al soltar y se guardan uno a la vez, en orden. La comprobación de
+  // conflictos (RN-48) compara posiciones y fechas, así que cada zona se compara con lo que el facturador vio al soltar
+  // o, si un movimiento anterior de la cola ya la cambió, con lo que devolvió el servidor (`conocidos`).
   const [cola, fijarCola] = useState({
     pedidos: pedidosServidor,
     opciones: opcionesServidor,
     movimientos: [] as Movimiento[],
-    guardados: 0,
   });
   let vigente = cola;
   if (cola.pedidos !== pedidosServidor || cola.opciones !== opcionesServidor) {
-    // Los datos nuevos ya incluyen los movimientos guardados; los demás siguen pendientes.
     vigente = {
       pedidos: pedidosServidor,
       opciones: opcionesServidor,
-      movimientos: cola.movimientos.slice(cola.guardados),
-      guardados: 0,
+      movimientos: cola.movimientos.filter((m) => !incluido(m, pedidosServidor, opcionesServidor)),
     };
     fijarCola(vigente);
   }
   const { pedidos, opciones } = aplicarMovimientos(pedidosServidor, opcionesServidor, vigente.movimientos);
   const enVuelo = useRef(false);
+  const conocidos = useRef(new Map<string, EstadoPedidos>());
+  const sinGuardar = vigente.movimientos.some((m) => !m.guardado);
   const [arrastrados, arrastrar] = useState<number[]>([]);
   const [activo, fijarActivo] = useState<{ id: number; zona: string } | null>(null);
   const sensores = useSensors(
@@ -154,8 +178,10 @@ function TableroInteractivo({
   const [seleccionados, seleccionar] = useState<Set<number>>(() => new Set());
   const [resumen, mostrarResumen] = useState<ResumenCarga | null>(null);
   const [enTransicion, iniciarTransicion] = useTransition();
-  // Mientras haya movimientos sin guardar, las acciones que comprueban el estado de los pedidos esperan.
-  const ocupado = enTransicion || vigente.movimientos.length > 0;
+  // Hasta que los datos del servidor incluyan los movimientos, la vista no sirve para comprobar conflictos: esperan
+  // «Eliminar», «Cancelar» y «Enviar a Bodega», que los comprueban con lo que se ve.
+  const esperandoMovimientos = vigente.movimientos.length > 0;
+  const ocupado = enTransicion || esperandoMovimientos;
   const lista = useRef<HTMLDivElement>(null);
   const archivo = useRef<HTMLInputElement>(null);
   const restaurarDesplazamiento = useRef<number | null>(null);
@@ -301,21 +327,28 @@ function TableroInteractivo({
     mover({ ids, origen, destino, antesDe });
   }
 
-  /** Mueve en pantalla de inmediato; el efecto de abajo lo guarda cuando le toca en la cola. */
-  function mover(movimiento: Movimiento) {
-    fijarCola((actual) => ({ ...actual, movimientos: [...actual.movimientos, movimiento] }));
+  /** Mueve en pantalla de inmediato y anota lo que se veía; el efecto de abajo lo guarda cuando le toca. */
+  function mover({ ids, origen, destino, antesDe }: PedidoDeMovimiento) {
+    const listaDe = (zona: string) =>
+      zona === "tablero" ? pedidos : (opciones.opciones.find((o) => o.tipo === zona)?.pedidos ?? []);
+    // Sin nada en la cola, lo que se ve es lo del servidor: lo que se supo de movimientos anteriores ya no sirve.
+    if (!vigente.movimientos.length) conocidos.current.clear();
+    const vistos = { origen: estadoDePedidos(listaDe(origen)), destino: estadoDePedidos(listaDe(destino)) };
+    fijarCola((actual) => ({
+      ...actual,
+      movimientos: [...actual.movimientos, { ids, origen, destino, antesDe, vistos }],
+    }));
     seleccionar(new Set());
   }
 
-  // Guarda el primer movimiento pendiente cuando la vista ya tiene los datos del servidor que incluyen el anterior.
-  // Si el servidor lo rechaza, se descarta la cola y la vista vuelve a los datos guardados.
+  // Guarda el primer movimiento sin guardar. Si el servidor lo rechaza, se descarta la cola y la vista vuelve a los
+  // datos guardados, con el aviso.
   useEffect(() => {
-    const siguiente = cola.movimientos[0];
-    if (enVuelo.current || cola.guardados || !siguiente) return;
+    const siguiente = cola.movimientos.find((m) => !m.guardado);
+    if (enVuelo.current || !siguiente) return;
     enVuelo.current = true;
-    const listaDe = (zona: string) =>
-      zona === "tablero" ? cola.pedidos : (cola.opciones.opciones.find((o) => o.tipo === zona)?.pedidos ?? []);
     const zonaOpcion = (zona: string) => (zona === "tablero" ? null : (zona as TipoOpcion));
+    const estado = (zona: string, visto: EstadoPedidos) => conocidos.current.get(zona) ?? visto;
     iniciarTransicion(async () => {
       const resultado = await moverPedidosFacturados({
         sedeId,
@@ -323,18 +356,37 @@ function TableroInteractivo({
         origen: zonaOpcion(siguiente.origen),
         destino: zonaOpcion(siguiente.destino),
         antesDe: siguiente.antesDe,
-        estadoOrigen: estadoDePedidos(listaDe(siguiente.origen)),
-        estadoDestino: estadoDePedidos(listaDe(siguiente.destino)),
+        estadoOrigen: estado(siguiente.origen, siguiente.vistos.origen),
+        estadoDestino: estado(siguiente.destino, siguiente.vistos.destino),
       });
       enVuelo.current = false;
-      if (resultado.ok) fijarCola((actual) => ({ ...actual, guardados: actual.guardados + 1 }));
-      else {
+      if (resultado.ok) {
+        const { estadoOrigen, estadoDestino } = resultado.datos;
+        conocidos.current.set(siguiente.origen, estadoOrigen);
+        conocidos.current.set(siguiente.destino, estadoDestino);
+        const guardado = Object.fromEntries(
+          estadoDestino.filter((p) => siguiente.ids.includes(p.id)).map((p) => [p.id, p.actualizadoEn]),
+        );
+        fijarCola((actual) => ({
+          ...actual,
+          movimientos: actual.movimientos.map((m) => (m === siguiente ? { ...m, guardado } : m)),
+        }));
+      } else {
         mensaje(resultado.error, "error");
-        fijarCola((actual) => ({ ...actual, movimientos: [], guardados: 0 }));
+        conocidos.current.clear();
+        fijarCola((actual) => ({ ...actual, movimientos: [] }));
       }
       router.refresh();
     });
   }, [cola, sedeId, mensaje, router]);
+
+  // Recargar o cerrar con movimientos sin guardar los perdería: el navegador pregunta antes.
+  useEffect(() => {
+    if (!sinGuardar) return;
+    const avisar = (evento: BeforeUnloadEvent) => evento.preventDefault();
+    window.addEventListener("beforeunload", avisar);
+    return () => window.removeEventListener("beforeunload", avisar);
+  }, [sinGuardar]);
 
   return (
     <DndContext
@@ -551,7 +603,8 @@ function TableroInteractivo({
               pilotos={opciones.pilotos}
               sedeId={sedeId}
               sedeNombre={sedeNombre}
-              ocupado={ocupado}
+              ocupado={enTransicion}
+              esperandoMovimientos={esperandoMovimientos}
               puedeVerBodega={puedeVerBodega}
               alInteraccion={alInteraccion}
             />
