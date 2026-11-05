@@ -299,6 +299,11 @@
     grid-template-columns: 1fr;
   }
 
+  /* JG-33: los botones de las opciones de envío muestran solo su ícono (el nombre queda en aria-label y title). */
+  .textoOpcion {
+    display: none;
+  }
+
   .tablero {
     position: static;
     max-height: none;

@@ -488,12 +488,16 @@ function TableroInteractivo({
                         variant="secundario"
                         size="pequeno"
                         disabled={ocupado}
+                        aria-label={nombre}
                         title={`Agregar los pedidos facturados seleccionados a ${nombre}`}
                         onClick={() =>
                           mover({ ids: idsSeleccionados, origen: "tablero", destino: opcion.tipo, antesDe: null })
                         }
                       >
-                        <Icono nombre={opcion.tipo === "camion" ? "camion" : "edificio"} aria-hidden="true" /> {nombre}
+                        <Icono nombre={opcion.tipo === "camion" ? "camion" : "edificio"} aria-hidden="true" />
+                        {/* Hasta 1024 px solo el ícono: la barra no crece más que con «Eliminar», y el tablero conserva
+                            la tarjeta que se estaba viendo al seleccionar (specs/06, 15/10). */}
+                        <span className={estilos.textoOpcion}>{nombre}</span>
                       </Button>
                     );
                   })}
