@@ -88,6 +88,26 @@ async function grabar(page: Page, id: number) {
   }, id);
 }
 
+/** Lugar de la tarjeta dentro de una zona en cada cuadro, hasta que se pida el resultado. */
+async function grabarLugar(page: Page, id: number, zona: string) {
+  await page.evaluate(
+    ([id, zona]) => {
+      const ventana = window as unknown as { __cuadros: string[]; __grabando: boolean };
+      ventana.__cuadros = [];
+      ventana.__grabando = true;
+      const paso = () => {
+        const filas = [...document.querySelectorAll(`[data-testid="${zona}"] article`)];
+        const elemento = document.querySelector(`article[data-pedido-id="${id}"]`);
+        const lugar = filas.findIndex((fila) => fila.getAttribute("data-pedido-id") === String(id));
+        ventana.__cuadros.push(`${elemento?.getAttribute("data-arrastrando")}|${lugar}`);
+        if (ventana.__grabando) requestAnimationFrame(paso);
+      };
+      requestAnimationFrame(paso);
+    },
+    [id, zona] as const,
+  );
+}
+
 /** Zonas en que se vio la tarjeta desde el primer cuadro después de soltarla. */
 async function zonasDespuesDeSoltar(page: Page) {
   const cuadros = await page.evaluate(() => {
@@ -231,4 +251,34 @@ test("RN-48 / JG-33: si otro facturador cambia la opción mientras se arrastra, 
   } finally {
     await otro.close();
   }
+});
+
+test("RF-SL-63: al reordenar dentro de una opción, el pedido queda en su nuevo lugar sin regresar", async ({
+  page,
+}) => {
+  await abrir(page);
+  const [primero, segundo] = ids as [number, number];
+  await moverConTeclado(page, primero, "Envío por camión");
+  await zonasDespuesDeSoltar(page);
+  await moverConTeclado(page, segundo, "Envío por camión");
+  await zonasDespuesDeSoltar(page);
+  const filas = opcion(page, "Envío por camión").locator("article");
+  const lugarDelPrimero = await filas.evaluateAll(
+    (articulos, id) => articulos.findIndex((a) => a.getAttribute("data-pedido-id") === String(id)),
+    primero,
+  );
+  // El segundo sube un lugar, antes del primero.
+  const fila = tarjeta(page, segundo);
+  await fila.focus();
+  await grabarLugar(page, segundo, "zona-camion");
+  await page.keyboard.press("Space", { delay: 50 });
+  await expect(fila).toHaveAttribute("data-arrastrando", "true");
+  await page.keyboard.press("ArrowUp", { delay: 50 });
+  // El aviso «Destino: …» ya está en la página por los movimientos anteriores: se espera a que el primero sea el destino.
+  await expect(tarjeta(page, primero)).toHaveAttribute("data-sobre", "true");
+  await page.keyboard.press("Space", { delay: 50 });
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 15_000 });
+  expect(await zonasDespuesDeSoltar(page)).toEqual([String(lugarDelPrimero)]);
+  await recargar(page);
+  await expect(filas.nth(lugarDelPrimero)).toHaveAttribute("data-pedido-id", String(segundo));
 });

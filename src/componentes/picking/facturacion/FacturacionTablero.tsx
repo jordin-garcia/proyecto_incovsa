@@ -29,7 +29,7 @@ import { Icono } from "@/componentes/comunes/iconos";
 import { VentanaConfirmacion } from "@/componentes/comunes/VentanaConfirmacion";
 import { formatoKg } from "@/componentes/comunes/formato";
 import { useMensajes } from "@/componentes/comunes/Mensajes";
-import { ErrorNegocio } from "@/lib/errores";
+import { ErrorNegocio, MENSAJE_ERROR_GENERAL } from "@/lib/errores";
 import { cargarArchivo, eliminarPedidosFacturados, moverPedidosFacturados } from "@/modulos/envios/acciones";
 import type { PedidoEnTablero } from "@/modulos/envios/servicio";
 import estilos from "./FacturacionTablero.module.css";
@@ -354,6 +354,7 @@ function TableroInteractivo({
     const zonaOpcion = (zona: string) => (zona === "tablero" ? null : (zona as TipoOpcion));
     const estado = (zona: string, visto: EstadoPedidos) => conocidos.current.get(zona) ?? visto;
     iniciarTransicion(async () => {
+      // Un fallo de red rechaza la llamada: se trata como un rechazo, para no dejar la cola detenida.
       const resultado = await moverPedidosFacturados({
         sedeId,
         ids: siguiente.ids,
@@ -362,7 +363,7 @@ function TableroInteractivo({
         antesDe: siguiente.antesDe,
         estadoOrigen: estado(siguiente.origen, siguiente.vistos.origen),
         estadoDestino: estado(siguiente.destino, siguiente.vistos.destino),
-      });
+      }).catch(() => ({ ok: false as const, error: MENSAJE_ERROR_GENERAL }));
       enVuelo.current = false;
       if (resultado.ok) {
         const { estadoOrigen, estadoDestino } = resultado.datos;
