@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useLayoutEffect, useRef, useState, useTransition } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useTransition } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -46,6 +46,43 @@ const motivos = [
   "no traen productos",
 ] as const;
 
+/** Movimiento ya soltado que todavía no llega del servidor: la vista lo aplica de inmediato, como el prototipo. */
+type Movimiento = { ids: number[]; origen: string; destino: string; antesDe: number | null };
+
+/**
+ * Aplica los movimientos con la misma regla que `moverPedidos()` del servidor: se insertan antes de `antesDe` o al
+ * final. Los pedidos se buscan en todas las listas, así que aplicar un movimiento que el servidor ya incluye no cambia
+ * nada.
+ */
+function aplicarMovimientos(pedidos: PedidoEnTablero[], opciones: OpcionesFacturacion, movimientos: Movimiento[]) {
+  if (!movimientos.length) return { pedidos, opciones };
+  const listas = new Map<string, PedidoEnTablero[]>([
+    ["tablero", pedidos],
+    ...opciones.opciones.map((opcion) => [opcion.tipo, opcion.pedidos] as const),
+  ]);
+  for (const { ids, destino, antesDe } of movimientos) {
+    if (!listas.has(destino)) continue;
+    const movidos: PedidoEnTablero[] = [];
+    for (const [zona, lista] of listas) {
+      movidos.push(...lista.filter((pedido) => ids.includes(pedido.id)));
+      listas.set(
+        zona,
+        lista.filter((pedido) => !ids.includes(pedido.id)),
+      );
+    }
+    const resto = listas.get(destino)!;
+    const indice = antesDe === null ? -1 : resto.findIndex((pedido) => pedido.id === antesDe);
+    resto.splice(indice < 0 ? resto.length : indice, 0, ...movidos);
+  }
+  return {
+    pedidos: listas.get("tablero")!,
+    opciones: {
+      ...opciones,
+      opciones: opciones.opciones.map((opcion) => ({ ...opcion, pedidos: listas.get(opcion.tipo)! })),
+    },
+  };
+}
+
 type PropsFacturacion = {
   pedidos: PedidoEnTablero[];
   sedeId: number;
@@ -71,15 +108,36 @@ export function FacturacionTablero(props: PropsFacturacion) {
 }
 
 function TableroInteractivo({
-  pedidos,
+  pedidos: pedidosServidor,
   sedeId,
   sedeNombre,
-  opciones,
+  opciones: opcionesServidor,
   puedeVerBodega,
   alInteraccion,
 }: PropsFacturacion & {
   alInteraccion: (clave: string, activa: boolean) => void;
 }) {
+  // Cola de movimientos: la vista los muestra al soltar y se guardan uno a la vez. Cada uno se envía con los datos del
+  // servidor que ya incluyen el anterior, porque la comprobación de conflictos (RN-48) compara posiciones y fechas.
+  const [cola, fijarCola] = useState({
+    pedidos: pedidosServidor,
+    opciones: opcionesServidor,
+    movimientos: [] as Movimiento[],
+    guardados: 0,
+  });
+  let vigente = cola;
+  if (cola.pedidos !== pedidosServidor || cola.opciones !== opcionesServidor) {
+    // Los datos nuevos ya incluyen los movimientos guardados; los demás siguen pendientes.
+    vigente = {
+      pedidos: pedidosServidor,
+      opciones: opcionesServidor,
+      movimientos: cola.movimientos.slice(cola.guardados),
+      guardados: 0,
+    };
+    fijarCola(vigente);
+  }
+  const { pedidos, opciones } = aplicarMovimientos(pedidosServidor, opcionesServidor, vigente.movimientos);
+  const enVuelo = useRef(false);
   const [arrastrados, arrastrar] = useState<number[]>([]);
   const [activo, fijarActivo] = useState<{ id: number; zona: string } | null>(null);
   const sensores = useSensors(
@@ -95,7 +153,9 @@ function TableroInteractivo({
   const mensaje = useMensajes();
   const [seleccionados, seleccionar] = useState<Set<number>>(() => new Set());
   const [resumen, mostrarResumen] = useState<ResumenCarga | null>(null);
-  const [ocupado, iniciarTransicion] = useTransition();
+  const [enTransicion, iniciarTransicion] = useTransition();
+  // Mientras haya movimientos sin guardar, las acciones que comprueban el estado de los pedidos esperan.
+  const ocupado = enTransicion || vigente.movimientos.length > 0;
   const lista = useRef<HTMLDivElement>(null);
   const archivo = useRef<HTMLInputElement>(null);
   const restaurarDesplazamiento = useRef<number | null>(null);
@@ -238,25 +298,43 @@ function TableroInteractivo({
       if (desde < hasta) antesDe = orden.slice(hasta + 1).find((p) => !ids.includes(p.id))?.id ?? null;
     }
     if (antesDe !== null && ids.includes(antesDe)) return;
+    mover({ ids, origen, destino, antesDe });
+  }
+
+  /** Mueve en pantalla de inmediato; el efecto de abajo lo guarda cuando le toca en la cola. */
+  function mover(movimiento: Movimiento) {
+    fijarCola((actual) => ({ ...actual, movimientos: [...actual.movimientos, movimiento] }));
+    seleccionar(new Set());
+  }
+
+  // Guarda el primer movimiento pendiente cuando la vista ya tiene los datos del servidor que incluyen el anterior.
+  // Si el servidor lo rechaza, se descarta la cola y la vista vuelve a los datos guardados.
+  useEffect(() => {
+    const siguiente = cola.movimientos[0];
+    if (enVuelo.current || cola.guardados || !siguiente) return;
+    enVuelo.current = true;
+    const listaDe = (zona: string) =>
+      zona === "tablero" ? cola.pedidos : (cola.opciones.opciones.find((o) => o.tipo === zona)?.pedidos ?? []);
+    const zonaOpcion = (zona: string) => (zona === "tablero" ? null : (zona as TipoOpcion));
     iniciarTransicion(async () => {
       const resultado = await moverPedidosFacturados({
         sedeId,
-        ids,
-        origen: origen === "tablero" ? null : (origen as TipoOpcion),
-        destino: destino === "tablero" ? null : (destino as TipoOpcion),
-        antesDe,
-        estadoOrigen: estadoDePedidos(
-          origen === "tablero" ? pedidos : opciones.opciones.find((o) => o.tipo === origen)!.pedidos,
-        ),
-        estadoDestino: estadoDePedidos(
-          destino === "tablero" ? pedidos : opciones.opciones.find((o) => o.tipo === destino)!.pedidos,
-        ),
+        ids: siguiente.ids,
+        origen: zonaOpcion(siguiente.origen),
+        destino: zonaOpcion(siguiente.destino),
+        antesDe: siguiente.antesDe,
+        estadoOrigen: estadoDePedidos(listaDe(siguiente.origen)),
+        estadoDestino: estadoDePedidos(listaDe(siguiente.destino)),
       });
-      if (!resultado.ok) mensaje(resultado.error, "error");
-      else seleccionar(new Set());
+      enVuelo.current = false;
+      if (resultado.ok) fijarCola((actual) => ({ ...actual, guardados: actual.guardados + 1 }));
+      else {
+        mensaje(resultado.error, "error");
+        fijarCola((actual) => ({ ...actual, movimientos: [], guardados: 0 }));
+      }
       router.refresh();
     });
-  }
+  }, [cola, sedeId, mensaje, router]);
 
   return (
     <DndContext
@@ -321,7 +399,7 @@ function TableroInteractivo({
           </Button>
         }
       />
-      <div className={estilos.disposicion}>
+      <div className={estilos.disposicion} aria-busy={ocupado}>
         <section className={`tarjeta ${estilos.tablero}`} aria-labelledby="titulo-tablero">
           <div className={`bloque-cab ${estilos.encabezadoTablero}`}>
             <div>
@@ -345,6 +423,23 @@ function TableroInteractivo({
                   <span className="chip chip-v" aria-live="polite">
                     {seleccionadosEnTablero.length} seleccionado(s)
                   </span>
+                  {opciones.opciones.map((opcion) => {
+                    const nombre = opcion.tipo === "camion" ? "Envío por camión" : "Cliente recoge en bodega";
+                    return (
+                      <Button
+                        key={opcion.tipo}
+                        variant="secundario"
+                        size="pequeno"
+                        disabled={ocupado}
+                        title={`Agregar los pedidos facturados seleccionados a ${nombre}`}
+                        onClick={() =>
+                          mover({ ids: idsSeleccionados, origen: "tablero", destino: opcion.tipo, antesDe: null })
+                        }
+                      >
+                        <Icono nombre={opcion.tipo === "camion" ? "camion" : "edificio"} aria-hidden="true" /> {nombre}
+                      </Button>
+                    );
+                  })}
                   <VentanaConfirmacion
                     titulo="Eliminar pedidos facturados"
                     texto={
@@ -521,7 +616,10 @@ function TableroInteractivo({
           </div>
         </DialogContent>
       </Dialog>
-      <DragOverlay>{arrastrados.length > 0 && activo ? fantasma(activo, arrastrados.length) : null}</DragOverlay>
+      {/* Sin animación al soltar: la de dnd-kit regresaba la copia a su lugar de origen antes de moverla. */}
+      <DragOverlay dropAnimation={null}>
+        {arrastrados.length > 0 && activo ? fantasma(activo, arrastrados.length) : null}
+      </DragOverlay>
     </DndContext>
   );
 
