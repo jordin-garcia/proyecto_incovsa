@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, useTransition } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useTransition } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -158,7 +158,11 @@ function TableroInteractivo({
     };
     fijarCola(vigente);
   }
-  const { pedidos, opciones } = aplicarMovimientos(pedidosServidor, opcionesServidor, vigente.movimientos);
+  // Memorizado: cada opción conserva su identidad entre renders y OpcionEnvio no vuelve a tomar sus campos de ella.
+  const { pedidos, opciones } = useMemo(
+    () => aplicarMovimientos(pedidosServidor, opcionesServidor, vigente.movimientos),
+    [pedidosServidor, opcionesServidor, vigente.movimientos],
+  );
   const enVuelo = useRef(false);
   const conocidos = useRef(new Map<string, EstadoPedidos>());
   const sinGuardar = vigente.movimientos.some((m) => !m.guardado);
@@ -372,9 +376,10 @@ function TableroInteractivo({
           movimientos: actual.movimientos.map((m) => (m === siguiente ? { ...m, guardado } : m)),
         }));
       } else {
+        // `conocidos` se conserva: sigue siendo lo que el servidor guardó de los movimientos anteriores.
         mensaje(resultado.error, "error");
-        conocidos.current.clear();
-        fijarCola((actual) => ({ ...actual, movimientos: [] }));
+        // Los ya guardados se siguen mostrando hasta que lleguen los datos; los demás se descartan.
+        fijarCola((actual) => ({ ...actual, movimientos: actual.movimientos.filter((m) => m.guardado) }));
       }
       router.refresh();
     });
