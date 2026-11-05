@@ -88,9 +88,9 @@ export async function moverPedidosFacturados(entrada: unknown) {
   try {
     const { sesion, sedeId } = await autorizarOpcion(entrada);
     exigirPermiso(sesion, "pk.facturacion", sedeId);
-    await moverPedidos(sesion, entrada);
+    const zonas = await moverPedidos(sesion, entrada);
     avisarCambio(sedeId);
-    return { ok: true as const, datos: null };
+    return { ok: true as const, datos: zonas };
   } catch (error) {
     return aResultadoDeError(error);
   }

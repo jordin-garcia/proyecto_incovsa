@@ -140,3 +140,21 @@ it("RNF-04 / decisión 39: las mutaciones rechazan entradas sin el estado que vi
   await expect(enviarOpcion(sesion, { sedeId: 1, tipo: "camion" })).rejects.toThrow();
   await expect(eliminarDelTablero(ids, { sedeId: 1, usuarioId: sesion.usuario.id })).rejects.toThrow();
 });
+it("RN-48 / JG-33: el estado que devuelve un movimiento sirve para guardar el siguiente sin conflicto", async () => {
+  const visto = await movimiento(null, "camion", [ids[2]!]);
+  const primero = await moverPedidos(sesion, await movimiento(null, "camion", [ids[0]!]));
+  expect(primero).toEqual({ estadoOrigen: await estado(null), estadoDestino: await estado("camion") });
+  // Facturación arma el segundo con lo que devolvió el primero, sin esperar a recargar la pantalla.
+  await moverPedidos(sesion, {
+    sedeId: 1,
+    ids: [ids[1]!],
+    origen: null,
+    destino: "camion",
+    antesDe: null,
+    estadoOrigen: primero.estadoOrigen,
+    estadoDestino: primero.estadoDestino,
+  });
+  expect((await estado("camion")).map((p) => p.id)).toEqual([ids[0], ids[1]]);
+  // Con lo que se veía antes de esos movimientos, el siguiente sigue siendo un conflicto.
+  await expect(moverPedidos(segunda, visto)).rejects.toThrow(aviso);
+});

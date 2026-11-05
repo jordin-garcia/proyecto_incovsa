@@ -93,7 +93,10 @@ it("RNF-04 / RNF-13 / RN-48: las acciones autorizadas persisten y avisan solo a 
     expect(programada.horaProgramada?.toISOString().slice(11, 16)).toBe("13:30");
     expect(aviso).toHaveBeenCalledTimes(2);
 
-    expect(await mover()).toEqual({ ok: true, datos: null });
+    expect(await mover()).toEqual({
+      ok: true,
+      datos: { estadoOrigen: expect.any(Array), estadoDestino: await estado() },
+    });
     expect(await prisma.pedidoFacturado.findUniqueOrThrow({ where: { id: pedido.id } })).toMatchObject({
       opcionEnvioId: opcion.id,
       envioId: null,
@@ -109,7 +112,10 @@ it("RNF-04 / RNF-13 / RN-48: las acciones autorizadas persisten y avisan solo a 
     });
     expect(aviso).toHaveBeenCalledTimes(4);
 
-    expect(await mover()).toEqual({ ok: true, datos: null });
+    expect(await mover()).toEqual({
+      ok: true,
+      datos: { estadoOrigen: expect.any(Array), estadoDestino: await estado() },
+    });
     await guardarCampoDeOpcion({ sedeId: 1, tipo: "recoge", campo: "fecha", valor: "2026-10-22" });
     await guardarCampoDeOpcion({ sedeId: 1, tipo: "recoge", campo: "hora", valor: "13:30" });
     const resultado = await enviarOpcionABodega({ sedeId: 1, tipo: "recoge", estadoEsperado: await estado() });

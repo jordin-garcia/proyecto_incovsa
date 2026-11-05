@@ -14,6 +14,7 @@ import {
   esquemaMovimiento,
   esquemaOpcion,
   esquemaEntradaTablero,
+  type EstadoPedidos,
   type TipoOpcion,
 } from "./esquemas";
 import { bloquearSede, exigirEstadoPedidos, AVISO_CONFLICTO } from "./concurrencia";
@@ -161,10 +162,13 @@ export async function guardarCampoOpcion(sesion: SesionActual | null, entrada: u
   });
 }
 
-export async function moverPedidos(sesion: SesionActual | null, entrada: unknown): Promise<void> {
+/** Cómo quedaron las dos zonas de un movimiento: Facturación lo usa para guardar el siguiente sin esperar (JG-33). */
+export type ZonasMovidas = { estadoOrigen: EstadoPedidos; estadoDestino: EstadoPedidos };
+
+export async function moverPedidos(sesion: SesionActual | null, entrada: unknown): Promise<ZonasMovidas> {
   autorizar(sesion, entrada);
   const { sedeId, ids, origen, destino, antesDe, estadoOrigen, estadoDestino } = esquemaMovimiento.parse(entrada);
-  await prisma.$transaction(async (tx) => {
+  return prisma.$transaction(async (tx) => {
     await bloquearSede(tx, sedeId);
     const opciones = await tx.opcionEnvio.findMany({ where: { sedeId } });
     const idDe = (tipo: TipoOpcion | null) => {
@@ -204,6 +208,15 @@ export async function moverPedidos(sesion: SesionActual | null, entrada: unknown
       });
       if (actualizado.count !== 1) throw new ErrorNegocio(AVISO_CONFLICTO);
     }
+    const zona = async (opcionEnvioId: number | null) =>
+      (
+        await tx.pedidoFacturado.findMany({
+          where: { sedeId, opcionEnvioId, envioId: null },
+          orderBy: [{ posicion: "asc" }, { id: "asc" }],
+          select: { id: true, posicion: true, actualizadoEn: true },
+        })
+      ).map((p) => ({ id: p.id, posicion: p.posicion, actualizadoEn: p.actualizadoEn.toISOString() }));
+    return { estadoOrigen: await zona(origenId), estadoDestino: await zona(destinoId) };
   });
 }
 

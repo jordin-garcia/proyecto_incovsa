@@ -110,6 +110,7 @@ No se valida si una referencia ya se cargó antes: no puede pasar, porque los da
   - una opción **"Seleccionar todos"** selecciona todos los del tablero;
   - al arrastrar un pedido facturado seleccionado se llevan **todos los seleccionados** juntos a la opción de envío;
   - al haber pedidos facturados seleccionados aparece la opción **"Eliminar"**, que los elimina del tablero después de confirmar. La bitácora registra la eliminación (RF-SL-68);
+  - **(04/11, JG-33)** junto a "Eliminar" aparece también un botón por cada opción de envío, **"Envío por camión"** y **"Cliente recoge en bodega"**, con el ícono de esa opción: agrega los seleccionados **al final** de esa opción, en el orden del tablero, sin arrastrarlos, y quita la selección. Hasta 1024 px de ancho muestran **solo el ícono** (el nombre queda en su etiqueta accesible, y al pasar el cursor se lee «Agregar los pedidos facturados seleccionados a …» con el nombre de la opción), para que la barra no crezca más que con "Eliminar" y el tablero conserve la tarjeta que se estaba viendo (15/10). Es una alternativa al arrastre que pidió el coordinador; el prototipo no la tiene;
   - **(15/10)** una tarjeta seleccionada se **compacta**: muestra **solo el número del pedido facturado y su peso total**, con la marca de seleccionada;
   - **(15/10)** seleccionar o quitar la selección **no mueve el desplazamiento** del tablero: la lista se queda donde estaba.
 
@@ -148,6 +149,7 @@ Solo hay **dos** opciones, sin importar cuántos camiones tenga la sede:
 - De una **opción** de regreso al **tablero**.
 - **Dentro de una opción**, para cambiar su orden (13/10).
 - Funciona con mouse y con el dedo. Como la tarjeta ya no tiene asa, en pantallas táctiles el arrastre empieza con una **pulsación larga** sobre la tarjeta; un toque corto la selecciona (decisión de diseño del 14/10).
+- **(04/11, JG-33)** Al soltar, el pedido facturado aparece **de inmediato** en su destino, como en el prototipo: no regresa antes a su lugar. Los movimientos se guardan en el orden en que se hicieron, uno a la vez; cada uno se comprueba contra lo que el facturador veía al soltarlo (RN-48). Mientras se guardan, "Enviar a Bodega", "Cancelar", "Eliminar", "Seleccionar todos", "Cargar archivo .xlsx" y los botones de las opciones esperan a que terminen; recargar o cerrar la página con movimientos sin guardar pide confirmación. Si el servidor rechaza un movimiento (por ejemplo, por el aviso de conflicto), la pantalla vuelve a lo guardado y muestra el aviso.
 
 ### Peso y alerta de sobrepeso (RF-SL-14, RN-13)
 

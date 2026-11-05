@@ -1,4 +1,4 @@
-import type { Page } from "@playwright/test";
+import { expect, type Page } from "@playwright/test";
 
 // Después de guardar, las pantallas llaman a router.refresh(). Si la prueba navega mientras esa petición está en
 // curso, Firefox («NS_BINDING_ABORTED») y WebKit («interrupted by another navigation») cancelan la navegación de la
@@ -25,7 +25,11 @@ export function irA(page: Page, url: string, opciones?: Parameters<Page["goto"]>
   return repetirSiSeInterrumpe(page, () => page.goto(url, opciones));
 }
 
-/** page.reload, repetido si la propia aplicación interrumpe la recarga. */
-export function recargar(page: Page, opciones?: Parameters<Page["reload"]>[0]) {
+/**
+ * page.reload, repetido si la propia aplicación interrumpe la recarga. Antes espera a que no quede nada guardándose
+ * (`aria-busy`): Facturación muestra los movimientos al soltar y los guarda después, en orden (JG-33).
+ */
+export async function recargar(page: Page, opciones?: Parameters<Page["reload"]>[0]) {
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 15_000 });
   return repetirSiSeInterrumpe(page, () => page.reload(opciones));
 }

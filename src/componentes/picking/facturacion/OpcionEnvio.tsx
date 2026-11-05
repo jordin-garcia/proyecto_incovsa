@@ -38,6 +38,7 @@ export function OpcionEnvio({
   sedeId,
   sedeNombre,
   ocupado,
+  esperandoMovimientos = false,
   puedeVerBodega,
   alInteraccion,
 }: Omit<OpcionesFacturacion, "opciones"> & {
@@ -45,6 +46,8 @@ export function OpcionEnvio({
   sedeId: number;
   sedeNombre: string;
   ocupado: boolean;
+  /** Hay movimientos de Facturación que los datos todavía no incluyen: «Cancelar» y «Enviar a Bodega» esperan (JG-33). */
+  esperandoMovimientos?: boolean;
   puedeVerBodega: boolean;
   alInteraccion: (clave: string, activa: boolean) => void;
 }) {
@@ -87,7 +90,8 @@ export function OpcionEnvio({
     (!esRuta || (camion && piloto)) &&
     !guardando &&
     !fallo &&
-    !ocupado
+    !ocupado &&
+    !esperandoMovimientos
   );
   const etiqueta = `${esRuta ? "Ruta" : "Pedido"} ${opcion.siguienteNumero}`;
   const clientes = new Set(opcion.pedidos.map(claveCliente)).size;
@@ -298,7 +302,7 @@ export function OpcionEnvio({
           <Button
             variant="secundario"
             size="pequeno"
-            disabled={!opcion.pedidos.length || ocupado || guardando}
+            disabled={!opcion.pedidos.length || ocupado || esperandoMovimientos || guardando}
             onClick={() => {
               confirmacion.current = estadoDePedidos(opcion.pedidos);
             }}

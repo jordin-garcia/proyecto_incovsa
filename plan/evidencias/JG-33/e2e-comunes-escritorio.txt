@@ -1,0 +1,24 @@
+
+Running 20 tests using 1 worker
+
+[1/20] [escritorio] › pruebas-e2e\comunes\accesibilidad.spec.ts:33:5 › RNF-08: el paso de la contraseña de Administración del sitio no tiene violaciones serias ni críticas
+[2/20] [escritorio] › pruebas-e2e\comunes\accesibilidad.spec.ts:49:5 › RNF-08: Reportes con el periodo por defecto no tiene violaciones serias ni críticas
+[3/20] [escritorio] › pruebas-e2e\comunes\accesibilidad.spec.ts:60:5 › RNF-08: Facturación al entrar no tiene violaciones serias ni críticas
+[4/20] [escritorio] › pruebas-e2e\comunes\aplicacion.spec.ts:6:5 › RNF-07: la aplicación responde en / con el título de INCOVSA y en español
+[5/20] [escritorio] › pruebas-e2e\comunes\aplicacion.spec.ts:13:5 › RNF-08: la página de inicio no tiene violaciones serias ni críticas de accesibilidad
+[6/20] [escritorio] › pruebas-e2e\comunes\armazon.spec.ts:8:7 › RF-SW-26 / RF-SL-60: armazón de panel, navegación y preferencia
+[7/20] [escritorio] › pruebas-e2e\comunes\armazon.spec.ts:62:7 › RNF-08: panel accesible con menú abierto y cerrado
+[8/20] [escritorio] › pruebas-e2e\comunes\armazon.spec.ts:8:7 › RF-SW-26 / RF-SL-60: armazón de picking, navegación y preferencia
+[9/20] [escritorio] › pruebas-e2e\comunes\armazon.spec.ts:62:7 › RNF-08: picking accesible con menú abierto y cerrado
+[10/20] [escritorio] › pruebas-e2e\comunes\armazon.spec.ts:73:5 › RF-SL-60: sede solo en módulos aplicables y con varias sedes
+[11/20] [escritorio] › pruebas-e2e\comunes\armazon.spec.ts:96:5 › RNF-01: tipografías locales y paleta exclusiva del prototipo
+[12/20] [escritorio] › pruebas-e2e\comunes\campos-fecha-hora.spec.ts:8:5 › RF-SL-70: fecha con teclado, normalización, inexistente y valor ISO
+[13/20] [escritorio] › pruebas-e2e\comunes\campos-fecha-hora.spec.ts:31:5 › RF-SL-70: hora de 24 horas, normalización y rechazo de hora inválida
+[14/20] [escritorio] › pruebas-e2e\comunes\campos-fecha-hora.spec.ts:47:5 › RF-SL-70: selectores nativos anclados al campo y elección sincronizada
+[15/20] [escritorio] › pruebas-e2e\comunes\componentes.spec.ts:9:5 › RNF-08: pestañas, botones segmentados y lista desplegable con teclado
+[16/20] [escritorio] › pruebas-e2e\comunes\componentes.spec.ts:28:5 › RNF-08: la ventana de confirmación no tiene violaciones serias ni críticas
+[17/20] [escritorio] › pruebas-e2e\comunes\componentes.spec.ts:38:5 › RNF-08: Escape, volver, confirmar y retorno del foco
+[18/20] [escritorio] › pruebas-e2e\comunes\componentes.spec.ts:60:7 › RNF-08: mensaje de Guardar desaparece a los cuatro segundos
+[19/20] [escritorio] › pruebas-e2e\comunes\componentes.spec.ts:60:7 › RNF-08: mensaje de Enviar a Bodega desaparece a los cuatro segundos
+[20/20] [escritorio] › pruebas-e2e\comunes\componentes.spec.ts:60:7 › RNF-08: mensaje de Volver desaparece a los cuatro segundos
+  20 passed (4.3m)
