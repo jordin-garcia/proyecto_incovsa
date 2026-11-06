@@ -418,5 +418,5 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Pendiente o aviso para otros:
 **Carlos:** cambié tus tareas `plan/tareas/CE-08-vps-y-dominio.md` (de bloqueada a pendiente, para Hostinger y `r2.dev`; tu trabajo del 20/10 quedó en «Trabajo previo»), `CE-10-verificacion-de-produccion.md` y `CE-15-documento-5-y-anexos-version-1-1.md` (pasos 6 y 7 nuevos). Las hago yo. Actualiza tu copia desde `develop`.
 **Daniela:** en `plan/tareas/DM-12-contenido-oficial.md`, el contenido se publica en el nombre de Hostinger del VPS, no en incovsa.com (decisión 91). Actualiza tu copia desde `develop`.
-**CE-08:** los pasos de DNS de `evidencia/CE-08/pasos-hugo.md` ya no aplican. Comprueba que la imagen de `r2.dev` se vea en el sitio con la política de seguridad de contenido de producción.
+**CE-08:** los pasos de DNS de `evidencia/CE-08/pasos-hugo.md` ya no aplican. Comprueba que la imagen de `r2.dev` se vea en el sitio con la política de seguridad de contenido de producción. El paso «Comprobar https://incovsa.com» de `.github/workflows/despliegue.yml` usa esa dirección fija: cámbialo para que tome la dirección del `environment: produccion` (paso 5 de la tarea).
 

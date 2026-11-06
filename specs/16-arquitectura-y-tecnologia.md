@@ -2,7 +2,7 @@
 
 ## Arquitectura
 
-- **Una sola aplicación web monolítica**, con renderizado en el servidor y organizada por módulos de dominio. Contiene el sitio público, el panel, la documentación interna y los cinco módulos del picking (Facturación, Bodega, Ruta, Reportes y Configuración), todo bajo incovsa.com.
+- **Una sola aplicación web monolítica**, con renderizado en el servidor y organizada por módulos de dominio. Contiene el sitio público, el panel, la documentación interna y los cinco módulos del picking (Facturación, Bodega, Ruta, Reportes y Configuración), todo bajo incovsa.com. **(06/11)** Mientras INCOVSA no lo publique ahí, en la dirección que Hostinger le da al VPS (decisión 91, P-99).
 - **Capas:**
   - presentación: rutas y vistas por área;
   - lógica de negocio: lectura del archivo de Odoo, conversión, rutas y pedidos, preparación, ruta, contenido, documentación, solicitudes, permisos y reportes;
@@ -143,7 +143,7 @@ Medidas que el equipo adoptó el 12/10/2026 para que la aplicación sea segura y
 ## Despliegue
 
 - Hace falta un servidor capaz de ejecutar Node.js y PostgreSQL. Un hosting compartido tradicional (cPanel con PHP) no sirve.
-- La empresa paga el hosting y el dominio.
+- La empresa paga el hosting y el dominio. **(06/11, decisión 91)** El primer mes del VPS de Hostinger lo paga el coordinador; si lo renueva o se cambia a otro, lo decide INCOVSA (P-99).
 - El Entregable 2 se prueba **solo en las computadoras del equipo**. No hay entorno de pruebas en internet ni se contrata un servicio de terceros (12/10, resuelve P-11).
 
 > **Decisiones del 16/10/2026.** El Ing. William Ambrossio se comprometió a contratar un **VPS** (P-10). El equipo definió cómo se instala, se despliega y se respalda la aplicación.
@@ -152,7 +152,7 @@ Medidas que el equipo adoptó el 12/10/2026 para que la aplicación sea segura y
 
 ### Servidor (VPS)
 
-Características que se le piden a INCOVSA:
+Características que se le piden a INCOVSA (desde el 06/11, las cumple el VPS de Hostinger que contrata el coordinador; decisión 91):
 
 | Recurso | Mínimo |
 |---|---|
@@ -184,7 +184,7 @@ En el VPS, un archivo `docker-compose.yml` con tres servicios:
 
 ### Despliegue
 
-- **Primer despliegue:** cuando la aplicación esté **completa**, al integrar `develop` en `main` (decisión 75): después de la entrega académica del 04/11 y en cuanto INCOVSA entregue los accesos (decisión 90; antes era el 02/11). Antes no se despliega.
+- **Primer despliegue:** cuando la aplicación esté **completa**, al integrar `develop` en `main` (decisión 75): después de la entrega académica del 04/11 y en cuanto INCOVSA entregue los accesos (decisión 90; antes era el 02/11). **(06/11: en cuanto el VPS de Hostinger esté listo, CE-08; decisión 91.)** Antes no se despliega.
 - **Después, cada despliegue es automático desde GitHub.** Al integrar en `main`, GitHub Actions:
   1. corre las revisiones de integración continua ("Forma de trabajo");
   2. compila la imagen de Docker de la aplicación y la guarda en el registro de GitHub (GHCR), privado;
@@ -375,7 +375,7 @@ Las tomó el coordinador el 16/10/2026, junto con el plan de desarrollo (`plan/`
 | 88 | Una tarea por conversación | Cada tarea se implementa en **su propia conversación** con el agente, para que no se exceda su ventana de contexto. Al integrar una tarea, el agente no sigue con otra: le pide a la persona que abra una conversación nueva. Si una tarea se interrumpe antes de integrarse, se retoma en una conversación nueva desde su rama (`plan/protocolo.md` §B) |
 | 89 | En diseño manda el prototipo | **(22/10, Jordin, JG-12)** En cómo se ve la aplicación (disposición, estructura visual, tamaños, colores, tipografía, espaciado y estilos), el **prototipo aprobado manda sobre `specs/`**, sin excepciones: si no coinciden, se sigue el prototipo y se corrige `specs/` con su línea en `specs/18`. En los requisitos, las reglas, los textos, los datos y el comportamiento sigue mandando `specs/`. Si seguir el prototipo haría fallar una prueba (por ejemplo, el contraste de RNF-08), el agente se detiene y le pregunta al coordinador: las pruebas no se debilitan |
 | 90 | Fechas de la fase final | **(02/11, Jordin, JG-32)** El Ing. Manuel Rojas fijó tres fechas, de 10 puntos cada una: **miércoles 04/11**, entrega académica antes de las 9:50 (proyecto funcional y desplegado, repositorio actualizado, toda la documentación también en el portal del curso) y prueba individual de conocimientos; **lunes 09/11**, presentación previa de 8 minutos con otro docente, sin mostrar código y con preguntas individuales; **jueves 12/11**, entrega final a la empresa (8 minutos, con manuales y accesos). Como INCOVSA no ha entregado los accesos de la decisión 73, la documentación del 04/11 es la **versión 1.0** y se arma solo con lo que el proyecto tiene hasta el 03/11: **nada de ella depende de la reunión con el Ing. William**. Si no hay despliegue, el docente acepta la demostración en local. El despliegue (JG-19), la capacitación (JG-20 y JG-21) y la transferencia de accesos y del repositorio pasan a antes del 12/11, y lo que salga de la reunión se agrega en la **versión 1.1** (CE-15 y JG-21). La convergencia final (JG-17), la documentación de seguridad (JG-27) y CE-14 se hacen después del 04/11 y antes de JG-19. **Excepción a RNF-10:** el coordinador sube `docs/Reuniones/` tal como está (actas, notas, capturas y fotos de personas), aunque el repositorio es público, para que CE-09 tenga las actas; CE-15 la quita antes de transferir el repositorio, y sigue en el historial de git. Hasta el 04/11 no entra código a `develop`, salvo los cambios que pidió el docente (JG-28), y en los PR que solo cambian documentos no se corre en local la batería e2e completa: la CI corre completa |
-| 91 | VPS de Hostinger | **(06/11, Jordin; acuerdo con el Ing. William del 05/11)** Como INCOVSA no entregó los accesos de la decisión 73, el coordinador contrata un **VPS de Hostinger, plan KVM 2**, por un mes, con un correo de soporte que crea para INCOVSA. Con ese correo crea también las cuentas de **Cloudflare** (R2: imágenes y respaldos) y de **Google Drive** (documentación interna, P-92). Es el entorno donde INCOVSA prueba el sistema y donde se hacen el primer despliegue (JG-19), la verificación (CE-10), la carga del contenido oficial (DM-12), la capacitación y las presentaciones del 09/11 y del 12/11. Sigue siendo el **único ambiente en internet** (decisión 30) y **se entrega a INCOVSA el 12/11**, con el correo y las cuentas (Anexo J). **Dirección:** el nombre que Hostinger le da al VPS (`srvXXXX.hstgr.cloud`), con el certificado automático de Caddy; el DNS de incovsa.com no se toca, porque también tiene el correo de Microsoft 365 de la empresa. **Imágenes:** se guardan en R2, como siempre, y se sirven desde la dirección pública gratuita del bucket (`r2.dev`): un dominio propio para R2 exige que el dominio esté en Cloudflare, y el nombre de Hostinger no lo está. Su límite de uso alcanza para este entorno, y no hay que cambiar el código (solo `URL_IMAGENES`, `DOMINIO` y `BETTER_AUTH_URL` del `.env`). Cambia las decisiones 28, 32, 33 y 73. **Si INCOVSA decide cambiarse a otro VPS o publicar el sistema en incovsa.com** (P-99), el Documento 5 v1.1 (CE-15) le explica cómo hacerlo |
+| 91 | VPS de Hostinger | **(06/11, Jordin; acuerdo con el Ing. William del 05/11)** Como INCOVSA no entregó los accesos de la decisión 73, el coordinador contrata un **VPS de Hostinger, plan KVM 2**, por un mes, con un correo de soporte que crea para INCOVSA. Con ese correo crea también las cuentas de **Cloudflare** (R2: imágenes y respaldos) y de **Google Drive** (documentación interna, P-92). Es el entorno donde INCOVSA prueba el sistema y donde se hacen el primer despliegue (JG-19), la verificación (CE-10), la carga del contenido oficial (DM-12), la capacitación y las presentaciones del 09/11 y del 12/11. Sigue siendo el **único ambiente en internet** (decisión 30) y **se entrega a INCOVSA el 12/11**, con el correo y las cuentas (Anexo J). **Dirección:** el nombre que Hostinger le da al VPS (`srvXXXX.hstgr.cloud`), con el certificado automático de Caddy; el DNS de incovsa.com no se toca, porque también tiene el correo de Microsoft 365 de la empresa. **Imágenes:** se guardan en R2, como siempre, y se sirven desde la dirección pública gratuita del bucket (`r2.dev`): un dominio propio para R2 exige que el dominio esté en Cloudflare, y el nombre de Hostinger no lo está. Su límite de uso alcanza para este entorno, y no hay que cambiar el código de la aplicación (solo `URL_IMAGENES`, `DOMINIO` y `BETTER_AUTH_URL` del `.env`); sí la comprobación final de `despliegue.yml`, que hoy consulta `https://incovsa.com` y pasa a tomar la dirección del `environment: produccion` (CE-08). Cambia las decisiones 28, 32, 33 y 73. **Si INCOVSA decide cambiarse a otro VPS o publicar el sistema en incovsa.com** (P-99), el Documento 5 v1.1 (CE-15) le explica cómo hacerlo |
 
 ## Estructura de carpetas
 
