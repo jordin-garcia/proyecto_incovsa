@@ -16,7 +16,7 @@ El sitio web tiene el botón **"Acceso personal"**. El flujo es:
 
 | Opción | Destino | Comportamiento |
 |---|---|---|
-| Iniciar sesión en Odoo | ERP de la empresa | Abre el enlace de inicio de sesión de Odoo. No hay intercambio de datos. La URL está pendiente (P-06) |
+| Iniciar sesión en Odoo | ERP de la empresa | Abre el enlace de inicio de sesión de Odoo. No hay intercambio de datos. **(06/11)** INCOVSA entregó la dirección: se configura en `URL_ODOO` del `.env` de producción (CE-08) y no se escribe en el repositorio, que es público |
 | Administración del sitio | Panel administrativo y documentación interna | Habilitada solo si el usuario tiene cuenta en el sitio (decisión del coordinador del 14/10) |
 | Sistema de picking | Sistema de control logístico | Habilitada solo si el usuario tiene cuenta en el picking (decisión del coordinador del 14/10) |
 

@@ -23,12 +23,12 @@ Dejar el VPS de Hostinger y los buckets de R2 listos y seguros para el primer de
 
 ## Contexto que debes leer
 - `specs/16` §"Despliegue" completo y decisiones 28 a 34 y 91
-- `specs/19`: P-94 y P-99
+- `specs/03` (enlace de Odoo) y `specs/19`: P-94 y P-99
 - `## Resultado` de CE-05, CE-06 y CE-07, y el trabajo previo de esta tarea (al final)
 
 ## Qué hacer
 **Esta tarea depende de cuentas que no tiene el agente.** Jordin contrata el VPS y crea las cuentas; el agente lo guía paso a paso y Jordin escribe las contraseñas y llaves, que nunca pasan por el agente ni por el repositorio (decisión 70). Si el VPS o la cuenta de Cloudflare todavía no existen, detente y pídeselos a Jordin.
-1. **VPS de Hostinger (Ubuntu Server 24.04 LTS):** comprobar que el plan cumple la decisión 28 y anotar el nombre del VPS (`srvXXXX.hstgr.cloud`). Con `evidencia/CE-08/preparar-vps.sh`: actualizaciones automáticas de seguridad; acceso SSH solo con llave, sin contraseña y sin `root`; un usuario de despliegue; cortafuegos que solo abre los puertos 22, 80 y 443 (también el cortafuegos del panel de Hostinger, si está activo); Docker y el complemento Compose oficiales; la carpeta de la aplicación con `docker-compose.yml`, `Caddyfile` y el `.env` de producción, con `DOMINIO` y `BETTER_AUTH_URL` en el nombre de Hostinger.
+1. **VPS de Hostinger (Ubuntu Server 24.04 LTS):** comprobar que el plan cumple la decisión 28 y anotar el nombre del VPS (`srvXXXX.hstgr.cloud`). Con `evidencia/CE-08/preparar-vps.sh`: actualizaciones automáticas de seguridad; acceso SSH solo con llave, sin contraseña y sin `root`; un usuario de despliegue; cortafuegos que solo abre los puertos 22, 80 y 443 (también el cortafuegos del panel de Hostinger, si está activo); Docker y el complemento Compose oficiales; la carpeta de la aplicación con `docker-compose.yml`, `Caddyfile` y el `.env` de producción, con `DOMINIO` y `BETTER_AUTH_URL` en el nombre de Hostinger y `URL_ODOO` con la dirección de Odoo que Jordin recibió el 06/11 (P-06; la escribe él, no va en el repositorio).
 2. **Sin DNS de incovsa.com:** no se toca (decisión 91). Los pasos de DNS de `evidencia/CE-08/pasos-hugo.md` ya no aplican.
 3. **Cloudflare R2:** bucket de imágenes, público **solo** por su dirección `r2.dev`, con `URL_IMAGENES` en esa dirección; y bucket de respaldos, privado y sin dirección pública. Cada uno con su credencial limitada a ese bucket.
 4. **GitHub:** el `environment: produccion` y sus secretos (`VPS_HOST`, `VPS_USUARIO`, `VPS_LLAVE_SSH`, `VPS_KNOWN_HOSTS`) que usa CE-06, más una variable con el nombre de Hostinger del VPS (por ejemplo `DOMINIO`). Los crea Jordin, que es el dueño del repositorio.

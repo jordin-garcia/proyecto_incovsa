@@ -23,7 +23,7 @@ Completar el Documento 5 y los anexos I y J con los datos reales de producción 
 
 ## Contexto que debes leer
 - `## Resultado` de CE-11 y CE-12, y de CE-08, JG-19 y CE-10 si ya están hechas
-- `specs/16` decisiones 32, 33, 90 y 91; `specs/19`: P-03, P-94 y P-99
+- `specs/16` decisiones 32, 33, 90 y 91; `specs/19`: P-03, P-94 y P-99; P-06 ya está resuelto (`specs/03`): en el Documento 5 (apartados 4 y 12), `URL_ODOO` deja de estar «pendiente», sin escribir la dirección
 
 ## Qué hacer
 1. **Documento 5:** si CE-10 ya está hecha, reemplazar lo que la versión 1.0 dejó para completarse al desplegar (IP, dominio, certificado, R2, verificación de producción) con los datos y la evidencia reales de CE-08 y CE-10, sin credenciales. Si no hay producción, esos datos siguen como pendientes del despliegue en el VPS de Hostinger. Subir la versión del documento y su tabla de control de versiones.
