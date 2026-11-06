@@ -25,17 +25,11 @@ test("RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y 
   await irA(page, "/panel/contenido");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
   await expect(page.getByRole("heading", { name: "Inicio y Quiénes somos" })).toBeVisible();
-  for (const bloque of [
-    "Portada",
-    "Logotipo de INCOVSA",
-    "Misión",
-    "Visión",
-    "Historia",
-    "Valores",
-    "Logotipo de Inquiserca",
-  ])
+  for (const bloque of ["Portada", "Logotipo de INCOVSA", "Misión", "Visión", "Historia", "Logotipo de Inquiserca"])
     await expect(page.getByRole("heading", { name: bloque, exact: true })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Imágenes del sitio", exact: true })).toHaveCount(0);
+  // JG-34 (06/11): el bloque de valores se quitó a pedido del Ing. William.
+  await expect(page.getByRole("heading", { name: "Valores", exact: true })).toHaveCount(0);
   const mision = page.getByRole("region", { name: "Misión", exact: true });
   const original = await mision.getByLabel("Texto", { exact: true }).inputValue();
   expect(original).toBe(MISION);
@@ -167,6 +161,8 @@ test("RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas
   const tarjetas = page.locator("main .mod-t");
   await expect(tarjetas).toHaveCount(6);
   await expect(tarjetas.first()).toContainText("Contenido institucional");
+  await expect(tarjetas.first()).toContainText("Portada, logotipos, historia, misión y visión");
+  await expect(tarjetas.first()).not.toContainText("valores");
   await expect(tarjetas.first().locator(".ic")).toHaveCSS("width", "44px");
   await expect(tarjetas.first().locator(".ic")).toHaveCSS("border-radius", "12px");
   expect(

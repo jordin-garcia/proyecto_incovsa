@@ -270,7 +270,7 @@ export function OpcionEnvio({
           <Icono nombre="alerta" aria-hidden="true" />
           <div>
             <strong>Sobrepeso.</strong> El total ({formatoKg(kg(total))}) excede la capacidad de {camion.nombre} en{" "}
-            {formatoKg(kg(total - gramos(camion.capacidadKg)))}. La alerta solo informa: se puede enviar igual (RN-13).
+            {formatoKg(kg(total - gramos(camion.capacidadKg)))}. La alerta solo informa: se puede enviar igual.
           </div>
         </div>
       )}

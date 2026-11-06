@@ -279,6 +279,9 @@ test("RF-SW-05 / RF-SW-17 / RF-SW-15: detalle público, galería, recomendados y
     await expect(page.locator(".recomendados .prod-t")).toHaveCount(4);
     await expect(page.locator(`.recomendados a[href='/productos/${ids[0]}']`)).toHaveCount(0);
     await expect(page.locator("main")).not.toContainText(/Ficha técnica|MSDS|COA/);
+    // 06/11 (pedido del Ing. William): la ficha ya no muestra el aviso de precio, lote y restricciones de venta.
+    await expect(page.locator(".aviso-producto, main .aviso")).toHaveCount(0);
+    await expect(page.locator("main")).not.toContainText(/número de lote|restricciones de venta|cotizaciones/i);
     await accesible(page);
     await page.getByRole("link", { name: "Volver al catálogo", exact: true }).click();
     await expect(page.getByRole("textbox", { name: "Buscar producto" })).toBeVisible();

@@ -74,14 +74,6 @@ export default async function DetalleProducto({ params }: { params: Promise<{ id
                     ))}
                 </dl>
               )}
-              <div className="aviso aviso-v aviso-producto">
-                <Icono nombre="info" />
-                <div>
-                  El precio y el número de lote no se publican en el sitio. Para cotizaciones, comuníquese con la sede
-                  que le corresponde. Los productos químicos tienen restricciones de venta: un asesor verificará el uso
-                  previsto.
-                </div>
-              </div>
               <div className="acciones-producto">
                 <Button asChild size="grande">
                   <Link href="/contacto">

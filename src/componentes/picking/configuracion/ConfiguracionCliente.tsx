@@ -166,7 +166,7 @@ export function ConfiguracionCliente({
           <div style={{ marginTop: 16 }}>
             <Aviso>
               Las cuentas de Gerencia y Soporte sirven en los dos sistemas. Las demás son de un solo sistema, y una
-              persona puede tener una cuenta en cada uno con el mismo nombre de usuario (RN-54).
+              persona puede tener una cuenta en cada uno con el mismo nombre de usuario.
             </Aviso>
           </div>
         </>

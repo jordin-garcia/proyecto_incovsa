@@ -2,7 +2,6 @@ import { expect } from "@playwright/test";
 import { test } from "./datos";
 import AxeBuilder from "@axe-core/playwright";
 import { capturaEvidencia } from "../comunes/evidencia";
-import { imagenWebp } from "../comunes/archivos";
 import { irA } from "../comunes/navegacion";
 
 try {
@@ -49,30 +48,4 @@ test("RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recup
     );
     await page.mouse.move(0, 0);
   }
-});
-
-test("RF-SW-29 / RN-39 / H-04: publicar y quitar un valor muestra el número del valor en el aviso", async ({
-  page,
-  context,
-}) => {
-  const respuesta = await context.request.post("/api/auth/sitio/sign-in/username", {
-    headers: { origin: "http://localhost:3000" },
-    data: { usuario: "ejemplo.08", clave: process.env.CLAVE_DEMO },
-  });
-  expect(respuesta.ok()).toBe(true);
-  await irA(page, "/panel/contenido");
-  await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
-  const valores = page.getByRole("region", { name: "Valores", exact: true });
-  await expect(valores.locator('[data-galeria="Valor 3"] [data-aviso]')).toHaveCSS("font-size", "14px");
-  await valores.getByLabel("Valor 3: elegir imágenes").setInputFiles(imagenWebp("public/marca/foto-reunion.webp"));
-  await expect(page.getByText("Imagen del valor 3 publicado en el sitio.", { exact: true })).toBeVisible();
-  await expect(valores.getByRole("img")).toHaveCount(1);
-  await capturaEvidencia(page, `plan/evidencias/JG-24/aplicacion-valor-publicado-${page.viewportSize()!.width}.png`);
-  await valores.getByRole("button", { name: "Quitar", exact: true }).click();
-  await expect(valores.getByRole("img")).toHaveCount(0);
-  expect(
-    (await new AxeBuilder({ page }).analyze()).violations.filter((v) =>
-      ["serious", "critical"].includes(v.impact ?? ""),
-    ),
-  ).toEqual([]);
 });

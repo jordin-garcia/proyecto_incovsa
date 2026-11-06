@@ -278,9 +278,7 @@ export async function enviarOpcion(sesion: SesionActual | null, entrada: unknown
     if (tipo === "ruta" && !camion) throw new ErrorNegocio("Elija el camión.");
     if (tipo === "ruta" && !piloto) throw new ErrorNegocio("Elija el piloto.");
     if (!opcion.fechaProgramada || !opcion.horaProgramada)
-      throw new ErrorNegocio(
-        `Escriba la fecha y la hora programadas de ${tipo === "ruta" ? "envío" : "despacho"} (RN-53).`,
-      );
+      throw new ErrorNegocio(`Escriba la fecha y la hora programadas de ${tipo === "ruta" ? "envío" : "despacho"}.`);
     const diaProgramado = opcion.fechaProgramada.toISOString().slice(0, 10);
     const hora = opcion.horaProgramada.toISOString().slice(11, 16);
     const programadoPara = new Date(

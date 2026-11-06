@@ -41,7 +41,7 @@ type ResumenCarga = {
 };
 
 const motivos = [
-  "tienen líneas con el Peso de Conversión en 0 o vacío (RN-50)",
+  "tienen líneas con el Peso de Conversión en 0 o vacío",
   "tienen líneas con la cantidad en 0 o vacía",
   "no traen productos",
 ] as const;

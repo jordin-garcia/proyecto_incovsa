@@ -149,7 +149,6 @@
 }
 .dos,
 .tres,
-.valores,
 .resumen {
   display: grid;
   gap: 22px;
@@ -161,10 +160,6 @@
 .tres,
 .resumen {
   grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-.valores {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 12px;
 }
 .bloques {
   display: grid;
@@ -215,7 +210,6 @@
   align-self: flex-start;
 }
 @media (max-width: 1180px) {
-  .valores,
   .resumen {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

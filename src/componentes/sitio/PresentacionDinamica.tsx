@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 const SELECTOR =
-  "main .hero-foto, main img:not(.gal img), main .gal:not(.gal-fondo), main .tarjeta, main .ind-t, main .prod-t, main .det-foto, main .banner-logos, main .valor-t";
+  "main .hero-foto, main img:not(.gal img), main .gal:not(.gal-fondo), main .tarjeta, main .ind-t, main .prod-t, main .det-foto, main .banner-logos";
 
 /** Se comparte entre todas las rutas públicas y se desmonta al salir del sitio. */
 export function PresentacionDinamica() {
