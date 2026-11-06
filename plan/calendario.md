@@ -64,7 +64,7 @@ Cada tarea tiene su día en el campo `programada`. Esta tabla la genera `node sc
 | Mar 3 nov | **JG-18** Documento 6, plan y evidencias de pruebas (Anexos F y G)<br>**JG-29** Guía de estudio para la prueba individual del 04/11 | **CE-09** Documento 1 final, con las reuniones 4 y 5 y los anexos A a E<br>**CE-11** Documento 5 (instalación, despliegue y mantenimiento) y README final<br>**CE-12** Anexos I y J, evidencia de entrega e inventario de servicios y accesos | **DM-13** Documento 3, manual de usuario de la administración del sitio | **JM-07** Documento 4, manual de usuario del sistema logístico | **JC-08** Documento 2, nueva versión para el Entregable 3 |
 | Mié 4 nov | **JG-30** Armado y entrega de la documentación del Entregable 3 en el portal del curso<br>**JG-33** Facturación, mover al instante y botones de las opciones de envío | — | — | — | — |
 | Jue 5 nov | **JG-17** Convergencia final y cierre del desarrollo<br>**JG-27** Documentación de seguridad y riesgos aceptados | **CE-14** Reautenticación, contraseñas fáciles de adivinar y mensajes de validación | — | — | — |
-| Vie 6 nov | — | **CE-08** Preparación del VPS, del dominio y de Cloudflare R2 | — | — | — |
+| Vie 6 nov | **JG-34** Ajustes del Ing. William al sitio y textos sin códigos de reglas | **CE-08** Preparación del VPS, del dominio y de Cloudflare R2 | — | — | — |
 | Sáb 7 nov | **JG-19** Integración de develop en main y primer despliegue a producción | **CE-10** Verificación de producción después del primer despliegue | — | — | — |
 | Dom 8 nov | **JG-22** Presentación previa con otro docente (09/11) | — | **DM-12** Carga del contenido oficial de INCOVSA en producción | — | — |
 | Lun 9 nov | **JG-20** Material y cuentas para la capacitación | — | — | — | — |

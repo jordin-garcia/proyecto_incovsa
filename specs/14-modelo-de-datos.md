@@ -91,7 +91,7 @@ Este es el modelo **conceptual**. Los nombres físicos, los tipos, los índices 
 |---|---|---|
 | CONTENIDO_INSTITUCIONAL | sección (misión, visión, historia), texto | Galería de imágenes |
 | CONFIGURACION_SITIO | logotipo de INCOVSA (URL de R2), logotipo de Inquiserca (URL de R2) | Galería de la portada |
-| VALOR | posición (1 a 5), imagen (URL de R2, vacía hasta que se sube) | — (13/10) |
+| VALOR | posición (1 a 5), imagen (URL de R2, vacía hasta que se sube) | — (13/10). **(06/11)** Sin uso: los valores se quitaron del sitio y del panel; la tabla se conserva para no hacer una migración |
 | INDUSTRIA | nombre, descripción, orden | Galería de imágenes |
 | PRODUCTO_SITIO | nombre, descripción, presentación, países de origen (texto) | Industrias (N:M), galería de imágenes |
 | NOTICIA | título, texto, fecha de publicación | Usuario que la creó, galería de imágenes. Sin atributo "publicada": toda noticia guardada se publica, y se elimina en lugar de ocultarse (15/10) |
