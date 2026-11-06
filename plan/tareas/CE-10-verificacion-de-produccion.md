@@ -24,7 +24,7 @@ Comprobar, el mismo día del primer despliegue (JG-19), que la aplicación en pr
 - `plan/calendario.md` §"Guion de las presentaciones del 09/11 y del 12/11"
 
 ## Qué hacer
-1. Recorrer en https://incovsa.com, con Playwright, el sitio público, el acceso personal, el panel y el flujo del picking con una cuenta de prueba creada para eso (y eliminada al terminar).
+1. Recorrer en la dirección de producción (el nombre de Hostinger del VPS, `specs/16`, decisión 91), con Playwright, el sitio público, el acceso personal, el panel y el flujo del picking con una cuenta de prueba creada para eso (y eliminada al terminar).
 2. Comprobar el certificado HTTPS, las cabeceras de seguridad, la redirección de HTTP a HTTPS y que PostgreSQL no es accesible desde fuera.
 3. Ejecutar un respaldo manual y una **restauración de prueba** en una base aparte en el VPS (Documento 5 §15), con evidencia.
 4. Dejar el informe en `plan/produccion/<AAAA-MM-DD del despliegue>.md`.

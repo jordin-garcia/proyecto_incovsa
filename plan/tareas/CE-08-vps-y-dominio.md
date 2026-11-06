@@ -5,8 +5,7 @@ persona: carlos
 responsable: Carlos Hugo Escobar
 hito: E3
 prioridad: P1
-estado: bloqueada
-bloqueo: Faltan accesos de INCOVSA — VPS (P-10), DNS de incovsa.com en Cloudflare (P-93) y cuentas Cloudflare/R2 (P-94). El environment GitHub "produccion" y los secretos VPS_* aún no existen; el agente no puede crearlos (403). Carlos los carga en la Mac cuando INCOVSA entregue IP, DNS y R2. Guía en evidencia/CE-08/.
+estado: pendiente
 depende_de: [CE-06, CE-07]
 programada: 2026-11-06
 requisitos: [RNF-09, RNF-10, RNF-12]
@@ -17,44 +16,46 @@ pantallas: []
 
 **Responsable:** Carlos Hugo Escobar · **Hito:** E3 · **Prioridad:** P1 · **Programada:** vie 06/11 · **Depende de:** CE-06, CE-07
 
+> **06/11: replanteada con la decisión 91** (`specs/16`). INCOVSA no entregó los accesos: el VPS es uno de **Hostinger, plan KVM 2**, que contrata Jordin con un correo de soporte para INCOVSA, igual que la cuenta de Cloudflare. El sistema se publica con el **nombre que Hostinger le da al VPS** (`srvXXXX.hstgr.cloud`), no en `incovsa.com`, y las imágenes se sirven desde la dirección **`r2.dev`** del bucket. Esta tarea la hace el coordinador (protocolo §E), que tiene los accesos.
+
 ## Objetivo
-Dejar el VPS de INCOVSA, el DNS de `incovsa.com` en Cloudflare y los buckets de R2 listos y seguros para el primer despliegue (JG-19, desde el 07/11; specs/16, decisiones 28, 32 a 34, 73 y 90).
+Dejar el VPS de Hostinger y los buckets de R2 listos y seguros para el primer despliegue (JG-19; specs/16, decisiones 28, 31 a 34 y 91).
 
 ## Contexto que debes leer
-- `specs/16` §"Despliegue" completo y decisiones 28 a 34 y 73
-- `specs/19`: P-10 (VPS), P-93 (DNS), P-94 (cuentas de servicios)
-- `## Resultado` de CE-05, CE-06 y CE-07
+- `specs/16` §"Despliegue" completo y decisiones 28 a 34 y 91
+- `specs/19`: P-94 y P-99
+- `## Resultado` de CE-05, CE-06 y CE-07, y el trabajo previo de esta tarea (al final)
 
 ## Qué hacer
-**Esta tarea depende de accesos que da INCOVSA** (P-10, P-93 y P-94). El agente no tiene esas credenciales: guía a Carlos paso a paso y él escribe las contraseñas y llaves. Si el 28/10 no hay acceso al VPS o al DNS, marca la tarea como **bloqueada** con el motivo (protocolo §C) y avisa a Jordin.
-1. **VPS (Ubuntu Server 24.04 LTS):** actualizaciones automáticas de seguridad; acceso SSH solo con llave, sin contraseña y sin `root`; un usuario de despliegue; cortafuegos que solo abre los puertos 22, 80 y 443; Docker y el complemento Compose oficiales; la carpeta de la aplicación con `docker-compose.yml`, `Caddyfile` y el `.env` de producción (lo llena Carlos con los secretos; nunca pasan por el agente ni por el repositorio).
-2. **DNS en Cloudflare (P-93):** `incovsa.com` apuntando al VPS; `imagenes.incovsa.com` conectado al bucket de imágenes de R2. Si INCOVSA no puede pasar el DNS a Cloudflare, la aplicación sirve las imágenes desde una ruta propia (decisión 32): avisa a Jordin y a Daniela.
-3. **Cloudflare R2 (P-94):** bucket de imágenes (público solo por `imagenes.incovsa.com`) y bucket de respaldos (privado), cada uno con su credencial limitada.
-4. **GitHub:** los secretos del `environment: produccion` (`VPS_HOST`, `VPS_USUARIO`, `VPS_LLAVE_SSH`, `VPS_KNOWN_HOSTS`) que usa CE-06.
+**Esta tarea depende de cuentas que no tiene el agente.** Jordin contrata el VPS y crea las cuentas; el agente lo guía paso a paso y Jordin escribe las contraseñas y llaves, que nunca pasan por el agente ni por el repositorio (decisión 70). Si el VPS o la cuenta de Cloudflare todavía no existen, detente y pídeselos a Jordin.
+1. **VPS de Hostinger (Ubuntu Server 24.04 LTS):** comprobar que el plan cumple la decisión 28 y anotar el nombre del VPS (`srvXXXX.hstgr.cloud`). Con `evidencia/CE-08/preparar-vps.sh`: actualizaciones automáticas de seguridad; acceso SSH solo con llave, sin contraseña y sin `root`; un usuario de despliegue; cortafuegos que solo abre los puertos 22, 80 y 443 (también el cortafuegos del panel de Hostinger, si está activo); Docker y el complemento Compose oficiales; la carpeta de la aplicación con `docker-compose.yml`, `Caddyfile` y el `.env` de producción, con `DOMINIO` y `BETTER_AUTH_URL` en el nombre de Hostinger.
+2. **Sin DNS de incovsa.com:** no se toca (decisión 91). Los pasos de DNS de `evidencia/CE-08/pasos-hugo.md` ya no aplican.
+3. **Cloudflare R2:** bucket de imágenes, público **solo** por su dirección `r2.dev`, con `URL_IMAGENES` en esa dirección; y bucket de respaldos, privado y sin dirección pública. Cada uno con su credencial limitada a ese bucket.
+4. **GitHub:** el `environment: produccion` y sus secretos (`VPS_HOST`, `VPS_USUARIO`, `VPS_LLAVE_SSH`, `VPS_KNOWN_HOSTS`) que usa CE-06. Los crea Jordin, que es el dueño del repositorio.
 5. Instalar el `cron` de los respaldos (CE-07) y correr una vez el respaldo y la restauración contra R2.
-6. Probar el despliegue (CE-06) con la imagen de `develop` en un nombre de host temporal o con el sitio cerrado, y dejarlo listo para JG-19.
+6. Probar el despliegue (CE-06) con la imagen de `develop` y dejarlo listo para JG-19.
+7. Actualizar `evidencia/CE-08/` con la evidencia real, sin credenciales ni la IP del VPS (el repositorio es público).
 
 ## Archivos que creas o modificas
-- Ninguno de código; si hace falta ajustar `docker-compose.yml`, `Caddyfile` o `despliegue.yml`, en este mismo PR.
+- `evidencia/CE-08/**`. Si hace falta ajustar `docker-compose.yml`, `Caddyfile` o `despliegue.yml`, en este mismo PR.
 
 ## Criterios de aceptación
 1. El VPS acepta solo SSH con llave; el cortafuegos solo abre 22, 80 y 443.
-2. Caddy obtiene el certificado de `incovsa.com` y la aplicación responde por HTTPS.
-3. Una imagen subida desde el panel en producción se sirve desde `imagenes.incovsa.com`.
+2. Caddy obtiene el certificado del nombre de Hostinger del VPS y la aplicación responde por HTTPS.
+3. Una imagen subida desde el panel en producción se guarda en R2, se sirve desde la dirección `r2.dev` del bucket y se ve en el sitio público (la política de seguridad de contenido la permite).
 4. El respaldo nocturno corre y una restauración contra R2 queda documentada.
 5. El flujo de despliegue llega al VPS por SSH.
 
 ## Fuera de alcance
 - El primer despliegue oficial (JG-19).
+- Publicar el sistema en `incovsa.com` o las imágenes en un dominio propio (P-99; los pasos los escribe CE-15 en el Documento 5).
 
 ## Notas
-- Las credenciales de producción nunca se guardan en el equipo de Carlos fuera del gestor de contraseñas, ni en ningún archivo del repositorio (decisión 70). El inventario de servicios y accesos va en el Anexo J (CE-12), sin las credenciales.
+- Las credenciales de producción nunca se guardan fuera del gestor de contraseñas de quien las crea, ni en ningún archivo del repositorio (decisión 70). El inventario de servicios y accesos va en el Anexo J (CE-12), sin las credenciales.
 
-## Resultado
+## Trabajo previo (20/10, Carlos)
 
-**Estado: bloqueada** (protocolo §C). No se cumplió ningún criterio de aceptación: no hay VPS, DNS ni R2 reales.
-
-**Qué quedó en el repo para cuando INCOVSA entregue el acceso:**
+La tarea estuvo bloqueada del 20/10 al 06/11 por falta de los accesos de INCOVSA (P-10, P-93 y P-94). Lo que quedó en el repositorio:
 
 - `evidencia/CE-08/README.md` — mapa de pendientes y orden de trabajo.
 - `evidencia/CE-08/pasos-hugo.md` — checklist de Carlos (VPS, R2, DNS, secretos GitHub, cron CE-07, prueba de despliegue).
@@ -63,8 +64,4 @@ Dejar el VPS de INCOVSA, el DNS de `incovsa.com` en Cloudflare y los buckets de 
 - `evidencia/CE-08/bloqueo.md` — evidencia del bloqueo (environment `produccion` ausente; `403` al crearlo con el token del agente).
 - `.env.produccion.example` — comentario `IMAGEN_APP` alineado con CE-06 (prod no usa `:latest`).
 
-**Cómo desbloquear.** Con P-10, P-93 y P-94 resueltos, Carlos sigue `pasos-hugo.md` en la Mac (`carloshugoeg`), guarda evidencia real en `evidencia/CE-08/` y reabre la tarea en una conversación nueva hasta `estado: hecha`. Si el DNS no puede pasar a Cloudflare, avisar a Jordin y Daniela (decisión 32).
-
 **Excepción de alcance (§C).** El protocolo pide un PR de bloqueo solo con la tarea y la bitácora. La asignación del coordinador del proyecto pidió dejar guía y scripts en `evidencia/CE-08/` y el comentario `IMAGEN_APP` en este mismo PR. Tras la CORRECCIÓN de `revision-claude` (2026-10-20): drop-in SSH `00-incovsa.conf` (gana a cloud-init), aborto si no hay llave antes de tocar SSH, UFW solo `22/80/443`, `verificar-vps.sh` como root y sin aceptar login root.
-
-**Fuera de este cierre:** JG-19 (primer despliegue oficial, desde el 07/11).

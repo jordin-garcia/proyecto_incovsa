@@ -45,7 +45,7 @@ La contraparte lo revisó y no tuvo objeción.
 | Qué | Dónde |
 |---|---|
 | Datos | PostgreSQL |
-| Imágenes del sitio | **Cloudflare R2, plan gratuito**. En la base de datos solo se guarda su dirección. **(16/10)** Se sirven desde el subdominio `imagenes.incovsa.com`, conectado al bucket, lo que requiere que el DNS de incovsa.com esté en Cloudflare (P-93). La dirección gratuita de R2 (`r2.dev`) tiene límite de uso y no se usa en producción |
+| Imágenes del sitio | **Cloudflare R2, plan gratuito**. En la base de datos solo se guarda su dirección. **(16/10)** Se sirven desde el subdominio `imagenes.incovsa.com`, conectado al bucket, lo que requiere que el DNS de incovsa.com esté en Cloudflare (P-93). La dirección gratuita de R2 (`r2.dev`) tiene límite de uso y no se usa en producción. **(06/11, decisión 91)** En el VPS de Hostinger el DNS de incovsa.com no se usa, así que las imágenes se sirven desde la dirección `r2.dev` del bucket hasta que INCOVSA publique el sistema en su dominio (P-99) |
 | Documentos técnicos (FT, HS, COA) | **Google Drive de la empresa** (13/10). En la base de datos solo se guardan los enlaces, que el sistema muestra únicamente a quien tiene permiso. El sistema ya no guarda archivos PDF |
 
 ## Servicios externos
@@ -55,9 +55,9 @@ La contraparte lo revisó y no tuvo objeción.
 | Cloudflare R2 | Imágenes del sitio y, en un bucket privado aparte, los respaldos (12/10) |
 | Google Drive de la empresa | Aloja los documentos técnicos. El sistema guarda sus enlaces, muestra la vista previa de Drive y el enlace de descarga según los permisos (13/10) |
 | Odoo | Un enlace al inicio de sesión. Además, Facturación **lee el archivo .xlsx que el facturador exporta de Odoo** (29/09). No hay conexión directa con Odoo |
-| Cloudflare DNS | **(16/10)** DNS de incovsa.com, plan gratuito, para conectar `imagenes.incovsa.com` al bucket de R2 (P-93) |
+| Cloudflare DNS | **(16/10)** DNS de incovsa.com, plan gratuito, para conectar `imagenes.incovsa.com` al bucket de R2. **(06/11)** No se usa mientras el sistema esté en la dirección de Hostinger (decisión 91, P-99) |
 | GitHub | **(16/10)** Repositorio, integración continua (GitHub Actions) y registro de imágenes de Docker (GHCR) del despliegue automático |
-| VPS | **(16/10)** Servidor de producción, que contrata INCOVSA (P-10) |
+| VPS | **(16/10)** Servidor de producción. **(06/11)** Un VPS de Hostinger (plan KVM 2) que contrata el coordinador y se entrega a INCOVSA el 12/11 (decisión 91) |
 
 No hay más integraciones. La integración directa con Odoo es a futuro y está fuera del alcance (29/09). **El sistema no envía correos** (13/10): las solicitudes de contacto solo se guardan en el sistema y las contraseñas las restablecen Gerencia o Soporte, así que no hace falta una cuenta SMTP.
 
@@ -147,6 +147,8 @@ Medidas que el equipo adoptó el 12/10/2026 para que la aplicación sea segura y
 - El Entregable 2 se prueba **solo en las computadoras del equipo**. No hay entorno de pruebas en internet ni se contrata un servicio de terceros (12/10, resuelve P-11).
 
 > **Decisiones del 16/10/2026.** El Ing. William Ambrossio se comprometió a contratar un **VPS** (P-10). El equipo definió cómo se instala, se despliega y se respalda la aplicación.
+>
+> **Acuerdo del 05/11/2026 (decisión 91).** El VPS es uno de **Hostinger, plan KVM 2**, que contrata el coordinador con un correo de soporte creado para INCOVSA y que se entrega a INCOVSA el 12/11. Se publica con el nombre que Hostinger le da al VPS, no en incovsa.com.
 
 ### Servidor (VPS)
 
@@ -165,7 +167,7 @@ Características que se le piden a INCOVSA:
 
 - **Desarrollo:** en las computadoras del equipo, **sin Docker**, con el Node.js 24 y el PostgreSQL 18 que ya tienen instalados (`npm run dev`).
 - **Integración continua:** GitHub Actions, con su propio PostgreSQL 18.
-- **Producción:** el VPS, en `incovsa.com`. **Solo hay ambiente de producción**: no hay ambiente de pruebas en internet.
+- **Producción:** el VPS, en `incovsa.com`. **Solo hay ambiente de producción**: no hay ambiente de pruebas en internet. **(06/11, decisión 91)** Ese VPS es el de Hostinger, en el nombre que Hostinger le da (`srvXXXX.hstgr.cloud`). INCOVSA lo usa para probar el sistema, pero sigue siendo el único ambiente en internet y el que se le entrega.
 
 ### Producción con Docker Compose
 
@@ -194,6 +196,7 @@ En el VPS, un archivo `docker-compose.yml` con tres servicios:
 ### Cuentas de los servicios
 
 - La cuenta de **Cloudflare** (R2 y DNS) y la del **VPS** se crean desde el inicio **a nombre de INCOVSA**, con un correo de la empresa, y se invita al equipo (P-94).
+- **(06/11, decisión 91)** El coordinador crea un **correo de soporte para INCOVSA** y, con él, las cuentas de Hostinger (el VPS), Cloudflare (R2) y Google Drive (documentación interna, P-92). El 12/11 se le entregan a INCOVSA el correo y las cuentas, en persona, junto con las credenciales del servidor (Anexo J). La dirección del correo no se escribe en el repositorio, que es público.
 - El **repositorio** se transfiere a una cuenta u organización de INCOVSA el día de la entrega (Anexo J).
 - **(03/11, Jordin, CE-12) Entrega de las credenciales: en persona.** La copia de respaldo de los secretos del servidor (el `.env` del VPS y la configuración de `rclone`) se entrega en persona a quien indique INCOVSA (P-03), que la copia del VPS a su propio medio de guarda desde una computadora de INCOVSA, con su propia llave SSH. No se envía por correo, chat ni otro medio digital del equipo, y ninguna computadora ni cuenta del equipo conserva copia (decisión 70). La llave privada SSH del despliegue y la contraseña del primer administrador no se entregan (Anexo J).
 
@@ -268,12 +271,12 @@ Las tomó el coordinador (Jordin García) el 16/10/2026 a partir de las recomend
 | # | Tema | Decisión |
 |---|---|---|
 | 27 | Docker | **Solo en producción.** En el VPS, Docker Compose con Caddy, la aplicación y PostgreSQL 18. En las computadoras del equipo no se usa Docker: ya tienen Node.js 24 y PostgreSQL 18, y en Windows Docker hace lenta la recarga automática de Next.js ("Despliegue") |
-| 28 | Servidor (VPS) | Ubuntu Server 24.04 LTS, 2 vCPU, 4 GB de RAM, 80 GB SSD, IP fija y SSH con llave. Lo contrata INCOVSA (P-10) |
+| 28 | Servidor (VPS) | Ubuntu Server 24.04 LTS, 2 vCPU, 4 GB de RAM, 80 GB SSD, IP fija y SSH con llave. Lo contrata INCOVSA (P-10). **(06/11: es un VPS de Hostinger que contrata el coordinador; decisión 91.)** |
 | 29 | HTTPS y proxy inverso | **Caddy**, en un contenedor: certificado automático y avisos en tiempo real sin búfer (`flush_interval -1`). La aplicación toma la IP del usuario solo de la cabecera de Caddy (RNF-15). **(28/10)** HSTS y las demás cabeceras de seguridad las envía Next.js (RNF-16); Caddy no las repite, para que no salgan dos HSTS. El flujo de la imagen de producción comprueba a través de Caddy las cabeceras y el primer aviso en tiempo real |
 | 30 | Ambientes | **Solo producción** en internet. Desarrollo en las computadoras del equipo |
 | 31 | Despliegue | El primero, cuando la aplicación esté completa. Después, **automático** al integrar en `main`: GitHub Actions compila la imagen, la guarda en GHCR y la despliega en el VPS por SSH, con las migraciones. Se conservan las últimas 5 imágenes para volver atrás |
-| 32 | DNS e imágenes | El DNS de incovsa.com pasa a **Cloudflare** (plan gratuito) para servir las imágenes de R2 desde `imagenes.incovsa.com`. Si no se pudiera (P-93), la aplicación serviría las imágenes desde una ruta propia |
-| 33 | Cuentas de servicios | Cloudflare y el VPS a nombre de INCOVSA, con un correo de la empresa, con el equipo invitado (P-94). El repositorio se transfiere a INCOVSA el día de la entrega |
+| 32 | DNS e imágenes | El DNS de incovsa.com pasa a **Cloudflare** (plan gratuito) para servir las imágenes de R2 desde `imagenes.incovsa.com`. Si no se pudiera (P-93), la aplicación serviría las imágenes desde una ruta propia. **(06/11: mientras el sistema esté en la dirección de Hostinger, el DNS de incovsa.com no se toca y las imágenes se sirven desde `r2.dev`; decisión 91.)** |
+| 33 | Cuentas de servicios | Cloudflare y el VPS a nombre de INCOVSA, con un correo de la empresa, con el equipo invitado (P-94). El repositorio se transfiere a INCOVSA el día de la entrega. **(06/11: las cuentas las crea el coordinador con un correo de soporte para INCOVSA y se entregan el 12/11; decisión 91.)** |
 | 34 | Respaldos | `cron` en el VPS, `pg_dump` dentro del contenedor de PostgreSQL y `rclone` hacia el bucket privado de R2; 7 diarios y 4 semanales; sin cifrado propio ("Respaldos") |
 
 ### Acceso y sesiones
@@ -354,7 +357,7 @@ Las tomó el coordinador el 16/10/2026, junto con el plan de desarrollo (`plan/`
 |---|---|---|
 | 71 | Tareas | **Una tarea por archivo** en `plan/tareas/`, con metadatos que valida `scripts/tareas.mjs`; una bitácora por persona en `plan/bitacora/`; el issue fijo "Tablero del plan" avisa a cada persona. Reemplaza a GitHub Issues y Projects (decisión 69). Los issues y el Project anteriores se borraron el 16/10, junto con `PLAN_DE_PROYECTO.md` de `main` |
 | 72 | Calendario e hitos | Se trabaja **todos los días** desde el sábado 17/10/2026. **E2:** el avance del Entregable 2 queda terminado el domingo 18/10 y Jordin lo presenta el lunes 19/10 al Ing. Manuel Rojas, sin preparar nada más que la demostración; su alcance es la base del proyecto (aplicación, base de datos, inicio de sesión y permisos), el flujo obligatorio del picking (carga del archivo de Odoo → conversión → envío a Bodega → preparación) y el panel con contenido institucional, industrias y catálogo, con las páginas públicas que los muestran. **E3:** el desarrollo queda completo el lunes 02/11. **Entrega:** capacitación el martes 03/11 y entrega final el miércoles 04/11. El plan incluye los documentos (con una versión nueva del Documento 2; la v0.4 no se edita) y la presentación. **(02/11: las fechas de la entrega cambian con la decisión 90.)** |
-| 73 | Fechas que dependen de INCOVSA | Se le pide al Ing. William el acceso al VPS y al DNS a más tardar el **28/10** (P-10, P-93 y P-94); la capacitación es el **03/11** y la entrega de accesos el **04/11**. **(02/11: las fechas de la entrega cambian con la decisión 90.)** |
+| 73 | Fechas que dependen de INCOVSA | Se le pide al Ing. William el acceso al VPS y al DNS a más tardar el **28/10** (P-10, P-93 y P-94); la capacitación es el **03/11** y la entrega de accesos el **04/11**. **(02/11: las fechas de la entrega cambian con la decisión 90.)** **(06/11: INCOVSA no entregó los accesos; los reemplaza la decisión 91.)** |
 | 74 | Fidelidad al prototipo | Cada pantalla tiene los mismos textos, estructura, orden, estados y colores del design system que el prototipo, salvo donde `specs/` cambia los textos, los datos o el comportamiento (en diseño manda el prototipo, decisión 89); no se exige coincidencia píxel por píxel, porque el prototipo usa otros datos. Cada PR lleva capturas lado a lado en 390, 768 y 1440 px (`plan/convenciones.md` §7). Después de que el coordinador aprueba una pantalla, sus capturas pueden quedar como referencia para detectar cambios |
 | 75 | Ramas y despliegue | `develop` es la **rama por defecto** del repositorio y `main` queda solo para versiones y despliegue. Los PR se integran en `develop` con *squash*. `develop` se integra en `main` en el primer despliegue (decisión 31), después del 04/11 (decisión 90; antes era el 02/11) |
 | 76 | Personas, prefijos y ramas | Jordin (`jordin`, JG, jordin-garcia), Carlos Hugo (`carlos`, CE, carloshugoeg), Daniela (`daniela`, DM, InAlexa), Josué (`josue`, JM, Josh-JM) y José Daniel (`jose-daniel`, JC, JDaniC). Ramas `<clave>/<ID>-<descripcion>` |
@@ -372,6 +375,7 @@ Las tomó el coordinador el 16/10/2026, junto con el plan de desarrollo (`plan/`
 | 88 | Una tarea por conversación | Cada tarea se implementa en **su propia conversación** con el agente, para que no se exceda su ventana de contexto. Al integrar una tarea, el agente no sigue con otra: le pide a la persona que abra una conversación nueva. Si una tarea se interrumpe antes de integrarse, se retoma en una conversación nueva desde su rama (`plan/protocolo.md` §B) |
 | 89 | En diseño manda el prototipo | **(22/10, Jordin, JG-12)** En cómo se ve la aplicación (disposición, estructura visual, tamaños, colores, tipografía, espaciado y estilos), el **prototipo aprobado manda sobre `specs/`**, sin excepciones: si no coinciden, se sigue el prototipo y se corrige `specs/` con su línea en `specs/18`. En los requisitos, las reglas, los textos, los datos y el comportamiento sigue mandando `specs/`. Si seguir el prototipo haría fallar una prueba (por ejemplo, el contraste de RNF-08), el agente se detiene y le pregunta al coordinador: las pruebas no se debilitan |
 | 90 | Fechas de la fase final | **(02/11, Jordin, JG-32)** El Ing. Manuel Rojas fijó tres fechas, de 10 puntos cada una: **miércoles 04/11**, entrega académica antes de las 9:50 (proyecto funcional y desplegado, repositorio actualizado, toda la documentación también en el portal del curso) y prueba individual de conocimientos; **lunes 09/11**, presentación previa de 8 minutos con otro docente, sin mostrar código y con preguntas individuales; **jueves 12/11**, entrega final a la empresa (8 minutos, con manuales y accesos). Como INCOVSA no ha entregado los accesos de la decisión 73, la documentación del 04/11 es la **versión 1.0** y se arma solo con lo que el proyecto tiene hasta el 03/11: **nada de ella depende de la reunión con el Ing. William**. Si no hay despliegue, el docente acepta la demostración en local. El despliegue (JG-19), la capacitación (JG-20 y JG-21) y la transferencia de accesos y del repositorio pasan a antes del 12/11, y lo que salga de la reunión se agrega en la **versión 1.1** (CE-15 y JG-21). La convergencia final (JG-17), la documentación de seguridad (JG-27) y CE-14 se hacen después del 04/11 y antes de JG-19. **Excepción a RNF-10:** el coordinador sube `docs/Reuniones/` tal como está (actas, notas, capturas y fotos de personas), aunque el repositorio es público, para que CE-09 tenga las actas; CE-15 la quita antes de transferir el repositorio, y sigue en el historial de git. Hasta el 04/11 no entra código a `develop`, salvo los cambios que pidió el docente (JG-28), y en los PR que solo cambian documentos no se corre en local la batería e2e completa: la CI corre completa |
+| 91 | VPS de Hostinger | **(06/11, Jordin; acuerdo con el Ing. William del 05/11)** Como INCOVSA no entregó los accesos de la decisión 73, el coordinador contrata un **VPS de Hostinger, plan KVM 2**, por un mes, con un correo de soporte que crea para INCOVSA. Con ese correo crea también las cuentas de **Cloudflare** (R2: imágenes y respaldos) y de **Google Drive** (documentación interna, P-92). Es el entorno donde INCOVSA prueba el sistema y donde se hacen el primer despliegue (JG-19), la verificación (CE-10), la carga del contenido oficial (DM-12), la capacitación y las presentaciones del 09/11 y del 12/11. Sigue siendo el **único ambiente en internet** (decisión 30) y **se entrega a INCOVSA el 12/11**, con el correo y las cuentas (Anexo J). **Dirección:** el nombre que Hostinger le da al VPS (`srvXXXX.hstgr.cloud`), con el certificado automático de Caddy; el DNS de incovsa.com no se toca, porque también tiene el correo de Microsoft 365 de la empresa. **Imágenes:** se guardan en R2, como siempre, y se sirven desde la dirección pública gratuita del bucket (`r2.dev`): un dominio propio para R2 exige que el dominio esté en Cloudflare, y el nombre de Hostinger no lo está. Su límite de uso alcanza para este entorno, y no hay que cambiar el código (solo `URL_IMAGENES`, `DOMINIO` y `BETTER_AUTH_URL` del `.env`). Cambia las decisiones 28, 32, 33 y 73. **Si INCOVSA decide cambiarse a otro VPS o publicar el sistema en incovsa.com** (P-99), el Documento 5 v1.1 (CE-15) le explica cómo hacerlo |
 
 ## Estructura de carpetas
 

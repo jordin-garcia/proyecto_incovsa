@@ -11,12 +11,12 @@ Trabajamos **todos los días**, del sábado 17/10/2026 al jueves 12/11/2026 (spe
 | Lun 19/10 | Presentación del avance | Jordin presenta el avance al Ing. Manuel Rojas (no en clase). No se prepara nada más que la demostración |
 | Mié 21/10 | Convergencia 1 | JG-12 |
 | Dom 25/10 | Convergencia 2 | JG-13 |
-| Mié 28/10 | Accesos de INCOVSA | VPS (P-10), DNS de incovsa.com en Cloudflare (P-93) y cuentas de los servicios (P-94), pedidos al Ing. William para esta fecha (decisión 73) |
+| Mié 28/10 | Accesos de INCOVSA | VPS (P-10), DNS de incovsa.com en Cloudflare (P-93) y cuentas de los servicios (P-94), pedidos al Ing. William para esta fecha (decisión 73). **(06/11)** No llegaron: los reemplaza el VPS de Hostinger (decisión 91) |
 | Vie 30/10 | Convergencia final | Pasó al 05/11 con la replanificación del 02/11 (JG-17, JG-32) |
 | Lun 02/11 | Cambios del docente | JG-28 (meta: integrada el 03/11 a las 10:00); hasta el 04/11 solo ese código entra a `develop` |
 | Mar 03/11, 18:00 | Documentos, versión 1.0 | Documentos 1 a 6, README y anexos integrados en `develop`; guía de estudio (JG-29); en la noche, armado (JG-30) |
 | **Mié 04/11, antes de 9:50** | **Entrega académica** | Documentación subida al portal del curso (JG-30) y prueba individual de conocimientos |
-| Jue 05/11 a dom 08/11 | Cierre y despliegue | JG-17, JG-27 y CE-14; en cuanto INCOVSA entregue los accesos: CE-08, JG-19, CE-10 y DM-12 |
+| Jue 05/11 a dom 08/11 | Cierre y despliegue | JG-17, JG-27 y CE-14; con el VPS de Hostinger (decisión 91): CE-08, JG-19, CE-10 y DM-12 |
 | **Lun 09/11** | **Presentación previa** | 8 minutos con otro docente, con preguntas individuales (JG-22) |
 | Lun 09/11 a mié 11/11 | Capacitación y versión 1.1 | JG-20, JG-21 y CE-15 |
 | **Jue 12/11** | **Entrega a la empresa** | Presentación a INCOVSA (JG-31), manuales, accesos y transferencia del repositorio |
@@ -36,7 +36,7 @@ Lo presenta Jordin, en su equipo, con la aplicación en modo de producción loca
 
 ## Guion de las presentaciones del 09/11 y del 12/11
 
-Lo completan JG-22 y JG-31, en producción (https://incovsa.com) con el contenido oficial si JG-19 ya está hecha; si no, en local, con la imagen de producción y la semilla de demostración (specs/16, decisión 90). Recorre el flujo que piden los lineamientos (`specs/17`): **pedido facturado → conversión de kg a unidades → generación del picking → preparación → carga → despacho → actualización de estado → reporte**. La actualización de inventario no aplica: el docente aprobó la exclusión (P-58). Además: el sitio público, el panel, la documentación interna, el tablero en la TV, la Ruta en el teléfono, los reportes con exportación y la bitácora.
+Lo completan JG-22 y JG-31, en producción (el nombre de Hostinger del VPS, decisión 91) con el contenido oficial si JG-19 ya está hecha; si no, en local, con la imagen de producción y la semilla de demostración (specs/16, decisión 90). Recorre el flujo que piden los lineamientos (`specs/17`): **pedido facturado → conversión de kg a unidades → generación del picking → preparación → carga → despacho → actualización de estado → reporte**. La actualización de inventario no aplica: el docente aprobó la exclusión (P-58). Además: el sitio público, el panel, la documentación interna, el tablero en la TV, la Ruta en el teléfono, los reportes con exportación y la bitácora.
 
 ## Calendario por día
 

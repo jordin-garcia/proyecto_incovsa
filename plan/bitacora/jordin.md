@@ -411,3 +411,12 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Pendiente o aviso para otros:
 **José Daniel:** cambié tus `src/componentes/picking/facturacion/FacturacionTablero.tsx` (cola de movimientos, `dropAnimation={null}`, `aria-busy` y los dos botones) y `OpcionEnvio.tsx` (prop `esperandoMovimientos`), `src/modulos/envios/opciones.ts` y `acciones.ts` (`moverPedidos` y `moverPedidosFacturados` devuelven `{ estadoOrigen, estadoDestino }`), sus pruebas `concurrencia.test.ts` y `acciones-integracion.test.ts`, y tu `pruebas-e2e/picking/facturacion-dos-facturadores.spec.ts` (su `mover()` espera el guardado). Lee el `## Resultado` de JG-33 y actualiza tu copia desde `develop`.
 **Todos:** `recargar()` de `pruebas-e2e/comunes/navegacion.ts` ahora espera a que la página no tenga ningún `aria-busy="true"` antes de recargar.
+
+## 2026-11-06 · JG-32 · VPS de Hostinger y replanteo de CE-08
+- Hecho: registré el acuerdo del 05/11 con el Ing. William (`specs/16`, decisión 91; `specs/18`, `specs/19` y `specs/05`): VPS de Hostinger (plan KVM 2) que contrato yo, con un correo de soporte para INCOVSA y las cuentas de Cloudflare y Google Drive. Desbloqueé y replanteé CE-08, y ajusté JG-19, CE-10, DM-12, CE-15 y el calendario.
+- Decisiones: el sistema se publica con el nombre que Hostinger le da al VPS, sin tocar el DNS de incovsa.com; las imágenes se guardan en R2 y se sirven desde `r2.dev`. El VPS es el entorno de pruebas y también el que se entrega a INCOVSA el 12/11; si INCOVSA se cambia de VPS o publica en incovsa.com, el Documento 5 v1.1 le explica cómo (P-99). Hago yo las tareas de Carlos que quedan (CE-08, CE-10, CE-14 y CE-15).
+- Pendiente o aviso para otros:
+**Carlos:** cambié tus tareas `plan/tareas/CE-08-vps-y-dominio.md` (de bloqueada a pendiente, para Hostinger y `r2.dev`; tu trabajo del 20/10 quedó en «Trabajo previo»), `CE-10-verificacion-de-produccion.md` y `CE-15-documento-5-y-anexos-version-1-1.md` (pasos 6 y 7 nuevos). Las hago yo. Actualiza tu copia desde `develop`.
+**Daniela:** en `plan/tareas/DM-12-contenido-oficial.md`, el contenido se publica en el nombre de Hostinger del VPS, no en incovsa.com (decisión 91). Actualiza tu copia desde `develop`.
+**CE-08:** los pasos de DNS de `evidencia/CE-08/pasos-hugo.md` ya no aplican. Comprueba que la imagen de `r2.dev` se vea en el sitio con la política de seguridad de contenido de producción.
+
