@@ -17,10 +17,10 @@ pantallas: []
 **Responsable:** Jordin García · **Hito:** entrega · **Prioridad:** P1 · **Programada:** sáb 07/11 · **Depende de:** JG-17, CE-06, CE-07, CE-08, JC-10, JG-26, DM-14, CE-14, JM-10, JG-27
 
 ## Objetivo
-Después de la entrega académica del 04/11 y en cuanto INCOVSA entregue los accesos (CE-08; specs/16, decisión 90), integrar `develop` en `main`, lo que dispara el **primer despliegue automático** a producción (specs/16, decisiones 31 y 75), y verificar con Carlos que la aplicación funciona en `incovsa.com` con HTTPS.
+Después de la entrega académica del 04/11 y en cuanto el VPS de Hostinger esté listo (CE-08; specs/16, decisiones 90 y 91), integrar `develop` en `main`, lo que dispara el **primer despliegue automático** a producción (specs/16, decisiones 31 y 75), y verificar que la aplicación funciona con HTTPS en el nombre que Hostinger le da al VPS (`srvXXXX.hstgr.cloud`, decisión 91; CE-10).
 
 ## Contexto que debes leer
-- `specs/16` "Despliegue" y decisiones 27 a 34, 37 y 75
+- `specs/16` "Despliegue" y decisiones 27 a 34, 37, 75 y 91
 - `## Resultado` de CE-05, CE-06, CE-07 y CE-08
 - `plan/convergencia/2026-11-05.md` (JG-17)
 
@@ -37,14 +37,14 @@ Después de la entrega académica del 04/11 y en cuanto INCOVSA entregue los acc
 
 ## Criterios de aceptación
 1. `main` tiene todo `develop`, y el despliegue automático terminó sin errores.
-2. https://incovsa.com responde con HTTPS válido y las cabeceras de seguridad.
+2. El nombre de Hostinger del VPS responde con HTTPS válido y las cabeceras de seguridad.
 3. El administrador inicial existe y entra a los dos sistemas.
 4. La etiqueta `v1.0-final` existe.
 
 ## Verificación
 ```
 gh run list --branch main --limit 3
-curl -sI https://incovsa.com
+curl -sI https://<nombre del VPS en Hostinger>
 ```
 
 ## Fuera de alcance
