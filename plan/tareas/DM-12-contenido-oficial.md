@@ -33,7 +33,7 @@ Cargar en producción, **desde el panel**, el contenido oficial que entregue INC
 - Ninguno de código. El archivo de la tarea y la bitácora.
 
 ## Criterios de aceptación
-1. Todo el contenido oficial recibido está publicado en producción (el nombre de Hostinger del VPS, `specs/16`, decisión 91) y se ve como en el prototipo.
+1. Todo el contenido oficial recibido está publicado en producción (`https://incovsa.tech`, `specs/16`, decisión 91) y se ve como en el prototipo.
 2. El `## Resultado` lista lo cargado y lo que INCOVSA todavía no entregó.
 
 ## Fuera de alcance

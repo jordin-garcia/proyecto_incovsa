@@ -108,6 +108,16 @@ apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin do
 usermod -aG docker "${USUARIO_DESPLIEGUE}"
 systemctl enable --now docker
 
+echo "==> Node.js 24 (repositorio de NodeSource): lo usa scripts/respaldo.sh (CE-07)"
+if [ ! -f /etc/apt/keyrings/nodesource.gpg ]; then
+  curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor --yes -o /etc/apt/keyrings/nodesource.gpg
+fi
+echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_24.x nodistro main" \
+  >/etc/apt/sources.list.d/nodesource.list
+apt-get update -y
+apt-get install -y nodejs
+# rclone no se instala aquí: la versión de Ubuntu falla con R2. Va con instalar-rclone.sh, como el usuario de despliegue.
+
 echo "==> Carpeta de la aplicación: ${DIR_APP}"
 install -d -m 755 -o "${USUARIO_DESPLIEGUE}" -g "${USUARIO_DESPLIEGUE}" "${DIR_APP}"
 

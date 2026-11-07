@@ -2,7 +2,7 @@
 
 ## Componentes
 
-La solución es **una sola aplicación web**, bajo el dominio **incovsa.com**, con dos componentes. **(06/11)** Mientras INCOVSA no la publique ahí, está en la dirección que Hostinger le da al VPS ([16](16-arquitectura-y-tecnologia.md), decisión 91; P-99):
+La solución es **una sola aplicación web**, bajo el dominio **incovsa.com**, con dos componentes. **(06/11)** Mientras INCOVSA no la publique ahí, está en `incovsa.tech`, el dominio que Hostinger incluyó con el VPS ([16](16-arquitectura-y-tecnologia.md), decisión 91; P-99):
 
 1. **Sitio web corporativo e institucional autoadministrable.** Es la presencia digital de la empresa y el punto de entrada a los sistemas internos.
 2. **Sistema de control logístico de bodega (sistema de picking).** Cubre el proceso posterior a la facturación: carga del pedido facturado desde Odoo, conversión a unidades, preparación, despacho, ruta y reportes.

@@ -430,3 +430,14 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 **Carlos:** quité «(RN-54)» de la nota de `src/componentes/picking/configuracion/ConfiguracionCliente.tsx`.
 **Todos:** los textos que ve el usuario no llevan códigos RN, RF o RNF ni rutas de `specs/`; `src/lib/textos-sin-codigos.test.ts` lo comprueba. Usen los códigos solo en comentarios y en los nombres de las pruebas.
 
+
+## 2026-11-06 · CE-08 · Preparación del VPS, del dominio y de Cloudflare R2 (protocolo §E)
+- Hecho: dejé el VPS de Hostinger listo para JG-19 y probé los cinco criterios: SSH solo con llave y UFW 22/80/443, `https://incovsa.tech` con certificado de Let's Encrypt, una imagen del panel servida desde `imagenes.incovsa.tech` (R2), respaldo y restauración contra R2 con su `cron`, y el script del despliegue por SSH a mano con la imagen de `develop`. Evidencia en `evidencia/CE-08/README.md`. Corregí `despliegue.yml` (pruebas nuevas en `scripts/flujos.test.mjs`).
+- Decisiones: publicar en `incovsa.tech` (el dominio que Hostinger incluyó con el VPS) con DNS en Cloudflare e imágenes en `imagenes.incovsa.tech`, en vez del nombre de Hostinger y `r2.dev` (`specs/16` decisión 91, `specs/18`). El paso SSH de `despliegue.yml` no reiniciaba la aplicación (`docker compose run` se comía el script) ni arrancaba Caddy: ahora migra con `-T </dev/null` y arranca `app` y `caddy`, y la comprobación final usa `vars.DOMINIO`. rclone oficial en `~/.local/bin`, porque el de Ubuntu falla con R2. Criterio 5 a mano; la primera corrida por Actions es de JG-19.
+- Pendiente o aviso para otros:
+**Carlos:** cambié tu `.github/workflows/despliegue.yml` (paso SSH y comprobación final), `evidencia/CE-08/preparar-vps.sh` (Node.js 24), `evidencia/CE-08/README.md` (reescrito), agregué `evidencia/CE-08/instalar-rclone.sh` y borré `pasos-hugo.md`, `bloqueo.md` y `validar-local.txt`. También `.env.produccion.example` (direcciones de `incovsa.tech`). Actualiza tu copia desde `develop`.
+**Daniela:** en `plan/tareas/DM-12-contenido-oficial.md`, la dirección de producción es `https://incovsa.tech`. Hay una imagen de prueba en «Quiénes somos» que reemplazas con el contenido oficial. Actualiza tu copia desde `develop`.
+**JG-19:** el flujo ya arranca Caddy solo y comprueba `https://incovsa.tech`; la base ya tiene la semilla base y un administrador de prueba. Cambié su criterio 2, su verificación y su paso 4.
+**CE-10:** la dirección es `https://incovsa.tech`.
+**CE-15:** agregué el paso 8 con lo que cambió CE-08 en el Documento 5 (dirección, R2, rclone y `PATH` del `cron`, primer despliegue sin pasos a mano) y precisé los pasos 6 y 7.
+**JG-27:** actualicé en `plan/seguridad/asvs-nivel-2.md` las citas de V13.2.1, V13.3.1 y V13.3.2, que apuntaban a `pasos-hugo.md`.

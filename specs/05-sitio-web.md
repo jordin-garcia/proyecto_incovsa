@@ -10,7 +10,7 @@
 
 | Elemento | Valor |
 |---|---|
-| Dominio | incovsa.com (reservado y disponible, según la contraparte). **(06/11)** Mientras INCOVSA no decida publicarlo ahí, el sistema está en la dirección que Hostinger le da al VPS ([16](16-arquitectura-y-tecnologia.md), decisión 91; P-99) |
+| Dominio | incovsa.com (reservado y disponible, según la contraparte). **(06/11)** Mientras INCOVSA no decida publicarlo ahí, el sistema está en `incovsa.tech`, el dominio que Hostinger incluyó con el VPS ([16](16-arquitectura-y-tecnologia.md), decisión 91; P-99) |
 | Nombre a mostrar | Industria del Cuero Covadonga S. A. |
 | Empresas | INCOVSA e Inquiserca en una sola presentación y una sola identidad visual |
 | Logotipo del sitio | **"INCOVSA Químicos"**, el que aparece en la cabecera. Es el que se usa en todo el sitio público, incluido el pie de página. **(13/10)** Se puede cambiar desde el panel, en "Contenido institucional" |

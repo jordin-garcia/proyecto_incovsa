@@ -289,3 +289,20 @@ test("JG-08: Dependabot junta menores y parches en un PR por ecosistema e ignora
     );
   }
 });
+
+test("CE-08, criterio 5: la comprobación final del despliegue usa el dominio del environment, sin dirección fija", () => {
+  const flujo = leer(".github", "workflows", "despliegue.yml");
+  assert.doesNotMatch(flujo, /incovsa\.com/);
+  const desplegar = trabajos(flujo)["desplegar"];
+  assert.match(desplegar, /environment: produccion/);
+  assert.match(desplegar, /DOMINIO: \$\{\{ vars\.DOMINIO \}\}/);
+  assert.match(desplegar, /curl -fsS --max-time 15 "https:\/\/\$\{DOMINIO\}\/"/);
+});
+
+test("CE-08: el despliegue por SSH migra sin leer el script por la entrada estándar y arranca la app y Caddy", () => {
+  const flujo = leer(".github", "workflows", "despliegue.yml");
+  // `bash -s` lee el script por la entrada estándar: un `docker compose run` que la lea se come el resto.
+  assert.match(flujo, /docker compose run --rm -T --no-deps .* migrate deploy <\/dev\/null\n/);
+  assert.match(flujo, /\n +docker compose up -d app caddy\n/);
+  assert.match(flujo, /-f \/tmp\/incovsa-sin-migrate\.yml up -d app caddy\n/);
+});
