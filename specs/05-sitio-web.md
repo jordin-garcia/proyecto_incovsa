@@ -95,7 +95,7 @@ Cada mapa se inserta con un `iframe` con `allowfullscreen`, `loading="lazy"` y `
   - **Sin texto pero con imágenes:** la fila conserva la etiqueta y el título («Misión» / «Nuestra misión», «Visión» / «Nuestra visión») junto a la galería, sin el párrafo (decisión del coordinador del 06/11).
   - **Sin texto ni imágenes:** la fila no se muestra.
 - En teléfono, el texto y la imagen van uno debajo del otro.
-- **Fondo (15/10):** la sección de misión y visión va con el **verde del pie de página** (`--v950`), con los títulos en blanco, igual en Inicio y en Quiénes somos.
+- **Fondo (15/10; 06/11):** en Inicio, la sección de misión y visión va con el **verde del pie de página** (`--v950`), con los títulos en blanco. En Quiénes somos, desde el 06/11, la misión va en verde y la visión en una sección clara aparte (ver «Fondos» en [Quiénes somos](#quiénes-somos-rf-sw-02)).
 - **Párrafos justificados (06/11, pedido del Ing. William):** en Inicio y en Quiénes somos, los párrafos (portada, misión, visión, historia, mercados, grupo y los textos de las secciones) van justificados, con guiones automáticos para que no queden huecos en las columnas angostas del teléfono. Los títulos, los botones y las tarjetas de industrias y sedes no cambian.
 
 **Misión**, transcrita de `MISION.jpg`:

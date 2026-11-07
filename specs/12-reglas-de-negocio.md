@@ -61,7 +61,7 @@ La columna **Estado** compara cada regla con el Documento 1 v0.1. Los códigos n
 | RN-53 | **(13/10 y 14/10)** Cada opción de envío lleva la **fecha y la hora programadas** de envío (ruta) o de despacho (pedido). Son **obligatorias** para enviar, se guardan con la ruta o el pedido y se muestran en Bodega en lugar de la hora de envío desde Facturación | Nuevo |
 | RN-54 | **(13/10)** El nombre de usuario es único **dentro de cada sistema**. Se puede crear una cuenta del picking con el mismo nombre de usuario que una del sitio, y al revés. Las cuentas de Gerencia y Soporte, que ya sirven en los dos sistemas, no se pueden repetir en el otro | Nuevo |
 | RN-55 | **(13/10)** La documentación interna se registra por **producto documentado**: nombre, país de origen, lote (obligatorio) y los enlaces de Google Drive de su ficha técnica, su hoja de seguridad y su certificado de análisis. El sistema no guarda archivos PDF | Nuevo |
-| RN-56 | **(13/10)** Cada área de imágenes del sitio público admite **hasta 5 imágenes**. Si tiene más de una, rotan cada 5 segundos; si tiene una, se muestra fija, sin movimiento. Los valores son la excepción: 5 imágenes fijas, una por valor | Nuevo |
+| RN-56 | **(13/10)** Cada área de imágenes del sitio público admite **hasta 5 imágenes**. Si tiene más de una, rotan cada 5 segundos; si tiene una, se muestra fija, sin movimiento. **(06/11)** Ya no hay excepción: los valores se quitaron del sitio ([05](05-sitio-web.md)) | Modificado |
 | RN-57 | **(13/10)** Cada registro guarda automáticamente la **fecha y la hora exactas** en que se guardó en la base de datos | Nuevo |
 
 ## Conversión (RN-01, RN-02, RN-05, RN-21)

@@ -5,7 +5,7 @@ persona: jordin
 responsable: Jordin García
 hito: entrega
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: []
 programada: 2026-11-06
 requisitos: [RF-SW-01, RF-SW-02, RF-SW-05, RF-SW-06, RF-SW-23, RF-SW-29]
@@ -74,3 +74,14 @@ npm run build
 ## Fuera de alcance
 - Borrar la tabla `valor` o cambiar `prisma/schema.prisma`.
 - Cambiar el prototipo aprobado: los cambios son un pedido del cliente posterior a su aprobación.
+
+## Resultado
+
+- **Valores fuera del sitio y del panel:** «Quiénes somos» ya no tiene la sección «Valores · Lo que nos guía» y el panel ya no tiene el bloque «Valores». `esquemaPublicacion` ya no acepta el bloque `valores` (el servidor lo rechaza), `leerNosotrosSitio` devuelve solo `{ historia }` y `leerContenidoPanel` ya no lee la tabla. La tabla `valor` y su semilla se quedan, sin uso (no hay migración). El Resumen del panel dice «Completo» con historia y, si no, «Falta la historia».
+- **Fondos de «Quiénes somos»** (decisión del coordinador): Historia claro, Misión verde (con el encabezado «Propósito · Misión y visión»), Visión claro en su propia sección, «A quién servimos» verde e «INCOVSA e Inquiserca» claro, alternados hasta el pie verde. La sección de la visión no se muestra si la visión no tiene texto ni imágenes. En Inicio misión y visión siguen juntas en la sección verde.
+- **`MisionVision`** (`src/componentes/sitio/MisionVision.tsx`): cada fila se arma por separado. Sin imágenes lleva la clase `una-col` (una columna, solo el texto); sin texto muestra la etiqueta, el título y la galería, sin párrafo; sin nada no se muestra. El párrafo usa la clase `mv-parrafo`; `.mv-sin` ya no existe. Para usar una sola fila: `<MisionVision mision={…} vision={…} solo="mision" />` (o `"vision"`), y `tieneContenido(seccion)` dice si una fila se mostrará.
+- **Párrafos justificados:** una sola regla en `sitio.css`, limitada a `main.inicio` (clase nueva) y `main.nosotros`, con `hyphens: auto`. Los títulos, los botones y las tarjetas de industrias y sedes no cambian.
+- **Avisos:** se quitaron el de Contacto y el de la ficha de producto completo, con la regla `.aviso-producto` y el import de `Icono` en Contacto.
+- **Textos sin códigos:** los mensajes de carga de Odoo, la fecha programada obligatoria, el sobrepeso y la nota de usuarios ya no muestran «(RN-50)», «(RN-53)», «(RN-13)» ni «(RN-54)». `src/lib/textos-sin-codigos.test.ts` recorre con el analizador de TypeScript todas las cadenas y textos JSX de `src` (sin `generated` ni pruebas) y falla si aparece `RN-`, `RF-`, `RNF-` o `specs/`. Los comentarios y los nombres de las pruebas pueden seguir usando los códigos.
+- **Specs:** `specs/01`, `03`, `04` (RF-SW-29 eliminado), `05`, `14` y `18`.
+- **Verificación:** autorizada por el coordinador el 06/11: en local, solo lo editado (unitarias de los módulos tocados y 102 pruebas e2e de 8 archivos con base nueva y un worker); la CI corre la batería completa. Capturas en `plan/evidencias/JG-34/` (Inicio, «Quiénes somos», Contacto, ficha de producto y panel de contenido en 390, 768 y 1440 px).
