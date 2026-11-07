@@ -150,7 +150,7 @@ Cada cambio que pidió el Ing. William el 13/10/2026, con las respuestas del coo
 | CAM-40 | Inicio: misión con el texto a la izquierda y la imagen a la derecha; debajo, visión con la imagen a la izquierda y el texto a la derecha. Sin imagen hasta que se suba | [05](05-sitio-web.md) |
 | CAM-41 | Quiénes somos: misión y visión igual que en Inicio | [05](05-sitio-web.md) |
 | CAM-42 | Valores: 5 imágenes, una por valor, en una fila, sin texto, que se suben desde el panel. **(06/11)** Se quitaron a pedido del Ing. William (JG-34) | [05](05-sitio-web.md) |
-| CAM-43 | Galerías de hasta 5 imágenes que rotan cada 5 s en todas las áreas con imágenes (menos logotipos y valores); con una sola imagen, fija; sin hacer más lenta la carga | [05](05-sitio-web.md), RNF-17 |
+| CAM-43 | Galerías de hasta 5 imágenes que rotan cada 5 s en todas las áreas con imágenes (menos logotipos y valores; **06/11**: sin valores); con una sola imagen, fija; sin hacer más lenta la carga | [05](05-sitio-web.md), RNF-17 |
 | CAM-44 | Industrias: barra lateral izquierda solo con íconos; el nombre aparece al pasar el cursor | [05](05-sitio-web.md) |
 | CAM-45 | Contacto: la solicitud solo se guarda en el sistema; no se envía por correo | [05](05-sitio-web.md) |
 
