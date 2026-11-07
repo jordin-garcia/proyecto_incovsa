@@ -449,3 +449,9 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 - Pendiente o aviso para otros:
 **Daniela:** ya no tienes que quitar el bloque Valores de tu Documento 3 (aviso de JG-34): lo hago yo en JG-35.
 **Josué:** en JG-35 agrego a tu Documento 4 (`entregable-3/documento-4/08-pedidos-pendientes.md`) los botones para mover los pedidos seleccionados que agregó JG-33.
+
+## 2026-11-07 · JG-32 · JG-27 actualiza los documentos del Entregable 3
+- Hecho: el paso 4 de JG-27 pedía revisar el Documento 2 del Entregable 2 y avisarle a José Daniel (JC-08, ya hecha). Ahora actualiza las fuentes de la versión 1.1 que remiten a JG-27: Documento 2 (`05-seguridad.md`, `07-operacion-y-mantenimiento.md` y `README.md`), Documento 6 (secciones 8 y 13) y Documento 1 (Anexo D). Agregué el criterio 3. Los `.docx` los arma JG-35.
+- Decisiones: ninguna nueva.
+- Pendiente o aviso para otros:
+**José Daniel:** JG-27 ya no te avisa nada: los cambios del Documento 2 los hago yo en la versión 1.1.
