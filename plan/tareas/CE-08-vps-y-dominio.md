@@ -52,7 +52,7 @@ Dejar el VPS de Hostinger y los buckets de R2 listos y seguros para el primer de
 ## Verificación
 ```
 sudo bash evidencia/CE-08/verificar-vps.sh        # en el VPS
-curl -sI https://<nombre del VPS en Hostinger>
+curl -sI https://incovsa.tech
 curl -sI <URL_IMAGENES>/<clave de una imagen subida desde el panel>
 gh run list --workflow despliegue.yml --limit 3
 ```

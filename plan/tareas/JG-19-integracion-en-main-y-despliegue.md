@@ -17,7 +17,7 @@ pantallas: []
 **Responsable:** Jordin García · **Hito:** entrega · **Prioridad:** P1 · **Programada:** sáb 07/11 · **Depende de:** JG-17, CE-06, CE-07, CE-08, JC-10, JG-26, DM-14, CE-14, JM-10, JG-27
 
 ## Objetivo
-Después de la entrega académica del 04/11 y en cuanto el VPS de Hostinger esté listo (CE-08; specs/16, decisiones 90 y 91), integrar `develop` en `main`, lo que dispara el **primer despliegue automático** a producción (specs/16, decisiones 31 y 75), y verificar que la aplicación funciona con HTTPS en el nombre que Hostinger le da al VPS (`srvXXXX.hstgr.cloud`, decisión 91; CE-10).
+Después de la entrega académica del 04/11 y en cuanto el VPS de Hostinger esté listo (CE-08; specs/16, decisiones 90 y 91), integrar `develop` en `main`, lo que dispara el **primer despliegue automático** a producción (specs/16, decisiones 31 y 75), y verificar que la aplicación funciona con HTTPS en `https://incovsa.tech` (decisión 91, precisada en CE-08; CE-10).
 
 ## Contexto que debes leer
 - `specs/16` "Despliegue" y decisiones 27 a 34, 37, 75 y 91

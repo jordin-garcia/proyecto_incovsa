@@ -36,7 +36,7 @@ Lo presenta Jordin, en su equipo, con la aplicación en modo de producción loca
 
 ## Guion de las presentaciones del 09/11 y del 12/11
 
-Lo completan JG-22 y JG-31, en producción (el nombre de Hostinger del VPS, decisión 91) con el contenido oficial si JG-19 ya está hecha; si no, en local, con la imagen de producción y la semilla de demostración (specs/16, decisión 90). Recorre el flujo que piden los lineamientos (`specs/17`): **pedido facturado → conversión de kg a unidades → generación del picking → preparación → carga → despacho → actualización de estado → reporte**. La actualización de inventario no aplica: el docente aprobó la exclusión (P-58). Además: el sitio público, el panel, la documentación interna, el tablero en la TV, la Ruta en el teléfono, los reportes con exportación y la bitácora.
+Lo completan JG-22 y JG-31, en producción (`https://incovsa.tech`, decisión 91) con el contenido oficial si JG-19 ya está hecha; si no, en local, con la imagen de producción y la semilla de demostración (specs/16, decisión 90). Recorre el flujo que piden los lineamientos (`specs/17`): **pedido facturado → conversión de kg a unidades → generación del picking → preparación → carga → despacho → actualización de estado → reporte**. La actualización de inventario no aplica: el docente aprobó la exclusión (P-58). Además: el sitio público, el panel, la documentación interna, el tablero en la TV, la Ruta en el teléfono, los reportes con exportación y la bitácora.
 
 ## Calendario por día
 

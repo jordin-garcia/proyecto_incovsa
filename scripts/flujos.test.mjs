@@ -305,4 +305,8 @@ test("CE-08: el despliegue por SSH migra sin leer el script por la entrada está
   assert.match(flujo, /docker compose run --rm -T --no-deps .* migrate deploy <\/dev\/null\n/);
   assert.match(flujo, /\n +docker compose up -d app caddy\n/);
   assert.match(flujo, /-f \/tmp\/incovsa-sin-migrate\.yml up -d app caddy\n/);
+  // El heredoc va sin comillas (<<EOF): una comilla invertida sin escapar se ejecutaría en el runner.
+  const heredoc = flujo.match(/bash -s <<EOF\n([\s\S]*?)\n {10}EOF\n/)?.[1];
+  assert.ok(heredoc, "falta el heredoc del paso SSH");
+  assert.doesNotMatch(heredoc, /(^|[^\\])`/);
 });

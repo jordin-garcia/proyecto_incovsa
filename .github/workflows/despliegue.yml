@@ -347,7 +347,7 @@ jobs:
           docker compose up -d postgres --wait
           docker compose pull app
           # Este script llega por la entrada estándar (bash -s): un comando que la lea se come el resto (CE-08).
-          # Se nombra caddy porque `up -d app` no lo arranca en un VPS nuevo.
+          # Se nombra caddy porque «up -d app» no lo arranca en un VPS nuevo.
           if [ "\$MIGRAR" = "true" ]; then
             # Contenedor de un solo uso: solo migrate (el ENTRYPOINT de la imagen arranca el servidor).
             docker compose run --rm -T --no-deps --entrypoint ./node_modules/.bin/prisma app migrate deploy </dev/null
