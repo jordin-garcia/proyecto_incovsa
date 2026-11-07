@@ -22,7 +22,8 @@ Cerrar las brechas documentales de ASVS 5.0 nivel 2 que encontró JG-15. Además
 ## Contexto que debes leer
 - `plan/seguridad/asvs-nivel-2.md`: todas las filas cuya tarea es JG-27
 - `specs/18-historial-de-decisiones.md` › "Revisión de seguridad con ASVS 5.0 y ZAP (29/10/2026, JG-15)"
-- `specs/16` "Seguridad", "Despliegue" y "Servicios externos"; `specs/03`; `entregable-2/documento-2/05-seguridad.md`
+- `specs/16` "Seguridad", "Despliegue" y "Servicios externos"; `specs/03`
+- `entregable-3/LEEME.md` › "Qué se completa en la versión 1.1 (12/11)": los documentos del Entregable 3 que dicen que algo «se completa en JG-27»
 
 ## Qué hacer
 1. **Documentar en `specs/16`**, en una sección nueva "Seguridad: verificación ASVS":
@@ -45,15 +46,22 @@ Cerrar las brechas documentales de ASVS 5.0 nivel 2 que encontró JG-15. Además
    - retención de solicitudes e IP;
    - límites de conexiones de tiempo real y de exportaciones.
 3. **Actualizar `plan/seguridad/asvs-nivel-2.md`:** los requisitos documentales pasan a "Cumple", con la sección de `specs/16` como evidencia. Los riesgos aceptados siguen como "No cumple", con el enlace a su justificación.
-4. **Revisar `entregable-2/documento-2/05-seguridad.md`** y avisar a José Daniel (JC-08) de lo que cambia para el Documento 2.
+4. **Actualizar las fuentes de la versión 1.1 de los documentos del Entregable 3** (replanificación del 06/11, JG-32), en cada lugar que remite a JG-27:
+   - Documento 2: `05-seguridad.md` (los riesgos aceptados y la lista de pendientes), las filas de riesgos documentales, sesiones y disponibilidad de `07-operacion-y-mantenimiento.md` y `README.md`;
+   - Documento 6: `08-pruebas-de-seguridad.md` (los 16 requisitos de documentación) y `13-registro-de-incidencias.md` (INC-38 corregida, INC-39 con el enlace a la justificación y los conteos de ASVS);
+   - Documento 1, Anexo D (`93-anexo-d-matriz.md`): JG-27 pasa de «Pendiente» a «Hecha» en RNF-03, RNF-04, RNF-05, RNF-15 y RNF-16.
+
+   Los `.docx` no se arman aquí: los arma JG-35.
 
 ## Archivos que creas o modificas
 - `specs/16-arquitectura-y-tecnologia.md`, `specs/18-historial-de-decisiones.md` (modificar)
 - `plan/seguridad/asvs-nivel-2.md` (modificar)
+- `entregable-3/documento-2/05-seguridad.md`, `07-operacion-y-mantenimiento.md` y `README.md`; `entregable-3/documento-6/08-pruebas-de-seguridad.md` y `13-registro-de-incidencias.md`; `entregable-3/documento-1/93-anexo-d-matriz.md` (modificar)
 
 ## Criterios de aceptación
 1. Cada requisito documental de ASVS con tarea JG-27 tiene en `specs/16` la información que pide, y en `asvs-nivel-2.md` queda "Cumple" con la sección como evidencia.
 2. Cada riesgo aceptado tiene en `specs/16` su justificación y sus controles compensatorios, y `asvs-nivel-2.md` lo enlaza.
+3. Ninguna fuente de los Documentos 1, 2 y 6 del Entregable 3 presenta como pendiente de JG-27 algo que esta tarea ya hizo.
 
 ## Verificación
 Además de los comandos generales del protocolo (B6):
