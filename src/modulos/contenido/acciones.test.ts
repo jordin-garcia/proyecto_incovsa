@@ -3,6 +3,8 @@ import type { SesionActual } from "@/lib/sesion";
 import { prisma } from "@/lib/prisma";
 import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import sharp from "sharp";
+import { readdir } from "node:fs/promises";
+import { join } from "node:path";
 import { leerImagenLocal } from "@/modulos/almacenamiento/servicio";
 import { leerResumen } from "./resumen";
 import { leerEstructuraSitio } from "./servicio";
@@ -69,6 +71,20 @@ it("RF-SW-23 (06/11): el bloque de valores ya no se publica y la tabla no cambia
   const antes = await prisma.valor.findMany({ orderBy: { posicion: "asc" } });
   expect((await publicarContenido(formulario("valores", [null, null, null, null, null]))).ok).toBe(false);
   expect(await prisma.valor.findMany({ orderBy: { posicion: "asc" } })).toEqual(antes);
+  expect(await prisma.bitacora.count()).toBe(0);
+});
+it("RF-SW-23 / RNF-05 (06/11): un bloque de valores con imágenes se rechaza sin guardar los archivos", async () => {
+  const carpeta = join(process.cwd(), "almacenamiento-local", "imagenes");
+  const guardadas = async () => (await readdir(carpeta).catch(() => [] as string[])).sort();
+  const antes = await guardadas();
+  const png = await sharp({ create: { width: 10, height: 10, channels: 4, background: "transparent" } })
+    .png()
+    .toBuffer();
+  const datos = formulario("valores", [0, null, null, null, null]);
+  datos.append("imagenes", new File([new Uint8Array(png)], "valor.png", { type: "image/png" }));
+  const resultado = await publicarContenido(datos);
+  expect(resultado).toMatchObject({ ok: false, error: "El contenido o la cantidad de imágenes no es válido." });
+  expect(await guardadas()).toEqual(antes);
   expect(await prisma.bitacora.count()).toBe(0);
 });
 it("RNF-05: impide asociar imágenes ajenas o direcciones proporcionadas por el navegador", async () => {
