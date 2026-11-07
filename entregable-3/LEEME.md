@@ -61,6 +61,25 @@ Se guarda una captura de la constancia de la subida. Va a la versión 1.1 del An
 | Reautenticación y contraseñas fáciles de adivinar (CP-111) | Documentos 2 y 6 | CE-14 |
 | Convergencia final, documentación de seguridad e incidencias pendientes | Documento 1 (Anexo D), Documento 2 y Documento 6 (secciones 7 y 13) | JG-17 y JG-27 |
 | Lo que salga de la reunión con el Ing. William Ambrossio | Los documentos que correspondan | JG-17 |
+| Cambios de `specs/` de JG-33 y JG-34, como RF-SW-29 eliminado y RF-SW-02 sin valores | Documento 1 (capítulos 1, 2, 3 y 5 y Anexo D) y Documento 2 (§1) | JG-35 |
+| Sin el bloque Valores (JG-34) y con los ajustes de la capacitación | Documento 3 | JG-35 |
+| Botones para mover los pedidos seleccionados (JG-33) y ajustes de la capacitación | Documento 4 | JG-35 |
+| Revisión de los pendientes, tabla de control de versiones y armado de los `.docx` | Los 6 documentos | JG-35 |
+
+## Qué se entrega el 12/11 (versión 1.1)
+
+**(06/11, decisión de Jordin)** La versión 1.1 se entrega **solo a INCOVSA**, en archivos de Word (`.docx`), en la presentación del jueves 12/11 (JG-31). No se sube al portal del curso, que se queda con la versión 1.0 del 04/11, ni se generan sus PDF. La arma JG-35 el 11/11 y la entrega Jordin. Si un documento no cambió, se entrega en su versión 1.0.
+
+| Archivo | Versión |
+|---|---|
+| `Documento 1 - Memoria general y especificacion del sistema v1.1.docx`, con los anexos A a E | 1.1 |
+| `Documento 2 - Documentacion tecnica del sistema v1.1.docx` | 1.1 |
+| `Documento 3 - Manual de usuario de la administracion del sitio v1.1.docx` | 1.1 |
+| `Documento 4 - Manual de usuario del sistema logistico v1.1.docx` | 1.1 |
+| `Documento 5 - Manual tecnico de instalacion despliegue y mantenimiento v1.1.docx`, con los anexos H, I y J | 1.1 |
+| `Documento 6 - Plan y evidencias de pruebas v1.1.docx`, con los anexos F y G | 1.1 |
+
+Además, ese día: el Anexo I impreso para firmarse, los accesos del Anexo J en persona y la transferencia del repositorio (CE-15).
 
 ## Cómo se arma un documento
 

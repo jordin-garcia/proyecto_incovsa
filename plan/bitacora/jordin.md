@@ -442,3 +442,10 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 **CE-15:** agregué el paso 8 con lo que cambió CE-08 en el Documento 5 (dirección, R2, rclone y `PATH` del `cron`, primer despliegue sin pasos a mano) y precisé los pasos 6 y 7.
 **CE-15:** de la revisión de CE-08 quedan dos pendientes: `docker-compose.yml` y el `Caddyfile` todavía usan `incovsa.com` como valor por omisión de `DOMINIO`, y el `README.md` (líneas 65 y 157) habla del DNS de incovsa.com como pendiente.
 **JG-27:** actualicé en `plan/seguridad/asvs-nivel-2.md` las citas de V13.2.1, V13.3.1 y V13.3.2, que apuntaban a `pasos-hugo.md`.
+
+## 2026-11-06 · JG-32 · Tarea JG-35 para la versión 1.1 de la documentación
+- Hecho: agregué JG-35 (11/11), que arma la versión 1.1 de los 6 documentos para la entrega a INCOVSA del 12/11. Ninguna tarea la armaba: CE-15 solo arma el Documento 5. Agregué a `entregable-3/LEEME.md` la lista de lo que se entrega el 12/11 y lo registré en `specs/16` (decisión 90) y `specs/18`.
+- Decisiones: la versión 1.1 se entrega solo a INCOVSA, en `.docx`, sin PDF y sin subirla al portal del curso. JG-35 también corrige los Documentos 3 (sin Valores, JG-34) y 4 (botones de JG-33), que quedaron atrasados respecto a la aplicación, y lleva a los Documentos 1 y 2 los cambios de `specs/` de esas dos tareas. Revisión en contexto limpio: apliqué sus 2 correcciones y los opcionales 1 a 3.
+- Pendiente o aviso para otros:
+**Daniela:** ya no tienes que quitar el bloque Valores de tu Documento 3 (aviso de JG-34): lo hago yo en JG-35.
+**Josué:** en JG-35 agrego a tu Documento 4 (`entregable-3/documento-4/08-pedidos-pendientes.md`) los botones para mover los pedidos seleccionados que agregó JG-33.

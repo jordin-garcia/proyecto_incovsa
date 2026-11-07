@@ -66,3 +66,10 @@ node scripts/tareas.mjs --validar-cierre "[JG-32] Replanificación del Entregabl
 - **Dirección e imágenes:** el sistema se publica con el nombre que Hostinger le da al VPS, sin tocar el DNS de incovsa.com, y las imágenes se guardan en R2 y se sirven desde la dirección `r2.dev` del bucket. No cambia el código de la aplicación: solo `DOMINIO`, `BETTER_AUTH_URL` y `URL_IMAGENES` del `.env`. Sí cambia la comprobación final de `despliegue.yml`, que consultaba `https://incovsa.com` con la dirección fija (lo hace CE-08).
 - **Pendientes:** se resolvieron P-06 (la dirección de Odoo, que va solo en `URL_ODOO` del `.env` de producción), P-10 y P-93, se precisaron P-92 (la cuenta de Drive) y P-94 (queda la organización de GitHub de INCOVSA) y se agregó P-99 (si INCOVSA renueva el VPS, se cambia a otro o publica el sistema en incovsa.com).
 - **Tareas:** CE-08 pasa de bloqueada a pendiente y se replanteó para Hostinger y `r2.dev`; JG-19, CE-10, DM-12 y el calendario usan la dirección de Hostinger; CE-15 agrega al Documento 5 los pasos para cambiarse de VPS, publicar en incovsa.com y pasar las imágenes a un dominio propio.
+
+### Ampliación (2026-11-06): versión 1.1 de la documentación
+
+- **Tarea nueva JG-35** (Jordin, 11/11): arma y deja lista la versión 1.1 de los 6 documentos para la entrega a INCOVSA del 12/11, como JG-30 hizo con la 1.0. Depende de JG-17, JG-27, CE-14, JG-19, JG-21 y CE-15.
+- **Formato (decisión de Jordin):** la versión 1.1 se entrega solo a INCOVSA, en `.docx`; no se sube al portal del curso ni se generan sus PDF (`specs/16`, decisión 90; `specs/18`).
+- **Documentos 3 y 4:** JG-35 quita el bloque Valores del Documento 3 (JG-34) y agrega al Documento 4 los botones para mover los pedidos seleccionados (JG-33).
+- `entregable-3/LEEME.md` tiene la lista de lo que se entrega el 12/11.
