@@ -440,5 +440,5 @@ Los avisos para otra persona van en su propia línea y empiezan en negrita con a
 **JG-19:** el flujo ya arranca Caddy solo y comprueba `https://incovsa.tech`; la base ya tiene la semilla base y un administrador de prueba. Cambié su criterio 2, su verificación y su paso 4.
 **CE-10:** la dirección es `https://incovsa.tech`.
 **CE-15:** agregué el paso 8 con lo que cambió CE-08 en el Documento 5 (dirección, R2, rclone y `PATH` del `cron`, primer despliegue sin pasos a mano) y precisé los pasos 6 y 7.
-En la revisión de CE-08 quedaron dos pendientes para ti: `docker-compose.yml` y el `Caddyfile` todavía usan `incovsa.com` como valor por omisión de `DOMINIO`, y el `README.md` (líneas 65 y 157) habla del DNS de incovsa.com como pendiente.
+**CE-15:** de la revisión de CE-08 quedan dos pendientes: `docker-compose.yml` y el `Caddyfile` todavía usan `incovsa.com` como valor por omisión de `DOMINIO`, y el `README.md` (líneas 65 y 157) habla del DNS de incovsa.com como pendiente.
 **JG-27:** actualicé en `plan/seguridad/asvs-nivel-2.md` las citas de V13.2.1, V13.3.1 y V13.3.2, que apuntaban a `pasos-hugo.md`.
