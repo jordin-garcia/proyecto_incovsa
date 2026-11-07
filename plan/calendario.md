@@ -69,6 +69,6 @@ Cada tarea tiene su día en el campo `programada`. Esta tabla la genera `node sc
 | Dom 8 nov | **JG-22** Presentación previa con otro docente (09/11) | — | **DM-12** Carga del contenido oficial de INCOVSA en producción | — | — |
 | Lun 9 nov | **JG-20** Material y cuentas para la capacitación | — | — | — | — |
 | Mar 10 nov | **JG-21** Capacitación al personal de INCOVSA y evidencia (Anexo H) | — | — | — | — |
-| Mié 11 nov | **JG-31** Presentación final a la empresa (12/11) | **CE-15** Versión 1.1 del Documento 5 y de los anexos I y J, con producción y transferencia | — | — | — |
+| Mié 11 nov | **JG-31** Presentación final a la empresa (12/11)<br>**JG-35** Armado y entrega de la versión 1.1 de la documentación a INCOVSA | **CE-15** Versión 1.1 del Documento 5 y de los anexos I y J, con producción y transferencia | — | — | — |
 
 <!-- calendario:fin -->
