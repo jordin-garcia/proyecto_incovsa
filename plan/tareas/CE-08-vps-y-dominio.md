@@ -5,7 +5,7 @@ persona: carlos
 responsable: Carlos Hugo Escobar
 hito: E3
 prioridad: P1
-estado: pendiente
+estado: hecha
 depende_de: [CE-06, CE-07]
 programada: 2026-11-06
 requisitos: [RNF-09, RNF-10, RNF-12]
@@ -17,6 +17,8 @@ pantallas: []
 **Responsable:** Carlos Hugo Escobar · **Hito:** E3 · **Prioridad:** P1 · **Programada:** vie 06/11 · **Depende de:** CE-06, CE-07
 
 > **06/11: replanteada con la decisión 91** (`specs/16`). INCOVSA no entregó los accesos: el VPS es uno de **Hostinger, plan KVM 2**, que contrata Jordin con un correo de soporte para INCOVSA, igual que la cuenta de Cloudflare. El sistema se publica con el **nombre que Hostinger le da al VPS** (`srvXXXX.hstgr.cloud`), no en `incovsa.com`, y las imágenes se sirven desde la dirección **`r2.dev`** del bucket. Esta tarea la hace el coordinador (protocolo §E), que tiene los accesos.
+
+> **06/11: precisada al implementarla.** Jordin decidió publicar en **`incovsa.tech`**, el dominio que Hostinger incluyó con el VPS, con su DNS en Cloudflare y las imágenes en **`imagenes.incovsa.tech`**. Donde los pasos y criterios dicen «nombre de Hostinger» o `r2.dev`, vale `incovsa.tech` e `imagenes.incovsa.tech` (`specs/16`, decisión 91; `specs/18`).
 
 ## Objetivo
 Dejar el VPS de Hostinger y los buckets de R2 listos y seguros para el primer despliegue (JG-19; specs/16, decisiones 28, 31 a 34 y 91).
@@ -50,7 +52,7 @@ Dejar el VPS de Hostinger y los buckets de R2 listos y seguros para el primer de
 ## Verificación
 ```
 sudo bash evidencia/CE-08/verificar-vps.sh        # en el VPS
-curl -sI https://<nombre del VPS en Hostinger>
+curl -sI https://incovsa.tech
 curl -sI <URL_IMAGENES>/<clave de una imagen subida desde el panel>
 gh run list --workflow despliegue.yml --limit 3
 ```
@@ -74,3 +76,28 @@ La tarea estuvo bloqueada del 20/10 al 06/11 por falta de los accesos de INCOVSA
 - `.env.produccion.example` — comentario `IMAGEN_APP` alineado con CE-06 (prod no usa `:latest`).
 
 **Excepción de alcance (§C).** El protocolo pide un PR de bloqueo solo con la tarea y la bitácora. La asignación del coordinador del proyecto pidió dejar guía y scripts en `evidencia/CE-08/` y el comentario `IMAGEN_APP` en este mismo PR. Tras la CORRECCIÓN de `revision-claude` (2026-10-20): drop-in SSH `00-incovsa.conf` (gana a cloud-init), aborto si no hay llave antes de tocar SSH, UFW solo `22/80/443`, `verificar-vps.sh` como root y sin aceptar login root.
+
+## Resultado
+
+Lo hizo el coordinador (protocolo §E) el 06/11/2026. La evidencia completa de los cinco criterios está en `evidencia/CE-08/README.md`.
+
+**Qué quedó listo**
+- **VPS:** Hostinger KVM 2, Ubuntu 24.04.5, `srv2136614.hstgr.cloud`. Endurecido con `evidencia/CE-08/preparar-vps.sh`: SSH solo con llave y sin root, usuario `despliegue` (grupo `docker`, sin `sudo`), UFW con 22, 80 y 443, Docker y Compose oficiales, Node.js 24. rclone 1.76 oficial con `evidencia/CE-08/instalar-rclone.sh`, en `~/.local/bin` de `despliegue`.
+- **Dirección:** `https://incovsa.tech`, certificado de Let's Encrypt emitido por Caddy. DNS de `incovsa.tech` en la cuenta de Cloudflare de soporte: CNAME al nombre del VPS, en «DNS only».
+- **R2:** `incovsa-imagenes`, servido solo por `https://imagenes.incovsa.tech` (`r2.dev` desactivado), e `incovsa-respaldos`, privado. Un token por bucket.
+- **Aplicación:** `~/incovsa` con `docker-compose.yml`, `Caddyfile`, `.env` (modo 600, escrito por Jordin, con `URL_ODOO`) y `scripts/` de respaldo. Corre la imagen de `develop` 437cddb (`proyecto_incovsa-prueba:evidencia-poda-5`), con la semilla base y un administrador que creó Jordin.
+- **Respaldos:** `cron` de `despliegue` a las 02:15 UTC (20:15 en Guatemala), con `PATH=` que pone `~/.local/bin` primero. Respaldo y restauración probados contra R2.
+- **GitHub:** `environment: produccion` con `VPS_HOST`, `VPS_USUARIO`, `VPS_LLAVE_SSH` y `VPS_KNOWN_HOSTS`, y la variable `DOMINIO=incovsa.tech`.
+
+**Decisiones**
+- `incovsa.tech` en lugar del nombre de Hostinger y de `r2.dev` (decisión de Jordin, `specs/16` decisión 91 y `specs/18`).
+- **Corrección de `despliegue.yml` (CE-06):** el script del paso SSH llega por la entrada estándar y `docker compose run` se lo comía: el flujo migraba y no reiniciaba la aplicación. La migración corre ahora con `-T` y `</dev/null`, y el flujo arranca `app` y `caddy` (antes, Caddy no arrancaba en un VPS nuevo). La comprobación final se llama «Comprobar la dirección de producción» y usa `vars.DOMINIO`. Pruebas en `scripts/flujos.test.mjs`.
+- rclone oficial en lugar del de Ubuntu (error 501 con R2). Sin `unzip` ni root, se descomprime con `python3 -m zipfile`.
+- El VPS no guarda credenciales de GHCR: la prueba usó un `docker login` temporal y terminó con `docker logout`.
+
+**Cómo usarlo**
+- **JG-19:** al integrar en `main`, el flujo entra por SSH como `despliegue`, migra, arranca `app` y `caddy` y comprueba `https://incovsa.tech`. No hace falta arrancar Caddy a mano. La base ya tiene la semilla base y un administrador de prueba.
+- **Entrar al VPS:** `ssh despliegue@srv2136614.hstgr.cloud` con una llave autorizada. Root solo entra por la consola de Hostinger, también para correr `verificar-vps.sh`.
+- **Comandos en el VPS por SSH:** si se manda un script por la entrada estándar (`ssh … 'bash -s' < script`), cada `docker compose run` o `exec` debe llevar `-T` y `</dev/null`, o se come el resto del script.
+- **CE-10 y DM-12:** la dirección es `https://incovsa.tech`.
+- **CE-15:** el paso 8 de su tarea lista lo que cambió en el Documento 5.

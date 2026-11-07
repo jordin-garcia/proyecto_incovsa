@@ -17,7 +17,7 @@ pantallas: []
 **Responsable:** Jordin García · **Hito:** entrega · **Prioridad:** P1 · **Programada:** sáb 07/11 · **Depende de:** JG-17, CE-06, CE-07, CE-08, JC-10, JG-26, DM-14, CE-14, JM-10, JG-27
 
 ## Objetivo
-Después de la entrega académica del 04/11 y en cuanto el VPS de Hostinger esté listo (CE-08; specs/16, decisiones 90 y 91), integrar `develop` en `main`, lo que dispara el **primer despliegue automático** a producción (specs/16, decisiones 31 y 75), y verificar que la aplicación funciona con HTTPS en el nombre que Hostinger le da al VPS (`srvXXXX.hstgr.cloud`, decisión 91; CE-10).
+Después de la entrega académica del 04/11 y en cuanto el VPS de Hostinger esté listo (CE-08; specs/16, decisiones 90 y 91), integrar `develop` en `main`, lo que dispara el **primer despliegue automático** a producción (specs/16, decisiones 31 y 75), y verificar que la aplicación funciona con HTTPS en `https://incovsa.tech` (decisión 91, precisada en CE-08; CE-10).
 
 ## Contexto que debes leer
 - `specs/16` "Despliegue" y decisiones 27 a 34, 37, 75 y 91
@@ -28,7 +28,7 @@ Después de la entrega académica del 04/11 y en cuanto el VPS de Hostinger est�
 1. Confirmar que `develop` tiene todas las verificaciones en verde, que el recorrido diario del día pasó y que no quedan tareas del hito E3 pendientes.
 2. Abrir el PR `[JG-19] Versión 1.0: integración de develop en main` de `develop` a `main` e integrarlo (solo el coordinador; integración de tipo *merge*, para conservar la historia).
 3. Seguir el despliegue automático (`gh run watch`): imagen en GHCR, migraciones y reinicio en el VPS.
-4. En el VPS, crear el administrador inicial con `npm run crear-admin` dentro del contenedor (P-08: la persona que indique INCOVSA). Si P-08 no está resuelto, detente y pregúntale a Jordin.
+4. En el VPS, crear el administrador inicial con `npm run crear-admin` dentro del contenedor (P-08: la persona que indique INCOVSA). Si P-08 no está resuelto, detente y pregúntale a Jordin. **(06/11, CE-08)** La base de producción ya tiene la semilla base y un administrador que creó Jordin para las pruebas; con P-08 resuelto, basta crear la cuenta de esa persona.
 5. Crear la etiqueta `v1.0-final` sobre el *commit* de `main` desplegado.
 6. Con CE-10, verificar producción.
 
@@ -37,14 +37,14 @@ Después de la entrega académica del 04/11 y en cuanto el VPS de Hostinger est�
 
 ## Criterios de aceptación
 1. `main` tiene todo `develop`, y el despliegue automático terminó sin errores.
-2. El nombre de Hostinger del VPS responde con HTTPS válido y las cabeceras de seguridad.
+2. `https://incovsa.tech` (decisión 91, CE-08) responde con HTTPS válido y las cabeceras de seguridad.
 3. El administrador inicial existe y entra a los dos sistemas.
 4. La etiqueta `v1.0-final` existe.
 
 ## Verificación
 ```
 gh run list --branch main --limit 3
-curl -sI https://<nombre del VPS en Hostinger>
+curl -sI https://incovsa.tech
 ```
 
 ## Fuera de alcance

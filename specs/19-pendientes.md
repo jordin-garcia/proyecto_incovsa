@@ -18,7 +18,7 @@ Las dudas sobre los cambios de la reunión 5 (13/10/2026) las resolvió el coord
 | P-07 | Tiempo de expiración de las sesiones | P2 |
 | P-08 | Usuario administrador inicial | P2 |
 | P-94 | **Cuenta u organización de GitHub de INCOVSA** a la que se transfiere el repositorio el 12/11 ([16](16-arquitectura-y-tecnologia.md), decisión 33). **(06/11)** El correo y las cuentas de Hostinger, Cloudflare y Google Drive ya no dependen de INCOVSA: los crea el coordinador (decisión 91) | P2 |
-| P-99 | **Continuidad del VPS de Hostinger** ([16](16-arquitectura-y-tecnologia.md), decisión 91): el plan está pagado por un mes. INCOVSA decide si lo renueva o se cambia a otro VPS, y si publica el sistema en incovsa.com, con las imágenes en un dominio propio en vez de `r2.dev`. El Documento 5 v1.1 (CE-15) le explica cómo. Es posterior a la entrega del 12/11 | P3 |
+| P-99 | **Continuidad del VPS de Hostinger** ([16](16-arquitectura-y-tecnologia.md), decisión 91): el plan está pagado por un mes. INCOVSA decide si lo renueva o se cambia a otro VPS, y si publica el sistema en incovsa.com, con las imágenes en un dominio propio en vez de `r2.dev`. El Documento 5 v1.1 (CE-15) le explica cómo. **(06/11, CE-08)** El sistema está en `incovsa.tech`, con las imágenes en `imagenes.incovsa.tech`; INCOVSA decide también si renueva ese dominio, que vence el 07/11/2027. Es posterior a la entrega del 12/11 | P3 |
 | P-17 | Datos de los productos públicos: nombre, descripción, presentación, países de origen e industrias de cada uno | P2 |
 | P-18 | Logotipo vectorial, códigos de color exactos y tipografía | P2 |
 | P-19 | Texto de la historia de la empresa y sus imágenes (opcionales). **(06/11)** Ya no se piden las imágenes de los 5 valores: se quitaron del sitio | P2 |

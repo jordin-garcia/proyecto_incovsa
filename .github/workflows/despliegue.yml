@@ -346,26 +346,35 @@ jobs:
           export IMAGEN_APP="\$IMAGEN"
           docker compose up -d postgres --wait
           docker compose pull app
+          # Este script llega por la entrada estándar (bash -s): un comando que la lea se come el resto (CE-08).
+          # Se nombra caddy porque «up -d app» no lo arranca en un VPS nuevo.
           if [ "\$MIGRAR" = "true" ]; then
             # Contenedor de un solo uso: solo migrate (el ENTRYPOINT de la imagen arranca el servidor).
-            docker compose run --rm --no-deps --entrypoint ./node_modules/.bin/prisma app migrate deploy
-            docker compose up -d app
+            docker compose run --rm -T --no-deps --entrypoint ./node_modules/.bin/prisma app migrate deploy </dev/null
+            docker compose up -d app caddy
           else
             # Volver atrás sin migraciones: anula el ENTRYPOINT que siempre corre migrate deploy.
             printf '%s\n' 'services:' '  app:' '    entrypoint: ["node", "server.js"]' > /tmp/incovsa-sin-migrate.yml
-            docker compose -f docker-compose.yml -f /tmp/incovsa-sin-migrate.yml up -d app
+            docker compose -f docker-compose.yml -f /tmp/incovsa-sin-migrate.yml up -d app caddy
             rm -f /tmp/incovsa-sin-migrate.yml
           fi
           docker logout ghcr.io >/dev/null 2>&1 || true
           EOF
 
-      - name: "Comprobar https://incovsa.com"
+      # La dirección es la variable DOMINIO del environment produccion (CE-08, decisión 91), no una fija.
+      - name: "Comprobar la dirección de producción"
         if: ${{ steps.vps.outputs.listo == 'true' }}
+        env:
+          DOMINIO: ${{ vars.DOMINIO }}
         run: |
           set -euo pipefail
+          if ! [[ "$DOMINIO" =~ ^[a-z0-9]([a-z0-9.-]{0,251}[a-z0-9])?$ ]]; then
+            echo "Falta la variable DOMINIO del environment produccion, o no es un nombre de dominio." >&2
+            exit 1
+          fi
           listo=0
           for _ in $(seq 1 24); do
-            if curl -fsS --max-time 15 https://incovsa.com/ -o /dev/null; then
+            if curl -fsS --max-time 15 "https://${DOMINIO}/" -o /dev/null; then
               listo=1
               break
             fi
