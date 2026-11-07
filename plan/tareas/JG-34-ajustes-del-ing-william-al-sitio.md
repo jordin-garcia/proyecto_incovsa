@@ -28,7 +28,7 @@ Quitar los valores del sitio y del panel, mostrar misión y visión sin recuadro
 
 ## Qué hacer
 1. **Valores:** quitar la sección «Valores · Lo que nos guía» de «Quiénes somos», su lectura y sus estilos, y el bloque «Valores» del panel (editor, esquema, servicio y resumen). La tabla `valor` se queda: no hay migración.
-2. **Fondos de «Quiénes somos»** (decisión del coordinador del 06/11): Historia claro, «Misión y visión» verde, «A quién servimos» claro e «INCOVSA e Inquiserca» verde, para que sigan alternándose.
+2. **Fondos de «Quiénes somos»** (decisión del coordinador del 06/11): la misión y la visión van en secciones separadas: Historia claro, Misión verde (con el encabezado «Misión y visión»), Visión claro, «A quién servimos» verde e «INCOVSA e Inquiserca» claro, para que se alternen hasta el pie verde. En Inicio siguen juntas.
 3. **Misión y visión** (Inicio y «Quiénes somos»): sin imágenes, la fila es de una columna, solo con el texto y sin el recuadro vacío; sin texto pero con imágenes, la fila conserva la etiqueta y el título (decisión del coordinador del 06/11) y la galería, sin el párrafo; sin texto ni imágenes, la fila no se muestra.
 4. **Párrafos justificados** en Inicio y «Quiénes somos» (`text-align: justify` con `hyphens: auto`): portada, misión, visión, historia, mercados, grupo y los párrafos de las secciones. Los títulos, los botones y las tarjetas de industrias y sedes no cambian.
 5. **Avisos:** quitar el de Contacto («Los productos químicos que distribuye INCOVSA tienen restricciones de venta…») y el de la ficha de producto completo («El precio y el número de lote no se publican…»).
@@ -47,7 +47,7 @@ Quitar los valores del sitio y del panel, mostrar misión y visión sin recuadro
 - `specs/01`, `03`, `04`, `05`, `14` y `18` (modificar)
 
 ## Criterios de aceptación
-1. **RF-SW-02 (06/11):** «Quiénes somos» no muestra la sección de valores y sus fondos se alternan: Historia claro, «Misión y visión» verde, «A quién servimos» claro e «INCOVSA e Inquiserca» verde.
+1. **RF-SW-02 (06/11):** «Quiénes somos» no muestra la sección de valores y sus fondos se alternan: Historia claro, Misión verde, Visión claro, «A quién servimos» verde e «INCOVSA e Inquiserca» claro.
 2. **RF-SW-23 (06/11):** el panel de contenido institucional no tiene el bloque «Valores», el servidor rechaza publicar el bloque `valores` y el resumen dice «Falta la historia» mientras no haya historia.
 3. **RF-SW-01 / RF-SW-02 (06/11):** en misión y visión, sin imágenes la fila tiene una sola columna, solo con el texto y sin recuadro vacío; sin texto, la fila muestra la etiqueta, el título y la galería, sin párrafo; sin texto ni imágenes, la fila no se muestra.
 4. **RF-SW-01 / RF-SW-02 (06/11):** los párrafos de Inicio y «Quiénes somos» están justificados; los títulos y las tarjetas de industrias no.

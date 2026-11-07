@@ -46,22 +46,27 @@ test("RF-SW-02 / CAM-79 / RNF-08: secciones, fondos, pie y accesibilidad de Qui�
   await expect(page.locator(".valores-fila, .valor-t")).toHaveCount(0);
   await expect(page.locator("main")).not.toContainText(/P-19|La historia la redacta|Faltan las imágenes/);
   await expect(page.getByRole("contentinfo")).toBeAttached();
-  // JG-34: los fondos siguen alternándose: Historia claro, Misión y visión verde, A quién servimos claro e
-  // INCOVSA e Inquiserca verde.
+  // JG-34 (decisión del coordinador del 06/11): los fondos se alternan hasta el pie verde: Historia claro, Misión
+  // verde, Visión claro, A quién servimos verde e INCOVSA e Inquiserca claro.
+  const secciones = page.locator("main > section");
   const seccion = (titulo: string) =>
-    page.locator("main > section").filter({ has: page.getByRole("heading", { level: 2, name: titulo, exact: true }) });
-  for (const titulo of ["Misión y visión", "Dos empresas del mismo grupo, una sola identidad"])
-    await expect(seccion(titulo)).toHaveCSS("background-color", "rgb(3, 31, 11)");
-  for (const titulo of [
-    "De tenería a distribuidor de productos químicos",
-    "Dos mercados, la misma calidad de producto",
-  ])
-    expect(await seccion(titulo).evaluate((el) => getComputedStyle(el).backgroundColor)).not.toBe("rgb(3, 31, 11)");
-  // JG-34: el título del grupo sigue legible sobre el verde.
-  await expect(seccion("Dos empresas del mismo grupo, una sola identidad").locator("h2")).toHaveCSS(
-    "color",
-    "rgb(255, 255, 255)",
-  );
+    secciones.filter({ has: page.getByRole("heading", { name: titulo, exact: true }) });
+  await expect(secciones).toHaveCount(6);
+  const orden = [
+    ["De tenería a distribuidor de productos químicos", false],
+    ["Nuestra misión", true],
+    ["Nuestra visión", false],
+    ["Dos mercados, la misma calidad de producto", true],
+    ["Dos empresas del mismo grupo, una sola identidad", false],
+  ] as const;
+  for (const [indice, [titulo, verde]] of orden.entries()) {
+    await expect(secciones.nth(indice + 1)).toContainText(titulo);
+    const fondo = await seccion(titulo).evaluate((el) => getComputedStyle(el).backgroundColor);
+    if (verde) expect(fondo).toBe("rgb(3, 31, 11)");
+    else expect(fondo).not.toBe("rgb(3, 31, 11)");
+  }
+  // La misión conserva el encabezado «Misión y visión» de la sección.
+  await expect(seccion("Nuestra misión").getByRole("heading", { level: 2 })).toHaveText("Misión y visión");
   // JG-34: los párrafos van justificados; los títulos no.
   for (const parrafo of [
     page.locator(".banner-nos p:not(.eyebrow)"),

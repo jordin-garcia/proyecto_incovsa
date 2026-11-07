@@ -1,6 +1,6 @@
 import { Icono } from "@/componentes/comunes/iconos";
 import { Galeria } from "@/componentes/sitio/Galeria";
-import { MisionVision } from "@/componentes/sitio/MisionVision";
+import { MisionVision, tieneContenido } from "@/componentes/sitio/MisionVision";
 import { LogotiposAlternados } from "@/componentes/sitio/LogotiposAlternados";
 import { leerInicioSitio } from "@/modulos/contenido/servicio";
 import { leerNosotrosSitio } from "@/modulos/contenido/nosotros";
@@ -50,12 +50,20 @@ export default async function Nosotros() {
               <h2>Misión y visión</h2>
             </div>
           </div>
-          <MisionVision mision={inicio.mision} vision={inicio.vision} />
+          <MisionVision mision={inicio.mision} vision={inicio.vision} solo="mision" />
         </div>
       </section>
-      {/* JG-34 (06/11): sin Valores, los fondos se alternan con «A quién servimos» claro e «INCOVSA e Inquiserca»
-          verde. */}
-      <section className="sec">
+      {/* JG-34 (06/11, decisión del coordinador): sin Valores, la visión va en su propia sección clara para que los
+          fondos se alternen: Historia claro, Misión verde, Visión claro, A quién servimos verde e INCOVSA e
+          Inquiserca claro, antes del pie verde. */}
+      {tieneContenido(inicio.vision) && (
+        <section className="sec">
+          <div className="wrap">
+            <MisionVision mision={inicio.mision} vision={inicio.vision} solo="vision" />
+          </div>
+        </section>
+      )}
+      <section className="sec sec-verde">
         <div className="wrap">
           <div className="cab-sec">
             <div>
@@ -87,9 +95,9 @@ export default async function Nosotros() {
           </div>
         </div>
       </section>
-      <section className="sec sec-verde">
+      <section className="sec">
         <div className="wrap grupo">
-          <LogotiposAlternados {...logos} />
+          <LogotiposAlternados {...logos} claro />
           <div>
             <p className="eyebrow">INCOVSA e Inquiserca</p>
             <h2>Dos empresas del mismo grupo, una sola identidad</h2>

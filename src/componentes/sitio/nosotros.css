@@ -107,13 +107,6 @@
     font-size: 17px;
     color: var(--g600);
   }
-  /* JG-34 (06/11): «INCOVSA e Inquiserca» pasa al verde del pie, con los mismos colores que «Misión y visión». */
-  .sec-verde .grupo h2 {
-    color: var(--color-blanco);
-  }
-  .sec-verde .grupo p:last-child {
-    color: var(--v200);
-  }
 }
 @keyframes alternar-logotipos {
   0% {

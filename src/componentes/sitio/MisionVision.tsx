@@ -2,6 +2,8 @@ import { Galeria } from "./Galeria";
 
 type Seccion = { texto: string; imagenes: string[] };
 
+export const tieneContenido = (seccion: Seccion) => !!seccion.texto || !!seccion.imagenes.length;
+
 /**
  * Una fila de misión o de visión (JG-34, pedido del Ing. William del 06/11): sin imágenes queda de una columna, solo
  * con el texto; sin texto conserva la etiqueta, el título y la galería; sin ninguno de los dos no se muestra.
@@ -17,7 +19,7 @@ function Fila({
   titulo: string;
   inversa?: boolean;
 }) {
-  if (!seccion.texto && !seccion.imagenes.length) return null;
+  if (!tieneContenido(seccion)) return null;
   const texto = (
     <div className="mv-txt">
       <p className="eyebrow">{etiqueta}</p>
@@ -36,11 +38,20 @@ function Fila({
   );
 }
 
-export function MisionVision({ mision, vision }: { mision: Seccion; vision: Seccion }) {
+/** En Quiénes somos, la misión y la visión van en secciones separadas (`solo`) para alternar los fondos (JG-34). */
+export function MisionVision({
+  mision,
+  vision,
+  solo,
+}: {
+  mision: Seccion;
+  vision: Seccion;
+  solo?: "mision" | "vision";
+}) {
   return (
     <div className="mv">
-      <Fila seccion={mision} etiqueta="Misión" titulo="Nuestra misión" />
-      <Fila seccion={vision} etiqueta="Visión" titulo="Nuestra visión" inversa />
+      {solo !== "vision" && <Fila seccion={mision} etiqueta="Misión" titulo="Nuestra misión" />}
+      {solo !== "mision" && <Fila seccion={vision} etiqueta="Visión" titulo="Nuestra visión" inversa />}
     </div>
   );
 }

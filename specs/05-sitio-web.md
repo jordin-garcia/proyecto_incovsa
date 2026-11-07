@@ -125,7 +125,7 @@ La imagen original de la visión dice "tranparente"; el texto del sitio dice "tr
 - **Sin valores (06/11, pedido del Ing. William):** la sección «Valores · Lo que nos guía» del prototipo (RF-SW-29 del 13/10) se quita del sitio y del panel. La tabla `valor` se conserva en la base de datos, sin uso, para no hacer una migración.
 - **A quién servimos:** mercado industrial y mercado artesanal, como en el prototipo.
 - **INCOVSA e Inquiserca (15/10):** el bloque muestra los **logotipos de INCOVSA e Inquiserca alternándose**, de la misma manera que el banner principal. Si no hay logotipo de Inquiserca, muestra solo el de INCOVSA.
-- **Fondos (15/10; 06/11):** se alternan claro y verde (`--v950`, el verde del pie de página): **Historia** claro, **"Misión y visión"** verde, **"A quién servimos"** claro e **"INCOVSA e Inquiserca"** verde. El 15/10 "A quién servimos" era verde e "INCOVSA e Inquiserca" claro; al quitar Valores quedaban dos verdes seguidas y el coordinador decidió invertirlas (06/11).
+- **Fondos (15/10; 06/11):** se alternan claro y verde (`--v950`, el verde del pie de página) hasta el pie: **Historia** claro, **Misión** verde (con el encabezado «Propósito · Misión y visión»), **Visión** claro, en su propia sección, **"A quién servimos"** verde e **"INCOVSA e Inquiserca"** claro. Si la visión no tiene texto ni imágenes, su sección no se muestra. Decisión del coordinador del 06/11: al quitar Valores quedaban dos verdes seguidas, y con "INCOVSA e Inquiserca" en verde ese bloque se unía con el pie. En Inicio, misión y visión siguen juntas en una sección verde.
 
 ### Industrias (RF-SW-03)
 
