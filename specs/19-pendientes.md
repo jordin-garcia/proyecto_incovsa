@@ -21,7 +21,7 @@ Las dudas sobre los cambios de la reunión 5 (13/10/2026) las resolvió el coord
 | P-99 | **Continuidad del VPS de Hostinger** ([16](16-arquitectura-y-tecnologia.md), decisión 91): el plan está pagado por un mes. INCOVSA decide si lo renueva o se cambia a otro VPS, y si publica el sistema en incovsa.com, con las imágenes en un dominio propio en vez de `r2.dev`. El Documento 5 v1.1 (CE-15) le explica cómo. Es posterior a la entrega del 12/11 | P3 |
 | P-17 | Datos de los productos públicos: nombre, descripción, presentación, países de origen e industrias de cada uno | P2 |
 | P-18 | Logotipo vectorial, códigos de color exactos y tipografía | P2 |
-| P-19 | Texto de la historia de la empresa y sus imágenes (opcionales), y las imágenes de los 5 valores | P2 |
+| P-19 | Texto de la historia de la empresa y sus imágenes (opcionales). **(06/11)** Ya no se piden las imágenes de los 5 valores: se quitaron del sitio | P2 |
 | P-21 | Descripciones definitivas e imágenes en alta resolución de las 9 industrias | P2 |
 | P-22 | Horarios de Quetzaltenango y Guatemala (desde el 13/10 ya no hace falta el correo que recibía las solicitudes) | P2 |
 | P-23 | Contenido inicial de Noticias | P2 |

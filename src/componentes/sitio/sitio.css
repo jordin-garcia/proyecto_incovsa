@@ -165,12 +165,8 @@
   .sec-verde .mv-txt h3 {
     color: var(--color-blanco);
   }
-  .sec-verde .mv-txt p:last-child {
+  .sec-verde .mv-parrafo {
     color: var(--v200);
-  }
-  .sec-verde .mv-sin {
-    border-color: var(--color-prototipo-25);
-    background: var(--color-prototipo-27);
   }
   .cab-sec {
     display: flex;
@@ -493,23 +489,37 @@
     font-size: 30px;
     margin-top: 10px;
   }
-  .mv-txt p:last-child {
+  .mv-parrafo {
     margin-top: 14px;
     font-size: 17.5px;
     line-height: 1.75;
   }
-  .mv-gal,
-  .mv-sin {
-    aspect-ratio: 16 / 10;
-    border-radius: var(--r-xl);
+  /* JG-34 (06/11): sin imágenes, la fila es de una sola columna y no deja el recuadro vacío. */
+  .mv-fila.una-col {
+    grid-template-columns: 1fr;
   }
   .mv-gal {
+    aspect-ratio: 16 / 10;
+    border-radius: var(--r-xl);
     height: auto;
     box-shadow: var(--s2);
   }
-  .mv-sin {
-    border: 1.5px dashed var(--g200);
-    background: var(--g50);
+  /* JG-34 (pedido del Ing. William, 06/11): los párrafos de Inicio y «Quiénes somos» van justificados, con
+     guiones automáticos (html lang="es") para que no queden huecos en las columnas angostas del teléfono. Los
+     títulos, los botones y las tarjetas de industrias y sedes no cambian. */
+  :is(.inicio, .nosotros)
+    :is(
+      .hero p.lead,
+      .pag-cab p:not(.eyebrow),
+      .cab-sec p:not(.eyebrow),
+      .mv-parrafo,
+      .historia-texto,
+      .mercado p,
+      .grupo p:not(.eyebrow),
+      .llamado p
+    ) {
+    text-align: justify;
+    hyphens: auto;
   }
   .revelar {
     visibility: hidden;
@@ -978,9 +988,6 @@
   }
   .descripcion-producto {
     grid-column: 1 / -1;
-  }
-  .aviso-producto {
-    margin-top: 18px;
   }
   .acciones-producto {
     display: flex;

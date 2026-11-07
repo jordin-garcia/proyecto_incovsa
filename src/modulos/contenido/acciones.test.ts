@@ -3,7 +3,9 @@ import type { SesionActual } from "@/lib/sesion";
 import { prisma } from "@/lib/prisma";
 import { limpiarTablasDeNegocio } from "../../../pruebas/bd";
 import sharp from "sharp";
-import { leerImagenLocal, borrarImagen } from "@/modulos/almacenamiento/servicio";
+import { readdir } from "node:fs/promises";
+import { join } from "node:path";
+import { leerImagenLocal } from "@/modulos/almacenamiento/servicio";
 import { leerResumen } from "./resumen";
 import { leerEstructuraSitio } from "./servicio";
 const estado = vi.hoisted(() => ({ sesion: null as SesionActual | null }));
@@ -65,39 +67,29 @@ it("RF-SW-23 / RN-39: publica el texto y registra el bloque en la misma operaci�
   expect(registro.operacion).toBe("Cambio de contenido del sitio");
   expect(registro.detalle).toEqual({ bloque: "Misión" });
 });
-it("RF-SW-29: conserva las cinco posiciones de los valores, incluidos los espacios vacíos", async () => {
-  expect((await publicarContenido(formulario("valores", [null, null, null, null, null]))).ok).toBe(true);
-  expect((await prisma.valor.findMany({ orderBy: { posicion: "asc" } })).map((v) => [v.posicion, v.imagenUrl])).toEqual(
-    [1, 2, 3, 4, 5].map((p) => [p, null]),
-  );
-  expect((await publicarContenido(formulario("valores", [null]))).ok).toBe(false);
+it("RF-SW-23 (06/11): el bloque de valores ya no se publica y la tabla no cambia", async () => {
+  const antes = await prisma.valor.findMany({ orderBy: { posicion: "asc" } });
+  expect((await publicarContenido(formulario("valores", [null, null, null, null, null]))).ok).toBe(false);
+  expect(await prisma.valor.findMany({ orderBy: { posicion: "asc" } })).toEqual(antes);
+  expect(await prisma.bitacora.count()).toBe(0);
+});
+it("RF-SW-23 / RNF-05 (06/11): un bloque de valores con imágenes se rechaza sin guardar los archivos", async () => {
+  const carpeta = join(process.cwd(), "almacenamiento-local", "imagenes");
+  const guardadas = async () => (await readdir(carpeta).catch(() => [] as string[])).sort();
+  const antes = await guardadas();
+  const png = await sharp({ create: { width: 10, height: 10, channels: 4, background: "transparent" } })
+    .png()
+    .toBuffer();
+  const datos = formulario("valores", [0, null, null, null, null]);
+  datos.append("imagenes", new File([new Uint8Array(png)], "valor.png", { type: "image/png" }));
+  const resultado = await publicarContenido(datos);
+  expect(resultado).toMatchObject({ ok: false, error: "El contenido o la cantidad de imágenes no es válido." });
+  expect(await guardadas()).toEqual(antes);
+  expect(await prisma.bitacora.count()).toBe(0);
 });
 it("RNF-05: impide asociar imágenes ajenas o direcciones proporcionadas por el navegador", async () => {
   expect((await publicarContenido(formulario("mision", ["https://ejemplo.invalid/imagen.webp"]))).ok).toBe(false);
   expect(await prisma.bitacora.count()).toBe(0);
-});
-
-it("RF-SW-29 / RN-39: publica cinco imágenes en sus posiciones y elimina la sustituida", async () => {
-  const png = await sharp({ create: { width: 10, height: 10, channels: 4, background: "transparent" } })
-    .png()
-    .toBuffer();
-  const datos = formulario("valores", [0, 1, 2, 3, 4]);
-  for (let i = 0; i < 5; i++)
-    datos.append("imagenes", new File([new Uint8Array(png)], `${i}.png`, { type: "image/png" }));
-  const resultado = await publicarContenido(datos);
-  expect(resultado.ok).toBe(true);
-  if (!resultado.ok) throw new Error("No se publicaron los valores");
-  const valores = await prisma.valor.findMany({ orderBy: { posicion: "asc" } });
-  expect(valores.map((v) => v.imagenUrl)).toEqual(resultado.datos.imagenes);
-  const sustituida = valores[2]!.imagenUrl!;
-  const siguientes = valores.map((v) => (v.posicion === 3 ? null : v.imagenUrl));
-  expect((await publicarContenido(formulario("valores", siguientes))).ok).toBe(true);
-  expect(await leerImagenLocal(sustituida.replace("/api/imagenes/", ""))).toBeNull();
-  expect(await prisma.bitacora.count()).toBe(2);
-  expect((await prisma.bitacora.findFirstOrThrow({ orderBy: { id: "desc" } })).detalle).toMatchObject({
-    bloque: "Imagen del valor 3",
-  });
-  await Promise.all(siguientes.filter((v): v is string => v !== null).map(borrarImagen));
 });
 
 it("RNF-05 / H-05: la publicación institucional acepta el origen público y no el origen interno del proxy", async () => {
@@ -152,6 +144,15 @@ it("RF-SW-23: quitar Inquiserca guarda null y permite recuperar el logotipo reci
 
 it("RF-SW-07 / RF-SW-25: el resumen consulta solo las tarjetas permitidas", async () => {
   expect((await leerResumen(sesion)).map((t) => t.ruta)).toEqual(["contenido"]);
+  // JG-34 (06/11): sin valores, la tarjeta solo depende de la historia.
+  await prisma.contenidoInstitucional.deleteMany({ where: { seccion: "historia" } });
+  expect((await leerResumen(sesion))[0]).toMatchObject({
+    detalle: "Portada, logotipos, historia, misión y visión",
+    estado: "Falta la historia",
+    color: "a",
+  });
+  await prisma.contenidoInstitucional.create({ data: { seccion: "historia", texto: "Historia de prueba" } });
+  expect((await leerResumen(sesion))[0]).toMatchObject({ estado: "Completo", color: "v" });
   await expect(leerResumen({ ...sesion, permisos: [] })).rejects.toThrow("No tiene permisos");
 });
 

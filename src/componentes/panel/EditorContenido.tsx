@@ -76,27 +76,23 @@ function BloqueEditor({
   }
   const cargadas = publicado.imagenes.filter(Boolean).length;
   const estado =
-    bloque === "valores"
-      ? cargadas === 5
-        ? "Completos"
-        : `${cargadas} de 5`
-      : bloque === "logo"
+    bloque === "logo"
+      ? cargadas
+        ? "Cambiado"
+        : "El recibido"
+      : bloque === "inquiserca"
         ? cargadas
-          ? "Cambiado"
-          : "El recibido"
-        : bloque === "inquiserca"
+          ? publicado.imagenes[0] === "/marca/inquiserca.webp"
+            ? "El recibido"
+            : "Cambiado"
+          : "Sin logotipo"
+        : bloque === "portada"
           ? cargadas
-            ? publicado.imagenes[0] === "/marca/inquiserca.webp"
-              ? "El recibido"
-              : "Cambiado"
-            : "Sin logotipo"
-          : bloque === "portada"
-            ? cargadas
-              ? "Publicada"
-              : "Fotografía de la empresa"
-            : publicado.texto || cargadas
-              ? "Publicado"
-              : "Sin contenido";
+            ? "Publicada"
+            : "Fotografía de la empresa"
+          : publicado.texto || cargadas
+            ? "Publicado"
+            : "Sin contenido";
   return (
     <section className="tarjeta" aria-label={nombresBloques[bloque]} aria-busy={ocupado}>
       <div className="bloque-cab">
@@ -104,11 +100,7 @@ function BloqueEditor({
           <h3>{nombresBloques[bloque]}</h3>
           <p>{descripcion}</p>
         </div>
-        <span
-          className={`chip ${(bloque === "valores" ? cargadas === 5 : cargadas || publicado.texto) ? "chip-v" : "chip-a"}`}
-        >
-          {estado}
-        </span>
+        <span className={`chip ${cargadas || publicado.texto ? "chip-v" : "chip-a"}`}>{estado}</span>
       </div>
       <form
         className={`${estilos.cuerpo} ${individual ? estilos.cuerpoIndividual : ""}`}
@@ -135,67 +127,31 @@ function BloqueEditor({
               )}
             </div>
           )}
-          {bloque === "valores" ? (
-            <div className={estilos.valores}>
-              {Array.from({ length: 5 }, (_, i) => (
-                <div className="campo" key={i}>
-                  <span>Valor {i + 1}</span>
-                  <CampoGaleria
-                    nombre={`Valor ${i + 1}`}
-                    individual
-                    maximo={1}
-                    texto="Imagen del valor"
-                    imagenes={imagenes[i] ? [imagenes[i]!] : []}
-                    deshabilitado={ocupado}
-                    alCambiar={(nuevas) => {
-                      const siguientes = [...imagenes];
-                      siguientes[i] = nuevas[0] ?? null;
-                      void publicar(siguientes);
-                    }}
-                  />
-                  {imagenes[i] && (
-                    <Button
-                      variant="fantasma"
-                      size="pequeno"
-                      onClick={() => {
-                        const siguientes = [...imagenes];
-                        siguientes[i] = null;
-                        void publicar(siguientes);
-                      }}
-                    >
-                      Quitar
-                    </Button>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="campo">
-              {esTexto && <span>Imágenes{bloque === "historia" ? " (opcionales)" : ""}</span>}
-              <CampoGaleria
-                nombre={nombresBloques[bloque]}
-                imagenes={
-                  individual
-                    ? imagenes[0]
-                      ? [imagenes[0]]
-                      : bloque === "logo"
-                        ? ["/marca/incovsa-quimicos.webp"]
-                        : []
-                    : imagenes.filter((i): i is ImagenBorrador => i !== null)
-                }
-                individual={individual}
-                maximo={individual ? 1 : 5}
-                texto={individual ? "Arrastre el logotipo aquí o haga clic para elegirlo" : undefined}
-                deshabilitado={ocupado}
-                alCambiar={(siguientes) => {
-                  if (individual) void publicar(siguientes);
-                  else ponerImagenes(siguientes);
-                }}
-              />
-            </div>
-          )}
+          <div className="campo">
+            {esTexto && <span>Imágenes{bloque === "historia" ? " (opcionales)" : ""}</span>}
+            <CampoGaleria
+              nombre={nombresBloques[bloque]}
+              imagenes={
+                individual
+                  ? imagenes[0]
+                    ? [imagenes[0]]
+                    : bloque === "logo"
+                      ? ["/marca/incovsa-quimicos.webp"]
+                      : []
+                  : imagenes.filter((i): i is ImagenBorrador => i !== null)
+              }
+              individual={individual}
+              maximo={individual ? 1 : 5}
+              texto={individual ? "Arrastre el logotipo aquí o haga clic para elegirlo" : undefined}
+              deshabilitado={ocupado}
+              alCambiar={(siguientes) => {
+                if (individual) void publicar(siguientes);
+                else ponerImagenes(siguientes);
+              }}
+            />
+          </div>
           <div className={estilos.botones}>
-            {!individual && bloque !== "valores" && (
+            {!individual && (
               <Button type="submit" size="pequeno">
                 Guardar y publicar
               </Button>
@@ -255,14 +211,6 @@ export function EditorContenido({ datos }: { datos: Awaited<ReturnType<typeof le
           />
         ))}
       </div>
-      <BloqueEditor
-        bloque="valores"
-        iniciales={Array.from(
-          { length: 5 },
-          (_, i) => datos.valores.find((v) => v.posicion === i + 1)?.imagenUrl ?? null,
-        )}
-        descripcion="Cinco imágenes, una por cada valor, que se muestran en una fila y sin texto en «Quiénes somos»."
-      />
       <BloqueEditor
         bloque="inquiserca"
         iniciales={[datos.configuracion.logotipoInquisercaUrl]}

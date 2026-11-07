@@ -37,7 +37,7 @@ type Campo = keyof typeof columnas;
 const indice = (campo: Campo) => encabezado.indexOf(columnas[campo]);
 const modelo = filas.find((f) => f[indice("referencia")] === "XE-IN/SALIDA/03543")!;
 const motivoCantidad = "tienen líneas con la cantidad en 0 o vacía";
-const motivoPeso = "tienen líneas con el Peso de Conversión en 0 o vacío (RN-50)";
+const motivoPeso = "tienen líneas con el Peso de Conversión en 0 o vacío";
 
 function fila(cambios: Partial<Record<Campo, unknown>> = {}): unknown[] {
   const copia = [...modelo];

@@ -244,7 +244,7 @@ test("RN-11 / RN-52 / RN-29 / RF-SL-16 / RF-SL-24 / RF-SL-29 / RF-SL-37 / RF-SL-
     const resumen = page.getByRole("dialog");
     await expect(resumen).toContainText("33 pedido(s) facturado(s) de Quetzaltenango se agregaron al tablero");
     await expect(resumen).toContainText(
-      "46 pedido(s) facturado(s) no se cargaron porque tienen líneas con el Peso de Conversión en 0 o vacío (RN-50)",
+      "46 pedido(s) facturado(s) no se cargaron porque tienen líneas con el Peso de Conversión en 0 o vacío",
     );
     await capturar("facturacion-resumen-carga");
     await resumen.getByRole("button", { name: "Listo", exact: true }).click();

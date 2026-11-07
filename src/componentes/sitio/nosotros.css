@@ -58,42 +58,6 @@
     border-radius: var(--r-xl);
     box-shadow: var(--s2);
   }
-  .valores-fila {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 16px;
-  }
-  .valor-t {
-    margin: 0;
-    aspect-ratio: 3 / 4;
-    border-radius: var(--r-l);
-    overflow: hidden;
-    background: var(--color-blanco);
-    border: 1px solid var(--g150);
-    box-shadow: var(--s1);
-  }
-  .valor-t img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-  .valor-t.vacio-v {
-    border-style: dashed;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    padding: 14px;
-    text-align: center;
-    box-shadow: none;
-  }
-  .valor-t.vacio-v .mono {
-    color: var(--g600);
-    font-size: 28px;
-    font-weight: 700;
-  }
   .mercados {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -188,17 +152,6 @@
   .sitio .nosotros .banner-nos .banner-logos {
     width: 180px;
     height: 90px;
-  }
-}
-@media (max-width: 860px) {
-  .sitio .nosotros .valores-fila {
-    grid-template-columns: repeat(5, minmax(150px, 1fr));
-    overflow-x: auto;
-    padding-bottom: 8px;
-    scroll-snap-type: x mandatory;
-  }
-  .sitio .nosotros .valor-t {
-    scroll-snap-align: start;
   }
 }
 @media (max-width: 760px) {

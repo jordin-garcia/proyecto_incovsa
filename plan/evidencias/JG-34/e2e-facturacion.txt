@@ -1,0 +1,35 @@
+
+Running 6 tests using 1 worker
+
+[1/6] [telefono] › pruebas-e2e\picking\facturacion-carga.spec.ts:40:1 › RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos facturados
+[2/6] [telefono] › pruebas-e2e\picking\facturacion-envio.spec.ts:51:5 › RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bodega
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[3/6] [tableta] › pruebas-e2e\picking\facturacion-carga.spec.ts:40:1 › RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos facturados
+[4/6] [tableta] › pruebas-e2e\picking\facturacion-envio.spec.ts:51:5 › RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bodega
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[5/6] [escritorio] › pruebas-e2e\picking\facturacion-carga.spec.ts:40:1 › RF-SL-50 / RF-SL-67 / RF-SL-69: carga, muestra y selecciona pedidos facturados
+[6/6] [escritorio] › pruebas-e2e\picking\facturacion-envio.spec.ts:51:5 › RF-SL-63 / RF-SL-70 / RN-13 / RNF-08: arrastre, persistencia y envío a Bodega
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+  6 passed (3.7m)

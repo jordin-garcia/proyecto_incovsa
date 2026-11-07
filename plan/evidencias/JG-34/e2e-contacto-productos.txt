@@ -1,0 +1,78 @@
+
+Running 39 tests using 1 worker
+
+[1/39] [telefono] › pruebas-e2e\sitio\contacto.spec.ts:68:1 › RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[2/39] [telefono] › pruebas-e2e\sitio\contacto.spec.ts:118:1 › RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[3/39] [telefono] › pruebas-e2e\sitio\contacto.spec.ts:152:1 › RF-SW-06 / P-98: el sexto envío de la IP muestra el límite y no se registra
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[4/39] [telefono] › pruebas-e2e\sitio\contacto.spec.ts:189:1 › RF-SW-06 / RNF-08: la trampa queda fuera del teclado y Contacto pasa axe
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[5/39] [telefono] › pruebas-e2e\sitio\contacto.spec.ts:204:1 › RF-SW-06 (06/11): Contacto ya no muestra el aviso de restricciones de venta
+[6/39] [telefono] › pruebas-e2e\sitio\contacto.spec.ts:211:1 › RF-SW-06: enviar Contacto sin JavaScript usa POST y no deja datos en la URL
+[7/39] [telefono] › pruebas-e2e\sitio\contacto.spec.ts:232:1 › RNF-05: Información de contacto limita los campos del panel y muestra errores en español
+[8/39] [telefono] › pruebas-e2e\sitio\contacto.spec.ts:258:1 › RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[9/39] [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:107:5 › JG-28 / RF-SW-03 / RF-SW-04: Productos usa la barra de solo íconos de Industrias, con «Todas las industrias» primero
+[10/39] [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:160:5 › RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y relaciones actuales
+[11/39] [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:219:5 › RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos, vacío y tarjetas sin lote
+[12/39] [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:252:5 › JG-28 / RF-SW-05: el detalle de un producto sin industria ni datos no muestra avisos ni espacios vacíos
+[13/39] [telefono] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:267:5 › RF-SW-05 / RF-SW-17 / RF-SW-15: detalle público, galería, recomendados y enlaces
+[14/39] [tableta] › pruebas-e2e\sitio\contacto.spec.ts:68:1 › RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[15/39] [tableta] › pruebas-e2e\sitio\contacto.spec.ts:118:1 › RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[16/39] [tableta] › pruebas-e2e\sitio\contacto.spec.ts:152:1 › RF-SW-06 / P-98: el sexto envío de la IP muestra el límite y no se registra
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[17/39] [tableta] › pruebas-e2e\sitio\contacto.spec.ts:189:1 › RF-SW-06 / RNF-08: la trampa queda fuera del teclado y Contacto pasa axe
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[18/39] [tableta] › pruebas-e2e\sitio\contacto.spec.ts:204:1 › RF-SW-06 (06/11): Contacto ya no muestra el aviso de restricciones de venta
+[19/39] [tableta] › pruebas-e2e\sitio\contacto.spec.ts:211:1 › RF-SW-06: enviar Contacto sin JavaScript usa POST y no deja datos en la URL
+[20/39] [tableta] › pruebas-e2e\sitio\contacto.spec.ts:232:1 › RNF-05: Información de contacto limita los campos del panel y muestra errores en español
+[21/39] [tableta] › pruebas-e2e\sitio\contacto.spec.ts:258:1 › RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[22/39] [tableta] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:107:5 › JG-28 / RF-SW-03 / RF-SW-04: Productos usa la barra de solo íconos de Industrias, con «Todas las industrias» primero
+[23/39] [tableta] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:160:5 › RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y relaciones actuales
+[24/39] [tableta] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:219:5 › RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos, vacío y tarjetas sin lote
+[25/39] [tableta] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:252:5 › JG-28 / RF-SW-05: el detalle de un producto sin industria ni datos no muestra avisos ni espacios vacíos
+[26/39] [tableta] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:267:5 › RF-SW-05 / RF-SW-17 / RF-SW-15: detalle público, galería, recomendados y enlaces
+[27/39] [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:68:1 › RF-SW-19 / RNF-08: valida país, territorios, correo y teléfono y conserva el diseño accesible
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[28/39] [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:118:1 › RF-SW-06 / CAM-82: guarda el envío público y desplaza el aviso de éxito
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[29/39] [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:152:1 › RF-SW-06 / P-98: el sexto envío de la IP muestra el límite y no se registra
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[30/39] [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:189:1 › RF-SW-06 / RNF-08: la trampa queda fuera del teclado y Contacto pasa axe
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[31/39] [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:204:1 › RF-SW-06 (06/11): Contacto ya no muestra el aviso de restricciones de venta
+[32/39] [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:211:1 › RF-SW-06: enviar Contacto sin JavaScript usa POST y no deja datos en la URL
+[33/39] [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:232:1 › RNF-05: Información de contacto limita los campos del panel y muestra errores en español
+[34/39] [escritorio] › pruebas-e2e\sitio\contacto.spec.ts:258:1 › RF-SW-22 / RNF-08: publica contacto en panel, Inicio y pie y rechaza mapas externos
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[35/39] [escritorio] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:107:5 › JG-28 / RF-SW-03 / RF-SW-04: Productos usa la barra de solo íconos de Industrias, con «Todas las industrias» primero
+[36/39] [escritorio] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:160:5 › RF-SW-03 / P-97 / RF-SW-15: industrias con íconos, foco, desplazamiento y relaciones actuales
+[37/39] [escritorio] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:219:5 › RF-SW-04 / RF-SW-16 / RF-SW-15: búsqueda sin acentos, filtros, recuentos, vacío y tarjetas sin lote
+[38/39] [escritorio] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:252:5 › JG-28 / RF-SW-05: el detalle de un producto sin industria ni datos no muestra avisos ni espacios vacíos
+[39/39] [escritorio] › pruebas-e2e\sitio\industrias-y-productos.spec.ts:267:5 › RF-SW-05 / RF-SW-17 / RF-SW-15: detalle público, galería, recomendados y enlaces
+  39 passed (4.3m)

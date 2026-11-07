@@ -91,7 +91,7 @@ Aprobado el 11/10/2026 y ajustado el 14/10/2026. Los permisos del sitio se asign
 
 | Sistema | Módulo | Permiso |
 |---|---|---|
-| Sitio | Contenido institucional | Editar portada, logotipos, historia, misión, visión, valores e imágenes |
+| Sitio | Contenido institucional | Editar portada, logotipos, historia, misión, visión e imágenes |
 | Sitio | Industrias | Editar descripción e imágenes de cada industria |
 | Sitio | Catálogo | Crear, editar y eliminar productos públicos |
 | Sitio | Noticias | Crear, editar y eliminar noticias (antes "Crear, editar, publicar y ocultar noticias", 15/10) |

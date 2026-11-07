@@ -18,14 +18,14 @@ export async function leerResumen(sesion: SesionActual) {
   if (tienePermiso(sesion, "sit.contenido")) {
     exigirPermiso(sesion, "sit.contenido");
     const historia = await prisma.contenidoInstitucional.findUnique({ where: { seccion: "historia" } });
-    const valores = await prisma.valor.findMany();
-    const completo = !!historia?.texto && valores.filter((v) => v.imagenUrl).length === 5;
+    // JG-34 (06/11): sin valores, el contenido está completo cuando hay historia.
+    const completo = !!historia?.texto;
     tarjetas.push({
       ruta: "contenido",
       nombre: "Contenido institucional",
       icono: "noticia",
-      detalle: "Portada, logotipos, historia, misión, visión y valores",
-      estado: completo ? "Completo" : "Faltan historia y valores",
+      detalle: "Portada, logotipos, historia, misión y visión",
+      estado: completo ? "Completo" : "Falta la historia",
       color: completo ? "v" : "a",
     });
   }

@@ -1,7 +1,6 @@
 import { EncabezadoPagina } from "@/componentes/sitio/EncabezadoPagina";
 import { Sedes } from "@/componentes/sitio/Sedes";
 import { FormularioContacto } from "@/componentes/sitio/FormularioContacto";
-import { Icono } from "@/componentes/comunes/iconos";
 import { leerInicioSitio } from "@/modulos/contenido/servicio";
 import { leerOpcionesContacto } from "@/modulos/solicitudes/servicio";
 import "@/componentes/sitio/contacto.css";
@@ -21,13 +20,6 @@ export default async function Contacto() {
           <FormularioContacto opciones={opciones} />
           <div className="contacto-sedes">
             <Sedes contactos={inicio.contactos} conMapa={false} />
-            <div className="aviso aviso-a">
-              <Icono nombre="alerta" />
-              <div>
-                Los productos químicos que distribuye INCOVSA tienen restricciones de venta. Un asesor verificará el uso
-                previsto antes de cotizar.
-              </div>
-            </div>
           </div>
         </div>
       </section>

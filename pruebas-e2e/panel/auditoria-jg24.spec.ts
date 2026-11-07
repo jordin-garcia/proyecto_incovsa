@@ -51,10 +51,12 @@ test("RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recup
   }
 });
 
-test("RF-SW-29 / RN-39 / H-04: publicar y quitar un valor muestra el número del valor en el aviso", async ({
+// JG-34 (06/11): reemplaza la prueba del aviso de los valores, que se quitaron del sitio y del panel. Comprueba desde
+// el panel el caso que el sitio muestra en una sección propia: la visión solo con imagen.
+test("RF-SW-23 / RF-SW-02 (06/11): la visión publicada solo con imagen desde el panel queda en su sección clara", async ({
   page,
   context,
-}) => {
+}, info) => {
   const respuesta = await context.request.post("/api/auth/sitio/sign-in/username", {
     headers: { origin: "http://localhost:3000" },
     data: { usuario: "ejemplo.08", clave: process.env.CLAVE_DEMO },
@@ -62,17 +64,24 @@ test("RF-SW-29 / RN-39 / H-04: publicar y quitar un valor muestra el número del
   expect(respuesta.ok()).toBe(true);
   await irA(page, "/panel/contenido");
   await expect(page.locator(".app")).toHaveAttribute("data-hidratado", "true");
-  const valores = page.getByRole("region", { name: "Valores", exact: true });
-  await expect(valores.locator('[data-galeria="Valor 3"] [data-aviso]')).toHaveCSS("font-size", "14px");
-  await valores.getByLabel("Valor 3: elegir imágenes").setInputFiles(imagenWebp("public/marca/foto-reunion.webp"));
-  await expect(page.getByText("Imagen del valor 3 publicado en el sitio.", { exact: true })).toBeVisible();
-  await expect(valores.getByRole("img")).toHaveCount(1);
-  await capturaEvidencia(page, `plan/evidencias/JG-24/aplicacion-valor-publicado-${page.viewportSize()!.width}.png`);
-  await valores.getByRole("button", { name: "Quitar", exact: true }).click();
-  await expect(valores.getByRole("img")).toHaveCount(0);
-  expect(
-    (await new AxeBuilder({ page }).analyze()).violations.filter((v) =>
-      ["serious", "critical"].includes(v.impact ?? ""),
-    ),
-  ).toEqual([]);
+  const vision = page.getByRole("region", { name: "Visión", exact: true });
+  await vision.getByLabel("Texto", { exact: true }).fill("");
+  await vision.getByLabel("Visión: elegir imágenes").setInputFiles(imagenWebp("public/marca/foto-reunion.webp"));
+  await vision.getByRole("button", { name: "Guardar y publicar", exact: true }).click();
+  await expect(page.getByText("Visión publicado en el sitio.", { exact: true })).toBeVisible();
+  await irA(page, "/nosotros");
+  const seccion = page.locator("main > section").filter({ has: page.getByRole("heading", { name: "Nuestra visión" }) });
+  expect(await seccion.evaluate((el) => getComputedStyle(el).backgroundColor)).not.toBe("rgb(3, 31, 11)");
+  const fila = seccion.locator(".mv-fila");
+  await expect(fila).toHaveClass(/inversa/);
+  await expect(fila).not.toHaveClass(/una-col/);
+  await expect(fila.locator(".eyebrow")).toHaveText("Visión");
+  await expect(fila.locator(".mv-parrafo")).toHaveCount(0);
+  await expect(fila.locator("[data-galeria] img")).toHaveCount(1);
+  // Fila invertida: la galería va primero y el texto después, como en el prototipo.
+  expect(await fila.evaluate((el) => [...el.children].map((hijo) => hijo.className))).toEqual([
+    expect.stringContaining("mv-gal"),
+    "mv-txt",
+  ]);
+  await capturaEvidencia(page, `pruebas-e2e/sitio/evidencias/JG-34/vision-solo-imagen-${info.project.name}.png`);
 });

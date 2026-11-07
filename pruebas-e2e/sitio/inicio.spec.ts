@@ -18,6 +18,10 @@ test("RF-SW-01 / RF-SW-27: Inicio informativo conserva secciones, cifras y texto
     "¿Necesita un producto que no aparece en el catálogo?",
   ]);
   await expect(page.locator(".ind-rejilla > a")).toHaveCount(9);
+  // JG-34 (06/11, pedido del Ing. William): los párrafos van justificados; las tarjetas de industrias no.
+  for (const parrafo of [page.locator(".hero .lead"), page.locator(".mv-txt p:not(.eyebrow)").first()])
+    await expect(parrafo).toHaveCSS("text-align", "justify");
+  await expect(page.locator(".ind-t p").first()).not.toHaveCSS("text-align", "justify");
   await expect(page.getByText("sedes con bodega de distribución")).toBeVisible();
   await expect(page.locator("main")).not.toContainText(/Escuintla|Catálogo informativo|inventario|Gerencia|Soporte/);
   const textos = await page.locator("main").innerText();
@@ -143,7 +147,9 @@ test("RN-56 / RNF-17: cinco imágenes rotan cada 5 s, una queda fija y las secun
       await expect(portada.locator("img").nth(indice)).toHaveAttribute("loading", "lazy");
     await expect.poll(() => peticiones.filter((url) => /dm02=[2-5]$/.test(url)).length).toBe(4);
     await expect(mision.locator("img")).toHaveCount(1);
-    await expect(page.locator(".mv-sin")).toHaveCount(1);
+    // JG-34 (06/11): la visión sin imágenes queda de una columna, sin el recuadro vacío.
+    await expect(page.locator(".mv-sin")).toHaveCount(0);
+    await expect(page.locator(".mv-fila.una-col")).toHaveCount(1);
     // Un reloj controlado elimina esperas de 25 segundos para recorrer el ciclo completo.
     await page.clock.install();
     await recargar(page);

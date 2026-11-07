@@ -9,10 +9,6 @@ import { esquemaPublicacion, nombresBloques, type Bloque, type Publicacion } fro
 import type { Prisma } from "@/generated/prisma/client";
 
 async function leerBloque(tx: Prisma.TransactionClient, bloque: Bloque): Promise<(string | null)[]> {
-  if (bloque === "valores") {
-    const valores = await tx.valor.findMany({ orderBy: { posicion: "asc" } });
-    return Array.from({ length: 5 }, (_, i) => valores.find((v) => v.posicion === i + 1)?.imagenUrl ?? null);
-  }
   if (bloque === "logo" || bloque === "inquiserca") {
     const configuracion = await tx.configuracionSitio.findUniqueOrThrow({ where: { id: 1 } });
     return [bloque === "logo" ? configuracion.logotipoIncovsaUrl : configuracion.logotipoInquisercaUrl];
@@ -30,7 +26,6 @@ export async function leerContenidoPanel(sesion: SesionActual | null) {
   return {
     configuracion: await prisma.configuracionSitio.findUniqueOrThrow({ where: { id: 1 } }),
     textos: await prisma.contenidoInstitucional.findMany(),
-    valores: await prisma.valor.findMany({ orderBy: { posicion: "asc" } }),
     imagenes: await prisma.imagen.findMany({
       where: { area: { in: ["portada", "mision", "vision", "historia"] } },
       orderBy: { posicion: "asc" },
@@ -43,7 +38,7 @@ export async function guardarPublicacion(entrada: Publicacion, archivos: File[],
   const datos = esquemaPublicacion.parse(entrada);
   const nuevas: string[] = [];
   let antiguas: string[];
-  let nombrePublicacion: string = nombresBloques[datos.bloque];
+  const nombrePublicacion: string = nombresBloques[datos.bloque];
   try {
     const indices = datos.imagenes.filter((i): i is number => typeof i === "number");
     if (
@@ -67,10 +62,6 @@ export async function guardarPublicacion(entrada: Publicacion, archivos: File[],
       )
         throw new ErrorNegocio("El contenido cambió. Recargue la página antes de publicar.");
       const urls = datos.imagenes.map((i) => (typeof i === "number" ? nuevas[i]! : i));
-      if (datos.bloque === "valores") {
-        const cambios = urls.flatMap((url, i) => (url !== actuales[i] ? [`Imagen del valor ${i + 1}`] : []));
-        if (cambios.length) nombrePublicacion = cambios.join(" · ");
-      }
       if (datos.bloque === "logo" || datos.bloque === "inquiserca") {
         await tx.configuracionSitio.update({
           where: { id: 1 },
@@ -79,13 +70,6 @@ export async function guardarPublicacion(entrada: Publicacion, archivos: File[],
               ? { logotipoIncovsaUrl: urls[0] ?? null }
               : { logotipoInquisercaUrl: urls[0] ?? null },
         });
-      } else if (datos.bloque === "valores") {
-        for (let i = 0; i < 5; i++)
-          await tx.valor.upsert({
-            where: { posicion: i + 1 },
-            create: { posicion: i + 1, imagenUrl: urls[i] },
-            update: { imagenUrl: urls[i] },
-          });
       } else {
         await tx.imagen.deleteMany({
           where: { area: datos.bloque, industriaId: null, productoSitioId: null, noticiaId: null },

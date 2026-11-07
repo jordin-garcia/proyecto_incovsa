@@ -74,7 +74,7 @@ export type PedidoFacturadoLeido = z.infer<typeof esquemaPedidoFacturadoLeido>;
 export const motivosNoCargados = {
   sinProductos: "no traen productos",
   cantidad: "tienen líneas con la cantidad en 0 o vacía",
-  peso: "tienen líneas con el Peso de Conversión en 0 o vacío (RN-50)",
+  peso: "tienen líneas con el Peso de Conversión en 0 o vacío",
 } as const;
 
 export const esquemaPedidoNoCargado = z.object({

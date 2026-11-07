@@ -201,6 +201,13 @@ test("RF-SW-06 / RNF-08: la trampa queda fuera del teclado y Contacto pasa axe",
   await axe(page);
 });
 
+test("RF-SW-06 (06/11): Contacto ya no muestra el aviso de restricciones de venta", async ({ page }) => {
+  await irA(page, "/contacto");
+  await expect(page.locator(".contacto-sedes .tarjeta").first()).toBeVisible();
+  await expect(page.locator(".contacto-sedes .aviso")).toHaveCount(0);
+  await expect(page.locator("main")).not.toContainText(/restricciones de venta|uso previsto/i);
+});
+
 test("RF-SW-06: enviar Contacto sin JavaScript usa POST y no deja datos en la URL", async ({ browser }) => {
   const contexto = await browser.newContext({ baseURL: "http://localhost:3000", javaScriptEnabled: false });
   try {

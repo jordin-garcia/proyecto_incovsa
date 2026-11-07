@@ -1,0 +1,74 @@
+
+Running 27 tests using 1 worker
+
+[1/27] [telefono] › pruebas-e2e\panel\auditoria-jg24.spec.ts:13:5 › RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recupera medidas y hover del prototipo
+[2/27] [telefono] › pruebas-e2e\panel\contenido.spec.ts:22:5 › RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y accesibilidad
+[3/27] [telefono] › pruebas-e2e\panel\contenido.spec.ts:79:5 › RNF-05: al salir de Misión rechaza más de 10 000 caracteres sin publicar
+[4/27] [telefono] › pruebas-e2e\panel\contenido.spec.ts:93:5 › RF-SW-25: el permiso se exige también al abrir la sección directamente
+[WebServer] {"fecha":"2026-11-06T23:46:09.000Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"sitio","usuarioId":"hHd1RRKIfxwPamiRwD5LjY8RQtq3gjtj","operacion":"sit.contenido","motivo":"sin_permiso"}
+
+[WebServer] {"fecha":"2026-11-06T23:46:10.874Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"sitio","usuarioId":"hHd1RRKIfxwPamiRwD5LjY8RQtq3gjtj","operacion":"sit.contenido","motivo":"sin_permiso"}
+
+[5/27] [telefono] › pruebas-e2e\panel\contenido.spec.ts:119:5 › RF-SW-23 / RNF-05: publica una imagen de 5 MB y limpia la imagen retirada
+[6/27] [telefono] › pruebas-e2e\panel\contenido.spec.ts:158:5 › RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[7/27] [telefono] › pruebas-e2e\panel\contenido.spec.ts:177:5 › RF-SW-23: un borrador de portada o historia no cambia la etiqueta publicada
+[8/27] [telefono] › pruebas-e2e\panel\contenido.spec.ts:193:5 › RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visita sin sesión
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[9/27] [telefono] › pruebas-e2e\panel\contenido.spec.ts:257:5 › RF-SW-23 / RF-SW-24: reemplazar INCOVSA actualiza cabecera y pie públicos
+[10/27] [tableta] › pruebas-e2e\panel\auditoria-jg24.spec.ts:13:5 › RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recupera medidas y hover del prototipo
+[11/27] [tableta] › pruebas-e2e\panel\contenido.spec.ts:22:5 › RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y accesibilidad
+[12/27] [tableta] › pruebas-e2e\panel\contenido.spec.ts:79:5 › RNF-05: al salir de Misión rechaza más de 10 000 caracteres sin publicar
+[13/27] [tableta] › pruebas-e2e\panel\contenido.spec.ts:93:5 › RF-SW-25: el permiso se exige también al abrir la sección directamente
+[WebServer] {"fecha":"2026-11-06T23:47:07.360Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"sitio","usuarioId":"hHd1RRKIfxwPamiRwD5LjY8RQtq3gjtj","operacion":"sit.contenido","motivo":"sin_permiso"}
+
+[WebServer] {"fecha":"2026-11-06T23:47:09.428Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"sitio","usuarioId":"hHd1RRKIfxwPamiRwD5LjY8RQtq3gjtj","operacion":"sit.contenido","motivo":"sin_permiso"}
+
+[14/27] [tableta] › pruebas-e2e\panel\contenido.spec.ts:119:5 › RF-SW-23 / RNF-05: publica una imagen de 5 MB y limpia la imagen retirada
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[15/27] [tableta] › pruebas-e2e\panel\contenido.spec.ts:158:5 › RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[16/27] [tableta] › pruebas-e2e\panel\contenido.spec.ts:177:5 › RF-SW-23: un borrador de portada o historia no cambia la etiqueta publicada
+[17/27] [tableta] › pruebas-e2e\panel\contenido.spec.ts:193:5 › RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visita sin sesión
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[18/27] [tableta] › pruebas-e2e\panel\contenido.spec.ts:257:5 › RF-SW-23 / RF-SW-24: reemplazar INCOVSA actualiza cabecera y pie públicos
+[19/27] [escritorio] › pruebas-e2e\panel\auditoria-jg24.spec.ts:13:5 › RNF-08 / decisión 89: CampoGaleria conserva el contraste aprobado y recupera medidas y hover del prototipo
+[20/27] [escritorio] › pruebas-e2e\panel\contenido.spec.ts:22:5 › RF-SW-23 / RNF-08: contenido institucional conserva bloques, borradores y accesibilidad
+[21/27] [escritorio] › pruebas-e2e\panel\contenido.spec.ts:79:5 › RNF-05: al salir de Misión rechaza más de 10 000 caracteres sin publicar
+[22/27] [escritorio] › pruebas-e2e\panel\contenido.spec.ts:93:5 › RF-SW-25: el permiso se exige también al abrir la sección directamente
+[WebServer] {"fecha":"2026-11-06T23:48:03.471Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"sitio","usuarioId":"hHd1RRKIfxwPamiRwD5LjY8RQtq3gjtj","operacion":"sit.contenido","motivo":"sin_permiso"}
+
+[WebServer] {"fecha":"2026-11-06T23:48:04.667Z","nivel":"aviso","evento":"autorizacion_rechazada","sistema":"sitio","usuarioId":"hHd1RRKIfxwPamiRwD5LjY8RQtq3gjtj","operacion":"sit.contenido","motivo":"sin_permiso"}
+
+[23/27] [escritorio] › pruebas-e2e\panel\contenido.spec.ts:119:5 › RF-SW-23 / RNF-05: publica una imagen de 5 MB y limpia la imagen retirada
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[24/27] [escritorio] › pruebas-e2e\panel\contenido.spec.ts:158:5 › RF-SW-07: el resumen muestra estados y enlaces de las secciones permitidas
+[WebServer] ⨯ Error: The destination stream errored while writing data.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '1949520924'
+[WebServer] }
+
+[25/27] [escritorio] › pruebas-e2e\panel\contenido.spec.ts:177:5 › RF-SW-23: un borrador de portada o historia no cambia la etiqueta publicada
+[26/27] [escritorio] › pruebas-e2e\panel\contenido.spec.ts:193:5 › RF-SW-23 / CU-07: publicar misión e imagen actualiza Inicio para una visita sin sesión
+[WebServer] [browser] Image with src "http://localhost:3000/marca/incovsa-quimicos-blanco.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+
+[27/27] [escritorio] › pruebas-e2e\panel\contenido.spec.ts:257:5 › RF-SW-23 / RF-SW-24: reemplazar INCOVSA actualiza cabecera y pie públicos
+  27 passed (3.2m)

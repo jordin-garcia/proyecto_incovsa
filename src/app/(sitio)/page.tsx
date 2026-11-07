@@ -18,7 +18,7 @@ export default async function Inicio({
   const datos = await leerInicioSitio();
   const mostrarSalida = (await searchParams).sesion === "cerrada";
   return (
-    <main>
+    <main className="inicio">
       <AvisoDeSalida mostrar={mostrarSalida} />
       <section className="hero">
         <div className="hero-foto revelar-f">

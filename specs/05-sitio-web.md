@@ -3,6 +3,8 @@
 > **Cambios del 29/09/2026 (reunión 4), respuestas del 11/10/2026 y cambios del 13/10/2026 (reunión 5).** El Ing. William revisó el prototipo de simulación en las reuniones 4 y 5 y pidió los cambios que se describen en este archivo; el 11/10 y el 14/10 el coordinador resolvió las dudas sobre cómo aplicarlos. Todo lo demás del prototipo (diseño visual, estructura y comportamiento) está aprobado ([20-prototipo-aprobado.md](20-prototipo-aprobado.md)).
 >
 > **Ajustes del coordinador del 15/10/2026** (CAM-78 a CAM-87): fondo verde en misión y visión y en las secciones blancas de Quiénes somos, logotipos alternados en "INCOVSA e Inquiserca", noticias a todo el ancho y completas, desplazamiento al aviso de Contacto, pantallas de acceso sin notas de roles, noticias que se eliminan en lugar de ocultarse y ajustes en la bandeja de solicitudes.
+>
+> **Pedido del Ing. William del 06/11/2026** (JG-34): sin valores, misión y visión sin recuadros vacíos, párrafos justificados en Inicio y Quiénes somos y sin los avisos de Contacto y de la ficha de producto. Se aparta del prototipo aprobado a pedido del cliente.
 
 ## Identidad
 
@@ -34,7 +36,8 @@ Archivos recibidos (`docs_incovsa/PAGINA WEB/INFORMACION EMPRESA/`): los logotip
 
 - **Banners de la misma altura:** el banner de Quiénes somos, Industrias, Productos, Noticias y Contacto mide lo mismo en cada tamaño de pantalla, sin importar el largo del título o del texto, con el contenido centrado verticalmente: **440 px** en escritorio (más de 1024 px), **380 px** en tableta (721 a 1024 px), **480 px** de 481 a 720 px y **560 px** en teléfono (hasta 480 px). La altura alcanza para el banner más alto, el de Quiénes somos, desde 360 px de ancho; en pantallas más angostas ese banner crece lo necesario para no recortar su contenido. Quiénes somos conserva sus logotipos alternados dentro de esa altura: en tableta van a la par del texto (200 × 100 px) y en teléfono debajo (180 × 90 px).
 - **Barras laterales de Productos e Industrias:** ver [Industrias](#industrias-rf-sw-03) y [Catálogo de productos](#catálogo-de-productos-rf-sw-04).
-- **Sin restos del prototipo:** ninguna pantalla del sitio, del panel ni del picking muestra avisos de datos pendientes («pendiente de INCOVSA», «por confirmar», «Imagen de la industria») ni los códigos internos de los pendientes (P-xx). En el sitio público, **si falta un dato, el elemento no se muestra** (sin aviso y sin espacio vacío). En el panel, la celda sin dato queda vacía. Se conservan, por decisión del coordinador, el recuadro vacío de misión y visión sin imagen y la tarjeta de cada valor sin imagen, que muestra solo su número.
+- **Sin restos del prototipo:** ninguna pantalla del sitio, del panel ni del picking muestra avisos de datos pendientes («pendiente de INCOVSA», «por confirmar», «Imagen de la industria») ni los códigos internos de los pendientes (P-xx). En el sitio público, **si falta un dato, el elemento no se muestra** (sin aviso y sin espacio vacío). En el panel, la celda sin dato queda vacía. Desde el 06/11 (JG-34) ya no se conserva ninguna excepción: misión y visión sin imagen no dejan recuadro vacío y los valores se quitaron.
+- **Sin códigos internos (06/11, JG-34):** ningún texto que muestra la aplicación (mensajes, avisos, etiquetas) lleva códigos de reglas o requisitos (RN-xx, RF-xx, RNF-xx) ni rutas de `specs/`. Los códigos se quedan en `specs/`, en los comentarios del código y en los nombres de las pruebas.
 
 ### Pie de página (RF-SW-15)
 
@@ -61,7 +64,7 @@ Las imágenes y las tarjetas del contenido de las páginas públicas tienen una 
 | Cada producto público | Hasta 5 imágenes (en la tarjeta del catálogo y en el detalle) |
 | Cada noticia | Hasta 5 imágenes; al menos una |
 
-- **No rotan:** los logotipos, que son una sola imagen cada uno, y los **valores**, que son 5 imágenes fijas, una por valor (RF-SW-29).
+- **No rotan:** los logotipos, que son una sola imagen cada uno.
 - En el banner de Quiénes somos se alternan los logotipos de INCOVSA e Inquiserca (RF-SW-02).
 - **Rendimiento (RNF-17):** la galería no puede hacer más lenta la carga de la página. Al abrir la página solo se descarga la primera imagen de cada galería; las demás se descargan después, mientras se ve la primera. Se comprueba con pruebas de rendimiento (Documento 6) que la carga inicial de una página con galerías de 5 imágenes no tarda más que con galerías de una. **(26/10, DM-11; autorizado por Daniela)** Para el ruido de medición se admite un margen temporal de **10 ms** al comparar las medianas del tiempo hasta la primera imagen de portada y hasta `load`, en producción, con calentamiento equilibrado, muestras alternadas y caché vacía. La igualdad de bytes iniciales es estricta y ninguna imagen secundaria puede iniciar su solicitud antes de `load`, aunque no haya terminado de descargarse.
 
@@ -86,9 +89,14 @@ Cada mapa se inserta con un `iframe` con `allowfullscreen`, `loading="lazy"` y `
 - Debajo, la **visión**: su **imagen a la izquierda** y el **texto de la visión a la derecha**.
 - Igual en Inicio y en Quiénes somos.
 - El texto es el de misión y visión del panel (abajo las transcripciones de `MISION.jpg` y `VISION.jpg`).
-- Las imágenes son galerías de hasta 5 que se suben desde el panel. **Mientras no se suba ninguna, el lugar de la imagen queda vacío** (decisión del coordinador del 14/10): `MISION.jpg` y `VISION.jpg` no se usan, porque ya traen el texto escrito y el logotipo "Transformamos INCOVSA".
+- Las imágenes son galerías de hasta 5 que se suben desde el panel. `MISION.jpg` y `VISION.jpg` no se usan, porque ya traen el texto escrito y el logotipo "Transformamos INCOVSA".
+- **Lo que falta no se muestra (06/11, pedido del Ing. William; reemplaza el lugar vacío del 14/10):**
+  - **Sin imágenes:** la fila es de una sola columna, solo con el texto, sin el recuadro vacío.
+  - **Sin texto pero con imágenes:** la fila conserva la etiqueta y el título («Misión» / «Nuestra misión», «Visión» / «Nuestra visión») junto a la galería, sin el párrafo (decisión del coordinador del 06/11).
+  - **Sin texto ni imágenes:** la fila no se muestra.
 - En teléfono, el texto y la imagen van uno debajo del otro.
-- **Fondo (15/10):** la sección de misión y visión va con el **verde del pie de página** (`--v950`), con los títulos en blanco, igual en Inicio y en Quiénes somos.
+- **Fondo (15/10; 06/11):** en Inicio, la sección de misión y visión va con el **verde del pie de página** (`--v950`), con los títulos en blanco. En Quiénes somos, desde el 06/11, la misión va en verde y la visión en una sección clara aparte (ver «Fondos» en [Quiénes somos](#quiénes-somos-rf-sw-02)).
+- **Párrafos justificados (06/11, pedido del Ing. William):** en Inicio y en Quiénes somos, los párrafos (portada, misión, visión, historia, mercados, grupo y los textos de las secciones) van justificados, con guiones automáticos para que no queden huecos en las columnas angostas del teléfono. Los títulos, los botones y las tarjetas de industrias y sedes no cambian.
 
 **Misión**, transcrita de `MISION.jpg`:
 
@@ -114,10 +122,10 @@ La imagen original de la visión dice "tranparente"; el texto del sitio dice "tr
 - **Banner principal** con una **transición dinámica entre el logotipo de INCOVSA y el de Inquiserca**, que se alternan en el mismo lugar. Si se quita el logotipo de Inquiserca desde el panel, el banner muestra solo el de INCOVSA.
 - **Historia:** texto pendiente de INCOVSA (P-19) y galería opcional de hasta 5 imágenes.
 - **Misión y visión** como se describe arriba (13/10).
-- **Valores (RF-SW-29, 13/10):** **solo 5 imágenes, una por cada valor**, en **una sola fila**, como las tarjetas de valores del prototipo. **Sin texto.** Se suben desde el panel. Mientras falte la imagen de un valor, su lugar muestra una tarjeta vacía con el número del valor, **sin texto** (02/11, JG-28: ya no dice «Imagen del valor pendiente de INCOVSA»). En teléfono, la fila se acomoda al ancho de la pantalla.
+- **Sin valores (06/11, pedido del Ing. William):** la sección «Valores · Lo que nos guía» del prototipo (RF-SW-29 del 13/10) se quita del sitio y del panel. La tabla `valor` se conserva en la base de datos, sin uso, para no hacer una migración.
 - **A quién servimos:** mercado industrial y mercado artesanal, como en el prototipo.
 - **INCOVSA e Inquiserca (15/10):** el bloque muestra los **logotipos de INCOVSA e Inquiserca alternándose**, de la misma manera que el banner principal. Si no hay logotipo de Inquiserca, muestra solo el de INCOVSA.
-- **Fondos (15/10):** las secciones que eran blancas, **"Misión y visión"** y **"A quién servimos"**, van con el **verde del pie de página** (`--v950`). Historia, Valores e "INCOVSA e Inquiserca" conservan el fondo claro, de modo que se alternan claro y verde.
+- **Fondos (15/10; 06/11):** se alternan claro y verde (`--v950`, el verde del pie de página) hasta el pie: **Historia** claro, **Misión** verde (con el encabezado «Propósito · Misión y visión»), **Visión** claro, en su propia sección, **"A quién servimos"** verde e **"INCOVSA e Inquiserca"** claro. Si la visión no tiene texto ni imágenes, su sección no se muestra. Decisión del coordinador del 06/11: al quitar Valores quedaban dos verdes seguidas, y con "INCOVSA e Inquiserca" en verde ese bloque se unía con el pie. En Inicio, misión y visión siguen juntas en una sección verde.
 
 ### Industrias (RF-SW-03)
 
@@ -156,6 +164,7 @@ Muestra la **galería de imágenes**, el **nombre**, la **descripción**, la **p
 
 - **Sin pie de página.**
 - **No** muestra documentos técnicos.
+- **Sin avisos (06/11, pedido del Ing. William):** no muestra el aviso del prototipo «El precio y el número de lote no se publican en el sitio…» ni el de restricciones de venta. El precio y el lote siguen sin publicarse (RF-SW-04).
 
 #### Productos Recomendados (RF-SW-17)
 
@@ -173,7 +182,7 @@ Muestra la **galería de imágenes**, el **nombre**, la **descripción**, la **p
 
 ### Contacto (RF-SW-06, RF-SW-19)
 
-La página muestra el formulario y los datos de Quetzaltenango y Guatemala. Escuintla no aparece.
+La página muestra el formulario y los datos de Quetzaltenango y Guatemala. Escuintla no aparece. **(06/11, pedido del Ing. William)** Sin el aviso del prototipo «Los productos químicos que distribuye INCOVSA tienen restricciones de venta…».
 
 | Campo | Regla |
 |---|---|
@@ -222,7 +231,7 @@ Entran los usuarios del sitio según sus permisos ([03-roles-y-accesos.md](03-ro
 
 | Sección | Qué se hace |
 |---|---|
-| Contenido institucional | **Portada** (galería de hasta 5), **logotipo de INCOVSA**, **misión** y **visión** (texto y galería de hasta 5), **historia** (texto y galería opcional de hasta 5), **valores** (5 imágenes, una por valor, sin texto) y **logotipo de Inquiserca**. La sección "Imágenes del sitio" del prototipo se elimina (13/10) |
+| Contenido institucional | **Portada** (galería de hasta 5), **logotipo de INCOVSA**, **misión** y **visión** (texto y galería de hasta 5), **historia** (texto y galería opcional de hasta 5) y **logotipo de Inquiserca**. La sección "Imágenes del sitio" del prototipo se elimina (13/10), y el bloque **valores**, el 06/11. En el Resumen, la tarjeta dice «Completo» cuando hay historia y, si no, «Falta la historia» (06/11) |
 | Industrias | Descripción y galería de hasta 5 imágenes de cada industria |
 | Catálogo | Productos públicos y sus industrias, con galería de hasta 5 imágenes. Se pueden eliminar |
 | Noticias | Título, texto y galería de hasta 5 imágenes de cada noticia. La lista muestra imagen, título, fecha y los botones **editar** (lápiz) y **eliminar** (basurero, con confirmación), como en el Catálogo. Sin columna de estado ni botón "Ocultar" (15/10) |
@@ -307,7 +316,7 @@ Cada sección muestra su **instrucción, lo más breve posible, a la par del tí
 
 ## Imágenes del sitio
 
-Todas las imágenes del sitio se guardan en **Cloudflare R2, plan gratuito**: las de la portada, misión, visión, historia, valores, industrias, productos y noticias, y los logotipos.
+Todas las imágenes del sitio se guardan en **Cloudflare R2, plan gratuito**: las de la portada, misión, visión, historia, industrias, productos y noticias, y los logotipos.
 
 **(16/10)** Se aceptan imágenes **JPG, PNG o WebP** de hasta **5 MB**. El servidor las reduce a un máximo de 2000 px de ancho, les quita los metadatos (incluida la ubicación GPS de las fotos) y las guarda en WebP. Se sirven desde `imagenes.incovsa.com` ([16](16-arquitectura-y-tecnologia.md), decisiones 32 y 44).
 

@@ -1,9 +1,21 @@
-import { expect } from "@playwright/test";
+import { expect, type BrowserContext } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { test } from "../panel/datos";
 import { readFile } from "node:fs/promises";
 import { capturaEvidencia } from "../comunes/evidencia";
 import { irA } from "../comunes/navegacion";
+
+async function publicarBloque(contexto: BrowserContext, bloque: string, texto: string, total: number) {
+  const imagen = await readFile("public/marca/foto-equipo.webp");
+  const formulario = new FormData();
+  formulario.set("datos", JSON.stringify({ bloque, texto, imagenes: Array.from({ length: total }, (_, i) => i) }));
+  for (let i = 0; i < total; i++)
+    formulario.append("imagenes", new File([new Uint8Array(imagen)], `imagen-${i}.webp`, { type: "image/webp" }));
+  return contexto.request.post("/api/imagenes/publicar", {
+    headers: { origin: "http://localhost:3000" },
+    multipart: formulario,
+  });
+}
 
 async function cargarImagenes(page: import("@playwright/test").Page) {
   await page.evaluate(() => window.scrollTo(0, 0));
@@ -26,18 +38,44 @@ test("RF-SW-02 / CAM-79 / RNF-08: secciones, fondos, pie y accesibilidad de Qui�
   await expect(page.locator("main h2")).toHaveText([
     "De tenería a distribuidor de productos químicos",
     "Misión y visión",
-    "Lo que nos guía",
     "Dos mercados, la misma calidad de producto",
     "Dos empresas del mismo grupo, una sola identidad",
   ]);
+  // JG-34 (06/11, pedido del Ing. William): sin la sección de valores.
+  await expect(page.getByText("Lo que nos guía")).toHaveCount(0);
+  await expect(page.locator(".valores-fila, .valor-t")).toHaveCount(0);
   await expect(page.locator("main")).not.toContainText(/P-19|La historia la redacta|Faltan las imágenes/);
   await expect(page.getByRole("contentinfo")).toBeAttached();
+  // JG-34 (decisión del coordinador del 06/11): los fondos se alternan hasta el pie verde: Historia claro, Misión
+  // verde, Visión claro, A quién servimos verde e INCOVSA e Inquiserca claro.
   const secciones = page.locator("main > section");
-  for (const indice of [2, 4]) await expect(secciones.nth(indice)).toHaveCSS("background-color", "rgb(3, 31, 11)");
-  for (const indice of [1, 3, 5])
-    expect(await secciones.nth(indice).evaluate((el) => getComputedStyle(el).backgroundColor)).not.toBe(
-      "rgb(3, 31, 11)",
-    );
+  const seccion = (titulo: string) =>
+    secciones.filter({ has: page.getByRole("heading", { name: titulo, exact: true }) });
+  await expect(secciones).toHaveCount(6);
+  const orden = [
+    ["De tenería a distribuidor de productos químicos", false],
+    ["Nuestra misión", true],
+    ["Nuestra visión", false],
+    ["Dos mercados, la misma calidad de producto", true],
+    ["Dos empresas del mismo grupo, una sola identidad", false],
+  ] as const;
+  for (const [indice, [titulo, verde]] of orden.entries()) {
+    await expect(secciones.nth(indice + 1)).toContainText(titulo);
+    const fondo = await seccion(titulo).evaluate((el) => getComputedStyle(el).backgroundColor);
+    if (verde) expect(fondo).toBe("rgb(3, 31, 11)");
+    else expect(fondo).not.toBe("rgb(3, 31, 11)");
+  }
+  // La misión conserva el encabezado «Misión y visión» de la sección.
+  await expect(seccion("Nuestra misión").getByRole("heading", { level: 2 })).toHaveText("Misión y visión");
+  // JG-34: los párrafos van justificados; los títulos no.
+  for (const parrafo of [
+    page.locator(".banner-nos p:not(.eyebrow)"),
+    page.locator(".mv-txt p:not(.eyebrow)").first(),
+    page.locator(".mercado p").first(),
+    page.locator(".grupo p:not(.eyebrow)"),
+  ])
+    await expect(parrafo).toHaveCSS("text-align", "justify");
+  await expect(page.locator("main h2").first()).not.toHaveCSS("text-align", "justify");
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
     page.viewportSize()!.width,
   );
@@ -98,26 +136,19 @@ test("RF-SW-02 / CAM-80: ambos bloques alternan y quitar Inquiserca desde el pan
   await capturaEvidencia(page, `pruebas-e2e/sitio/evidencias/DM-06/aplicacion-sin-inquiserca-${info.project.name}.png`);
 });
 
-test("RF-SW-29 / RF-SW-16 / JG-28: cinco valores sin imagen, sin aviso de pendiente, y presentación dinámica", async ({
-  page,
-}) => {
+test("RF-SW-16: presentación dinámica de las tarjetas de Quiénes somos", async ({ page }) => {
   await irA(page, "/nosotros");
-  await expect(page.locator(".valor-t")).toHaveCount(5);
-  await expect(page.locator(".valor-t.vacio-v")).toHaveCount(5);
-  // JG-28: cada tarjeta vacía conserva solo su número, sin el texto del prototipo.
-  await expect(page.locator(".valor-t.vacio-v")).toHaveText(["01", "02", "03", "04", "05"]);
-  await expect(page.locator(".valores-fila")).not.toContainText(/pendiente/i);
-  const valor = page.locator(".valor-t").first();
-  await valor.scrollIntoViewIfNeeded();
-  await expect(valor).toHaveClass(/visible/);
+  const mercado = page.locator(".mercado").first();
+  await mercado.scrollIntoViewIfNeeded();
+  await expect(mercado).toHaveClass(/visible/);
   await page.evaluate(() => window.scrollTo(0, 0));
-  await expect(valor).not.toHaveClass(/visible/);
+  await expect(mercado).not.toHaveClass(/visible/);
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await expect(valor).toHaveCSS("opacity", "1");
+  await expect(mercado).toHaveCSS("opacity", "1");
   await expect(page.locator(".banner-logos img").first()).toHaveCSS("animation-name", "none");
 });
 
-test("RF-SW-02 / RF-SW-29 / RN-56: historia y cinco imágenes publicadas conservan orden, fila y ausencia de textos", async ({
+test("RF-SW-02 / RN-56 (06/11): la historia publicada se muestra y los valores ya no se publican ni se muestran", async ({
   page,
   context,
 }, info) => {
@@ -126,42 +157,16 @@ test("RF-SW-02 / RF-SW-29 / RN-56: historia y cinco imágenes publicadas conserv
     data: { usuario: "ejemplo.08", clave: process.env.CLAVE_DEMO },
   });
   expect(acceso.ok()).toBe(true);
-  const imagen = await readFile("public/marca/foto-equipo.webp");
-  const publicar = async (bloque: string, texto: string, total: number) => {
-    const formulario = new FormData();
-    formulario.set("datos", JSON.stringify({ bloque, texto, imagenes: Array.from({ length: total }, (_, i) => i) }));
-    for (let i = 0; i < total; i++)
-      formulario.append("imagenes", new File([new Uint8Array(imagen)], `imagen-${i}.webp`, { type: "image/webp" }));
-    const respuesta = await context.request.post("/api/imagenes/publicar", {
-      headers: { origin: "http://localhost:3000" },
-      multipart: formulario,
-    });
-    expect(respuesta.ok()).toBe(true);
-    return (await respuesta.json()).datos.imagenes as string[];
-  };
-  const urls = await publicar("valores", "", 5);
-  await publicar("historia", "Historia de prueba DM-06\nSegunda línea <script>texto escapado</script>", 2);
+  expect((await publicarBloque(context, "valores", "", 5)).ok()).toBe(false);
+  const historia = "Historia de prueba DM-06\nSegunda línea <script>texto escapado</script>";
+  expect((await publicarBloque(context, "historia", historia, 2)).ok()).toBe(true);
   await irA(page, "/nosotros");
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await expect(page.locator(".historia-texto")).toHaveText(
-    "Historia de prueba DM-06\nSegunda línea <script>texto escapado</script>",
-  );
+  await expect(page.locator(".historia-texto")).toHaveText(historia);
+  await expect(page.locator(".historia-texto")).toHaveCSS("text-align", "justify");
   await expect(page.locator(".hist-gal img")).toHaveCount(2);
-  await expect(page.locator(".valor-t.vacio-v")).toHaveCount(0);
-  await expect(page.locator(".valor-t img")).toHaveCount(5);
-  await expect(page.locator(".valores-fila")).toHaveText("");
-  for (let i = 0; i < 5; i++) {
-    await expect(page.locator(".valor-t img").nth(i)).toHaveAttribute("src", urls[i]!);
-    await expect(page.locator(".valor-t img").nth(i)).toHaveAttribute("alt", `Valor ${i + 1} de INCOVSA`);
-  }
-  const alturas = await page
-    .locator(".valor-t")
-    .evaluateAll((elementos) => elementos.map((el) => el.getBoundingClientRect().top));
-  expect(new Set(alturas).size).toBe(1);
-  const fila = page.getByRole("region", { name: "Valores", exact: true });
-  await fila.focus();
-  await page.keyboard.press("End");
-  await expect(fila).toBeFocused();
+  await expect(page.locator(".valor-t, .valores-fila")).toHaveCount(0);
+  await expect(page.getByRole("img", { name: /^Valor \d de INCOVSA$/ })).toHaveCount(0);
   expect(
     (await new AxeBuilder({ page }).analyze()).violations.filter((v) =>
       ["serious", "critical"].includes(v.impact ?? ""),
@@ -169,4 +174,55 @@ test("RF-SW-02 / RF-SW-29 / RN-56: historia y cinco imágenes publicadas conserv
   ).toEqual([]);
   await cargarImagenes(page);
   await capturaEvidencia(page, `pruebas-e2e/sitio/evidencias/DM-06/aplicacion-contenido-${info.project.name}.png`);
+});
+
+test("RF-SW-01 / RF-SW-02 (06/11): misión y visión solo con texto, solo con imagen o sin nada, en Inicio y Quiénes somos", async ({
+  page,
+  context,
+}, info) => {
+  const acceso = await context.request.post("/api/auth/sitio/sign-in/username", {
+    headers: { origin: "http://localhost:3000" },
+    data: { usuario: "ejemplo.08", clave: process.env.CLAVE_DEMO },
+  });
+  expect(acceso.ok()).toBe(true);
+  const fila = (titulo: string) =>
+    page.locator(".mv-fila").filter({ has: page.getByRole("heading", { name: titulo }) });
+  // Solo texto (los textos aprobados, sin imágenes): una columna, sin recuadro vacío.
+  for (const ruta of ["/", "/nosotros"]) {
+    await irA(page, ruta);
+    await expect(page.locator(".mv-fila")).toHaveCount(2);
+    await expect(page.locator(".mv-sin, .mv [data-galeria]")).toHaveCount(0);
+    for (const titulo of ["Nuestra misión", "Nuestra visión"]) {
+      await expect(fila(titulo)).toHaveClass(/una-col/);
+      await expect(fila(titulo).locator(".mv-txt p:not(.eyebrow)")).toHaveCSS("text-align", "justify");
+      const [texto, ancho] = await Promise.all([
+        fila(titulo)
+          .locator(".mv-txt")
+          .evaluate((el) => el.getBoundingClientRect().width),
+        fila(titulo).evaluate((el) => el.getBoundingClientRect().width),
+      ]);
+      expect(texto).toBe(ancho);
+    }
+  }
+  // Solo imagen en la misión y nada en la visión.
+  expect((await publicarBloque(context, "mision", "", 1)).ok()).toBe(true);
+  expect((await publicarBloque(context, "vision", "", 0)).ok()).toBe(true);
+  for (const ruta of ["/", "/nosotros"]) {
+    await irA(page, ruta);
+    await expect(page.locator(".mv-fila")).toHaveCount(1);
+    await expect(page.getByRole("heading", { name: "Nuestra visión" })).toHaveCount(0);
+    await expect(page.locator(".mv").getByText("Visión", { exact: true })).toHaveCount(0);
+    const mision = fila("Nuestra misión");
+    await expect(mision).not.toHaveClass(/una-col/);
+    await expect(mision.locator(".eyebrow")).toHaveText("Misión");
+    await expect(mision.locator(".mv-txt p:not(.eyebrow)")).toHaveCount(0);
+    await expect(mision.locator("[data-galeria] img")).toHaveCount(1);
+    await expect(page.locator(".mv-sin")).toHaveCount(0);
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await cargarImagenes(page);
+    await capturaEvidencia(
+      page,
+      `pruebas-e2e/sitio/evidencias/JG-34/mision-solo-imagen-${ruta === "/" ? "inicio" : "nosotros"}-${info.project.name}.png`,
+    );
+  }
 });

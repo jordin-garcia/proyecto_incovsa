@@ -35,7 +35,7 @@ El módulo de **Inventario se eliminó** el 29/09/2026 ([09-picking-inventario.m
 
 ### Sitio web
 
-- Información institucional: historia, misión, visión y valores. Misión y visión con su texto y su imagen; valores como 5 imágenes (13/10).
+- Información institucional: historia, misión y visión. Misión y visión con su texto y su imagen (13/10). **(06/11)** Los valores se quitaron del sitio y del panel a pedido del Ing. William ([05](05-sitio-web.md)).
 - Galerías de hasta 5 imágenes que rotan en las áreas con imágenes del sitio (13/10).
 - Industrias atendidas, con navegación por industria en una barra de íconos, imágenes por industria y sus productos en texto.
 - Catálogo informativo de productos, sin precios y sin comercio electrónico, con búsqueda.

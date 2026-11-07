@@ -1,7 +1,6 @@
-import Image from "next/image";
 import { Icono } from "@/componentes/comunes/iconos";
 import { Galeria } from "@/componentes/sitio/Galeria";
-import { MisionVision } from "@/componentes/sitio/MisionVision";
+import { MisionVision, tieneContenido } from "@/componentes/sitio/MisionVision";
 import { LogotiposAlternados } from "@/componentes/sitio/LogotiposAlternados";
 import { leerInicioSitio } from "@/modulos/contenido/servicio";
 import { leerNosotrosSitio } from "@/modulos/contenido/nosotros";
@@ -51,33 +50,19 @@ export default async function Nosotros() {
               <h2>Misión y visión</h2>
             </div>
           </div>
-          <MisionVision mision={inicio.mision} vision={inicio.vision} />
+          <MisionVision mision={inicio.mision} vision={inicio.vision} solo="mision" />
         </div>
       </section>
-      <section className="sec">
-        <div className="wrap">
-          <div className="cab-sec">
-            <div>
-              <p className="eyebrow">Valores</p>
-              <h2>Lo que nos guía</h2>
-            </div>
+      {/* JG-34 (06/11, decisión del coordinador): sin Valores, la visión va en su propia sección clara para que los
+          fondos se alternen: Historia claro, Misión verde, Visión claro, A quién servimos verde e INCOVSA e
+          Inquiserca claro, antes del pie verde. */}
+      {tieneContenido(inicio.vision) && (
+        <section className="sec">
+          <div className="wrap">
+            <MisionVision mision={inicio.mision} vision={inicio.vision} solo="vision" />
           </div>
-          <div className="valores-fila" tabIndex={0} role="region" aria-label="Valores">
-            {datos.valores.map((src, indice) =>
-              src ? (
-                <figure className="valor-t" key={indice}>
-                  <Image src={src} alt={`Valor ${indice + 1} de INCOVSA`} width={300} height={400} unoptimized />
-                </figure>
-              ) : (
-                // JG-28: el valor sin imagen conserva su tarjeta con el número, sin el aviso de pendiente.
-                <div className="valor-t vacio-v" key={indice}>
-                  <span className="mono">{String(indice + 1).padStart(2, "0")}</span>
-                </div>
-              ),
-            )}
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
       <section className="sec sec-verde">
         <div className="wrap">
           <div className="cab-sec">

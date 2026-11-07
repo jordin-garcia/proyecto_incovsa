@@ -1,0 +1,34 @@
+
+Running 30 tests using 1 worker
+
+[1/30] [telefono] › pruebas-e2e\sitio\inicio.spec.ts:6:5 › RF-SW-01 / RF-SW-27: Inicio informativo conserva secciones, cifras y textos aprobados
+[2/30] [telefono] › pruebas-e2e\sitio\inicio.spec.ts:34:5 › RF-SW-15 / RF-SW-22 / RF-SW-24: pie público y mapas solo de las dos oficinas
+[3/30] [telefono] › pruebas-e2e\sitio\inicio.spec.ts:68:5 › RF-SW-08 / RNF-08: menú responsivo, ausencia de desbordamiento y accesibilidad
+[4/30] [telefono] › pruebas-e2e\sitio\inicio.spec.ts:85:5 › RF-SW-16: tarjetas aparecen al entrar en pantalla y desaparecen al salir
+[5/30] [telefono] › pruebas-e2e\sitio\inicio.spec.ts:114:5 › RN-56 / RNF-17: cinco imágenes rotan cada 5 s, una queda fija y las secundarias cargan después
+[6/30] [telefono] › pruebas-e2e\sitio\nosotros.spec.ts:33:5 › RF-SW-02 / CAM-79 / RNF-08: secciones, fondos, pie y accesibilidad de Quiénes somos
+[7/30] [telefono] › pruebas-e2e\sitio\nosotros.spec.ts:92:5 › RF-SW-02 / CAM-80: ambos bloques alternan y quitar Inquiserca desde el panel deja solo INCOVSA
+[8/30] [telefono] › pruebas-e2e\sitio\nosotros.spec.ts:139:5 › RF-SW-16: presentación dinámica de las tarjetas de Quiénes somos
+[9/30] [telefono] › pruebas-e2e\sitio\nosotros.spec.ts:151:5 › RF-SW-02 / RN-56 (06/11): la historia publicada se muestra y los valores ya no se publican ni se muestran
+[10/30] [telefono] › pruebas-e2e\sitio\nosotros.spec.ts:179:5 › RF-SW-01 / RF-SW-02 (06/11): misión y visión solo con texto, solo con imagen o sin nada, en Inicio y Quiénes somos
+[11/30] [tableta] › pruebas-e2e\sitio\inicio.spec.ts:6:5 › RF-SW-01 / RF-SW-27: Inicio informativo conserva secciones, cifras y textos aprobados
+[12/30] [tableta] › pruebas-e2e\sitio\inicio.spec.ts:34:5 › RF-SW-15 / RF-SW-22 / RF-SW-24: pie público y mapas solo de las dos oficinas
+[13/30] [tableta] › pruebas-e2e\sitio\inicio.spec.ts:68:5 › RF-SW-08 / RNF-08: menú responsivo, ausencia de desbordamiento y accesibilidad
+[14/30] [tableta] › pruebas-e2e\sitio\inicio.spec.ts:85:5 › RF-SW-16: tarjetas aparecen al entrar en pantalla y desaparecen al salir
+[15/30] [tableta] › pruebas-e2e\sitio\inicio.spec.ts:114:5 › RN-56 / RNF-17: cinco imágenes rotan cada 5 s, una queda fija y las secundarias cargan después
+[16/30] [tableta] › pruebas-e2e\sitio\nosotros.spec.ts:33:5 › RF-SW-02 / CAM-79 / RNF-08: secciones, fondos, pie y accesibilidad de Quiénes somos
+[17/30] [tableta] › pruebas-e2e\sitio\nosotros.spec.ts:92:5 › RF-SW-02 / CAM-80: ambos bloques alternan y quitar Inquiserca desde el panel deja solo INCOVSA
+[18/30] [tableta] › pruebas-e2e\sitio\nosotros.spec.ts:139:5 › RF-SW-16: presentación dinámica de las tarjetas de Quiénes somos
+[19/30] [tableta] › pruebas-e2e\sitio\nosotros.spec.ts:151:5 › RF-SW-02 / RN-56 (06/11): la historia publicada se muestra y los valores ya no se publican ni se muestran
+[20/30] [tableta] › pruebas-e2e\sitio\nosotros.spec.ts:179:5 › RF-SW-01 / RF-SW-02 (06/11): misión y visión solo con texto, solo con imagen o sin nada, en Inicio y Quiénes somos
+[21/30] [escritorio] › pruebas-e2e\sitio\inicio.spec.ts:6:5 › RF-SW-01 / RF-SW-27: Inicio informativo conserva secciones, cifras y textos aprobados
+[22/30] [escritorio] › pruebas-e2e\sitio\inicio.spec.ts:34:5 › RF-SW-15 / RF-SW-22 / RF-SW-24: pie público y mapas solo de las dos oficinas
+[23/30] [escritorio] › pruebas-e2e\sitio\inicio.spec.ts:68:5 › RF-SW-08 / RNF-08: menú responsivo, ausencia de desbordamiento y accesibilidad
+[24/30] [escritorio] › pruebas-e2e\sitio\inicio.spec.ts:85:5 › RF-SW-16: tarjetas aparecen al entrar en pantalla y desaparecen al salir
+[25/30] [escritorio] › pruebas-e2e\sitio\inicio.spec.ts:114:5 › RN-56 / RNF-17: cinco imágenes rotan cada 5 s, una queda fija y las secundarias cargan después
+[26/30] [escritorio] › pruebas-e2e\sitio\nosotros.spec.ts:33:5 › RF-SW-02 / CAM-79 / RNF-08: secciones, fondos, pie y accesibilidad de Quiénes somos
+[27/30] [escritorio] › pruebas-e2e\sitio\nosotros.spec.ts:92:5 › RF-SW-02 / CAM-80: ambos bloques alternan y quitar Inquiserca desde el panel deja solo INCOVSA
+[28/30] [escritorio] › pruebas-e2e\sitio\nosotros.spec.ts:139:5 › RF-SW-16: presentación dinámica de las tarjetas de Quiénes somos
+[29/30] [escritorio] › pruebas-e2e\sitio\nosotros.spec.ts:151:5 › RF-SW-02 / RN-56 (06/11): la historia publicada se muestra y los valores ya no se publican ni se muestran
+[30/30] [escritorio] › pruebas-e2e\sitio\nosotros.spec.ts:179:5 › RF-SW-01 / RF-SW-02 (06/11): misión y visión solo con texto, solo con imagen o sin nada, en Inicio y Quiénes somos
+  30 passed (3.2m)
